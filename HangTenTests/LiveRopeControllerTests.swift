@@ -76,13 +76,13 @@ final class LiveRopeControllerTests: XCTestCase {
         let a=try await first.advanceExactly(steps:2,target:q)
         let b=try await second.advanceExactly(steps:1,target:q)
         XCTAssertEqual(a.count,2);XCTAssertEqual(b.count,1)
-        XCTAssertEqual(a[0].boardHeight,b[0].boardHeight)
+        XCTAssertEqual(a[0].boardTranslation.y,b[0].boardTranslation.y)
         XCTAssertEqual(a[0].ropes[0].positions,b[0].ropes[0].positions)
         await first.stop()
         let stopped=try await first.advanceExactly(steps:1,target:q)
         let continuing=try await second.advanceExactly(steps:1,target:q)
         XCTAssertTrue(stopped.isEmpty)
-        XCTAssertEqual(continuing[0].boardHeight,a[1].boardHeight)
+        XCTAssertEqual(continuing[0].boardTranslation.y,a[1].boardTranslation.y)
     }
 
     @MainActor

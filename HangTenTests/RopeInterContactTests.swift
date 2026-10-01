@@ -194,7 +194,7 @@ final class RopeInterContactTests:XCTestCase {
         let input=RopePhysicsInput(modelSHA256:String(repeating:"a",count:64),sourceSHA256:String(repeating:"b",count:64),
             collision:RopeTriangleColliderTests.box(minimum:SIMD3(repeating:-0.01),maximum:SIMD3(repeating:0.01)),
             portals:[],channels:[],profiles:[RopePhysicsProfile(id:"fixture",presentationID:"fixture",instanceID:nil,boardMass:1,ropes:sources)])
-        let state=RopeSimulationState(profileID:"fixture",boardMass:1,boardHeight:0,boardVerticalVelocity:0,
+        let state=RopeSimulationState(profileID:"fixture",boardMass:1,boardTranslation:.zero,boardLinearVelocity:.zero,
             orientation:simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1)),ropes:chains)
         return (input,state,try RopeTriangleCollider(input:input))
     }
@@ -203,7 +203,7 @@ final class RopeInterContactTests:XCTestCase {
         let (input,state,collider)=try Self.fixture(
             [SIMD3(-0.1,1,-0.01),SIMD3(0,1.005,0),SIMD3(0.1,1,-0.01)],
             [SIMD3(-0.1,1,0.014),SIMD3(0,1.005,0.004),SIMD3(0.1,1,0.014)])
-        let before=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,boardHistory:[0])
+        let before=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,boardHistory:[.zero])
         XCTAssertFalse(before.geometryAccepted)
         var solver=try RopeDynamicsSolver(input:input,state:state,collider:collider)
         let frame=try solver.projectInitialization()
@@ -227,11 +227,11 @@ final class RopeInterContactTests:XCTestCase {
             [SIMD3(-0.1,1,-0.01),SIMD3(0,1.005,0),SIMD3(0.1,1,-0.01)],
             [SIMD3(-0.1,1,0.014),SIMD3(0,1.005,0.004),SIMD3(0.1,1,0.014)])
         XCTAssertFalse(try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,
-            boardHistory:[0]).geometryAccepted)
+            boardHistory:[.zero]).geometryAccepted)
         let prepared=try RopeDynamicsSolver.prepareDisplay(input:input,state:state,collider:collider)
         XCTAssertTrue(prepared.frame.metrics.geometryAccepted)
         XCTAssertFalse(prepared.frame.settled)
-        XCTAssertEqual(prepared.frame.boardHeight,prepared.solver.state.boardHeight)
+        XCTAssertEqual(prepared.frame.boardTranslation.y,prepared.solver.state.boardTranslation.y)
         for ((original,result),frame) in zip(zip(state.ropes,prepared.solver.state.ropes),prepared.frame.ropes) {
             XCTAssertEqual(result.restLengths,original.restLengths)
             XCTAssertEqual(frame.id,result.id)

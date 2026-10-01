@@ -68,6 +68,14 @@ struct RopePhysicsInput: Hashable, Sendable {
     let portals: [RopePortalRegion]
     let channels: [RopeChannelRegion]
     let profiles: [RopePhysicsProfile]
+
+    /// A numerical mass-location estimate, never a pinned bearing or hinge.
+    var bodyReferencePoint: SIMD3<Double> {
+        guard let first = collision.vertices.first else { return .zero }
+        let low = collision.vertices.reduce(first, simd_min)
+        let high = collision.vertices.reduce(first, simd_max)
+        return low + (high - low) * 0.5
+    }
 }
 
 /// Decodes untrusted package data before creating any simulation entities.

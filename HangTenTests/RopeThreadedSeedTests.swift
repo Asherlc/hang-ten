@@ -6,10 +6,10 @@ import simd
 #endif
 
 final class RopeThreadedSeedTests: XCTestCase {
-    private func attachedBoard() -> RopePhysicsInput {
+    private func attachedBoard(supportOffset: Double = 0) -> RopePhysicsInput {
         let ropes = [-0.008, 0.008].enumerated().map { index, x in
             let nodes = [
-                RopeGraphNode(id: "support-\(index)", kind: "support", point: SIMD3(x, 0.12, 0.008), portalID: nil),
+                RopeGraphNode(id: "support-\(index)", kind: "support", point: SIMD3(x, 0.12, 0.008 + supportOffset), portalID: nil),
                 RopeGraphNode(id: "attachment-\(index)", kind: "attachment", point: SIMD3(x, 0.02, 0.008), portalID: nil)
             ]
             return RopePhysicsRope(id: "lead-\(index)", baselineRadius: 0.001, radius: 0.001,
@@ -22,51 +22,47 @@ final class RopeThreadedSeedTests: XCTestCase {
                 instanceID: nil, boardMass: 1, ropes: ropes)])
     }
 
-    func testXTiltKeepsBoardCordAttachmentsOnTheirAxis() throws {
-        let input = attachedBoard(), collider = try RopeTriangleCollider(input: input)
-        var state = try RopeThreadedSeed.make(input: input, profileID: "front",
-            orientation: simd_quatd(angle: 0, axis: SIMD3(1, 0, 0)), collider: collider)
-        let height = state.boardHeight
-        for angle in [-Double.pi / 2, -0.4, 0, 0.4, Double.pi / 2] {
-            state.orientation = simd_quatd(angle: angle, axis: SIMD3(1, 0, 0))
-            for x in [-0.008, 0.008] {
-                let attachment = SIMD3<Double>(x, 0.02, 0.008)
-                XCTAssertLessThan(simd_distance(state.worldPoint(attachment), attachment + SIMD3(0, height, 0)), 1e-10)
-                XCTAssertLessThan(simd_distance(state.boardPoint(state.worldPoint(attachment)), attachment), 1e-10)
+    func testCordSupportSolvesLateralBoardTranslation() throws {
+        let input = attachedBoard(supportOffset: 0.01), collider = try RopeTriangleCollider(input: input)
+        let upright = simd_quatd(angle: 0, axis: SIMD3<Double>(1, 0, 0))
+        let state = try RopeThreadedSeed.make(input: input, profileID: "front", orientation: upright, collider: collider)
+        var solver = try RopeDynamicsSolver(input: input, state: state, collider: collider)
+        let frame = try solver.settled(targetOrientation: upright, maxDuration: 5)
+        // Gravity puts both attachments directly beneath their shifted supports.
+        XCTAssertLessThan(simd_distance(frame.boardTranslation, SIMD3(0, 0, 0.01)), 0.0002)
+        XCTAssertTrue(frame.metrics.geometryAccepted)
+        for chain in solver.state.ropes {
+            for (index, support) in chain.supports { XCTAssertEqual(chain.positions[index], support) }
+            for (index, local) in chain.attachments {
+                XCTAssertLessThan(simd_distance(chain.positions[index], solver.state.worldPoint(local)), 1e-10)
             }
         }
-        // At +90 degrees the board origin moves around the cord axis.
-        let origin = state.worldPoint(.zero)
-        XCTAssertEqual(origin.y - height, 0.028, accuracy: 1e-10)
-        XCTAssertEqual(origin.z, -0.012, accuracy: 1e-10)
     }
 
-    func testTiltedSeedKeepsFixedSupportsAndTautAttachmentLeads() throws {
+    func testXTiltKeepsSettledAttachmentsOnTheirCordAxis() throws {
+        let input = attachedBoard(), collider = try RopeTriangleCollider(input: input)
+        let upright = simd_quatd(angle: 0, axis: SIMD3<Double>(1, 0, 0))
+        let state = try RopeThreadedSeed.make(input: input, profileID: "front", orientation: upright, collider: collider)
+        var solver = try RopeDynamicsSolver(input: input, state: state, collider: collider)
+        for angle in [-Double.pi / 2, -0.4, 0, 0.4, Double.pi / 2, 0] {
+            let frame = try solver.settled(targetOrientation: simd_quatd(angle: angle, axis: SIMD3(1, 0, 0)), maxDuration: 5)
+            XCTAssertTrue(frame.metrics.geometryAccepted)
+            for (chain, x) in zip(solver.state.ropes, [-0.008, 0.008]) {
+                XCTAssertLessThan(simd_distance(try XCTUnwrap(chain.positions.last), SIMD3(x, 0.02, 0.008)), 0.0002)
+            }
+        }
+    }
+
+    func testTiltedSeedPreservesSupportsAndDeclaredMaterial() throws {
         let input = attachedBoard(), collider = try RopeTriangleCollider(input: input)
         let state = try RopeThreadedSeed.make(input: input, profileID: "front",
             orientation: simd_quatd(angle: Double.pi / 3, axis: SIMD3(1, 0, 0)), collider: collider)
-        XCTAssertEqual(state.boardHeight, 0, accuracy: 1e-8)
-        for (index, x) in [-0.008, 0.008].enumerated() {
-            let chain = state.ropes[index]
-            XCTAssertLessThan(simd_distance(try XCTUnwrap(chain.positions.first), SIMD3(x, 0.12, 0.008)), 1e-10)
-            XCTAssertLessThan(simd_distance(try XCTUnwrap(chain.positions.last), SIMD3(x, 0.02, 0.008)), 1e-8)
+        for (chain, source) in zip(state.ropes, input.profiles[0].ropes) {
+            for (index, point) in chain.supports { XCTAssertEqual(chain.positions[index], point) }
+            XCTAssertEqual(chain.restLengths.reduce(0, +), source.restLength, accuracy: 1e-8)
         }
-        let metrics = try RopeSimulationMetrics.measure(state: state, input: input, collider: collider, boardHistory: [state.boardHeight])
-        XCTAssertTrue(metrics.geometryAccepted)
-    }
-
-    func testThreadedBoardTiltsAroundItsPassageCenter() throws {
-        let input = try Self.clavellium(), collider = try RopeTriangleCollider(input: input)
-        var state = try RopeThreadedSeed.make(input: input, profileID: "front",
-            orientation: simd_quatd(angle: 0, axis: SIMD3(1, 0, 0)), collider: collider)
-        // The front/back mouths are at y=2.5 mm, z=+/-45 mm.
-        // Their central cord axis crosses (0, 2.5 mm, 0).
-        let center = SIMD3<Double>(0, 0.0025, 0)
-        let fixed = center + SIMD3(0, state.boardHeight, 0)
-        for angle in [-0.6, 0, 0.6] {
-            state.orientation = simd_quatd(angle: angle, axis: SIMD3(1, 0, 0))
-            XCTAssertLessThan(simd_distance(state.worldPoint(center), fixed), 1e-10)
-        }
+        XCTAssertTrue(try RopeSimulationMetrics.measure(state: state, input: input, collider: collider,
+            boardHistory: [state.worldPoint(input.bodyReferencePoint)]).geometryAccepted)
     }
 
     func testSeedRejectsChannelRegionThatDoesNotContainItsTraversal() throws {
@@ -192,10 +188,10 @@ final class RopeThreadedSeedTests: XCTestCase {
         for (index, state) in [original, outside].enumerated() {
             let uncached = try RopeSimulationMetrics.measure(
                 state: state, input: input, collider: collider,
-                boardHistory: [state.boardHeight], includeSelfContact: false)
+                boardHistory:[state.boardTranslation], includeSelfContact: false)
             let cached = try RopeSimulationMetrics.measure(
                 state: state, input: input, collider: collider,
-                boardHistory: [state.boardHeight], includeSelfContact: false, channelCache: cache)
+                boardHistory:[state.boardTranslation], includeSelfContact: false, channelCache: cache)
             XCTAssertEqual(
                 [
                     cached.totalLengthError, cached.maximumLocalStrain, cached.minimumSegmentClearance,
@@ -232,12 +228,12 @@ final class RopeThreadedSeedTests: XCTestCase {
         XCTAssertFalse(
             try RopeSimulationMetrics.measure(
                 state: state, input: input, collider: collider,
-                boardHistory: [state.boardHeight], includeSelfContact: false
+                boardHistory:[state.boardTranslation], includeSelfContact: false
             ).geometryAccepted)
         XCTAssertThrowsError(
             try RopeSimulationMetrics.measure(
                 state: state, input: input, collider: collider,
-                boardHistory: [state.boardHeight], includeSelfContact: false, channelCache: cache))
+                boardHistory:[state.boardTranslation], includeSelfContact: false, channelCache: cache))
     }
 
     func testCentralLoopIsContinuousCollisionFreeAndFullLength() throws {

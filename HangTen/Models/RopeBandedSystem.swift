@@ -1,7 +1,7 @@
 import Accelerate
 
 /// Pivoted band LU plus a small Schur border. Local chain constraints stay
-/// sparse; board height and nonlocal cord contacts occupy the border.
+/// sparse; board translation and nonlocal cord contacts occupy the border.
 struct RopeBandedSystem: Sendable {
     let size: Int
     let bandwidth: Int

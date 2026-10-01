@@ -1,7 +1,7 @@
 import simd
 
-/// Inextensible chain with a coupled mass-metric nonlinear projection. The scalar
-/// board-height degree of freedom participates in the same solve as the rope.
+/// Inextensible chain with coupled rope and three-dimensional body translation.
+/// Orientation is controlled; supports, length and contact determine body position.
 struct RopeDynamicsSolver: Sendable {
     // Match inactive-contact feasibility and merit at 10 nm. Physical
     // acceptance separately retains its exact radius/clearance limits.
@@ -10,11 +10,14 @@ struct RopeDynamicsSolver: Sendable {
     let collider:RopeTriangleCollider
     private(set) var state:RopeSimulationState
     private var time=0.0
-    private var history:[(Double,Double)]=[]
+    private var history:[(Double,SIMD3<Double>)]=[]
+    private let bodyReferencePoint:SIMD3<Double>
     private var acceptedMinimumClearance:Double?
     private let channelColliderCache:RopeChannelColliderCache
     private let portalMap:[String:RopePortalRegion]
     private var distanceTension:[[Double]]
+    /// Read-only production linearization data for stiffness verification.
+    var accumulatedLinkTensions:[[Double]] { distanceTension }
     private var lastStepDuration=1.0/240
 
     /// Return the solver and its first accepted display frame together. Raw
@@ -29,6 +32,7 @@ struct RopeDynamicsSolver: Sendable {
 
     init(input:RopePhysicsInput,state:RopeSimulationState,collider:RopeTriangleCollider) throws {
         self.input=input;self.state=state;self.collider=collider
+        bodyReferencePoint=input.bodyReferencePoint
         channelColliderCache=try RopeChannelColliderCache(channels:input.channels)
         portalMap=Dictionary(uniqueKeysWithValues:input.portals.map{($0.id,$0)})
         guard let profile=input.profiles.first(where:{$0.id == state.profileID}),
@@ -38,9 +42,8 @@ struct RopeDynamicsSolver: Sendable {
                   abs(source.restLength-chain.restLengths.reduce(0,+))<1e-8
               }),Self.finite(state.orientation.vector.xyz),state.orientation.vector.w.isFinite,
               abs(simd_length(state.orientation.vector)-1)<1e-8,
-              state.boardMass>0,state.boardMass.isFinite,state.boardHeight.isFinite,
-              state.boardVerticalVelocity.isFinite,!state.ropes.isEmpty,
-              Self.finite(state.rotationPivot),
+              state.boardMass>0,state.boardMass.isFinite,Self.finite(state.boardTranslation),
+              Self.finite(state.boardLinearVelocity),!state.ropes.isEmpty,Self.finite(bodyReferencePoint),
               state.ropes.allSatisfy({rope in
                   !rope.restLengths.isEmpty &&
                   rope.positions.count == rope.restLengths.count+1 && rope.positions.count == rope.velocities.count &&
@@ -51,7 +54,7 @@ struct RopeDynamicsSolver: Sendable {
                   rope.supports.keys.allSatisfy{rope.positions.indices.contains($0)} &&
                   rope.portals.keys.allSatisfy{rope.positions.indices.contains($0)}
               }) else{throw RopePhysicsError.invalid("Invalid or nonfinite simulation state")}
-        history=[(0,state.boardHeight)]
+        history=[(0,state.worldPoint(bodyReferencePoint))]
         distanceTension=state.ropes.map{Array(repeating:0,count:$0.restLengths.count)}
     }
 
@@ -69,7 +72,7 @@ struct RopeDynamicsSolver: Sendable {
         guard maxIterations>0,maxIterations<=2000 else {throw RopePhysicsError.invalid("Invalid initialization bound")}
         var candidate=self
         let preflight=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,
-            boardHistory:[state.boardHeight],includeSelfContact:false,channelCache:channelColliderCache)
+            boardHistory:[state.worldPoint(bodyReferencePoint)],includeSelfContact:false,channelCache:channelColliderCache)
         guard preflight.geometryAccepted else {throw RopePhysicsError.invalid("Invalid initial wood geometry or threading")}
         for rope in state.ropes {
             guard RopeSimulationMetrics.selfContactPair(positions:rope.positions,radius:rope.radius,
@@ -89,10 +92,10 @@ struct RopeDynamicsSolver: Sendable {
         let prediction=state
         for iteration in 0...maxIterations {
             let metrics=try RopeSimulationMetrics.measure(state:candidate.state,input:input,collider:collider,
-                boardHistory:[candidate.state.boardHeight],channelCache:candidate.channelColliderCache)
+                boardHistory:[candidate.state.worldPoint(bodyReferencePoint)],channelCache:candidate.channelColliderCache)
             if metrics.geometryAccepted {
                 if iteration>0 {
-                    candidate.history=[(0,candidate.state.boardHeight)]
+                    candidate.history=[(0,candidate.state.worldPoint(bodyReferencePoint))]
                     candidate.distanceTension=candidate.state.ropes.map {Array(repeating:0,count:$0.restLengths.count)}
                     for r in candidate.state.ropes.indices {
                         candidate.state.ropes[r].previousPositions=candidate.state.ropes[r].positions
@@ -100,8 +103,8 @@ struct RopeDynamicsSolver: Sendable {
                 }
                 candidate.acceptedMinimumClearance=metrics.minimumSegmentClearance
                 self=candidate
-                return RopeFrameSnapshot(boardHeight:state.boardHeight,orientation:state.orientation,
-                    ropes:state.ropes.map{RopeChainSnapshot(id:$0.id,radius:$0.radius,positions:$0.positions)},settled:false,metrics:metrics,rotationPivot:state.rotationPivot)
+                return RopeFrameSnapshot(boardTranslation:state.boardTranslation,orientation:state.orientation,
+                    ropes:state.ropes.map{RopeChainSnapshot(id:$0.id,radius:$0.radius,positions:$0.positions)},settled:false,metrics:metrics)
             }
             guard iteration<maxIterations else {break}
             _ = try candidate.correctConstraints(prediction:prediction)
@@ -142,8 +145,9 @@ struct RopeDynamicsSolver: Sendable {
         let angle=2*acos(dot),fraction=angle>1e-9 ? min(1,dt*2.1/angle):1
         state.orientation=simd_slerp(old.orientation,targetOrientation,fraction)
         let damping=exp(-18*dt)
-        state.boardVerticalVelocity=(old.boardVerticalVelocity-9.81*dt)*damping
-        state.boardHeight += state.boardVerticalVelocity*dt
+        state.boardLinearVelocity=(old.boardLinearVelocity+SIMD3(0,-9.81*dt,0))*damping
+        state.boardTranslation += old.orientation.act(bodyReferencePoint)-state.orientation.act(bodyReferencePoint)
+        state.boardTranslation += state.boardLinearVelocity*dt
         for r in state.ropes.indices {
             let rope=old.ropes[r]
             for i in rope.positions.indices {
@@ -171,8 +175,8 @@ struct RopeDynamicsSolver: Sendable {
             func deviation(_ i:Int)->Double {
                 if state.ropes[r].attachments[i] != nil {return 0}
                 return RopeMotionSweep.rotationalDeviation(
-                    start:old.ropes[r].positions[i]-old.rotationPivot-SIMD3(0,old.boardHeight,0),
-                    end:state.ropes[r].positions[i]-state.rotationPivot-SIMD3(0,state.boardHeight,0),angle:rotationAngle)
+                    start:old.ropes[r].positions[i]-old.worldPoint(bodyReferencePoint),
+                    end:state.ropes[r].positions[i]-state.worldPoint(bodyReferencePoint),angle:rotationAngle)
             }
             for i in state.ropes[r].restLengths.indices {
                 let a=old.boardPoint(old.ropes[r].positions[i]),b=old.boardPoint(old.ropes[r].positions[i+1])
@@ -206,11 +210,11 @@ struct RopeDynamicsSolver: Sendable {
                 state.ropes[r].velocities[i]=(state.ropes[r].positions[i]-old.ropes[r].positions[i])/dt
             }
         }
-        state.boardVerticalVelocity=(state.boardHeight-old.boardHeight)/dt
-        guard state.boardHeight.isFinite,state.ropes.allSatisfy({$0.positions.allSatisfy(Self.finite)}) else {
+        state.boardLinearVelocity=(state.worldPoint(bodyReferencePoint)-old.worldPoint(bodyReferencePoint))/dt
+        guard Self.finite(state.boardTranslation),Self.finite(state.boardLinearVelocity),state.ropes.allSatisfy({$0.positions.allSatisfy(Self.finite)}) else {
             state=old;throw RopePhysicsError.invalid("Dynamics produced nonfinite state")
         }
-        time += dt;history.append((time,state.boardHeight))
+        time += dt;history.append((time,state.worldPoint(bodyReferencePoint)))
         history.removeAll{$0.0<time-0.5-dt/2}
         let metrics=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,boardHistory:history.map{$0.1},channelCache:channelColliderCache)
         guard metrics.geometryAccepted else {
@@ -220,8 +224,8 @@ struct RopeDynamicsSolver: Sendable {
         lastStepDuration=dt
         let arrived=abs(simd_dot(state.orientation.vector,targetOrientation.vector))>1-1e-12
         let settled=arrived && time>=0.5 && metrics.maximumSpeed<0.001 && metrics.boardDisplacement<0.0001
-        return RopeFrameSnapshot(boardHeight:state.boardHeight,orientation:state.orientation,
-            ropes:state.ropes.map{RopeChainSnapshot(id:$0.id,radius:$0.radius,positions:$0.positions)},settled:settled,metrics:metrics,rotationPivot:state.rotationPivot)
+        return RopeFrameSnapshot(boardTranslation:state.boardTranslation,orientation:state.orientation,
+            ropes:state.ropes.map{RopeChainSnapshot(id:$0.id,radius:$0.radius,positions:$0.positions)},settled:settled,metrics:metrics)
     }
 
     mutating func settled(targetOrientation:simd_quatd,maxDuration:Double) throws -> RopeFrameSnapshot {
@@ -246,11 +250,11 @@ struct RopeDynamicsSolver: Sendable {
         }
     }
 
-    private struct ConstraintRow {
+    struct ConstraintRow {
         let rope:Int
         let particles:[Int]
         let gradients:[SIMD3<Double>]
-        let boardGradient:Double
+        let boardGradient:SIMD3<Double>
         let residual:Double
         let contact:Bool
         let lengthSegment:Int?
@@ -262,38 +266,31 @@ struct RopeDynamicsSolver: Sendable {
     /// CAD wood and eroded portal boundaries constrain sliding crossings
     /// without pinning material. Unilateral tensile contacts are released, with inactive
     /// inequalities reconsidered before accepting a correction.
-    private mutating func correctConstraints(prediction:RopeSimulationState) throws -> Double {
+    func assembledConstraintRows() throws -> [ConstraintRow] {
         var rows:[ConstraintRow]=[]
-        var weights:[[Double]]=[]
-        let worldUp=SIMD3<Double>(0,1,0)
         for (r,rope) in state.ropes.enumerated() {
             let links=rope.restLengths.count
-            weights.append(rope.positions.indices.map {i in
-                if rope.supports[i] != nil || rope.attachments[i] != nil {return 0}
-                let length=(i>0 ? rope.restLengths[i-1]:0)+(i<links ? rope.restLengths[i]:0)
-                return 2/(rope.linearMass*length)
-            })
             for i in rope.positions.indices {
                 for hit in collider.segmentContacts(from:state.boardPoint(rope.positions[i]),to:state.boardPoint(rope.positions[i]),
                     radius:rope.radius+RopeRegionGeometry.clearance+0.00005) {
                     let normal=state.orientation.act(hit.normal)
-                    let attached=rope.attachments[i] == nil ? SIMD3<Double>.zero:worldUp
+                    let attached=rope.attachments[i] == nil ? 0.0:1.0
                     rows.append(ConstraintRow(rope:r,particles:[i],gradients:[normal],
-                        boardGradient:-normal.y+simd_dot(normal,attached),residual:0.00005-hit.penetrationDepth,contact:true,lengthSegment:nil))
+                        boardGradient:normal*(attached-1),residual:0.00005-hit.penetrationDepth,contact:true,lengthSegment:nil))
                 }
                 guard i<links else{continue}
                 let delta=rope.positions[i+1]-rope.positions[i],length=simd_length(delta)
                 guard length>1e-12 else{throw RopePhysicsError.invalid("Collapsed rope link")}
                 let tangent=delta/length
-                let attachedA=rope.attachments[i] == nil ? SIMD3<Double>.zero:worldUp
-                let attachedB=rope.attachments[i+1] == nil ? SIMD3<Double>.zero:worldUp
+                let attachedA=rope.attachments[i] == nil ? 0.0:1.0
+                let attachedB=rope.attachments[i+1] == nil ? 0.0:1.0
                 rows.append(ConstraintRow(rope:r,particles:[i,i+1],gradients:[-tangent,tangent],
-                    boardGradient:simd_dot(tangent,attachedB-attachedA),residual:length-rope.restLengths[i],contact:false,lengthSegment:i))
+                    boardGradient:tangent*(attachedB-attachedA),residual:length-rope.restLengths[i],contact:false,lengthSegment:i))
                 let a=state.boardPoint(rope.positions[i]),b=state.boardPoint(rope.positions[i+1])
                 for hit in collider.segmentContacts(from:a,to:b,radius:rope.radius+RopeRegionGeometry.clearance+0.00005) where hit.fraction>1e-6 && hit.fraction<1-1e-6 {
                     let normal=state.orientation.act(hit.normal),f=hit.fraction
                     let gradients=[normal*(1-f),normal*f]
-                    let boardGradient = -normal.y+simd_dot(gradients[0],attachedA)+simd_dot(gradients[1],attachedB)
+                    let boardGradient = -normal+gradients[0]*attachedA+gradients[1]*attachedB
                     rows.append(ConstraintRow(rope:r,particles:[i,i+1],gradients:gradients,boardGradient:boardGradient,
                         residual:0.00005-hit.penetrationDepth,contact:true,lengthSegment:nil))
                 }
@@ -309,8 +306,8 @@ struct RopeDynamicsSolver: Sendable {
                     to:state.boardPoint(rope.positions[i+1]),portal:portal,radius:rope.radius)
                 for boundary in boundaries where boundary.residual<0.00005 {
                     let gradients=[state.orientation.act(boundary.firstGradient),state.orientation.act(boundary.secondGradient)]
-                    let boardGradient = -gradients[0].y-gradients[1].y +
-                        (rope.attachments[i] == nil ? 0:gradients[0].y)+(rope.attachments[i+1] == nil ? 0:gradients[1].y)
+                    let boardGradient = -gradients[0]*(rope.attachments[i] == nil ? 1.0:0.0) -
+                        gradients[1]*(rope.attachments[i+1] == nil ? 1.0:0.0)
                     rows.append(ConstraintRow(rope:r,particles:[i,i+1],gradients:gradients,boardGradient:boardGradient,
                         residual:boundary.residual,contact:true,lengthSegment:nil))
                 }
@@ -324,8 +321,8 @@ struct RopeDynamicsSolver: Sendable {
                 var normal=distance>1e-10 ? delta/distance:simd_cross(rope.positions[i+1]-rope.positions[i],edge)
                 normal=simd_length(normal)>1e-10 ? simd_normalize(normal):SIMD3(1,0,0)
                 let indices=[i,i+1,j,j+1],gradients=[normal*(1-f),normal*f,-normal*(1-g),-normal*g]
-                let boardGradient=zip(indices,gradients).reduce(0.0){value,item in
-                    value+(rope.attachments[item.0] == nil ? 0:item.1.y)
+                let boardGradient=zip(indices,gradients).reduce(SIMD3<Double>.zero){value,item in
+                    value+(rope.attachments[item.0] == nil ? .zero:item.1)
                 }
                 rows.append(ConstraintRow(rope:r,particles:indices,gradients:gradients,boardGradient:boardGradient,
                     residual:distance-2*rope.radius-0.00005,contact:true,lengthSegment:nil))
@@ -337,8 +334,8 @@ struct RopeDynamicsSolver: Sendable {
                     let i=hit.firstSegment,j=hit.secondSegment,f=hit.firstFraction,g=hit.secondFraction,n=hit.normal
                     let particles=[i,i+1,j,j+1],gradients=[n*(1-f),n*f,-n*(1-g),-n*g]
                     let references=[first,first,second,second]
-                    let boardGradient=particles.indices.reduce(0.0) {value,k in
-                        value+(state.ropes[references[k]].attachments[particles[k]] == nil ? 0:gradients[k].y)
+                    let boardGradient=particles.indices.reduce(SIMD3<Double>.zero) {value,k in
+                        value+(state.ropes[references[k]].attachments[particles[k]] == nil ? .zero:gradients[k])
                     }
                     rows.append(ConstraintRow(rope:first,particles:particles,gradients:gradients,
                         boardGradient:boardGradient,residual:hit.distance-hit.targetDistance,
@@ -346,17 +343,32 @@ struct RopeDynamicsSolver: Sendable {
                 }
             }
         }
+        return rows
+    }
+
+    var particleInverseMasses:[[Double]] {
+        state.ropes.map {rope in
+            rope.positions.indices.map {i in
+                if rope.supports[i] != nil || rope.attachments[i] != nil {return 0}
+                let length=(i>0 ? rope.restLengths[i-1]:0)+(i<rope.restLengths.count ? rope.restLengths[i]:0)
+                return 2/(rope.linearMass*length)
+            }
+        }
+    }
+
+    private mutating func correctConstraints(prediction:RopeSimulationState) throws -> Double {
+        let rows=try assembledConstraintRows(),weights=particleInverseMasses
         let solved=try contactCorrection(rows:rows,weights:weights,prediction:prediction)
         let selected=solved.ids.map{rows[$0]},lambda=solved.multipliers
-        let heightCorrection=solved.height,corrections=solved.particles
+        let boardCorrection=solved.boardCorrection,corrections=solved.particles
         let before=state
         let maximum=corrections.flatMap{$0}.map{simd_length($0)}.max() ?? 0
-        var alpha=Self.correctionFraction(ropes:state.ropes,corrections:corrections,heightCorrection:heightCorrection)
+        var alpha=Self.correctionFraction(ropes:state.ropes,corrections:corrections,boardCorrection:boardCorrection)
         let penalty=max(1,2*(lambda.map{abs($0)}.max() ?? 0))
         let score=try merit(state,prediction:prediction,weights:weights,penalty:penalty)
         for _ in 0..<16 {
             state=before
-            state.boardHeight += heightCorrection*alpha
+            state.boardTranslation += boardCorrection*alpha
             for r in state.ropes.indices {
                 for i in state.ropes[r].positions.indices {state.ropes[r].positions[i] += corrections[r][i]*alpha}
                 for (index,local) in state.ropes[r].attachments {state.ropes[r].positions[index]=state.worldPoint(local)}
@@ -370,7 +382,7 @@ struct RopeDynamicsSolver: Sendable {
                             distanceTension[row.rope][link]=max(0,(1-alpha)*old+alpha*lambda[index])
                         }
                     }
-                    return alpha*max(maximum,abs(heightCorrection))
+                    return alpha*max(maximum,simd_length(boardCorrection))
                 }
             } catch RopePhysicsError.invalid { }
             alpha *= 0.5
@@ -381,15 +393,15 @@ struct RopeDynamicsSolver: Sendable {
 
     /// Bound the relative displacement of each immutable material link. Common
     /// translation preserves link lengths; attached endpoints instead move by
-    /// the solved board height, and fixed supports do not move. Global merit,
+    /// the solved board translation, and fixed supports do not move. Global merit,
     /// exact geometry, and continuous collision checks still accept the trial.
-    static func correctionFraction(ropes:[RopeChainState],corrections:[[SIMD3<Double>]],heightCorrection:Double)->Double {
+    static func correctionFraction(ropes:[RopeChainState],corrections:[[SIMD3<Double>]],boardCorrection:SIMD3<Double>)->Double {
         var fraction=1.0
         for r in ropes.indices {
             let rope=ropes[r]
             func displacement(_ particle:Int)->SIMD3<Double> {
                 if rope.supports[particle] != nil {return .zero}
-                if rope.attachments[particle] != nil {return SIMD3(0,heightCorrection,0)}
+                if rope.attachments[particle] != nil {return boardCorrection}
                 return corrections[r][particle]
             }
             for link in rope.restLengths.indices {
@@ -400,8 +412,8 @@ struct RopeDynamicsSolver: Sendable {
         return fraction
     }
 
-    private func contactCorrection(rows:[ConstraintRow],weights:[[Double]],prediction:RopeSimulationState) throws
-        -> (particles:[[SIMD3<Double>]],height:Double,multipliers:[Double],ids:[Int]) {
+    func contactCorrection(rows:[ConstraintRow],weights:[[Double]],prediction:RopeSimulationState) throws
+        -> (particles:[[SIMD3<Double>]],boardCorrection:SIMD3<Double>,multipliers:[Double],ids:[Int]) {
         let equalityIDs=rows.indices.filter{!rows[$0].contact}
         let contactIDs=rows.indices.filter{rows[$0].contact}
         let backbone=try constraintBackbone(rows:equalityIDs.map{rows[$0]},weights:weights,prediction:prediction)
@@ -413,7 +425,7 @@ struct RopeDynamicsSolver: Sendable {
                 let variable=variables[row.ropeIndex(k)][row.particles[k]][axis]
                 if variable>=0 {indices.append(variable);coefficients.append(row.gradients[k][axis])}
             }}
-            return RopeLinearContact(indices:indices,coefficients:coefficients,border:[row.boardGradient],residual:row.residual)
+            return RopeLinearContact(indices:indices,coefficients:coefficients,border:[row.boardGradient.x,row.boardGradient.y,row.boardGradient.z],residual:row.residual)
         }
         let solved:RopeContactSystem.Solution
         do {
@@ -429,7 +441,7 @@ struct RopeDynamicsSolver: Sendable {
                     for (index,id) in direct.ids.enumerated() {allMultipliers[id]=direct.multipliers[index]}
                     for (index,id) in equalityIDs.enumerated() {base[backbone.rowVariables[index]!]=allMultipliers[id]}
                     let active=Set(direct.ids)
-                    return RopeContactSystem.Solution(base:base,border:[direct.height],
+                    return RopeContactSystem.Solution(base:base,border:[direct.boardCorrection.x,direct.boardCorrection.y,direct.boardCorrection.z],
                         multipliers:contactIDs.map{allMultipliers[$0]},activeIDs:contactIDs.indices.filter{active.contains(contactIDs[$0])})
                 })
         } catch RopeContactSystem.Failure.iterationLimit {throw StepFailure.nonlinearConvergence}
@@ -442,13 +454,13 @@ struct RopeDynamicsSolver: Sendable {
         for (index,id) in equalityIDs.enumerated() {multipliers[id]=solved.base[backbone.rowVariables[index]!]}
         for index in contactIDs.indices {multipliers[contactIDs[index]]=solved.multipliers[index]}
         let ids=(equalityIDs+solved.activeIDs.map{contactIDs[$0]}).sorted()
-        return (particles,solved.border[0],ids.map{multipliers[$0]},ids)
+        return (particles,SIMD3(solved.border[0],solved.border[1],solved.border[2]),ids.map{multipliers[$0]},ids)
     }
 
     /// Preserve the explicitly regularized KKT path for contact Schur
     /// conditioning failures. Complete inactive separation remains mandatory.
     private func fullContactCorrection(rows:[ConstraintRow],weights:[[Double]],prediction:RopeSimulationState) throws
-        -> (particles:[[SIMD3<Double>]],height:Double,multipliers:[Double],ids:[Int]) {
+        -> (particles:[[SIMD3<Double>]],boardCorrection:SIMD3<Double>,multipliers:[Double],ids:[Int]) {
         var working=RopeContactWorkingSet(activeIDs:rows.indices.filter{!rows[$0].contact})
         for _ in 0..<min(2048,rows.count*2+10) {
             let ids=working.activeIDs,selected=ids.map{rows[$0]}
@@ -459,25 +471,25 @@ struct RopeDynamicsSolver: Sendable {
             for r in weights.indices {for i in weights[r].indices where weights[r][i]>0 {
                 let v=solved.variables[r][i];particles[r][i]=SIMD3(solved.base[v.x],solved.base[v.y],solved.base[v.z])
             }}
-            let height=solved.border[0]
+            let boardCorrection=SIMD3(solved.border[0],solved.border[1],solved.border[2])
             var active=Array(repeating:false,count:rows.count)
             for id in ids {active[id]=true}
             var worst:(Int,Double)?
             for index in rows.indices where rows[index].contact && !active[index] {
                 let row=rows[index]
-                var residual=row.residual+row.boardGradient*height
+                var residual=row.residual+simd_dot(row.boardGradient,boardCorrection)
                 for k in row.particles.indices {residual += simd_dot(row.gradients[k],particles[row.ropeIndex(k)][row.particles[k]])}
                 if residual < -Self.contactLinearTolerance && residual<(worst?.1 ?? 0) {worst=(index,residual)}
             }
             if let index=worst?.0 {working.insert(index);continue}
-            return (particles,height,lambda,ids)
+            return (particles,boardCorrection,lambda,ids)
         }
         throw StepFailure.nonlinearConvergence
     }
 
     /// Primal KKT system: particle inertia plus tension curvature, local
-    /// length/contact rows, and borders for height/nonlocal self-contact.
-    private func constraintBackbone(rows:[ConstraintRow],weights:[[Double]],prediction:RopeSimulationState) throws
+    /// length/contact rows, and borders for translation/nonlocal self-contact.
+    func constraintBackbone(rows:[ConstraintRow],weights:[[Double]],prediction:RopeSimulationState) throws
         -> (factor:RopeBandedFactorization,variables:[[SIMD3<Int>]],rowVariables:[Int:Int],base:[Double],border:[Double],multipliers:[Double]) {
         let borderRows=rows.indices.filter{rows[$0].secondRope != nil || rows[$0].particles.max()!-rows[$0].particles.min()!>1}
         let borderSet=Set(borderRows),local=rows.indices.filter{!borderSet.contains($0)}
@@ -512,12 +524,14 @@ struct RopeDynamicsSolver: Sendable {
             }
         }
         var system=try RopeBandedSystem(size:size,bandwidth:bandwidth)
-        let borderCount=1+borderRows.count
+        let borderCount=3+borderRows.count
         var columns=Array(repeating:Array(repeating:0.0,count:size),count:borderCount)
         var border=Array(repeating:Array(repeating:0.0,count:borderCount),count:borderCount)
         var rhs=Array(repeating:0.0,count:size),borderRHS=Array(repeating:0.0,count:borderCount)
-        border[0][0]=state.boardMass
-        borderRHS[0] = -state.boardMass*(state.boardHeight-prediction.boardHeight)
+        for axis in 0..<3 {
+            border[axis][axis]=state.boardMass
+            borderRHS[axis] = -state.boardMass*(state.boardTranslation[axis]-prediction.boardTranslation[axis])
+        }
         for r in state.ropes.indices {
             let rope=state.ropes[r]
             for i in rope.positions.indices where weights[r][i]>0 {
@@ -545,9 +559,13 @@ struct RopeDynamicsSolver: Sendable {
                 }
                 let attachedDifference=(rope.attachments[i+1] == nil ? 0.0:1)-(rope.attachments[i] == nil ? 0.0:1)
                 if attachedDifference != 0 {
-                    border[0][0] += coefficient(1,1)*attachedDifference*attachedDifference
+                    for a in 0..<3 {for b in 0..<3 {
+                        border[a][b] += coefficient(a,b)*attachedDifference*attachedDifference
+                    }}
                     for (particle,sign) in [(i,-1.0),(i+1,1.0)] where weights[r][particle]>0 {
-                        for axis in 0..<3 {columns[0][variables[r][particle][axis]] += sign*coefficient(axis,1)*attachedDifference}
+                        for axis in 0..<3 {for bodyAxis in 0..<3 {
+                            columns[bodyAxis][variables[r][particle][axis]] += sign*coefficient(axis,bodyAxis)*attachedDifference
+                        }}
                     }
                 }
             }
@@ -558,7 +576,7 @@ struct RopeDynamicsSolver: Sendable {
             // Numerical rank regularization, not authored rope elasticity;
             // acceptance still measures actual immutable length and clearance.
             try system.addSymmetric(row:variable,column:variable,value:-1e-8)
-            columns[0][variable]=row.boardGradient
+            for axis in 0..<3 {columns[axis][variable]=row.boardGradient[axis]}
             for j in row.particles.indices {
                 for axis in 0..<3 where variables[row.ropeIndex(j)][row.particles[j]][axis]>=0 {
                     try system.addSymmetric(row:variable,column:variables[row.ropeIndex(j)][row.particles[j]][axis],value:row.gradients[j][axis])
@@ -566,9 +584,9 @@ struct RopeDynamicsSolver: Sendable {
             }
         }
         for (offset,index) in borderRows.enumerated() {
-            let row=rows[index],variable=offset+1
+            let row=rows[index],variable=offset+3
             border[variable][variable] = -1e-8
-            border[0][variable]=row.boardGradient;border[variable][0]=row.boardGradient
+            for axis in 0..<3 {border[axis][variable]=row.boardGradient[axis];border[variable][axis]=row.boardGradient[axis]}
             borderRHS[variable] = -row.residual
             for j in row.particles.indices {
                 for axis in 0..<3 where variables[row.ropeIndex(j)][row.particles[j]][axis]>=0 {
@@ -580,12 +598,12 @@ struct RopeDynamicsSolver: Sendable {
         let solved=try factor.solve(rhs:rhs,borderRHS:borderRHS)
         var multipliers=Array(repeating:0.0,count:rows.count)
         for index in local {multipliers[index]=solved.base[rowVariables[index]!]}
-        for (offset,index) in borderRows.enumerated() {multipliers[index]=solved.border[offset+1]}
+        for (offset,index) in borderRows.enumerated() {multipliers[index]=solved.border[offset+3]}
         return (factor,variables,rowVariables,solved.base,solved.border,multipliers)
     }
 
     private func merit(_ candidate:RopeSimulationState,prediction:RopeSimulationState,weights:[[Double]],penalty:Double) throws -> Double {
-        var objective=0.5*state.boardMass*pow(candidate.boardHeight-prediction.boardHeight,2),violation=0.0
+        var objective=0.5*state.boardMass*simd_length_squared(candidate.boardTranslation-prediction.boardTranslation),violation=0.0
         for (r,rope) in candidate.ropes.enumerated() {
             for i in rope.positions.indices where weights[r][i]>0 {
                 objective += 0.5*simd_length_squared(rope.positions[i]-prediction.ropes[r].positions[i])/weights[r][i]

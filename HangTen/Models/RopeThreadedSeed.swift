@@ -20,20 +20,21 @@ enum RopeThreadedSeed {
             throw RopePhysicsError.invalid("Invalid seed profile or orientation")
         }
         let portalMap=Dictionary(uniqueKeysWithValues:input.portals.map{($0.id,$0)})
-        let cordPoints = Array(Set(profile.ropes.flatMap(\.nodes).compactMap { node -> SIMD3<Double>? in
-            if node.kind == "attachment" { return node.point }
-            return node.portalID.flatMap { portalMap[$0]?.center }
-        })).sorted {
-            if $0.x != $1.x { return $0.x < $1.x }
-            if $0.y != $1.y { return $0.y < $1.y }
-            return $0.z < $1.z
+        let reference = input.bodyReferencePoint
+        let supports = profile.ropes.flatMap(\.nodes).filter { $0.kind == "support" }.compactMap(\.point)
+        guard !supports.isEmpty else { throw RopePhysicsError.invalid("Missing seed supports") }
+        let supportCenter = supports.reduce(SIMD3<Double>.zero, +) / Double(supports.count)
+        // The local reference shifts with importer coordinates. Its initial world
+        // location derives from fixed supports, so changing the origin adds no motion.
+        let worldReference = SIMD3<Double>(supportCenter.x, 0, supportCenter.z)
+        func translation(_ height: Double) -> SIMD3<Double> {
+            worldReference + SIMD3(0, height, 0) - orientation.act(reference)
         }
-        let pivot = cordPoints.isEmpty ? SIMD3<Double>.zero : cordPoints.reduce(.zero, +) / Double(cordPoints.count)
         func worldPoint(_ point: SIMD3<Double>, height: Double) -> SIMD3<Double> {
-            orientation.act(point - pivot) + pivot + SIMD3(0, height, 0)
+            orientation.act(point) + translation(height)
         }
         func boardPoint(_ point: SIMD3<Double>, height: Double) -> SIMD3<Double> {
-            pivot + orientation.inverse.act(point - pivot - SIMD3(0, height, 0))
+            orientation.inverse.act(point - translation(height))
         }
         let up=orientation.inverse.act(SIMD3<Double>(0,1,0))
         let channelColliders=try RopeChannelColliderCache(channels:input.channels).matchingColliders(for:input.channels)
@@ -196,7 +197,10 @@ enum RopeThreadedSeed {
             var supports:[Int:SIMD3<Double>]=[:],attachments:[Int:SIMD3<Double>]=[:],portals:[Int:String]=[:]
             for (nodeIndex,pointIndex) in route.nodeIndices {
                 let node=route.rope.nodes[nodeIndex],particle=originalToParticle[pointIndex]!
-                if node.kind == "support" { supports[particle]=node.point! }
+                if node.kind == "support" {
+                    supports[particle]=node.point!
+                    positions[particle]=node.point!
+                }
                 else if node.kind == "attachment" { attachments[particle]=node.point! }
                 else { portals[particle]=node.portalID! }
             }
@@ -211,8 +215,8 @@ enum RopeThreadedSeed {
                 restLengths:rest,positions:positions,previousPositions:positions,velocities:Array(repeating:.zero,count:positions.count),
                 supports:supports,attachments:attachments,portals:portals,channelSegments:channels))
         }
-        var state=RopeSimulationState(profileID:profileID,boardMass:profile.boardMass,boardHeight:height,
-                                   boardVerticalVelocity:0,orientation:orientation,ropes:chains,rotationPivot:pivot)
+        var state=RopeSimulationState(profileID:profileID,boardMass:profile.boardMass,boardTranslation:translation(height),
+                                   boardLinearVelocity:.zero,orientation:orientation,ropes:chains)
         try RopePassageTopology.refresh(state:&state,input:input)
         return state
     }

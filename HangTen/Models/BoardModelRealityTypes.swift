@@ -190,6 +190,7 @@ final class BoardModelRealityScene {
     private var liveMeshes: [[LiveRopeMesh]] = []
     private var liveFrames: [RopeFrameSnapshot] = []
     private var liveBaseTransforms: [simd_float4x4] = []
+    private var liveMotionBounds: [BoardModelBounds] = []
     private var liveSubscription: EventSubscription?
     private var liveFailure: Error?
     private var liveActivity = true
@@ -873,6 +874,36 @@ final class BoardModelRealityScene {
             return simd_length(up-SIMD4<Float>(0,1,0,0))<1e-6
         }) else {throw BoardModelRealityError.invalidSuspension}
         for (index,profile) in profiles.enumerated() {
+            // Every cord point is within its declared material length of a
+            // fixed support. A bearing adds only its board-local distance to
+            // the numerical reference; this bounds translation on every axis.
+            let reference=physics.bodyReferencePoint
+            let bodyRadius=Self.boundsCorners(descriptor.modelBounds).map {
+                simd_length(SIMD3<Double>($0)-reference)
+            }.max() ?? 0
+            var motionLow=SIMD3<Double>(repeating:.infinity)
+            var motionHigh=SIMD3<Double>(repeating:-.infinity)
+            for rope in profile.ropes {
+                let bearingRadius=rope.nodes.compactMap {node -> Double? in
+                    if node.kind == "attachment",let point=node.point {return simd_distance(point,reference)}
+                    if let id=node.portalID,let portal=physics.portals.first(where:{$0.id == id}) {
+                        return portal.boundary.map {simd_distance($0,reference)}.max()
+                    }
+                    return nil
+                }.max()
+                guard let bearingRadius else {continue}
+                let supports=rope.nodes.filter {$0.kind == "support"}.compactMap(\.point)
+                // A closed sling with both ends at the same anchor can reach
+                // only half its total length from that anchor.
+                let closed=supports.count == 2 && simd_distance(supports[0],supports[1])<1e-10
+                let reach=rope.restLength*(closed ? 0.5:1)+bearingRadius+bodyRadius+rope.radius
+                for support in supports {
+                    motionLow=simd_min(motionLow,support-SIMD3(repeating:reach))
+                    motionHigh=simd_max(motionHigh,support+SIMD3(repeating:reach))
+                }
+            }
+            liveMotionBounds.append(BoardModelBounds(minimum:[motionLow.x,motionLow.y,motionLow.z],
+                maximum:[motionHigh.x,motionHigh.y,motionHigh.z]))
             let prepared = try await Task.detached(priority:.userInitiated) {
                 let collider=try RopeTriangleCollider(input:physics)
                 let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
@@ -946,12 +977,21 @@ final class BoardModelRealityScene {
         // while the board moves; refitting happens only at accepted rest.
         var low=minimum,high=maximum
         for (index,frame) in liveFrames.enumerated() {
-            let pivot=SIMD3<Float>(frame.rotationPivot)
-            let radius=Self.boundsCorners(descriptor.modelBounds).map {simd_length($0-pivot)}.max() ?? 0
-            let world=liveBaseTransforms[index]*SIMD4<Float>(pivot+SIMD3(0,Float(frame.boardHeight),0),1)
+            let reference=physics?.bodyReferencePoint ?? SIMD3<Double>(Self.boundsCenter(descriptor.modelBounds))
+            let centerInModel=SIMD3<Float>(reference)
+            let radius=Self.boundsCorners(descriptor.modelBounds).map {simd_length($0-centerInModel)}.max() ?? 0
+            let physicalCenter=SIMD3<Float>(frame.orientation.act(reference)+frame.boardTranslation)
+            let world=liveBaseTransforms[index]*SIMD4<Float>(physicalCenter,1)
             let center=SIMD3<Float>(world.x,world.y,world.z)
             low=simd_min(low,center-SIMD3(repeating:radius))
             high=simd_max(high,center+SIMD3(repeating:radius))
+            if liveMotionBounds.indices.contains(index),liveMotionBounds[index].minimum.allSatisfy(\.isFinite) {
+                for corner in Self.boundsCorners(liveMotionBounds[index]) {
+                    let translated=liveBaseTransforms[index]*SIMD4<Float>(corner,1)
+                    let point=SIMD3<Float>(translated.x,translated.y,translated.z)
+                    low=simd_min(low,point);high=simd_max(high,point)
+                }
+            }
         }
         if let framing=Self.framing(bounds:BoardModelBounds(minimum:[Double(low.x),Double(low.y),Double(low.z)],
             maximum:[Double(high.x),Double(high.y),Double(high.z)]),display:display) {

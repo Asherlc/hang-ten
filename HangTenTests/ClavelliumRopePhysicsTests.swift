@@ -14,7 +14,7 @@ final class ClavelliumRopePhysicsTests: XCTestCase {
             for i in state.ropes[0].positions.indices where state.ropes[0].supports[i] == nil {
                 state.ropes[0].positions[i].y += 0.00005*sin(Double(i))
             }
-            state.boardVerticalVelocity = -0.01
+            state.boardLinearVelocity = SIMD3(0, -0.01, 0)
         }
         return try RopeDynamicsSolver(input:input,state:state,collider:collider)
     }
@@ -44,7 +44,7 @@ final class ClavelliumRopePhysicsTests: XCTestCase {
         let input=try RopeThreadedSeedTests.clavellium(),collider=try RopeTriangleCollider(input:input)
         let state=try RopeThreadedSeed.make(input:input,profileID:"front",orientation:upright,collider:collider,
                                            placement:.apertureCenter)
-        let initial=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,boardHistory:[state.boardHeight])
+        let initial=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,boardHistory:[state.boardTranslation])
         XCTAssertTrue(initial.geometryAccepted)
         for crossing in state.ropes[0].portalCrossings.values {
             let local=state.boardPoint(crossing.point(in:state.ropes[0].positions))
@@ -78,15 +78,15 @@ final class ClavelliumRopePhysicsTests: XCTestCase {
         }
     }
 
-    func testXTiltAndReturnPreserveCordPivotAndThreading() throws {
+    func testXTiltAndReturnPreserveCordConstraints() throws {
         var solver = try solver()
-        let center = SIMD3<Double>(0, 0.0025, 0)
         let supports = solver.state.ropes.map(\.supports)
+        let rest = solver.state.ropes.map(\.restLengths)
         for angle in [Double.pi / 9, -Double.pi / 9, 0] {
             let target = simd_quatd(angle: angle, axis: SIMD3(1, 0, 0))
             let frame = try solver.settled(targetOrientation: target, maxDuration: 5)
             assertAccepted(frame)
-            XCTAssertLessThan(simd_distance(solver.state.worldPoint(center), center + SIMD3(0, frame.boardHeight, 0)), 1e-10)
+            XCTAssertEqual(solver.state.ropes.map(\.restLengths), rest)
             for (chain, fixed) in zip(solver.state.ropes, supports) {
                 for (index, point) in fixed {
                     XCTAssertEqual(chain.positions[index], point)
@@ -102,9 +102,9 @@ final class ClavelliumRopePhysicsTests: XCTestCase {
         var c=try halfStep.step(dt:1.0/480,targetOrientation:upright)
         for _ in 0..<2399 where !c.settled { c=try halfStep.step(dt:1.0/480,targetOrientation:upright) }
         assertAccepted(a);assertAccepted(b);assertAccepted(c)
-        XCTAssertEqual(a.boardHeight,b.boardHeight)
+        XCTAssertEqual(a.boardTranslation,b.boardTranslation)
         XCTAssertEqual(a.ropes[0].positions,b.ropes[0].positions)
-        XCTAssertLessThan(abs(a.boardHeight-c.boardHeight),0.0002)
+        XCTAssertLessThan(simd_distance(a.boardTranslation,c.boardTranslation),0.0002)
         for i in a.ropes[0].positions.indices {
             XCTAssertLessThan(simd_distance(a.ropes[0].positions[i],c.ropes[0].positions[i]),0.0002)
         }

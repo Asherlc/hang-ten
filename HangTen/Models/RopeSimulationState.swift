@@ -35,19 +35,16 @@ struct RopeChainState: Sendable {
 struct RopeSimulationState: Sendable {
     let profileID: String
     let boardMass: Double
-    var boardHeight: Double
-    var boardVerticalVelocity: Double
+    var boardTranslation: SIMD3<Double>
+    /// Velocity of the collision-bounds reference, independent of importer origin.
+    var boardLinearVelocity: SIMD3<Double>
     var orientation: simd_quatd
     var ropes: [RopeChainState]
-    /// Board-local center of its evidenced cord attachments/passages.
-    /// Height remains a gravity-driven degree of freedom at this pivot.
-    var rotationPivot: SIMD3<Double> = .zero
-
     func boardPoint(_ world: SIMD3<Double>) -> SIMD3<Double> {
-        rotationPivot + orientation.inverse.act(world - rotationPivot - SIMD3(0,boardHeight,0))
+        orientation.inverse.act(world - boardTranslation)
     }
     func worldPoint(_ board: SIMD3<Double>) -> SIMD3<Double> {
-        orientation.act(board - rotationPivot) + rotationPivot + SIMD3(0,boardHeight,0)
+        orientation.act(board) + boardTranslation
     }
 }
 

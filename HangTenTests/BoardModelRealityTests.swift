@@ -6,7 +6,7 @@ import simd
 
 final class BoardModelRealityTests: XCTestCase {
     @MainActor
-    func testRenderedXTiltSharesPhysicsCordPivot() async throws {
+    func testRenderedXTiltMatchesAcceptedRigidTransform() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "clavellium-training-block"))
         let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
         defer { scene.stopLiveRopes() }
@@ -20,9 +20,11 @@ final class BoardModelRealityTests: XCTestCase {
         let frame = try XCTUnwrap(scene.liveFramesForTesting.first)
         XCTAssertGreaterThan(frame.orientation.imag.x, 0.001)
         let body = try XCTUnwrap(scene.instanceEntities.first)
-        let center = body.transform.matrix * SIMD4<Float>(0, 0.0025, 0, 1)
-        XCTAssertEqual(center.y, 0.0025 + Float(frame.boardHeight), accuracy: 1e-7)
-        XCTAssertEqual(center.z, 0, accuracy: 1e-8)
+        for local in [SIMD3<Double>.zero, SIMD3(0, 0.0025, 0), SIMD3(0.02, 0.01, -0.03)] {
+            let rendered = body.transform.matrix * SIMD4<Float>(SIMD3<Float>(local), 1)
+            let physical = frame.orientation.act(local) + frame.boardTranslation
+            XCTAssertLessThan(simd_distance(SIMD3<Double>(Double(rendered.x), Double(rendered.y), Double(rendered.z)), physical), 1e-7)
+        }
         XCTAssertTrue(frame.metrics.geometryAccepted)
     }
 
@@ -77,7 +79,7 @@ final class BoardModelRealityTests: XCTestCase {
         XCTAssertNil(scene.transientCordEntity)
         XCTAssertTrue(scene.select(positionID:try XCTUnwrap(board.positions.first?.id)))
         XCTAssertNotNil(scene.transientCordEntity)
-        XCTAssertEqual(Double(try XCTUnwrap(scene.instanceEntities.first).position.y),frame.boardHeight,accuracy:1e-7)
+        XCTAssertEqual(Double(try XCTUnwrap(scene.instanceEntities.first).position.y),frame.boardTranslation.y,accuracy:1e-7)
         scene.stopLiveRopes()
     }
 
@@ -122,7 +124,7 @@ final class BoardModelRealityTests: XCTestCase {
                 })
                 XCTAssertEqual(Set(frame.ropes.map(\.id)), Set(expectedProfile.ropes.map(\.id)))
                 XCTAssertEqual(scene.instanceEntities[index].position.x,Float(instance.baseTransform.translation[0]),accuracy:1e-7)
-                XCTAssertEqual(scene.instanceEntities[index].position.y,Float(frame.boardHeight+0.02),accuracy:1e-7)
+                XCTAssertEqual(scene.instanceEntities[index].position.y,Float(frame.boardTranslation.y+0.02),accuracy:1e-7)
                 let tube=try XCTUnwrap(group.children[index] as? ModelEntity)
                 let mesh=try XCTUnwrap(tube.model?.mesh.lowLevelMesh)
                 let point=try XCTUnwrap(frame.ropes.first?.positions.first)
@@ -150,7 +152,7 @@ final class BoardModelRealityTests: XCTestCase {
         scene.setLiveActivity(false)
         scene.advanceLiveRopes(elapsed:100)
         try await Task.sleep(for:.milliseconds(50))
-        XCTAssertEqual(scene.liveFramesForTesting.first?.boardHeight,initial.boardHeight)
+        XCTAssertEqual(scene.liveFramesForTesting.first?.boardTranslation.y,initial.boardTranslation.y)
         scene.configureLiveMotion(reduceMotion:true,displayOnly:false)
         scene.setLiveActivity(true)
         scene.advanceLiveRopes(elapsed:1.0/60)

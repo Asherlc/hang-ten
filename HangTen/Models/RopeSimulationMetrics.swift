@@ -7,16 +7,11 @@ struct RopeChainSnapshot: Sendable {
 }
 
 struct RopeFrameSnapshot: Sendable {
-    let boardHeight: Double
+    let boardTranslation: SIMD3<Double>
     let orientation: simd_quatd
     let ropes: [RopeChainSnapshot]
     let settled: Bool
     let metrics: RopeSimulationMetrics
-    let rotationPivot: SIMD3<Double>
-
-    var boardTranslation: SIMD3<Double> {
-        rotationPivot - orientation.act(rotationPivot) + SIMD3(0, boardHeight, 0)
-    }
 }
 
 /// Immutable native-channel BVHs, bound to all authored region geometry.
@@ -113,8 +108,8 @@ struct RopeSimulationMetrics: Sendable {
     }
 
     static func measure(state:RopeSimulationState,input:RopePhysicsInput,collider:RopeTriangleCollider,
-                        boardHistory:[Double],includeSelfContact:Bool=true,channelCache:RopeChannelColliderCache?=nil) throws -> Self {
-        var totalError=0.0,strain=0.0,clearance=Double.infinity,topology=true,speed=abs(state.boardVerticalVelocity)
+                        boardHistory:[SIMD3<Double>],includeSelfContact:Bool=true,channelCache:RopeChannelColliderCache?=nil) throws -> Self {
+        var totalError=0.0,strain=0.0,clearance=Double.infinity,topology=true,speed=simd_length(state.boardLinearVelocity)
         var failure:String?
         var margin=Double.infinity
         let portals=Dictionary(uniqueKeysWithValues:input.portals.map{($0.id,$0)})
@@ -162,7 +157,12 @@ struct RopeSimulationMetrics: Sendable {
                 }
             }
         }
-        let displacement=(boardHistory.max() ?? state.boardHeight)-(boardHistory.min() ?? state.boardHeight)
+        var displacement = 0.0
+        for i in boardHistory.indices {
+            for j in boardHistory.indices where j > i {
+                displacement = max(displacement, simd_distance(boardHistory[i], boardHistory[j]))
+            }
+        }
         return Self(totalLengthError:totalError,maximumLocalStrain:strain,minimumSegmentClearance:clearance,minimumClearanceMargin:margin,
                     topologyValid:topology,topologyFailure:failure,maximumSpeed:speed,boardDisplacement:displacement)
     }
