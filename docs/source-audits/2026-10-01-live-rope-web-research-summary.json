@@ -1,0 +1,298 @@
+{
+  "owner": "strong-owl-live-physics",
+  "status": "research-complete; no solver adoption",
+  "baseCommit": "b5e50eb4397503baa858bf47580bbbdaf4536870",
+  "primaryDownloadsVerified": 21,
+  "parsedPapers": {
+    "avbd": 12,
+    "direct-rods": 12,
+    "small-steps": 7,
+    "newton": 21,
+    "primal-dual": 12,
+    "ftl": 6
+  },
+  "referenceCommit": "7701bd427d55ca5d03ea1fdf331912ded9169f4b",
+  "downloadedCodeExecuted": false,
+  "physicalOrNumericalGatesChanged": false,
+  "cleanup": {
+    "owner": "strong-owl-live-physics",
+    "pids": [
+      41393,
+      41387,
+      39290
+    ],
+    "allAbsent": true,
+    "workerGroups": 1,
+    "servers": 0,
+    "tunnels": 0,
+    "simulators": 0,
+    "nativePhysicsRuns": 0
+  },
+  "files": [
+    {
+      "path": ".context/strong-owl-live-physics-inexact-outer/clav-inexact-step-exact-restoration/report.json",
+      "sha256": "e967026e476ae29df8bef605ccc2948a10649ecb458294faff2f6c0081bfe0c2",
+      "bytes": 314132
+    },
+    {
+      "path": ".context/strong-owl-live-physics-solver-foundation/clav-contact-step/checkpoint.json",
+      "sha256": "cad349812c3c0c33384378fe368abff97411f2a0c9aeb385d99edebef151c464",
+      "bytes": 122445
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/advisor-review.md",
+      "sha256": "df50d390c624248ef3e518347c41d202a78c075e60044405f8c7f0a57bc3f4a6",
+      "bytes": 1909
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/avbd-LICENSE",
+      "sha256": "29e4d75ef49307d8462145b1e685af43042fee6fa23b34f6599ee68bda096322",
+      "bytes": 1067
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/avbd-README.md",
+      "sha256": "0442a37d091c3cf154180a9494a95fc0a53f6b6ab3845f4a9edd748d5efe05d5",
+      "bytes": 1008
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/avbd-commit.json",
+      "sha256": "3712a7e7df059a34528fa8c3453b31039b9ebefe3a3a8efd083deeea3cdb21d9",
+      "bytes": 5353
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/avbd-force.cpp",
+      "sha256": "5fc4c05e7d6cadcd8f141d8d2bd069b66ecc78fdde4a854a8142b55c8f99d8e4",
+      "bytes": 1388
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/avbd-joint.cpp",
+      "sha256": "b178ecc07806158fe84d293c4adbec4a04618f01943c840413ddb1b515674f54",
+      "bytes": 6382
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/avbd-manifold.cpp",
+      "sha256": "33f867a56e4c0a2bedd49fd62b8044f57fe119ba544ed51d56a45532ac6c45bc",
+      "bytes": 6771
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/avbd-project.html",
+      "sha256": "602525cc0a21b32b71d742ea38be27f68d6672b7c6968397a2ac44c21a5d3aac",
+      "bytes": 10265
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/avbd-solver.cpp",
+      "sha256": "4fac67f066ff14ee0031d0bf5cb2114bcc59ab350af6531ebfdba3fb3f2df99e",
+      "bytes": 7978
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/avbd-solver.h",
+      "sha256": "abe33fc92b7e9d8ac176038a90d2a4943e760f86cbb91000a0bd299e35352acb",
+      "bytes": 5863
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/avbd-spring.cpp",
+      "sha256": "7dd884794de15ec3d5552e0ef7fbfeec36ba535953b7af8ef455593282e3c806",
+      "bytes": 2014
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/avbd-tree.json",
+      "sha256": "d96551e635bb0a6f9d9c123651afa87f91d7c018ed0cd10ab09ba56bc64c31b1",
+      "bytes": 4684
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/avbd.pdf",
+      "sha256": "7957d116b9130cfb0aa5a48ab7cd0d74a64ad79f75c99acd291bdece2be3f2d6",
+      "bytes": 13803273
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/avbd.txt",
+      "sha256": "25fd84bb19290a2893e6dff5cd9bd8bc80947c0875da17cdd2cf147d46363b5a",
+      "bytes": 68143
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/cleanup-verification.json",
+      "sha256": "c645a6e3e2cd57b0ac53a171398c1b9a2aedaa51ec13793052fcce4dae494222",
+      "bytes": 209
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/collect_reference.py",
+      "sha256": "40fc49f2422539b894fc98785b0056df6694438cb62900627c7d01b1e58e22e9",
+      "bytes": 1454
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/collect_sources.py",
+      "sha256": "62f47e18a8f0586560881a34575e294a6e0f03aade89ebec7d61784f2479c3eb",
+      "bytes": 3223
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/collector-ownership.json",
+      "sha256": "687a0d9077fd7dacb308c7e1522538d64a94056dfc23b1f2b9e84459dc6711d8",
+      "bytes": 85
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/direct-rods.pdf",
+      "sha256": "6c651871808deb6a6ee24e1b754c0bf40b9bd228fae01a09127f76b38ec39cc4",
+      "bytes": 2590788
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/direct-rods.txt",
+      "sha256": "f50586747c2b723e843aa81f7fa2bca3bc86ef3120032457afb840a8ed84516e",
+      "bytes": 60560
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/driver-resources.jsonl",
+      "sha256": "48c1b1dffa48238e734cca522015531a3b284922052ba840b1214fe8301a2c87",
+      "bytes": 153
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/extract.swift",
+      "sha256": "be6a51b5ebf9393d15d1260f5e7b1c09a80e32ff4b6a3697450baee78b700043",
+      "bytes": 668
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/extract_owned.py",
+      "sha256": "a7911dd69d64006dd2bab73f4bb07f92d10bc1851123434e890029da55cf553f",
+      "bytes": 894
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/extract_owned.sh",
+      "sha256": "a8c2c89634cf30a1056aa7f5b06717fd922b638185055e3fe56e1d289881307a",
+      "bytes": 661
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/extraction.log",
+      "sha256": "510127baae1fe955afb3baa9f518d7eb4d109fb355c4bab00d5b1c37db1fcc6f",
+      "bytes": 200
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/ftl.pdf",
+      "sha256": "a7ebdc5e8c5409fcaef3079e3225ad312dddba4c6283cc85654deb90ae0418a7",
+      "bytes": 4463957
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/ftl.txt",
+      "sha256": "8b720f367104112507c51fec67470a5d61c2b441c197bd8360b69fdcf66c647e",
+      "bytes": 25374
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/multilayer-project.html",
+      "sha256": "c8d6170e79b67df9bb8add7aeeb58d348bee17bb022083168b27d5eed2679821",
+      "bytes": 18895
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/multilayer.pdf",
+      "sha256": "a58ad0f0aef94ad3aaee90cb8cc85a47589b98e28db857393c75eb1299e035f4",
+      "bytes": 3276334
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/newton.pdf",
+      "sha256": "9d9a76004ecd77eb9dad5756ce13350091a67c5f0b3f0ea64154ce3633427965",
+      "bytes": 7897809
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/newton.txt",
+      "sha256": "b4eaa40159f7fe2419e5847b04eaec976dfa0e247aeba7fb14e013252b377935",
+      "bytes": 102258
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/physx-collision.html",
+      "sha256": "8c4da059c15d36c67b63bb97a62b8744bb8889a0d25ef062345519882324da62",
+      "bytes": 114847
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/physx-dynamics.html",
+      "sha256": "291bfd4e9387dfe741242b3b7875199f49df71fce6d2f88d95e92423223ff35a",
+      "bytes": 93670
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/primal-dual.pdf",
+      "sha256": "f0c496292044b09c4d3b0dfe080243bac73eeb0526903fb12cdf31ab9a1df350",
+      "bytes": 18180746
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/primal-dual.txt",
+      "sha256": "225c6ba0589f1056054f0ef59fd6950463a537fe270d4dabba96bc30254c0231",
+      "bytes": 55898
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/reference-sources.json",
+      "sha256": "4e950a4ca2b71b3ded7e9eacd89e94dc396379057257e683826238a0a33f6906",
+      "bytes": 2617
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/resources.jsonl",
+      "sha256": "6bc4fd7b18a4a28707f0c1bb9226ab8132e22bbe908821ea7b27b6a2f8ff6bc3",
+      "bytes": 715
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/small-steps.pdf",
+      "sha256": "658cb1428a7c34af6419a59fcb1652f25dd8f6cca9472687b337ed9f2f0efca8",
+      "bytes": 8208308
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/small-steps.txt",
+      "sha256": "9481dd8b31d498db17e3789e8d0ad74a54b1af0d144da50caeeca56c4a822cda",
+      "bytes": 38706
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/sources.json",
+      "sha256": "f76b8b3506bcf6da5a212862beab754f6e2cb9fdc97c858e3758918495209ddd",
+      "bytes": 4944
+    },
+    {
+      "path": ".context/strong-owl-live-physics-web-research/verify_research.py",
+      "sha256": "fd24cac96d86ce273c9133d3eb4f0a9a1fa504b7ba97cb0232d238ee268c6ffc",
+      "bytes": 4217
+    },
+    {
+      "path": "HangTen/Models/RopeContactSystem.swift",
+      "sha256": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+      "bytes": 10571
+    },
+    {
+      "path": "HangTen/Models/RopeDynamicsSolver.swift",
+      "sha256": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+      "bytes": 46547
+    },
+    {
+      "path": "HangTen/Models/RopeSimulationState.swift",
+      "sha256": "915a55c8422030a3efeb5c449fc9b085b3a24b612d7766a3ba8745e0670514c8",
+      "bytes": 8317
+    },
+    {
+      "path": "HangTen/Models/RopeTriangleCollider.swift",
+      "sha256": "e7f16b650115842ae0eeac5d209c692992ff0c29fda7cb557184337654033b1d",
+      "bytes": 23949
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/native_contact/BlockImpulse.swift",
+      "sha256": "76ca73c18fa6593e0de8e649aa1b35e1fcc701fd077c088d58917ff97e92219b",
+      "bytes": 6472
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/run_native_contact_screen.py",
+      "sha256": "b6940301d49a7db8e5dfc6d4db9c8e031db62e78993ac3012f7596655a2a897e",
+      "bytes": 23271
+    },
+    {
+      "path": "docs/source-audits/2026-09-30-live-affine-schur-contact.md",
+      "sha256": "59eaf813c253839ed7389d928bc0db9b9f306131d8665f044bb3e505665976ce",
+      "bytes": 7116
+    },
+    {
+      "path": "docs/source-audits/2026-10-01-live-inexact-outer.md",
+      "sha256": "48631c059d4009828eae9886e6fc53d2ae1c449f61c4c0a27e7412d250fba7c3",
+      "bytes": 8016
+    },
+    {
+      "path": "docs/source-audits/2026-10-01-live-rope-web-research.md",
+      "sha256": "2cc98ef05f0c616a59124177737e84f126fd286358190616e7e6933ac7b80a85",
+      "bytes": 13506
+    },
+    {
+      "path": "docs/source-audits/2026-10-01-live-solver-foundation.md",
+      "sha256": "a1dd6efe5369a0c432000af8c27a39a5c12ccb53e23d5300837289cc6a50312f",
+      "bytes": 8126
+    }
+  ]
+}
