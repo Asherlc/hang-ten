@@ -73,6 +73,17 @@ struct RopeTriangleCollider: Sendable {
                 for next in neighbors[face] where visited.insert(next).inserted {pending.append(next)}
             }
             shells.append(shell)
+            guard shells.count<=256 else {throw RopePhysicsError.invalid("Excessive disconnected collision shells")}
+        }
+        let shellBounds=shells.map { shell -> (minimum:SIMD3<Double>,maximum:SIMD3<Double>) in
+            var minimum=SIMD3<Double>(repeating:.infinity),maximum=SIMD3<Double>(repeating: -.infinity)
+            for id in shell {
+                let face=mesh.triangles[id]
+                for vertex in [face.x,face.y,face.z] {
+                    minimum=simd_min(minimum,mesh.vertices[vertex]);maximum=simd_max(maximum,mesh.vertices[vertex])
+                }
+            }
+            return (minimum,maximum)
         }
         func enclosed(_ point:SIMD3<Double>,by shell:[Int]) throws ->Bool {
             var angle=0.0
@@ -101,6 +112,11 @@ struct RopeTriangleCollider: Sendable {
             }
             var depth=0
             for other in shells.indices where other != index {
+                let bounds=shellBounds[other]
+                // Enclosure is impossible outside a shell's bounds. Combined
+                // with the shell cap, even overlapping bounds permit at most
+                // 255 full scans of each face, never an unbounded shell product.
+                guard (0..<3).allSatisfy({sample[$0]>=bounds.minimum[$0] && sample[$0]<=bounds.maximum[$0]}) else {continue}
                 if try enclosed(sample,by:shells[other]) {depth += 1}
             }
             guard signedVolume.isFinite,(depth%2 == 0 ? signedVolume>0:signedVolume<0) else {
@@ -267,10 +283,32 @@ struct RopeTriangleCollider: Sendable {
             let middle=(a+b)/2,distance=signedDistance(at:middle),halfLength=simd_distance(a,b)/2
             guard distance.isFinite,distance<=tolerance else{return false}
             if distance+halfLength<=tolerance {continue}
+            if abs(distance)<=tolerance && boundaryTubeContainsSegment(from:a,to:b,tolerance:tolerance) {continue}
             guard depth<32 else{return false}
             pending.append((a,middle,depth+1));pending.append((middle,b,depth+1))
         }
         return true
+    }
+
+    /// A triangle plus a closed tolerance ball is convex. If both endpoints
+    /// lie in that set, the whole chord does too, so every point is within the
+    /// existing allowed distance of the boundary. This triangle-based certificate
+    /// avoids dense Lipschitz subdivision along flat channel walls.
+    private func boundaryTubeContainsSegment(from start:SIMD3<Double>,to end:SIMD3<Double>,tolerance:Double)->Bool {
+        let squaredTolerance=tolerance*tolerance
+        var pending=[0]
+        while let index=pending.popLast() {
+            let node=tree[index]
+            guard Self.boxDistanceSquared(start,node.minimum,node.maximum)<=squaredTolerance,
+                  Self.boxDistanceSquared(end,node.minimum,node.maximum)<=squaredTolerance else {continue}
+            if node.left>=0 {pending.append(node.left);pending.append(node.right);continue}
+            for id in node.faces {
+                let face=mesh.triangles[id],a=mesh.vertices[face.x],b=mesh.vertices[face.y],c=mesh.vertices[face.z]
+                guard simd_length_squared(start-Self.triangleClosest(start,a,b,c))<=squaredTolerance else {continue}
+                if simd_length_squared(end-Self.triangleClosest(end,a,b,c))<=squaredTolerance {return true}
+            }
+        }
+        return false
     }
 
     private func contains(_ point: SIMD3<Double>) -> Bool {

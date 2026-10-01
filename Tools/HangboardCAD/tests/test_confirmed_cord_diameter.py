@@ -8,6 +8,7 @@ import pytest
 
 ROOT=Path(__file__).resolve().parents[3]
 TOOLS=ROOT/"Tools/HangboardCAD"
+FREECAD = Path(os.environ.get("HANGTEN_FREECAD_CMD", "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd"))
 
 def test_mini_bar_uses_the_confirmed_seven_mm_cord():
     document=json.loads((ROOT/"Hangboards/lattice-mini-bar/suspension.json").read_text())
@@ -42,7 +43,7 @@ def test_exported_contact_regions_leave_the_native_cord_mouths_open():
     assert all(point[2] < mouths[ray, 2] - depth / 2 for point, ray in zip(hits, rays)), "Contact overlays must not cap the actual bore openings"
 
 
-@pytest.mark.skipif(not Path("/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd").is_file(),reason="FreeCAD unavailable")
+@pytest.mark.skipif(not FREECAD.is_file(),reason="FreeCAD unavailable")
 def test_curved_channel_section_recovers_a_connected_bearing_outline(tmp_path):
     pytest.importorskip("trimesh")
     pytest.importorskip("rtree")
@@ -56,7 +57,7 @@ def test_curved_channel_section_recovers_a_connected_bearing_outline(tmp_path):
     environment=dict(os.environ,HANGTEN_ROPE_PACKAGE="lattice-mini-bar",
                      HANGTEN_ROPE_SOLID_FEATURE="RightCordChannel",
                      HANGTEN_ROPE_SOLID_OUTPUT=str(solid))
-    run=subprocess.run([sys.executable,str(TOOLS/"run_freecad.py"),str(TOOLS/"export_rope_collision_solid.py")],cwd=ROOT,env=environment,capture_output=True,text=True,timeout=60)
+    run=subprocess.run([sys.executable,str(TOOLS/"run_freecad.py"), "--freecad", str(FREECAD),str(TOOLS/"export_rope_collision_solid.py")],cwd=ROOT,env=environment,capture_output=True,text=True,timeout=60)
     assert run.returncode == 0,run.stdout+run.stderr
     data=json.loads(solid.read_text())
     mesh=trimesh.Trimesh(vertices=data["vertices"],faces=data["triangles"],process=False)
@@ -66,7 +67,7 @@ def test_curved_channel_section_recovers_a_connected_bearing_outline(tmp_path):
     assert outline.is_valid and outline.geom_type == "Polygon" and not outline.interiors
     assert not outline.contains(Point(.024,.067183))
 
-@pytest.mark.skipif(not Path("/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd").is_file(),reason="FreeCAD unavailable")
+@pytest.mark.skipif(not FREECAD.is_file(),reason="FreeCAD unavailable")
 def test_mini_bar_native_passages_fit_seven_mm_without_changing_board_scale(tmp_path):
     script=tmp_path/"confirmed-diameter.py"
     script.write_text('''import FreeCAD as App
@@ -81,5 +82,5 @@ assert body.isValid() and len(body.Solids)==1
 assert abs(body.BoundBox.XLength-155)<1e-7
 App.closeDocument(d.Name)
 ''')
-    run=subprocess.run([sys.executable,str(TOOLS/"run_freecad.py"),str(script)],cwd=ROOT,capture_output=True,text=True,timeout=60)
+    run=subprocess.run([sys.executable,str(TOOLS/"run_freecad.py"), "--freecad", str(FREECAD),str(script)],cwd=ROOT,capture_output=True,text=True,timeout=60)
     assert run.returncode == 0,run.stdout+run.stderr

@@ -5,6 +5,39 @@ import simd
 #endif
 
 final class RopeDynamicsSolverTests: XCTestCase {
+    func testImmovableContactUsesBoundedRetryAndRollsBack() throws {
+        let upright = simd_quatd(angle: 0, axis: SIMD3<Double>(0, 0, 1))
+        let mesh = RopeTriangleColliderTests.box()
+        let points = [SIMD3<Double>(0.9, 0, 0), SIMD3<Double>(0.9, 0.1, 0)]
+        let nodes = points.enumerated().map { index, point in
+            RopeGraphNode(id: "support-\(index)", kind: "support", point: point, portalID: nil)
+        }
+        let rope = RopePhysicsRope(id: "fixed", baselineRadius: 0.0035, radius: 0.0035,
+            restLength: 0.1, linearMass: 0.01, nodes: nodes,
+            edges: [RopeGraphEdge(from: nodes[0].id, to: nodes[1].id, kind: "free", channelID: nil, winding: nil)])
+        let profile = RopePhysicsProfile(id: "test", presentationID: "test", instanceID: nil, boardMass: 1, ropes: [rope])
+        let input = RopePhysicsInput(modelSHA256: "test", sourceSHA256: "test", collision: mesh,
+            portals: [], channels: [], profiles: [profile])
+        let chain = RopeChainState(id: rope.id, radius: rope.radius, linearMass: rope.linearMass,
+            restLengths: [0.1], positions: points, previousPositions: points, velocities: [.zero, .zero],
+            supports: [0: points[0], 1: points[1]], attachments: [:], portals: [:], channelSegments: [:])
+        let state = RopeSimulationState(profileID: profile.id, boardMass: 1, boardHeight: 0,
+            boardVerticalVelocity: 0, orientation: upright, ropes: [chain])
+        var solver = try RopeDynamicsSolver(input: input, state: state, collider: RopeTriangleCollider(mesh: mesh))
+        // Both endpoints are fixed inside wood. Their nearest wall normal is
+        // horizontal, so neither rope motion nor board height can correct it.
+        // Failure must exhaust the existing four retry levels, never publish.
+        XCTAssertThrowsError(try solver.step(dt: 1.0 / 240, targetOrientation: upright)) { error in
+            guard case RopePhysicsError.invalid(let reason) = error else {
+                return XCTFail("Expected bounded nonlinear failure, got \(error)")
+            }
+            XCTAssertEqual(reason, "Bounded solve could not resolve nonlinearConvergence")
+        }
+        XCTAssertEqual(solver.state.boardHeight, state.boardHeight)
+        XCTAssertEqual(solver.state.ropes[0].positions, points)
+        XCTAssertEqual(solver.state.boardVerticalVelocity, state.boardVerticalVelocity)
+    }
+
     func testConnectedNeighborhoodRejectsCrossingAtEarlierSegmentEndpoint() {
         let points: [SIMD3<Double>] = [SIMD3(-0.002, 0, 0), .zero,
             SIMD3(0, 0.001, 0), SIMD3(0, -0.001, 0)]

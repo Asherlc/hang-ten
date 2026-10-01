@@ -139,3 +139,15 @@ def test_nested_json_fails_closed(tmp_path):
     path.write_text("[" * depth + "0" + "]" * depth)
     with pytest.raises(ValueError, match="JSON"):
         load_rope_physics(path, MODEL_SHA)
+
+
+@pytest.mark.parametrize("field", ["restLength", "radius"])
+def test_huge_json_integer_fails_with_value_error(tmp_path, field):
+    document = physics_fixture()
+    document["profiles"][0]["ropes"][0][field] = 10 ** 400
+    with pytest.raises(ValueError, match="finite"):
+        validate_rope_physics(document, MODEL_SHA)
+    path = tmp_path / "integer-overflow.physics.json"
+    path.write_text(json.dumps(document))
+    with pytest.raises(ValueError, match="finite"):
+        load_rope_physics(path, MODEL_SHA)

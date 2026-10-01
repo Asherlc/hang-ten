@@ -5,6 +5,41 @@ import simd
 #endif
 
 final class RopeTriangleColliderTests: XCTestCase {
+    func testDisconnectedShellBudgetFailsClosedAndDisjointBoundsRemainValid() throws {
+        func boxes(_ count: Int) -> RopeCollisionMesh {
+            var vertices: [SIMD3<Double>] = [], triangles: [SIMD3<Int>] = []
+            for index in 0..<count {
+                let origin = Double(index) * 3
+                let box = Self.box(minimum: SIMD3(origin, 0, 0), maximum: SIMD3(origin + 1, 1, 1))
+                let offset = vertices.count
+                vertices += box.vertices
+                triangles += box.triangles.map { $0 &+ SIMD3(repeating: offset) }
+            }
+            return RopeCollisionMesh(vertices: vertices, triangles: triangles)
+        }
+        XCTAssertNoThrow(try RopeTriangleCollider(mesh: boxes(256)))
+        XCTAssertThrowsError(try RopeTriangleCollider(mesh: boxes(257))) { error in
+            guard case RopePhysicsError.invalid(let reason) = error else {
+                return XCTFail("Expected bounded shell rejection, got \(error)")
+            }
+            XCTAssertEqual(reason, "Excessive disconnected collision shells")
+        }
+    }
+
+    func testLongNearWallChordsCertifyWithoutIncreasingContainmentBudget() throws {
+        let collider = try RopeTriangleCollider(mesh: Self.box())
+        // A two-metre chord on the triangulated face exhausted the old
+        // 16,384-query Lipschitz-only search; its triangle tubes certify it.
+        for distance in [0.0, 0.000009, -0.000009] {
+            XCTAssertTrue(collider.containsSegment(
+                from: SIMD3(-1, 1 + distance, 0), to: SIMD3(1, 1 + distance, 0)))
+        }
+        XCTAssertFalse(collider.containsSegment(
+            from: SIMD3(-1, 1.000011, 0), to: SIMD3(1, 1.000011, 0)))
+        XCTAssertFalse(collider.containsSegment(
+            from: SIMD3(-1, 1, 0), to: SIMD3(1, 1.1, 0)))
+    }
+
     func testDisconnectedShellOrientationAndNestedCavityOrientation() throws {
         let outer = Self.box()
         let separate = Self.box(minimum: SIMD3(2, -0.25, -0.25), maximum: SIMD3(2.5, 0.25, 0.25))

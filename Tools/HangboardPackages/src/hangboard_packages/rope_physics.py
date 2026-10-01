@@ -17,11 +17,17 @@ def _closed(value, required, optional=()):
 
 
 def _number(value, name, positive=False):
-    if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value):
+    if isinstance(value, bool) or not isinstance(value, (float, int)):
+        raise ValueError(f"{name} must be finite")
+    try:
+        value = float(value)
+    except OverflowError as error:
+        raise ValueError(f"{name} must be finite") from error
+    if not math.isfinite(value):
         raise ValueError(f"{name} must be finite")
     if positive and value <= 0:
         raise ValueError(f"{name} must be positive")
-    return float(value)
+    return value
 
 
 def _vector(value):

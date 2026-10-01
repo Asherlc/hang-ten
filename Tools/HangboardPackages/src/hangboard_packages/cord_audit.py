@@ -24,7 +24,7 @@ from .board_catalog import (
 
 
 _DECISIONS = frozenset({"represented", "excluded"})
-_TOPOLOGIES = frozenset({"singleCord", "pairedLeadCord", "twoBranchCord"})
+_TOPOLOGIES = frozenset({"singleCord", "pairedLeadCord", "twoBranchCord", "threadedLoopCord"})
 _SOURCE_FACTS = frozenset({"documentedSuspension", "noDocumentedSuspension"})
 _SOURCE_TIERS = frozenset({"independent", "manufacturer", "manufacturer-instruction", "retailer"})
 _SHA256 = re.compile(r"^[0-9a-fA-F]{64}$")
@@ -370,7 +370,7 @@ def _suspension_topology(suspension: object | None) -> str | None:
     if isinstance(suspension, BoardModelPairedLeadCord):
         return "pairedLeadCord"
     if isinstance(suspension, BoardModelTwoBranchSuspension):
-        return "twoBranchCord"
+        return "threadedLoopCord" if suspension.internal_loop_channel_points_by_branch_id is not None else "twoBranchCord"
     raise CordAuditError("model package has unsupported suspension topology")
 
 

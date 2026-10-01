@@ -412,6 +412,7 @@ struct RopeDynamicsSolver: Sendable {
                         multipliers:contactIDs.map{allMultipliers[$0]},activeIDs:contactIDs.indices.filter{active.contains(contactIDs[$0])})
                 })
         } catch RopeContactSystem.Failure.iterationLimit {throw StepFailure.nonlinearConvergence}
+          catch RopeContactSystem.Failure.infeasible {throw StepFailure.nonlinearConvergence}
         var particles=state.ropes.map{Array(repeating:SIMD3<Double>.zero,count:$0.positions.count)}
         for r in weights.indices {for i in weights[r].indices where weights[r][i]>0 {
             let v=variables[r][i];particles[r][i]=SIMD3(solved.base[v.x],solved.base[v.y],solved.base[v.z])

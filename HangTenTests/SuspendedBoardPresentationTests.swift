@@ -14,7 +14,9 @@ final class SuspendedBoardPresentationTests: XCTestCase {
             return XCTFail("expected model presentation")
         }
         let instances = try XCTUnwrap(media.instances)
-        XCTAssertEqual(instances.count, scene.instanceEntities.count)
+        guard instances.count == scene.instanceEntities.count else {
+            return XCTFail("instance count mismatch")
+        }
         for (entity, authored) in zip(scene.instanceEntities, instances) {
             // Contacts mapped to this equipment object must belong to this clone.
             for contactID in authored.contactIDsBySlotID.values {
@@ -100,6 +102,33 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         pose.cordContactPoints = nil
         XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
             pose: pose, suspension: profile, bounds: media.descriptor.modelBounds))
+    }
+
+    func testRockRingLoopTraversesChannelBetweenFreeSpans() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.rock-rings-3d"))
+        guard case .model(let media) = board.defaultPresentation.media else {
+            return XCTFail("expected reusable Rock Rings")
+        }
+        for instance in try XCTUnwrap(media.instances) {
+            guard case .twoBranchCord(let profile) = instance.suspension else {
+                return XCTFail("expected threaded loop")
+            }
+            let pose = try XCTUnwrap(profile.canonicalPoses["primary"])
+            let solution = try SuspendedBoardPresentation.solveInstance(
+                pose: pose, suspension: .twoBranchCord(profile), bounds: media.descriptor.modelBounds,
+                transform: matrix_identity_float4x4)
+            guard case .twoBranch(let solved) = solution else { return XCTFail("expected loop solution") }
+            let branch = try XCTUnwrap(solved.branches.first)
+            XCTAssertEqual(branch.spans.count, 3)
+            guard branch.spans.count == 3 else { continue }
+            XCTAssertEqual(branch.spans[0].last, branch.spans[1].first)
+            XCTAssertEqual(branch.spans[1].last, branch.spans[2].first)
+            XCTAssertEqual(branch.spans[0].first, solved.fixedAnchor)
+            XCTAssertEqual(branch.spans[2].last, solved.fixedAnchor)
+            XCTAssertTrue(branch.spans[1].allSatisfy { branch.centerlineSamples.contains($0) })
+            XCTAssertTrue(branch.spans.flatMap { $0 }.allSatisfy { solved.cameraFraming.contains($0) })
+            XCTAssertEqual(branch.arcLength, Float(profile.branches[0].restLength), accuracy: 1e-5)
+        }
     }
 
     func testMiniBarInternalLoopSolvesFourLeadsForEveryGripPose() throws {

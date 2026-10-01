@@ -208,7 +208,15 @@ def pair_clearance(first, second, shared_anchor=True, knot_radius=0):
             origin = a-route[0]
             aa = np.dot(direction,direction)
             bb = np.dot(origin,direction)
-            t = (-bb + math.sqrt(bb*bb - aa*(np.dot(origin,origin)-knot_radius*knot_radius))) / aa
+            cc = np.dot(origin,origin)-knot_radius*knot_radius
+            discriminant = bb*bb-aa*cc
+            scale = max(bb*bb, abs(aa*cc), aa*knot_radius*knot_radius)
+            # norm and dot may disagree by an ulp at the sphere boundary.
+            # Clamp roundoff only; invalid or overflowing quadratics fail closed.
+            tolerance = 32*np.finfo(float).eps*scale
+            if not all(math.isfinite(value) for value in [aa,bb,cc,discriminant,scale]) or aa <= 0 or discriminant < -tolerance:
+                raise ValueError('invalid exterior knot intersection')
+            t = float(np.clip((-bb + math.sqrt(max(discriminant,0.0))) / aa, 0, 1))
             return np.vstack([a+t*direction, route[index:]])
         first, second = outside_knot(first), outside_knot(second)
     u = (first[1:] - first[:-1])[:, None, :]
@@ -285,7 +293,11 @@ def solve_pair(mesh, anchor, endpoints, radius, approaches, additional_clearance
     best = None
     for left in candidates[0]:
         for right in candidates[1]:
-            if pair_clearance(left[1],right[1], knot_radius=4*radius) < 2*radius+additional_clearance:
+            try:
+                pair_gap = pair_clearance(left[1],right[1], knot_radius=4*radius)
+            except ValueError:
+                continue
+            if pair_gap < 2*radius+additional_clearance:
                 continue
             length = left[0]+right[0]
             if best is None or length < best[0]:

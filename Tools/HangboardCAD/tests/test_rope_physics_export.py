@@ -1,5 +1,6 @@
 """Physics geometry comes from the watertight CAD solid and editable channel."""
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -7,7 +8,8 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[3]
 TOOLS = ROOT / "Tools/HangboardCAD"
-pytestmark = pytest.mark.skipif(not Path("/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd").is_file(), reason="FreeCAD unavailable")
+FREECAD = Path(os.environ.get("HANGTEN_FREECAD_CMD", "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd"))
+pytestmark = pytest.mark.skipif(not FREECAD.is_file(), reason="FreeCAD unavailable")
 
 
 def test_native_cylinder_bores_export_complete_circular_apertures(tmp_path):
@@ -37,7 +39,7 @@ for channel in a["channels"]:
   assert .00349 < portal_clearance_radius(p) <= .0035
 App.closeDocument(d.Name)
 ''')
-    run=subprocess.run([sys.executable,str(TOOLS/"run_freecad.py"),str(script)],cwd=ROOT,capture_output=True,text=True,timeout=60)
+    run=subprocess.run([sys.executable,str(TOOLS/"run_freecad.py"), "--freecad", str(FREECAD),str(script)],cwd=ROOT,capture_output=True,text=True,timeout=60)
     assert run.returncode == 0,run.stdout+run.stderr
 
 
@@ -67,7 +69,7 @@ for channel in a["channels"]:
  assert all(.060 < p["center"][2] < .067183 for p in portals)
 App.closeDocument(d.Name)
 ''')
-    run=subprocess.run([sys.executable,str(TOOLS/"run_freecad.py"),str(script)],cwd=ROOT,capture_output=True,text=True,timeout=60)
+    run=subprocess.run([sys.executable,str(TOOLS/"run_freecad.py"), "--freecad", str(FREECAD),str(script)],cwd=ROOT,capture_output=True,text=True,timeout=60)
     assert run.returncode == 0,run.stdout+run.stderr
 
 
@@ -108,7 +110,7 @@ for x in [-9, 0, 9]:
 Path({str(output.with_suffix('.samples.json'))!r}).write_text(json.dumps(samples))
 App.closeDocument(d.Name)
 ''')
-    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(script)],
+    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), "--freecad", str(FREECAD), str(script)],
                          cwd=ROOT, capture_output=True, text=True, timeout=60)
     assert run.returncode == 0, run.stdout + run.stderr
     import trimesh
@@ -147,7 +149,7 @@ except ValueError: pass
 else: raise AssertionError("must require operator-selected axis")
 App.closeDocument(d.Name)
 ''')
-    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(script)],
+    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), "--freecad", str(FREECAD), str(script)],
                          cwd=ROOT, capture_output=True, text=True, timeout=60)
     assert run.returncode == 0, run.stdout + run.stderr
 
@@ -184,7 +186,7 @@ except ValueError: pass
 else: raise AssertionError("invalid enlarged rope must be rejected")
 App.closeDocument(d.Name)
 '''.replace('FIXTURE_JSON', repr(fixture_json)))
-    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(script)],
+    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), "--freecad", str(FREECAD), str(script)],
                          cwd=ROOT, capture_output=True, text=True, timeout=60)
     assert run.returncode == 0, run.stdout + run.stderr
 
@@ -198,14 +200,22 @@ def test_compiler_removes_stale_physics_when_authoring_is_removed(tmp_path):
     shutil.copyfile(ROOT / "Hangboards/clavellium-training-block/clavellium-training-block.FCStd", source)
     assets = tmp_path / "assets"
     assets.mkdir()
-    stale = assets / "primary.physics.json"
-    stale.write_text("stale physics from a prior build")
-    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(TOOLS / "compile_board.py"),
-                          "--package", "clavellium-training-block", "--source", str(source), "--assets", str(assets)],
-                         cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
-    assert run.returncode == 0, run.stdout + run.stderr
+    authoring = tmp_path / "rope-physics.json"
+    shutil.copyfile(ROOT / "Hangboards/clavellium-training-block/rope-physics.json", authoring)
+    command = [sys.executable, str(TOOLS / "run_freecad.py"), "--freecad", str(FREECAD), str(TOOLS / "compile_board.py"),
+               "--package", "clavellium-training-block", "--source", str(source), "--assets", str(assets)]
+    first = subprocess.run(command, cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
+    assert first.returncode == 0, first.stdout + first.stderr
+    physics_path = assets / "primary.physics.json"
+    assert physics_path.is_file(), "Valid authoring must publish live physics"
+    physics = json.loads(physics_path.read_text())
+    model = json.loads((assets / "primary.model.json").read_text())
+    assert physics["modelSHA256"] == model["modelSHA256"]
+    authoring.unlink()
+    second = subprocess.run(command, cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
+    assert second.returncode == 0, second.stdout + second.stderr
     assert (assets / "primary.usdz").is_file()
-    assert not stale.exists()
+    assert not physics_path.exists()
 
 
 def test_compiler_reports_malformed_physics_authoring_as_build_error(tmp_path):
@@ -216,7 +226,7 @@ def test_compiler_reports_malformed_physics_authoring_as_build_error(tmp_path):
     source = tmp_path / "clavellium-training-block.FCStd"
     shutil.copyfile(ROOT / "Hangboards/clavellium-training-block/clavellium-training-block.FCStd", source)
     (tmp_path / "rope-physics.json").write_text("[]")
-    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(TOOLS / "compile_board.py"),
+    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), "--freecad", str(FREECAD), str(TOOLS / "compile_board.py"),
                           "--package", "clavellium-training-block", "--source", str(source), "--check"],
                          cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
     assert run.returncode != 0

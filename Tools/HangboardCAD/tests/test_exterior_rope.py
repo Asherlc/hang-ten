@@ -115,3 +115,40 @@ def test_endpoint_tolerance_never_admits_negative_distance(monkeypatch):
     monkeypatch.setattr(mesh, "section", unexpected_section)
     with pytest.raises(ValueError, match="endpoint"):
         solver().solve_route(mesh, [0,2,0], [0,.5-1e-6,0], 1e-6, [0,0,1])
+
+
+
+def test_knot_boundary_roundoff_does_not_raise_math_domain_error():
+    # norm(a) rounds to exactly 8 mm while dot(a,a) is one ulp above r*r.
+    a = [0.0037863206823175333, 0.00036587497592235007, 0.0070377490146103045]
+    b = [0.0037863123175304837, 0.0003658720777962528, 0.007037753665545988]
+    gap = solver().pair_clearance([[0,0,0], a, b], [[0,0,0], [-.1,0,0]], knot_radius=.008)
+    assert np.isfinite(gap) and gap > 0
+
+
+def test_failed_pair_candidate_does_not_abort_other_candidates(monkeypatch):
+    module = solver()
+    mesh = trimesh.creation.box(extents=[1,1,1])
+    # Keep route generation fixed and isolate handling of a rejected pair.
+    monkeypatch.setattr(module, "solve_route", lambda mesh, anchor, end, *args, **kwargs: np.asarray([anchor,end]))
+    calls = []
+    def candidate_gap(*args, **kwargs):
+        calls.append(1)
+        if len(calls) == 1:
+            raise ValueError("exterior route does not leave the knot neighborhood")
+        return .1
+    monkeypatch.setattr(module, "pair_clearance", candidate_gap)
+    routes = module.solve_pair(mesh, [0,2,0], [[-1,0,0],[1,0,0]], .002,
+                               [[-1,.1,0],[1,.1,0]])
+    assert len(calls) > 1 and len(routes) == 2
+
+
+def test_all_rejected_pair_candidates_report_routing_budget(monkeypatch):
+    module = solver()
+    monkeypatch.setattr(module, "solve_route", lambda mesh, anchor, end, *args, **kwargs: np.asarray([anchor,end]))
+    def rejected(*args, **kwargs):
+        raise ValueError("exterior route does not leave the knot neighborhood")
+    monkeypatch.setattr(module, "pair_clearance", rejected)
+    with pytest.raises(ValueError, match="no clear pair within the exterior routing budget"):
+        module.solve_pair(None, [0,2,0], [[-1,0,0],[1,0,0]], .002,
+                          [[-1,.1,0],[1,.1,0]])

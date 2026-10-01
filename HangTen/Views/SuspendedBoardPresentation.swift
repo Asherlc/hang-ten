@@ -360,7 +360,16 @@ enum SuspendedBoardPresentation {
             return .pairedLead(try solve(pose: pose, suspension: profile, bounds: bounds,
                 modelTransform: transform, preserveAuthoredAnchor: true))
         case .twoBranchCord(let profile):
-            return .twoBranch(try solve(pose: pose, suspension: profile, bounds: bounds, modelTransform: transform))
+            var placed = profile
+            if profile.internalLoopChannelPointsByBranchID != nil {
+                let anchor = transformPoint(transform, SIMD3<Float>(profile.anchor.position.map(Float.init)))
+                placed.anchor = BoardModelInvisibleAnchor(
+                    offsetFromBoardBounds: profile.anchor.offsetFromBoardBounds,
+                    visibility: profile.anchor.visibility, provenance: profile.anchor.provenance,
+                    position: [Double(anchor.x), Double(anchor.y), Double(anchor.z)])
+            }
+            return .twoBranch(try solve(pose: pose, suspension: placed, bounds: bounds,
+                modelTransform: transform * boardTransform(for: pose)))
         case .singleCord(let profile):
             guard profile.attachment.pointInModel.count == 3,
                   profile.attachment.pointInModel.allSatisfy(\.isFinite) else {
@@ -842,8 +851,12 @@ enum SuspendedBoardPresentation {
                   exitContacts.allSatisfy(\.allFinite) else {
                 throw SuspendedPresentationError.invalidPose
             }
+            let channelPoints = suspension.internalLoopChannelPointsByBranchID?[branch.id].map { points in
+                points.map { transformPoint(transform, SIMD3<Float>($0.map(Float.init))) }
+            }
             let rigidRoute = wrappedRoute ?? (usesInternalLoop
-                ? entryContacts + exitContacts
+                ? channelPoints.map { entryContacts + Array($0.dropFirst()) + Array(exitContacts.dropFirst()) }
+                    ?? (entryContacts + exitContacts)
                 : usesAuthoredRoute
                 ? entryContacts + [firstEntry, firstExit] + contactPoints + [secondExit, secondEntry] + exitContacts
                 : [firstEntry, secondEntry])
@@ -867,7 +880,7 @@ enum SuspendedBoardPresentation {
             } else {
                 hiddenLength = mouthChord
             }
-            let hiddenLengthCorrection = usesInternalLoop ? hiddenLength - mouthChord : 0
+            let hiddenLengthCorrection = usesInternalLoop && channelPoints == nil ? hiddenLength - mouthChord : 0
             let rigidLength = visibleRigidLength + hiddenLengthCorrection
             guard rigidLength.isFinite, rigidLength > 1e-7 else {
                 throw SuspendedPresentationError.invalidSuspension
@@ -946,8 +959,9 @@ enum SuspendedBoardPresentation {
                 id: branch.id,
                 passageIDs: branch.passageIDs,
                 spans: usesInternalLoop
-                    ? [firstSpan.samples + Array(entryContacts.dropFirst()),
-                       exitContacts + Array(secondSpan.samples.dropFirst())]
+                    ? [firstSpan.samples + Array(entryContacts.dropFirst())]
+                        + (channelPoints.map { [$0] } ?? [])
+                        + [exitContacts + Array(secondSpan.samples.dropFirst())]
                     : (usesAuthoredRoute || wrappedRoute != nil)
                         ? [firstSpan.samples, rigidRoute, secondSpan.samples]
                         : [firstSpan.samples, secondSpan.samples],
@@ -1397,7 +1411,7 @@ enum SuspendedBoardPresentation {
         }
     }
 
-    private static func makeCameraFraming(
+    static func makeCameraFraming(
         pose: BoardModelCanonicalPose,
         transform: simd_float4x4,
         minimumFitPadding: Float = 1,

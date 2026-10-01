@@ -29,6 +29,7 @@
         "assetPath": "assets/primary.usdz",
         "descriptorPath": "assets/primary.model.json",
         "display": {
+          "surfaceFinish": "wood",
           "camera": {
             "type": "orthographic",
             "viewDirection": [
@@ -186,7 +187,7 @@
                 "restLength": 0.3,
                 "radius": 0.002,
                 "material": "matteCord",
-                "provenance": "authored-display-estimate: 300 mm allowance per exterior lead and 2 mm radius. The manufacturer's 60 cm loop is assembly evidence only; this is not a measured lead or a modeled knot. Automatically computed planar seated exterior pose routes against the current approved surface; documented diameter where available, otherwise labeled display estimate. Interior connections are unchanged/omitted; cached shape is not live settling or a measured material-length split."
+                "provenance": "authored-display-estimate: 300 mm allowance per exterior lead and 2 mm radius. The manufacturer's 60 cm loop is assembly evidence only; this is not a measured lead or a modeled knot. Automatically computed planar seated exterior pose routes against the current approved surface; documented diameter where available, otherwise labeled display estimate. Interior connections are unchanged/omitted; cached shape is not live settling or a measured material-length split. Explicit pair-clearance exemption for these unchanged approved caches: original authoring excluded both complete first segments at the shared support, and all 2 cached pose pairs fail diameter plus 1 mm separation outside the 4*cordRadius knot ball. These caches are exempt from that revised bounded-knot separation guarantee, which applies only to newly solved accepted pairs. No route geometry was regenerated. See docs/source-audits/2026-09-30-seated-exterior-cord-rollout.md, Review diagnostic of unchanged pair caches."
               },
               "canonicalPoses": {
                 "primary": {
@@ -647,7 +648,7 @@
                 "restLength": 0.3,
                 "radius": 0.002,
                 "material": "matteCord",
-                "provenance": "authored-display-estimate: 300 mm allowance per exterior lead and 2 mm radius. The manufacturer's 60 cm loop is assembly evidence only; this is not a measured lead or a modeled knot. Automatically computed planar seated exterior pose routes against the current approved surface; documented diameter where available, otherwise labeled display estimate. Interior connections are unchanged/omitted; cached shape is not live settling or a measured material-length split."
+                "provenance": "authored-display-estimate: 300 mm allowance per exterior lead and 2 mm radius. The manufacturer's 60 cm loop is assembly evidence only; this is not a measured lead or a modeled knot. Automatically computed planar seated exterior pose routes against the current approved surface; documented diameter where available, otherwise labeled display estimate. Interior connections are unchanged/omitted; cached shape is not live settling or a measured material-length split. Explicit pair-clearance exemption for these unchanged approved caches: original authoring excluded both complete first segments at the shared support, and all 2 cached pose pairs fail diameter plus 1 mm separation outside the 4*cordRadius knot ball. These caches are exempt from that revised bounded-knot separation guarantee, which applies only to newly solved accepted pairs. No route geometry was regenerated. See docs/source-audits/2026-09-30-seated-exterior-cord-rollout.md, Review diagnostic of unchanged pair caches."
               },
               "canonicalPoses": {
                 "primary": {
