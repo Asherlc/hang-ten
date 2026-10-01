@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 
 import pytest
-from hangboard_packages.board_catalog import load_board_package
+from hangboard_packages.board_catalog import PresentationMediaModel, load_board_package
 
 from conftest import (
     PRIMARY_PNG_BYTES,
@@ -1448,17 +1448,22 @@ def test_model_display_rejects_invalid_board_finish(tmp_path: Path, finish) -> N
         load_board_package(package)
 
 
-def test_every_native_cad_board_authors_a_complete_board_finish() -> None:
-    from hangboard_packages import cad_source
+def test_every_catalog_model_authors_a_material_finish() -> None:
+    # Missing/neutral assignments silently render real wood and resin gray.
     root = Path(__file__).resolve().parents[3] / "Hangboards"
-    sources = sorted(root.glob("*/*.FCStd"))
-    assert sources
-    for source in sources:
-        board = cad_source.load_board(source)
-        for presentation in board["presentations"]:
-            display = presentation["media"]["display"]
-            assert display.get("surfaceFinish") in {"wood", "plastic", "neutral"}, source
-            assert "woodNeutralBands" not in display, source
+    model_count = 0
+    for package in sorted(root.iterdir()):
+        if not package.is_dir():
+            continue
+        board = load_board_package(package).board
+        for presentation in board.presentations:
+            if not isinstance(presentation.media, PresentationMediaModel):
+                continue
+            model_count += 1
+            display = presentation.media.display
+            assert display.get("surfaceFinish") in {"wood", "plastic", "granite"}, package
+            assert "woodNeutralBands" not in display, package
+    assert model_count > 0
 
 
 def test_model_display_rejects_invented_per_surface_bands(tmp_path: Path) -> None:
