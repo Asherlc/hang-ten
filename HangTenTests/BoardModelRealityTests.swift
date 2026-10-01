@@ -155,6 +155,267 @@ final class BoardModelRealityTests: XCTestCase {
         scene.stopLiveRopes()
     }
 
+    @MainActor
+    func testReflectedMeshPreservesInstancePlacementAndSourceBuffers() throws {
+        var descriptor = MeshDescriptor(name: "front")
+        descriptor.positions = .init([SIMD3<Float>(0, 0, 1), SIMD3<Float>(2, 0, 1), SIMD3<Float>(0, 3, 1)])
+        descriptor.normals = .init(Array(repeating: SIMD3<Float>(0, 0, 1), count: 3))
+        descriptor.primitives = .triangles([0, 1, 2])
+        let mesh = try MeshResource.generate(from: [descriptor])
+        var contents = mesh.contents
+        for var instance in contents.instances {
+            instance.transform = simd_float4x4(simd_quatf(angle: .pi / 2, axis: SIMD3(0, 0, 1)))
+            instance.transform.columns.3 = SIMD4(4, 5, 6, 1)
+            contents.instances.update(instance)
+        }
+        let source = try MeshResource.generate(from: contents)
+        var reflection = matrix_identity_float4x4
+        reflection.columns.0.x = -1
+        reflection.columns.3.x = 2 // Reflect about x=1 in the containing board.
+        let mirrored = try BoardModelRealityScene.reflectedMesh(source, reflection: reflection)
+        let instance = try XCTUnwrap(mirrored.contents.instances.first)
+        let model = try XCTUnwrap(mirrored.contents.models[instance.model])
+        let part = try XCTUnwrap(model.parts.first)
+        XCTAssertEqual(part.triangleIndices?.elements, [0, 2, 1])
+        XCTAssertEqual(part.normals?.elements, Array(repeating: SIMD3<Float>(0, 0, 1), count: 3))
+        let points = part.positions.map { instance.transform * SIMD4<Float>($0, 1) }
+        let expected: [SIMD4<Float>] = [SIMD4(-2, 5, 7, 1), SIMD4(-2, 7, 7, 1), SIMD4(1, 5, 7, 1)]
+        for (actual, expected) in zip(points, expected) {
+            XCTAssertLessThan(simd_length(actual - expected), 0.0001)
+        }
+        XCTAssertGreaterThan(simd_determinant(instance.transform), 0)
+        let sourcePart = try XCTUnwrap(source.contents.models.first?.parts.first)
+        XCTAssertEqual(sourcePart.positions.elements, descriptor.positions.elements)
+        XCTAssertEqual(sourcePart.triangleIndices?.elements, [0, 1, 2])
+    }
+
+    @MainActor
+    func testMirroredBoardNormalsAgreeWithRenderedTriangleWinding() async throws {
+        for boardID in ["trango.rock-prodigy-pivot", "soill.split-palm",
+                        "trango.rock-prodigy-forge", "trango.rock-prodigy-natural",
+                        "trango.rock-prodigy-training-center"] {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            guard case .model(let media) = board.defaultPresentation.media else {
+                return XCTFail("Expected model")
+            }
+            let scene = try await BoardModelRealityLoader.load(board: board,
+                                                              presentation: board.defaultPresentation)
+            if let positionID = board.positions.first?.id {
+                XCTAssertTrue(scene.select(positionID: positionID))
+            }
+            var mirroredInstancesChecked = 0
+            for (instance, root) in zip(media.instances ?? [], scene.instanceEntities)
+            where instance.baseTransform.reflection == .x {
+                mirroredInstancesChecked += 1
+                var trianglesChecked = 0
+                var inwardTriangles = 0
+                func check(_ entity: Entity) throws {
+                    if let component = (entity as? ModelEntity)?.model {
+                        for meshInstance in component.mesh.contents.instances {
+                            let model = try XCTUnwrap(component.mesh.contents.models[meshInstance.model])
+                            let transform = entity.transformMatrix(relativeTo: scene.root) * meshInstance.transform
+                            let linear = simd_float3x3(SIMD3(transform.columns.0.x, transform.columns.0.y, transform.columns.0.z),
+                                                     SIMD3(transform.columns.1.x, transform.columns.1.y, transform.columns.1.z),
+                                                     SIMD3(transform.columns.2.x, transform.columns.2.y, transform.columns.2.z))
+                            let normalTransform = simd_transpose(simd_inverse(linear))
+                            for part in model.parts {
+                                let positions = part.positions.elements
+                                let normals = try XCTUnwrap(part.normals).elements
+                                let indices = try XCTUnwrap(part.triangleIndices).elements
+                                for offset in stride(from: 0, to: indices.count, by: 3) {
+                                    let a = Int(indices[offset]), b = Int(indices[offset + 1]), c = Int(indices[offset + 2])
+                                    let edge1 = linear * (positions[b] - positions[a])
+                                    let edge2 = linear * (positions[c] - positions[a])
+                                    let face = simd_cross(edge1, edge2)
+                                    guard simd_length(face) > 1e-12 else { continue }
+                                    let normal = normalTransform * (normals[a] + normals[b] + normals[c])
+                                    guard simd_length(normal) > 1e-6 else { continue }
+                                    trianglesChecked += 1
+                                    if simd_dot(simd_normalize(face), simd_normalize(normal)) < -0.01 {
+                                        inwardTriangles += 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    for child in entity.children { try check(child) }
+                }
+                try check(root)
+                XCTAssertGreaterThan(trianglesChecked, 0, boardID)
+                let mirroredTriangles = trianglesChecked
+                let mirroredInwardTriangles = inwardTriangles
+                trianglesChecked = 0
+                inwardTriangles = 0
+                let sourceIndex = try XCTUnwrap(media.instances?.firstIndex {
+                    $0.baseTransform.reflection == nil
+                })
+                try check(scene.instanceEntities[sourceIndex])
+                XCTAssertEqual(mirroredTriangles, trianglesChecked, boardID)
+                XCTAssertEqual(mirroredInwardTriangles, inwardTriangles,
+                               "\(boardID): reflection must preserve the source winding/normal agreement")
+                // Forge's retained source has a small number of pre-existing
+                // disagreements at thin facets. Reflection must not add any.
+                if boardID != "trango.rock-prodigy-forge" {
+                    XCTAssertEqual(inwardTriangles, 0, boardID)
+                }
+            }
+            XCTAssertGreaterThan(mirroredInstancesChecked, 0, boardID)
+        }
+    }
+
+    @MainActor
+    func testRockProdigyPairsPreserveSpacingAndIndependentContactEntities() async throws {
+        for boardID in ["trango.rock-prodigy-forge", "trango.rock-prodigy-natural",
+                        "trango.rock-prodigy-training-center"] {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            let scene = try await BoardModelRealityLoader.load(board: board,
+                                                              presentation: board.defaultPresentation)
+            XCTAssertEqual(scene.instanceEntities.count, 2, boardID)
+            let left = scene.instanceEntities[0].visualBounds(relativeTo: scene.root)
+            let right = scene.instanceEntities[1].visualBounds(relativeTo: scene.root)
+            XCTAssertLessThan(left.max.x, 0, boardID)
+            XCTAssertGreaterThan(right.min.x, 0, boardID)
+            XCTAssertEqual(left.min.x, -right.max.x, accuracy: 0.00001, boardID)
+            XCTAssertEqual(left.max.x, -right.min.x, accuracy: 0.00001, boardID)
+            XCTAssertEqual(left.center.y, right.center.y, accuracy: 0.00001, boardID)
+            XCTAssertEqual(left.center.z, right.center.z, accuracy: 0.00001, boardID)
+            XCTAssertEqual(Set(scene.contactEntities.keys), Set(board.contacts.map(\.id)), boardID)
+            for contact in board.contacts where contact.id.hasSuffix("-left") {
+                let rightID = String(contact.id.dropLast(5)) + "-right"
+                let leftEntities = try XCTUnwrap(scene.contactEntities[contact.id])
+                let rightEntities = try XCTUnwrap(scene.contactEntities[rightID])
+                XCTAssertFalse(leftEntities.isEmpty, contact.id)
+                XCTAssertEqual(leftEntities.count, rightEntities.count, contact.id)
+                XCTAssertTrue(Set(leftEntities.map(ObjectIdentifier.init))
+                    .isDisjoint(with: Set(rightEntities.map(ObjectIdentifier.init))), contact.id)
+            }
+        }
+    }
+
+    @MainActor
+    func testEveryCatalogModelKeepsSurfacesVisibleThroughHighlightAndClear() async throws {
+        var presentationsChecked = 0
+        var mirroredInstancesChecked = 0
+        for board in BoardCatalog.packageStore.boards {
+            for presentation in board.presentations {
+                guard case .model(let media) = presentation.media else { continue }
+                let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+                var meshesChecked = 0
+                func checkSurfaces(_ entity: Entity) {
+                    if let model = (entity as? ModelEntity)?.model {
+                        meshesChecked += 1
+                        XCTAssertFalse(model.materials.isEmpty, "\(board.id)/\(presentation.id)/\(entity.name)")
+                        for material in model.materials {
+                            let culling: MaterialParameterTypes.FaceCulling?
+                            if let material = material as? CustomMaterial {
+                                culling = material.faceCulling
+                            } else if let material = material as? PhysicallyBasedMaterial {
+                                culling = material.faceCulling
+                            } else {
+                                culling = nil
+                            }
+                            XCTAssertEqual(culling, MaterialParameterTypes.FaceCulling.none,
+                                           "\(board.id)/\(presentation.id)/\(entity.name): board surfaces must survive reflected winding")
+                        }
+                    }
+                    for child in entity.children { checkSurfaces(child) }
+                }
+                func checkBoardSurfaces() {
+                    for entity in scene.instanceEntities { checkSurfaces(entity) }
+                }
+                checkBoardSurfaces()
+                XCTAssertGreaterThan(meshesChecked, 0, "\(board.id)/\(presentation.id)")
+                let contactIDs = Set(scene.contactEntities.keys)
+                XCTAssertFalse(contactIDs.isEmpty, "\(board.id)/\(presentation.id)")
+                for mode: BoardHighlightMode in [.active, .preview] {
+                    scene.highlight(contactIDs, mode: mode)
+                    checkBoardSurfaces()
+                    scene.highlight([], mode: mode)
+                    checkBoardSurfaces()
+                }
+                // Check every authored pose of reflected instances as well as
+                // the default and cleared transforms. This discovers new
+                // mirrored boards automatically rather than listing two IDs.
+                if media.instances?.contains(where: { $0.baseTransform.reflection == .x }) == true {
+                    for position in board.positions where position.presentationID == presentation.id {
+                        XCTAssertTrue(scene.select(positionID: position.id), "\(board.id)/\(position.id)")
+                        checkBoardSurfaces()
+                        for entity in scene.instanceEntities {
+                            XCTAssertGreaterThan(simd_determinant(entity.transformMatrix(relativeTo: scene.root)), 0,
+                                                 "\(board.id)/\(position.id): pose must preserve outward winding")
+                        }
+                    }
+                    _ = scene.select(positionID: nil)
+                    checkBoardSurfaces()
+                    for (instance, entity) in zip(media.instances ?? [], scene.instanceEntities)
+                    where instance.baseTransform.reflection == .x {
+                        XCTAssertGreaterThan(simd_determinant(entity.transformMatrix(relativeTo: scene.root)), 0,
+                                             "\(board.id)/\(instance.equipmentObjectID): baked reflection must not reintroduce negative scale on clear")
+                        mirroredInstancesChecked += 1
+                    }
+                }
+                presentationsChecked += 1
+            }
+        }
+        XCTAssertGreaterThan(presentationsChecked, 0)
+        XCTAssertGreaterThan(mirroredInstancesChecked, 0)
+        print("Validated surface visibility for \(presentationsChecked) model presentations and \(mirroredInstancesChecked) reflected instances")
+    }
+
+    @MainActor
+    func testSplitPalmReflectionPreservesTheFrontThroughSelectionAndClear() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "soill.split-palm"))
+        let scene = try await BoardModelRealityLoader.load(board: board,
+                                                          presentation: board.defaultPresentation)
+        XCTAssertEqual(scene.instanceEntities.count, 2)
+        func checkFrontFacingReflection() {
+            for entity in scene.instanceEntities {
+                let matrix = entity.transformMatrix(relativeTo: scene.root)
+                // Reflect horizontal coordinates only; depth must still face
+                // the same camera as the original half, including after reset.
+                let expectedX: Float = 1 // Horizontal reflection is in mesh buffers.
+                XCTAssertEqual(matrix.columns.0.x, expectedX, accuracy: 0.0001)
+                XCTAssertEqual(matrix.columns.0.y, 0, accuracy: 0.0001)
+                XCTAssertEqual(matrix.columns.0.z, 0, accuracy: 0.0001)
+                XCTAssertEqual(matrix.columns.1.y, 1, accuracy: 0.0001)
+                XCTAssertEqual(matrix.columns.2.x, 0, accuracy: 0.0001)
+                XCTAssertEqual(matrix.columns.2.y, 0, accuracy: 0.0001)
+                XCTAssertEqual(matrix.columns.2.z, 1, accuracy: 0.0001)
+            }
+        }
+        checkFrontFacingReflection()
+        XCTAssertTrue(scene.select(positionID: "primary"))
+        checkFrontFacingReflection()
+        XCTAssertFalse(scene.select(positionID: nil))
+        checkFrontFacingReflection()
+        func checkVisibleSurfaces(_ entity: Entity) throws {
+            if let model = (entity as? ModelEntity)?.model {
+                for material in model.materials {
+                    if let material = material as? CustomMaterial {
+                        XCTAssertEqual(material.faceCulling, .none,
+                                       "Reflected plastic surfaces must remain visible")
+                    } else if let material = material as? PhysicallyBasedMaterial {
+                        XCTAssertEqual(material.faceCulling, .none,
+                                       "Fallback and highlighted reflected surfaces must remain visible")
+                    } else {
+                        XCTFail("Unexpected board material")
+                    }
+                }
+            }
+            for child in entity.children { try checkVisibleSurfaces(child) }
+        }
+        try checkVisibleSurfaces(scene.root)
+        let selectedEntities = try XCTUnwrap(scene.contactEntities["left-flat-rail"])
+        XCTAssertFalse(selectedEntities.isEmpty)
+        scene.highlight(["left-flat-rail"], mode: .active)
+        for entity in selectedEntities {
+            XCTAssertTrue(entity.model?.materials.first is PhysicallyBasedMaterial)
+        }
+        try checkVisibleSurfaces(scene.root)
+        scene.highlight([], mode: .active)
+        try checkVisibleSurfaces(scene.root)
+    }
+
     func testRealityTypesCompile() {
         let _ = BoardModelRealityScene.self
         let _ = BoardModelRealityLoader.self
@@ -344,8 +605,8 @@ final class BoardModelRealityTests: XCTestCase {
 
                 // If reflection == .x, verify mirroring was applied
                 if instance.baseTransform.reflection == .x {
-                    XCTAssertLessThan(simd_determinant(entity.transform.matrix), 0,
-                                      "Mirrored instance should preserve a negative transform determinant")
+                    XCTAssertGreaterThan(simd_determinant(entity.transform.matrix), 0,
+                                         "Baked reflected geometry should use a positive transform determinant")
                     // And should have ModelEntity children with model components
                     var hasModelEntities = false
                     func checkForModelEntity(_ e: Entity) {
@@ -388,6 +649,46 @@ final class BoardModelRealityTests: XCTestCase {
         let selected = scene.instanceEntities.map { $0.transform.matrix }
         XCTAssertEqual(selected.count, initial.count)
         XCTAssertNotEqual(selected, initial, "Position transforms should be applied to cloned instances")
+    }
+
+    @MainActor
+    func testRockRingSelectionAppliesThreadedLoopPoseExactlyOnce() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.rock-rings-3d"))
+        guard case .model(let media) = board.defaultPresentation.media else {
+            return XCTFail("expected Rock Rings model")
+        }
+        let instances = try XCTUnwrap(media.instances)
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
+        guard instances.count == scene.instanceEntities.count else {
+            return XCTFail("instance count mismatch")
+        }
+        let initial = scene.instanceEntities.map { $0.transform.matrix }
+        XCTAssertTrue(scene.select(positionID: "primary"))
+        let centerX = Float((media.descriptor.modelBounds.minimum[0] + media.descriptor.modelBounds.maximum[0]) / 2)
+        for (index, instance) in instances.enumerated() {
+            guard case .twoBranchCord(let profile) = instance.suspension else {
+                return XCTFail("expected threaded-loop adapter")
+            }
+            XCTAssertNotNil(profile.internalLoopChannelPointsByBranchID)
+            let pose = try XCTUnwrap(profile.canonicalPoses["primary"])
+            let poseMatrix = try SuspendedBoardPresentation.boardTransform(for: pose)
+            XCTAssertNotEqual(poseMatrix, matrix_identity_float4x4)
+            // Reflection belongs to the mesh. Restore the authored base and
+            // cancel that reflection after composing exactly one canonical pose.
+            var reflection = matrix_identity_float4x4
+            if instance.baseTransform.reflection == .x {
+                reflection.columns.0.x = -1
+                reflection.columns.3.x = 2 * centerX
+            }
+            let expected = initial[index] * reflection * poseMatrix * reflection
+            let actual = scene.instanceEntities[index].transform.matrix
+            for column in 0..<4 {
+                for row in 0..<4 {
+                    XCTAssertEqual(actual[column][row], expected[column][row], accuracy: 1e-6,
+                                   "\(instance.equipmentObjectID) column \(column) row \(row)")
+                }
+            }
+        }
     }
 
     @MainActor

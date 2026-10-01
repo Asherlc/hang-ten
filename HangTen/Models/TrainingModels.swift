@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import simd
 
 /// Python-compatible `round(value, 9)` for finite JSON numbers. The fused
 /// residual preserves which side of an exact scaled midpoint the binary input
@@ -452,6 +453,61 @@ struct BoardModelMedia: Hashable {
         self.orientation = orientation
         self.instances = instances
         self.physicsDescriptorPath = physicsDescriptorPath
+    }
+}
+
+extension BoardModelMedia {
+    /// Canonical slots remain model-local; map callers need the physical pair's frame.
+    func resolvedContactFrame(_ contactID: String, presentationID: String) -> HoldFrame? {
+        guard let contact = descriptor.contacts[contactID] else { return nil }
+        guard let instances, !instances.isEmpty,
+              instances.allSatisfy({ $0.suspension == nil }),
+              let owner = instances.first(where: { $0.contactIDsBySlotID.values.contains(contactID) }) else {
+            return contact.facePlaneAABB.contactFrame
+        }
+        let minimum = SIMD3<Double>(descriptor.modelBounds.minimum)
+        let maximum = SIMD3<Double>(descriptor.modelBounds.maximum)
+        let center = (minimum + maximum) / 2
+        func apply(_ transform: BoardModelTransform, to point: SIMD3<Double>, pivot: SIMD3<Double>) -> SIMD3<Double> {
+            var offset = point - pivot
+            if transform.reflection == .x { offset.x = -offset.x }
+            return simd_quatd(vector: transform.rotation).act(offset) + pivot
+                + SIMD3<Double>(transform.translation)
+        }
+        func placed(_ point: SIMD3<Double>, instance: BoardModelInstance) -> SIMD3<Double> {
+            let base = apply(instance.baseTransform, to: point, pivot: center)
+            // Use this presentation's implicit position, or its first authored
+            // canonical position (e.g. Pivot p1), for nominal map/resolver frames.
+            let positionID = instance.positionTransforms?[presentationID] != nil
+                ? presentationID : instance.positionTransforms?.keys.sorted().first
+            guard let positionID, let pose = instance.positionTransforms?[positionID] else { return base }
+            return apply(pose, to: base, pivot: center + SIMD3<Double>(instance.baseTransform.translation))
+        }
+        let boundsCorners = [minimum.x, maximum.x].flatMap { x in
+            [minimum.y, maximum.y].flatMap { y in
+                [minimum.z, maximum.z].map { SIMD3<Double>(x, y, $0) }
+            }
+        }
+        let pairPoints = instances.flatMap { instance in boundsCorners.map { placed($0, instance: instance) } }
+        let pairMinX = pairPoints.map(\.x).min()!, pairMaxX = pairPoints.map(\.x).max()!
+        let pairMinY = pairPoints.map(\.y).min()!, pairMaxY = pairPoints.map(\.y).max()!
+        let width = pairMaxX - pairMinX, height = pairMaxY - pairMinY
+        guard width > 0, height > 0 else { return nil }
+        let local = contact.facePlaneAABB
+        let points = [local.minimum[0], local.maximum[0]].flatMap { x in
+            [local.minimum[1], local.maximum[1]].map { y in
+                placed(SIMD3(minimum.x + x * (maximum.x - minimum.x),
+                             minimum.y + y * (maximum.y - minimum.y), center.z), instance: owner)
+            }
+        }
+        let minX = points.map(\.x).min()!, maxX = points.map(\.x).max()!
+        let minY = points.map(\.y).min()!, maxY = points.map(\.y).max()!
+        return HoldFrame(
+            x: boardDescriptorRoundedToNinePlaces((minX - pairMinX) / width),
+            y: boardDescriptorRoundedToNinePlaces((minY - pairMinY) / height),
+            width: boardDescriptorRoundedToNinePlaces((maxX - minX) / width),
+            height: boardDescriptorRoundedToNinePlaces((maxY - minY) / height)
+        )
     }
 }
 
@@ -1084,7 +1140,7 @@ struct PhysicalContact: Identifiable, Hashable {
                 height: boardDescriptorRoundedToNinePlaces(union.height)
             )
         case .model(let media):
-            return media.descriptor.contacts[id]?.facePlaneAABB.contactFrame
+            return media.resolvedContactFrame(id, presentationID: presentation.id)
         }
     }
 }
