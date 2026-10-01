@@ -805,7 +805,7 @@ temporary scope/tap symbols, and exact owned DerivedData deletion was verified.
 The treatment crops were visually inspected against the active captures.
 No local UI pass or production rendering correction is claimed.
 
-## Prepared transaction-creator diagnostic (never merge)
+## Completed transaction-creator diagnostic and removal
 
 Retained application logs associate 37 successful selection/orbit attachments
 with nearby thread-exit uncommitted-transaction warnings; the enclosing intervals
@@ -821,10 +821,19 @@ creation-stack capture and a thread-release path that prints the stored stack
 and commits. This supports creator attribution, not proof that the transaction
 contains or blocks this board's presentation.
 
-After the complete probe-free 9d2 baseline and its evidence are retained, and
-only if relevant presentation failures reproduce, the prepared diagnostic adds
-that variable solely to Batch05 app launches. It runs the original 24 cases
-once. Application code, workflow, Train navigation, inputs, coordinates,
+The complete probe-free 9d2 baseline CI36849285348 and its artifact11155813355,
+logs, screenshots and diagnostics were retained before this diagnostic push.
+Door, Evo, Megalith, Natural and Pro each failed rendered orbit with two distinct
+scene attachments, stable map bounds and zero changed RGB pixels. Forge's
+separate 1x1 screenshot failure is excluded from the presentation conclusion.
+The gate passed in transaction-baseline-gate.json.
+
+Commit5655d78a9 made the variable live solely in Batch05 app launches; diagnostic
+CI36852873182 completed the single intended run. This was an operational run-once
+obligation, not a workflow-enforced removal gate: leaving the variable present
+would enable it on subsequent PR runs. The diagnostic head was never merged.
+The completed run was retained and the variable removed before the next push.
+It ran the original 24 cases. Application code, workflow, Train navigation, inputs, coordinates,
 assertions and deadlines remain unchanged. Stack capture and logging can alter
 timing; a passing diagnostic is inconclusive and is never a rendering fix.
 
@@ -840,3 +849,36 @@ operation connects to a relevant contract, retain a support evidence package
 and stop speculative probes; do not automatically add another readback or retry.
 All original required checks remain blocking. No production correction, framework
 or GPU cause, or local UI pass is claimed.
+
+CI36852873182 completed 24 board cases with five failures: Door/Natural rendered
+reset, Evo/Forge rendered orbit, and Pro's separate 1x1 screenshot failure.
+Megalith completed the full rendered sequence; the other 18 cases passed. All
+six processes recorded two distinct scene attachments. Evo/Forge active-to-orbit
+crops and Door/Natural orbit-to-reset crops each changed zero RGB pixels with
+stable bounds. Megalith visibly orbited and restored its exact canonical crop.
+These captures were visually inspected; Pro is excluded from presentation
+conclusions. Unit tests passed (1,406, three skips), purchase passed (23), native
+CAD passed (49, zero skips), Python passed (547 package plus 41 CAD tests, four
+skips and two deselections), and lint passed.
+
+Full artifact11158923342, logs, attachments and diagnostics were retained under
+ci-5655-* before removal. The application stdout contains 36 creation-stack
+headers: 22 are complete through the worker-thread entry; five more preserve
+the Metal Simulator drawable-presentation chain before later truncation, and
+nine are truncated earlier. All 14 incomplete/interleaved records are excluded
+from complete-stack attribution.
+The preserved path runs from MTLSimDriver's handleMainConnectionReplies through
+Metal command-buffer scheduling/presentDrawable, CAMetalDrawable present,
+layer_private_present, and QuartzCore's implicit-transaction creation. The same
+path occurs in passing Megalith and failed cases. No stack identifies a board
+drawable or establishes transaction contents, causal responsibility for the
+stale screen, or an app operation that can be corrected. Warning-to-map timing
+has not been independently calibrated for this run; full causal validity is
+not claimed. Raw process/thread-attributed records are retained in
+ci-5655-transaction-creation-stacks.json.
+
+The sole environment entry is removed; the UI test file again exactly matches
+probe-free9d2. No additional readback, transaction intervention, assertion
+change or speculative correction is retained. The evidence is preserved for
+support investigation; this result does not justify another automatic probe.
+Original required rendering checks remain blocking.
