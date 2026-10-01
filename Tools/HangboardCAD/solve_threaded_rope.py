@@ -29,6 +29,7 @@ import argparse
 import heapq
 import hashlib
 import json
+import math
 import re
 from pathlib import Path
 
@@ -209,8 +210,75 @@ class Section:
         )
 
 
+def solve_direct_loop(mesh, setup, descriptor, native_solid=None):
+    """Settle a single loop with unobstructed rising legs from CAD mouths.
+
+    The connected CAD spine supplies the entire interior route. Reject any
+    bearing or collision instead of drawing substitute contacts by hand.
+    """
+    branch = setup["branches"][0]
+    mouths = {p["id"]: p for side in setup["passages"].values() for p in side}
+    first, second = (np.asarray(mouths[key]["pointInModel"], dtype=float) for key in branch["passageIDs"])
+    points = setup["internalLoop"]["channelPointsByBranchID"][branch["id"]]
+    channel_length = sum(np.linalg.norm(np.asarray(b) - a) for a, b in zip(points, points[1:]))
+    declared = setup["internalLoop"]["channelLengthByBranchID"][branch["id"]]
+    if abs(channel_length - declared) > 1e-6:
+        raise ValueError("channel length differs from its native spine")
+    bounds = descriptor["modelBounds"]
+    center = (np.asarray(bounds["min"]) + np.asarray(bounds["max"])) / 2
+    anchor = np.array([center[0], bounds["max"][1], center[2]]) + setup["anchor"]["offsetFromBoardBounds"]
+    rest = branch["restLength"]
+    output = {}
+    for pose_id, pose in setup["canonicalPoses"].items():
+        def local(height):
+            translation = np.asarray(pose["translation"], dtype=float).copy()
+            translation[1] = height
+            return rotate_inverse(pose["rotation"], anchor - translation)
+        def length(height):
+            support = local(height)
+            return np.linalg.norm(support - first) + np.linalg.norm(support - second) + channel_length
+        low, high = -2 * rest, 0.0
+        if length(high) > rest or length(low) < rest:
+            raise ValueError("cannot bracket the threaded loop hanging height")
+        for _ in range(40):
+            midpoint = (low + high) / 2
+            if length(midpoint) > rest: low = midpoint
+            else: high = midpoint
+        height = (low + high) / 2
+        support = local(height)
+        segments = [(support, first), *zip(points, points[1:]), (second, support)]
+        samples = np.concatenate([np.linspace(a, b, max(2, math.ceil(np.linalg.norm(np.asarray(b)-a)/0.0005)+1)) for a,b in segments])
+        if native_solid is not None:
+            import FreeCAD as App, Part
+            def signed_clearance(point):
+                vertex = App.Vector(point[0]*1000, -point[2]*1000, point[1]*1000)
+                distance = native_solid.distToShape(Part.Vertex(vertex))[0] / 1000
+                return -distance if native_solid.isInside(vertex, 1e-7, True) else distance
+            clearance = min(signed_clearance(point) for point in samples)
+        else:
+            clearance = -float(trimesh.proximity.signed_distance(mesh, samples).max())
+        required_clearance = branch["radius"] + setup["internalLoop"]["clearance"]
+        if clearance < required_clearance - 1e-5:
+            raise ValueError(f"{pose_id}: threaded channel or free leg collides with CAD: {clearance}")
+        contacts = {key: [mouths[key]["pointInModel"]] for key in branch["passageIDs"]}
+        output[pose_id] = {"height": round(height, 9), "lengths": {branch["id"]: float(length(height))}, "contacts": contacts}
+        print(f"{pose_id}: single loop {length(height):.9f} m; CAD clearance {clearance:.9f} m", flush=True)
+    return output
+
+
 def solve_package(package, mesh, suspension, descriptor):
     setup = suspension["suspension"]
+    if setup["type"] == "threadedLoopCord":
+        mouths = {p["id"]: p for side in setup["passages"].values() for p in side}
+        if len(mouths) != 2 or len(setup["branches"]) != 1:
+            raise ValueError("threadedLoopCord requires one connected loop with two mouths")
+        passage_ids = setup["branches"][0]["passageIDs"]
+        if len(passage_ids) != 2 or set(passage_ids) != set(mouths):
+            raise ValueError("threadedLoopCord passageIDs must name both distinct mouths")
+        native = mesh.metadata.get("nativeSolid")
+        if native is None and (not mesh.is_watertight or not mesh.is_winding_consistent):
+            raise ValueError("single loop clearance requires the native CAD solid or a watertight tessellation")
+        return solve_direct_loop(mesh, setup, descriptor, native)
     if not mesh.is_watertight or not mesh.is_winding_consistent:
         raise ValueError("the native CAD collision solid is not watertight")
     bounds = descriptor["modelBounds"]
@@ -381,18 +449,29 @@ def main():
     mesh = trimesh.Trimesh(
         vertices=source["vertices"], faces=source["triangles"], process=False
     )
-    solved = solve_package(arguments.package, mesh, data, model)
-    for pose_id, result in solved.items():
-        pose = data["suspension"]["canonicalPoses"][pose_id]
-        if arguments.check:
-            if (
-                abs(pose["translation"][1] - result["height"]) > 1e-8
-                or pose.get("cordContactPoints") != result["contacts"]
-            ):
-                raise ValueError(f"{pose_id}: generated route cache is stale")
-        else:
-            pose["translation"][1] = result["height"]
-            pose["cordContactPoints"] = result["contacts"]
+    setups = data.get("instanceSuspensions", {"single": data.get("suspension")})
+    if any(setup["type"] == "threadedLoopCord" for setup in setups.values()):
+        try:
+            import FreeCAD as App
+        except ImportError as error:
+            raise ValueError("run the single-loop solve with FreeCAD Python for exact native-solid clearance") from error
+        document = App.openDocument(str(cad_source.resolve()))
+        native = document.getObject(source["sourceFeature"]).Shape
+        if not native.isValid() or len(native.Solids) != 1:
+            raise ValueError("collision source is not one valid native CAD solid")
+        mesh.metadata["nativeSolid"] = native
+    for equipment_id, setup in setups.items():
+        import copy
+        local_setup = copy.deepcopy(setup)
+        solved = solve_package(arguments.package, mesh, {"suspension": local_setup, "ropeSolver": data.get("ropeSolver", {})}, model)
+        for pose_id, result in solved.items():
+            pose = setup["canonicalPoses"][pose_id]
+            if arguments.check:
+                if abs(pose["translation"][1] - result["height"]) > 1e-8 or pose.get("cordContactPoints") != result["contacts"]:
+                    raise ValueError(f"{equipment_id}/{pose_id}: generated route cache is stale")
+            else:
+                pose["translation"][1] = result["height"]
+                pose["cordContactPoints"] = result["contacts"]
     if arguments.apply:
         formatted = json.dumps(data, indent=2)
         number = r"-?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?"

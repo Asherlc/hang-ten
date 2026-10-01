@@ -10,7 +10,10 @@ The adjacent suspension.json supplies each branch's two mouth coordinates.
 This command reports the measured length between their projections on each
 channel's spine. A channel is either a `PartDesign::SubtractivePipe` (its
 Sketcher spine, as on the Mini Bar) or a straight `Part::Cylinder` through-bore
-(its axis, as on the Helium Mobile). It never edits the CAD source or sidecar.
+(its axis, as on the Helium Mobile), or a `Part::MultiFuse` with a linked
+ordered Part::Feature Spine (Rock Rings). Schema-2 sidecars require
+HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID to select the instance. It never edits
+the CAD source or sidecar.
 """
 from __future__ import annotations
 
@@ -64,7 +67,20 @@ def channel_samples(feature, name):
         return spine_samples(feature.Spine[0])
     if feature.TypeId == "Part::Cylinder":
         return cylinder_axis_samples(feature)
-    raise ValueError(f"{name} is neither a SubtractivePipe nor a Part::Cylinder channel")
+    if feature.TypeId == "Part::MultiFuse" and "Spine" in feature.PropertiesList:
+        samples = []
+        if feature.Spine is None or feature.Spine.Shape.isNull() or feature.Spine.Shape.ShapeType != "Wire":
+            raise ValueError(f"{name} has no usable spine")
+        # Shape edges already include the linked feature's Placement.
+        # Apply only the channel's own placement, avoiding a second spine transform.
+        for edge in feature.Spine.Shape.OrderedEdges:
+            points = edge.discretize(Number=max(2, math.ceil(edge.Length / 0.25) + 1))
+            points = [feature.Placement.multVec(point) for point in points]
+            samples.extend(points if not samples else points[1:])
+        if len(samples) < 2:
+            raise ValueError(f"{name} has no usable spine")
+        return samples
+    raise ValueError(f"{name} has no supported native channel spine")
 
 
 def station_on_spine(point, samples):
@@ -115,7 +131,15 @@ def native_to_model(point):
 
 def main():
     document = App.openDocument(str(SOURCE))
-    suspension = json.loads(SIDECAR.read_text())["suspension"]
+    data = json.loads(SIDECAR.read_text())
+    if "instanceSuspensions" in data:
+        equipment_id = os.environ.get("HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID")
+        if equipment_id not in data["instanceSuspensions"]:
+            raise ValueError("set HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID to one of: "
+                             + ", ".join(data["instanceSuspensions"]))
+        suspension = data["instanceSuspensions"][equipment_id]
+    else:
+        suspension = data["suspension"]
     passages_by_id = {
         passage["id"]: passage for side in suspension["passages"].values()
         for passage in side
