@@ -3,8 +3,8 @@
   "owner": "placid-badger",
   "package": "metolius-contact",
   "reviewNumber": 7,
-  "status": "ready for individual human review",
-  "humanAcceptance": "pending",
+  "status": "shown pinch revision accepted",
+  "humanAcceptance": "reviewed; projecting pinch rails and highlights accepted",
   "revisionBaseCommit": "5cfd5b6386b283b2eb8daefc054a42823fdf852b",
   "userFeedback": "The pinch rails need to extend forward otherwise there\u2019s nothing to pinch",
   "sourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
@@ -96,5 +96,10 @@
     "Rail projection, width, profile poles, section scale and rounding are display estimates.",
     "Geometric surface witnesses do not certify manufacturer dimensions or hand clearance.",
     "App captures cover representative contacts and two real drags, not an all-contact visual sweep."
-  ]
+  ],
+  "humanReviewRecord": "../human-review.json",
+  "answer": "Y",
+  "acceptedDate": "2026-10-01",
+  "acceptedScope": "Displayed forward-projecting Contact pinch rails and their highlights in the prior-versus-revised front/side/top and actual-app images.",
+  "revisionCommit": "ca5024c3b62f5ecc87e669e1ecab398e650b3890"
 }

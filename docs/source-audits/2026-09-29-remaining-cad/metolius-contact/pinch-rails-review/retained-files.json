@@ -174,8 +174,8 @@
       "bytes": 3456
     },
     "index.html": {
-      "sha256": "d288663bcc32ec6ce19fa954132710ceb7e662036a83c7c1861f184fa872560b",
-      "bytes": 2880
+      "sha256": "20dd64a59e82da083c3864dcf741454f422581f9cd63b4de4aaa5855a7e9bebb",
+      "bytes": 3012
     },
     "native/author.log": {
       "sha256": "0da09c100cfb4550b206b35d98f8fd1e6c257349ec058673dc8bf095f0541069",
@@ -394,21 +394,21 @@
       "bytes": 412
     },
     "provenance.json": {
-      "sha256": "50dbabc1adaa45ae79d44c6e09252fd3f5454b9359828f1f530c710dae41b5f1",
-      "bytes": 4854
+      "sha256": "8189d0de31b52bc8032654b10de15fae252f645d367ade36902dcd680b99c95f",
+      "bytes": 5217
     },
     "raw-retention.json": {
       "sha256": "26a50a20a661a79153acd2007049eb1da15dfdb1be4db98d67545f70a7d2bc06",
       "bytes": 28977
     },
     "review.md": {
-      "sha256": "102f6707194bd3c85275854eae4fe5d556b6ea951cc670ccb52ea267f8cdbf44",
-      "bytes": 2968
+      "sha256": "ebb3d242981180f7313f0be0bae1d7ddad222181adc980e545893792366f304f",
+      "bytes": 3193
     },
     "runtime-validation.json": {
-      "sha256": "4fe06dbecb89b1de30a86278a892062727cfcde940f8e0e63ba71c86a8f73f53",
-      "bytes": 4345
+      "sha256": "f12254cbe437ab37fcd2116f29e4f4f40193af6df430dc8b4186a5a9dc313bba",
+      "bytes": 4731
     }
   },
-  "note": "Raw proof bytes are unedited; authored review documents are separate."
+  "note": "Raw proof bytes are unedited; authored review and acceptance records are separate."
 }

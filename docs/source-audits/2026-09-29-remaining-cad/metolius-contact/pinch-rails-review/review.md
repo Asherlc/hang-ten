@@ -18,6 +18,6 @@ Independent native/source/export checks passed, including actual parameter edit 
 
 The full validation and its practical limits are in [runtime-validation.json](runtime-validation.json). Original raw proof bytes and their copy mappings are retained in [raw-retention.json](raw-retention.json); the package hashes and source references are in [provenance.json](provenance.json).
 
-Human acceptance is pending. Review remains on #7; the first six accepted boards and the remaining queue are unchanged.
+Asher accepted the shown forward-projecting pinch rails and highlights with “Y” on 2026-10-01. The accepted geometry is pinned to commit `ca5024c3b62f5ecc87e669e1ecab398e650b3890` and [human-review.json](../human-review.json). Display estimates and the retained technical limits still apply.
 
-Does the pinch look right now?
+Recorded review question: “Does the pinch look right now?” Answer: “Y”.

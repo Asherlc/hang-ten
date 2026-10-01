@@ -774,7 +774,7 @@
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/metadata-diff.json",
       "nativeValidation": "Original pockets and 31 non-pinch contact constructions preserved; mirrored native forward-projecting rails, actual rail dimension edit/restore, final-solid pinch surfaces and fresh compiler checks. Full integration evidence is retained with review #7.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/app/validation.json",
-      "geometryAcceptance": "pending revised human review #7: forward-projecting pinch rails",
+      "geometryAcceptance": "reviewed; projecting pinch rails and highlights accepted",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
       "nativeAppValidationHistory": [
         "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/app-review/validation.json",
@@ -805,8 +805,9 @@
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/metadata-diff.json",
       "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/app-review/validation.json",
-      "geometryAcceptance": "pending requested one-by-one user review",
-      "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0"
+      "geometryAcceptance": "pending correction and human review #8 after Jagged feedback",
+      "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+      "geometryAcceptanceRecord": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/human-review.json"
     },
     "nature-stone-hanger": {
       "source": "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd",
@@ -1301,9 +1302,14 @@
       "scope": "Mirrored constrained native rails and final-solid pinch contact skins; all original pockets, 31 non-pinch regions and embedded board facts preserved.",
       "review": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/review.md",
       "runtimeValidation": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/runtime-validation.json",
-      "geometryAcceptance": "pending revised human review #7",
+      "geometryAcceptance": "reviewed; projecting pinch rails and highlights accepted",
       "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/human-review.json",
-      "priorDeliveryManifestSHA256": "231e8702257a989a95691766749dac147905b11d8bf78205dc5c573bf63b1ad5"
+      "priorDeliveryManifestSHA256": "231e8702257a989a95691766749dac147905b11d8bf78205dc5c573bf63b1ad5",
+      "answer": "Y",
+      "question": "Does the pinch look right now?",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed forward-projecting Contact pinch rails and their highlights in the prior-versus-revised front/side/top and actual-app images.",
+      "revisionCommit": "ca5024c3b62f5ecc87e669e1ecab398e650b3890"
     }
   ]
 }

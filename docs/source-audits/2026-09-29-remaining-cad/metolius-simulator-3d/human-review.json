@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-01",
+  "reviewer": "asherlc",
+  "number": 8,
+  "package": "metolius-simulator-3d",
+  "boardID": "metolius.simulator-3d",
+  "status": "awaiting jagged appearance correction; not accepted",
+  "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+  "modelSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+  "descriptorSHA256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e",
+  "revisionCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
+  "currentRevision": "source-audit.md",
+  "sourceAudit": "source-audit.md",
+  "appReview": "app-review/validation.json",
+  "shownImages": {
+    "sources/product-01.jpg": "5ac1677d6280dc90242cb1dcef47691647fd3f5a9adc3c465838e930075f58a9",
+    "sources/product-03.jpg": "e9561ab3fb6d3a85014097dcbdb0bc3d9c4079f9cb0954bd87965d180329932a",
+    "review/cad-front.png": "bf17b82d051e2d7dbd1913a28f9324eda1970c75cbef724a8378af50d53238de",
+    "review/cad-side.png": "98b5ee0b886e9e669b9943c17cc2db11921fa0f10e3d32acd1859bf21f0307b2",
+    "review/cad-top.png": "3491a2e75ef9635e2dcd586644d08a2bb112330a8ee30b11f3b3bc1c984faa92",
+    "review/comparison-front.png": "04f3ba9fdb8777011e3bfeed441f29e5e950811d2bc40a5759bb3999547beffb",
+    "review/comparison-side.png": "25c96d8e6b170f20dd0b334b9e2df76dd8fff437e234c4a24a2143e8d2d7cbd8",
+    "review/comparison-top.png": "358fa53e3714b3e1232f8e028fe97de8590b16bc518a2e075da3fa0dbf128c76",
+    "app-review/default.png": "fb658cab57c4b8909eee38e7faaa1f37f62bcc67938cf7eec66cdade552ec833",
+    "app-review/contact-selection.png": "6327b3a0156617517788be228dd5f56a972269b4f5e570a631f6d461920d20f0"
+  },
+  "feedback": [
+    "Jagged"
+  ],
+  "reviewScope": "Initial native CAD source, exact prior-versus-CAD front/side/top, complete approved manufacturer evidence and retained representative app selections.",
+  "approvalLimit": "No acceptance. Original app images are retained migration captures, not a fresh run. Estimated depth, openings, relief and transition shapes remain under review."
+}

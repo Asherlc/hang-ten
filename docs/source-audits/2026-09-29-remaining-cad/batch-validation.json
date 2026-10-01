@@ -148,8 +148,12 @@
       },
       "allOtherPackageFilesUnchanged": 203,
       "boardFactsAndContactIDsUnchanged": true,
-      "geometryAcceptance": "pending revised review #7",
-      "humanReviewRecord": "metolius-contact/human-review.json"
+      "geometryAcceptance": "reviewed; projecting pinch rails and highlights accepted",
+      "humanReviewRecord": "metolius-contact/human-review.json",
+      "answer": "Y",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed forward-projecting Contact pinch rails and their highlights in the prior-versus-revised front/side/top and actual-app images.",
+      "revisionCommit": "ca5024c3b62f5ecc87e669e1ecab398e650b3890"
     }
   ]
 }

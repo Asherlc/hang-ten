@@ -7,7 +7,7 @@
   "revision": "forward-projecting pinch rails",
   "revisionBaseCommit": "5cfd5b6386b283b2eb8daefc054a42823fdf852b",
   "userFeedback": "The pinch rails need to extend forward otherwise there\u2019s nothing to pinch",
-  "status": "technical checks passed; human review pending",
+  "status": "technical checks retained; shown pinch rails and highlights accepted",
   "sourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
   "modelSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
   "descriptorSHA256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
@@ -115,10 +115,17 @@
       "--json"
     ]
   },
-  "humanGeometryAcceptance": "pending revised review #7",
+  "humanGeometryAcceptance": "reviewed; projecting pinch rails and highlights accepted",
   "limits": [
     "Rail projection, width, profile poles, section scale and rounding are display estimates.",
     "Geometric surface witnesses do not certify manufacturer dimensions or hand clearance.",
     "App captures cover representative contacts and two real drags, not an all-contact visual sweep."
-  ]
+  ],
+  "humanReview": {
+    "record": "../human-review.json",
+    "date": "2026-10-01",
+    "answer": "Y",
+    "acceptedScope": "Displayed forward-projecting Contact pinch rails and their highlights in the prior-versus-revised front/side/top and actual-app images.",
+    "revisionCommit": "ca5024c3b62f5ecc87e669e1ecab398e650b3890"
+  }
 }

@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "date": "2026-09-30",
+  "date": "2026-10-01",
   "reviewer": "asherlc",
   "number": 7,
   "package": "metolius-contact",
   "boardID": "metolius.contact",
-  "status": "awaiting revised one-by-one review #7",
+  "status": "reviewed; projecting pinch rails and highlights accepted",
   "question": "Does the pinch look right now?",
   "sourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
   "modelSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
@@ -16,7 +16,7 @@
   "appReview": "pinch-rails-review/app/validation.json",
   "reviewScope": "Forward-projecting native pinch rails, their gripping highlights, exact prior-vs-revised front/side/top/oblique exports and fresh representative app selections with real left/right orbits.",
   "runtimeValidation": "pinch-rails-review/runtime-validation.json",
-  "approvalLimit": "Human acceptance pending. Rail widths, projection, curves and rounding are display estimates. Representative app captures and geometric witnesses do not establish manufacturer accuracy, hand clearance or all-contact visual coverage.",
+  "approvalLimit": "The reply accepts the displayed pinch rails and highlights. Rail widths, projection, curves and rounding remain display estimates; manufacturer accuracy, hand clearance and all-contact visual coverage are not established.",
   "shownImages": {
     "pinch-rails-review/front-side-top-comparison.png": "2a560543415ba8a57f20d808ce5eacc2204032e5365064156033465dc06f1450",
     "pinch-rails-review/app-before-after.png": "e69fa9373664962212088d609502e98ec82702a781a4f9989c4e4073e1375af6"
@@ -48,6 +48,21 @@
       },
       "feedback": "The pinch rails need to extend forward otherwise there\u2019s nothing to pinch",
       "result": "Superseded by forward-projecting native pinch rails; no acceptance recorded."
+    },
+    {
+      "date": "2026-10-01",
+      "reviewer": "asherlc",
+      "question": "Does the pinch look right now?",
+      "answer": "Y",
+      "revisionCommit": "ca5024c3b62f5ecc87e669e1ecab398e650b3890",
+      "acceptedScope": "Displayed forward-projecting Contact pinch rails and their highlights in the prior-versus-revised front/side/top and actual-app images.",
+      "shownImages": {
+        "pinch-rails-review/front-side-top-comparison.png": "2a560543415ba8a57f20d808ce5eacc2204032e5365064156033465dc06f1450",
+        "pinch-rails-review/app-before-after.png": "e69fa9373664962212088d609502e98ec82702a781a4f9989c4e4073e1375af6"
+      }
     }
-  ]
+  ],
+  "answer": "Y",
+  "acceptedScope": "Displayed forward-projecting Contact pinch rails and their highlights in the prior-versus-revised front/side/top and actual-app images.",
+  "revisionCommit": "ca5024c3b62f5ecc87e669e1ecab398e650b3890"
 }
