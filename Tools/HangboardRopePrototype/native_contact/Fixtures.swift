@@ -1,5 +1,18 @@
 import XCTest
 final class PrimalTests:XCTestCase {
+ func testBLASProductUsesOriginalBandStorageAtEdgesAndZeroBandwidth() throws {
+  var system=try RopeBandedSystem(size:5,bandwidth:2)
+  for (i,d) in [2.0,3,5,7,11].enumerated() {try system.addSymmetric(row:i,column:i,value:d)}
+  for (i,j,v) in [(0,1,-1.0),(0,2,0.5),(1,3,0.25),(2,3,-2),(3,4,-3)] {
+   try system.addSymmetric(row:i,column:j,value:v)
+  }
+  // Independent dense arithmetic checks the LAPACK-to-BLAS storage offset,
+  // both band edges, zero-filled positions and the final allocated column.
+  XCTAssertEqual(system.blasProduct([1,-2,3,-4,5]),[5.5,-8,23.5,-49.5,67])
+  var diagonal=try RopeBandedSystem(size:3,bandwidth:0)
+  for (i,d) in [-2.0,3,4].enumerated() {try diagonal.addSymmetric(row:i,column:i,value:d)}
+  XCTAssertEqual(diagonal.blasProduct([0.5,-1,2]),[-1,-3,8])
+ }
  #if SCREEN_GLOBAL_SCHUR
  func testCondensedRecoveryCannotHideOriginalOrderedGap() throws {
   var system=try RopeBandedSystem(size:2,bandwidth:0)
@@ -271,8 +284,8 @@ final class PrimalTests:XCTestCase {
 }
 let suite=PrimalTests.defaultTestSuite;suite.run()
 #if SCREEN_GLOBAL_SCHUR
-let expectedTests=20
+let expectedTests=21
 #else
-let expectedTests=19
+let expectedTests=20
 #endif
 guard let result=suite.testRun,result.executionCount==expectedTests,result.totalFailureCount==0 else {exit(1)}

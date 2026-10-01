@@ -177,6 +177,8 @@ def main():
                         help="experimental simultaneous contact solve with exact coupled chain/height responses")
     parser.add_argument("--schur-fb", action="store_true",
                         help="reproduce the rejected condensed Fischer-Burmeister globalization; requires --global-schur")
+    parser.add_argument("--blas-product", action="store_true",
+                        help="isolated BLAS original-band residual product; default scalar path retained")
     args = parser.parse_args()
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789-_" for c in args.label):
         parser.error("label must use lowercase letters, numbers, hyphen or underscore")
@@ -267,11 +269,13 @@ def main():
     environment = dict(os.environ, CLANG_MODULE_CACHE_PATH=str(output / "module-cache"),
                        PYTHONPYCACHEPREFIX=str(root / "pycache"),
                        HANGTEN_PACKED_CONTACT_SOURCE="1" if args.packed or args.regions else "0",
+                       HANGTEN_BLAS_RESPONSE_PRODUCT="1" if args.blas_product else "0",
                        HANGTEN_AFFINE_REGION_CERTIFICATES="1" if args.regions else "0",
                        HANGTEN_AFFINE_REGION_CROSS_CHECK="1" if args.region_checks else "0",
                        HANGTEN_SCHUR_METHOD="fischer-burmeister" if args.schur_fb else "interior-point",
                        HANGTEN_SCHUR_FAILURE_OUTPUT=str(output / "schur-failure.json"))
     provenance = {"owner": owner, "runtimeAdoption": False, "sourceSHA256": source_hashes,
+                  "blasResponseProduct": args.blas_product,
                   "sourceSnapshots": source_snapshots,
                   "compileCommand": compile_command, "mode": args.mode, "packedSource": args.packed or args.regions,
                   "complementarityBackend": args.complementarity, "affineRegionCertificates": args.regions,

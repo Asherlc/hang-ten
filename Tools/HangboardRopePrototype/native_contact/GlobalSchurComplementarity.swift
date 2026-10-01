@@ -64,6 +64,7 @@ final class GlobalSchurSession {
             cachedJacobianEntries += keyEntries
             return value
         }
+        let responseSeconds = ProcessInfo.processInfo.systemUptime-started
         // Exact global compliance, including both ropes, length equalities,
         // nonlocal contacts and board height. There is no per-loop solve.
         var schur = Array(repeating: 0.0, count: m*m)
@@ -193,6 +194,8 @@ final class GlobalSchurSession {
             }
             lastStatistics = ["workingRows": Double(m), "newResponses": Double(responses.count-before),
                 "cachedResponses": Double(responses.count), "responseAndComplianceSeconds": constructionSeconds,
+                "responseSolveSeconds": responseSeconds,
+                "complianceAssemblySeconds": constructionSeconds-responseSeconds,
                 "newtonFactorizations": Double(factorizations), "newtonFactorSeconds": factorSeconds,
                 "lineSearchTrials": Double(lineTrials)]
             return RopeContactSystem.Solution(base: solved.base, border: solved.border, multipliers: mu,
