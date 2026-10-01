@@ -239,7 +239,7 @@ final class BoardModelRealityScene {
 
         // Build instance entities from media instances
         if let instances = instances, !instances.isEmpty {
-            buildInstanceEntities(from: modelEntity, instances: instances)
+            try buildInstanceEntities(from: modelEntity, instances: instances)
         } else {
             // Single instance (legacy behavior)
             root.addChild(modelEntity)
@@ -258,20 +258,77 @@ final class BoardModelRealityScene {
         setupCameraFraming()
     }
 
-    private func buildInstanceEntities(from sourceEntity: Entity, instances: [BoardModelInstance]) {
+    private func buildInstanceEntities(from sourceEntity: Entity, instances: [BoardModelInstance]) throws {
         instanceEntities = []
         let center = Self.boundsCenter(descriptor.modelBounds)
 
         for instance in instances {
             // Clone the source entity hierarchy for this instance
             let instanceEntity = sourceEntity.clone(recursive: true)
-
-            instanceEntity.transform = Transform(matrix: Self.instanceMatrix(
-                instance: instance, positionID: nil, center: center))
+            if instance.baseTransform.reflection == .x {
+                try Self.reflectMeshes(in: instanceEntity, center: center)
+            }
+            instanceEntity.transform = renderTransform(Self.instanceMatrix(
+                instance: instance, positionID: nil, center: center), instance: instance)
 
             root.addChild(instanceEntity)
             instanceEntities.append(instanceEntity)
         }
+    }
+
+    /// Bake the reflection into independent mesh resources. A negative entity
+    /// scale reverses front-face winding, so double-sided shading lights the
+    /// reflected front with inward normals. Reflect normals and reverse the
+    /// triangles together, keeping imported node names and contact bindings.
+    private static func reflectMeshes(in root: Entity, center: SIMD3<Float>) throws {
+        let reflection = reflectionMatrix(center: center)
+        func visit(_ entity: Entity) throws {
+            if let entity = entity as? ModelEntity, var component = entity.model {
+                let localToBoard = entity.transformMatrix(relativeTo: root)
+                let localReflection = simd_inverse(localToBoard) * reflection * localToBoard
+                component.mesh = try reflectedMesh(component.mesh, reflection: localReflection)
+                entity.model = component
+            }
+            for child in entity.children { try visit(child) }
+        }
+        try visit(root)
+    }
+
+    static func reflectedMesh(_ mesh: MeshResource, reflection: simd_float4x4) throws -> MeshResource {
+        var contents = mesh.contents
+        let originReflection = reflectionMatrix(center: .zero)
+        func reflect(_ value: SIMD3<Float>) -> SIMD3<Float> { SIMD3(-value.x, value.y, value.z) }
+        for var model in contents.models {
+            for var part in model.parts {
+                guard var indices = part.triangleIndices?.elements, indices.count.isMultiple(of: 3) else {
+                    throw BoardModelRealityError.geometryProcessingFailed(reason: "Reflected board mesh must contain triangles")
+                }
+                part.positions = .init(part.positions.map(reflect))
+                if let normals = part.normals { part.normals = .init(normals.map(reflect)) }
+                if let tangents = part.tangents { part.tangents = .init(tangents.map(reflect)) }
+                if let bitangents = part.bitangents { part.bitangents = .init(bitangents.map(reflect)) }
+                for offset in stride(from: 0, to: indices.count, by: 3) {
+                    indices.swapAt(offset + 1, offset + 2)
+                }
+                part.triangleIndices = .init(indices)
+                model.parts.update(part)
+            }
+            contents.models.update(model)
+        }
+        for var instance in contents.instances {
+            // Conjugate imported mesh-instance transforms so translating or
+            // rotating a mesh within its named node preserves board-space reflection.
+            instance.transform = reflection * instance.transform * originReflection
+            contents.instances.update(instance)
+        }
+        return try MeshResource.generate(from: contents)
+    }
+
+    private func renderTransform(_ matrix: simd_float4x4, instance: BoardModelInstance) -> Transform {
+        guard instance.baseTransform.reflection == .x else { return Transform(matrix: matrix) }
+        // The mesh already owns this reflection. Cancel it from the authored
+        // presentation matrix on load, pose changes, and clearing selection.
+        return Transform(matrix: matrix * Self.reflectionMatrix(center: Self.boundsCenter(descriptor.modelBounds)))
     }
 
     private func applyBoardMaterials(to entity: Entity, inheritedFinish: BoardSurfaceFinish) {
@@ -568,8 +625,8 @@ final class BoardModelRealityScene {
                 }
                 selectedTransforms.append(transform)
             }
-            for (entity, transform) in zip(instanceEntities, selectedTransforms) {
-                entity.transform = Transform(matrix: transform)
+            for (index, transform) in selectedTransforms.enumerated() {
+                instanceEntities[index].transform = renderTransform(transform, instance: instances[index])
             }
             if let selectedFraming {
                 currentFraming = selectedFraming
@@ -689,8 +746,8 @@ final class BoardModelRealityScene {
         if let instances, !instances.isEmpty, instances.count == instanceEntities.count {
             let center = Self.boundsCenter(descriptor.modelBounds)
             for (entity, instance) in zip(instanceEntities, instances) {
-                entity.transform = Transform(matrix: Self.instanceMatrix(
-                    instance: instance, positionID: nil, center: center))
+                entity.transform = renderTransform(Self.instanceMatrix(
+                    instance: instance, positionID: nil, center: center), instance: instance)
             }
         } else {
             for entity in instanceEntities { entity.transform = .identity }
@@ -978,10 +1035,7 @@ final class BoardModelRealityScene {
                                                   Float(transform.translation[2]), 0)
             }
             if transform.reflection == .x {
-                var reflection = matrix_identity_float4x4
-                reflection.columns.0.x = -1
-                reflection.columns.3.x = 2 * center.x
-                result = result * reflection
+                result = result * reflectionMatrix(center: center)
             }
             return result
         }
@@ -990,6 +1044,13 @@ final class BoardModelRealityScene {
         let baseTranslation = instance.baseTransform.translation.count == 3
             ? SIMD3<Float>(instance.baseTransform.translation.map(Float.init)) : .zero
         return transformMatrix(position, pivot: center + baseTranslation) * base
+    }
+
+    private static func reflectionMatrix(center: SIMD3<Float>) -> simd_float4x4 {
+        var reflection = matrix_identity_float4x4
+        reflection.columns.0.x = -1
+        reflection.columns.3.x = 2 * center.x
+        return reflection
     }
 
     private static func translationMatrix(_ value: SIMD3<Float>) -> simd_float4x4 {
