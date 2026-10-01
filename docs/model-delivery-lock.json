@@ -1003,13 +1003,14 @@
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/metadata-diff.json",
       "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/groove-removal-review/ios/captures/validation.json",
-      "geometryAcceptance": "pending user review of smooth ends; no grooves",
+      "geometryAcceptance": "accepted by user reply y on 2026-10-01; displayed revision a77034f",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
       "suspensionSHA256": "c69c11dc9708bc1e2dc9f235004f55a7c0ecd524fdf5b073c40dda1d9b0c956f",
       "individualReview": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/groove-removal-review/review.md",
       "nativeAppHistory": [
         "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/app-review/validation.json"
-      ]
+      ],
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/human-review.json"
     },
     "yy-baguette-evo": {
       "source": "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd",

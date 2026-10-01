@@ -438,7 +438,7 @@
       "package": "yy-baguette",
       "boardID": "yy.baguette",
       "name": "YY Vertical La Baguette",
-      "humanReview": "pending",
+      "humanReview": "reviewed; smooth-end geometry, exterior cords and wood display accepted",
       "sourceSHA256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
       "reviewPage": "yy-baguette/groove-removal-review/review.md",
       "sourceAudit": "yy-baguette/native-authoring.md",
@@ -464,7 +464,11 @@
       ],
       "reviewPageHistory": [
         "yy-baguette/review/index.html"
-      ]
+      ],
+      "humanReviewRecord": "yy-baguette/human-review.json",
+      "reviewAnswer": "y",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed La Baguette revision with unsupported grooves removed, exterior cords on smooth rounded end surfaces, wood finish and all six selectable contacts."
     },
     {
       "number": 17,
