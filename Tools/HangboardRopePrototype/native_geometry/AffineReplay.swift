@@ -22,6 +22,11 @@ let orientation = simd_quatd(ix:q[0],iy:q[1],iz:q[2],r:q[3])
 let last = solution["last"] as! [String:Any],x = last["x"] as! [Double]
 let thresholdRegions = ProcessInfo.processInfo.environment["HANGTEN_AFFINE_GEOMETRY_METHOD"] == "regions"
 let fastRegionBoxes = ProcessInfo.processInfo.environment["HANGTEN_AFFINE_FAST_BOXES"] == "1"
+let useBatch = ProcessInfo.processInfo.environment["HANGTEN_AFFINE_BATCH"] == "1"
+let useSlabs = ProcessInfo.processInfo.environment["HANGTEN_AFFINE_SLABS"] == "1"
+let slabStart = now()
+let slabIndex = useSlabs ? collider.affineSlabIndex():nil
+let slabBuildSeconds = useSlabs ? now()-slabStart:0
 let multipliers = last["mu"] as! [Double]
 guard positions.map(\.count) == [715,715],weights.map(\.count) == [715,715],
       abs(simd_length(orientation.vector)-1) < 1e-8,
@@ -64,13 +69,41 @@ func contacts(_ query: Query) -> [RopeSegmentContact] {
 struct Output {let clear: [Bool],contacts: [[RopeSegmentContact]]}
 func evaluate(_ certified: Bool) throws -> Output {
     var flags: [Bool] = [],output: [[RopeSegmentContact]] = []
-    for query in queries() {
-        let clear = certified ? try collider.screenAffinelyClear(from:query.start,to:query.end,
-            requiredClearance:query.required,startCorrection:query.da,endCorrection:query.db,
-            thresholdRegions:thresholdRegions,fastRegionBoxes:fastRegionBoxes):false
+    let inputs = queries()
+    let batchFlags: [Bool]?
+    if certified,useBatch,let slabIndex {
+        batchFlags = try slabIndex.screenBatch(inputs.map {RopeAffineQuery(start:$0.start,end:$0.end,
+            requiredClearance:$0.required,startCorrection:$0.da,endCorrection:$0.db)})
+    } else {batchFlags = nil}
+    for (i,query) in inputs.enumerated() {
+        let clear: Bool
+        if let batchFlags {clear = batchFlags[i]}
+        else
+        if certified,let slabIndex {
+            clear = try slabIndex.screenAffinelyClear(from:query.start,to:query.end,requiredClearance:query.required,
+                startCorrection:query.da,endCorrection:query.db)
+        } else {
+            clear = certified ? try collider.screenAffinelyClear(from:query.start,to:query.end,
+                requiredClearance:query.required,startCorrection:query.da,endCorrection:query.db,
+                thresholdRegions:thresholdRegions,fastRegionBoxes:fastRegionBoxes):false
+        }
         flags.append(clear);output.append(clear ? []:contacts(query))
     }
     return Output(clear:flags,contacts:output)
+}
+// Independent exact-sign cost checkpoint, outside both wood-generation clocks.
+// Query endpoints are classified by the unchanged contains implementation.
+let signPoints = queries().flatMap { $0.start == $0.end ? [$0.start]:[$0.start,$0.end] }
+let uniqueSignPoints = Array(Set(signPoints))
+let signStart = now()
+let signFlags = collider.originalSignClassifications(at:signPoints)
+let signSeconds = now()-signStart
+let uniqueSignStart = now()
+let uniqueSignFlags = collider.originalSignClassifications(at:uniqueSignPoints)
+let uniqueSignSeconds = now()-uniqueSignStart
+let signByPoint = Dictionary(uniqueKeysWithValues:zip(uniqueSignPoints,uniqueSignFlags))
+guard zip(signPoints,signFlags).allSatisfy({signByPoint[$0.0] == $0.1}) else {
+    throw RopePhysicsError.invalid("Exact sign reuse differs from original classifier")
 }
 var original: Output!,candidate: Output!,baseline: [Double] = [],accelerated: [Double] = []
 for _ in 0..<runs {
@@ -126,7 +159,8 @@ guard contactID == multipliers.count else {throw RopePhysicsError.invalid("Froze
 func percentile(_ values: [Double]) -> Double {values.sorted()[Int(ceil(0.95*Double(values.count)))-1]}
 let speedup = percentile(baseline)/percentile(accelerated)
 let report: [String:Any] = ["owner":ProcessInfo.processInfo.environment["HANGTEN_AFFINE_GEOMETRY_OWNER"]!,
-    "runtimeAdoption":false,"method":thresholdRegions ? (fastRegionBoxes ? "fast-threshold-regions":"threshold-regions"):"original-nearest",
+    "runtimeAdoption":false,"slabBuildSeconds":slabBuildSeconds,"originalSignQueries":signPoints.count,
+    "uniqueOriginalSignQueries":uniqueSignPoints.count,"originalSignSeconds":signSeconds,"uniqueOriginalSignSeconds":uniqueSignSeconds,"method":useBatch ? "dual-tree-triangle-slabs":useSlabs ? "oriented-triangle-slabs":thresholdRegions ? (fastRegionBoxes ? "fast-threshold-regions":"threshold-regions"):"original-nearest",
     "scope":"Production first frozen candidate: all point/segment wood manifold generation or original geometry affine proof with exact fallback. Original portal, self/intercord, CCD, solver and mesh are excluded; this is not a complete geometry gate.",
     "queryCount":inputs.count,"certifiedQueries":candidate.clear.filter {$0}.count,
     "originalWoodRows":original.contacts.reduce(0) {$0+$1.count},"certifiedOriginalWoodRows":certifiedRows,
