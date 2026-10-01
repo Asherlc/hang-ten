@@ -247,6 +247,7 @@ final class BoardPackageStoreTests: XCTestCase {
             let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { url in
                 packageURL = url
                 try self.addPhysicsFixture(to: url)
+                try FileManager.default.removeItem(at: url.appendingPathComponent("assets/primary.usdz"))
             }
             defer { fixture.remove() }
             let store = try BoardPackageStore(bundle: fixture.bundle, modelAssetMode: .onDemand)
