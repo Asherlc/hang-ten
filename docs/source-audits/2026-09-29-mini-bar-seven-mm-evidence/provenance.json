@@ -42,5 +42,11 @@
       "failures": 0,
       "seconds": 15.015
     }
+  },
+  "sourceSnapshot": {
+    "commit": "7d05d01df",
+    "path": "Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd",
+    "hashBasis": "Raw native FCStd bytes; Git LFS oid at this historical commit matches sourceSHA256.",
+    "scope": "Historical seven-millimeter capture before merging main; baselineCommit identifies the comparison baseline, not the capture source. The current merged FCStd has different metadata and is not this snapshot."
   }
 }

@@ -22,10 +22,17 @@ def test_wide_rectangular_through_slot_opens_only_the_selected_mouth():
     assert section.covers(Point(0.03, 0.045))
 
 
-def test_rectangular_bridge_rejects_tapered_or_overlapping_sections():
+def test_rectangular_bridge_rejects_tapered_sections():
     with pytest.raises(ValueError, match="rectangular"):
         bearing_section([box(-.05, -.045, -.01, .045),
                          box(.015, -.04, .05, .04)],
+                        [.0025, .045], .0021, channel_profile="rectangular")
+
+
+def test_rectangular_bridge_rejects_overlapping_sections():
+    with pytest.raises(ValueError, match="separated"):
+        bearing_section([box(-.05, -.045, .01, .045),
+                         box(0, -.045, .05, .045)],
                         [.0025, .045], .0021, channel_profile="rectangular")
 
 

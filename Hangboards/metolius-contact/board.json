@@ -26,6 +26,7 @@
         "assetPath": "assets/primary.usdz",
         "descriptorPath": "assets/primary.model.json",
         "display": {
+          "surfaceFinish": "plastic",
           "camera": {
             "type": "orthographic",
             "viewDirection": [
@@ -66,6 +67,7 @@
       "name": "Center 53 mm flat sloper",
       "kind": "sloper",
       "shape": "flat",
+      "handCapacity": 2,
       "gripTypes": []
     },
     {
@@ -262,6 +264,7 @@
       "equipmentObjectID": "primary",
       "name": "Center #17 35 mm edge",
       "kind": "edge",
+      "handCapacity": 2,
       "depth": {
         "range": {
           "minimum": 35,
@@ -275,6 +278,7 @@
       "equipmentObjectID": "primary",
       "name": "Center #18 28 mm edge",
       "kind": "edge",
+      "handCapacity": 2,
       "depth": {
         "range": {
           "minimum": 28,

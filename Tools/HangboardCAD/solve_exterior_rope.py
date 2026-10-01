@@ -119,7 +119,7 @@ def solve_route(mesh,anchor,endpoint,radius,section_direction,clearance=0.0001,a
         raise ValueError('exterior surface must be closed with outward winding')
     if np.linalg.norm(anchor-endpoint)<1e-9:raise ValueError('coincident exterior endpoints')
     distances=-trimesh.proximity.signed_distance(mesh,np.asarray([anchor,endpoint]))
-    if min(distances)<radius-1e-5:raise ValueError('endpoint cannot fit cord outside the actual surface')
+    if not np.isfinite(distances).all() or min(distances)<0 or min(distances)<radius-1e-5:raise ValueError('endpoint cannot fit cord outside the actual surface')
     up=(anchor-endpoint)/np.linalg.norm(anchor-endpoint)
     across=direction-up*np.dot(direction,up)
     if np.linalg.norm(across)<1e-9:raise ValueError('section direction parallel to lead')
@@ -176,8 +176,8 @@ def solve_route(mesh,anchor,endpoint,radius,section_direction,clearance=0.0001,a
     raise ValueError('exterior route fails full-surface clearance')
 
 
-def pair_clearance(first, second, shared_anchor=True):
-    """Complete-segment gap, optionally excluding shared initial straight rays.
+def pair_clearance(first, second, shared_anchor=True, knot_radius=0):
+    """Complete-segment gap outside an explicit shared display-knot radius.
 
     Evaluate the interior closest approach and all four endpoint/edge cases.
     Cross products avoid cancellation in the near-parallel determinant.
@@ -192,6 +192,33 @@ def pair_clearance(first, second, shared_anchor=True):
             or np.any(np.linalg.norm(np.diff(first, axis=0), axis=1) < 1e-9)
             or np.any(np.linalg.norm(np.diff(second, axis=0), axis=1) < 1e-9)):
         raise ValueError('invalid paired exterior routes')
+    if not math.isfinite(knot_radius) or knot_radius < 0:
+        raise ValueError('invalid shared knot radius')
+    if shared_anchor and knot_radius > 0:
+        # The renderer joins the two leads inside a 4*cord-radius knot arc.
+        # Trim only that bounded neighborhood, never an entire first segment.
+        def outside_knot(route):
+            lengths = np.linalg.norm(route[1:] - route[0], axis=1)
+            outside = np.flatnonzero(lengths > knot_radius)
+            if not len(outside):
+                raise ValueError('exterior route does not leave the knot neighborhood')
+            index = int(outside[0]) + 1
+            a, b = route[index-1], route[index]
+            direction = b-a
+            origin = a-route[0]
+            aa = np.dot(direction,direction)
+            bb = np.dot(origin,direction)
+            cc = np.dot(origin,origin)-knot_radius*knot_radius
+            discriminant = bb*bb-aa*cc
+            scale = max(bb*bb, abs(aa*cc), aa*knot_radius*knot_radius)
+            # norm and dot may disagree by an ulp at the sphere boundary.
+            # Clamp roundoff only; invalid or overflowing quadratics fail closed.
+            tolerance = 32*np.finfo(float).eps*scale
+            if not all(math.isfinite(value) for value in [aa,bb,cc,discriminant,scale]) or aa <= 0 or discriminant < -tolerance:
+                raise ValueError('invalid exterior knot intersection')
+            t = float(np.clip((-bb + math.sqrt(max(discriminant,0.0))) / aa, 0, 1))
+            return np.vstack([a+t*direction, route[index:]])
+        first, second = outside_knot(first), outside_knot(second)
     u = (first[1:] - first[:-1])[:, None, :]
     v = (second[1:] - second[:-1])[None, :, :]
     w = first[:-1, None, :] - second[None, :-1, :]
@@ -214,15 +241,6 @@ def pair_clearance(first, second, shared_anchor=True):
     for t in [0, 1]:
         s = np.clip((t*bb-dd)/aa, 0, 1)
         distances = np.minimum(distances, ((w+s[..., None]*u-t*v)**2).sum(-1))
-    # Initial straight rays share the support knot and can only diverge.
-    if shared_anchor:
-        first_ray = first[1] - first[0]
-        second_ray = second[1] - second[0]
-        if (np.dot(first_ray, second_ray) > 0
-                and np.linalg.norm(np.cross(first_ray, second_ray))
-                    <= 1e-12*np.linalg.norm(first_ray)*np.linalg.norm(second_ray)):
-            return 0.0
-        distances[0, 0] = np.inf
     return float(np.sqrt(distances.min()))
 
 
@@ -233,7 +251,7 @@ def solve_pair(mesh, anchor, endpoints, radius, approaches, additional_clearance
     Approach points select the entry side, not mandatory material pins: their
     projection into each candidate plane must stay on the original side.
     Every accepted route clears the full wood surface; complete segment pairs
-    have 2*radius + clearance separation after their shared initial rays.
+    have 2*radius + clearance separation outside their shared 4*radius display-knot neighborhood.
     This is a bounded static approximation, not a global 3D equilibrium solve.
     """
     anchor = np.asarray(anchor, dtype=float)
@@ -275,7 +293,11 @@ def solve_pair(mesh, anchor, endpoints, radius, approaches, additional_clearance
     best = None
     for left in candidates[0]:
         for right in candidates[1]:
-            if pair_clearance(left[1],right[1]) < 2*radius+additional_clearance:
+            try:
+                pair_gap = pair_clearance(left[1],right[1], knot_radius=4*radius)
+            except ValueError:
+                continue
+            if pair_gap < 2*radius+additional_clearance:
                 continue
             length = left[0]+right[0]
             if best is None or length < best[0]:

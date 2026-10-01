@@ -1,5 +1,6 @@
 import Foundation
 import RealityKit
+import Metal
 import SwiftUI
 import UIKit
 import simd
@@ -172,7 +173,8 @@ final class BoardModelRealityScene {
     var contactEntities: [String: [ModelEntity]] = [:]
     private(set) var transientCordEntity: Entity?
     private var contactIDByEntity: [Entity: String] = [:]
-    private var baselineMaterials: [Entity: PhysicallyBasedMaterial] = [:]
+    private var baselineMaterials: [Entity: any RealityKit.Material] = [:]
+    private let finishByNodeID: [String: BoardSurfaceFinish]
 
     // Suspension/camera state
     private var suspension: BoardModelSuspension?
@@ -240,6 +242,15 @@ final class BoardModelRealityScene {
         self.physics = physics
         self.presentationID = presentationID
         self.resourceLease = resourceLease
+        let woodNodes = Set(display.woodNodeIDs)
+        let plasticNodes = Set(display.plasticNodeIDs)
+        let graniteNodes = Set(display.graniteNodeIDs)
+        self.finishByNodeID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map {
+            ($0.nodeID, $0.role == .attachment ? .neutral
+                : woodNodes.contains($0.nodeID) ? .wood
+                : plasticNodes.contains($0.nodeID) ? .plastic
+                : graniteNodes.contains($0.nodeID) ? .granite : display.surfaceFinish)
+        })
     }
 
 /// Loads the USDZ model directly into RealityKit and binds descriptor nodes.
@@ -251,19 +262,19 @@ final class BoardModelRealityScene {
 
         // Build instance entities from media instances
         if let instances = instances, !instances.isEmpty {
-            buildInstanceEntities(from: modelEntity, instances: instances)
+            try buildInstanceEntities(from: modelEntity, instances: instances)
         } else {
             // Single instance (legacy behavior)
             root.addChild(modelEntity)
             instanceEntities = [modelEntity]
         }
 
-        // Apply neutral PBR materials to all model entities FIRST
-        // This captures original USDZ materials before they're replaced
-        applyNeutralMaterials(to: root)
+        // Appearance is runtime-only; the bundled USDZ stays unbound. Capture
+        // each finish before highlighting so deselection restores the authored finish.
+        applyBoardMaterials(to: root, inheritedFinish: display.surfaceFinish)
 
         // Build contact entity mapping from descriptor
-        // Neutral highlight baselines were captured by applyNeutralMaterials().
+        // Highlight baselines were captured by applyBoardMaterials().
         try buildContactEntities()
 
         // Set up camera framing based on model bounds
@@ -271,33 +282,160 @@ final class BoardModelRealityScene {
         try await prepareLiveRopes()
     }
 
-    private func buildInstanceEntities(from sourceEntity: Entity, instances: [BoardModelInstance]) {
+    private func buildInstanceEntities(from sourceEntity: Entity, instances: [BoardModelInstance]) throws {
         instanceEntities = []
         let center = Self.boundsCenter(descriptor.modelBounds)
 
         for instance in instances {
             // Clone the source entity hierarchy for this instance
             let instanceEntity = sourceEntity.clone(recursive: true)
-
-            instanceEntity.transform = Transform(matrix: Self.instanceMatrix(
-                instance: instance, positionID: nil, center: center))
+            if instance.baseTransform.reflection == .x {
+                try Self.reflectMeshes(in: instanceEntity, center: center)
+            }
+            instanceEntity.transform = renderTransform(Self.instanceMatrix(
+                instance: instance, positionID: nil, center: center), instance: instance)
 
             root.addChild(instanceEntity)
             instanceEntities.append(instanceEntity)
         }
     }
 
-    private func applyNeutralMaterials(to entity: Entity) {
-        if let modelEntity = entity as? ModelEntity,
-           let model = modelEntity.model {
-            let material = Self.neutralMaterial()
+    /// Bake the reflection into independent mesh resources. A negative entity
+    /// scale reverses front-face winding, so double-sided shading lights the
+    /// reflected front with inward normals. Reflect normals and reverse the
+    /// triangles together, keeping imported node names and contact bindings.
+    private static func reflectMeshes(in root: Entity, center: SIMD3<Float>) throws {
+        let reflection = reflectionMatrix(center: center)
+        func visit(_ entity: Entity) throws {
+            if let entity = entity as? ModelEntity, var component = entity.model {
+                let localToBoard = entity.transformMatrix(relativeTo: root)
+                let localReflection = simd_inverse(localToBoard) * reflection * localToBoard
+                component.mesh = try reflectedMesh(component.mesh, reflection: localReflection)
+                entity.model = component
+            }
+            for child in entity.children { try visit(child) }
+        }
+        try visit(root)
+    }
+
+    static func reflectedMesh(_ mesh: MeshResource, reflection: simd_float4x4) throws -> MeshResource {
+        var contents = mesh.contents
+        let originReflection = reflectionMatrix(center: .zero)
+        func reflect(_ value: SIMD3<Float>) -> SIMD3<Float> { SIMD3(-value.x, value.y, value.z) }
+        for var model in contents.models {
+            for var part in model.parts {
+                guard var indices = part.triangleIndices?.elements, indices.count.isMultiple(of: 3) else {
+                    throw BoardModelRealityError.geometryProcessingFailed(reason: "Reflected board mesh must contain triangles")
+                }
+                part.positions = .init(part.positions.map(reflect))
+                if let normals = part.normals { part.normals = .init(normals.map(reflect)) }
+                if let tangents = part.tangents { part.tangents = .init(tangents.map(reflect)) }
+                if let bitangents = part.bitangents { part.bitangents = .init(bitangents.map(reflect)) }
+                for offset in stride(from: 0, to: indices.count, by: 3) {
+                    indices.swapAt(offset + 1, offset + 2)
+                }
+                part.triangleIndices = .init(indices)
+                model.parts.update(part)
+            }
+            contents.models.update(model)
+        }
+        for var instance in contents.instances {
+            // Conjugate imported mesh-instance transforms so translating or
+            // rotating a mesh within its named node preserves board-space reflection.
+            instance.transform = reflection * instance.transform * originReflection
+            contents.instances.update(instance)
+        }
+        return try MeshResource.generate(from: contents)
+    }
+
+    private func renderTransform(_ matrix: simd_float4x4, instance: BoardModelInstance) -> Transform {
+        guard instance.baseTransform.reflection == .x else { return Transform(matrix: matrix) }
+        // The mesh already owns this reflection. Cancel it from the authored
+        // presentation matrix on load, pose changes, and clearing selection.
+        return Transform(matrix: matrix * Self.reflectionMatrix(center: Self.boundsCenter(descriptor.modelBounds)))
+    }
+
+    private func applyBoardMaterials(to entity: Entity, inheritedFinish: BoardSurfaceFinish) {
+        // CAD descriptor names identify the authored surfaces. Carry the finish
+        // through any unnamed mesh children inserted by the USDZ importer.
+        let finish = finishByNodeID[entity.name] ?? inheritedFinish
+        if let modelEntity = entity as? ModelEntity, modelEntity.model != nil {
+            let material: any RealityKit.Material
+            switch finish {
+            case .wood: material = Self.woodMaterial
+            case .plastic: material = Self.plasticMaterial
+            case .granite: material = Self.graniteMaterial
+            case .neutral: material = Self.neutralMaterial()
+            }
             modelEntity.model?.materials = [material]
             baselineMaterials[modelEntity] = material
         }
         for child in entity.children {
-            applyNeutralMaterials(to: child)
+            applyBoardMaterials(to: child, inheritedFinish: finish)
         }
     }
+
+    private static let woodMaterial: any RealityKit.Material = {
+        var base = PhysicallyBasedMaterial()
+        base.baseColor = .init(tint: UIColor(red: 0.78, green: 0.66, blue: 0.49, alpha: 1))
+        base.roughness = .init(floatLiteral: 0.82)
+        base.metallic = .init(floatLiteral: 0)
+        base.faceCulling = .none
+        guard let device = MTLCreateSystemDefaultDevice(),
+              let library = device.makeDefaultLibrary() else { return base }
+        do {
+            let shader = CustomMaterial.SurfaceShader(named: "boardWoodSurfaceShader", in: library)
+            return try CustomMaterial(from: base, surfaceShader: shader)
+        } catch {
+            #if DEBUG
+            print("[BoardModelRealityScene] Wood shader unavailable: \(error)")
+            #endif
+            // A warm matte fallback still identifies wood on unsupported devices.
+            return base
+        }
+    }()
+
+    private static let graniteMaterial: any RealityKit.Material = {
+        var base = PhysicallyBasedMaterial()
+        base.baseColor = .init(tint: UIColor(red: 0.25, green: 0.26, blue: 0.27, alpha: 1))
+        base.roughness = .init(floatLiteral: 0.92)
+        base.metallic = .init(floatLiteral: 0)
+        base.faceCulling = .none
+        guard let device = MTLCreateSystemDefaultDevice(),
+              let library = device.makeDefaultLibrary() else { return base }
+        do {
+            let shader = CustomMaterial.SurfaceShader(named: "boardGraniteSurfaceShader", in: library)
+            return try CustomMaterial(from: base, surfaceShader: shader)
+        } catch {
+            #if DEBUG
+            print("[BoardModelRealityScene] Granite shader unavailable: \(error)")
+            #endif
+            return base
+        }
+    }()
+
+    private static let plasticMaterial: any RealityKit.Material = {
+        var base = PhysicallyBasedMaterial()
+        // Seafoam mint is the app's display palette, not a product color fact.
+        base.baseColor = .init(tint: UIColor(red: 123.0 / 255, green: 203.0 / 255,
+                                            blue: 178.0 / 255, alpha: 1))
+        base.roughness = .init(floatLiteral: 0.78)
+        base.metallic = .init(floatLiteral: 0)
+        // Like the neutral finish, retain front surfaces when an instance's
+        // reflection reverses winding. CustomMaterial inherits this setting.
+        base.faceCulling = .none
+        guard let device = MTLCreateSystemDefaultDevice(),
+              let library = device.makeDefaultLibrary() else { return base }
+        do {
+            let shader = CustomMaterial.SurfaceShader(named: "boardPlasticSurfaceShader", in: library)
+            return try CustomMaterial(from: base, surfaceShader: shader)
+        } catch {
+            #if DEBUG
+            print("[BoardModelRealityScene] Plastic shader unavailable: \(error)")
+            #endif
+            return base
+        }
+    }()
 
     private func setupCameraFraming() {
         var allPoints: [SIMD3<Float>] = []
@@ -380,6 +518,9 @@ final class BoardModelRealityScene {
         material.baseColor = .init(tint: UIColor(red: 0.82, green: 0.80, blue: 0.77, alpha: 1))
         material.roughness = .init(floatLiteral: 0.5)
         material.metallic = .init(floatLiteral: 0)
+        // A reflected instance reverses triangle winding. Some CAD contacts
+        // are open front surfaces, so culling would hide the mirrored half.
+        material.faceCulling = .none
         return material
     }
 
@@ -512,8 +653,10 @@ final class BoardModelRealityScene {
 
         if let instances, !instances.isEmpty {
             guard instances.count == instanceEntities.count else { return false }
-            var selectedFrames: [SuspendedCameraFraming] = []
+            var selectedFramings: [SuspendedCameraFraming] = []
             var selectedTransforms: [simd_float4x4] = []
+            var framingPose: BoardModelCanonicalPose?
+            var framingTransform: simd_float4x4?
             let cordGroup = Entity()
             for instance in instances {
                 let transform: simd_float4x4
@@ -522,11 +665,23 @@ final class BoardModelRealityScene {
                     do {
                         let base = Self.instanceMatrix(instance: instance, positionID: nil,
                                                        center: Self.boundsCenter(descriptor.modelBounds))
+                        let instanceTransform: simd_float4x4
+                        if case .twoBranchCord = suspension {
+                            // This adapter composes base * pose itself and places
+                            // connected-channel anchors using the base alone.
+                            instanceTransform = base
+                        } else {
+                            instanceTransform = try SuspendedBoardPresentation.boardTransform(for: pose) * base
+                        }
                         let solved = try SuspendedBoardPresentation.solveInstance(
                             pose: pose, suspension: suspension, bounds: descriptor.modelBounds,
-                            transform: try SuspendedBoardPresentation.boardTransform(for: pose) * base)
+                            transform: instanceTransform)
                         transform = solved.boardTransform
-                        selectedFrames.append(solved.cameraFraming)
+                        if framingPose == nil {
+                            framingPose = pose
+                            framingTransform = transform
+                        }
+                        selectedFramings.append(solved.cameraFraming)
                         cordGroup.addChild(Self.makeCordEntity(for: solved))
                     } catch { return false }
                 } else {
@@ -538,21 +693,26 @@ final class BoardModelRealityScene {
                 }
                 selectedTransforms.append(transform)
             }
-            let combinedFraming: SuspendedCameraFraming?
-            if selectedFrames.isEmpty {
-                combinedFraming = nil
-            } else {
-                guard let combined = try? SuspendedBoardPresentation.combinedCameraFraming(selectedFrames) else { return false }
-                combinedFraming = combined
+            var combinedFraming: SuspendedCameraFraming?
+            if !selectedFramings.isEmpty {
+                let allBounds = selectedTransforms.flatMap { transform in
+                    Self.boundsCorners(descriptor.modelBounds).map { point in
+                        let placed = transform * SIMD4<Float>(point, 1)
+                        return SIMD3<Float>(placed.x, placed.y, placed.z)
+                    }
+                }
+                guard let pose = framingPose, let transform = framingTransform,
+                      let framing = try? SuspendedBoardPresentation.makeCameraFraming(
+                        pose: pose, transform: transform,
+                        minimumFitPadding: selectedFramings.map(\.fitPadding).max() ?? 1,
+                        points: selectedFramings.flatMap(\.includedPoints) + allBounds) else { return false }
+                combinedFraming = framing
             }
-            for (entity, transform) in zip(instanceEntities, selectedTransforms) {
-                entity.transform = Transform(matrix: transform)
+            for (index, transform) in selectedTransforms.enumerated() {
+                instanceEntities[index].transform = renderTransform(transform, instance: instances[index])
             }
-            if let combinedFraming {
-                currentFraming = combinedFraming
-            } else {
-                setupCameraFraming()
-            }
+            if let combinedFraming { currentFraming = combinedFraming }
+            else { setupCameraFraming() }
             transientCordEntity?.removeFromParent()
             if !cordGroup.children.isEmpty {
                 transientCordEntity = cordGroup
@@ -660,6 +820,7 @@ final class BoardModelRealityScene {
     }
 
     private func clearSelection() {
+        installLiveUpdateSubscription(nil)
         liveGeneration &+= 1
         liveControllers.forEach { $0.pause() }
         activePositionID = nil
@@ -668,8 +829,8 @@ final class BoardModelRealityScene {
         if let instances, !instances.isEmpty, instances.count == instanceEntities.count {
             let center = Self.boundsCenter(descriptor.modelBounds)
             for (entity, instance) in zip(instanceEntities, instances) {
-                entity.transform = Transform(matrix: Self.instanceMatrix(
-                    instance: instance, positionID: nil, center: center))
+                entity.transform = renderTransform(Self.instanceMatrix(
+                    instance: instance, positionID: nil, center: center), instance: instance)
             }
         } else {
             for entity in instanceEntities { entity.transform = .identity }
@@ -784,12 +945,16 @@ final class BoardModelRealityScene {
             low=simd_min(low,center-SIMD3(repeating:radius))
             high=simd_max(high,center+SIMD3(repeating:radius))
         }
-        currentFraming=Self.framing(bounds:BoardModelBounds(minimum:[Double(low.x),Double(low.y),Double(low.z)],
-            maximum:[Double(high.x),Double(high.y),Double(high.z)]),display:display)
+        if let framing=Self.framing(bounds:BoardModelBounds(minimum:[Double(low.x),Double(low.y),Double(low.z)],
+            maximum:[Double(high.x),Double(high.y),Double(high.z)]),display:display) {
+            currentFraming=framing
+        }
         updateCameraTransform()
     }
 
-    func installLiveUpdateSubscription(_ subscription:EventSubscription) {
+    var hasLiveUpdateSubscription: Bool { liveSubscription != nil }
+
+    func installLiveUpdateSubscription(_ subscription:EventSubscription?) {
         liveSubscription?.cancel(); liveSubscription=subscription
     }
     func advanceLiveRopes(elapsed:Double) {
@@ -1043,17 +1208,16 @@ final class BoardModelRealityScene {
     }
 
     private func applyHighlight(to entity: ModelEntity, color: Color, mode: BoardHighlightMode) {
-        guard var material = entity.model?.materials.first as? PhysicallyBasedMaterial else { return }
+        guard let baseline = baselineMaterials[entity] else { return }
 
         if color == .clear {
-            // Restore the neutral PBR baseline.
-            if let baselineMaterial = baselineMaterials[entity] {
-                entity.model?.materials = [baselineMaterial]
-            }
+            // Restore the complete runtime finish, including a wood shader.
+            entity.model?.materials = [baseline]
             return
         }
 
-        // Apply highlight by setting a tint color
+        // Use a solid selection color for legibility over either finish.
+        var material = (baseline as? PhysicallyBasedMaterial) ?? Self.neutralMaterial()
         let uiColor = UIColor(color)
         material.baseColor = .init(tint: uiColor.withAlphaComponent(0.6))
         material.roughness = .init(floatLiteral: 0.8)
@@ -1129,10 +1293,7 @@ final class BoardModelRealityScene {
                                                   Float(transform.translation[2]), 0)
             }
             if transform.reflection == .x {
-                var reflection = matrix_identity_float4x4
-                reflection.columns.0.x = -1
-                reflection.columns.3.x = 2 * center.x
-                result = result * reflection
+                result = result * reflectionMatrix(center: center)
             }
             return result
         }
@@ -1141,6 +1302,13 @@ final class BoardModelRealityScene {
         let baseTranslation = instance.baseTransform.translation.count == 3
             ? SIMD3<Float>(instance.baseTransform.translation.map(Float.init)) : .zero
         return transformMatrix(position, pivot: center + baseTranslation) * base
+    }
+
+    private static func reflectionMatrix(center: SIMD3<Float>) -> simd_float4x4 {
+        var reflection = matrix_identity_float4x4
+        reflection.columns.0.x = -1
+        reflection.columns.3.x = 2 * center.x
+        return reflection
     }
 
     private static func translationMatrix(_ value: SIMD3<Float>) -> simd_float4x4 {
@@ -1497,7 +1665,7 @@ final class BoardModelRealityLoader {
                 $0.presentationID == presentation.id
             }.map(\.id)),
             instances: media.instances,
-            physics: media.physics,
+            physics: try store.presentationPhysicsInput(for: board, presentationID: presentation.id),
             presentationID: presentation.id,
             resourceLease: source.resourceLease
         )

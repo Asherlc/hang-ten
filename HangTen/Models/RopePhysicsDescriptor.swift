@@ -29,6 +29,8 @@ struct RopeChannelRegion: Hashable, Sendable {
 struct RopeGraphNode: Hashable, Sendable {
     let id: String
     let kind: String
+    /// Supports are fixed world-space anchors; attachments are board-local.
+    /// A support is intentionally allowed outside the board's model bounds.
     let point: SIMD3<Double>?
     let portalID: String?
 }
@@ -94,7 +96,9 @@ struct RopePhysicsDescriptor: Decodable, Sendable {
         let portals = try portalValues.map { value -> RopePortalRegion in
             let p = try value.object(["id", "center", "normal", "boundary"])
             let center = try p["center"]!.vector(), normal = try p["normal"]!.vector()
-            let boundary = try p["boundary"]!.array().map { try $0.vector() }
+            let boundaryValues = try p["boundary"]!.array()
+            guard boundaryValues.count <= 256 else { throw RopePhysicsError.invalid("Portal boundary exceeds 256 vertices") }
+            let boundary = try boundaryValues.map { try $0.vector() }
             guard abs(simd_length_squared(normal) - 1) <= 1e-6, boundary.count >= 3,
                   boundary.allSatisfy({ abs(simd_dot($0 - center, normal)) <= 1e-7 }) else {
                 throw RopePhysicsError.invalid("Invalid portal normal or plane")
@@ -205,8 +209,12 @@ struct RopePhysicsDescriptor: Decodable, Sendable {
         var edges: [SIMD2<Int>: (Int, Int)] = [:], volume = 0.0
         for face in triangles {
             let a = vertices[face.x], b = vertices[face.y], c = vertices[face.z]
-            guard simd_length_squared(simd_cross(b-a, c-a)) > 1e-24 else { throw RopePhysicsError.invalid("Degenerate collision triangle") }
-            volume += simd_dot(a, simd_cross(b,c)) / 6
+            let squaredArea = simd_length_squared(simd_cross(b-a, c-a))
+            let volumeTerm = simd_dot(a, simd_cross(b,c)) / 6
+            guard squaredArea.isFinite, volumeTerm.isFinite else { throw RopePhysicsError.invalid("Collision arithmetic must remain finite") }
+            guard squaredArea > 1e-24 else { throw RopePhysicsError.invalid("Degenerate collision triangle") }
+            volume += volumeTerm
+            guard volume.isFinite else { throw RopePhysicsError.invalid("Collision volume must remain finite") }
             for (i,j) in [(face.x,face.y),(face.y,face.z),(face.z,face.x)] {
                 let key = SIMD2(min(i,j), max(i,j)), old = edges[key] ?? (0,0)
                 edges[key] = (old.0 + 1, old.1 + (i < j ? 1 : -1))

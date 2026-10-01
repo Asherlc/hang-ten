@@ -29,6 +29,7 @@ struct FreeWorkoutLogSessionView: View {
     @State private var showsAddExercise = false
     @State private var guidedHangTarget: FreeWorkoutSetTarget?
     @State private var logSetTarget: FreeWorkoutSetTarget?
+    @FocusState private var focusedSetField: String?
 
     init(onFinished: (() -> Void)? = nil, onClose: (() -> Void)? = nil) {
         self.onFinished = onFinished
@@ -97,6 +98,8 @@ struct FreeWorkoutLogSessionView: View {
                     .padding(.horizontal, 20)
                     .padding(.vertical, 16)
                 }
+                .scrollDismissesKeyboard(.immediately)
+                .accessibilityIdentifier("freeWorkout.log.scroll")
             }
             .background(Color.hangBackground)
             .onChange(of: now) { _, date in
@@ -111,6 +114,11 @@ struct FreeWorkoutLogSessionView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") { focusedSetField = nil }
+                    .accessibilityIdentifier("freeWorkout.keyboard.done")
+            }
             ToolbarItem(placement: .cancellationAction) {
                 Button("Close") {
                     if let onClose {
@@ -442,6 +450,7 @@ struct FreeWorkoutLogSessionView: View {
             .padding(.horizontal, 4)
             .background(Color.hangBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
             .accessibilityIdentifier("freeWorkout.set.weight.\(set.id.uuidString)")
+            .focused($focusedSetField, equals: "weight.\(set.id.uuidString)")
 
             if exercise.type == .hang {
                 TextField(
@@ -456,6 +465,7 @@ struct FreeWorkoutLogSessionView: View {
                 .padding(.horizontal, 4)
                 .background(Color.hangBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .accessibilityIdentifier("freeWorkout.set.duration.\(set.id.uuidString)")
+                .focused($focusedSetField, equals: "duration.\(set.id.uuidString)")
             } else {
                 TextField(
                     "reps",
@@ -469,6 +479,7 @@ struct FreeWorkoutLogSessionView: View {
                 .padding(.horizontal, 4)
                 .background(Color.hangBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .accessibilityIdentifier("freeWorkout.set.reps.\(set.id.uuidString)")
+                .focused($focusedSetField, equals: "reps.\(set.id.uuidString)")
             }
 
             Button {
@@ -491,6 +502,7 @@ struct FreeWorkoutLogSessionView: View {
         .padding(.vertical, 2)
         .background(isFocused ? Color.hangGreen.opacity(0.12) : Color.clear)
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("freeWorkout.set.\(set.id.uuidString)")
     }
 

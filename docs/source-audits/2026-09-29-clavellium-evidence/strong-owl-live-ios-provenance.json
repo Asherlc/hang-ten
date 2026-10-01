@@ -10,9 +10,9 @@
   "modelSHA256": "35417e90919ff4bb75c2e4faaffe04547457e67032de8601451d799d789ca64d",
   "cordDiameterMM": 7,
   "viewProof": [
-    "live-front.png",
-    "live-side.png",
-    "live-top.png"
+    "strong-owl-live-ios-front.png",
+    "strong-owl-live-ios-side.png",
+    "strong-owl-live-ios-top.png"
   ],
   "debugRotationSequenceDegrees": [
     0,

@@ -32,8 +32,9 @@ from a bore. No general threefold multiplier applies to these values.
 
 Clavellium and Mini Bar use the operator's explicit 7 mm confirmation for
 both boards. Clavellium retains its documented round-cord adaptation of the
-photographed flat sling. Its legacy static suspension contains the earlier
-4 mm display baseline; the delivered live physics profile selects 7 mm using
+photographed flat sling. Its historical static suspension used a
+4 mm display baseline; the shipped static suspension now has radius 3.5 mm
+(7 mm diameter). The delivered live physics profile also selects 7 mm using
 baseline radius 2 mm and scale 1.75. This baseline is not a separate measured
 cord size. Mini Bar's static suspension and candidate physics both select
 7 mm. The Mini Bar 7.4 mm CAD bore is an explicitly labeled display estimate,

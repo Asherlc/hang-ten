@@ -4,6 +4,23 @@ import XCTest
 #endif
 
 final class RopeContactSystemTests: XCTestCase {
+    func testImmovableViolatedContactsFailClosedWithColdAndWarmSets() throws {
+        var system = try RopeBandedSystem(size: 1, bandwidth: 0)
+        try system.addSymmetric(row: 0, column: 0, value: 1)
+        let factor = try system.factorized(borderColumns: [], borderMatrix: [])
+        for gradient in [0.0, 1e-12] {
+            let contact = RopeLinearContact(indices: [0], coefficients: [gradient], border: [], residual: -0.001)
+            for warm in [[:], [0: -1.0]] {
+                XCTAssertThrowsError(try RopeContactSystem.solve(
+                    factor: factor, base: [0], border: [], contacts: [contact], initialMultipliers: warm)) { error in
+                    guard case RopeContactSystem.Failure.infeasible = error else {
+                        return XCTFail("Expected infeasible immovable contact, got \(error)")
+                    }
+                }
+            }
+        }
+    }
+
     func testIndependentCordAndBoardContactsShareOneMinimum() throws {
         var system=try RopeBandedSystem(size:2,bandwidth:0)
         try system.addSymmetric(row:0,column:0,value:2)

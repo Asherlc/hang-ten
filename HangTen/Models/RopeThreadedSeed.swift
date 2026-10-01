@@ -21,6 +21,7 @@ enum RopeThreadedSeed {
         }
         let portalMap=Dictionary(uniqueKeysWithValues:input.portals.map{($0.id,$0)})
         let up=orientation.inverse.act(SIMD3<Double>(0,1,0))
+        let channelColliders=try RopeChannelColliderCache(channels:input.channels).matchingColliders(for:input.channels)
         func makeRoutes(height: Double) throws -> [Route] {
         var routes:[Route]=[]
         for rope in profile.ropes {
@@ -46,12 +47,23 @@ enum RopeThreadedSeed {
                 let edgePortalID=rope.nodes[index].portalID ?? rope.nodes[index+1].portalID
                 let wrapBelow:Bool = {
                     guard edge.kind != "channel",let id=edgePortalID,let portal=portalMap[id] else{return false}
-                    let sameFace=rope.nodes.compactMap { $0.portalID.flatMap { portalMap[$0] } }
-                        .contains { $0.id != id && simd_dot($0.normal,portal.normal)>0.99 }
+                    guard let winding=edge.winding else{return false}
                     let projectedUp=up-portal.normal*simd_dot(up,portal.normal)
                     let positiveBasis=simd_dot(projectedUp,SIMD3<Double>(0,1,0))*portal.normal.z>0
-                    return sameFace && edge.winding == (positiveBasis ? "counterclockwise":"clockwise")
+                    // Authoring measures turn from support to mouth in the
+                    // model (+Y,+Z) section, independently of graph traversal
+                    // direction. The upper route turns CCW at a +Z mouth;
+                    // the opposite winding must take the lower exterior route.
+                    return winding != (positiveBasis ? "counterclockwise":"clockwise")
                 }()
+                if wrapBelow,let id=edgePortalID,let portal=portalMap[id],
+                   !rope.nodes.compactMap({$0.portalID.flatMap{portalMap[$0]}})
+                    .contains(where:{$0.id != id && simd_dot($0.normal,portal.normal)>0.99}) {
+                    // The lower same-face adapter is not a through-bore
+                    // closure. Without that closure its search can take the
+                    // bore itself and falsely claim an exterior winding.
+                    throw RopePhysicsError.invalid("Opposite-face lower winding requires a reviewed exterior topology adapter")
+                }
                 let path:[SIMD3<Double>]
                 if edge.kind == "channel" {
                     guard let channel=input.channels.first(where:{$0.id == edge.channelID}) else {
@@ -72,6 +84,10 @@ enum RopeThreadedSeed {
                             let f=stations[i]/total
                             return spine[i]+firstOffset*(1-f)+lastOffset*f
                         }
+                    }
+                    guard let channelCollider=channelColliders[channel.id],
+                          zip(path,path.dropFirst()).allSatisfy({channelCollider.containsSegment(from:$0,to:$1)}) else {
+                        throw RopePhysicsError.invalid("Seed traversal leaves its native channel region")
                     }
                     guard zip(path,path.dropFirst()).allSatisfy({first,second in
                         collider.segmentContact(from:first,to:second,radius:rope.radius+RopeRegionGeometry.clearance-1e-9) == nil
@@ -218,13 +234,23 @@ enum RopeThreadedSeed {
         let projections=collider.mesh.vertices.map{SIMD2(simd_dot($0-mouth,u),simd_dot($0-mouth,v))}
         let anchorUV=SIMD2(simd_dot(anchor-mouth,u),simd_dot(anchor-mouth,v))
         let top=projections.map{$0.x}.max()!+offset+spacing
-        let minU=Int(floor(min(projections.map{$0.x}.min()!,0)/spacing))-20
-        let maxU=Int(ceil(max(anchorUV.x,top)/spacing))+20
-        let minV=Int(floor(min(projections.map{$0.y}.min()!,anchorUV.y)/spacing))-20
-        let maxV=Int(ceil(max(projections.map{$0.y}.max()!,anchorUV.y)/spacing))+20
-        let width=maxV-minV+1,count=(maxU-minU+1)*width
-        let states=wrapBelow ? count*3:count
-        guard count>0,states<500_000 else{throw RopePhysicsError.invalid("Seed search exceeds bounded workspace")}
+        // Bound the complete workspace before any integer conversion or
+        // multiplication. Finite descriptor coordinates can still exceed Int.
+        let lowerU=floor(min(projections.map{$0.x}.min()!,min(anchorUV.x,0))/spacing)-20
+        let upperU=ceil(max(anchorUV.x,top)/spacing)+20
+        let lowerV=floor(min(projections.map{$0.y}.min()!,anchorUV.y)/spacing)-20
+        let upperV=ceil(max(projections.map{$0.y}.max()!,anchorUV.y)/spacing)+20
+        let gridWidth=upperV-lowerV+1,gridHeight=upperU-lowerU+1
+        let cellCount=gridHeight*gridWidth,stateCount=cellCount*(wrapBelow ? 3:1)
+        guard [lowerU,upperU,lowerV,upperV,gridWidth,gridHeight,cellCount,stateCount].allSatisfy(\.isFinite),
+              lowerU<=0,upperU>=0,lowerV<=0,upperV>=0,
+              gridWidth>0,gridHeight>0,stateCount>0,stateCount<500_000,
+              let minU=Int(exactly:lowerU),let maxU=Int(exactly:upperU),
+              let minV=Int(exactly:lowerV),let maxV=Int(exactly:upperV),
+              let width=Int(exactly:gridWidth),let count=Int(exactly:cellCount),
+              let states=Int(exactly:stateCount) else {
+            throw RopePhysicsError.invalid("Seed search exceeds bounded workspace")
+        }
         func index(_ a:Int,_ b:Int)->Int{(a-minU)*width+b-minV}
         func point(_ i:Int)->SIMD3<Double>{let j=i%count;return mouth+u*(Double(j/width+minU)*spacing)+v*(Double(j%width+minV)*spacing)}
         let centerU=(projections.map{$0.x}.min()!+projections.map{$0.x}.max()!)/2
@@ -238,7 +264,12 @@ enum RopeThreadedSeed {
             return av>=0 ? 1:-1
         }
         let start=index(0,0)+(wrapBelow ? count:0)
-        let goal=index(Int(anchorUV.x/spacing),Int(anchorUV.y/spacing))+(wrapBelow ? 2*count:0)
+        guard let goalU=Int(exactly:(anchorUV.x/spacing).rounded(.towardZero)),
+              let goalV=Int(exactly:(anchorUV.y/spacing).rounded(.towardZero)),
+              (minU...maxU).contains(goalU),(minV...maxV).contains(goalV) else {
+            throw RopePhysicsError.invalid("Seed search exceeds bounded workspace")
+        }
+        let goal=index(goalU,goalV)+(wrapBelow ? 2*count:0)
         var distances=Array(repeating:Double.infinity,count:states),previous=Array(repeating:-1,count:states)
         var clearance=Array(repeating:Double.nan,count:count),heap=Heap()
         distances[start]=0;heap.push((simd_distance(mouth,anchor),start))

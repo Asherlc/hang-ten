@@ -107,18 +107,26 @@ manufacturer—not the app—defines when the task is complete.
 
 ## 5. Resolve holds semantically
 
-Choose the narrowest truthful `ContactRequirement` predicate. Routines never
-contain board contact IDs or visual-frame references:
+Choose the narrowest truthful `PlanContactPredicate` for each hand. Bundled
+routines use ordered `tasks`; each task contains one or two simultaneous hand
+targets. Routines never contain board contact IDs or visual-frame references:
 
 - `kind` for a source term such as “jug,” “edge,” or “pocket”;
 - `shape` only for a documented physical qualifier such as “flat,” “round,”
   “incut,” or “slot”;
-- `depth: .category(...)` for a source size word (for example “medium edge”)
-  when the source gives no measurement, or `depth: .range(...)` for a stated
-  measurement;
-- `fingerCapacity` or `handCapacity` only when the source specifies it;
-- `.bilateralPair` when the source prescribes both hands together or names a
-  pair; otherwise `.single` resolves one stable geometry-selected contact.
+- `depth: {"category":"medium"}` for a source size word, or
+  `depth: {"minMM":20,"maxMM":35}` for a stated measurement or an explicitly
+  documented inferred band in an adapted plan. Never present an inferred band
+  as a manufacturer prescription; use equal bounds for one exact measurement;
+- `fingerCapacity` when the source specifies it, and `handCapacity` only when
+  source evidence supports multiple hands sharing one contact;
+- `target: "any"` when the source explicitly lets the athlete choose a hold.
+
+Default to two hand entries unless the source prescribes one arm. Put different
+holds used together in the same task, and put successive holds in successive
+tasks. Use `side: "left"` or `"right"` only when the source names a side. The
+number of entries in a task is the hand count; do not add a separate `hands`
+field. See [`PlanWorkTarget.schema.json`](schemas/PlanWorkTarget.schema.json).
 
 The resolver matches those predicates against factual board metadata. Do not
 hard-code a contact ID or visual frame into a routine. If the source names a
@@ -131,6 +139,43 @@ size available—for example both “Medium Edge” and “Small Edge” can res
 board whose only smaller edges are 19 mm. Keep the source term in the task,
 make the board metadata truthful, and disclose the equivalence in review. Never
 rename a pocket as a sloper or omit a required target silently.
+
+### Metolius edge-name cross-reference (checked September 29, 2026)
+
+The [10 Minute Sequences guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide)
+uses Large, Medium, and Small Edge without millimeter measurements. The separate
+[Simulator 3D guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide)
+uses numbered deep, medium, shallow, and extra-shallow edges. Metolius's
+[numbered depth diagram](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep.jpg?v=1759460619)
+provides the following measurements. Matching the generic names across the
+two guides is an inference, not a manufacturer-published conversion table.
+
+| Generic guide term | Simulator 3D term | Number | Depth |
+| --- | --- | ---: | ---: |
+| Large Edge | Deep edge | 7 | 36 mm |
+| Medium Edge | Medium edge | 5 | 25 mm |
+| Small Edge | Shallow edge | 6 | 19 mm |
+| No generic counterpart | Extra-shallow edge | 11 | 14 mm |
+
+The Simulator matrix calls #5 “shallow” once in its Entry minute 6, despite
+calling it “medium” elsewhere; the diagram still measures #5 at 25 mm. The
+cross-reference supports an inferred 8–19 mm resolution band for the Metolius
+generic plan's Small Edge tasks: 8–15 mm comes from Hang Ten's existing Small
+category, and the inferred 19 mm upper bound admits Metolius's shallow edge.
+This is specific to those tasks; the shared Small category remains 8–15 mm for
+other plans and saved routines. The band overlaps Medium Edge on a board with
+only two edge depths. On Simulator 3D, Hang Ten's center-nearest resolver
+currently highlights the same #6 19 mm edge for both generic Small Edge and
+Medium Edge tasks; that overlap is an app mapping, not a manufacturer-published
+equivalence. It is not a manufacturer-prescribed numeric range and
+does not change any contact's factual depth. Because numeric `HoldDepth.matches`
+allows 1 mm of tolerance on each end, the serialized requirement uses 9–18 mm
+to match point-depth contacts from 8 through 19 mm, excluding 7.5 and 20 mm.
+Contacts with measured depth ranges still match when their range intersects
+that band. The Intermediate generic guide's
+minute 9 says only “Slope,” so its target is an unqualified sloper. Its
+Advanced section explicitly says “Large Slope,” and that target remains
+size-qualified.
 
 ## 6. Audit the implementation line by line
 
@@ -170,8 +215,9 @@ Preview representative steps with the DEBUG routes documented in
 - Step order, repetitions, times, and qualifiers match line by line.
 - No unrequested timed work/rest, warm-up, cooldown, or exercise added.
 - `official` or `adapted` provenance is honest.
-- Every target resolves to at least one factual hold on each compatible board.
+- Every simultaneous task resolves to factual hold contacts on each compatible board.
 - Board-specific plans are hidden from other boards.
 - Source link is visible in the app.
 - `PlanLibrary.json` was regenerated and passes the exporter's `--check` mode.
+- `scripts/validate-plan-work-targets.sh` validates every bundled work target.
 - Representative timer, audio, text, and highlight states reviewed.

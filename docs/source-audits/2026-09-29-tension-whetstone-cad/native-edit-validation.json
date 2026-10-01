@@ -1,0 +1,22 @@
+{
+  "reopenRecompute": true,
+  "namedEdit": "CenterIncutSection2.Placement.Base.y + 0.5 mm",
+  "before": {
+    "volume": 2936940.5688402173,
+    "depth": 40.000000000000014,
+    "area": 14761.375436693103,
+    "unrelatedArea": 8023.731098183483
+  },
+  "after": {
+    "volume": 2935212.151574239,
+    "depth": 40.5,
+    "area": 14894.923802319176,
+    "unrelatedArea": 8023.731098183483
+  },
+  "unrelatedContactUnchanged": true,
+  "jugEdit": "UpperSilhouette2.Placement.Base.z + 0.5 mm",
+  "jugAreaBefore": 41443.02984044971,
+  "jugAreaAfter": 41799.1128656596,
+  "allNative": true,
+  "sourceBytesUnchanged": true
+}

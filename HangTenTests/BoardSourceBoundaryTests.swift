@@ -51,6 +51,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "soill.iron-palm-2",
             "soill.split-palm",
             "soill.training-tiles",
+            "surfaces-for-climbing-transgression-2011",
+            "surfaces-for-climbing-transgression-2013",
             "target10a.linebreaker-base",
             "tension.flash-board",
             "tension.grindstone",
@@ -325,6 +327,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "tension.flash-board",
             "tension.grindstone",
             "tension.grindstone-pro",
+            "tension.grindstone-original",
+            "tension.honestone",
+            "tension.whetstone",
             "trango.rock-prodigy-pivot",
             "metolius.climbers-edge",
             "metolius.contact",
@@ -332,10 +337,13 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "soill.iron-palm-2",
             "soill.split-palm",
             "soill.training-tiles",
+            "surfaces-for-climbing-transgression-2011",
+            "surfaces-for-climbing-transgression-2013",
             "the-hangboard.the-hangboard",
             "trango.rock-prodigy-training-center",
             "target10a.linebreaker-base",
             "yy.baguette-evo",
+            "yy.verticalboard-evo",
             "yy.penta-evo"
         ]
 
@@ -460,7 +468,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 var typedAssets = Set([media.assetPath, media.descriptorPath])
                 if let physicsPath = media.physicsDescriptorPath {
                     typedAssets.insert(physicsPath)
-                    XCTAssertNotNil(media.physics)
+                    XCTAssertNotNil(try BoardCatalog.packageStore.presentationPhysicsInput(for: board))
                 }
                 if packageEntries.contains("rope-physics.json") {
                     XCTAssertNotNil(media.physicsDescriptorPath)

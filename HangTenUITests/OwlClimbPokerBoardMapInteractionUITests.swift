@@ -1,4 +1,5 @@
 import XCTest
+import UIKit
 
 final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
     override func tearDown() {
@@ -228,7 +229,8 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
     func testDoorMount() throws {
         try review(boardID: "frictitious.doormount-pro-7", target: "edge-35-right",
                    surfacePoint: CGVector(dx: 0.83197737, dy: 0.46294296),
-                   resetContactOffset: CGVector(dx: 0.82, dy: 0.55))
+                   // The larger orbit clips the outer end; tap the visible inner floor.
+                   resetContactOffset: CGVector(dx: 0.25, dy: 0.55))
     }
 
     func testMegalith() throws {
@@ -263,14 +265,13 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": boardID,
+            "HANGTEN_REVIEW_BOARD_DETAIL": "1",
+            "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
         ]
         app.launch()
-        // The Train card's noninteractive preview starts loading this same model
-        // before the map test begins. Navigate straight to Hold specs instead
-        // of waiting for that preview to finish and importing the USDZ again in
-        // the interactive map. The contact query below is the readiness check
-        // for the model this test actually exercises.
-        app.buttons["View hold specs"].tap()
+        // Open Hold specs directly so the Train card does not first load a
+        // second RealityView of the same model. The contact query below checks
+        // readiness of the interactive model this test actually exercises.
         XCTAssertTrue(app.navigationBars["Hold specs"].waitForExistence(timeout: 30))
         let contact = app.buttons["boardModel.contact.\(target)"]
         XCTAssertTrue(contact.waitForExistence(timeout: 120))
@@ -294,20 +295,38 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         capture("\(boardID)-portrait-active")
 
         let initialContactFrame = contact.frame
+        captureRendererDiagnostic(app: app, name: "\(boardID)-before-orbit")
+        let initialMapFrame = map.frame
+        let initialMapImage = try mapSnapshot(in: initialMapFrame)
         // Some models have empty gaps around the projected center. Begin the
         // orbit on the verified surface point when the test needed one to pick.
         let orbitStart = surfacePoint != nil
             ? initialPoint
             : map.coordinate(withNormalizedOffset: CGVector(dx: 0.55, dy: 0.5))
-        orbitStart.press(forDuration: 0.1,
-                         thenDragTo: map.coordinate(withNormalizedOffset: CGVector(dx: 0.70, dy: 0.65)))
+        // DoorMount's shallow viewport makes the old gesture only 44 × 11 points.
+        // Give UIKit a sustained drag across the surface rather than a brief
+        // touch that can be synthesized as a contact tap/camera reset on CI.
+        let orbitEndX = boardID == "frictitious.doormount-pro-7" ? 0.50 : 0.70
+        orbitStart.press(forDuration: 0.3,
+                         thenDragTo: map.coordinate(withNormalizedOffset: CGVector(dx: orbitEndX, dy: 0.65)),
+                         withVelocity: .slow, thenHoldForDuration: 0.2)
         XCTAssertTrue(selected.exists, "Orbit must preserve contact selection")
         let orbitFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             contact.frame != initialContactFrame
         }, object: nil)
         XCTAssertEqual(XCTWaiter.wait(for: [orbitFinished], timeout: 15), .completed,
                        "Orbit must change the projected contact")
+        let visibleOrbit = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let image = try? self.mapSnapshot(in: initialMapFrame) else {
+                return false
+            }
+            return image != initialMapImage
+        }, object: nil)
+        let visibleOrbitResult = XCTWaiter.wait(for: [visibleOrbit], timeout: 60)
         capture("\(boardID)-portrait-orbit")
+        captureRendererDiagnostic(app: app, name: "\(boardID)-after-orbit")
+        XCTAssertEqual(visibleOrbitResult, .completed,
+                       "Orbit must change the rendered board, not only its accessibility projection")
         // Reproject after orbit; the initial contact offset no longer tracks
         // the visible surface once the camera has moved.
         let resetPoint = surfaceCoordinate(for: contact, in: map, offset: resetContactOffset)
@@ -348,6 +367,53 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         ))
     }
 
+    private func captureRendererDiagnostic(app: XCUIApplication, name: String) {
+        let element = app.descendants(matching: .any)
+            .matching(identifier: "boardModel.renderDiagnostic").firstMatch
+        let value = element.exists ? String(describing: element.value ?? "pending") : "missing"
+        let mapFrame = app.descendants(matching: .any)
+            .matching(identifier: "boardDetail.map").firstMatch.frame
+        let screenshot = XCUIScreen.main.screenshot().image
+        let attachment = XCTAttachment(string:
+            "renderer=\(value);map=\(mapFrame);app=\(app.frame);imageSize=\(screenshot.size);scale=\(screenshot.scale);orientation=\(screenshot.imageOrientation.rawValue);rawPixels=\(screenshot.cgImage?.width ?? 0)x\(screenshot.cgImage?.height ?? 0)")
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    private func mapSnapshot(in frame: CGRect) throws -> Data {
+        // RealityView's accessibility element can remain queryable while XCTest
+        // cannot snapshot its hosted view. Crop the screen at the saved viewport
+        // instead, so the assertion observes pixels without that snapshot API.
+        let screenshot = normalizedScreenImage()
+        let image = try XCTUnwrap(screenshot.cgImage)
+        // SpringBoard can retain its landscape frame after the app returns to
+        // portrait. Use the normalized screenshot’s own point-to-pixel scale
+        // so the crop always observes the board rather than a stale header area.
+        let scale = screenshot.scale
+        let region = CGRect(x: frame.minX * scale,
+                            y: frame.minY * scale,
+                            width: frame.width * scale,
+                            height: frame.height * scale).integral
+        let bounds = CGRect(x: 0, y: 0, width: image.width, height: image.height)
+        XCTAssertTrue(region.width > 0 && region.height > 0 && bounds.contains(region),
+                      "Map crop \(region) must fit normalized screenshot \(bounds); map=\(frame), imageSize=\(screenshot.size), scale=\(scale)")
+        let cropped = try XCTUnwrap(image.cropping(to: region))
+        return try XCTUnwrap(UIImage(cgImage: cropped).pngData())
+    }
+
+    private func normalizedScreenImage() -> UIImage {
+        let image = XCUIScreen.main.screenshot().image
+        // A screenshot can retain a landscape CGImage with a portrait UIImage
+        // orientation after another test rotates the device. Draw it once to
+        // apply that orientation before converting screen points to pixels.
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = image.scale
+        return UIGraphicsImageRenderer(size: image.size, format: format).image { _ in
+            image.draw(in: CGRect(origin: .zero, size: image.size))
+        }
+    }
+
     private func assertModelBodyIsVisible(in viewport: XCUIElement) throws {
         let rendered = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             ((try? self.modelBodySampleCount(in: viewport)) ?? 0) > 8
@@ -359,7 +425,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
     }
 
     private func modelBodySampleCount(in viewport: XCUIElement) throws -> Int {
-        let screenshot = XCUIScreen.main.screenshot().image
+        let screenshot = normalizedScreenImage()
         let cgImage = try XCTUnwrap(screenshot.cgImage)
         let width = cgImage.width
         let height = cgImage.height

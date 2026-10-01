@@ -4,7 +4,7 @@
 
 Every corded CAD board uses this method: the cord's hidden passage is a void
 in the native FreeCAD solid, the topology lives in `suspension.json` as a
-`twoBranchCord` with `internalLoop`, the channel length is measured from CAD
+`twoBranchCord` (or the single-loop `threadedLoopCord`) with `internalLoop`, the channel length is measured from CAD
 with `Tools/HangboardCAD/measure_channel_spines.py`, and the visible routes
 and hanging height are solved against the exported CAD solid with
 `Tools/HangboardCAD/solve_threaded_rope.py`. Do not hand-place cord contact
@@ -13,13 +13,14 @@ board. The runtime's convex-section fallback and hand-authored
 `pairedLeadCord` / `singleCord` metadata remain only for older non-CAD
 packages; migrate a board's cord to this method when the board moves to CAD.
 
-The following boards use it:
+These boards use it:
 
 | Board | Channel | Section plane | Notes |
 | --- | --- | --- | --- |
 | Lattice Mini Bar | curved `PartDesign::SubtractivePipe`, two mouths on one face per end | `mouth-x` (default) | constant-section bar; four grip poses |
 | Crimptonite Helium Mobile | straight `Part::Cylinder` through-bore, front and back mouths per end | `anchor` | mouths sit in the rounded ends; one loop of cord through both holes |
 | Clavellium Training Block | owner-confirmed straight rectangular `Part::Box` passages | `mouth-x`, `channelProfile=rectangular` | one central-channel loop; round-cord adaptation of a flat sling; grip-to-channel mapping unknown |
+| Metolius Rock Rings | connected `Part::MultiFuse` void with linked ordered spine | none (direct-leg solve) | one continuous loop per displayed ring; exact native-solid clearance |
 
 One sling through one channel uses the same `twoBranchCord` wire type with
 one branch, its two mouths in `passages.left`, and an empty `passages.right`.
@@ -27,6 +28,15 @@ This one-loop form is valid only with `internalLoop` and a complete generated
 route cache for every pose. It must not duplicate the physical sling to satisfy
 the older two-loop inventory. Existing exterior and uncached topologies still
 require two branches and four mouths.
+
+Rock Rings extend the topology to one branch with two mouths and retain the
+whole measured channel centerline in `internalLoop.channelPointsByBranchID`.
+The solver settles the board from total cord length and checks both free legs
+and the interior path against the native solid in FreeCAD Python. The spine is
+rendered as transient cord geometry, hidden by the body except at its openings.
+Schema-2 sidecars attach this setup to each independent instance of the same
+model. See the [retained threading audit](source-audits/2026-09-30-rock-ring-threading.md)
+for the owner-confirmed hidden connection and estimated channel dimensions.
 
 If a board's cord does not fit the solver's assumptions (below), extend the
 solver with evidence and tests rather than falling back to hand-authored
@@ -69,7 +79,7 @@ pairing, one overhead anchor, estimated radius and rest length, canonical
 board poses, a positive clearance, `internalLoop.windingByPassageID`, and
 `internalLoop.channelLengthByBranchID` measured from the CAD pipe spines.
 The passage IDs and pair order are part of the topology. The sidecar is bound
-to the model descriptor's `modelSHA256` and covered by the delivery lock;
+to the model descriptor's `modelSHA256` and checked by package validation;
 `board.json` is generated from the FCStd manifest plus this sidecar.
 
 `Tools/HangboardCAD/export_rope_collision_solid.py` tessellates the final,
@@ -191,9 +201,15 @@ The current solver applies when all of these hold:
    to that void in the descriptor/importer coordinate basis.
 3. Each mouth's section plane (below) is representative of the bearing
    surface along that leg. The native solid is watertight for collision checks.
-4. The model has two branches, four distinct point mouths, and one winding
+4. The internal-loop model has one or two branches, two distinct point mouths
+   per branch, and one winding
    choice for each mouth. Each branch's `passageIDs` lists its paired mouths
    in traversal order.
+
+The `threadedLoopCord` extension instead requires one branch with two distinct
+mouths, its complete ordered native channel spine, and unobstructed rising
+legs. It does not use a section plane or surface winding; exact native-solid
+checks enforce cord radius plus the configured internal-loop clearance.
 
 **Channels.** A channel is either a curved `PartDesign::SubtractivePipe`
 (its Sketcher spine is measured) or a straight `Part::Cylinder` through-bore
@@ -264,7 +280,7 @@ tests. No solver choice can recover hidden threading from the mesh alone.
    Generated pose routes are a cache in the sidecar, not operator-drawn
    contacts. Generate `board.json` through the normal CAD package process;
    never commit that generated file.
-4. Validate the schema, model SHA, delivery lock, package inventory, and
+4. Validate the schema, model SHA, package inventory, and
    byte-for-byte CAD rebuild. Add a focused parser and native solver test for
    every pose and a negative test for malformed topology.
 5. Measure cord-centerline clearance against the **actual FreeCAD solid**,

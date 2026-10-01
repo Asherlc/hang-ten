@@ -69,7 +69,7 @@ final class ClavelliumRopePhysicsTests: XCTestCase {
             assertAccepted(frame)
             let up=target.inverse.act(SIMD3<Double>(0,1,0))
             for (id,crossing) in solver.state.ropes[0].portalCrossings {
-                let portal=solver.input.portals.first{$0.id == id}!
+                let portal=try XCTUnwrap(solver.input.portals.first{$0.id == id}, "Missing portal for crossing \(id)")
                 let expected=try RopeRegionGeometry.bearing(portal,radius:solver.state.ropes[0].radius,up:up)
                 let bearing=solver.state.boardPoint(crossing.point(in:frame.ropes[0].positions))
                 XCTAssertEqual(simd_dot(bearing,up),simd_dot(expected,up),accuracy:0.0002)

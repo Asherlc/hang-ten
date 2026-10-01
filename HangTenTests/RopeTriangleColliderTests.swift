@@ -5,6 +5,72 @@ import simd
 #endif
 
 final class RopeTriangleColliderTests: XCTestCase {
+    func testDisconnectedShellBudgetFailsClosedAndDisjointBoundsRemainValid() throws {
+        func boxes(_ count: Int) -> RopeCollisionMesh {
+            var vertices: [SIMD3<Double>] = [], triangles: [SIMD3<Int>] = []
+            for index in 0..<count {
+                let origin = Double(index) * 3
+                let box = Self.box(minimum: SIMD3(origin, 0, 0), maximum: SIMD3(origin + 1, 1, 1))
+                let offset = vertices.count
+                vertices += box.vertices
+                triangles += box.triangles.map { $0 &+ SIMD3(repeating: offset) }
+            }
+            return RopeCollisionMesh(vertices: vertices, triangles: triangles)
+        }
+        XCTAssertNoThrow(try RopeTriangleCollider(mesh: boxes(256)))
+        XCTAssertThrowsError(try RopeTriangleCollider(mesh: boxes(257))) { error in
+            guard case RopePhysicsError.invalid(let reason) = error else {
+                return XCTFail("Expected bounded shell rejection, got \(error)")
+            }
+            XCTAssertEqual(reason, "Excessive disconnected collision shells")
+        }
+    }
+
+    func testLongNearWallChordsCertifyWithoutIncreasingContainmentBudget() throws {
+        let collider = try RopeTriangleCollider(mesh: Self.box())
+        // A two-metre chord on the triangulated face exhausted the old
+        // 16,384-query Lipschitz-only search; its triangle tubes certify it.
+        for distance in [0.0, 0.000009, -0.000009] {
+            XCTAssertTrue(collider.containsSegment(
+                from: SIMD3(-1, 1 + distance, 0), to: SIMD3(1, 1 + distance, 0)))
+        }
+        XCTAssertFalse(collider.containsSegment(
+            from: SIMD3(-1, 1.000011, 0), to: SIMD3(1, 1.000011, 0)))
+        XCTAssertFalse(collider.containsSegment(
+            from: SIMD3(-1, 1, 0), to: SIMD3(1, 1.1, 0)))
+    }
+
+    func testDisconnectedShellOrientationAndNestedCavityOrientation() throws {
+        let outer = Self.box()
+        let separate = Self.box(minimum: SIMD3(2, -0.25, -0.25), maximum: SIMD3(2.5, 0.25, 0.25))
+        let cavity = Self.box(minimum: SIMD3(-0.25, -0.25, -0.25), maximum: SIMD3(0.25, 0.25, 0.25))
+        func combined(_ other: RopeCollisionMesh, reversed: Bool) -> RopeCollisionMesh {
+            let faces = other.triangles.map { face in
+                let oriented = reversed ? SIMD3(face.x, face.z, face.y) : face
+                return oriented &+ SIMD3(repeating: outer.vertices.count)
+            }
+            return RopeCollisionMesh(vertices: outer.vertices + other.vertices, triangles: outer.triangles + faces)
+        }
+        XCTAssertNoThrow(try RopeTriangleCollider(mesh: combined(separate, reversed: false)))
+        // Total volume remains positive in both malformed cases.
+        XCTAssertThrowsError(try RopeTriangleCollider(mesh: combined(separate, reversed: true)))
+        XCTAssertThrowsError(try RopeTriangleCollider(mesh: combined(cavity, reversed: false)))
+        let hollow = try RopeTriangleCollider(mesh: combined(cavity, reversed: true))
+        XCTAssertEqual(hollow.signedDistance(at: .zero), 0.25, accuracy: 1e-9)
+        XCTAssertLessThan(hollow.signedDistance(at: SIMD3(0.5, 0, 0)), 0)
+    }
+
+    func testWholeSegmentContainmentRejectsExcursionThroughCavity() throws {
+        let collider = try RopeTriangleCollider(mesh: Self.box())
+        XCTAssertTrue(collider.containsSegment(from: SIMD3(0, 0, -1), to: SIMD3(0, 0, 1)))
+        XCTAssertFalse(collider.containsSegment(from: SIMD3(0, 0, 0), to: SIMD3(2, 0, 0)))
+        let outer = Self.box(), inner = Self.box(minimum: SIMD3(-0.25, -0.25, -0.25), maximum: SIMD3(0.25, 0.25, 0.25))
+        let faces = inner.triangles.map { SIMD3($0.x, $0.z, $0.y) &+ SIMD3(repeating: outer.vertices.count) }
+        let hollow = try RopeTriangleCollider(mesh: RopeCollisionMesh(
+            vertices: outer.vertices + inner.vertices, triangles: outer.triangles + faces))
+        XCTAssertFalse(hollow.containsSegment(from: SIMD3(-0.5, 0, 0), to: SIMD3(0.5, 0, 0)))
+    }
+
     static func box(minimum: SIMD3<Double> = SIMD3(-1,-1,-1), maximum: SIMD3<Double> = SIMD3(1,1,1)) -> RopeCollisionMesh {
         let a = minimum, b = maximum
         let vertices = [SIMD3(a.x,a.y,a.z),SIMD3(b.x,a.y,a.z),SIMD3(b.x,b.y,a.z),SIMD3(a.x,b.y,a.z),
@@ -78,6 +144,8 @@ final class RopeTriangleColliderTests: XCTestCase {
 
     func testMalformedCollisionMeshIsRejected() {
         let mesh = Self.box()
+        let overflow = RopeCollisionMesh(vertices: mesh.vertices.map { $0 * 1e200 }, triangles: mesh.triangles)
+        XCTAssertThrowsError(try RopeTriangleCollider(mesh: overflow))
         XCTAssertThrowsError(try RopeTriangleCollider(mesh:RopeCollisionMesh(vertices:mesh.vertices,triangles:Array(mesh.triangles.dropLast()))))
         var faces = mesh.triangles
         faces[0] = SIMD3(0,0,1)

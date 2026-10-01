@@ -100,7 +100,7 @@ struct RopeSimulationMetrics: Sendable {
                 if commonNeighborhood {
                     if distance<1e-8,let commonSupport,simd_distance(pair.0,commonSupport)>1e-6 {pairs.append(SIMD2(i,j));if stopAfterFirst{return pairs}}
                 } else if connectedNeighborhood {
-                    if distance<1e-8 && pair.2>1e-6 && pair.2<1-1e-6 {pairs.append(SIMD2(i,j));if stopAfterFirst{return pairs}}
+                    if distance<1e-8 {pairs.append(SIMD2(i,j));if stopAfterFirst{return pairs}}
                 } else if distance < 2*radius-0.00005+margin {pairs.append(SIMD2(i,j));if stopAfterFirst{return pairs}}
             }
         }

@@ -53,6 +53,79 @@ final class RopeDynamicsSolverTests: XCTestCase {
             corrections:[[.zero,.zero],[.zero,SIMD3(0.004,0,0)]],heightCorrection:0),0.25,accuracy:1e-12)
     }
 
+    func testImmovableContactUsesBoundedRetryAndRollsBack() throws {
+        let upright = simd_quatd(angle: 0, axis: SIMD3<Double>(0, 0, 1))
+        let mesh = RopeTriangleColliderTests.box()
+        let points = [SIMD3<Double>(0.9, 0, 0), SIMD3<Double>(0.9, 0.1, 0)]
+        let nodes = points.enumerated().map { index, point in
+            RopeGraphNode(id: "support-\(index)", kind: "support", point: point, portalID: nil)
+        }
+        let rope = RopePhysicsRope(id: "fixed", baselineRadius: 0.0035, radius: 0.0035,
+            restLength: 0.1, linearMass: 0.01, nodes: nodes,
+            edges: [RopeGraphEdge(from: nodes[0].id, to: nodes[1].id, kind: "free", channelID: nil, winding: nil)])
+        let profile = RopePhysicsProfile(id: "test", presentationID: "test", instanceID: nil, boardMass: 1, ropes: [rope])
+        let input = RopePhysicsInput(modelSHA256: "test", sourceSHA256: "test", collision: mesh,
+            portals: [], channels: [], profiles: [profile])
+        let chain = RopeChainState(id: rope.id, radius: rope.radius, linearMass: rope.linearMass,
+            restLengths: [0.1], positions: points, previousPositions: points, velocities: [.zero, .zero],
+            supports: [0: points[0], 1: points[1]], attachments: [:], portals: [:], channelSegments: [:])
+        let state = RopeSimulationState(profileID: profile.id, boardMass: 1, boardHeight: 0,
+            boardVerticalVelocity: 0, orientation: upright, ropes: [chain])
+        var solver = try RopeDynamicsSolver(input: input, state: state, collider: RopeTriangleCollider(mesh: mesh))
+        // Both endpoints are fixed inside wood. Their nearest wall normal is
+        // horizontal, so neither rope motion nor board height can correct it.
+        // Failure must exhaust the existing four retry levels, never publish.
+        XCTAssertThrowsError(try solver.step(dt: 1.0 / 240, targetOrientation: upright)) { error in
+            guard case RopePhysicsError.invalid(let reason) = error else {
+                return XCTFail("Expected bounded nonlinear failure, got \(error)")
+            }
+            XCTAssertEqual(reason, "Bounded solve could not resolve nonlinearConvergence")
+        }
+        XCTAssertEqual(solver.state.boardHeight, state.boardHeight)
+        XCTAssertEqual(solver.state.ropes[0].positions, points)
+        XCTAssertEqual(solver.state.boardVerticalVelocity, state.boardVerticalVelocity)
+    }
+
+    func testConnectedNeighborhoodRejectsCrossingAtEarlierSegmentEndpoint() {
+        let points: [SIMD3<Double>] = [SIMD3(-0.002, 0, 0), .zero,
+            SIMD3(0, 0.001, 0), SIMD3(0, -0.001, 0)]
+        // Link 2 crosses link 0 exactly at its endpoint, but these links do
+        // not share a material knot. The short intervening arc cannot hide it.
+        XCTAssertEqual(RopeSimulationMetrics.selfContactPair(
+            positions: points, radius: 0.0035, supports: [:]), SIMD2(0, 2))
+    }
+
+    func testLargeFiniteSettlingDurationFailsWithoutIntegerConversionTrap() throws {
+        let input = try RopeThreadedSeedTests.clavellium()
+        let collider = try RopeTriangleCollider(input: input)
+        let upright = simd_quatd(angle: 0, axis: SIMD3<Double>(0, 0, 1))
+        let state = try RopeThreadedSeed.make(input: input, profileID: "front", orientation: upright, collider: collider)
+        var solver = try RopeDynamicsSolver(input: input, state: state, collider: collider)
+        for duration in [Double.greatestFiniteMagnitude, Double(Int.max) / 240] {
+            XCTAssertThrowsError(try solver.settled(targetOrientation: upright, maxDuration: duration))
+            XCTAssertEqual(solver.state.boardHeight, state.boardHeight)
+        }
+    }
+
+    func testCancelledSettlingStopsBeforeTakingAnyStep() async throws {
+        let input = try RopeThreadedSeedTests.clavellium()
+        let collider = try RopeTriangleCollider(input: input)
+        let upright = simd_quatd(angle: 0, axis: SIMD3<Double>(0, 0, 1))
+        let state = try RopeThreadedSeed.make(input: input, profileID: "front", orientation: upright, collider: collider)
+        let initial = try RopeDynamicsSolver(input: input, state: state, collider: collider)
+        let task = Task {
+            withUnsafeCurrentTask { $0?.cancel() }
+            var solver = initial
+            do {
+                _ = try solver.settled(targetOrientation: upright, maxDuration: 5)
+                XCTFail("Cancelled settling must throw")
+            } catch is CancellationError {
+                XCTAssertEqual(solver.state.boardHeight, initial.state.boardHeight)
+            }
+        }
+        try await task.value
+    }
+
     func testRejectsNonfiniteStateAndInvalidTimeStep() throws {
         let input=try RopeThreadedSeedTests.clavellium(),collider=try RopeTriangleCollider(input:input)
         let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
@@ -66,6 +139,35 @@ final class RopeDynamicsSolverTests: XCTestCase {
         XCTAssertThrowsError(try RopeDynamicsSolver(input:input,state:previousState,collider:collider))
         state.ropes[0].positions[20].x = .nan
         XCTAssertThrowsError(try RopeDynamicsSolver(input:input,state:state,collider:collider))
+    }
+
+    func testRejectsLinklessRopeBeforeSimulation() throws {
+        let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
+        let mesh=RopeTriangleColliderTests.box(minimum:SIMD3(-0.01,-0.01,-0.01),maximum:SIMD3(0.01,0.01,0.01))
+        let rope=RopePhysicsRope(id:"lead",baselineRadius:0.002,radius:0.0035,restLength:0,linearMass:0.01,nodes:[],edges:[])
+        let input=RopePhysicsInput(modelSHA256:String(repeating:"a",count:64),sourceSHA256:String(repeating:"b",count:64),
+            collision:mesh,portals:[],channels:[],profiles:[RopePhysicsProfile(id:"front",presentationID:"front",instanceID:nil,boardMass:1,ropes:[rope])])
+        let chain=RopeChainState(id:"lead",radius:0.0035,linearMass:0.01,restLengths:[],positions:[.zero],
+            previousPositions:[.zero],velocities:[.zero],supports:[:],attachments:[:],portals:[:],channelSegments:[:])
+        let state=RopeSimulationState(profileID:"front",boardMass:1,boardHeight:0,boardVerticalVelocity:0,orientation:q,ropes:[chain])
+        XCTAssertThrowsError(try RopeDynamicsSolver(input:input,state:state,collider:RopeTriangleCollider(input:input)))
+    }
+
+    func testLostPredictedCrossingExhaustsBoundedRecoveryAndRollsBack() throws {
+        let input=try RopeThreadedSeedTests.clavellium(),collider=try RopeTriangleCollider(input:input)
+        let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
+        var state=try RopeThreadedSeed.make(input:input,profileID:"front",orientation:q,collider:collider)
+        state.ropes[0].velocities=state.ropes[0].positions.map { _ in SIMD3<Double>(1_000_000,0,0) }
+        var solver=try RopeDynamicsSolver(input:input,state:state,collider:collider)
+        XCTAssertThrowsError(try solver.step(dt:1.0/240,targetOrientation:q)) { error in
+            // An unrecoverable prediction must exhaust subdivision rather
+            // than escape as the first raw topology error.
+            XCTAssertTrue(error.localizedDescription.contains("Bounded solve could not resolve"), "\(error)")
+            XCTAssertTrue(error.localizedDescription.contains("Lost ordered portal crossing"), "\(error)")
+        }
+        XCTAssertEqual(solver.state.ropes[0].positions,state.ropes[0].positions)
+        XCTAssertEqual(solver.state.boardHeight,state.boardHeight)
+        XCTAssertEqual(solver.state.orientation.vector,state.orientation.vector)
     }
 
     func testTautAttachmentTransfersBoardLoadWithoutStretch() throws {

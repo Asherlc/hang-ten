@@ -1,5 +1,6 @@
 """Physics geometry comes from the watertight CAD solid and editable channel."""
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -7,7 +8,8 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[3]
 TOOLS = ROOT / "Tools/HangboardCAD"
-pytestmark = pytest.mark.skipif(not Path("/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd").is_file(), reason="FreeCAD unavailable")
+FREECAD = Path(os.environ.get("HANGTEN_FREECAD_CMD", "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd"))
+pytestmark = pytest.mark.skipif(not FREECAD.is_file(), reason="FreeCAD unavailable")
 
 
 def test_native_cylinder_bores_export_complete_circular_apertures(tmp_path):
@@ -37,7 +39,7 @@ for channel in a["channels"]:
   assert .00349 < portal_clearance_radius(p) <= .0035
 App.closeDocument(d.Name)
 ''')
-    run=subprocess.run([sys.executable,str(TOOLS/"run_freecad.py"),str(script)],cwd=ROOT,capture_output=True,text=True,timeout=60)
+    run=subprocess.run([sys.executable,str(TOOLS/"run_freecad.py"), "--freecad", str(FREECAD),str(script)],cwd=ROOT,capture_output=True,text=True,timeout=60)
     assert run.returncode == 0,run.stdout+run.stderr
 
 
@@ -67,11 +69,14 @@ for channel in a["channels"]:
  assert all(.060 < p["center"][2] < .067183 for p in portals)
 App.closeDocument(d.Name)
 ''')
-    run=subprocess.run([sys.executable,str(TOOLS/"run_freecad.py"),str(script)],cwd=ROOT,capture_output=True,text=True,timeout=60)
+    run=subprocess.run([sys.executable,str(TOOLS/"run_freecad.py"), "--freecad", str(FREECAD),str(script)],cwd=ROOT,capture_output=True,text=True,timeout=60)
     assert run.returncode == 0,run.stdout+run.stderr
 
 
 def test_clavellium_collision_and_portals_are_native_and_repeatable(tmp_path):
+    pytest.importorskip("numpy")
+    pytest.importorskip("trimesh")
+    pytest.importorskip("rtree")
     output = tmp_path / "physics-geometry.json"
     script = tmp_path / "export.py"
     script.write_text(f'''import FreeCAD as App
@@ -105,7 +110,7 @@ for x in [-9, 0, 9]:
 Path({str(output.with_suffix('.samples.json'))!r}).write_text(json.dumps(samples))
 App.closeDocument(d.Name)
 ''')
-    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(script)],
+    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), "--freecad", str(FREECAD), str(script)],
                          cwd=ROOT, capture_output=True, text=True, timeout=60)
     assert run.returncode == 0, run.stdout + run.stderr
     import trimesh
@@ -144,7 +149,7 @@ except ValueError: pass
 else: raise AssertionError("must require operator-selected axis")
 App.closeDocument(d.Name)
 ''')
-    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(script)],
+    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), "--freecad", str(FREECAD), str(script)],
                          cwd=ROOT, capture_output=True, text=True, timeout=60)
     assert run.returncode == 0, run.stdout + run.stderr
 
@@ -155,10 +160,12 @@ def test_generated_descriptor_is_hash_bound_and_validated(tmp_path):
     spec = importlib.util.spec_from_file_location("rope_fixture", ROOT / "Tools/HangboardPackages/tests/test_rope_physics.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    fixture_json = json.dumps(module.physics_fixture())
+    # Only authoring profiles enter config; fixture collision/portals/channels
+    # are replaced entirely by the native CAD export.
+    profile_json = json.dumps(module.physics_fixture()["profiles"][0])
     script = tmp_path / "descriptor.py"
     script.write_text('''import FreeCAD as App
-import sys, json
+import sys, json, hashlib
 from pathlib import Path
 sys.path[:0] = [str(Path("Tools/HangboardCAD").resolve()),
                str(Path("Tools/HangboardPackages/src").resolve()),
@@ -166,21 +173,71 @@ sys.path[:0] = [str(Path("Tools/HangboardCAD").resolve()),
 from export_rope_physics import build_physics_descriptor
 source = Path("Hangboards/clavellium-training-block/clavellium-training-block.FCStd").resolve()
 d = App.openDocument(str(source))
-fixture = json.loads(FIXTURE_JSON)
-profile = fixture["profiles"][0]
+profile = json.loads(PROFILE_JSON)
 profile["ropes"][0]["nodes"][1]["portalID"] = "central-front"
 profile["ropes"][0]["nodes"][2]["portalID"] = "central-back"
 config = {"bodyFeature":"Pinch100BottomReliefCut", "channelFeatures":{"central":"CenterChannelTool"}, "profiles":[profile]}
 first = build_physics_descriptor(d, source, "a"*64, config)
 assert json.dumps(first) == json.dumps(build_physics_descriptor(d, source, "a"*64, config))
 assert first["modelSHA256"] == "a"*64
-assert len(first["sourceSHA256"]) == 64
-config["profiles"][0]["ropes"][0]["radius"] = .020
+assert first["sourceSHA256"] == hashlib.sha256(source.read_bytes()).hexdigest()
+channel = first["channels"][0]
+assert channel["id"] == "central"
+assert channel["portalIDs"] == ["central-front", "central-back"]
+rope = first["profiles"][0]["ropes"][0]
+assert [node["portalID"] for node in rope["nodes"] if node["kind"] == "portal"] == channel["portalIDs"]
+from hangboard_packages.rope_physics import validate_rope_physics
+assert validate_rope_physics(first, "a"*64) == first
+config["profiles"][0]["ropes"][0].update(radius=.020, thicknessScale=10)
 try: build_physics_descriptor(d, source, "a"*64, config)
-except ValueError: pass
+except ValueError as error:
+    assert "rope does not fit portal central-front" in str(error), str(error)
 else: raise AssertionError("invalid enlarged rope must be rejected")
 App.closeDocument(d.Name)
-'''.replace('FIXTURE_JSON', repr(fixture_json)))
-    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(script)],
+'''.replace('PROFILE_JSON', repr(profile_json)))
+    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), "--freecad", str(FREECAD), str(script)],
                          cwd=ROOT, capture_output=True, text=True, timeout=60)
     assert run.returncode == 0, run.stdout + run.stderr
+
+
+def test_compiler_removes_stale_physics_when_authoring_is_removed(tmp_path):
+    import os
+    import shutil
+    pxr = pytest.importorskip("pxr")
+    env = dict(os.environ, HANGTEN_CAD_PYTHONPATH=str(Path(pxr.__file__).parent.parent))
+    source = tmp_path / "clavellium-training-block.FCStd"
+    shutil.copyfile(ROOT / "Hangboards/clavellium-training-block/clavellium-training-block.FCStd", source)
+    assets = tmp_path / "assets"
+    assets.mkdir()
+    authoring = tmp_path / "rope-physics.json"
+    shutil.copyfile(ROOT / "Hangboards/clavellium-training-block/rope-physics.json", authoring)
+    command = [sys.executable, str(TOOLS / "run_freecad.py"), "--freecad", str(FREECAD), str(TOOLS / "compile_board.py"),
+               "--package", "clavellium-training-block", "--source", str(source), "--assets", str(assets)]
+    first = subprocess.run(command, cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
+    assert first.returncode == 0, first.stdout + first.stderr
+    physics_path = assets / "primary.physics.json"
+    assert physics_path.is_file(), "Valid authoring must publish live physics"
+    physics = json.loads(physics_path.read_text())
+    model = json.loads((assets / "primary.model.json").read_text())
+    assert physics["modelSHA256"] == model["modelSHA256"]
+    authoring.unlink()
+    second = subprocess.run(command, cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
+    assert second.returncode == 0, second.stdout + second.stderr
+    assert (assets / "primary.usdz").is_file()
+    assert not physics_path.exists()
+
+
+def test_compiler_reports_malformed_physics_authoring_as_build_error(tmp_path):
+    import os
+    import shutil
+    pxr = pytest.importorskip("pxr")
+    env = dict(os.environ, HANGTEN_CAD_PYTHONPATH=str(Path(pxr.__file__).parent.parent))
+    source = tmp_path / "clavellium-training-block.FCStd"
+    shutil.copyfile(ROOT / "Hangboards/clavellium-training-block/clavellium-training-block.FCStd", source)
+    (tmp_path / "rope-physics.json").write_text("[]")
+    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), "--freecad", str(FREECAD), str(TOOLS / "compile_board.py"),
+                          "--package", "clavellium-training-block", "--source", str(source), "--check"],
+                         cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
+    assert run.returncode != 0
+    assert "BUILD FAILED: invalid rope physics authoring" in run.stdout + run.stderr
+    assert "Traceback" not in run.stdout + run.stderr

@@ -41,6 +41,7 @@ struct RopeDynamicsSolver: Sendable {
               state.boardMass>0,state.boardMass.isFinite,state.boardHeight.isFinite,
               state.boardVerticalVelocity.isFinite,!state.ropes.isEmpty,
               state.ropes.allSatisfy({rope in
+                  !rope.restLengths.isEmpty &&
                   rope.positions.count == rope.restLengths.count+1 && rope.positions.count == rope.velocities.count &&
                   rope.positions.count == rope.previousPositions.count && rope.radius>0 && rope.linearMass>0 &&
                   rope.positions.allSatisfy(Self.finite) && rope.previousPositions.allSatisfy(Self.finite) &&
@@ -107,7 +108,7 @@ struct RopeDynamicsSolver: Sendable {
         throw RopePhysicsError.invalid("Initial finite-radius rope contact did not converge")
     }
 
-    private enum StepFailure:Error {case sweptWoodTraversal,sweptSelfTraversal,nonlinearConvergence,geometry(RopeSimulationMetrics)}
+    private enum StepFailure:Error {case sweptWoodTraversal,sweptSelfTraversal,nonlinearConvergence,predictedTopology(String),geometry(RopeSimulationMetrics)}
 
     private mutating func advanceBounded(dt:Double,targetOrientation:simd_quatd,depth:Int) throws -> RopeFrameSnapshot {
         var trial=self
@@ -154,7 +155,11 @@ struct RopeDynamicsSolver: Sendable {
             }
         }
         let prediction=state
-        try RopePassageTopology.refresh(state:&state,input:input)
+        do {
+            try RopePassageTopology.refresh(state:&state,input:input)
+        } catch let error as RopePhysicsError {
+            throw StepFailure.predictedTopology(error.localizedDescription)
+        }
         for _ in 0..<80 {
             let movement=try correctConstraints(prediction:prediction)
             if maximumStrain()<0.0002 && movement<1e-8 {break}
@@ -220,7 +225,12 @@ struct RopeDynamicsSolver: Sendable {
 
     mutating func settled(targetOrientation:simd_quatd,maxDuration:Double) throws -> RopeFrameSnapshot {
         guard maxDuration.isFinite,maxDuration>0 else{throw RopePhysicsError.invalid("Invalid settling duration")}
-        for _ in 0..<Int(ceil(maxDuration*240)) {
+        let requestedSteps=ceil(maxDuration*240)
+        guard requestedSteps.isFinite,let steps=Int(exactly:requestedSteps) else {
+            throw RopePhysicsError.invalid("Invalid settling step count")
+        }
+        for _ in 0..<steps {
+            try Task.checkCancellation()
             let frame=try step(dt:1.0/240,targetOrientation:targetOrientation)
             if frame.settled {return frame}
         }
@@ -422,6 +432,7 @@ struct RopeDynamicsSolver: Sendable {
                         multipliers:contactIDs.map{allMultipliers[$0]},activeIDs:contactIDs.indices.filter{active.contains(contactIDs[$0])})
                 })
         } catch RopeContactSystem.Failure.iterationLimit {throw StepFailure.nonlinearConvergence}
+          catch RopeContactSystem.Failure.infeasible {throw StepFailure.nonlinearConvergence}
         var particles=state.ropes.map{Array(repeating:SIMD3<Double>.zero,count:$0.positions.count)}
         for r in weights.indices {for i in weights[r].indices where weights[r][i]>0 {
             let v=variables[r][i];particles[r][i]=SIMD3(solved.base[v.x],solved.base[v.y],solved.base[v.z])
@@ -719,13 +730,20 @@ struct RopeContactWorkingSet {
     init(activeIDs:[Int]) {self.activeIDs=activeIDs}
     mutating func insert(_ id:Int) {activeIDs.append(id);activeIDs.sort()}
 
-    mutating func releaseTensileContact(multipliers:[Double],contacts:[Bool])->Bool {
+    static func blockingMultiplier(activeIDs:[Int],multipliers:[Double],contacts:[Bool],
+                                   feasibleMultipliers:[Int:Double])->(index:Int,fraction:Double)? {
         var blocking:(index:Int,fraction:Double)?
         for j in activeIDs.indices where contacts[j] && multipliers[j]>1e-12 {
             let previous=min(0,feasibleMultipliers[activeIDs[j]] ?? 0)
             let fraction=max(0,min(1,-previous/(multipliers[j]-previous)))
             if fraction<(blocking?.fraction ?? 2) {blocking=(j,fraction)}
         }
+        return blocking
+    }
+
+    mutating func releaseTensileContact(multipliers:[Double],contacts:[Bool])->Bool {
+        let blocking=Self.blockingMultiplier(activeIDs:activeIDs,multipliers:multipliers,
+            contacts:contacts,feasibleMultipliers:feasibleMultipliers)
         if let blocking {
             for j in activeIDs.indices {
                 let id=activeIDs[j],previous=feasibleMultipliers[id] ?? 0

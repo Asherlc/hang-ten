@@ -19,7 +19,7 @@ struct RopeLinearContact: Sendable {
 /// factor as inequalities enter and leave. All inactive inequalities are
 /// separated before returning; none are discarded on grounds of dependence.
 enum RopeContactSystem {
-    enum Failure: Error {case iterationLimit, illConditioned}
+    enum Failure: Error {case iterationLimit, illConditioned, infeasible}
     struct Solution: Sendable {
         let base: [Double]
         let border: [Double]
@@ -84,20 +84,16 @@ enum RopeContactSystem {
         }
         for _ in 0..<maxIterations {
             let lambda=try cholesky.solve(active.map{residuals[$0]})
-            var blocking: (offset: Int, fraction: Double)?
-            for k in active.indices where lambda[k]>1e-12 {
-                let previous=min(0,dual[active[k]] ?? 0)
-                let fraction=max(0,min(1,-previous/(lambda[k]-previous)))
-                if fraction<(blocking?.fraction ?? 2) {blocking=(k,fraction)}
-            }
+            let blocking=RopeContactWorkingSet.blockingMultiplier(activeIDs:active,multipliers:lambda,
+                contacts:Array(repeating:true,count:active.count),feasibleMultipliers:dual)
             if let blocking {
                 for k in active.indices {
                     let previous=dual[active[k]] ?? 0
                     dual[active[k]]=previous+blocking.fraction*(lambda[k]-previous)
                 }
-                dual.removeValue(forKey:active[blocking.offset])
-                active.remove(at:blocking.offset)
-                try cholesky.remove(blocking.offset)
+                dual.removeValue(forKey:active[blocking.index])
+                active.remove(at:blocking.index)
+                try cholesky.remove(blocking.index)
                 continue
             }
             dual=Dictionary(uniqueKeysWithValues:zip(active,lambda))
@@ -110,10 +106,23 @@ enum RopeContactSystem {
             var selected=Array(repeating:false,count:contacts.count)
             for id in active {selected[id]=true}
             var worst: (id: Int, residual: Double)?
-            for id in contacts.indices where !selected[id] {
+            for id in contacts.indices {
                 let residual=contacts[id].residual+contacts[id].dot(correction,size:size)
-                guard residual.isFinite else {throw RopePhysicsError.invalid("Nonfinite inactive contact")}
-                if residual < -1e-8 && residual<(worst?.residual ?? 0) {worst=(id,residual)}
+                guard residual.isFinite else {throw RopePhysicsError.invalid("Nonfinite contact feasibility")}
+                if selected[id] {
+                    // The explicitly regularized KKT solves C + J dq =
+                    // epsilon * lambda, not zero. Validate that equation and
+                    // require an actual physical response for violated rows.
+                    // A zero-gradient row must never be "solved" solely by
+                    // its multiplier regularizer. Outer nonlinear acceptance
+                    // still applies the unchanged physical clearance gate.
+                    let multiplier=dual[id] ?? 0
+                    guard abs(residual-1e-8*multiplier)<=1e-8 else {throw Failure.illConditioned}
+                    if residual < -1e-8 {
+                        let column=try response(id)
+                        guard contacts[id].dot(column,size:size)>1e-8 else {throw Failure.infeasible}
+                    }
+                } else if residual < -1e-8 && residual<(worst?.residual ?? 0) {worst=(id,residual)}
             }
             if let worst {
                 let column=try response(worst.id)

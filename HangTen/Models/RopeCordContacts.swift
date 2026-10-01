@@ -146,7 +146,22 @@ enum RopeCordContacts {
                 let otherLow=simd_min(simd_min(c,d),simd_min(nextC,nextD)),otherHigh=simd_max(simd_max(c,d),simd_max(nextC,nextD))
                 let gap=simd_max(simd_max(low-otherHigh,otherLow-high),SIMD3(repeating:0))
                 if simd_length_squared(gap)>=threshold*threshold {continue}
-                let motion=max(simd_distance(a,nextA),simd_distance(b,nextB))+max(simd_distance(c,nextC),simd_distance(d,nextD))
+                // A common translation cannot change separation. Remove it
+                // before bounding relative motion, rather than spending the
+                // advancement budget on inertial-frame travel.
+                let translation=((nextA-a)+(nextB-b)+(nextC-c)+(nextD-d))/4
+                let motion=max(simd_length(nextA-a-translation),simd_length(nextB-b-translation)) +
+                    max(simd_length(nextC-c-translation),simd_length(nextD-d-translation))
+                let initial=RopeTriangleCollider.segmentPair(a,b,c,d)
+                let separation=initial.0-initial.1
+                if simd_length(separation)>threshold+1e-9 {
+                    let normal=simd_normalize(separation)
+                    let firstMinimum=[a,b,nextA,nextB].map{simd_dot($0,normal)}.min()!
+                    let secondMaximum=[c,d,nextC,nextD].map{simd_dot($0,normal)}.max()!
+                    // The entire swept convex hull stays on its side of
+                    // this separating plane, including every intermediate t.
+                    if firstMinimum-secondMaximum>threshold+1e-9 {continue}
+                }
                 var t=0.0,certified=false
                 for _ in 0..<256 {
                     let pair=RopeTriangleCollider.segmentPair(a+(nextA-a)*t,b+(nextB-b)*t,c+(nextC-c)*t,d+(nextD-d)*t)

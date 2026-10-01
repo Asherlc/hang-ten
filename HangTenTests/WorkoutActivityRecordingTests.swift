@@ -5,6 +5,91 @@ import Combine
 
 @MainActor
 final class WorkoutActivityRecordingTests: XCTestCase {
+    func testRecordingKeepsOnlyPerformedTaskAssignmentsInOrder() throws {
+        let step = WorkoutStep(
+            id: "two-tasks", number: 1, title: "Two tasks", instruction: "Move holds.",
+            accessory: "", duration: 30, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .tasks([
+                    [.init(target: .init(kind: .edge, depth: .measured(.init(minimum: 21, maximum: 21)))),
+                     .init(target: .init(kind: .edge, depth: .measured(.init(minimum: 21, maximum: 21))))],
+                    [.init(target: .init(kind: .jug)), .init(target: .init(kind: .jug))]
+                ]), timing: .undefined, duration: nil
+            )]
+        )
+        let plan = TrainingPlan(
+            id: "fixture", title: "Fixture", subtitle: "", level: "",
+            sourceLabel: "Fixture", sourceURL: nil, provenance: .custom,
+            boardID: board.id, steps: [step]
+        )
+        let firstOnly = try WorkoutActivityRecorder().segments(
+            for: plan, on: board,
+            performedTaskIndicesByStepID: [step.id: [0]]
+        )
+        XCTAssertEqual(firstOnly.count, 1)
+        XCTAssertEqual(firstOnly[0].target?.resolvedContactSnapshot?.contactIDs,
+                       ["edge-left", "edge-right"])
+        XCTAssertEqual(firstOnly[0].target?.resolvedContactSnapshot?.handTargets?.count, 2)
+        XCTAssertEqual(
+            try JSONDecoder().decode(RecordedActivitySegment.self, from: JSONEncoder().encode(firstOnly[0])),
+            firstOnly[0]
+        )
+        let all = try WorkoutActivityRecorder().segments(
+            for: plan, on: board,
+            performedTaskIndicesByStepID: [step.id: [0, 1]]
+        )
+        XCTAssertEqual(all.count, 2)
+        XCTAssertEqual(all[1].target?.resolvedContactSnapshot?.contactIDs,
+                       ["jug-center", "jug-center"])
+    }
+
+    func testAnyHoldTaskRecordsAthleteChoiceWithoutInventedContact() throws {
+        let step = WorkoutStep(
+            id: "chosen", number: 1, title: "Chosen", instruction: "Any holds.",
+            accessory: "", duration: 10, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .tasks([[.init(), .init()]]), timing: .fixed, duration: 10
+            )], timedWorkDuration: 10
+        )
+        let workout = TrainingPlan(
+            id: "chosen", title: "Chosen", subtitle: "", level: "",
+            sourceLabel: "Fixture", sourceURL: nil, provenance: .custom,
+            boardID: board.id, steps: [step]
+        )
+        let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
+        XCTAssertEqual(records.count, 1)
+        XCTAssertEqual(records[0].target, .selfSelected)
+        XCTAssertEqual(records[0].handUse, .double)
+        XCTAssertEqual(records[0].durationSeconds, 10)
+    }
+
+    func testOneArmTaskRecordsChosenSideAndContact() throws {
+        let step = WorkoutStep(
+            id: "one-arm", number: 1, title: "One arm", instruction: "One arm hang.",
+            accessory: "", duration: 10, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .tasks([[.init(target: .init(kind: .edge, depth: .measured(.init(minimum: 21, maximum: 21))))]]),
+                timing: .fixed, duration: 10
+            )], timedWorkDuration: 10
+        )
+        let workout = TrainingPlan(
+            id: "one-arm", title: "One arm", subtitle: "", level: "",
+            sourceLabel: "Fixture", sourceURL: nil, provenance: .custom,
+            boardID: board.id, steps: [step]
+        )
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout, on: board,
+            selectedTaskSidesByStepID: [step.id: [0: .right]]
+        )
+        XCTAssertEqual(records.count, 1)
+        XCTAssertEqual(records[0].handUse, .single)
+        XCTAssertEqual(records[0].side, .right)
+        XCTAssertEqual(records[0].target?.resolvedContactSnapshot?.contactIDs, ["edge-right"])
+    }
+
     private enum CodingPathComponent: Equatable {
         case key(String)
         case index(Int)
@@ -50,7 +135,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             PhysicalContact(
                 id: "jug-center",
                 name: "Center jug",
-                kind: .jug
+                kind: .jug,
+                handCapacity: 2
             )
         ]
         let frames: [String: CGRect] = [
@@ -305,6 +391,28 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 )
             ]
         )
+    }
+
+    func testRockProdigyReusableFramesResolveToDistinctPhysicalSides() throws {
+        for boardID in ["trango.rock-prodigy-forge", "trango.rock-prodigy-natural",
+                        "trango.rock-prodigy-training-center"] {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            for left in board.contacts where left.id.hasSuffix("-left") {
+                let rightID = String(left.id.dropLast(5)) + "-right"
+                let right = try XCTUnwrap(board.contacts.first { $0.id == rightID })
+                let leftFrame = try XCTUnwrap(left.resolvedFrame(in: board.defaultPresentation))
+                let rightFrame = try XCTUnwrap(right.resolvedFrame(in: board.defaultPresentation))
+                XCTAssertLessThan(leftFrame.rect.maxX, 0.5, left.id)
+                XCTAssertGreaterThan(rightFrame.rect.minX, 0.5, right.id)
+                XCTAssertEqual(leftFrame.rect.minX, 1 - rightFrame.rect.maxX, accuracy: 1e-8, left.id)
+                XCTAssertEqual(leftFrame.rect.midY, rightFrame.rect.midY, accuracy: 1e-8, left.id)
+            }
+            let step = WorkoutStep(id: "side-fixture", number: 1, title: "Fixture",
+                                   instruction: "", accessory: "", duration: 10, phase: .hang)
+            let pair = try ContactResolver.resolve(.edge(selection: .bilateralPair), step: step, board: board)
+            XCTAssertEqual(pair.count, 2, boardID)
+            XCTAssertEqual(Set(pair.map(\.equipmentObjectID)), ["left-half", "right-half"], boardID)
+        }
     }
 
     func testModelDescriptorFacePlaneAABBResolvesExactlyForWorkoutMatching() {
@@ -685,6 +793,24 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             WorkoutSegment(
                 kind: .work,
                 target: .fromLegacyTargets([.kind(.pinch)]),
+                timing: .fixed,
+                duration: 7
+            )
+        ])
+
+        let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
+        XCTAssertEqual(records.count, 1)
+        XCTAssertEqual(records[0].target, .selfSelected)
+    }
+
+    func testBoardAgnosticSourceLinkedUnmatchedTasksRecordSelfSelected() throws {
+        let workout = plan(boardID: nil, [
+            WorkoutSegment(
+                kind: .work,
+                target: .tasks([[
+                    .init(target: .init(kind: .pinch)),
+                    .init(target: .init(kind: .pinch))
+                ]]),
                 timing: .fixed,
                 duration: 7
             )

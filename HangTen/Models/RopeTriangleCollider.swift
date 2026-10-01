@@ -36,19 +36,92 @@ struct RopeTriangleCollider: Sendable {
             throw RopePhysicsError.invalid("Invalid collision mesh")
         }
         var edges: [SIMD2<Int>: (Int, Int)] = [:], volume = 0.0
-        for face in mesh.triangles {
+        var edgeFaces:[SIMD2<Int>:[Int]]=[:]
+        for (faceID,face) in mesh.triangles.enumerated() {
             guard (0..<3).allSatisfy({ face[$0] >= 0 && face[$0] < mesh.vertices.count }),
                   Set([face.x, face.y, face.z]).count == 3 else { throw RopePhysicsError.invalid("Invalid collision triangle") }
             let a = mesh.vertices[face.x], b = mesh.vertices[face.y], c = mesh.vertices[face.z]
-            guard simd_length_squared(simd_cross(b-a,c-a)) > 1e-24 else { throw RopePhysicsError.invalid("Degenerate collision triangle") }
-            volume += simd_dot(a, simd_cross(b,c))/6
+            let normal=simd_cross(b-a,c-a),areaSquared=simd_length_squared(normal)
+            let faceVolume=simd_dot(a,simd_cross(b,c))/6
+            guard normal.x.isFinite,normal.y.isFinite,normal.z.isFinite,
+                  areaSquared.isFinite,areaSquared>1e-24,faceVolume.isFinite else {
+                throw RopePhysicsError.invalid("Degenerate or nonfinite collision triangle")
+            }
+            volume += faceVolume
+            guard volume.isFinite else {throw RopePhysicsError.invalid("Nonfinite collision volume")}
             for (i,j) in [(face.x,face.y),(face.y,face.z),(face.z,face.x)] {
                 let key = SIMD2(min(i,j), max(i,j)), old = edges[key] ?? (0,0)
                 edges[key] = (old.0+1,old.1+(i < j ? 1 : -1))
+                edgeFaces[key,default:[]].append(faceID)
             }
         }
         guard volume > 0, edges.values.allSatisfy({ $0.0 == 2 && $0.1 == 0 }) else {
             throw RopePhysicsError.invalid("Collision mesh must be closed with consistent outward winding")
+        }
+        // Edge consistency establishes orientation within a shell, but a
+        // positive aggregate volume can hide a reversed disconnected solid.
+        var neighbors=Array(repeating:[Int](),count:mesh.triangles.count)
+        for faces in edgeFaces.values {
+            neighbors[faces[0]].append(faces[1]);neighbors[faces[1]].append(faces[0])
+        }
+        var visited=Set<Int>(),shells:[[Int]]=[]
+        for first in mesh.triangles.indices where !visited.contains(first) {
+            var shell:[Int]=[],pending=[first]
+            visited.insert(first)
+            while let face=pending.popLast() {
+                shell.append(face)
+                for next in neighbors[face] where visited.insert(next).inserted {pending.append(next)}
+            }
+            shells.append(shell)
+            guard shells.count<=256 else {throw RopePhysicsError.invalid("Excessive disconnected collision shells")}
+        }
+        let shellBounds=shells.map { shell -> (minimum:SIMD3<Double>,maximum:SIMD3<Double>) in
+            var minimum=SIMD3<Double>(repeating:.infinity),maximum=SIMD3<Double>(repeating: -.infinity)
+            for id in shell {
+                let face=mesh.triangles[id]
+                for vertex in [face.x,face.y,face.z] {
+                    minimum=simd_min(minimum,mesh.vertices[vertex]);maximum=simd_max(maximum,mesh.vertices[vertex])
+                }
+            }
+            return (minimum,maximum)
+        }
+        func enclosed(_ point:SIMD3<Double>,by shell:[Int]) throws ->Bool {
+            var angle=0.0
+            for id in shell {
+                let face=mesh.triangles[id]
+                let a=mesh.vertices[face.x]-point,b=mesh.vertices[face.y]-point,c=mesh.vertices[face.z]-point
+                let la=simd_length(a),lb=simd_length(b),lc=simd_length(c)
+                let numerator=simd_dot(a,simd_cross(b,c))
+                let denominator=la*lb*lc+simd_dot(a,b)*lc+simd_dot(b,c)*la+simd_dot(c,a)*lb
+                guard numerator.isFinite,denominator.isFinite else {throw RopePhysicsError.invalid("Nonfinite shell enclosure query")}
+                angle += 2*atan2(numerator,denominator)
+                guard angle.isFinite else {throw RopePhysicsError.invalid("Nonfinite shell enclosure angle")}
+            }
+            return abs(angle)>3*Double.pi
+        }
+        for (index,shell) in shells.enumerated() {
+            let first=mesh.triangles[shell[0]],origin=mesh.vertices[first.x]
+            let sample=(origin+mesh.vertices[first.y]+mesh.vertices[first.z])/3
+            var signedVolume=0.0
+            for id in shell {
+                let face=mesh.triangles[id]
+                // Translating the origin avoids cancellation for small solids
+                // placed far from the world origin.
+                signedVolume += simd_dot(mesh.vertices[face.x]-origin,
+                    simd_cross(mesh.vertices[face.y]-origin,mesh.vertices[face.z]-origin))/6
+            }
+            var depth=0
+            for other in shells.indices where other != index {
+                let bounds=shellBounds[other]
+                // Enclosure is impossible outside a shell's bounds. Combined
+                // with the shell cap, even overlapping bounds permit at most
+                // 255 full scans of each face, never an unbounded shell product.
+                guard (0..<3).allSatisfy({sample[$0]>=bounds.minimum[$0] && sample[$0]<=bounds.maximum[$0]}) else {continue}
+                if try enclosed(sample,by:shells[other]) {depth += 1}
+            }
+            guard signedVolume.isFinite,(depth%2 == 0 ? signedVolume>0:signedVolume<0) else {
+                throw RopePhysicsError.invalid("Collision shell winding does not match solid/cavity nesting")
+            }
         }
         var nodes: [Node] = []
         func build(_ indices: [Int]) -> Int {
@@ -195,6 +268,47 @@ struct RopeTriangleCollider: Sendable {
         // A bounded query that cannot establish clearance blocks the move.
         let a=previousStart+(start-previousStart)*time, b=previousEnd+(end-previousEnd)*time
         var hit=closestSegment(a,b).contact; hit.timeOfImpact=time; return hit
+    }
+
+    /// Certify the whole centerline lies in this region, including portal
+    /// endpoints on its boundary. Signed distance is 1-Lipschitz, so midpoint
+    /// distance plus interval radius bounds every point in that interval.
+    func containsSegment(from start:SIMD3<Double>,to end:SIMD3<Double>,tolerance:Double=1e-5)->Bool {
+        guard tolerance>0,tolerance.isFinite else{return false}
+        var pending=[(start,end,0)]
+        var queries=0
+        while let (a,b,depth)=pending.popLast() {
+            queries += 1
+            guard queries<=16_384 else{return false}
+            let middle=(a+b)/2,distance=signedDistance(at:middle),halfLength=simd_distance(a,b)/2
+            guard distance.isFinite,distance<=tolerance else{return false}
+            if distance+halfLength<=tolerance {continue}
+            if abs(distance)<=tolerance && boundaryTubeContainsSegment(from:a,to:b,tolerance:tolerance) {continue}
+            guard depth<32 else{return false}
+            pending.append((a,middle,depth+1));pending.append((middle,b,depth+1))
+        }
+        return true
+    }
+
+    /// A triangle plus a closed tolerance ball is convex. If both endpoints
+    /// lie in that set, the whole chord does too, so every point is within the
+    /// existing allowed distance of the boundary. This triangle-based certificate
+    /// avoids dense Lipschitz subdivision along flat channel walls.
+    private func boundaryTubeContainsSegment(from start:SIMD3<Double>,to end:SIMD3<Double>,tolerance:Double)->Bool {
+        let squaredTolerance=tolerance*tolerance
+        var pending=[0]
+        while let index=pending.popLast() {
+            let node=tree[index]
+            guard Self.boxDistanceSquared(start,node.minimum,node.maximum)<=squaredTolerance,
+                  Self.boxDistanceSquared(end,node.minimum,node.maximum)<=squaredTolerance else {continue}
+            if node.left>=0 {pending.append(node.left);pending.append(node.right);continue}
+            for id in node.faces {
+                let face=mesh.triangles[id],a=mesh.vertices[face.x],b=mesh.vertices[face.y],c=mesh.vertices[face.z]
+                guard simd_length_squared(start-Self.triangleClosest(start,a,b,c))<=squaredTolerance else {continue}
+                if simd_length_squared(end-Self.triangleClosest(end,a,b,c))<=squaredTolerance {return true}
+            }
+        }
+        return false
     }
 
     private func contains(_ point: SIMD3<Double>) -> Bool {

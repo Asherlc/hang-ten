@@ -905,7 +905,7 @@ def build(
             try:
                 physics = build_physics_descriptor(document, source,
                     descriptor_json["modelSHA256"], json.loads(physics_config.read_text()))
-            except (ValueError, TypeError, KeyError) as error:
+            except (OSError, AttributeError, ValueError, TypeError, KeyError, RecursionError) as error:
                 raise BuildError(f"invalid rope physics authoring: {error}") from error
             physics_path = staging / "primary.physics.json"
             physics_path.write_text(json.dumps(physics, indent=2) + "\n")
@@ -948,13 +948,16 @@ def build(
             physics_target = assets / physics_path.name
             physics_temp = assets / f".{physics_path.name}.staged"
             shutil.copyfile(physics_path, physics_temp)
-            os.replace(physics_temp, physics_target)
-        # Two files cannot be replaced in one atomic step. The descriptor is
-        # hash-bound to the asset and is moved last, so an interruption between
-        # the two moves leaves a detectable mismatch rather than a silently
-        # stale pairing; the delivered pair is re-verified immediately after.
+        # The files cannot be replaced in one atomic step. Publish the asset,
+        # its hash-bound model descriptor, then the bound physics descriptor.
+        # An interrupted update leaves a detectable mismatch; verify the
+        # delivered identities immediately after publication.
         os.replace(asset_temp, asset_target)
         os.replace(descriptor_temp, descriptor_target)
+        if physics_path is not None:
+            os.replace(physics_temp, physics_target)
+        else:
+            (assets / "primary.physics.json").unlink(missing_ok=True)
         delivered = json.loads(descriptor_target.read_text())
         delivered_digest = _digest(asset_target)
         if delivered.get("modelSHA256") != delivered_digest:

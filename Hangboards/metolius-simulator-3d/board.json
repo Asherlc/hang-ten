@@ -26,6 +26,7 @@
         "assetPath": "assets/primary.usdz",
         "descriptorPath": "assets/primary.model.json",
         "display": {
+          "surfaceFinish": "plastic",
           "camera": {
             "type": "orthographic",
             "viewDirection": [
@@ -68,6 +69,7 @@
       "name": "Center #3 65 mm round sloper",
       "kind": "sloper",
       "shape": "round",
+      "handCapacity": 2,
       "gripTypes": []
     },
     {

@@ -12,7 +12,7 @@ approve reducing the requested thickness.
 | Mini Bar overall length | [Lattice product page](https://latticetraining.com/product/mini-bar-portable-hangboard/), retrieved 29 September 2026 | Marketing specification says 15.5 cm; the same page's tech table says 15 cm. The current CAD uses 155 mm, consistent with the specific marketing specification. |
 | Mini Bar scene width | Native `BoardModelRealityTests.testCordAndCADModelShareMeterScale` | RealityKit body bounds measure 0.155 m. |
 | Clavellium scene width | Same native test; retained approved display reconstruction | RealityKit body bounds measure 0.080 m. This does not establish a factory measurement. |
-| Current displayed cords | Same native test, transient cord segment visual bounds and entity scales | Both boards render a 4 mm diameter with unit cord and segment scales. There is no extra relative scene shrink. |
+| Historical displayed cords before the operator correction | Same native test, transient cord segment visual bounds and entity scales | Both boards render a 4 mm diameter with unit cord and segment scales. There is no extra relative scene shrink. |
 | Mini Bar internal bore | Native `LeftChannelDiameter` and `RightChannelDiameter` sketch circles | The CAD uses a 2.7 mm radius. `suspension.json` explicitly calls the resulting 5.4 mm diameter a display estimate. The manufacturer page supplies no bore or cord diameter. |
 | Clavellium center opening | Source-bound physics descriptor exported from native channel void | The reconstructed opening is 24 × 26 mm. These dimensions remain estimates; see the Clavellium source audit. |
 | Requested cord | Operator instruction, 3× current diameter | 12 mm diameter. It fits the reconstructed Clavellium center opening. |
@@ -26,11 +26,13 @@ throat. No automatic pixel measurement or geometry inference was used.
 
 ## Verification
 
-The native iOS Simulator test passed with both actual USDZ models and rendered
-cord meshes: one test, zero failures. The test checks metre-scale body widths,
-4 mm segment diameters on both radial axes, and unit cord/segment scales. The
-live 12 mm rope is not yet enabled in the app; the numerical settling gates are
-still in progress. This audit makes no live-physics completion claim.
+The initial native iOS Simulator test passed with both actual USDZ models and
+4 mm rendered cords: one test, zero failures. The committed regression now
+checks metre-scale body widths, 7 mm segment diameters on both radial axes for
+static cords, a 3.5 mm vertex radius for live cords, and unit cord/segment scales.
+Both shipped static suspensions also use radius 3.5 mm. The later correction
+below supersedes the historical 12 mm request; live physics is integrated only
+for Clavellium, and catalog/device gates remain separate.
 
 ## Operator correction after the initial audit
 

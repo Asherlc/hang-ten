@@ -33,7 +33,6 @@ def test_iron_palm_is_not_subject_to_seed_based_enclosed_background_clearing() -
     [
         ("yy-travelboard", (190, 625), (768, 512)),
         ("yy-travelboard", (1348, 625), (768, 512)),
-        ("yy-verticalboard-evo", (887, 500), (887, 443)),
         ("yy-verticalboard-one", (887, 500), (887, 443)),
     ],
 )
