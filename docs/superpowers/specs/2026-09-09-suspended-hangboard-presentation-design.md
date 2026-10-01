@@ -156,10 +156,9 @@ Hold selection and workout resolution select a `positionID` before presenting
 the model. The renderer commits the board and destination-solved cord as one
 atomic presentation change. Camera behavior follows the
 [selected-hold visibility contract](2026-10-01-selected-hold-camera-visibility.md).
-It does not interpolate
-the board while retaining an old cord, and it does not independently
-interpolate cord samples. Selecting another hold always restores that hold's
-position's canonical pose, even after manual inspection.
+It does not interpolate the board while retaining an old cord, and it does
+not independently interpolate cord samples. Selecting another hold always
+restores that hold's position's canonical pose, even after manual inspection.
 
 Manual gestures alter only orbit camera azimuth, elevation, and allowed zoom
 around the suspended board-and-cord scene. The board transform, invisible
