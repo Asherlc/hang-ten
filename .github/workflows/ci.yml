@@ -719,7 +719,9 @@ jobs:
       needs.changes.outputs.workflow == 'true'
     runs-on: xcode-27
     env:
-      DEVELOPER_DIR: /Applications/Xcode_27.1.app/Contents/Developer
+      # The 27.1 alias resolves to Xcode_27.1_beta.app on this image.
+      # Use the latest released toolchain with the latest available simulator.
+      DEVELOPER_DIR: /Applications/Xcode_27.0.app/Contents/Developer
     strategy:
       fail-fast: false
       matrix:

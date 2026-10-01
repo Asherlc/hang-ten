@@ -1125,3 +1125,23 @@ The passing cases do not establish a correction or an environment-only cause.
 The temporary workflow configuration is removed, restoring the exact b56
 workflow. App code, tests, gestures, deadlines and rendered assertions remain
 unchanged. No rendering fix is claimed, and required checks remain blocking.
+
+## Released toolchain selection
+
+The latest-environment workflow selected the misleading Xcode_27.1.app alias.
+The retained 5af invocation resolves it to Xcode_27.1_beta.app, build 27A9269,
+with the iOS 27.1 SDK. Apple's release announcement identifies that build as
+Xcode 27.1 beta. The runner inventory lists released Xcode 27.0 (27A266a),
+matching the local compiler, at Xcode_27.0.app. The board job now selects that
+released toolchain explicitly, retaining the latest available iOS simulator,
+all 25 selectors, rapid Train navigation, gestures, app code and assertions.
+This corrects toolchain selection; a rendering correction is not established.
+
+Sources: [Apple's beta announcement](https://developer.apple.com/jp/news/releases/?id=09182026a),
+[Apple's released Xcode announcement](https://developer.apple.com/cn/news/releases/?id=09142026h),
+and [GitHub's runner inventory](https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md).
+The 5af baseline contains four unchanged rendered-orbit images with stable
+bounds (Evo, Forge, Natural and Pro), a separate DoorMount initial-pick failure,
+and a passing Megalith sequence. Full artifact 11187125729, logs, attachments,
+diagnostics and a visually inspected comparison are retained. No unchanged
+retry or weakened assertion is used to validate the corrected selection.
