@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-30",
+  "reviewer": "asherlc",
+  "number": 6,
+  "package": "mammut-diamond-finger",
+  "boardID": "mammut.diamond-finger",
+  "status": "awaiting one-by-one review",
+  "question": "Does this one look right?",
+  "sourceSHA256": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
+  "modelSHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+  "descriptorSHA256": "b92676a9b4a81cc3db9714e2e27d8cd4593b6d9d13b846b942a00bff5833bc46",
+  "currentRevision": "individual-review/preview-index.html",
+  "revisionCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
+  "shownImages": {
+    "individual-review/preview-reference-cad-overview.png": "184863587067e361ab635d5d4a5ce47a5f45d55a54f1ea1f79e33dd0950902aa",
+    "individual-review/preview-app-selection-overview.png": "0894c167b2c7f8a757ce05900b14a51453a53bd433f710871c077670454d41cd"
+  },
+  "sourceAudit": "source-audit.md",
+  "appReview": "app-review/validation.json",
+  "reviewScope": "Existing native body and sixteen selectable contacts, retained manufacturer photo/manual, prior-versus-CAD front/side/top, and two app selection views.",
+  "approvalLimit": "Human acceptance pending. Dimensions/depths/relief remain display estimates; two lower recesses are not selectable and the inherited21-surface subtitle is unresolved. Retained app views show only two selections, not a new full-contact sweep."
+}

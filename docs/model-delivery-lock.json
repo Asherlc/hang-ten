@@ -723,7 +723,7 @@
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/metadata-diff.json",
       "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/cord-physics-review/after-app/validation.json",
-      "geometryAcceptance": "pending requested one-by-one user review",
+      "geometryAcceptance": "accepted shown revised displayed cord routing with Y",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
       "suspensionSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf"
     },
@@ -1246,8 +1246,11 @@
       "descriptorSHA256": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
       "suspensionSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
       "review": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/cord-physics-review/review.md",
-      "geometryAcceptance": "pending revised cord review #5",
-      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/human-review.json"
+      "geometryAcceptance": "reviewed; revised displayed cord routing accepted",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/human-review.json",
+      "answer": "Y",
+      "question": "Does the cord routing look right now?",
+      "revisionCommit": "7a81dcf5af5f79fe3a5b419749dd30bff0f0a32d"
     }
   ]
 }

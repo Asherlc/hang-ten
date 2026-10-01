@@ -5,7 +5,8 @@ route was constrained to a fixed-X section while the actual support was at the
 board's center. The renderer faithfully drew that saved bend. The revised
 native sections contain the actual support and mouth, so the visible leads
 continue diagonally across the face. Remaining bends follow the upper rim and
-the real mouth rims. Human acceptance of this revision is pending.
+the real mouth rims. The user accepted the shown revised cord routing with “Y”;
+see the [human review record](../human-review.json).
 
 Only `suspension.json` changes in the board package: authoring selects
 `sectionPlane: "anchor"` and `pathSearch: "aStar"`; the native solver generates
@@ -75,6 +76,6 @@ raw evidence and logs are copied byte-for-byte and bound by
 
 This is a finite native section/path approximation. The checks do not assert
 dynamic equilibrium, a global minimum, manufacturer cord dimensions or
-unknown hidden connections. Physical-device orbit was not checked. Review
-remains on Port-A-Board (#5); the four previously accepted boards retain their
-recorded acceptance.
+unknown hidden connections. Physical-device orbit was not checked.
+Port-A-Board (#5) is reviewed; Mammut Diamond Finger (#6) is next. Earlier
+boards retain their recorded acceptance.

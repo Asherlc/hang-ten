@@ -5,7 +5,7 @@
   "number": 5,
   "package": "frictitious-port-a-board",
   "boardID": "frictitious.port-a-board",
-  "status": "awaiting revised cord review #5",
+  "status": "reviewed; revised displayed cord routing accepted",
   "question": "Does the cord routing look right now?",
   "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
   "modelSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
@@ -19,7 +19,7 @@
   "sourceAudit": "native-authoring.md",
   "appReview": "cord-physics-review/after-app/validation.json",
   "reviewScope": "Revised Port-A-Board displayed cord routing across six native canonical poses; front/side/top and fresh installed-app before/after shown.",
-  "approvalLimit": "Human acceptance pending for review #5. Physical and route certificates concern the displayed native approximation; estimated cord dimensions and unspecified hidden joins remain estimates/unknowns.",
+  "approvalLimit": "The reply accepts the shown revised displayed cord routing. It does not establish manufacturer cord dimensions, unspecified hidden joins, dynamic equilibrium, or unshown physical details.",
   "revisionBaseCommit": "3fd0418d9a66d489cdb515ca3a3e82b4ec52121e",
   "sourceModelRevisionCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
   "history": [
@@ -50,6 +50,22 @@
       },
       "feedback": "Rope physics are off. They go up and then it's coming to a point that there should be no bend.",
       "result": "Actual-support native routes generated; revised cord awaits review."
+    },
+    {
+      "date": "2026-09-30",
+      "reviewer": "asherlc",
+      "question": "Does the cord routing look right now?",
+      "answer": "Y",
+      "revisionCommit": "7a81dcf5af5f79fe3a5b419749dd30bff0f0a32d",
+      "acceptedScope": "Revised displayed Port-A-Board cord routing shown in the inline app before/after and front/side/top comparisons.",
+      "suspensionSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
+      "shownImages": {
+        "cord-physics-review/app-before-after.png": "ec330f53931b5160bdbd5ac6fc268ed3189d95c3649317fec913b04b71220979",
+        "cord-physics-review/front-side-top-comparison.png": "eea56d4c28ea6123a61a7cc0b9128f1c7d9e34f98291f65d7ed4640dba21dc50"
+      }
     }
-  ]
+  ],
+  "answer": "Y",
+  "revisionCommit": "7a81dcf5af5f79fe3a5b419749dd30bff0f0a32d",
+  "acceptedScope": "Revised displayed Port-A-Board cord routing shown in the inline app before/after and front/side/top comparisons."
 }

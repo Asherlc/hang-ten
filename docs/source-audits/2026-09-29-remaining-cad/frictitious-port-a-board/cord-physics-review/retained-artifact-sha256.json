@@ -598,12 +598,12 @@
   },
   "generatedArtifactSHA256": {
     "comparison-layout.json": "421b34296cce7f4903ad0776d024c0f1e0ace0d1877d039345cdd7942b9a32b5",
-    "index.html": "98a093faa5b7cf1b844e5a450c85303e842264978252ccb3fc6277978ef97e05",
+    "index.html": "14c7bff831e62d8b9904d6314dfafb4abf27717fabbae342fb8c9e69dd04b143",
     "six-pose-comparison-overview.png": "6301cfe9f13cfba2fe7e2fe684f69af35f1a53e1065eb5ba322f699154689316",
     "front-side-top-comparison.png": "eea56d4c28ea6123a61a7cc0b9128f1c7d9e34f98291f65d7ed4640dba21dc50",
     "app-before-after.png": "ec330f53931b5160bdbd5ac6fc268ed3189d95c3649317fec913b04b71220979",
-    "review.md": "acd4568fedc0346ae43ceb6f6d1f68266273aff0fae8a6bff21a426fad9c14e6",
-    "validation-summary.json": "346944b6fab3a9333dea0df2f92e26de72fbe08ee84b6ced1d299742619211cb",
+    "review.md": "e0ae2579b3589241afdbb12c3d4a609555f40e8a1d368fa691431df178e8d2a8",
+    "validation-summary.json": "6a3db50ae46a236344f0dbf8f893b7ada0b72bd49e826b60edd1ba02c517426c",
     "validation/final-commit-checks.json": "86b4d6d5265f9152140735237d1208e94cfed1f3dd8eb68dfd04b5cac93eff7c"
   },
   "rawCopyPolicy": "Evidence, JSON, logs and source scripts copied byte-for-byte. No whitespace stripping or sanitizing."

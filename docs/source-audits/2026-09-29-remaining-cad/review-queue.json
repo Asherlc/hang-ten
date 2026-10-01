@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "one-by-one review in progress: Cyclops, DUAL, UNLEVEL and The NUG shown revisions accepted; Port-A-Board is review #5",
+  "reviewState": "one-by-one review in progress: Cyclops, DUAL, UNLEVEL, The NUG and Port-A-Board shown revisions accepted; Mammut Diamond Finger is review #6",
   "boards": [
     {
       "number": 1,
@@ -133,7 +133,7 @@
       "package": "frictitious-port-a-board",
       "boardID": "frictitious.port-a-board",
       "name": "Frictitious Climbing Port-A-Board",
-      "humanReview": "awaiting revised cord review #5",
+      "humanReview": "reviewed; revised displayed cord routing accepted",
       "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
       "reviewPage": "frictitious-port-a-board/cord-physics-review/index.html",
       "sourceAudit": "frictitious-port-a-board/native-authoring.md",
@@ -151,21 +151,22 @@
       "appReviewPage": "frictitious-port-a-board/cord-physics-review/index.html",
       "humanReviewRecord": "frictitious-port-a-board/human-review.json",
       "suspensionSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
-      "revisionBaseCommit": "3fd0418d9a66d489cdb515ca3a3e82b4ec52121e"
+      "revisionBaseCommit": "3fd0418d9a66d489cdb515ca3a3e82b4ec52121e",
+      "revisionCommit": "7a81dcf5af5f79fe3a5b419749dd30bff0f0a32d",
+      "answer": "Y"
     },
     {
       "number": 6,
       "package": "mammut-diamond-finger",
       "boardID": "mammut.diamond-finger",
       "name": "Mammut Diamond Finger Hangboard",
-      "humanReview": "pending",
+      "humanReview": "awaiting review #6",
       "sourceSHA256": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
-      "reviewPage": "mammut-diamond-finger/source-audit.md",
+      "reviewPage": "mammut-diamond-finger/individual-review/preview-index.html",
       "sourceAudit": "mammut-diamond-finger/source-audit.md",
       "comparisons": [
-        "mammut-diamond-finger/review/comparison-side.png",
-        "mammut-diamond-finger/review/comparison-top.png",
-        "mammut-diamond-finger/review/comparison-front.png"
+        "mammut-diamond-finger/individual-review/preview-reference-cad-overview.png",
+        "mammut-diamond-finger/individual-review/preview-app-selection-overview.png"
       ],
       "presentations": {
         "primary": {
@@ -174,7 +175,8 @@
         }
       },
       "appReview": "mammut-diamond-finger/app-review/validation.json",
-      "appReviewPage": "mammut-diamond-finger/app-review/index.html"
+      "appReviewPage": "mammut-diamond-finger/app-review/index.html",
+      "humanReviewRecord": "mammut-diamond-finger/human-review.json"
     },
     {
       "number": 7,

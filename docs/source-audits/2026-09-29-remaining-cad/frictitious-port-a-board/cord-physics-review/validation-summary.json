@@ -2,7 +2,7 @@
   "owner": "placid-badger",
   "boardID": "frictitious.port-a-board",
   "reviewNumber": 5,
-  "status": "revised cord validated; awaiting human review",
+  "status": "revised cord validated; shown routing accepted with Y",
   "baselineCommit": "3fd0418d9a66d489cdb515ca3a3e82b4ec52121e",
   "beforeSidecarSHA256": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305",
   "afterSidecarSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
@@ -83,5 +83,6 @@
     "nativeSolveProcessesExited": true,
     "sharedAndUnknownSimulatorsPreserved": true
   },
-  "limitations": "Finite native section graph approximation; no dynamic rope equilibrium, global minimum or unknown hidden connection is asserted. Cord lengths/radii remain audited display estimates. Physical-device orbit not checked."
+  "limitations": "Finite native section graph approximation; no dynamic rope equilibrium, global minimum or unknown hidden connection is asserted. Cord lengths/radii remain audited display estimates. Physical-device orbit not checked.",
+  "humanReviewRecord": "../human-review.json"
 }
