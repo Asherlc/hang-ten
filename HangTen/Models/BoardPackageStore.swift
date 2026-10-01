@@ -186,6 +186,7 @@ struct BoardPackageStore {
     private let boardsByID: [String: BoardRevision]
     private let presentationURLsByBoardID: [String: [String: URL]]
     private let descriptorURLsByBoardID: [String: [String: URL]]
+    private let packageURLsByBoardID: [String: URL]
     private let modelResourcesByBoardID: [String: [String: BoardModelResource]]
     let resourceBundle: Bundle
 
@@ -201,6 +202,7 @@ struct BoardPackageStore {
         var loadedBoards: [BoardRevision] = []
         var loadedPresentationURLs: [String: [String: URL]] = [:]
         var loadedDescriptorURLs: [String: [String: URL]] = [:]
+        var loadedPackageURLs: [String: URL] = [:]
         var loadedModelResources: [String: [String: BoardModelResource]] = [:]
         var seenBoardIDs = Set<String>()
 
@@ -229,6 +231,7 @@ struct BoardPackageStore {
             guard seenBoardIDs.insert(loaded.board.id).inserted else {
                 throw BoardPackageStoreError.duplicateBoardID(loaded.board.id)
             }
+            loadedPackageURLs[loaded.board.id] = packageURL
             loadedBoards.append(loaded.board)
             loadedPresentationURLs[loaded.board.id] = loaded.presentationURLs
             loadedDescriptorURLs[loaded.board.id] = loaded.descriptorURLs
@@ -240,6 +243,7 @@ struct BoardPackageStore {
         self.boardsByID = Dictionary(uniqueKeysWithValues: loadedBoards.map { ($0.id, $0) })
         self.presentationURLsByBoardID = loadedPresentationURLs
         self.descriptorURLsByBoardID = loadedDescriptorURLs
+        self.packageURLsByBoardID = loadedPackageURLs
         self.modelResourcesByBoardID = loadedModelResources
         self.resourceBundle = bundle
     }
@@ -271,6 +275,42 @@ struct BoardPackageStore {
     ) -> URL? {
         let resolvedID = presentationID ?? board.defaultPresentation.id
         return descriptorURLsByBoardID[board.id]?[resolvedID]
+    }
+
+    /// The catalog validates physics on load but retains only its package path.
+    /// Decode the heavy collision payload only when a scene actually needs it.
+    func presentationPhysicsInput(
+        for board: BoardRevision,
+        presentationID: String? = nil
+    ) throws -> RopePhysicsInput? {
+        guard let registeredBoard = boardsByID[board.id] else {
+            throw RopePhysicsError.invalid("Unknown physics board")
+        }
+        let resolvedID = presentationID ?? registeredBoard.defaultPresentation.id
+        guard case .model(let media) = registeredBoard.presentation(id: resolvedID)?.media,
+              let path = media.physicsDescriptorPath else { return nil }
+        guard let packageURL = packageURLsByBoardID[board.id] else {
+            throw RopePhysicsError.invalid("Missing physics package URL")
+        }
+        try Self.validateHangboardsRoot(packageURL.deletingLastPathComponent())
+        guard try Self.isRegularDirectory(packageURL) else {
+            throw BoardPackageStoreError.packagePathEscape(boardID: board.id, path: packageURL.path)
+        }
+        try Self.validatePackageContainer(packageURL, boardID: board.id)
+        try Self.validateAssetPath(path, suffix: ".physics.json", boardID: board.id, packageURL: packageURL)
+        let url = packageURL.appendingPathComponent(path)
+        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
+        guard values.isRegularFile == true, values.isSymbolicLink != true,
+              let size = values.fileSize, size <= 64 * 1024 * 1024 else {
+            throw RopePhysicsError.invalid("Physics descriptor must be a regular file of at most 64 MiB")
+        }
+        let input = try RopePhysicsDescriptor.decode(Data(contentsOf: url)).validated(modelSHA256: media.descriptor.modelSHA256)
+        let profiles = input.profiles.filter { $0.presentationID == resolvedID }
+        let expectedInstances: Set<String?> = media.instances.map { Set($0.map { Optional($0.equipmentObjectID) }) } ?? [nil]
+        guard Set(profiles.map(\.instanceID)) == expectedInstances else {
+            throw RopePhysicsError.invalid("Physics profiles must cover presentation instances exactly")
+        }
+        return input
     }
 
     func modelResource(
@@ -735,7 +775,7 @@ struct BoardPackageStore {
                 hasRaster = true
                 try validateAssetPath(assetPath, suffix: ".png", boardID: document.id, packageURL: packageURL)
                 declaredAssetPaths.insert(assetPath)
-            case .model(let assetPath, let descriptorPath, let display, let suspension, let orientation, let instances):
+            case .model(let assetPath, let descriptorPath, let display, let suspension, let orientation, let instances, let physicsDescriptorPath):
                 hasModel = true
                 guard case .original = presentation.derivation else {
                     throw BoardPackageStoreError.invalidPackage(
@@ -759,6 +799,10 @@ struct BoardPackageStore {
                     )
                 }
                 declaredAssetPaths.formUnion([assetPath, descriptorPath])
+                if let physicsDescriptorPath {
+                    try validateAssetPath(physicsDescriptorPath, suffix: ".physics.json", boardID: document.id, packageURL: packageURL)
+                    declaredAssetPaths.insert(physicsDescriptorPath)
+                }
                 if modelAssetMode == .onDemand {
                     onDemandModelAssetPaths.insert(assetPath)
                 }
@@ -896,7 +940,7 @@ struct BoardPackageStore {
                     )
                 }
                 media = .raster(BoardRasterMedia(assetPath: assetPath, contactGeometry: contactGeometry))
-            case .model(let assetPath, let descriptorPath, let displayDocument, let suspensionDocument, let orientationDocument, let instanceDocuments):
+            case .model(let assetPath, let descriptorPath, let displayDocument, let suspensionDocument, let orientationDocument, let instanceDocuments, let physicsDescriptorPath):
                 let loadedDescriptor = try loadModelDescriptor(
                     at: packageURL.appendingPathComponent(descriptorPath),
                     modelURL: modelAssetMode == .bundled
@@ -911,6 +955,28 @@ struct BoardPackageStore {
                     instanceDocuments: instanceDocuments
                 )
                 let descriptor = loadedDescriptor.descriptor
+                _ = try physicsDescriptorPath.map { path -> RopePhysicsInput in
+                    do {
+                        let url = packageURL.appendingPathComponent(path)
+                        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
+                        guard values.isRegularFile == true, values.isSymbolicLink != true,
+                              let size = values.fileSize, size <= 64 * 1024 * 1024 else {
+                            throw RopePhysicsError.invalid("Physics descriptor must be a regular file of at most 64 MiB")
+                        }
+                        let input = try RopePhysicsDescriptor.decode(Data(contentsOf: url)).validated(modelSHA256: descriptor.modelSHA256)
+                        let profiles = input.profiles.filter { $0.presentationID == presentation.id }
+                        let expectedInstances: Set<String?> = loadedDescriptor.instances.map { Set($0.map { Optional($0.equipmentObjectID) }) } ?? [nil]
+                        guard Set(profiles.map(\.instanceID)) == expectedInstances else {
+                            throw RopePhysicsError.invalid("Physics profiles must cover presentation instances exactly")
+                        }
+                        return input
+                    } catch {
+                        throw BoardPackageStoreError.invalidPackage(
+                            boardID: document.id,
+                            reason: "Invalid rope physics descriptor: \(error.localizedDescription)"
+                        )
+                    }
+                }
                 let woodNodes = Set(displayDocument.woodNodeIDs)
                 let plasticNodes = Set(displayDocument.plasticNodeIDs)
                 let graniteNodes = Set(displayDocument.graniteNodeIDs)
@@ -971,7 +1037,8 @@ struct BoardPackageStore {
                         ),
                         suspension: suspension,
                         orientation: orientation,
-                        instances: loadedDescriptor.instances
+                        instances: loadedDescriptor.instances,
+                        physicsDescriptorPath: physicsDescriptorPath
                     )
                 )
                 descriptorURLs[presentation.id] = packageURL.appendingPathComponent(descriptorPath)
@@ -2065,9 +2132,12 @@ struct BoardPackageStore {
         positionIDs: Set<String>,
         boardID: String
     ) throws -> BoardModelSuspension {
+        let singleLoop = document.internalLoop != nil && document.meshWrap == nil && document.passages.right.isEmpty
+        let passagePairs = singleLoop ? [document.passages.left] : [document.passages.left, document.passages.right]
         guard document.canonicalPoses.values.allSatisfy({ $0.attachmentPoints == nil }),
               document.passages.left.count == 2,
-              document.passages.right.count == (document.type == "threadedLoopCord" ? 0 : 2) else {
+              (document.type == "threadedLoopCord" ? document.passages.right.isEmpty
+                  : (singleLoop || document.passages.right.count == 2)) else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: document.type == "threadedLoopCord"
                 ? "threadedLoopCord requires two left passages and no right passages"
                 : "twoBranchCord suspension requires exactly two passages per side")
@@ -2131,12 +2201,12 @@ struct BoardPackageStore {
                   }),
                   [0, document.canonicalPoses.count].contains(
                       document.canonicalPoses.values.filter { $0.cordContactPoints != nil }.count),
+                  !singleLoop || (!document.canonicalPoses.isEmpty && document.canonicalPoses.values.allSatisfy({ $0.cordContactPoints != nil })),
                   document.canonicalPoses.values.allSatisfy({ pose in
                       pose.wrappedRoutes == nil && (pose.cordContactPoints == nil ||
                           Set(pose.cordContactPoints!.keys) == Set(passages.map(\.id)))
                   }),
-                  document.passages.left[0].entryPointInModel != document.passages.left[1].entryPointInModel,
-                  (document.passages.right.isEmpty || document.passages.right[0].entryPointInModel != document.passages.right[1].entryPointInModel) else {
+                  passagePairs.allSatisfy({ $0[0].entryPointInModel != $0[1].entryPointInModel }) else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "internalLoop requires two distinct point mouths per side and complete derived routes when cached")
             }
         }
@@ -2165,10 +2235,9 @@ struct BoardPackageStore {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage must declare a non-zero through-bore")
             }
         }
-        guard document.branches.count == (document.type == "threadedLoopCord" ? 1 : 2),
+        guard document.branches.count == passagePairs.count,
               document.branches.allSatisfy({ $0.id.isBoardPackageIdentifier }),
-              document.branches[0].passageIDs == document.passages.left.map(\.id),
-              (document.passages.right.isEmpty || document.branches[1].passageIDs == document.passages.right.map(\.id)),
+              zip(document.branches, passagePairs).allSatisfy({ $0.0.passageIDs == $0.1.map(\.id) }),
               Set(document.branches.map(\.id)).count == document.branches.count else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: document.type == "threadedLoopCord"
                 ? "threadedLoopCord requires one branch naming its two ordered mouths"
@@ -2964,11 +3033,12 @@ private enum BoardPackageMediaDocument: Decodable {
         display: BoardPackageModelDisplayDocument,
         suspension: BoardPackageSuspensionDocument?,
         orientation: BoardPackageModelOrientationDocument?,
-        instances: [BoardPackageModelInstanceDocument]?
+        instances: [BoardPackageModelInstanceDocument]?,
+        physicsDescriptorPath: String?
     )
 
     private enum CodingKeys: String, CodingKey {
-        case type, assetPath, contactGeometry, descriptorPath, display, suspension, orientation, instances
+        case type, assetPath, contactGeometry, descriptorPath, display, suspension, orientation, instances, physicsDescriptorPath
     }
 
     init(from decoder: Decoder) throws {
@@ -2985,7 +3055,7 @@ private enum BoardPackageMediaDocument: Decodable {
                 )
             )
         case "model":
-            try decoder.rejectUnknownKeys(["type", "assetPath", "descriptorPath", "display", "suspension", "orientation", "instances"])
+            try decoder.rejectUnknownKeys(["type", "assetPath", "descriptorPath", "display", "suspension", "orientation", "instances", "physicsDescriptorPath"])
             self = .model(
                 assetPath: try container.decode(String.self, forKey: .assetPath),
                 descriptorPath: try container.decode(String.self, forKey: .descriptorPath),
@@ -2998,6 +3068,9 @@ private enum BoardPackageMediaDocument: Decodable {
                     : nil,
                 instances: container.contains(.instances)
                     ? try container.decode([BoardPackageModelInstanceDocument].self, forKey: .instances)
+                    : nil,
+                physicsDescriptorPath: container.contains(.physicsDescriptorPath)
+                    ? try container.decode(String.self, forKey: .physicsDescriptorPath)
                     : nil
             )
         default:
@@ -3011,7 +3084,7 @@ private enum BoardPackageMediaDocument: Decodable {
 
     var assetPath: String {
         switch self {
-        case .raster(let assetPath, _), .model(let assetPath, _, _, _, _, _): assetPath
+        case .raster(let assetPath, _), .model(let assetPath, _, _, _, _, _, _): assetPath
         }
     }
 }

@@ -104,6 +104,8 @@ TARGET_ANDROID = "android"
 TARGETS = (TARGET_XCODE, TARGET_ANDROID)
 DEBUG_SIMULATOR_MODEL_ASSET_DIRECTORY = "HangTenDebugSimulatorModels"
 CI_DEBUG_SIMULATOR_MODEL_SLUGS = frozenset({
+    "clavellium-training-block",
+    "lattice-mini-bar",
     "frictitious-doormount-pro-7",
     "frictitious-megalith",
     "tension-whetstone",
@@ -340,7 +342,8 @@ def stage_board_packages(
             for path in package_root.rglob("*.FCStd")
         )
         sidecar = frozenset({Path("suspension.json")}) if (package_root / "suspension.json").is_file() else frozenset()
-        authoring_source_paths_by_slug[package.root.name] = cad_sources | sidecar
+        physics_authoring = frozenset({Path("rope-physics.json")}) if (package_root / "rope-physics.json").is_file() else frozenset()
+        authoring_source_paths_by_slug[package.root.name] = cad_sources | sidecar | physics_authoring
 
     destination.parent.mkdir(parents=True, exist_ok=True)
     staging = destination.with_name(f".{destination.name}.staging-{uuid.uuid4().hex}")

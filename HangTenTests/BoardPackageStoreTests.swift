@@ -228,6 +228,138 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertNil(board.unilateralHandResolution)
     }
 
+    func testLiveRopePhysicsLoadsWithoutTheOnDemandModel() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try self.addPhysicsFixture(to: packageURL)
+            try FileManager.default.removeItem(at: packageURL.appendingPathComponent("assets/primary.usdz"))
+        }
+        defer { fixture.remove() }
+        let store = try BoardPackageStore(bundle: fixture.bundle, modelAssetMode: .onDemand)
+        let board = try XCTUnwrap(store.boards.first)
+        guard case .model(let media) = try XCTUnwrap(board.presentations.first).media else { return XCTFail("Expected model") }
+        XCTAssertEqual(media.physicsDescriptorPath, "assets/primary.physics.json")
+        XCTAssertEqual(try XCTUnwrap(store.presentationPhysicsInput(for: board)).profiles.first?.ropes.first?.radius, 0.006)
+    }
+
+    func testLazyRopePhysicsRejectsFilesMutatedAfterCatalogValidation() throws {
+        for failure in ["ancestor-symlink", "oversized", "stale", "wrong-profile"] {
+            var packageURL: URL!
+            let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { url in
+                packageURL = url
+                try self.addPhysicsFixture(to: url)
+                try FileManager.default.removeItem(at: url.appendingPathComponent("assets/primary.usdz"))
+            }
+            let relocated = fixture.rootURL.deletingLastPathComponent()
+                .appendingPathComponent(fixture.rootURL.lastPathComponent + "-relocated-assets")
+            defer {
+                try? FileManager.default.removeItem(at: relocated)
+                fixture.remove()
+            }
+            let store = try BoardPackageStore(bundle: fixture.bundle, modelAssetMode: .onDemand)
+            let board = try XCTUnwrap(store.boards.first)
+            let url = packageURL.appendingPathComponent("assets/primary.physics.json")
+            switch failure {
+            case "ancestor-symlink":
+                let assets = packageURL.appendingPathComponent("assets")
+                try FileManager.default.moveItem(at: assets, to: relocated)
+                try FileManager.default.createSymbolicLink(at: assets, withDestinationURL: relocated)
+            case "oversized":
+                let handle = try FileHandle(forWritingTo: url)
+                defer { try? handle.close() }
+                try handle.truncate(atOffset: UInt64(64 * 1024 * 1024 + 1))
+            case "stale":
+                try mutateJSONObject(at: url) { $0["modelSHA256"] = String(repeating: "c", count: 64) }
+            case "wrong-profile":
+                try mutateJSONObject(at: url) { object in
+                    var profiles = try XCTUnwrap(object["profiles"] as? [[String: Any]])
+                    profiles[0]["presentationID"] = "unrelated"
+                    object["profiles"] = profiles
+                }
+            default:
+                XCTFail("Unknown mutation: \(failure)")
+            }
+            XCTAssertThrowsError(try store.presentationPhysicsInput(for: board), failure) { error in
+                if failure == "ancestor-symlink" {
+                    guard case .packagePathEscape(let boardID, let path) = error as? BoardPackageStoreError else {
+                        return XCTFail("Expected packagePathEscape for ancestor symlink, got \(error)")
+                    }
+                    XCTAssertEqual(boardID, board.id)
+                    XCTAssertTrue(path.hasSuffix("/assets"), path)
+                } else {
+                    guard case .invalid(let reason) = error as? RopePhysicsError else {
+                        return XCTFail("Expected invalid physics for \(failure), got \(error)")
+                    }
+                    let expected: [String: String] = [
+                        "oversized": "Physics descriptor must be a regular file of at most 64 MiB",
+                        "stale": "Physics model hash mismatch",
+                        "wrong-profile": "Physics profiles must cover presentation instances exactly"
+                    ]
+                    XCTAssertEqual(reason, expected[failure])
+                }
+            }
+        }
+    }
+
+    func testDeclaredRopePhysicsFailsClosed() throws {
+        for failure in ["missing", "stale", "symlink", "wrong-profile", "malformed"] {
+            let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+                try self.addPhysicsFixture(to: packageURL)
+                let url = packageURL.appendingPathComponent("assets/primary.physics.json")
+                switch failure {
+                case "malformed": try Data("{}".utf8).write(to: url)
+                case "missing": try FileManager.default.removeItem(at: url)
+                case "stale": try self.mutateJSONObject(at: url) { $0["modelSHA256"] = String(repeating:"c", count:64) }
+                case "wrong-profile": try self.mutateJSONObject(at: url) { object in
+                    var profiles = try XCTUnwrap(object["profiles"] as? [[String:Any]])
+                    profiles[0]["presentationID"] = "unrelated"
+                    object["profiles"] = profiles
+                }
+                case "symlink":
+                    let target = packageURL.appendingPathComponent("assets/link-target.json")
+                    try FileManager.default.moveItem(at: url, to: target)
+                    try FileManager.default.createSymbolicLink(at: url, withDestinationURL: target)
+                default:
+                    XCTFail("Unknown failure mode: \(failure)")
+                    return
+                }
+            }
+            defer { fixture.remove() }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle, modelAssetMode: .onDemand), failure) { error in
+                if failure == "symlink" {
+                    guard case .packagePathEscape(let boardID, let path) = error as? BoardPackageStoreError else {
+                        return XCTFail("Expected packagePathEscape for symlink, got \(error)")
+                    }
+                    XCTAssertEqual(boardID, "fixture-model")
+                    XCTAssertTrue(path.hasSuffix("/assets/primary.physics.json"))
+                    return
+                }
+                guard case .invalidPackage(let boardID, let reason) = error as? BoardPackageStoreError else {
+                    return XCTFail("Expected board-specific invalidPackage for \(failure), got \(error)")
+                }
+                XCTAssertEqual(boardID, "fixture.board")
+                XCTAssertFalse(reason.isEmpty)
+            }
+        }
+    }
+
+    private func addPhysicsFixture(to packageURL: URL) throws {
+        let modelData = try Data(contentsOf: packageURL.appendingPathComponent("assets/primary.model.json"))
+        let model = try XCTUnwrap(JSONSerialization.jsonObject(with: modelData) as? [String:Any])
+        var physics = try XCTUnwrap(JSONSerialization.jsonObject(with: RopePhysicsDescriptorTests.fixture) as? [String:Any])
+        physics["modelSHA256"] = model["modelSHA256"]
+        try mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String:Any]])
+            var media = try XCTUnwrap(presentations[0]["media"] as? [String:Any])
+            media["physicsDescriptorPath"] = "assets/primary.physics.json"
+            presentations[0]["media"] = media
+            var profiles = try XCTUnwrap(physics["profiles"] as? [[String:Any]])
+            profiles[0]["presentationID"] = presentations[0]["id"]
+            physics["profiles"] = profiles
+            board["presentations"] = presentations
+        }
+        try JSONSerialization.data(withJSONObject: physics).write(to: packageURL.appendingPathComponent("assets/primary.physics.json"))
+    }
+
     func testOnDemandModelTagIsDeterministicAndSafeForValidatedPackageSlug() {
         let resource = BoardModelResource(
             packageSlug: "metolius-wood-grips-compact-ii",
@@ -596,6 +728,41 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertTrue(suspension.branches.allSatisfy {
             !$0.entryContactPoints.isEmpty && $0.exteriorContactPoints.count >= 2 && !$0.exitContactPoints.isEmpty
         })
+    }
+
+    func testStoreRejectsSingleLoopWithConflictingMeshWrapBeforeIndexingPassages() throws {
+        let root: [Any] = ["presentations", 0, "media", "suspension"]
+        let fixture = try makeSharedModelParserParityFixtureBundle([
+            "base": "twoBranchModel",
+            "mutations": [
+                ["target": "board", "op": "replace", "path": root + ["passages", "right"], "value": []],
+                ["target": "board", "op": "replace", "path": root + ["meshWrap"], "value": ["clearance": 0.001]],
+                ["target": "board", "op": "replace", "path": root + ["internalLoop"], "value": [
+                    "clearance": 0.001, "windingByPassageID": [:], "channelLengthByBranchID": [:]
+                ]]
+            ]
+        ])
+        defer { fixture.remove() }
+        // Pin the emitted fixture before constructing the store: an empty JSON
+        // array casts to [Any] and is serialized as an empty right-mouth list.
+        let boardURL = fixture.rootURL.appendingPathComponent("Hangboards/fixture-model/board.json")
+        let document = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any])
+        let presentations = try XCTUnwrap(document["presentations"] as? [[String: Any]])
+        let media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+        let suspension = try XCTUnwrap(media["suspension"] as? [String: Any])
+        let passages = try XCTUnwrap(suspension["passages"] as? [String: Any])
+        XCTAssertTrue(try XCTUnwrap(passages["right"] as? [Any]).isEmpty)
+        XCTAssertNotNil(suspension["meshWrap"])
+        XCTAssertNotNil(suspension["internalLoop"])
+        let rawData = try Data(contentsOf: boardURL)
+        XCTAssertNotNil(rawData.range(of: Data(#""internalLoop":{"clearance":0.001,"windingByPassageID":{},"channelLengthByBranchID":{}}"#.utf8)))
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(let boardID, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("expected invalidPackage, got \(error)")
+            }
+            XCTAssertEqual(boardID, document["id"] as? String)
+            XCTAssertEqual(reason, "twoBranchCord suspension requires exactly two passages per side")
+        }
     }
 
     func testSharedFixtureBuilderUsesDeclaredBaseDocument() throws {
@@ -4484,7 +4651,7 @@ final class BoardPackageStoreTests: XCTestCase {
 
     private func serializedTwoBranchSuspension(
         _ suspension: [String: Any],
-        memberOrder: [String] = ["type", "passages", "branches", "anchor", "canonicalPoses"]
+        memberOrder: [String] = ["type", "passages", "branches", "meshWrap", "internalLoop", "anchor", "canonicalPoses"]
     ) throws -> Data {
         var serializedValues: [String: Data] = [:]
         if let passages = suspension["passages"] as? [String: Any] {
@@ -4503,6 +4670,13 @@ final class BoardPackageStoreTests: XCTestCase {
         }
         if let poses = suspension["canonicalPoses"] as? [String: Any] {
             serializedValues["canonicalPoses"] = try serializedTwoBranchCanonicalPoses(poses)
+        }
+        if let loop = suspension["internalLoop"] as? [String: Any] {
+            serializedValues["internalLoop"] = try orderedJSONObjectData(
+                loop,
+                keys: ["clearance", "windingByPassageID", "channelLengthByBranchID", "channelPointsByBranchID"]
+                    .filter { loop[$0] != nil }
+            )
         }
         return try orderedJSONObjectData(
             suspension,

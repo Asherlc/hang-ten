@@ -157,6 +157,8 @@ struct BoardModelRealityView: View {
     let onUnavailable: (() -> Void)?
     var isDisplayOnly = false
 
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var cameraRevision = 0
     @State private var lastDragTranslation: CGSize = .zero
     @State private var lastMagnification: CGFloat = 1
@@ -183,12 +185,32 @@ struct BoardModelRealityView: View {
                 content.add(model.root)
                 content.add(model.camera)
                 applySync(size: size)
+                if model.hasLiveRopes, positionID != nil {
+                    if !model.hasLiveUpdateSubscription {
+                        model.installLiveUpdateSubscription(content.subscribe(to: SceneEvents.Update.self) { [weak model] event in
+                            let elapsed = event.deltaTime
+                            Task { @MainActor [weak model] in model?.advanceLiveRopes(elapsed: elapsed) }
+                        })
+                    }
+                } else {
+                    model.installLiveUpdateSubscription(nil)
+                }
             } update: { content in
                 // Observe orbit invalidation in the RealityView update itself,
                 // as well as the projected SwiftUI accessibility overlay.
                 let revision = cameraRevision
                 content.camera = .virtual
                 applySync(size: size)
+                if model.hasLiveRopes, positionID != nil {
+                    if !model.hasLiveUpdateSubscription {
+                        model.installLiveUpdateSubscription(content.subscribe(to: SceneEvents.Update.self) { [weak model] event in
+                            let elapsed = event.deltaTime
+                            Task { @MainActor [weak model] in model?.advanceLiveRopes(elapsed: elapsed) }
+                        })
+                    }
+                } else {
+                    model.installLiveUpdateSubscription(nil)
+                }
                 #if DEBUG
                 if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
                     let diagnostic = "revision=\(revision);rootActive=\(model.root.isActive);cameraActive=\(model.camera.isActive);sameScene=\(model.root.scene != nil && model.root.scene === model.camera.scene)"
@@ -225,12 +247,25 @@ struct BoardModelRealityView: View {
         // A display-only card is one element (its host Button owns the tap). An
         // interactive board exposes its contact elements instead, so the
         // container must not collapse them into a single element.
+        .onAppear { model.setLiveActivity(scenePhase == .active) }
+        .onDisappear {
+            model.onLiveFrame=nil
+            model.onLiveFailure=nil
+            model.setLiveActivity(false)
+        }
+        .onChange(of:scenePhase) { _,phase in model.setLiveActivity(phase == .active) }
+        .onChange(of:reduceMotion) { _,value in model.configureLiveMotion(reduceMotion:value,displayOnly:isDisplayOnly) }
         .modifier(BoardModelAccessibilityContainer(
             label: onContactTap == nil ? "\(boardName) hangboard" : nil,
             value: onContactTap == nil ? accessibilityValue : nil))
     }
 
     private func applySync(size: CGSize) {
+        model.configureLiveMotion(reduceMotion:reduceMotion,displayOnly:isDisplayOnly)
+        let unavailableCallback = onUnavailable
+        model.onLiveFailure = { unavailableCallback?() }
+        let revisionBinding = $cameraRevision
+        model.onLiveFrame = { Task { @MainActor in revisionBinding.wrappedValue &+= 1 } }
         let priorCameraTransform = model.camera.transform.matrix
         let priorInstanceTransforms = model.instanceEntities.map { $0.transform.matrix }
         var camera = model.camera.camera
@@ -242,6 +277,9 @@ struct BoardModelRealityView: View {
         model.frame(in: size)
         let didSelect = model.select(positionID: positionID)
         model.highlight(highlightedContactIDs, mode: highlightMode)
+        #if DEBUG
+        model.applyReviewCamera()
+        #endif
         // RealityView synchronizes after SwiftUI evaluates the accessibility
         // overlay. Reproject once when framing or a board pose actually changes.
         // The unchanged follow-up update must not schedule another invalidation.
