@@ -94,7 +94,11 @@ final class FreeWorkoutUITests: XCTestCase {
         tapVisibleControl(duration, requireHittable: false)
         duration.typeText("120")
         XCTAssertEqual(duration.value as? String, "120")
-        tapVisibleControl(app.buttons["freeWorkout.keyboard.done"], requireHittable: false)
+        // A hardware keyboard or an already-dismissed software keyboard leaves
+        // no Done toolbar. Dismiss it only while an onscreen keyboard is present.
+        if app.keyboards.firstMatch.exists {
+            tapVisibleControl(app.buttons["freeWorkout.keyboard.done"], requireHittable: false)
+        }
 
         let startSet = firstMatching(
             in: app,
