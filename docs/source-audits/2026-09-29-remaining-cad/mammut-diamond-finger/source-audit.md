@@ -1,5 +1,11 @@
 # mammut-diamond-finger source audit
 
+Current correction (2026-09-30): the [geometry and runtime wood packet](geometry-and-wood-review/review.md) and [review page](geometry-and-wood-review/index.html) supersede the original construction described below. The current source is `06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe`; its unbound USDZ is `736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12`. It has 39 fully constrained sketches, flatter machined terraces, straight chamfers and notches, pill openings, angular recessed shelves and tray, and 106,272 exported triangles. All 16 original contact IDs and board facts are preserved; only the display finish opts into the existing runtime wood system.
+
+The additionally retained [manufacturer press document](geometry-and-wood-review/sources/manufacturer-press-release.docx) confirms 85 cm width and walnut. Height, thickness, recess depths, slightly forward-sloping floors, tapers, rounds and the whole side profile remain display estimates. Final app, native/export, iOS/Python and delivery checks passed; revised human review #6 remains pending. Opus's [fourth opinion](geometry-and-wood-review/opus/review-response-4.md) found no source-supported app blocker.
+
+The following text and linked original reports are the historical initial migration record. Their former geometry, counts and pending integration statements are preserved as history, rather than asserted to describe the corrected package.
+
 Exact 2060-00020 walnut revision. Product photo supports deliberately sculpted upper channels, three lower lobes, symmetric cavity arrangement, and removal of phone/mount hardware. Manufacturer manual page 1 is a materially distinct drawn topology view; page 2 shows side/mount context. The second gallery photograph differs only by a phone accessory and is not counted as a second geometric view. Preserve the existing 16 contact IDs; the subtitle says 21 surfaces but no contact-inventory change is in scope. Only 33.5 in width is published in current package; other display dimensions stay explicitly estimated.
 
 Source-set approval: asherlc, 2026-09-29, direct conversation: “those are fine, feel free to use more searches for individual boards as needed”. Consolidated snapshot: `.context/placid-badger/source-review.json`.

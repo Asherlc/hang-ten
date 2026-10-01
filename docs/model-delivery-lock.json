@@ -62,7 +62,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "15ff6700a3d966c5cf348a72b60d8e0e48833c3053a1d554d83135f8113f527b",
+  "sha256Manifest": "231e8702257a989a95691766749dac147905b11d8bf78205dc5c573bf63b1ad5",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -729,25 +729,31 @@
     },
     "mammut-diamond-finger": {
       "source": "Hangboards/mammut-diamond-finger/mammut-diamond-finger.FCStd",
-      "sourceSHA256": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
-      "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
-      "assetSHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
-      "descriptorSHA256": "b92676a9b4a81cc3db9714e2e27d8cd4593b6d9d13b846b942a00bff5833bc46",
+      "sourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+      "boardMetadata": "Generated from HangTenBoardManifest; original facts and 16 contacts preserved; primary display surfaceFinish opts into existing runtime wood.",
+      "assetSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+      "descriptorSHA256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099",
       "assets": {
         "assets/primary.usdz": {
-          "modelSHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+          "modelSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
           "descriptorPath": "assets/primary.model.json",
-          "descriptorSHA256": "b92676a9b4a81cc3db9714e2e27d8cd4593b6d9d13b846b942a00bff5833bc46"
+          "descriptorSHA256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099"
         }
       },
       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
-      "provenance": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/source-audit.md",
-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/source-audit.md",
-      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/metadata-diff.json",
-      "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/app-review/validation.json",
-      "geometryAcceptance": "pending requested one-by-one user review",
-      "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0"
+      "provenance": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/geometry-and-wood-review/review.md",
+      "comparison": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/geometry-and-wood-review/front-side-top-comparison.png",
+      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/geometry-and-wood-review/runtime-proof/final-metadata-comparison.json",
+      "nativeValidation": "Native constrained sketches, one solid, editable mirrored pockets and exact contact boundaries; unchanged compiler check plus fresh metadata-only compile match; every expected native facet present in watertight unbound USDZ.",
+      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/geometry-and-wood-review/runtime-validation.json",
+      "geometryAcceptance": "pending revised Mammut review #6",
+      "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+      "nativeAppValidationHistory": [
+        "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/app-review/validation.json"
+      ],
+      "metadataAuditHistory": [
+        "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/metadata-diff.json"
+      ]
     },
     "metolius-contact": {
       "source": "Hangboards/metolius-contact/metolius-contact.FCStd",
@@ -1151,7 +1157,8 @@
     "57c0654a52e3c8b4cb4c3dd6e610dced580daf8ccfb71dbd2f1d4028c4ad66be",
     "d1eff0bbf16d58487e273f9a24a12a4ab2c9bc50b960ff68fdaaee000a068244",
     "f9f84417bfde7f8689920ac28724ccff4fa6f6a4592cac75a86cd54d84b4d23c",
-    "b39446d7f609b41d81e3d4ac0f9746be9108611c5bc06dcf11503ebb040efbf1"
+    "b39446d7f609b41d81e3d4ac0f9746be9108611c5bc06dcf11503ebb040efbf1",
+    "15ff6700a3d966c5cf348a72b60d8e0e48833c3053a1d554d83135f8113f527b"
   ],
   "individualReviewRevisions": [
     {
@@ -1251,6 +1258,24 @@
       "answer": "Y",
       "question": "Does the cord routing look right now?",
       "revisionCommit": "7a81dcf5af5f79fe3a5b419749dd30bff0f0a32d"
+    },
+    {
+      "package": "mammut-diamond-finger",
+      "date": "2026-09-30",
+      "revision": "geometry-and-wood",
+      "request": [
+        "Should be wood texture",
+        "I also don\u2019t think the geometry is right",
+        "Consult with Opus to get a second opinion",
+        "We have a rendering system for wood"
+      ],
+      "scope": "Manufacturer-backed machined terraces, angular recesses and pills; native contact seams; existing runtime wood finish. All original board facts/contacts and all other packages preserved.",
+      "sourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+      "modelSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+      "descriptorSHA256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099",
+      "review": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/geometry-and-wood-review/review.md",
+      "geometryAcceptance": "pending revised Mammut review #6",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/human-review.json"
     }
   ]
 }

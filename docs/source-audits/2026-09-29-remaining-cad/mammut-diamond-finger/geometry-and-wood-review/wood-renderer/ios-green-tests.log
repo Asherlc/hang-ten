@@ -1,0 +1,95 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=2B43841B-18A2-46B4-8080-B4E90AA24F4A" -derivedDataPath .context/DerivedData -parallel-testing-enabled NO "-only-testing:HangTenTests/BoardModelRealityTests/testWoodFinishHighlightsAndRestoresEveryContactWithoutChangingPicking" "-only-testing:HangTenTests/BoardModelRealityTests/testWoodSelectionDoesNotAlterAnotherSceneUsingTheSameResource" -collect-test-diagnostics never -resultBundlePath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mammut-wood-integration/placid-badger-mammut-wood-green.xcresult test-without-building
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  Sentry: https://github.com/getsentry/sentry-cocoa.git @ 8.58.4
+  AmplitudeCore: https://github.com/amplitude/AmplitudeCore-Swift.git @ 1.5.0
+  analytics-connector-ios: https://github.com/amplitude/analytics-connector-ios.git @ 1.3.2
+  Amplitude-Swift: https://github.com/amplitude/Amplitude-Swift @ 1.18.8
+
+Writing result bundle at path:
+	/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mammut-wood-integration/placid-badger-mammut-wood-green.xcresult
+
+[Sentry] [error] [1790823812.699692] [SentryOptions:251] Could not parse the DSN: Error Domain=SentryErrorDomain Code=100 "Host component of DSN is missing" UserInfo={NSLocalizedDescription=Host component of DSN is missing}.
+[Sentry] [fatal] [1790823812.704935] [SentryFileManager:162] No DSN provided, using base path for envelopes: /Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Data/Application/2B4BA214-EF98-4D0E-B4F6-1EDFB63CA75F/Library/Caches/io.sentry
+[Sentry] [fatal] [1790823812.7095041] [SentryFileManager:162] No DSN provided, using base path for envelopes: /Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Data/Application/2B4BA214-EF98-4D0E-B4F6-1EDFB63CA75F/Library/Caches/io.sentry
+Test Suite 'Selected tests' started at 2026-09-30 20:03:35.120.
+Test Suite 'HangTenTests.xctest' started at 2026-09-30 20:03:35.120.
+Test Suite 'BoardModelRealityTests' started at 2026-09-30 20:03:35.120.
+Test Case '-[HangTenTests.BoardModelRealityTests testWoodFinishHighlightsAndRestoresEveryContactWithoutChangingPicking]' started.
+2026-09-30 20:03:35.190064-0700 HangTen[59954:31173644] [Foundation.IO] Could not locate file 'default-binaryarchive.metallib' in bundle.
+2026-09-30 20:03:35.201478-0700 HangTen[59954:31173644] [Assets] asset string 'engine:throttleGhosted.rematerial' parse failed: Invalid asset path: Unknown asset type suffix 'engine:throttleGhosted.rematerial'
+2026-09-30 20:03:35.219840-0700 HangTen[59954:31173717] [tbbmain] TBB Global TLS count is not == 1, instead it is: 2
+2026-09-30 20:03:35.572936-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/suFeatheringCreateMergedOcclusionMask.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.577730-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arKitPassthrough.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.579707-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arSegmentationComposite.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.581168-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute0.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.582644-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute1.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.583501-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute2.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.587092-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute3.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.588090-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute4.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.589130-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute5.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.590439-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute6.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.591713-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute7.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.592930-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute8.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.593973-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute9.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.594997-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute10.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.595848-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute11.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.596718-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute12.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.597847-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute13.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.598889-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute14.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:35.599927-0700 HangTen[59954:31173644] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute15.rematerial' in bundle at '/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B43841B-18A2-46B4-8080-B4E90AA24F4A/data/Containers/Bundle/Application/585ADAF2-E2AB-4242-8BA4-D8F71CA14EE8/HangTen.app'. Loading via asset path.
+2026-09-30 20:03:36.083346-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 17583710169250286791 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.083483-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 7343261094190209505 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.083573-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 17641463273470315183 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.083655-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 5106320031393198244 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.083738-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 15363260694409574270 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.083812-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 2193732114486647800 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.083882-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 8990906292434384453 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.083947-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 8242168634696507074 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.084017-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 14231594911243317437 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.084089-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 13088172015449060424 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.084168-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 3914683946949630098 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.084244-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 826592819239675515 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.084318-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 9913537239373189532 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.084390-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 8603437001785615388 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.084463-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 7069815741288370241 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.084532-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 15876448158263952245 because NetworkAssetManager does not have an asset entity for that id.
+Test Case '-[HangTenTests.BoardModelRealityTests testWoodFinishHighlightsAndRestoresEveryContactWithoutChangingPicking]' passed (0.965 seconds).
+Test Case '-[HangTenTests.BoardModelRealityTests testWoodSelectionDoesNotAlterAnotherSceneUsingTheSameResource]' started.
+Test Case '-[HangTenTests.BoardModelRealityTests testWoodSelectionDoesNotAlterAnotherSceneUsingTheSameResource]' passed (0.209 seconds).
+Test Suite 'BoardModelRealityTests' passed at 2026-09-30 20:03:36.296.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 1.174 (1.175) seconds
+Test Suite 'HangTenTests.xctest' passed at 2026-09-30 20:03:36.296.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 1.174 (1.175) seconds
+Test Suite 'Selected tests' passed at 2026-09-30 20:03:36.296.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 1.174 (1.176) seconds
+2026-09-30 20:03:36.300563-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 14457849308958029579 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.300678-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 6085962878168818523 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.300756-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 9879699552471590706 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.300839-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 2611208971138183553 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.300911-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 5468107171848644479 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.300984-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 8696769239088702909 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.301058-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 1460456216347944477 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.301129-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 11053159076893322161 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.301200-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 8784696947921511674 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.301270-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 11348279263018743719 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.301340-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 12401439850989322622 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.301411-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 2469644859455661025 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.301479-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 5208172848660097668 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.301551-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 5114075345356429089 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.301620-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 8216914352940798501 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.301684-0700 HangTen[59954:31173644] [Assets] Failed to set dependencies on asset 10209824370700329167 because NetworkAssetManager does not have an asset entity for that id.
+2026-09-30 20:03:36.591 xcodebuild[59936:31173378] [MT] IDETestOperationsObserverDebug: 5.916 elapsed -- Testing started completed.
+2026-09-30 20:03:36.591 xcodebuild[59936:31173378] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-30 20:03:36.591 xcodebuild[59936:31173378] [MT] IDETestOperationsObserverDebug: 5.916 sec, +5.916 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mammut-wood-integration/placid-badger-mammut-wood-green.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

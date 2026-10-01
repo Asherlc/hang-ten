@@ -48,7 +48,17 @@
       "removedContacts": [],
       "addedContacts": [],
       "changedContacts": [],
-      "report": "mammut-diamond-finger/metadata-diff.json"
+      "report": "mammut-diamond-finger/metadata-diff.json",
+      "reviewRevisions": [
+        {
+          "date": "2026-09-30",
+          "revision": "geometry-and-wood",
+          "onlyBoardFieldChange": "presentations[primary].media.display.surfaceFinish: wood",
+          "allOtherBoardFieldsEqual": true,
+          "contactsUnchanged": 16,
+          "report": "mammut-diamond-finger/geometry-and-wood-review/runtime-proof/final-metadata-comparison.json"
+        }
+      ]
     },
     {
       "package": "metolius-contact",

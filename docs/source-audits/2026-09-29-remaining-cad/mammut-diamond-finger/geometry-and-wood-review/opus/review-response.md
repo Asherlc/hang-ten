@@ -1,0 +1,66 @@
+**Verdict: not acceptable as it stands. The user is right.** The CAD has the right features in roughly the right places. What's wrong is the shape style: the real board is a machined block with flat faces and sharp angled transitions, while the CAD looks like a smooth, rounded, full-width extrusion. You can see the difference at a glance in the photo, the manual drawing and the app thumbnail.
+
+I looked at the full product photo, both manual pages, CAD front/side/top, the old-vs-new comparisons, both app captures and the overview sheet. I took no measurements from pixels; everything below is direct visual judgment.
+
+## What the CAD gets right (keep this)
+- Left/right symmetry, overall wide-and-low proportions, and the 850 mm width. Mammut's own press release confirms 85 cm, walnut, 8,900 g.
+- Raised top ends with a lower central section, placed in about the right spots.
+- Three open-top trapezoid pockets in the upper band, small slots near each end, lateral ledges below the main horizontal rail that runs across the board, a central lower pocket, three lower lobes, and slots in the outer lobes. All are present and in the right order.
+- The highlighting works: Jug left lights the top-left end and Upper inset step right shows inside the right trapezoid. The inset highlight is very small, though.
+
+## Discrepancies, in priority order
+
+1. **The surfaces are rounded and wavy instead of flat and sharp. Highest priority, high confidence.** Both sources show flat terraces joined by crisp roughly 45° chamfers, with pocket outlines made of straight lines and small corner radii. The CAD uses one smooth front curve run across the whole width. As a result the main rail looks like a pipe, the side view is a sine wave, and every band has the same overhang from end to end. On the real board the depth changes along the width: the centre of the top dips into the sloper, and the rail breaks at angles where the lateral ledges end.
+   - **Fix:** rebuild the front cross-section as straight segments: flat top, flat front of the upper band, a rail lip with a flat face and chamfered edges, then flat lower lobe faces. Give the centre section its own profile instead of extruding one shape across the full width.
+
+2. **The ends are the wrong shape. High confidence.** In the manual and at both ends of the photo, the top is clearly narrower than the main rail. A straight face slopes outward from the top lip down to the rail, then a straight diagonal runs back in to the lobe. The CAD makes the top lip as wide as the rail and curves inward between them (pinched-in sides).
+   - **Fix:** pull the top corners in and replace that inward curve with one straight outward slope.
+
+3. **The notches between the lower lobes are too shallow and too rounded. Medium-high confidence.** In the manual and photo they are wider and deeper, with straight angled sides and a flat roof. The CAD uses soft S-curves, and its centre lobe looks too wide.
+   - **Fix:** use straight-sided notches with a flat roof, make them wider and deeper, and narrow the centre lobe.
+
+4. **The central lower pocket should be angular, not oval. Medium-high confidence.** In the manual it has a straight top edge, angled ends, and a rectangular dip in the middle with angled sides. The photo agrees. The CAD draws it as a pointed oval over a rectangle.
+   - **Fix:** redraw it as a straight-edged tray.
+
+5. **The rounded holes should be true pill shapes. Medium confidence.** The small upper slots and the lower lobe slots have fully rounded ends in both sources. The CAD makes them rounded rectangles. The upper slots look like deep dark holes in the photo but read as shallow in the CAD, so deepen them (depth stays a display estimate).
+
+6. **The step down to the lower centre of the top edge is too small. Medium confidence.** The manual shows a clear drop with chamfers at each side. The CAD front view barely shows it, even though the top view has the dip.
+
+7. **The lateral ledges should be Z-shaped. Medium confidence.** The manual shows each ledge as a flat outer shelf, a diagonal rise, then a flat inner part. The CAD has a curled, pointed hook.
+
+8. **The side profile is not supported by any source. Low confidence either way.** Nothing we have shows a true side view. The CAD's two deep scoops in the lower half and its strong backward slope to the bottom are invented. The photo suggests flat, fairly upright lobe faces; the Mammut nameplate sits on one.
+   - **Fix:** default to flat, near-vertical lower faces until a side view turns up.
+   - **Possible thickness hint (weak):** 8.9 kg of walnut-plus-steel suggests the board may be thicker or more solid than 78 mm with deep scoops. That figure includes hardware, so it's a sanity check, not a dimension.
+
+## Limits on confidence
+- **Well supported:** the 850 mm width, the feature layout, the flat-and-sharp character, the end shape, and the pill shapes.
+- **Display estimates:** the 196 mm height and 78 mm thickness, every pocket depth, and the side profile.
+- **Possible renderer exaggeration:** some of the black bands in the CAD front render may come from how the preview renderer shades downward faces. The app view, which shows the same rounded rail, is the fairer comparison.
+
+## More manufacturer angles: yes, needed
+I wouldn't finalise the side profile or thickness without a side or end-on view. Places to look:
+- **Mammut press-release .docx:** it has three embedded images I didn't open because this pass was read-only.
+- **Mammut product videos.**
+- **Other photos of the exact 2060-00020 board.**
+
+Skip the 2018 trade-show (ORWM) photos unless they're confirmed to be the same revision. Points 1–7 can be fixed from the evidence we already have.
+
+## Wood appearance
+Do this in the app at runtime. Per AGENTS.md, the USDZ files must stay without materials. The photo shows a pale, warm, pinkish-tan walnut, not dark walnut. A fine grain running along the width with a satin finish would match it. Check that the red selection highlight still stands out on that tone; the small inset highlight already struggles on grey. Treat this as separate from the geometry decision, which is the real blocker.
+
+## Recommendation
+Don't accept #6. Rework the existing CAD file in place:
+1. Make the surfaces flat-faced with sharp chamfers, and let the centre differ from the ends.
+2. Fix the end shape.
+3. Fix the notches and the central pocket.
+4. Turn the slots and holes into pill shapes.
+
+Keep the 16 contact IDs, re-bind them to the new faces, then re-render front/side/top against the old version and show them to the user. Meanwhile, look for a side view before locking the thickness or side profile.
+
+Sources:
+- [Mammut 2060-00020 compare page (weight 8900 g)](https://www.mammut.com/uk/en/compare/2060-00020)
+- [Mammut press release (Gewicht 8900 g, Breite 85 cm, Walnussholz)](https://cdn.uc.assets.prezly.com/da46d83b-e3f0-484b-b349-2047c1a0da6c/-/inline/no/202003_Mammut_DiamondFingerHangboard.docx)
+- [Product photo](https://static.mammut.com/master/2060-00020-7458_main_75743.jpg)
+- [Manual](https://static.mammut.com/file/2060-00020_man_en_070420_DiamondFingerHangboard_Manual.pdf)
+
+Three connected services need authorising before they can be used: claude.ai Dofek and PostHog (in the claude.ai connector settings) and sentry (via `/mcp` in an interactive session). This review didn't need any of them.

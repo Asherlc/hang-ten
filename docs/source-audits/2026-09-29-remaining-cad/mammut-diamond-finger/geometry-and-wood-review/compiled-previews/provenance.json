@@ -1,0 +1,25 @@
+{
+  "owner": "placid-badger",
+  "beforeModelSHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+  "afterModelSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+  "afterSourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+  "method": "Existing preview.py rendering functions; prior/final actual USDZ; same views, full-image uniform fit, no cropping or geometry inference.",
+  "files": {
+    "after-front.png": "a75a2c2eef5221c95385696f5fde865f6afbb856ecf6af15981ba807a5f77d6a",
+    "after-oblique.png": "fa91f2be67ad486465e00f0fdd4334da24dc91024ef59956380b238e6ca35f55",
+    "after-raking.png": "3cff255da32650e3e04831583766af2749e99151efd5e1dab9b27084c77b9898",
+    "after-side.png": "2f401b49f64fcd3eed36065d90bba944da7589c4e75c39d09fbc007169fbaedf",
+    "after-top.png": "57b7f15ee7b7b6e6b94d70ce354caf62f122ca53f809a2ba62d51b6cc5442db0",
+    "before-front.png": "5f87564d4d69573688984a0175d2f0b0b5c3fd56b25e7b01166a9e15a0c11119",
+    "before-oblique.png": "560ecf5a36e1135a8ec13b22ee9a0e601683828ab5ec4de15bd0c4d3eb4ef38e",
+    "before-raking.png": "dc43ded4b0eba3bd8bdc2fa6477943a4661b47a4a9f3077b56eb9e21ce083b55",
+    "before-side.png": "f361742b5fdefc95401841ea50b78905b6b13c5949023f8876b36858e2ae084b",
+    "before-top.png": "485d5ca25b520be06edec515db4c6b94f853829f9d90354f29ebda8ea3be548f",
+    "comparison-front.png": "677279a00a7df7b9ff7b9c2094ca0f0112c896478514ea7073d11011de9ced5d",
+    "comparison-oblique.png": "4a556c7b68ee4bf2c54cc234f34e26d89c5513a2fcfed7ca93df30f87b5fb883",
+    "comparison-raking.png": "246df0bb64ffb686ca4b57bc30e56d830ef8ca844ad67d967bfabe0171a51ba4",
+    "comparison-side.png": "38dcfb0707e18aa70d86fb5565a4488d250519a65e610ea34fac2463ada6115c",
+    "comparison-top.png": "e600b6e1c176fabc968123bc4b0ccacda8c621f0103d4b22c4910e7737cce09e",
+    "front-side-top-comparison.png": "65524bf5ee8ce55669e0e05eb719b517224df2e97a712b08b6d1ede5e3ba55df"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "Id": "b5c60ebf-8de3-4db4-a22d-44bb8ba2db5e",
+  "Name": "[Advisor] placid-badger Mammut geometry",
+  "Provider": "claude",
+  "Model": "claude-opus-5-5",
+  "Thinking": "high",
+  "Status": "closed",
+  "Archived": true,
+  "ArchivedAt": "2026-10-01T04:00:52.463Z",
+  "Mode": "bypassPermissions",
+  "Cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+  "CreatedAt": "2026-10-01T02:48:24.027Z",
+  "UpdatedAt": "2026-10-01T04:00:52.463Z",
+  "LastUsage": null,
+  "Capabilities": {
+    "Streaming": false,
+    "Persistence": true,
+    "DynamicModes": false,
+    "McpServers": false
+  },
+  "AvailableModes": [],
+  "PendingPermissions": [],
+  "Worktree": null,
+  "ParentAgentId": "62e01d1f-0832-4466-9e2c-315d62e8f0cb"
+}

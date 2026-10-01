@@ -790,3 +790,32 @@ def test_xcode_provisions_odr_packs_for_recently_migrated_model_boards() -> None
     for slug in migrated_slugs:
         assert f"HangTenModelODR/{slug}/Hangboards" in project
         assert f'ASSET_TAGS = ("hang-ten-model-{slug}", );' in project
+
+
+@pytest.mark.parametrize("native", [False, True])
+def test_staging_preserves_package_authored_surface_finishes_without_model_edits(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, native: bool
+) -> None:
+    repository_root = tmp_path / "repository"
+    source = make_v3_model_package(repository_root / "Hangboards" / "finish-fixture")
+    board_path = source / "board.json"
+    document = json.loads(board_path.read_text())
+    finish = {"surfaceFinish": "wood", "woodNodeIDs": ["Body"],
+              "plasticNodeIDs": ["Right"], "graniteNodeIDs": ["Left"]}
+    document["presentations"][0]["media"]["display"].update(finish)
+    board_path.write_text(json.dumps(document))
+    if native:
+        write_cad_source(source)
+    shutil.copytree(
+        REPO_ROOT / "Tools/HangboardPackages/src/hangboard_packages",
+        repository_root / "Tools/HangboardPackages/src/hangboard_packages",
+    )
+    destination = tmp_path / "Build/HangTen.app/Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+    load_staging_module().stage_board_packages(repository_root, destination)
+    staged = destination / "finish-fixture"
+    loaded = json.loads((staged / "board.json").read_text())
+    assert loaded["presentations"][0]["media"]["display"] == document["presentations"][0]["media"]["display"]
+    assert (staged / "assets/primary.model.json").read_bytes() == (source / "assets/primary.model.json").read_bytes()
+    model = odr_staging_root(destination) / "finish-fixture/Hangboards/finish-fixture/assets/primary.usdz"
+    assert model.read_bytes() == (source / "assets/primary.usdz").read_bytes()

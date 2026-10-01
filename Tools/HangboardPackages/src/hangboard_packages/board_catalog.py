@@ -1182,7 +1182,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
 
 def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
     payload = _mapping(value, source)
-    _closed(payload, {"camera"}, source)
+    _closed(payload, {"camera"}, source, optional={"surfaceFinish", "woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"})
     camera_source = f"{source}.camera"
     camera = _mapping(payload["camera"], camera_source)
     _closed(camera, {"type", "viewDirection", "up", "fitPadding"}, camera_source)
@@ -1191,18 +1191,34 @@ def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
     view_direction = _vector3(camera["viewDirection"], f"{camera_source}.viewDirection")
     up = _vector3(camera["up"], f"{camera_source}.up")
     fit_padding = _positive_number(camera["fitPadding"], f"{camera_source}.fitPadding")
-    return MappingProxyType(
-        {
-            "camera": MappingProxyType(
-                {
-                    "type": "orthographic",
-                    "viewDirection": view_direction,
-                    "up": up,
-                    "fitPadding": fit_padding,
-                }
-            )
-        }
-    )
+    result: dict[str, Any] = {
+        "camera": MappingProxyType({
+            "type": "orthographic",
+            "viewDirection": view_direction,
+            "up": up,
+            "fitPadding": fit_padding,
+        })
+    }
+    if "surfaceFinish" in payload:
+        finish = payload["surfaceFinish"]
+        if not isinstance(finish, str) or finish not in {"neutral", "wood", "plastic", "granite"}:
+            raise ValueError(f"{source}.surfaceFinish must be neutral, wood, plastic, or granite")
+        result["surfaceFinish"] = finish
+    for field in ("woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"):
+        if field in payload:
+            raw_nodes = payload[field]
+            if not isinstance(raw_nodes, list):
+                raise ValueError(f"{source}.{field} must be an array")
+            nodes = tuple(_string(node, f"{source}.{field}") for node in raw_nodes)
+            if len(set(nodes)) != len(nodes):
+                raise ValueError(f"{source}.{field} must contain unique node IDs")
+            result[field] = nodes
+    fields = ("woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs")
+    for index, field in enumerate(fields):
+        for other in fields[index + 1:]:
+            if set(result.get(field, ())) & set(result.get(other, ())):
+                raise ValueError(f"{source} {field} and {other} must be disjoint")
+    return MappingProxyType(result)
 
 
 def _load_model_orientation(value: Any, source: str) -> BoardModelOrientation:
@@ -2843,6 +2859,14 @@ def _validate_finished_shape(
             contacts=board.contacts,
             equipment_objects=frozenset(board.equipment_objects),
         )
+        for field in ("woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"):
+            surface_nodes = presentation.media.display.get(field, ())
+            if surface_nodes:
+                descriptor = _load_json(root / presentation.media.descriptor_path, "model descriptor")
+                eligible_nodes = {node["nodeID"] for node in descriptor["nodes"]
+                                  if node["role"] in {"body", "contact"}}
+                if not set(surface_nodes) <= eligible_nodes:
+                    raise ValueError(f"display.{field} must name body or contact descriptor nodes")
         _validate_model_orientation(
             presentation.media.orientation,
             board.positions,

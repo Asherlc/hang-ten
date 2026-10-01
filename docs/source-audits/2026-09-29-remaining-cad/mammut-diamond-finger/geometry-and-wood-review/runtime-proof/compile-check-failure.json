@@ -1,0 +1,11 @@
+{
+  "owner": "placid-badger",
+  "sourceSHA256": "695845291f92314d7ddc6369f663d25312eb52c7c75283b75e2b9e1f7a29ffa4",
+  "exitCode": 1,
+  "stage": "native export partition coverage gate",
+  "error": "contact_mam_mid_edge_c claims 12778.9982 mm^2 of body surface but its own exported surface is only 10344.9711 mm^2; the region leaves a gap larger than 0.541812 mm^2",
+  "evidenceKind": "Summary of compiler tool result; not an original raw FreeCAD log",
+  "command": ["python3", "Tools/HangboardCAD/run_freecad.py", "Tools/HangboardCAD/compile_board.py", "--package", "mammut-diamond-finger", "--source", ".context/placid-badger/mammut-geometry-revision/native-author/candidate/mammut-diamond-finger.FCStd", "--assets", ".context/placid-badger/mammut-geometry-revision/check-assets", "--check", "--report", ".context/placid-badger/mammut-geometry-revision/compile-check.json"],
+  "productionPackageUnchanged": true,
+  "followup": "Astra author will split the native rail at the contact boundaries, preserve the physical solid, and bind exact final native faces. Compiler gate remains unchanged."
+}

@@ -494,6 +494,148 @@ final class BoardModelRealityTests: XCTestCase {
 
     // MARK: - Helpers
 
+    @MainActor
+    func testNestedSurfaceSelectorsPreserveAttachmentNeutralityAndInheritedWood() throws {
+        let contact = BoardModelContactDescriptor(
+            nodeIDs: ["Group/Left"],
+            facePlaneAABB: .init(minimum: [0, 0], maximum: [1, 1]), center: [0.5, 0.5])
+        let descriptor = BoardModelDescriptor(
+            schemaVersion: 1, coordinateFrame: "hang-ten-board-v1",
+            modelSHA256: String(repeating: "0", count: 64),
+            modelBounds: .init(minimum: [-1, -1, -1], maximum: [1, 1, 1]),
+            nodes: [
+                .init(nodeID: "Group/Hardware", role: .attachment, contactID: nil),
+                .init(nodeID: "Group/Left", role: .contact, contactID: "primary",
+                      additionalContactIDs: ["secondary"])
+            ], contacts: ["primary": contact, "secondary": contact])
+        let camera = BoardModelCamera(type: "orthographic", viewDirection: [0, 0, -1],
+            up: [0, 1, 0], fitPadding: 0.1, distanceMultiplier: nil, boundsExpansionFactor: nil)
+        for finish: BoardSurfaceFinish in [.neutral, .wood] {
+            let scene = BoardModelRealityScene(
+                descriptor: descriptor,
+                display: .init(camera: camera, surfaceFinish: finish, woodNodeIDs: ["Group/Left"]),
+                suspension: nil, orientation: nil, allowedPositionIDs: [],
+                resourceLease: .init(url: Bundle(for: Self.self).bundleURL))
+            var contacts: [ModelEntity] = []
+            var inheritedMeshes: [ModelEntity] = []
+            var attachments: [ModelEntity] = []
+            for index in 0..<2 {
+                let instance = Entity()
+                instance.name = "Instance\(index)"
+                let group = Entity()
+                group.name = "Group"
+                let left = ModelEntity(mesh: .generateBox(size: 0.01))
+                left.name = "Left"
+                let unnamedMesh = ModelEntity(mesh: .generateBox(size: 0.005))
+                unnamedMesh.name = ""
+                left.addChild(unnamedMesh)
+                let hardware = ModelEntity(mesh: .generateBox(size: 0.005))
+                hardware.name = "Hardware"
+                group.addChild(left)
+                group.addChild(hardware)
+                instance.addChild(group)
+                scene.root.addChild(instance)
+                scene.instanceEntities.append(instance)
+                contacts.append(left)
+                inheritedMeshes.append(unnamedMesh)
+                attachments.append(hardware)
+            }
+            scene.applyBoardMaterials()
+            for entity in contacts + inheritedMeshes {
+                XCTAssertTrue(entity.model?.materials.first is CustomMaterial,
+                              "Relative selector and unnamed-child inheritance must apply in each instance")
+            }
+            for entity in attachments {
+                let neutral = try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial,
+                                           "Nested attachment must stay neutral under the wood default")
+                XCTAssertEqual(neutral.roughness.scale, 0.5, accuracy: 0.0001)
+            }
+            // Test selection over the same physical meshes in two logical inventories.
+            // Descriptor parsing and primary picking are covered by separate binding tests.
+            scene.contactEntities = ["primary": contacts, "secondary": contacts]
+            scene.highlight(["secondary"], mode: .active)
+            for entity in contacts {
+                let selected = try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial)
+                XCTAssertEqual(selected.roughness.scale, 0.8, accuracy: 0.0001)
+            }
+            scene.highlight([], mode: .active)
+            for entity in contacts {
+                if let restored = entity.model?.materials.first as? CustomMaterial {
+                    XCTAssertEqual(restored.roughness.scale, 0.82, accuracy: 0.0001)
+                } else {
+                    XCTFail("Clearing a shared selection must restore the selected node's wood finish")
+                }
+            }
+        }
+    }
+
+    @MainActor
+    func testWoodFinishHighlightsAndRestoresEveryContactWithoutChangingPicking() async throws {
+        let scene = try await woodFixtureScene()
+        let bounds = scene.root.visualBounds(relativeTo: nil)
+        for (contactID, entities) in scene.contactEntities {
+            XCTAssertFalse(entities.isEmpty)
+            for entity in entities {
+                XCTAssertTrue(entity.model?.materials.first is CustomMaterial,
+                              "Wood must cover cavity walls and floors, not just the body")
+                XCTAssertEqual(scene.contactID(for: entity), contactID)
+                XCTAssertNotNil(entity.collision)
+                XCTAssertNotNil(entity.components[InputTargetComponent.self])
+            }
+            for mode: BoardHighlightMode in [.active, .preview] {
+                scene.highlight([contactID], mode: mode)
+                for entity in entities {
+                    let selected = try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial)
+                    XCTAssertEqual(selected.roughness.scale, 0.8, accuracy: 0.0001)
+                }
+                scene.highlight([], mode: mode)
+                for entity in entities {
+                    let restored = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial)
+                    XCTAssertEqual(restored.roughness.scale, 0.82, accuracy: 0.0001)
+                    XCTAssertEqual(scene.contactID(for: entity), contactID)
+                }
+            }
+        }
+        XCTAssertEqual(scene.root.visualBounds(relativeTo: nil), bounds)
+    }
+
+    @MainActor
+    func testWoodSelectionDoesNotAlterAnotherSceneUsingTheSameResource() async throws {
+        let first = try await woodFixtureScene()
+        let second = try await woodFixtureScene()
+        let contactID = try XCTUnwrap(first.contactEntities.keys.sorted().first)
+        first.highlight([contactID], mode: .active)
+        for entity in try XCTUnwrap(second.contactEntities[contactID]) {
+            XCTAssertTrue(entity.model?.materials.first is CustomMaterial)
+        }
+        first.highlight([], mode: .active)
+        for entity in try XCTUnwrap(first.contactEntities[contactID]) {
+            XCTAssertTrue(entity.model?.materials.first is CustomMaterial)
+        }
+    }
+
+    @MainActor
+    private func woodFixtureScene() async throws -> BoardModelRealityScene {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "mammut.diamond-finger"))
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media else {
+            throw BoardModelRealityError.presentationNotModel
+        }
+        let loaded = try await BoardModelRealityCache.source(
+            for: BoardModelRealityKey(boardID: board.id, presentationID: presentation.id,
+                                      modelSHA256: media.descriptor.modelSHA256),
+            media: media, board: board, presentationID: presentation.id,
+            store: BoardCatalog.packageStore, resourceAccess: .live)
+        let source = try XCTUnwrap(loaded)
+        let scene = BoardModelRealityScene(
+            descriptor: media.descriptor,
+            display: BoardModelDisplay(camera: media.display.camera, surfaceFinish: .wood),
+            suspension: nil, orientation: nil, allowedPositionIDs: [],
+            resourceLease: source.resourceLease)
+        try await scene.load(usdzURL: source.resourceLease.url)
+        return scene
+    }
+
     private func checkNeutralMaterial(
         on entity: Entity,
         checkedCount: inout Int

@@ -5,19 +5,56 @@
   "number": 6,
   "package": "mammut-diamond-finger",
   "boardID": "mammut.diamond-finger",
-  "status": "awaiting one-by-one review",
-  "question": "Does this one look right?",
-  "sourceSHA256": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
-  "modelSHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
-  "descriptorSHA256": "b92676a9b4a81cc3db9714e2e27d8cd4593b6d9d13b846b942a00bff5833bc46",
-  "currentRevision": "individual-review/preview-index.html",
-  "revisionCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
+  "status": "awaiting revised one-by-one review #6",
+  "question": "Does this Mammut look right now?",
+  "sourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+  "modelSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+  "descriptorSHA256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099",
+  "currentRevision": "geometry-and-wood-review/index.html",
+  "revisionBaseCommit": "4501915a09f9a2ee48d5b527750f74851f876d99",
   "shownImages": {
-    "individual-review/preview-reference-cad-overview.png": "184863587067e361ab635d5d4a5ce47a5f45d55a54f1ea1f79e33dd0950902aa",
-    "individual-review/preview-app-selection-overview.png": "0894c167b2c7f8a757ce05900b14a51453a53bd433f710871c077670454d41cd"
+    "geometry-and-wood-review/app/after-app/wood-unselected.png": "c5f7a1c25f009bf024a39c25581fb4c75b0f97cdfc42ccc5c0ef10404763b460",
+    "geometry-and-wood-review/front-side-top-comparison.png": "65524bf5ee8ce55669e0e05eb719b517224df2e97a712b08b6d1ede5e3ba55df",
+    "geometry-and-wood-review/compiled-previews/comparison-raking.png": "246df0bb64ffb686ca4b57bc30e56d830ef8ca844ad67d967bfabe0171a51ba4",
+    "geometry-and-wood-review/native-final/previews/native-central-and-lateral-sections.png": "eac6e603c3998837e4fd519c017bd116b1269c216692e9b1699e32f4bb1eb5c4"
   },
   "sourceAudit": "source-audit.md",
-  "appReview": "app-review/validation.json",
-  "reviewScope": "Existing native body and sixteen selectable contacts, retained manufacturer photo/manual, prior-versus-CAD front/side/top, and two app selection views.",
-  "approvalLimit": "Human acceptance pending. Dimensions/depths/relief remain display estimates; two lower recesses are not selectable and the inherited21-surface subtitle is unresolved. Retained app views show only two selections, not a new full-contact sweep."
+  "appReview": "geometry-and-wood-review/app/after-app/validation.json",
+  "runtimeValidation": "geometry-and-wood-review/runtime-validation.json",
+  "reviewScope": "Revised native geometry, actual existing wood finish and contact highlights, prior-versus-final front/side/top/raking views, native sections and real app orbits. Opus final actual-app second opinion has no source-supported blocker.",
+  "approvalLimit": "Human acceptance pending. Height, thickness, all cavity depths, slight forward floor slopes, tapers, rounds and the entire side profile are display estimates. Generic wood colour is not factory-calibrated; two lower recesses remain non-selectable and inherited21-surfaces versus16contacts is unresolved. No claim about subpixel flicker on physical hardware.",
+  "history": [
+    {
+      "displayedRevision": {
+        "schemaVersion": 1,
+        "date": "2026-09-30",
+        "reviewer": "asherlc",
+        "number": 6,
+        "package": "mammut-diamond-finger",
+        "boardID": "mammut.diamond-finger",
+        "status": "awaiting one-by-one review",
+        "question": "Does this one look right?",
+        "sourceSHA256": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
+        "modelSHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+        "descriptorSHA256": "b92676a9b4a81cc3db9714e2e27d8cd4593b6d9d13b846b942a00bff5833bc46",
+        "currentRevision": "individual-review/preview-index.html",
+        "revisionCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
+        "shownImages": {
+          "individual-review/preview-reference-cad-overview.png": "184863587067e361ab635d5d4a5ce47a5f45d55a54f1ea1f79e33dd0950902aa",
+          "individual-review/preview-app-selection-overview.png": "0894c167b2c7f8a757ce05900b14a51453a53bd433f710871c077670454d41cd"
+        },
+        "sourceAudit": "source-audit.md",
+        "appReview": "app-review/validation.json",
+        "reviewScope": "Existing native body and sixteen selectable contacts, retained manufacturer photo/manual, prior-versus-CAD front/side/top, and two app selection views.",
+        "approvalLimit": "Human acceptance pending. Dimensions/depths/relief remain display estimates; two lower recesses are not selectable and the inherited21-surface subtitle is unresolved. Retained app views show only two selections, not a new full-contact sweep."
+      },
+      "feedback": [
+        "Should be wood texture",
+        "I also don\u2019t think the geometry is right",
+        "Consult with Opus to get a second opinion",
+        "We have a rendering system for wood"
+      ],
+      "status": "superseded by this correction; no acceptance recorded"
+    }
+  ]
 }

@@ -1,0 +1,1105 @@
+{
+  "owner": "placid-badger",
+  "status": "Final native/export, app, iOS/Python and delivery validation passed; human review #6 pending",
+  "priorCommittedUSDZSHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+  "opusReview": {
+    "provider": "claude/claude-opus-5-5",
+    "agentId": "b5c60ebf-8de3-4db4-a22d-44bb8ba2db5e",
+    "latest": "opus/review-response-4.md",
+    "scope": "Final actual app and geometry ready for human review #6; no factory accuracy or human acceptance claim"
+  },
+  "copiedArtifactCount": 152,
+  "copiedBytes": 9517504,
+  "files": [
+    {
+      "path": "app/after-app/center-tray-accessibility.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/after-app/center-tray-accessibility.json",
+      "bytes": 22166,
+      "sha256": "88f5204da645a98c22f81049cff25dd194378d41f25b00523c8086b8da469ebb",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/after-app/center-tray.png",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/after-app/center-tray.png",
+      "bytes": 613245,
+      "sha256": "9b326957b45d365724f0967e63419a833ce27c0d30dc26e60c51727e48732794",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/after-app/extra-validation.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/after-app/extra-validation.json",
+      "bytes": 3919,
+      "sha256": "b209128726e6cbe078fdb96e77e24b3d3952c7c1428edb52b454764b48ebbd40",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/after-app/inset-right-accessibility.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/after-app/inset-right-accessibility.json",
+      "bytes": 21854,
+      "sha256": "1fd760cddc83dca05793243efc68500bcde33f0b50005825836ae9548233ee99",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/after-app/inset-right.png",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/after-app/inset-right.png",
+      "bytes": 608217,
+      "sha256": "61ec0f02e45024e5b769139f0a1471966fc43bc098ca9738360b2f05f120c7ed",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/after-app/jug-left-accessibility.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/after-app/jug-left-accessibility.json",
+      "bytes": 22229,
+      "sha256": "7bc183905c852f7c1ae9484925d9e286b32cfb6743ccb7b8f21f5b1d7a7be11f",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/after-app/jug-left.png",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/after-app/jug-left.png",
+      "bytes": 608215,
+      "sha256": "83f14d2882da118e44f7c6b96e607d1018a3ae274d8f033a03d1b3df53bbf96f",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/after-app/validation.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/after-app/validation.json",
+      "bytes": 3422,
+      "sha256": "1212f925d8d60ddcb989fb3b22f882c1b0386ff4ff26c20924ca5e9ab3255a70",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/after-app/wood-orbit-left-accessibility.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/after-app/wood-orbit-left-accessibility.json",
+      "bytes": 21901,
+      "sha256": "dd27e884a5354ca3e59a34529490be63a8be2333f553047d066657193c7e1937",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/after-app/wood-orbit-left.png",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/after-app/wood-orbit-left.png",
+      "bytes": 631691,
+      "sha256": "885b3e4041b80479e7eea9e8e753bf70b0af7ca82077f6a159ea9e16f66bc2ee",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/after-app/wood-orbit-right-accessibility.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/after-app/wood-orbit-right-accessibility.json",
+      "bytes": 21886,
+      "sha256": "c26f225d27ae85fdcd880f758b1443217e75912398a29f952ebd8ead639d7888",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/after-app/wood-orbit-right.png",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/after-app/wood-orbit-right.png",
+      "bytes": 627894,
+      "sha256": "45efb85db69435248714b209cb7cf7d657669e8964dbc8c5b6a88332baead9da",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/after-app/wood-unselected-accessibility.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/after-app/wood-unselected-accessibility.json",
+      "bytes": 6417,
+      "sha256": "c92bafed1b7120412d81d8ebd24a0a8d72a820f1bc005327cb1b5b20e679529e",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/after-app/wood-unselected.png",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/after-app/wood-unselected.png",
+      "bytes": 399973,
+      "sha256": "c5f7a1c25f009bf024a39c25581fb4c75b0f97cdfc42ccc5c0ef10404763b460",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/before-app/center-tray-accessibility.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/before-app/center-tray-accessibility.json",
+      "bytes": 22071,
+      "sha256": "4160207d92538a4136e03bbf9eee62a38c8a1e0af0df048554ec65d5cf409c91",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/before-app/center-tray.png",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/before-app/center-tray.png",
+      "bytes": 610130,
+      "sha256": "f140d9ea1460c012a0ee9016cf45d5ac64195c631eaaa3fa826034a25453f76d",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/before-app/inset-right-accessibility.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/before-app/inset-right-accessibility.json",
+      "bytes": 21714,
+      "sha256": "18a9a57af02907d33c4dddc8a6e8010f3ecb69438b9a71ec808f9598d5df6ae7",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/before-app/inset-right.png",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/before-app/inset-right.png",
+      "bytes": 602187,
+      "sha256": "f4ed6d84eba8ff58bf8e193393aa7c0fb9e2b8d25aa6c999b12293c1280ac54e",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/before-app/jug-left-accessibility.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/before-app/jug-left-accessibility.json",
+      "bytes": 22186,
+      "sha256": "cb1dee868fe6b39500c7e4bf26d024fe1104ea97e886e5424b13ec5d72650aae",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/before-app/jug-left.png",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/before-app/jug-left.png",
+      "bytes": 601563,
+      "sha256": "d3b5cf2ae2bf00e46b41f886acb957a0649c16b9c48e57c359157de17e43cd23",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "app/before-app/validation.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/before-app/validation.json",
+      "bytes": 3422,
+      "sha256": "c87349699f58060b664cc5d37d80788188c1a657dd37635a22ce9599844f9c5b",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/after-front.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/after-front.png",
+      "bytes": 14830,
+      "sha256": "a75a2c2eef5221c95385696f5fde865f6afbb856ecf6af15981ba807a5f77d6a",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/after-oblique.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/after-oblique.png",
+      "bytes": 27062,
+      "sha256": "fa91f2be67ad486465e00f0fdd4334da24dc91024ef59956380b238e6ca35f55",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/after-raking.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/after-raking.png",
+      "bytes": 28766,
+      "sha256": "3cff255da32650e3e04831583766af2749e99151efd5e1dab9b27084c77b9898",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/after-side.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/after-side.png",
+      "bytes": 6247,
+      "sha256": "2f401b49f64fcd3eed36065d90bba944da7589c4e75c39d09fbc007169fbaedf",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/after-top.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/after-top.png",
+      "bytes": 6294,
+      "sha256": "57b7f15ee7b7b6e6b94d70ce354caf62f122ca53f809a2ba62d51b6cc5442db0",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/before-front.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/before-front.png",
+      "bytes": 54071,
+      "sha256": "5f87564d4d69573688984a0175d2f0b0b5c3fd56b25e7b01166a9e15a0c11119",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/before-oblique.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/before-oblique.png",
+      "bytes": 69164,
+      "sha256": "560ecf5a36e1135a8ec13b22ee9a0e601683828ab5ec4de15bd0c4d3eb4ef38e",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/before-raking.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/before-raking.png",
+      "bytes": 77554,
+      "sha256": "dc43ded4b0eba3bd8bdc2fa6477943a4661b47a4a9f3077b56eb9e21ce083b55",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/before-side.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/before-side.png",
+      "bytes": 10789,
+      "sha256": "f361742b5fdefc95401841ea50b78905b6b13c5949023f8876b36858e2ae084b",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/before-top.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/before-top.png",
+      "bytes": 17978,
+      "sha256": "485d5ca25b520be06edec515db4c6b94f853829f9d90354f29ebda8ea3be548f",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/comparison-front.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/comparison-front.png",
+      "bytes": 77465,
+      "sha256": "677279a00a7df7b9ff7b9c2094ca0f0112c896478514ea7073d11011de9ced5d",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/comparison-oblique.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/comparison-oblique.png",
+      "bytes": 104029,
+      "sha256": "4a556c7b68ee4bf2c54cc234f34e26d89c5513a2fcfed7ca93df30f87b5fb883",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/comparison-raking.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/comparison-raking.png",
+      "bytes": 115396,
+      "sha256": "246df0bb64ffb686ca4b57bc30e56d830ef8ca844ad67d967bfabe0171a51ba4",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/comparison-side.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/comparison-side.png",
+      "bytes": 22282,
+      "sha256": "38dcfb0707e18aa70d86fb5565a4488d250519a65e610ea34fac2463ada6115c",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/comparison-top.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/comparison-top.png",
+      "bytes": 29894,
+      "sha256": "e600b6e1c176fabc968123bc4b0ccacda8c621f0103d4b22c4910e7737cce09e",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "compiled-previews/provenance.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/provenance.json",
+      "bytes": 1972,
+      "sha256": "4f398bb167aa8bd5249ffd4e36d92a3ece399bbd0f226744649fb759c0f8433c",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "front-side-top-comparison.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/official-previews/front-side-top-comparison.png",
+      "bytes": 129841,
+      "sha256": "65524bf5ee8ce55669e0e05eb719b517224df2e97a712b08b6d1ede5e3ba55df",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/delivery-parity.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/delivery-parity.json",
+      "bytes": 26447,
+      "sha256": "528c45f409c00898ed2005ac43950a44770fdc98cac2f21b7c397e58cbd072f6",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/delivery-validation-stderr.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/delivery-validation-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/delivery-validation.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/delivery-validation.log",
+      "bytes": 2040,
+      "sha256": "afdd00411c0980450602537d16bbf620a5fd73be423b1ac86a127924e8ba0fb0",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/installed-app-provenance.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/installed-app-provenance.json",
+      "bytes": 731,
+      "sha256": "9dcd38cae2b6a7403e90eedc1f5c305b4cc536ed9b8f25b86ccb486801d0c3b0",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/ios-build-command.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/ios-build-command.json",
+      "bytes": 478,
+      "sha256": "8ab491a0c17643fe16d42c1fedc96a6ad669832d7d3da5443bb1bf5d30049387",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/ios-build.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/ios-build.log",
+      "bytes": 196028,
+      "sha256": "38a6141447a36a110158e947036d9d8fbb58ad40cb479f43c6d4b1527fa66a47",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/ios-cleanup.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/ios-cleanup.json",
+      "bytes": 110,
+      "sha256": "3605296d41aba76df4264486a23054e206d3be7560cb282995f42959eb45ed6a",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/ios-summary.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/ios-summary.json",
+      "bytes": 2003,
+      "sha256": "d7f8d2fbd592062793578a6c8019ac69e031ba5d1a41154799349898d298d68f",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/ios-test-command.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/ios-test-command.json",
+      "bytes": 968,
+      "sha256": "9541fcff5958ef118a77345045ee84f686a46bb50f7045d347087d74bf109f13",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/ios-tests.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/ios-tests.log",
+      "bytes": 472268,
+      "sha256": "ae8be8a52437acf4d9f9e69352d3844cbe7e9524a8c2760e73f3303bc49cc54a",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/package-validation-command.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/package-validation-command.json",
+      "bytes": 213,
+      "sha256": "33aae5264a1bbf0c8893617d473718a506e43791d402e1d1b3d7bd7d79b56077",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/package-validation.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/package-validation.log",
+      "bytes": 5583,
+      "sha256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/python-test-report.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/python-test-report.json",
+      "bytes": 681,
+      "sha256": "46f01cde9cc7597e1997de75ec97bc0b5f539bedf0c98d6c187d3be959d08ca0",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/python-tests.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/python-tests.log",
+      "bytes": 844,
+      "sha256": "c0d484f84434316470d0c1f0bb9cd75bba64dd1a4552efab9b1cd9e910e60810",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/resource-cleanup-verification.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/resource-cleanup-verification.json",
+      "bytes": 953,
+      "sha256": "f4078877540e394814141d4641db093feb5e42ca07eec253c51f90f6191c2d22",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/staging-command.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/staging-command.json",
+      "bytes": 747,
+      "sha256": "f9a3b3678943bc300c53eb640197a69b5ccd08e5f2ad83b11ef463a25817defd",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "integration/staging.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/staging.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/authored-design.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/authored-design.json",
+      "bytes": 4371,
+      "sha256": "a143deee4bf8f85b29222129089d16c705e07e394dd370f82309703ded39d8c2",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/native-mesh-ray-proof.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/native-mesh-ray-proof.json",
+      "bytes": 4201,
+      "sha256": "faf0e9182c884d21fe09e86d7a6fff7d7d89e8cd7799703aacb2714e7d7f5063",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/native-verification.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/native-verification.json",
+      "bytes": 4179,
+      "sha256": "19fe382df9bc519663784cd4ab666d4d6e2eb7ac337d5817ac07ba56aed7ae81",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/before-front.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/before-front.png",
+      "bytes": 66573,
+      "sha256": "45739bec7003bc6a98424811fc278fb4e00fd72593fab451e396e2133d0fc3cf",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/before-oblique.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/before-oblique.png",
+      "bytes": 84921,
+      "sha256": "b2080b060d789615f393ab8c9745e87216fff882a15d6081cd326d7572714f89",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/before-raking.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/before-raking.png",
+      "bytes": 96301,
+      "sha256": "7e443df85246045a9c62ba50a98e10342e5e0d498e4299c479ad9afc13365fe1",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/before-side.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/before-side.png",
+      "bytes": 13308,
+      "sha256": "dd8799d1335954dec2f088b13dd40dcb7178d5b129be66d1f4709bd8abcab3bd",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/before-top.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/before-top.png",
+      "bytes": 22201,
+      "sha256": "3b2cfa6141af81623a254acb768a0bf4d13313b745276fca15db8cd9b88cebf0",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/candidate-front.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/candidate-front.png",
+      "bytes": 18560,
+      "sha256": "a1b04329fd3e178a75b63925b22b8c8bcc953578f9e6808a36f26bdb592df9ba",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/candidate-oblique.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/candidate-oblique.png",
+      "bytes": 34288,
+      "sha256": "3b5f59f60a1c579e5fae76e5a3c88e33ee442c6ee226401ae85682d6d3f04770",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/candidate-raking.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/candidate-raking.png",
+      "bytes": 35547,
+      "sha256": "47e5d81f3d1eccf32037e8c88130f83e1abdd19e8fd3f48133617b76bfa81dbf",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/candidate-side.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/candidate-side.png",
+      "bytes": 7730,
+      "sha256": "3f992db3f9934d017fe3074f62190d263b9755cf931de2fe4acf77107f206dcd",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/candidate-top.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/candidate-top.png",
+      "bytes": 7675,
+      "sha256": "3a5958eb55ecca43b0dec0faddf107c8db67d6e1d2105c204de5fc7a86e421df",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/comparison-front.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/comparison-front.png",
+      "bytes": 90248,
+      "sha256": "ce1c3126bb5951f290c915b6cffad605c5e2ad85bd7e15e6d778727aaa1a6d25",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/comparison-oblique.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/comparison-oblique.png",
+      "bytes": 124240,
+      "sha256": "96cb0588fe71fd63df62eb559a9496cc519acb09d8e03322616168c8e7d4f068",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/comparison-raking.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/comparison-raking.png",
+      "bytes": 136980,
+      "sha256": "c39f0f2fd0c1a003f4c8ed08634c9f8cf5bec89861277b54efbf19d985de04f7",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/comparison-side.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/comparison-side.png",
+      "bytes": 25612,
+      "sha256": "d33159e65ab26bf9595ba038e1dd00287a4a64d9f51ad914e224fb7aeddfb5c2",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/comparison-top.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/comparison-top.png",
+      "bytes": 34700,
+      "sha256": "a0eb2cd4e1114ee8651ff0babfcbd20c0b0de33d7934dcf1869e748804e97649",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/previews/native-central-and-lateral-sections.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/native-central-and-lateral-sections.png",
+      "bytes": 25247,
+      "sha256": "57ec5f47bb654d4f138b344c2438eccb80910242bf3a151c8194d288c2cfe635",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/revision-2-proof-manifest.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/revision-2-proof-manifest.json",
+      "bytes": 2860,
+      "sha256": "3cd2dfc55c457bc43621be4da98f0aa9aeca71c8e9b0ac9d33b1eb71c665a3e5",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-author/source-reasoning.md",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/source-reasoning.md",
+      "bytes": 6834,
+      "sha256": "2b6e76c07ee4fc734f1abc474fa0435abe3bfe47de058a720c9cdc0de1d00180",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/authored-design.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/authored-design.json",
+      "bytes": 4918,
+      "sha256": "a3082c010e71ae9c35cfc3b1d76ceed412a7bc0a831bd8245f2efec4aca37f6c",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/native-mesh-ray-proof.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/native-mesh-ray-proof.json",
+      "bytes": 4167,
+      "sha256": "e4738497a4174710d4b0a632e9d119819b7d070a09ee51cd504f24b3a4a25b9e",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/native-verification.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/native-verification.json",
+      "bytes": 4184,
+      "sha256": "22ea61e95f4bb994db957f3964ea9644a7af5d8702e7aae2ec76f7bacce1d596",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/partition-compile-check/invocation.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/partition-compile-check/invocation.json",
+      "bytes": 847,
+      "sha256": "5f7ee12bcdb0d6f6a14e7c1f44e753df1587937ea2eb4ee76daebdd560f1a8b8",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/partition-compile-check/raw.log",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/partition-compile-check/raw.log",
+      "bytes": 3832,
+      "sha256": "01447d5bfd007b959ef36f1d971a266f8152931c0a23a8d1e1ef4a090fe3d6db",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/partition-compile-check/report.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/partition-compile-check/report.json",
+      "bytes": 2333,
+      "sha256": "e9a457e046841193cc75f9777da8241d7fd9b79b262a00e2d5d3be084d0287a1",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/partition-fix-proof.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/partition-fix-proof.json",
+      "bytes": 9389,
+      "sha256": "29c09e634d4e48f6cac7e07e5e918d2a6f5240440ae5623afd901c4ba0a9af9d",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/partition-proof-manifest.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/partition-proof-manifest.json",
+      "bytes": 3589,
+      "sha256": "e5e05026814a6352a23acac2f1de3e1b2e767c5b08a92fa955071f60a9a54473",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/before-front.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/before-front.png",
+      "bytes": 66573,
+      "sha256": "45739bec7003bc6a98424811fc278fb4e00fd72593fab451e396e2133d0fc3cf",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/before-oblique.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/before-oblique.png",
+      "bytes": 84921,
+      "sha256": "b2080b060d789615f393ab8c9745e87216fff882a15d6081cd326d7572714f89",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/before-raking.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/before-raking.png",
+      "bytes": 96301,
+      "sha256": "7e443df85246045a9c62ba50a98e10342e5e0d498e4299c479ad9afc13365fe1",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/before-side.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/before-side.png",
+      "bytes": 13308,
+      "sha256": "dd8799d1335954dec2f088b13dd40dcb7178d5b129be66d1f4709bd8abcab3bd",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/before-top.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/before-top.png",
+      "bytes": 22201,
+      "sha256": "3b2cfa6141af81623a254acb768a0bf4d13313b745276fca15db8cd9b88cebf0",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/candidate-front.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/candidate-front.png",
+      "bytes": 18772,
+      "sha256": "16ccfda1c672387038cd7d93c1f781d44b619a684f6f434dd4aba1c1445d64e2",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/candidate-oblique.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/candidate-oblique.png",
+      "bytes": 34622,
+      "sha256": "11d9316d251bc4b526c84ef0a19f93da018b68f40438ead649f03f49da743cd4",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/candidate-raking.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/candidate-raking.png",
+      "bytes": 35688,
+      "sha256": "ea2da124f97fcb410737f8fbb9134ee471209c72eaef0420b4ad0614e160ec61",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/candidate-side.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/candidate-side.png",
+      "bytes": 7762,
+      "sha256": "44042af9a6bec9cfb6396b1dc7863a13092254d3ce50cc424579f2ed041e4af4",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/candidate-top.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/candidate-top.png",
+      "bytes": 7793,
+      "sha256": "ad0269239b4a8e15a3e5548ba97b54127ecdceb0fe9e0985bb6f5e444ccbf3b3",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/comparison-front.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/comparison-front.png",
+      "bytes": 90427,
+      "sha256": "51fca6feabd49ecc26def6caa69dcd166c2b3724b751568a3ae25263e4596261",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/comparison-oblique.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/comparison-oblique.png",
+      "bytes": 124572,
+      "sha256": "a3eef6f8321c93610e7c802c3e467c8a6ae21a922f4d06feb0caf3f69f89f7f9",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/comparison-raking.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/comparison-raking.png",
+      "bytes": 137117,
+      "sha256": "3a924b6f557e3031482a8d5bf800535f043ee83678ee897a7f16d1b680856ff6",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/comparison-side.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/comparison-side.png",
+      "bytes": 25648,
+      "sha256": "7dee96e4c3121a23a79af42da81b68e41531c145c57c40c6cd39f744b83812d3",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/comparison-top.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/comparison-top.png",
+      "bytes": 34823,
+      "sha256": "57758308394d075c4268356f83df7e08498789a3484eb5ce2c045384e1efde56",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/previews/native-central-and-lateral-sections.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/previews/native-central-and-lateral-sections.png",
+      "bytes": 26316,
+      "sha256": "eac6e603c3998837e4fd519c017bd116b1269c216692e9b1699e32f4bb1eb5c4",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "native-final/source-reasoning.md",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/native-author/source-reasoning.md",
+      "bytes": 9469,
+      "sha256": "4cf5d1f210b9260dc1475cb749517708e330c174ab4ee1cf7f43d9c9cad612ea",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "opus/activity-2.json",
+      "originalPath": ".context/placid-badger/mammut-opus-review/activity-2.json",
+      "bytes": 5863,
+      "sha256": "905227ec708f082cc56404c4b9b913ec9b717e1ccec78b96bfaa3987ba62ce23",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "opus/activity-3.json",
+      "originalPath": ".context/placid-badger/mammut-opus-review/activity-3.json",
+      "bytes": 10708,
+      "sha256": "7da45c44d10688144c373b7306be708dba6d77c1fa7d96e239203e393bc81e2f",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "opus/activity-4.json",
+      "originalPath": ".context/placid-badger/mammut-opus-review/activity-4.json",
+      "bytes": 8147,
+      "sha256": "4b8d69334bebb6ca5ceb60bf9cda76b02731a763f7838d348da09edf90f51b48",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "opus/activity.json",
+      "originalPath": ".context/placid-badger/mammut-opus-review/activity.json",
+      "bytes": 8162,
+      "sha256": "38fdc8282678249eb7930eb55d7170dc9a16193afbfccc3a809564353443f912",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "opus/archive-result.json",
+      "originalPath": ".context/placid-badger/mammut-opus-review/archive-result.json",
+      "bytes": 124,
+      "sha256": "26618b586e1c4f0d1ef1efa91c8a5a06a81889a1750b9796d6ee4e8eb3b18eb0",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "opus/archived-agent.json",
+      "originalPath": ".context/placid-badger/mammut-opus-review/archived-agent.json",
+      "bytes": 727,
+      "sha256": "13731eee9669b08e16883f696156dbf7cb5860487c7debe3bb1990a36384c1f0",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "opus/review-response-2.md",
+      "originalPath": ".context/placid-badger/mammut-opus-review/review-response-2.md",
+      "bytes": 5681,
+      "sha256": "a3059fc1f19a08109944a0741fc3ea58a1a1b058ad42dd6044a1bdc7bc5da480",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "opus/review-response-3.md",
+      "originalPath": ".context/placid-badger/mammut-opus-review/review-response-3.md",
+      "bytes": 5095,
+      "sha256": "103de38b6bf4c0c7c6ede9b4e0f8bfd2f2a4f071571ed45522f1e18d6fd0f33d",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "opus/review-response-4.md",
+      "originalPath": ".context/placid-badger/mammut-opus-review/review-response-4.md",
+      "bytes": 3819,
+      "sha256": "5642ae55bb99cb90a679ffb8e73fdf648ea7181ba57aca6d1407a4ea4a4c9c51",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "opus/review-response.md",
+      "originalPath": ".context/placid-badger/mammut-opus-review/review-response.md",
+      "bytes": 7362,
+      "sha256": "0fd06a3198ccc49ac5799d90451f642825ce4718d4e2c0bc0b9cc823fc2230a1",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "runtime-proof/compile-check-failure.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/compile-check-failure.json",
+      "bytes": 1095,
+      "sha256": "f659172a5fb3c78e53db50cd1a4925d6c0f5b310ff18cc1f8e595bca46a0bb5c",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "runtime-proof/compile-final-command.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/compile-final-command.json",
+      "bytes": 853,
+      "sha256": "83fda6706f4d7e180e2aa4cc2ebadf1179bfef1e2e524ff3d340a8d1c5721425",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "runtime-proof/compile-final.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/compile-final.json",
+      "bytes": 2426,
+      "sha256": "6a3cc9ce13142dd9ebe9ddc247345fa1846fb3f2fda33f01f5ca078666b8f64f",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "runtime-proof/compile-final.log",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/compile-final.log",
+      "bytes": 3931,
+      "sha256": "5856f3b6591fad62e1f63efebb82f82eb55d99ca2f558541770f7a4b291218b0",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "runtime-proof/export-match-diagnostic.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/export-match-diagnostic.json",
+      "bytes": 1447,
+      "sha256": "3fed6bcdacf9f26110b9627210a428c4375aea98f7064c4eec241b3b4d57c307",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "runtime-proof/export-verification.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/export-verification.json",
+      "bytes": 1396,
+      "sha256": "5f8b16c828db119be11b1f805a48f1fab45af03e18c08ee67c90921acb81fc12",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "runtime-proof/final-metadata-comparison.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/final-metadata-comparison.json",
+      "bytes": 435,
+      "sha256": "70fdd992b8d22a2e756ce02663c0debbd5b95132f728d26cfc15e21294a6a751",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "runtime-proof/promotion-report.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/promotion-report.json",
+      "bytes": 2825,
+      "sha256": "c5291c4e013bfa01ba4a99861e431f788dde2158443e2da2520513f26f58b3e7",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "sources/image1.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/sources/image1.png",
+      "bytes": 81287,
+      "sha256": "6c5424f134da0d8abc7955960f8e6cc295a2481892f9b7429532c4a2ca6090b4",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "sources/image2.png",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/sources/image2.png",
+      "bytes": 101004,
+      "sha256": "c64f8ab9bd0758bf8867db3c4a1f3115df94962c7c69b3ec79a15ebed867fc91",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "sources/image3.jpg",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/sources/image3.jpg",
+      "bytes": 89958,
+      "sha256": "e9bffaf6aa6e95124922623a94a5257f47dce26109dc7b319b791503d9651444",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "sources/manufacturer-press-release.docx",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/sources/manufacturer-press-release.docx",
+      "bytes": 295746,
+      "sha256": "7312bb772da797aca3cfa7f6368761cb5a9c97cfda00f19537888fa2ac7fcc1f",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "sources/press-provenance.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/sources/press-provenance.json",
+      "bytes": 928,
+      "sha256": "c7d2e864a346e0807301d8a886b2d5146467224fdded00463515cbb823202b1f",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "sources/press-release-text.txt",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/sources/press-release-text.txt",
+      "bytes": 2561,
+      "sha256": "56d3003c28f7f1e7e48af214a41940d1630d12659bc53fbe51368bbdbe943e77",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-final/finish-metadata-final-proof.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/finish-metadata-final-proof.json",
+      "bytes": 25206,
+      "sha256": "2b404ca3d71364cb62417214f43d3f3a8c1504d7929f49bb233cf536f11288bf",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-final/manifest-edit-final.log",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/manifest-edit-final.log",
+      "bytes": 182,
+      "sha256": "1a6e74a13567d4ba925932bfc148967513d36ac6c518534f41c3db2186f0eb02",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/independent-renderer-review.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/independent-renderer-review.json",
+      "bytes": 5237,
+      "sha256": "a852b295774659f4f967d5cc32962ad6e8edfc46a170373a86757fcb088ea150",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/independent-renderer-review.md",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/independent-renderer-review.md",
+      "bytes": 1677,
+      "sha256": "9c89096f9e587210c49f2c434a2dde1cc3c3bd659ffe597e8e33bfe0bef60fcd",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/ios-green-command.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/ios-green-command.json",
+      "bytes": 1155,
+      "sha256": "7c9f81b82011c0df1a30197d61b7dbe461a13b0bd8ce0d43f218561969648c66",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/ios-green-summary.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/ios-green-summary.json",
+      "bytes": 1041,
+      "sha256": "dcf6196403b8fa5eaec6659987b43ad0d596985ae335c4cab7e63b32de6aac3a",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/ios-green-tests.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/ios-green-tests.log",
+      "bytes": 18093,
+      "sha256": "32445c36807cfbc9e9e34fa3822dcc616343656c6900708fe366caf5a23a637c",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/ios-red-command.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/ios-red-command.json",
+      "bytes": 1153,
+      "sha256": "566cfca0262e8dedb9a4e32b2ab64d913f89a39a2769cebab6198bfaf397a9ef",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/ios-red-summary.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/ios-red-summary.json",
+      "bytes": 2103,
+      "sha256": "277f8e0cff27eb67df711056458543bc2063d0a35e053fcef8789350d4a64588",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/ios-red-tests.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/ios-red-tests.log",
+      "bytes": 20187,
+      "sha256": "c19f3ae8a5137405369722059cd5dd45365ab93c08cda2f881597415f7f84a8f",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/renderer-adoption-proof.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/renderer-adoption-proof.json",
+      "bytes": 496,
+      "sha256": "25aeac9b59cd48746a05e0ab7576cd9539e97d9d2818be4b1c4188c2cef90fb9",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/selector-fix/implementation-review.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/selector-fix/implementation-review.json",
+      "bytes": 2241,
+      "sha256": "e370a2f9c28b2640bec9ece46e14368e7ffe173dfc0c5f38b2ea725ab5acb2f6",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/selector-fix/tests-first-snapshot.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/selector-fix/tests-first-snapshot.json",
+      "bytes": 1078,
+      "sha256": "d557ec18583c5c12a90945867e7620899a8bb098803116e9b76989383613763e",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/selector-green-command.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/selector-green-command.json",
+      "bytes": 1040,
+      "sha256": "f7bc2b62900540015c3bb69a0a384a77f3979f4e12bdcc40aa55dcda42a7ceb6",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/selector-green-summary.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/selector-green-summary.json",
+      "bytes": 1041,
+      "sha256": "a6cbc8f8b7a7c9c4a8ee18f38f4bf666eb6d708e541c4d7de9f58e32b75ff6d5",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/selector-green.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/selector-green.log",
+      "bytes": 4631,
+      "sha256": "33e5427f1636dca61332a77789d1ad2794b568ed7294a4d3a958c91d1608667e",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/selector-red-command.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/selector-red-command.json",
+      "bytes": 1036,
+      "sha256": "b12e04cc677fe19d8b8ca9c7dcdeaf339b0edb5dc7c2b9d7f71676eb79e9f819",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/selector-red-summary.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/selector-red-summary.json",
+      "bytes": 2081,
+      "sha256": "addde2ca70279d55ff0cd7170b6456d73766859736b5d1c9f4118565072361fb",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-renderer/selector-red.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/selector-red.log",
+      "bytes": 7375,
+      "sha256": "7ab0c93eb2cefe72d498cd67dc46cb7d8ad906055a51f4ef56e9f0cc3c140252",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-schema/full-relevant-python.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/schema/full-relevant-python.log",
+      "bytes": 844,
+      "sha256": "84639fb5c82f6350f038c1516c596a5bc01d82f297b481dbecad3d2f64a4ca0b",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-schema/green-swift-decoder.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/schema/green-swift-decoder.log",
+      "bytes": 37,
+      "sha256": "21b75d1912a807ac216292d63057816f2f6076b88e768175a555c4db4e6d2ad4",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-schema/red-python-expanded.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/schema/red-python-expanded.log",
+      "bytes": 32965,
+      "sha256": "8bc21ca80152a2b9e94e7844915df525929d1e862f989880b98b7fcf677f0014",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-schema/red-swift-decoder.log",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/schema/red-swift-decoder.log",
+      "bytes": 603,
+      "sha256": "dd016c59966ca2b20efb778aef9fc52e33e862848b3b11a5de2d3a000b777fb5",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-schema/upstream-adoption-proof.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/schema/upstream-adoption-proof.json",
+      "bytes": 1215,
+      "sha256": "e9284824e72396c3bc23a7a55156bbf2d783d8354c4c89e2359338e5219e1f5e",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood-schema/verification.json",
+      "originalPath": ".context/placid-badger/mammut-wood-integration/schema/verification.json",
+      "bytes": 2440,
+      "sha256": "b8f518cd2f3762f2f68396c4898c638e76fee6cac023fea4c4cda4f8b923ae2f",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood/finish-metadata-proof.json",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/finish-metadata-proof.json",
+      "bytes": 24413,
+      "sha256": "64fbf8aff80bf7f05a6f68d45252a165485bf6dbf4e270658dbb611696e7a03b",
+      "copyVerifiedByteIdentical": true
+    },
+    {
+      "path": "wood/manifest-edit.log",
+      "originalPath": ".context/placid-badger/mammut-geometry-revision/manifest-edit.log",
+      "bytes": 176,
+      "sha256": "f284778e7512c379037da116692464055d1b8a0d27d515864d7ac3fa63a6f57a",
+      "copyVerifiedByteIdentical": true
+    }
+  ],
+  "omittedLargeScratchArtifacts": [
+    "candidate FCStd and backups",
+    "author and debug programs/sources",
+    "candidate-native-preview.json",
+    "section-diagnostic.json",
+    "historical revision-1 mesh data"
+  ],
+  "pending": [
+    "runtime wood source official export, package publication and final source/model/descriptor hash closure",
+    "published-asset reproducibility and material-binding verification",
+    "official prior-versus-final front/side/top comparisons",
+    "installed app wood rendering and contact highlight/restoration review",
+    "final integration/full test proof",
+    "human acceptance"
+  ],
+  "externalResourcesStarted": [],
+  "opusReviewedRevision2SourceSHA256": "695845291f92314d7ddc6369f663d25312eb52c7c75283b75e2b9e1f7a29ffa4",
+  "preSeamRuntimeSourceSHA256": "dee7bbda64ccc3025dc919e31f301b35439491c0cb747ce31aea7ff63bbf3681",
+  "sourceStatus": "Original revision-2/pre-seam records remain historical and byte-identical. native-final is the physically equivalent seam-corrected native source; wood-final adds runtime wood metadata only. These proofs do not assert final package publication.",
+  "seamCorrectedNativeSourceSHA256": "5e06a1e7ae4f6bee8391605f61395ff86807e4234a54d6b8b2d46c015fa4ddd8",
+  "seamCorrectedCheckModelSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+  "runtimeWoodSourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+  "original35ArtifactsPreserved": true,
+  "runtimeSourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+  "modelSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+  "descriptorSHA256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099"
+}

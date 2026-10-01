@@ -38,9 +38,9 @@
     },
     {
       "package": "mammut-diamond-finger",
-      "sourceSHA256": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
-      "archiveMembers": 262,
-      "sketches": 58,
+      "sourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+      "archiveMembers": 214,
+      "sketches": 39,
       "embeddedMeshFeatures": 0
     },
     {

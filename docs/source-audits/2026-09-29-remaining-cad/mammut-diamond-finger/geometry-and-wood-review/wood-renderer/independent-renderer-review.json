@@ -1,0 +1,51 @@
+{
+  "createdAt": "2026-10-01T03:23:21.183747+00:00",
+  "status": "one generic hierarchical-selector defect identified; current Mammut simple names unaffected",
+  "blockingFindings": [
+    {
+      "id": "R1",
+      "priority": "P2",
+      "file": "HangTen/Models/BoardModelRealityTypes.swift",
+      "line": 280,
+      "title": "Resolve appearance selectors with the same relative descriptor paths used for contact binding",
+      "evidence": "applyBoardMaterials only checks finishByNodeID[entity.name]. Descriptor nodeIDs may be hierarchical paths; existing findNodeID at882 resolves name first then path relative to each instance root. Both parsers accept valid nodeIDs as finish selectors. Group/Left therefore passes validation but fails material lookup for entity named Left. Group/Attachment also misses forced neutrality when board default is wood.",
+      "currentExposure": "No current bundled descriptor uses slash nodeIDs; Mammut unaffected today. Defect affects newly accepted generic appearance contract.",
+      "minimalFix": "Apply material traversal separately to each instance root; pass that relative root through recursion. Reuse shared name-first/path-second descriptor lookup for finishByNodeID and contact-binding maps; preserve inherited finish for unnamed child meshes."
+    }
+  ],
+  "verifiedCodeProperties": [
+    "Shared contact highlight union remains unchanged and applies once per unique entity.",
+    "Primary contact picking and descriptor membership binding remain unchanged.",
+    "Clear highlight restores captured any-Material baseline; CustomMaterial selection temporarily uses neutral PBR highlight, then restores original complete shader material.",
+    "Board default remains neutral for absent metadata; attachment simple IDs override to neutral; transient cord material path unchanged.",
+    "Swift/Python selector validation rejects unknown, duplicate, attachment and cross-finish-conflicting selections, malformed/null arrays, unknown finish enum and unknown fields.",
+    "No production board-ID or Mammut literals introduced.",
+    "Shader byte-identical to6126228e8c44c5832982acc09e10ce47809f50c0; wood/plastic/granite factory source text exactly matches same reference.",
+    "pbxproj includes shader file and app Sources phase."
+  ],
+  "testAssessment": {
+    "covered": "New tests cover wood application to every Mammut contact, active/preview highlight and restore, stable picking/collision/bounds, two-scene independence; parser and Python staging coverage include default-neutral, malformed selectors, conflicts and byte-preserving staging. Existing shared-contact tests remain.",
+    "specificGap": "No material-application fixture covers nested relative node IDs or forced-neutral attachment paths. Add that as red-to-green regression forR1.",
+    "additionalNonblockingLimit": "Existing shared-contact tests use neutral materials while wood tests use separate contact meshes. One shared wood-mesh selection/restoration assertion would directly combine these contracts; no incorrect union behavior found in code.",
+    "execution": "Read-only review only; no build/test/simulator run by reviewer."
+  },
+  "proposedRegression": {
+    "tree": "instanceRoot -> Group -> Left(ModelEntity), Hardware(ModelEntity), unnamed mesh descendant of Left; optional second Group in another cloned instance.",
+    "descriptor": "Group/Left contact plus Group/Hardware attachment; shared contact membership on Left if combining coverage.",
+    "display": "default neutral + woodNodeIDs[Group/Left] tests path override; default wood tests Group/Hardware remains neutral and inherited unnamed Left child remains wood.",
+    "assertions": "Actual applied material type and neutral roughness, stable primary picking, selected shared membership once and full custom baseline restore after clear. The same path lookup must be relative to each instance root."
+  },
+  "fileSHA256": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "3f61378302759c03ac1804e1d344172be86632f9f1f014b64536f6ee80dd3731",
+    "HangTen/Models/BoardPackageStore.swift": "298b6d5d6268e013432085e09c3103d35fad799566a77984db28341db0756fb4",
+    "HangTen/Models/TrainingModels.swift": "2e680154c8f9389324440dcf853f2f3ca106c17d3905dac9fb6f51c05676646d",
+    "HangTen/Rendering/BoardWoodSurfaceShader.metal": "caf524e2b7a548510f607a1ac7e61ff79671e5543d21ecf892b22ead7a95e8f7",
+    "HangTen.xcodeproj/project.pbxproj": "3ac6920f5c5d6cd0b8c7565fb2720d74a1ba4655b20df77c6c2b48081bbd27aa",
+    "HangTenTests/BoardModelRealityTests.swift": "eabb26cfdd00e8a8225f13ad93a93d7174942e7cfa294be7648ca40e8e4ca420",
+    "HangTenTests/BoardPackageStoreTests.swift": "fc1e5542383ae521cd5bfeeca0b2ca5131212948a4568b13daa1df20da8bfc26",
+    "Tools/HangboardPackages/src/hangboard_packages/board_catalog.py": "54af5c45627f76128e7629c601822d37903c57f4260ee81fdc668bf922140172",
+    "Tools/HangboardPackages/tests/test_board_package_staging.py": "94fc0cc37523d012112ef55108d35b02d872bd758cd9b936845179374a1e9056",
+    "Tools/HangboardPackages/tests/test_model_first_packages.py": "5784e35ecc4116a925bf6971e8b8c09dea093cb6f7c8ea4dbf6ed9cab9b76d10"
+  },
+  "ownership": "Scratch report only; no production/test/package/Git mutation or external resource."
+}

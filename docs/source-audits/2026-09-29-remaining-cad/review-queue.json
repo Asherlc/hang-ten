@@ -160,22 +160,24 @@
       "package": "mammut-diamond-finger",
       "boardID": "mammut.diamond-finger",
       "name": "Mammut Diamond Finger Hangboard",
-      "humanReview": "awaiting review #6",
-      "sourceSHA256": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
-      "reviewPage": "mammut-diamond-finger/individual-review/preview-index.html",
+      "humanReview": "awaiting revised review #6",
+      "sourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+      "reviewPage": "mammut-diamond-finger/geometry-and-wood-review/index.html",
       "sourceAudit": "mammut-diamond-finger/source-audit.md",
       "comparisons": [
-        "mammut-diamond-finger/individual-review/preview-reference-cad-overview.png",
-        "mammut-diamond-finger/individual-review/preview-app-selection-overview.png"
+        "mammut-diamond-finger/geometry-and-wood-review/app/after-app/wood-unselected.png",
+        "mammut-diamond-finger/geometry-and-wood-review/front-side-top-comparison.png",
+        "mammut-diamond-finger/geometry-and-wood-review/compiled-previews/comparison-raking.png",
+        "mammut-diamond-finger/geometry-and-wood-review/native-final/previews/native-central-and-lateral-sections.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "b92676a9b4a81cc3db9714e2e27d8cd4593b6d9d13b846b942a00bff5833bc46",
-          "modelSHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54"
+          "descriptorSHA256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099",
+          "modelSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12"
         }
       },
-      "appReview": "mammut-diamond-finger/app-review/validation.json",
-      "appReviewPage": "mammut-diamond-finger/app-review/index.html",
+      "appReview": "mammut-diamond-finger/geometry-and-wood-review/app/after-app/validation.json",
+      "appReviewPage": "mammut-diamond-finger/geometry-and-wood-review/index.html",
       "humanReviewRecord": "mammut-diamond-finger/human-review.json"
     },
     {

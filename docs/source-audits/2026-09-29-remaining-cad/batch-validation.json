@@ -65,7 +65,7 @@
     {
       "package": "captain-fingerfood-dual",
       "date": "2026-09-30",
-      "feedback": "Cord doesn’t go through holes",
+      "feedback": "Cord doesn\u2019t go through holes",
       "report": "captain-fingerfood-dual/cord-entry-runtime-validation.json",
       "suspensionSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
       "nativeAndCanonicalAppValidation": "passed",
@@ -106,6 +106,27 @@
       "nativeAndCanonicalAppValidation": "passed",
       "physicalUIOrbit": "unverified",
       "geometryAcceptance": "pending review #4"
+    },
+    {
+      "package": "mammut-diamond-finger",
+      "date": "2026-09-30",
+      "revision": "geometry-and-wood",
+      "report": "mammut-diamond-finger/geometry-and-wood-review/runtime-validation.json",
+      "sourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+      "modelSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+      "descriptorSHA256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099",
+      "postPromotionTests": {
+        "iOSPassed": 1278,
+        "iOSSkipped": 3,
+        "pythonPassed": 706,
+        "pythonSkipped": 10,
+        "failures": 0
+      },
+      "allOtherPackageTreesUnchanged": true,
+      "boardFactsAndContactsUnchanged": true,
+      "onlyDisplayMetadataChange": "surfaceFinish: wood",
+      "geometryAcceptance": "pending revised human review #6",
+      "humanReviewRecord": "mammut-diamond-finger/human-review.json"
     }
   ]
 }

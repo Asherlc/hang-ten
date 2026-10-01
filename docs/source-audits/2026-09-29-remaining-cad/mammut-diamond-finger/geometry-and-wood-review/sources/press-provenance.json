@@ -1,0 +1,23 @@
+{
+  "url": "https://cdn.uc.assets.prezly.com/da46d83b-e3f0-484b-b349-2047c1a0da6c/-/inline/no/202003_Mammut_DiamondFingerHangboard.docx",
+  "publisher": "Mammut manufacturer press release",
+  "sha256": "7312bb772da797aca3cfa7f6368761cb5a9c97cfda00f19537888fa2ac7fcc1f",
+  "fullEmbeddedImages": [
+    {
+      "file": "image1.png",
+      "sha256": "6c5424f134da0d8abc7955960f8e6cc295a2481892f9b7429532c4a2ca6090b4",
+      "archiveMember": "word/media/image1.png"
+    },
+    {
+      "file": "image2.png",
+      "sha256": "c64f8ab9bd0758bf8867db3c4a1f3115df94962c7c69b3ec79a15ebed867fc91",
+      "archiveMember": "word/media/image2.png"
+    },
+    {
+      "file": "image3.jpg",
+      "sha256": "e9bffaf6aa6e95124922623a94a5257f47dce26109dc7b319b791503d9651444",
+      "archiveMember": "word/media/image3.jpg"
+    }
+  ],
+  "scope": "Additional source research authorized by user; no cropping, tracing or image-derived dimensions."
+}

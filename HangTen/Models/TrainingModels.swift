@@ -414,8 +414,26 @@ struct BoardModelCamera: Hashable {
     let boundsExpansionFactor: Double?
 }
 
+enum BoardSurfaceFinish: String, Hashable, Decodable {
+    case neutral, wood, plastic, granite
+}
+
 struct BoardModelDisplay: Hashable {
     let camera: BoardModelCamera
+    let surfaceFinish: BoardSurfaceFinish
+    /// Package-authored surface selection; USDZ meshes remain material-free.
+    let woodNodeIDs: [String]
+    let plasticNodeIDs: [String]
+    let graniteNodeIDs: [String]
+
+    init(camera: BoardModelCamera, surfaceFinish: BoardSurfaceFinish = .neutral,
+         woodNodeIDs: [String] = [], plasticNodeIDs: [String] = [], graniteNodeIDs: [String] = []) {
+        self.camera = camera
+        self.surfaceFinish = surfaceFinish
+        self.woodNodeIDs = woodNodeIDs
+        self.plasticNodeIDs = plasticNodeIDs
+        self.graniteNodeIDs = graniteNodeIDs
+    }
 }
 
 struct BoardModelOrientation: Hashable {

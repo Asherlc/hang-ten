@@ -86,7 +86,7 @@
       "models": [
         {
           "presentationID": "primary",
-          "SHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+          "SHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
           "meshCount": 17,
           "archiveMembers": [
             "stage.usdc"
