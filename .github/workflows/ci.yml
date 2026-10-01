@@ -782,6 +782,25 @@ jobs:
           xcrun simctl list runtimes
           xcrun simctl list devices available
 
+      - name: Select iOS 26.4 for the board runtime comparison
+        run: |
+          set -euo pipefail
+          xcrun simctl list devices available --json | python3 -c '
+          import json
+          import os
+          import sys
+
+          runtime = "com.apple.CoreSimulator.SimRuntime.iOS-26-4"
+          candidates = [device for device in json.load(sys.stdin).get("devices", {}).get(runtime, [])
+                        if device.get("name") == "iPhone 17 Pro" and device.get("isAvailable", False)]
+          if len(candidates) != 1:
+              raise SystemExit(f"Expected one available iPhone 17 Pro on {runtime}; found {len(candidates)}")
+          destination = "platform=iOS Simulator,id=" + candidates[0]["udid"]
+          with open(os.environ["GITHUB_ENV"], "a") as environment:
+              environment.write("XCTEST_DESTINATION=" + destination + "\n")
+          print(f"Board runtime comparison: {runtime}; {destination}; compiler/SDK remain Xcode 26.5")
+          '
+
       - name: Run XCTest suite
         id: xctest
         env:
@@ -806,9 +825,10 @@ jobs:
           unset ANALYTICS_API_KEY
           XCTEST_XCCONFIG="$telemetry_xcconfig" scripts/ci-run-xctest.sh
 
+      # Retain passing and failing evidence for the runtime comparison.
       # actions/upload-artifact v4.6.2
-      - name: Upload test diagnostics on failure
-        if: failure() || cancelled()
+      - name: Upload board runtime comparison diagnostics
+        if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-test-results-HangTenUITests-map-${{ matrix.shard }}-${{ github.run_id }}

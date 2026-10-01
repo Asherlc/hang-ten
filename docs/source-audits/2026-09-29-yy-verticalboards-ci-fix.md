@@ -882,3 +882,26 @@ probe-free9d2. No additional readback, transaction intervention, assertion
 change or speculative correction is retained. The evidence is preserved for
 support investigation; this result does not justify another automatic probe.
 Original required rendering checks remain blocking.
+
+## Authorized alternate simulator runtime comparison
+
+The user selected alternate CI runtime investigation after probe-free5bf CI
+completed with six rendered assertion timeouts. Retained runner inventory lists
+iOS26.4.1 (23E254a) and26.5 (23F77); GitHub's macos-26 image inventory confirms
+both runtimes and iPhone17Pro devices:
+https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md.
+
+The board shard selects the available iPhone17Pro specifically from the iOS26.4
+runtime by UUID. Missing or ambiguous selection fails without fallback. Compiler
+and SDK remain Xcode26.5; application and test source, test selectors, assets,
+rapid navigation, gestures, assertions and deadlines remain unchanged. Unit and
+purchase shards continue on26.5. Existing XCTest runner accepts UUID destinations;
+its SDK-version log describes the SDK, not the selected device's OS. The new
+selection step and toolchain inventory identify the actual comparison runtime.
+
+Retain the board artifact on success as well as failure to inspect the complete
+rendered sequence and lifecycle evidence. Execute once and retain all results
+before another push; no unchanged retries. A pass supports runtime sensitivity,
+not a specific framework/GPU diagnosis or an application rendering fix. This
+comparison head is not merge-ready even if green; any eventual CI runtime policy
+must be reviewed and pass all original required checks before merge.
