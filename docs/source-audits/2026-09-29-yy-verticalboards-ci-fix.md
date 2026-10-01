@@ -238,12 +238,13 @@ the delivery lock validates 53 models and 122 authored files. CI on the
 pushed branch must supply the remaining interaction validation. The local trace-free UI failures are retained and
 are not described as a full-suite pass.
 
-The retained before/after landscape screenshots show the actual blank map
-and the same board rendered with its selected contact:
+These historical captures show a blank landscape map and the same board
+rendered with its selected contact in portrait. They are not a matched
+landscape comparison or evidence of a current UI validation pass:
 
 ![Pro landscape before](../pr-screenshots/yy-verticalboards/ci-map-pro-landscape-before.png)
 
-![Pro landscape after](../pr-screenshots/yy-verticalboards/ci-map-pro-landscape-after.png)
+![Pro portrait rendered reference](../pr-screenshots/yy-verticalboards/ci-map-pro-landscape-after.png)
 
 The unit shard's sole failure was
 `AppStoreTests.testFailedSessionPersistenceDoesNotConsumeCredit`: a two-second
@@ -933,8 +934,12 @@ iPhone 18 Pro, then failed during build because the Metal Toolchain was absent.
 No board test or rendered acceptance sequence ran. Its complete board job log
 and build artifact are retained before the setup correction is pushed. The
 remaining unit and purchase jobs may be superseded by the new workflow; retain
-their available logs separately without treating cancelled jobs as passes. The selected Xcode path resolves through Xcode_27.1_beta.app; the
-runner inventory labels the version 27.1 without a beta qualifier.
+their available logs separately without treating cancelled jobs as passes.
+
+The build invocation in the retained ca92 log resolves through
+Xcode_27.1_beta.app, while DEVELOPER_DIR uses the Xcode_27.1.app alias.
+The runner inventory labels the version 27.1 without a beta qualifier; the
+bundle filename alone does not establish its release status.
 
 The board job now checks the Metal compiler, installs its required component
 only if unavailable, and verifies the compiler before building. Apple documents
@@ -949,3 +954,32 @@ UUID. It prints actual runtime/device metadata, Xcode version and SDK version;
 no fixed latest-version output is asserted. Missing compatible inventory fails
 explicitly. Original test selectors, app/test sources, inputs and assertions
 remain unchanged; the comparison is still not merge-ready merely if green.
+
+## Completed latest-environment validation
+
+CI 36870263120 at d8cd5d75e completed after the missing Metal component was
+installed and the compiler check passed. The actual inventory selected Xcode
+27.1, SDK 27.1, iOS 27.0 (24A434) and iPhone 18 Pro. All original 24 board
+cases ran: six rendered assertion timeouts, with the other 18 passing. Door,
+Forge, Natural and Pro failed rendered orbit; Evo failed rendered reset;
+Megalith failed rendered selection before orbit. No assertion was weakened.
+
+The four failed orbit crops have zero changed RGB pixels with stable recorded
+map bounds. Evo visibly orbited (115,579 changed pixels), then its orbit-to-reset
+crop had zero changes. Megalith initial-to-selection-failure also had zero
+changes, but only its pre-tap geometry was read back. These are screen-region
+observations, not proof of the expected native reset state or a framework cause.
+Every Batch05 process recorded two distinct scene attachments; counts do not
+prove simultaneous native renderer lifetime. The overview was visually reviewed.
+
+Units passed 1,406 tests with three skips and no failures; purchase UI passed
+23 tests; native CAD passed 49 with no skips; Python passed 547 package and
+41 CAD tests (four skips, two deselected); lint passed. Full artifact
+11167774686 (130,082,240 bytes), logs, exported screenshots and diagnostics
+were retained and ZIP integrity verified before this documentation update.
+Workspace evidence is under .context/supreme-zebra-cad-validation/ci-d8cd-*.
+
+The latest environment did not resolve the required rendered assertions. No
+supported application correction or runtime-policy correction is established.
+No unchanged retry or additional automatic probe is justified by this result.
+PR 524 remains unmerged with automatic merge disabled.
