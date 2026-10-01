@@ -6,6 +6,40 @@ import simd
 #endif
 
 final class RopeThreadedSeedTests: XCTestCase {
+    func testAnchorsBelowTheGridFailWithoutIntegerOverflow() throws {
+        let source = try Self.clavellium()
+        let original = source.profiles[0]
+        for magnitude in [1e16, 1e6] {
+            let ropes = original.ropes.map { rope in
+                RopePhysicsRope(
+                    id: rope.id, baselineRadius: rope.baselineRadius, radius: rope.radius,
+                    restLength: rope.restLength, linearMass: rope.linearMass,
+                    nodes: rope.nodes.map { node in
+                        node.id == "end" ? RopeGraphNode(
+                            id: node.id, kind: "attachment",
+                            point: SIMD3<Double>(0, -magnitude, 0), portalID: nil) : node
+                    }, edges: rope.edges)
+            }
+            let profile = RopePhysicsProfile(
+                id: original.id, presentationID: original.presentationID,
+                instanceID: original.instanceID, boardMass: original.boardMass, ropes: ropes)
+            let input = RopePhysicsInput(
+                modelSHA256: source.modelSHA256, sourceSHA256: source.sourceSHA256,
+                collision: source.collision, portals: source.portals, channels: source.channels,
+                profiles: [profile])
+            let collider = try RopeTriangleCollider(input: input)
+            XCTAssertThrowsError(try RopeThreadedSeed.make(
+                input: input, profileID: profile.id,
+                orientation: simd_quatd(angle: 0, axis: SIMD3<Double>(0, 0, 1)),
+                collider: collider)) { error in
+                guard case .invalid(let reason) = error as? RopePhysicsError else {
+                    return XCTFail("Expected invalid physics, got \(error)")
+                }
+                XCTAssertEqual(reason, "Seed search exceeds bounded workspace")
+            }
+        }
+    }
+
     func testUnboundedCollisionCoordinatesFailWithoutIntegerOverflow() throws {
         let source = try Self.clavellium()
         for magnitude in [1e16, 3e15, 1e6] {

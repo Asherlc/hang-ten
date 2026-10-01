@@ -220,7 +220,7 @@ enum RopeThreadedSeed {
         let top=projections.map{$0.x}.max()!+offset+spacing
         // Bound the complete workspace before any integer conversion or
         // multiplication. Finite descriptor coordinates can still exceed Int.
-        let lowerU=floor(min(projections.map{$0.x}.min()!,0)/spacing)-20
+        let lowerU=floor(min(projections.map{$0.x}.min()!,min(anchorUV.x,0))/spacing)-20
         let upperU=ceil(max(anchorUV.x,top)/spacing)+20
         let lowerV=floor(min(projections.map{$0.y}.min()!,anchorUV.y)/spacing)-20
         let upperV=ceil(max(projections.map{$0.y}.max()!,anchorUV.y)/spacing)+20
@@ -248,7 +248,12 @@ enum RopeThreadedSeed {
             return av>=0 ? 1:-1
         }
         let start=index(0,0)+(wrapBelow ? count:0)
-        let goal=index(Int(anchorUV.x/spacing),Int(anchorUV.y/spacing))+(wrapBelow ? 2*count:0)
+        guard let goalU=Int(exactly:(anchorUV.x/spacing).rounded(.towardZero)),
+              let goalV=Int(exactly:(anchorUV.y/spacing).rounded(.towardZero)),
+              (minU...maxU).contains(goalU),(minV...maxV).contains(goalV) else {
+            throw RopePhysicsError.invalid("Seed search exceeds bounded workspace")
+        }
+        let goal=index(goalU,goalV)+(wrapBelow ? 2*count:0)
         var distances=Array(repeating:Double.infinity,count:states),previous=Array(repeating:-1,count:states)
         var clearance=Array(repeating:Double.nan,count:count),heap=Heap()
         distances[start]=0;heap.push((simd_distance(mouth,anchor),start))

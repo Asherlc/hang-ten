@@ -23,6 +23,19 @@ CLASS_PATTERN = re.compile(
 )
 
 
+def test_ci_model_asset_guard_matches_staging_inventory() -> None:
+    staging = (REPO_ROOT / "scripts/stage-board-packages.py").read_text()
+    inventory = re.search(r"CI_DEBUG_SIMULATOR_MODEL_SLUGS = frozenset\(\{(.*?)\}\)", staging, re.DOTALL)
+    assert inventory is not None
+    expected = set(re.findall(r'"([^"\n]+)"', inventory.group(1)))
+    runner = (REPO_ROOT / "scripts/ci-run-xctest.sh").read_text()
+    guard = re.search(r"for model in\s+(.*?); do", runner, re.DOTALL)
+    assert guard is not None
+    actual = guard.group(1).replace("\\", "").split()
+    assert len(actual) == len(set(actual))
+    assert set(actual) == expected
+
+
 def test_required_ui_shards_select_every_method_exactly_once() -> None:
     workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
     jobs = workflow["jobs"]

@@ -98,7 +98,10 @@ final class BoardModelRealityTests: XCTestCase {
             let group=try XCTUnwrap(scene.transientCordEntity)
             for (index,instance) in instances.enumerated() {
                 let frame=scene.liveFramesForTesting[index]
-                XCTAssertTrue(frame.ropes.allSatisfy{$0.id.hasPrefix(instance.equipmentObjectID+"-")})
+                let expectedProfile = try XCTUnwrap(profiles.first {
+                    $0.instanceID == instance.equipmentObjectID
+                })
+                XCTAssertEqual(Set(frame.ropes.map(\.id)), Set(expectedProfile.ropes.map(\.id)))
                 XCTAssertEqual(scene.instanceEntities[index].position.x,Float(instance.baseTransform.translation[0]),accuracy:1e-7)
                 XCTAssertEqual(scene.instanceEntities[index].position.y,Float(frame.boardHeight+0.02),accuracy:1e-7)
                 let tube=try XCTUnwrap(group.children[index] as? ModelEntity)
