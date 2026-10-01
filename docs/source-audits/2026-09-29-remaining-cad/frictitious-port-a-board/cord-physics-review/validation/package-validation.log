@@ -1,0 +1,262 @@
+{
+  "boards": [
+    {
+      "id": "aelith.cyclops-011",
+      "path": "aelith-cyclops-011"
+    },
+    {
+      "id": "beastmaker-1000",
+      "path": "beastmaker-1000"
+    },
+    {
+      "id": "beastmaker-2000",
+      "path": "beastmaker-2000"
+    },
+    {
+      "id": "captain-fingerfood.dual",
+      "path": "captain-fingerfood-dual"
+    },
+    {
+      "id": "captain-fingerfood.pocket",
+      "path": "captain-fingerfood-pocket"
+    },
+    {
+      "id": "captain-fingerfood.unlevel",
+      "path": "captain-fingerfood-unlevel"
+    },
+    {
+      "id": "clavellium-training-block",
+      "path": "clavellium-training-block"
+    },
+    {
+      "id": "crimptonite.helium-mobile",
+      "path": "crimptonite-helium-mobile"
+    },
+    {
+      "id": "dewoodstok-woodbord",
+      "path": "dewoodstok-woodbord"
+    },
+    {
+      "id": "escape-beta-22",
+      "path": "escape-beta-22"
+    },
+    {
+      "id": "escape.unlimited",
+      "path": "escape-unlimited"
+    },
+    {
+      "id": "evolv-kilter-basic-long",
+      "path": "evolv-kilter-basic-long"
+    },
+    {
+      "id": "frictitious.doormount-pro-7",
+      "path": "frictitious-doormount-pro-7"
+    },
+    {
+      "id": "frictitious.port-a-board",
+      "path": "frictitious-port-a-board"
+    },
+    {
+      "id": "frictitious.megalith",
+      "path": "frictitious-megalith"
+    },
+    {
+      "id": "frictitious.nug",
+      "path": "frictitious-nug"
+    },
+    {
+      "id": "j-bryant.ftg-32",
+      "path": "j-bryant-ftg-32"
+    },
+    {
+      "id": "lattice.mini-bar",
+      "path": "lattice-mini-bar"
+    },
+    {
+      "id": "lattice.mxedge-lift-large",
+      "path": "lattice-mxedge-lift-large"
+    },
+    {
+      "id": "lattice.mxedge-lift-small",
+      "path": "lattice-mxedge-lift-small"
+    },
+    {
+      "id": "lattice-triple-rung",
+      "path": "lattice-triple-rung"
+    },
+    {
+      "id": "mammut.diamond-finger",
+      "path": "mammut-diamond-finger"
+    },
+    {
+      "id": "metolius.climbers-edge",
+      "path": "metolius-climbers-edge"
+    },
+    {
+      "id": "metolius.contact",
+      "path": "metolius-contact"
+    },
+    {
+      "id": "metolius.foundry",
+      "path": "metolius-foundry"
+    },
+    {
+      "id": "metolius.light-rail-2",
+      "path": "metolius-light-rail-2"
+    },
+    {
+      "id": "metolius.prime-rib",
+      "path": "metolius-prime-rib"
+    },
+    {
+      "id": "metolius.project",
+      "path": "metolius-project"
+    },
+    {
+      "id": "metolius.rock-rings-3d",
+      "path": "metolius-rock-rings-3d"
+    },
+    {
+      "id": "metolius.simulator-3d",
+      "path": "metolius-simulator-3d"
+    },
+    {
+      "id": "metolius.wood-grips-compact-ii",
+      "path": "metolius-wood-grips-compact-ii"
+    },
+    {
+      "id": "metolius.wood-grips-deluxe-ii",
+      "path": "metolius-wood-grips-deluxe-ii"
+    },
+    {
+      "id": "moon.armstrong",
+      "path": "moon-armstrong"
+    },
+    {
+      "id": "nature.stoak-board-iii",
+      "path": "nature-stoak-board-iii"
+    },
+    {
+      "id": "nature.stone-hanger",
+      "path": "nature-stone-hanger"
+    },
+    {
+      "id": "nature.stone-hanger-mini",
+      "path": "nature-stone-hanger-mini"
+    },
+    {
+      "id": "nature.stone-hanger-mini-karma8a",
+      "path": "nature-stone-hanger-mini-karma8a"
+    },
+    {
+      "id": "owl-climb.poker",
+      "path": "owl-climb-poker"
+    },
+    {
+      "id": "plateau.lifting-edge",
+      "path": "plateau-lifting-edge"
+    },
+    {
+      "id": "soill.iron-palm-2",
+      "path": "soill-iron-palm-2"
+    },
+    {
+      "id": "soill.split-palm",
+      "path": "soill-split-palm"
+    },
+    {
+      "id": "soill.training-tiles",
+      "path": "soill-training-tiles"
+    },
+    {
+      "id": "target10a.linebreaker-base",
+      "path": "target10a-linebreaker-base"
+    },
+    {
+      "id": "tension.flash-board",
+      "path": "tension-flash-board"
+    },
+    {
+      "id": "tension.grindstone-original",
+      "path": "tension-grindstone-original"
+    },
+    {
+      "id": "tension.grindstone",
+      "path": "tension-grindstone"
+    },
+    {
+      "id": "tension.grindstone-pro",
+      "path": "tension-grindstone-pro"
+    },
+    {
+      "id": "tension.honestone",
+      "path": "tension-honestone"
+    },
+    {
+      "id": "tension.whetstone",
+      "path": "tension-whetstone"
+    },
+    {
+      "id": "the-hangboard.the-hangboard",
+      "path": "the-hangboard"
+    },
+    {
+      "id": "trango.rock-prodigy-forge",
+      "path": "trango-rock-prodigy-forge"
+    },
+    {
+      "id": "trango.rock-prodigy-natural",
+      "path": "trango-rock-prodigy-natural"
+    },
+    {
+      "id": "trango.rock-prodigy-pivot",
+      "path": "trango-rock-prodigy-pivot"
+    },
+    {
+      "id": "trango.rock-prodigy-training-center",
+      "path": "trango-rock-prodigy-training-center"
+    },
+    {
+      "id": "yy.baguette-evo",
+      "path": "yy-baguette-evo"
+    },
+    {
+      "id": "yy.baguette",
+      "path": "yy-baguette"
+    },
+    {
+      "id": "yy.penta-evo",
+      "path": "yy-penta-evo"
+    },
+    {
+      "id": "yy.travelboard",
+      "path": "yy-travelboard"
+    },
+    {
+      "id": "yy.verticalboard-evo",
+      "path": "yy-verticalboard-evo"
+    },
+    {
+      "id": "yy.verticalboard-first",
+      "path": "yy-verticalboard-first"
+    },
+    {
+      "id": "yy.verticalboard-light",
+      "path": "yy-verticalboard-light"
+    },
+    {
+      "id": "yy.verticalboard-one",
+      "path": "yy-verticalboard-one"
+    },
+    {
+      "id": "zlagboard.evo",
+      "path": "zlagboard-evo"
+    },
+    {
+      "id": "zlagboard.pro",
+      "path": "zlagboard-pro"
+    }
+  ],
+  "drafts": []
+}
+

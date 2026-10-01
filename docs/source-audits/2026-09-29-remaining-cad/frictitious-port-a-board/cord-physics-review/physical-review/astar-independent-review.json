@@ -1,0 +1,64 @@
+{
+  "status": "passed",
+  "offPlaneProbes": [
+    {
+      "start": [
+        0.02,
+        0.15,
+        0
+      ],
+      "finish": [
+        -0.02,
+        -0.08,
+        0
+      ],
+      "lengthDelta": 0.0,
+      "defaultExpanded": 36,
+      "aStarExpanded": 26,
+      "exactEndpoints": true
+    },
+    {
+      "start": [
+        0.04,
+        0.3,
+        0
+      ],
+      "finish": [
+        0,
+        -0.034,
+        0.034
+      ],
+      "lengthDelta": 0.0,
+      "defaultExpanded": 36,
+      "aStarExpanded": 9,
+      "exactEndpoints": true
+    },
+    {
+      "start": [
+        0,
+        0.15,
+        0.01
+      ],
+      "finish": [
+        0.04,
+        -0.1,
+        0
+      ],
+      "lengthDelta": 0.0,
+      "defaultExpanded": 36,
+      "aStarExpanded": 21,
+      "exactEndpoints": true
+    }
+  ],
+  "hashes": {
+    "Tools/HangboardCAD/native_cord_routes.py": "6953e1aada40dfd71ac78f27c7696209c83b395acd579f0b3a036e59791dd93f",
+    "Tools/HangboardCAD/tests/test_native_path_search.py": "92e8282584b47399b4fef095d3507b20ed6b0190c876d28a8e4b4d6705f63c5f",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "02fb4d9089a8961bdd24241eca0ac3f2b0ecc8b4c0812cb46879e49b5c17fe94"
+  },
+  "review": "Actual world endpoint heuristic is admissible and consistent for the unchanged Euclidean graph edges. g-score stale skipping and popped-destination termination are correct. Queue ties deterministic by f,g,index. Default Dijkstra queue unchanged. No code blockers; graph optimum does not establish physical bearing.",
+  "poseReuseReview": {
+    "sha256": "71e72d2883c431c668a2f4fdbd7c000ffe44939c74186ed3753560f8b63bf976",
+    "status": "no blockers",
+    "rationale": "Scoped to opt-in aStar and one invocation with shared source/descriptor/strand/solver inputs. Exact rotation and X/Z translation key covers pose-dependent physical inputs; Y is always re-solved from zero and camera/cache fields do not participate. Recursive reduction strictly reduces duplicate pose count, then deep-copies result into each original pose ID to avoid aliasing. No approximate symmetry or persistent stale cache."
+  }
+}

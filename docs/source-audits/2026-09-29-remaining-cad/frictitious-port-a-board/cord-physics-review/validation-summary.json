@@ -1,0 +1,87 @@
+{
+  "owner": "placid-badger",
+  "boardID": "frictitious.port-a-board",
+  "reviewNumber": 5,
+  "status": "revised cord validated; awaiting human review",
+  "baselineCommit": "3fd0418d9a66d489cdb515ca3a3e82b4ec52121e",
+  "beforeSidecarSHA256": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305",
+  "afterSidecarSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
+  "frozenBodyHashes": {
+    "frictitious-port-a-board.FCStd": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+    "assets/primary.usdz": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+    "assets/primary.model.json": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1"
+  },
+  "nativeRoutes": {
+    "freshApplyCheckReportsByteIdentical": true,
+    "roundedPathsCertified": 24,
+    "minimumCertifiedCenterlineClearanceM": 0.001490419016191299,
+    "radiusM": 0.0015,
+    "unchangedNumericalToleranceM": 1e-05,
+    "restLengthM": 0.3,
+    "solvedTranslationYM": -0.12409166
+  },
+  "firstBearing": {
+    "left-front": {
+      "oldShoulderTurn3DDegrees": 12.257561470607286,
+      "newShoulderTurn3DDegrees": 0.8013620458441454,
+      "oldFrontProjectedTurnDegrees": 12.329074055178634,
+      "newFrontProjectedTurnDegrees": 0.010822703392289731,
+      "oldTangentialUnitTension": 0.212762128336169,
+      "newTangentialUnitTension": 5.8670111549844623e-05
+    },
+    "left-rear": {
+      "oldShoulderTurn3DDegrees": 12.257561470607286,
+      "newShoulderTurn3DDegrees": 0.8013620458441454,
+      "oldFrontProjectedTurnDegrees": 12.329074055178634,
+      "newFrontProjectedTurnDegrees": 0.010822703392289731,
+      "oldTangentialUnitTension": 0.212762128336169,
+      "newTangentialUnitTension": 5.8670111549844623e-05
+    },
+    "right-front": {
+      "oldShoulderTurn3DDegrees": 12.25756344092156,
+      "newShoulderTurn3DDegrees": 0.8013620458441454,
+      "oldFrontProjectedTurnDegrees": 12.329074055178664,
+      "newFrontProjectedTurnDegrees": 0.010822703392289731,
+      "oldTangentialUnitTension": 0.21276202818479997,
+      "newTangentialUnitTension": 5.8670111549844623e-05
+    },
+    "right-rear": {
+      "oldShoulderTurn3DDegrees": 12.257561470607286,
+      "newShoulderTurn3DDegrees": 0.8013620458441454,
+      "oldFrontProjectedTurnDegrees": 12.329074055178634,
+      "newFrontProjectedTurnDegrees": 0.010822703392289731,
+      "oldTangentialUnitTension": 0.212762128336169,
+      "newTangentialUnitTension": 5.8670111549844623e-05
+    }
+  },
+  "tests": {
+    "pythonPassed": 671,
+    "pythonSkipped": 10,
+    "iosPassed": 1264,
+    "iosSkipped": 3,
+    "iosFailed": 0
+  },
+  "app": {
+    "currentCanonicalPosesCaptured": 6,
+    "currentContactSelectionVerified": true,
+    "transientCordAccessibilityAbsent": true,
+    "currentInstalledModelMetadataVerified": true
+  },
+  "staging": {
+    "bundledPackages": 64,
+    "modelPackages": 58,
+    "ODRModelAssets": 60,
+    "appleAndroidGeneratedManifestParity": true
+  },
+  "cleanup": {
+    "owner": "placid-badger",
+    "simulator": "43FADF46-7A23-4A88-8EF8-20E572101661",
+    "exactSimulatorDeleted": true,
+    "ownedAndPendingRecordsConsumed": true,
+    "derivedDataRemoved": true,
+    "resultBundleRemoved": true,
+    "nativeSolveProcessesExited": true,
+    "sharedAndUnknownSimulatorsPreserved": true
+  },
+  "limitations": "Finite native section graph approximation; no dynamic rope equilibrium, global minimum or unknown hidden connection is asserted. Cord lengths/radii remain audited display estimates. Physical-device orbit not checked."
+}

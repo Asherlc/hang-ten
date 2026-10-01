@@ -1,0 +1,26 @@
+{
+  "status": "passed",
+  "freshIndependentCheck": true,
+  "reportBytesIdentical": true,
+  "reportSHA256": "c94c4fa845fd35f8e16260620eb9c5ce9dd952242d2662b1ac1ef850243b5acc",
+  "candidateSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
+  "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+  "solverHashes": {
+    "Tools/HangboardCAD/native_cord_routes.py": "71e72d2883c431c668a2f4fdbd7c000ffe44939c74186ed3753560f8b63bf976",
+    "Tools/HangboardCAD/solve_threaded_rope.py": "f3b297283d046facb8571339a8987ff5c8e13dbb5a810472a25867a6c6d95f86",
+    "Tools/HangboardPackages/src/hangboard_packages/cord_paths.py": "d0c6dcacc8e1ad129e8d03580a43e9e20b547879a127bb912582b19c7a683250",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "02fb4d9089a8961bdd24241eca0ac3f2b0ecc8b4c0812cb46879e49b5c17fe94"
+  },
+  "all24RoundedCertificatesSHA256": "ca011881b71176649b686c5ca68efe8d92b666beb6ef87e8329e4c431dce94ff",
+  "totalBaselinePackageFiles": 206,
+  "changedProductionFiles": {
+    "Hangboards/frictitious-port-a-board/suspension.json": {
+      "before": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305",
+      "current": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf"
+    }
+  },
+  "productionChangeOwner": "root; exact reviewed candidate promotion",
+  "ownedApplyAndCheckProcessesExited": true,
+  "externalResourcesStarted": false,
+  "gitMutationsByThisWorker": false
+}

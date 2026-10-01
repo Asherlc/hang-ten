@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "owner": "placid-badger",
+  "stagedScopeRestrictedToPortCorrection": true,
+  "stagedFilesBeforeThisReport": 119,
+  "sourceCodeAndCuratedDocsWhitespacePassed": true,
+  "whitespaceExclusions": {
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/cord-physics-review/path-search/red-pose-reuse.log": "06b2db2c35f2100ba788cc4d7896b6da518e2d48ab2dbce6418a664e5a37e6b3",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/cord-physics-review/path-search/red.log": "306dd64b3920b01261b70e0284ca86d43bba678175bf048b704722313f6c3872",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/cord-physics-review/validation/before-ios-build.log": "c69cb8fc3ff4c33464e742c8b1329d2349664fd19c664f132bb9f8aee21345bb",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/cord-physics-review/validation/ios-build.log": "5a9348f96fe275fe74f91243f40050408e1d7be1b49525be85961f19bcf27c47",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/cord-physics-review/validation/package-validation.log": "eb7d9d4ad8263eec0c1ef22a13b916a80ab950d3494e2c0f548f7ef23db27233"
+  },
+  "exclusionReason": "Exact byte-preserved raw tool logs; existing whitespace is retained, not sanitized.",
+  "rawArtifactCopiesVerified": 99,
+  "deliveryLockPassed": true
+}

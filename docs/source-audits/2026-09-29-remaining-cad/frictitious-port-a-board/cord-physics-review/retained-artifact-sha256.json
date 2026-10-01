@@ -1,0 +1,610 @@
+{
+  "owner": "placid-badger",
+  "copiedArtifacts": {
+    "validation/baseline.json": {
+      "sha256": "f935509f28a8070b8ed854cb2aa0e837dd09187f2d42b9fb64c2f733a2737b15",
+      "originalPath": ".context/placid-badger/port-cord-physics/baseline.json",
+      "originalSHA256": "f935509f28a8070b8ed854cb2aa0e837dd09187f2d42b9fb64c2f733a2737b15",
+      "byteIdenticalCopy": true
+    },
+    "validation/promotion-report.json": {
+      "sha256": "3852b940c4cdd5c8fcef4066d6b98778f8b28876efbd3f7f2e69d5fd6299a5cb",
+      "originalPath": ".context/placid-badger/port-cord-physics/promotion-report.json",
+      "originalSHA256": "3852b940c4cdd5c8fcef4066d6b98778f8b28876efbd3f7f2e69d5fd6299a5cb",
+      "byteIdenticalCopy": true
+    },
+    "validation/resource-cleanup-verification.json": {
+      "sha256": "200fc5c3ca347746ee75e9f51a36db3e1ad91a625579344c270409cdb8d72cc9",
+      "originalPath": ".context/placid-badger/port-cord-physics/resource-cleanup-verification.json",
+      "originalSHA256": "200fc5c3ca347746ee75e9f51a36db3e1ad91a625579344c270409cdb8d72cc9",
+      "byteIdenticalCopy": true
+    },
+    "validation/python-test-report.json": {
+      "sha256": "f898de9cb71ee387ade0d70f5ee7d54405fd77dde3f93971f4bf869aed135142",
+      "originalPath": ".context/placid-badger/port-cord-physics/python-test-report.json",
+      "originalSHA256": "f898de9cb71ee387ade0d70f5ee7d54405fd77dde3f93971f4bf869aed135142",
+      "byteIdenticalCopy": true
+    },
+    "validation/python-tests.log": {
+      "sha256": "8dff37c91ce3a576949b559432f986ad89918b263481c747606cdd16779bdf72",
+      "originalPath": ".context/placid-badger/port-cord-physics/python-tests.log",
+      "originalSHA256": "8dff37c91ce3a576949b559432f986ad89918b263481c747606cdd16779bdf72",
+      "byteIdenticalCopy": true
+    },
+    "validation/ios-summary.json": {
+      "sha256": "95d8d75f91de196aac28b19f9f3995cea2d9c2c14caa28db2b6eb54bbfb3a9e5",
+      "originalPath": ".context/placid-badger/port-cord-physics/ios-summary.json",
+      "originalSHA256": "95d8d75f91de196aac28b19f9f3995cea2d9c2c14caa28db2b6eb54bbfb3a9e5",
+      "byteIdenticalCopy": true
+    },
+    "validation/ios-test-command.json": {
+      "sha256": "742314686303bc9140fbda3fd036f22e061c9c663df0aaa5a2a79f02be293ea1",
+      "originalPath": ".context/placid-badger/port-cord-physics/ios-test-command.json",
+      "originalSHA256": "742314686303bc9140fbda3fd036f22e061c9c663df0aaa5a2a79f02be293ea1",
+      "byteIdenticalCopy": true
+    },
+    "validation/ios-tests.log": {
+      "sha256": "c5a46bca080b500d9dd309f6fec8d621debc8f1595c69905f5fce321a7b60d98",
+      "originalPath": ".context/placid-badger/port-cord-physics/ios-tests.log",
+      "originalSHA256": "c5a46bca080b500d9dd309f6fec8d621debc8f1595c69905f5fce321a7b60d98",
+      "byteIdenticalCopy": true
+    },
+    "validation/ios-build-command.json": {
+      "sha256": "ddc73a3e5b358d204e3b8256793fea6f2790e04150d34dc9fa833f26763e707b",
+      "originalPath": ".context/placid-badger/port-cord-physics/ios-build-command.json",
+      "originalSHA256": "ddc73a3e5b358d204e3b8256793fea6f2790e04150d34dc9fa833f26763e707b",
+      "byteIdenticalCopy": true
+    },
+    "validation/ios-build.log": {
+      "sha256": "5a9348f96fe275fe74f91243f40050408e1d7be1b49525be85961f19bcf27c47",
+      "originalPath": ".context/placid-badger/port-cord-physics/ios-build.log",
+      "originalSHA256": "5a9348f96fe275fe74f91243f40050408e1d7be1b49525be85961f19bcf27c47",
+      "byteIdenticalCopy": true
+    },
+    "validation/installed-app-provenance.json": {
+      "sha256": "be4a3df3c6c6a3601333dc49762ed16ad66b3cde7f734e294774ed0c1aa3d893",
+      "originalPath": ".context/placid-badger/port-cord-physics/installed-app-provenance.json",
+      "originalSHA256": "be4a3df3c6c6a3601333dc49762ed16ad66b3cde7f734e294774ed0c1aa3d893",
+      "byteIdenticalCopy": true
+    },
+    "validation/before-installed-app-provenance.json": {
+      "sha256": "db49b67c7541196373191fd0418207a024f58155d3d776465a008c3e8991dddc",
+      "originalPath": ".context/placid-badger/port-cord-physics/before-installed-app-provenance.json",
+      "originalSHA256": "db49b67c7541196373191fd0418207a024f58155d3d776465a008c3e8991dddc",
+      "byteIdenticalCopy": true
+    },
+    "validation/before-ios-build-command.json": {
+      "sha256": "83690246827402a3dd46126e9fd13a8f8df7534ad91ca04dacfd89772f0f22e6",
+      "originalPath": ".context/placid-badger/port-cord-physics/before-ios-build-command.json",
+      "originalSHA256": "83690246827402a3dd46126e9fd13a8f8df7534ad91ca04dacfd89772f0f22e6",
+      "byteIdenticalCopy": true
+    },
+    "validation/before-ios-build.log": {
+      "sha256": "c69cb8fc3ff4c33464e742c8b1329d2349664fd19c664f132bb9f8aee21345bb",
+      "originalPath": ".context/placid-badger/port-cord-physics/before-ios-build.log",
+      "originalSHA256": "c69cb8fc3ff4c33464e742c8b1329d2349664fd19c664f132bb9f8aee21345bb",
+      "byteIdenticalCopy": true
+    },
+    "validation/package-validation.log": {
+      "sha256": "eb7d9d4ad8263eec0c1ef22a13b916a80ab950d3494e2c0f548f7ef23db27233",
+      "originalPath": ".context/placid-badger/port-cord-physics/package-validation.log",
+      "originalSHA256": "eb7d9d4ad8263eec0c1ef22a13b916a80ab950d3494e2c0f548f7ef23db27233",
+      "byteIdenticalCopy": true
+    },
+    "validation/delivery-parity.json": {
+      "sha256": "d8ac7b965159aec3a53995fae93b038952f58470191dc86e663349784ad0ba31",
+      "originalPath": ".context/placid-badger/port-cord-physics/delivery-parity.json",
+      "originalSHA256": "d8ac7b965159aec3a53995fae93b038952f58470191dc86e663349784ad0ba31",
+      "byteIdenticalCopy": true
+    },
+    "validation/staging-command.json": {
+      "sha256": "1b1fed2d5eab39dd7ff5237e4b94ceb034923bbe9128d2e2677fa3c055317f69",
+      "originalPath": ".context/placid-badger/port-cord-physics/staging-command.json",
+      "originalSHA256": "1b1fed2d5eab39dd7ff5237e4b94ceb034923bbe9128d2e2677fa3c055317f69",
+      "byteIdenticalCopy": true
+    },
+    "validation/staging.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "originalPath": ".context/placid-badger/port-cord-physics/staging.log",
+      "originalSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteIdenticalCopy": true
+    },
+    "validation/ios-cleanup.json": {
+      "sha256": "371f952ae5aaee7c1b29bec0686ee4f9113102753b06536199bd08c42aaa5272",
+      "originalPath": ".context/placid-badger/port-cord-physics/ios-cleanup.json",
+      "originalSHA256": "371f952ae5aaee7c1b29bec0686ee4f9113102753b06536199bd08c42aaa5272",
+      "byteIdenticalCopy": true
+    },
+    "native-solve/frozen-inputs.json": {
+      "sha256": "b9bb6f2df393280b90826ae3bf7e7d1b15fad9c155b67b030e59081a45b8b20b",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/anchor-astar/frozen-inputs.json",
+      "originalSHA256": "b9bb6f2df393280b90826ae3bf7e7d1b15fad9c155b67b030e59081a45b8b20b",
+      "byteIdenticalCopy": true
+    },
+    "native-solve/fresh-reproducibility-result.json": {
+      "sha256": "519e0cbc5b3b3fd2ce85106ce3c44efddcc6269b75b872f4f4d1767f7d2d1164",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/anchor-astar/fresh-reproducibility-result.json",
+      "originalSHA256": "519e0cbc5b3b3fd2ce85106ce3c44efddcc6269b75b872f4f4d1767f7d2d1164",
+      "byteIdenticalCopy": true
+    },
+    "native-solve/candidate-certificates.json": {
+      "sha256": "ca011881b71176649b686c5ca68efe8d92b666beb6ef87e8329e4c431dce94ff",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/anchor-astar/candidate-certificates.json",
+      "originalSHA256": "ca011881b71176649b686c5ca68efe8d92b666beb6ef87e8329e4c431dce94ff",
+      "byteIdenticalCopy": true
+    },
+    "native-solve/apply-report.json": {
+      "sha256": "c94c4fa845fd35f8e16260620eb9c5ce9dd952242d2662b1ac1ef850243b5acc",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/anchor-astar/apply-report.json",
+      "originalSHA256": "c94c4fa845fd35f8e16260620eb9c5ce9dd952242d2662b1ac1ef850243b5acc",
+      "byteIdenticalCopy": true
+    },
+    "native-solve/check-report.json": {
+      "sha256": "c94c4fa845fd35f8e16260620eb9c5ce9dd952242d2662b1ac1ef850243b5acc",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/anchor-astar/check-report.json",
+      "originalSHA256": "c94c4fa845fd35f8e16260620eb9c5ce9dd952242d2662b1ac1ef850243b5acc",
+      "byteIdenticalCopy": true
+    },
+    "native-solve/apply.log": {
+      "sha256": "688b6c44ef44fc75de46712ce99ef4fde03b90a4f8cebd2d6a264baa0fe40c43",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/anchor-astar/apply.log",
+      "originalSHA256": "688b6c44ef44fc75de46712ce99ef4fde03b90a4f8cebd2d6a264baa0fe40c43",
+      "byteIdenticalCopy": true
+    },
+    "native-solve/check.log": {
+      "sha256": "b7b32ef385b2f0deb01f5bd248043c81b4eefeea01cbe4ca9ba073b44219ffbe",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/anchor-astar/check.log",
+      "originalSHA256": "b7b32ef385b2f0deb01f5bd248043c81b4eefeea01cbe4ca9ba073b44219ffbe",
+      "byteIdenticalCopy": true
+    },
+    "native-solve/apply-progress.json": {
+      "sha256": "85d7ec3dcc76883c4b39840c03dfb1e3da843483d0ee361c9b6004979460a39b",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/anchor-astar/apply-progress.json",
+      "originalSHA256": "85d7ec3dcc76883c4b39840c03dfb1e3da843483d0ee361c9b6004979460a39b",
+      "byteIdenticalCopy": true
+    },
+    "native-solve/check-progress.json": {
+      "sha256": "efb8e8447069aed84d5963467615280ce510dfaf5b1320516c195f20aa0446f3",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/anchor-astar/check-progress.json",
+      "originalSHA256": "efb8e8447069aed84d5963467615280ce510dfaf5b1320516c195f20aa0446f3",
+      "byteIdenticalCopy": true
+    },
+    "native-solve/certificates.log": {
+      "sha256": "473a438d257315e6d324191447b72c0c1b700c2e8563582a2aeb1d69ede00f20",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/anchor-astar/certificates.log",
+      "originalSHA256": "473a438d257315e6d324191447b72c0c1b700c2e8563582a2aeb1d69ede00f20",
+      "byteIdenticalCopy": true
+    },
+    "native-solve/exact-pose-groups.json": {
+      "sha256": "1a06e4bffd430f449cd9a5d264782cb45e939ce1824e16e21d97e0d7e4f8bcd5",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/anchor-astar/exact-pose-groups.json",
+      "originalSHA256": "1a06e4bffd430f449cd9a5d264782cb45e939ce1824e16e21d97e0d7e4f8bcd5",
+      "byteIdenticalCopy": true
+    },
+    "native-solve/solve_candidate.py": {
+      "sha256": "d067aa71d9d0a62247783c0064d78b115d867d9abee9ea020902c66531520117",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/anchor-astar/solve_candidate.py",
+      "originalSHA256": "d067aa71d9d0a62247783c0064d78b115d867d9abee9ea020902c66531520117",
+      "byteIdenticalCopy": true
+    },
+    "native-solve/certify_candidate.py": {
+      "sha256": "75484cee307e27e60175a0c69bba2061edc5d37eeb964db34791d36d1a86a6da",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/anchor-astar/certify_candidate.py",
+      "originalSHA256": "75484cee307e27e60175a0c69bba2061edc5d37eeb964db34791d36d1a86a6da",
+      "byteIdenticalCopy": true
+    },
+    "physical-review/native-inspection.json": {
+      "sha256": "8c6ff7a41a13d3112bfd51eb32074231299b75501bf98789670eb0540a464b93",
+      "originalPath": ".context/placid-badger/port-cord-physics/physical-review/native-inspection.json",
+      "originalSHA256": "8c6ff7a41a13d3112bfd51eb32074231299b75501bf98789670eb0540a464b93",
+      "byteIdenticalCopy": true
+    },
+    "physical-review/physical-acceptance.json": {
+      "sha256": "c7a5345786f18cbb3167eb66589416eefb5d7367d19d8fcd1ed39dd345fead6b",
+      "originalPath": ".context/placid-badger/port-cord-physics/physical-review/physical-acceptance.json",
+      "originalSHA256": "c7a5345786f18cbb3167eb66589416eefb5d7367d19d8fcd1ed39dd345fead6b",
+      "byteIdenticalCopy": true
+    },
+    "physical-review/anchor-first-bearing.json": {
+      "sha256": "08e28bd766490e2cf4faa2f00699303fe0f2a5f593cb1b9a16196e9f665ee651",
+      "originalPath": ".context/placid-badger/port-cord-physics/physical-review/anchor-first-bearing.json",
+      "originalSHA256": "08e28bd766490e2cf4faa2f00699303fe0f2a5f593cb1b9a16196e9f665ee651",
+      "byteIdenticalCopy": true
+    },
+    "physical-review/anchor-only-native-turns.json": {
+      "sha256": "b90fc1ee37e0f06a9ef14cbf2e521a49e6543dc76c3302f4c524a17f1c07c851",
+      "originalPath": ".context/placid-badger/port-cord-physics/physical-review/anchor-only-native-turns.json",
+      "originalSHA256": "b90fc1ee37e0f06a9ef14cbf2e521a49e6543dc76c3302f4c524a17f1c07c851",
+      "byteIdenticalCopy": true
+    },
+    "physical-review/astar-independent-review.json": {
+      "sha256": "eb41006f09ef8670f7819f2590967d9e8659fd5a8486d93744d21985ade44c7b",
+      "originalPath": ".context/placid-badger/port-cord-physics/physical-review/astar-independent-review.json",
+      "originalSHA256": "eb41006f09ef8670f7819f2590967d9e8659fd5a8486d93744d21985ade44c7b",
+      "byteIdenticalCopy": true
+    },
+    "physical-review/native_inspect.py": {
+      "sha256": "df53bc01b34b108fc3529fa1e608615133dcc21ae28367ce13c885293905696d",
+      "originalPath": ".context/placid-badger/port-cord-physics/physical-review/native_inspect.py",
+      "originalSHA256": "df53bc01b34b108fc3529fa1e608615133dcc21ae28367ce13c885293905696d",
+      "byteIdenticalCopy": true
+    },
+    "physical-review/native_anchor_first.py": {
+      "sha256": "7fcd75ee84b9c8e5d314d648908bc1cba943bb4da793499beac1d27f9135c154",
+      "originalPath": ".context/placid-badger/port-cord-physics/physical-review/native_anchor_first.py",
+      "originalSHA256": "7fcd75ee84b9c8e5d314d648908bc1cba943bb4da793499beac1d27f9135c154",
+      "byteIdenticalCopy": true
+    },
+    "physical-review/native_candidate_turns.py": {
+      "sha256": "b66e57af6763949528fe022bdd6803a50723f0c544807b58bc5adcede09c5ea6",
+      "originalPath": ".context/placid-badger/port-cord-physics/physical-review/native_candidate_turns.py",
+      "originalSHA256": "b66e57af6763949528fe022bdd6803a50723f0c544807b58bc5adcede09c5ea6",
+      "byteIdenticalCopy": true
+    },
+    "runtime/runtime-route-review.json": {
+      "sha256": "f6f259b259c41af8f2d2098ad14f4ac4ce4b6b2739ad1419246f23fc8be08f80",
+      "originalPath": ".context/placid-badger/port-cord-physics/runtime/runtime-route-review.json",
+      "originalSHA256": "f6f259b259c41af8f2d2098ad14f4ac4ce4b6b2739ad1419246f23fc8be08f80",
+      "byteIdenticalCopy": true
+    },
+    "runtime/runtime-route-review.md": {
+      "sha256": "28e8f3dc84daebc7f6a512f60987d6e1f93ea1369bf0c3f34922a73bfdf9aeb8",
+      "originalPath": ".context/placid-badger/port-cord-physics/runtime/runtime-route-review.md",
+      "originalSHA256": "28e8f3dc84daebc7f6a512f60987d6e1f93ea1369bf0c3f34922a73bfdf9aeb8",
+      "byteIdenticalCopy": true
+    },
+    "runtime/seam-metrics.json": {
+      "sha256": "b96926bcd5981dc577a98661ba2c651609abd6138ce9a427461e739c03b2b528",
+      "originalPath": ".context/placid-badger/port-cord-physics/runtime/seam-metrics.json",
+      "originalSHA256": "b96926bcd5981dc577a98661ba2c651609abd6138ce9a427461e739c03b2b528",
+      "byteIdenticalCopy": true
+    },
+    "path-search/production-benchmark.json": {
+      "sha256": "7187fa938ffa28a2c2af5506322b97fa119e6158055a924d7eb5f1135272bf73",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/astar/production-benchmark.json",
+      "originalSHA256": "7187fa938ffa28a2c2af5506322b97fa119e6158055a924d7eb5f1135272bf73",
+      "byteIdenticalCopy": true
+    },
+    "path-search/production-benchmark.log": {
+      "sha256": "1d18743d0433eaf436a26512c64a5d98402f1d9a48f35a1c0eae802ca6513f17",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/astar/production-benchmark.log",
+      "originalSHA256": "1d18743d0433eaf436a26512c64a5d98402f1d9a48f35a1c0eae802ca6513f17",
+      "byteIdenticalCopy": true
+    },
+    "path-search/production-benchmark.py": {
+      "sha256": "be89dd2fd030f23ee582a5c7219cccfda0a1821bf4eb52999bda499fad712dc1",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/astar/production-benchmark.py",
+      "originalSHA256": "be89dd2fd030f23ee582a5c7219cccfda0a1821bf4eb52999bda499fad712dc1",
+      "byteIdenticalCopy": true
+    },
+    "path-search/green-final-focused.log": {
+      "sha256": "c8760a6a5412d9adfe3ede38de9536cce63eb5000dbef143fb72f4ae8791d3ff",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/astar/green-final-focused.log",
+      "originalSHA256": "c8760a6a5412d9adfe3ede38de9536cce63eb5000dbef143fb72f4ae8791d3ff",
+      "byteIdenticalCopy": true
+    },
+    "path-search/red.log": {
+      "sha256": "306dd64b3920b01261b70e0284ca86d43bba678175bf048b704722313f6c3872",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/astar/red.log",
+      "originalSHA256": "306dd64b3920b01261b70e0284ca86d43bba678175bf048b704722313f6c3872",
+      "byteIdenticalCopy": true
+    },
+    "path-search/red-pose-reuse.log": {
+      "sha256": "06b2db2c35f2100ba788cc4d7896b6da518e2d48ab2dbce6418a664e5a37e6b3",
+      "originalPath": ".context/placid-badger/port-cord-physics/solver/astar/red-pose-reuse.log",
+      "originalSHA256": "06b2db2c35f2100ba788cc4d7896b6da518e2d48ab2dbce6418a664e5a37e6b3",
+      "byteIdenticalCopy": true
+    },
+    "before-suspension.json": {
+      "sha256": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305",
+      "originalPath": ".context/placid-badger/port-cord-physics/before-package/suspension.json",
+      "originalSHA256": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305",
+      "byteIdenticalCopy": true
+    },
+    "after-suspension.json": {
+      "sha256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
+      "originalPath": "Hangboards/frictitious-port-a-board/suspension.json",
+      "originalSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
+      "byteIdenticalCopy": true
+    },
+    "previews/render_comparisons.py": {
+      "sha256": "37f186cf43d95ef6b49f287b86620a0931b38e379df1e6f5257ffa812b2957f1",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/render_comparisons.py",
+      "originalSHA256": "37f186cf43d95ef6b49f287b86620a0931b38e379df1e6f5257ffa812b2957f1",
+      "byteIdenticalCopy": true
+    },
+    "previews/render-helper.py": {
+      "sha256": "e90232263554453be7412f6f5421828187a71fdc59a09be7a1d8a8ea2e4f9cea",
+      "originalPath": ".context/placid-badger/cad-raster-boards/render_reviews.py",
+      "originalSHA256": "e90232263554453be7412f6f5421828187a71fdc59a09be7a1d8a8ea2e4f9cea",
+      "byteIdenticalCopy": true
+    },
+    "previews/front-inverted-front.png": {
+      "sha256": "7ecf14b6a7e697f99660532cb6ef5359759b38d1f84a814dc50f598c3c0917e0",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/front-inverted-front.png",
+      "originalSHA256": "7ecf14b6a7e697f99660532cb6ef5359759b38d1f84a814dc50f598c3c0917e0",
+      "byteIdenticalCopy": true
+    },
+    "previews/front-inverted-oblique.png": {
+      "sha256": "010b6dd3934fa57a52f5df2d0a27f35862577774b7203947457225a2caa134da",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/front-inverted-oblique.png",
+      "originalSHA256": "010b6dd3934fa57a52f5df2d0a27f35862577774b7203947457225a2caa134da",
+      "byteIdenticalCopy": true
+    },
+    "previews/front-inverted-side.png": {
+      "sha256": "17845c88de69277cb20d3f5fdf2cb746e0b23b1e802eeb32f3626b46235e354d",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/front-inverted-side.png",
+      "originalSHA256": "17845c88de69277cb20d3f5fdf2cb746e0b23b1e802eeb32f3626b46235e354d",
+      "byteIdenticalCopy": true
+    },
+    "previews/front-inverted-top.png": {
+      "sha256": "c3ac43a11a2d671b2aaf8231d2fbd316ec40a037cdea22bbde01cb168ca75638",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/front-inverted-top.png",
+      "originalSHA256": "c3ac43a11a2d671b2aaf8231d2fbd316ec40a037cdea22bbde01cb168ca75638",
+      "byteIdenticalCopy": true
+    },
+    "previews/front-upright-front.png": {
+      "sha256": "13ef4901e97dbd68c77f4068fdb790407397f0ca291e291e48a121f3598f49ef",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/front-upright-front.png",
+      "originalSHA256": "13ef4901e97dbd68c77f4068fdb790407397f0ca291e291e48a121f3598f49ef",
+      "byteIdenticalCopy": true
+    },
+    "previews/front-upright-oblique.png": {
+      "sha256": "962ccd40dc493c3c45dbc9eadf0377dc5984c082bdf0c6c86b854428993e7e31",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/front-upright-oblique.png",
+      "originalSHA256": "962ccd40dc493c3c45dbc9eadf0377dc5984c082bdf0c6c86b854428993e7e31",
+      "byteIdenticalCopy": true
+    },
+    "previews/front-upright-side.png": {
+      "sha256": "294752cada35a392d797d39e7b61f1ff44cbcf06cffd6c0a0d8f429a39c1384d",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/front-upright-side.png",
+      "originalSHA256": "294752cada35a392d797d39e7b61f1ff44cbcf06cffd6c0a0d8f429a39c1384d",
+      "byteIdenticalCopy": true
+    },
+    "previews/front-upright-top.png": {
+      "sha256": "fad7a7aa91e6e7958d76fa7437a3024adeaba30a4ec47931fe5d8352b5ecd141",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/front-upright-top.png",
+      "originalSHA256": "fad7a7aa91e6e7958d76fa7437a3024adeaba30a4ec47931fe5d8352b5ecd141",
+      "byteIdenticalCopy": true
+    },
+    "previews/index.html": {
+      "sha256": "c8598b43bdad2ad0f39e918794076197de7dc3ba50c303e62a2731c419ea44f0",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/index.html",
+      "originalSHA256": "c8598b43bdad2ad0f39e918794076197de7dc3ba50c303e62a2731c419ea44f0",
+      "byteIdenticalCopy": true
+    },
+    "previews/outer-upper-front.png": {
+      "sha256": "f0ea013688e3b35ae998d450036bfa886e74dbea955cd227556f8c478556a14a",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/outer-upper-front.png",
+      "originalSHA256": "f0ea013688e3b35ae998d450036bfa886e74dbea955cd227556f8c478556a14a",
+      "byteIdenticalCopy": true
+    },
+    "previews/outer-upper-oblique.png": {
+      "sha256": "4d065536fd03d26717673ed322573a9d3eef35a87e4cfea9954766d391eb569b",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/outer-upper-oblique.png",
+      "originalSHA256": "4d065536fd03d26717673ed322573a9d3eef35a87e4cfea9954766d391eb569b",
+      "byteIdenticalCopy": true
+    },
+    "previews/outer-upper-side.png": {
+      "sha256": "5ebd672422bbb37afa1f9472168b797284b0834e27c33d7ab84ead4f9efa2b6f",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/outer-upper-side.png",
+      "originalSHA256": "5ebd672422bbb37afa1f9472168b797284b0834e27c33d7ab84ead4f9efa2b6f",
+      "byteIdenticalCopy": true
+    },
+    "previews/outer-upper-top.png": {
+      "sha256": "aee48e8776ce603988ee9cdd448d49f4212dbab047e76f4bf57f00a63e13be93",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/outer-upper-top.png",
+      "originalSHA256": "aee48e8776ce603988ee9cdd448d49f4212dbab047e76f4bf57f00a63e13be93",
+      "byteIdenticalCopy": true
+    },
+    "previews/pinch-side-front.png": {
+      "sha256": "06222e5cc4207baaabd373e2befa15b9f30e7939288ec173da14a6e20f826a8b",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/pinch-side-front.png",
+      "originalSHA256": "06222e5cc4207baaabd373e2befa15b9f30e7939288ec173da14a6e20f826a8b",
+      "byteIdenticalCopy": true
+    },
+    "previews/pinch-side-oblique.png": {
+      "sha256": "a184eac95f28127cb948081967ad4b4ee6e3169f5c52be731dc6c7997b368156",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/pinch-side-oblique.png",
+      "originalSHA256": "a184eac95f28127cb948081967ad4b4ee6e3169f5c52be731dc6c7997b368156",
+      "byteIdenticalCopy": true
+    },
+    "previews/pinch-side-side.png": {
+      "sha256": "3f11215ae79f661013476a38997c47bd9a281d0b90311a061205c3174079149f",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/pinch-side-side.png",
+      "originalSHA256": "3f11215ae79f661013476a38997c47bd9a281d0b90311a061205c3174079149f",
+      "byteIdenticalCopy": true
+    },
+    "previews/pinch-side-top.png": {
+      "sha256": "278ab96e76e35552c39a39d0beb21b79d139307cd352ada97adae529386c5286",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/pinch-side-top.png",
+      "originalSHA256": "278ab96e76e35552c39a39d0beb21b79d139307cd352ada97adae529386c5286",
+      "byteIdenticalCopy": true
+    },
+    "previews/render-provenance.json": {
+      "sha256": "80e8203c91aaff921561ecb8214ec806e981fdef4fe9994f152146af039888cd",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/render-provenance.json",
+      "originalSHA256": "80e8203c91aaff921561ecb8214ec806e981fdef4fe9994f152146af039888cd",
+      "byteIdenticalCopy": true
+    },
+    "previews/reverse-inverted-front.png": {
+      "sha256": "965db3d2c95e8680b49922a503d8b516117db766873d25e04c8ed30e55844b3b",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/reverse-inverted-front.png",
+      "originalSHA256": "965db3d2c95e8680b49922a503d8b516117db766873d25e04c8ed30e55844b3b",
+      "byteIdenticalCopy": true
+    },
+    "previews/reverse-inverted-oblique.png": {
+      "sha256": "3ef060320fe76b1cf65acaeef1154b6daa1e040cd2f4f5ad5785167a1b0c9944",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/reverse-inverted-oblique.png",
+      "originalSHA256": "3ef060320fe76b1cf65acaeef1154b6daa1e040cd2f4f5ad5785167a1b0c9944",
+      "byteIdenticalCopy": true
+    },
+    "previews/reverse-inverted-side.png": {
+      "sha256": "132ca5dd2f2c37213fa7430db201b3b1fe0d7ae9c3304cbfd32661a5c8fcb00e",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/reverse-inverted-side.png",
+      "originalSHA256": "132ca5dd2f2c37213fa7430db201b3b1fe0d7ae9c3304cbfd32661a5c8fcb00e",
+      "byteIdenticalCopy": true
+    },
+    "previews/reverse-inverted-top.png": {
+      "sha256": "c9172de74969850e0ecbc7ec2265d99025d2370d6a1a3efc8e15f4bbc975944b",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/reverse-inverted-top.png",
+      "originalSHA256": "c9172de74969850e0ecbc7ec2265d99025d2370d6a1a3efc8e15f4bbc975944b",
+      "byteIdenticalCopy": true
+    },
+    "previews/reverse-upright-front.png": {
+      "sha256": "ae30567ec633a889fc7a00f822f1416ac4d08fa3fcbbbc4522b06459b5cdd4b5",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/reverse-upright-front.png",
+      "originalSHA256": "ae30567ec633a889fc7a00f822f1416ac4d08fa3fcbbbc4522b06459b5cdd4b5",
+      "byteIdenticalCopy": true
+    },
+    "previews/reverse-upright-oblique.png": {
+      "sha256": "66d17aa8b8d2392b816e027d07006870593b71b5d80d27a575e99a88d09121de",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/reverse-upright-oblique.png",
+      "originalSHA256": "66d17aa8b8d2392b816e027d07006870593b71b5d80d27a575e99a88d09121de",
+      "byteIdenticalCopy": true
+    },
+    "previews/reverse-upright-side.png": {
+      "sha256": "1189bfdcb4cfc033a59bdaa4d5f71f02d07e56e18a154f199cae60341be61f88",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/reverse-upright-side.png",
+      "originalSHA256": "1189bfdcb4cfc033a59bdaa4d5f71f02d07e56e18a154f199cae60341be61f88",
+      "byteIdenticalCopy": true
+    },
+    "previews/reverse-upright-top.png": {
+      "sha256": "fd1f98db0c32b1986b61de32680b1bb2c2fb279c7d1270c6ff3c8323a8a1e169",
+      "originalPath": ".context/placid-badger/port-cord-physics/previews/final/reverse-upright-top.png",
+      "originalSHA256": "fd1f98db0c32b1986b61de32680b1bb2c2fb279c7d1270c6ff3c8323a8a1e169",
+      "byteIdenticalCopy": true
+    },
+    "before-app/front-upright-front-accessibility.json": {
+      "sha256": "32a3da8d487fe950ecaef62d03a9a972597738b39ea62f3afa3cbafe77a3a531",
+      "originalPath": ".context/placid-badger/port-cord-physics/before-app/front-upright-front-accessibility.json",
+      "originalSHA256": "32a3da8d487fe950ecaef62d03a9a972597738b39ea62f3afa3cbafe77a3a531",
+      "byteIdenticalCopy": true
+    },
+    "before-app/front-upright-front.png": {
+      "sha256": "75e85336ec2c059a395f438e9927aefbf3eb36b890f925f03fc30ef8455df635",
+      "originalPath": ".context/placid-badger/port-cord-physics/before-app/front-upright-front.png",
+      "originalSHA256": "75e85336ec2c059a395f438e9927aefbf3eb36b890f925f03fc30ef8455df635",
+      "byteIdenticalCopy": true
+    },
+    "before-app/pinch-side-front-accessibility.json": {
+      "sha256": "30cda3186103532a029a4d22737d83571ce1e344ccfc0ab8f98486955b762424",
+      "originalPath": ".context/placid-badger/port-cord-physics/before-app/pinch-side-front-accessibility.json",
+      "originalSHA256": "30cda3186103532a029a4d22737d83571ce1e344ccfc0ab8f98486955b762424",
+      "byteIdenticalCopy": true
+    },
+    "before-app/pinch-side-front.png": {
+      "sha256": "e1b899f0cf9b89f973867cefd325e5526808a349e5fd4e8c87e878e244044741",
+      "originalPath": ".context/placid-badger/port-cord-physics/before-app/pinch-side-front.png",
+      "originalSHA256": "e1b899f0cf9b89f973867cefd325e5526808a349e5fd4e8c87e878e244044741",
+      "byteIdenticalCopy": true
+    },
+    "before-app/validation.json": {
+      "sha256": "1ec80235b60372af6ba8f24107dd05468dc281589aed314611144f41ff69d003",
+      "originalPath": ".context/placid-badger/port-cord-physics/before-app/validation.json",
+      "originalSHA256": "1ec80235b60372af6ba8f24107dd05468dc281589aed314611144f41ff69d003",
+      "byteIdenticalCopy": true
+    },
+    "after-app/front-inverted-front-accessibility.json": {
+      "sha256": "b53242eddeb741b58616a2835bdd57c093b5bb0f5e2f0cb43420d68e8f0e43d2",
+      "originalPath": ".context/placid-badger/port-cord-physics/after-app/front-inverted-front-accessibility.json",
+      "originalSHA256": "b53242eddeb741b58616a2835bdd57c093b5bb0f5e2f0cb43420d68e8f0e43d2",
+      "byteIdenticalCopy": true
+    },
+    "after-app/front-inverted-front.png": {
+      "sha256": "fb2e03ebaa3ff2a3f2e1abc89db7b5a0622c235e5ef6910038e69b22a2a5e1e7",
+      "originalPath": ".context/placid-badger/port-cord-physics/after-app/front-inverted-front.png",
+      "originalSHA256": "fb2e03ebaa3ff2a3f2e1abc89db7b5a0622c235e5ef6910038e69b22a2a5e1e7",
+      "byteIdenticalCopy": true
+    },
+    "after-app/front-upright-front-accessibility.json": {
+      "sha256": "270dd7d9abdd19c0a294996faaaec64d284e82a8a95113fb6dbad359c0bd2470",
+      "originalPath": ".context/placid-badger/port-cord-physics/after-app/front-upright-front-accessibility.json",
+      "originalSHA256": "270dd7d9abdd19c0a294996faaaec64d284e82a8a95113fb6dbad359c0bd2470",
+      "byteIdenticalCopy": true
+    },
+    "after-app/front-upright-front.png": {
+      "sha256": "bec97d4819ab86ce17a65960523a2f65b8ea2ea6fd4e8cbbcab3847580e96383",
+      "originalPath": ".context/placid-badger/port-cord-physics/after-app/front-upright-front.png",
+      "originalSHA256": "bec97d4819ab86ce17a65960523a2f65b8ea2ea6fd4e8cbbcab3847580e96383",
+      "byteIdenticalCopy": true
+    },
+    "after-app/outer-upper-front-accessibility.json": {
+      "sha256": "3b893d352911cc38750e5ff01f677c8dae116ae880a98abb98cdf16ab81e321f",
+      "originalPath": ".context/placid-badger/port-cord-physics/after-app/outer-upper-front-accessibility.json",
+      "originalSHA256": "3b893d352911cc38750e5ff01f677c8dae116ae880a98abb98cdf16ab81e321f",
+      "byteIdenticalCopy": true
+    },
+    "after-app/outer-upper-front.png": {
+      "sha256": "74a6562584cc7b772a4d54a5797d487b9f909e9e0fff71ed336755a0a505f012",
+      "originalPath": ".context/placid-badger/port-cord-physics/after-app/outer-upper-front.png",
+      "originalSHA256": "74a6562584cc7b772a4d54a5797d487b9f909e9e0fff71ed336755a0a505f012",
+      "byteIdenticalCopy": true
+    },
+    "after-app/pinch-side-front-accessibility.json": {
+      "sha256": "a0886aaf1597881c69ab8d07d67a4a3dbdbbe9abf898cd189bc81377e4cb5873",
+      "originalPath": ".context/placid-badger/port-cord-physics/after-app/pinch-side-front-accessibility.json",
+      "originalSHA256": "a0886aaf1597881c69ab8d07d67a4a3dbdbbe9abf898cd189bc81377e4cb5873",
+      "byteIdenticalCopy": true
+    },
+    "after-app/pinch-side-front.png": {
+      "sha256": "07e2288d7cbd979293b95e52e4e0a730b541430ce339f9b33cd1d8f6c9698671",
+      "originalPath": ".context/placid-badger/port-cord-physics/after-app/pinch-side-front.png",
+      "originalSHA256": "07e2288d7cbd979293b95e52e4e0a730b541430ce339f9b33cd1d8f6c9698671",
+      "byteIdenticalCopy": true
+    },
+    "after-app/reverse-inverted-front-accessibility.json": {
+      "sha256": "eb3c09edb41888922300da831a4eee4459e7f355adda4f734a8225042291ac14",
+      "originalPath": ".context/placid-badger/port-cord-physics/after-app/reverse-inverted-front-accessibility.json",
+      "originalSHA256": "eb3c09edb41888922300da831a4eee4459e7f355adda4f734a8225042291ac14",
+      "byteIdenticalCopy": true
+    },
+    "after-app/reverse-inverted-front.png": {
+      "sha256": "a5791e0f82c74d9f2d753befe3e629064a32c66603408a8b327931dc40b0f888",
+      "originalPath": ".context/placid-badger/port-cord-physics/after-app/reverse-inverted-front.png",
+      "originalSHA256": "a5791e0f82c74d9f2d753befe3e629064a32c66603408a8b327931dc40b0f888",
+      "byteIdenticalCopy": true
+    },
+    "after-app/reverse-upright-front-accessibility.json": {
+      "sha256": "421d70112ca412d498fe4aeaab2ff743ef41f32679a3022f16b99e90f9199175",
+      "originalPath": ".context/placid-badger/port-cord-physics/after-app/reverse-upright-front-accessibility.json",
+      "originalSHA256": "421d70112ca412d498fe4aeaab2ff743ef41f32679a3022f16b99e90f9199175",
+      "byteIdenticalCopy": true
+    },
+    "after-app/reverse-upright-front.png": {
+      "sha256": "aba4e1f7fc11cf86ed0adb5ce45e1facb8d4ca62c26c59b22a25af17832f60c0",
+      "originalPath": ".context/placid-badger/port-cord-physics/after-app/reverse-upright-front.png",
+      "originalSHA256": "aba4e1f7fc11cf86ed0adb5ce45e1facb8d4ca62c26c59b22a25af17832f60c0",
+      "byteIdenticalCopy": true
+    },
+    "after-app/validation.json": {
+      "sha256": "c2fbee449ca422bf0599464bacc335bf498aa498106de61b7a7d879ad4171384",
+      "originalPath": ".context/placid-badger/port-cord-physics/after-app/validation.json",
+      "originalSHA256": "c2fbee449ca422bf0599464bacc335bf498aa498106de61b7a7d879ad4171384",
+      "byteIdenticalCopy": true
+    },
+    "validation/installed-delivery-validation.json": {
+      "sha256": "6cfccc4c2c0b208b995222ed455a53cf4bfa0a801fb14a26a5b73b1ee0b591d3",
+      "originalPath": "docs/source-audits/2026-09-29-remaining-cad/installed-delivery-validation.json",
+      "originalSHA256": "6cfccc4c2c0b208b995222ed455a53cf4bfa0a801fb14a26a5b73b1ee0b591d3",
+      "byteIdenticalCopy": true
+    },
+    "validation/delivery-lock-verification.json": {
+      "sha256": "51267357d69253b2b9fe8e6c9d6e926f015b497e90ea6affff0bdf97da350bd1",
+      "originalPath": ".context/placid-badger/port-cord-physics/delivery-lock-verification.json",
+      "originalSHA256": "51267357d69253b2b9fe8e6c9d6e926f015b497e90ea6affff0bdf97da350bd1",
+      "byteIdenticalCopy": true
+    }
+  },
+  "generatedArtifactSHA256": {
+    "comparison-layout.json": "421b34296cce7f4903ad0776d024c0f1e0ace0d1877d039345cdd7942b9a32b5",
+    "index.html": "98a093faa5b7cf1b844e5a450c85303e842264978252ccb3fc6277978ef97e05",
+    "six-pose-comparison-overview.png": "6301cfe9f13cfba2fe7e2fe684f69af35f1a53e1065eb5ba322f699154689316",
+    "front-side-top-comparison.png": "eea56d4c28ea6123a61a7cc0b9128f1c7d9e34f98291f65d7ed4640dba21dc50",
+    "app-before-after.png": "ec330f53931b5160bdbd5ac6fc268ed3189d95c3649317fec913b04b71220979",
+    "review.md": "acd4568fedc0346ae43ceb6f6d1f68266273aff0fae8a6bff21a426fad9c14e6",
+    "validation-summary.json": "346944b6fab3a9333dea0df2f92e26de72fbe08ee84b6ced1d299742619211cb",
+    "validation/final-commit-checks.json": "86b4d6d5265f9152140735237d1208e94cfed1f3dd8eb68dfd04b5cac93eff7c"
+  },
+  "rawCopyPolicy": "Evidence, JSON, logs and source scripts copied byte-for-byte. No whitespace stripping or sanitizing."
+}

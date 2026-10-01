@@ -396,7 +396,7 @@ def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> 
     # never merged into board.json.
     solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
     if isinstance(solver, dict) and solver.get("method") == "nativeRoutes":
-        if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane", "tightening"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
+        if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane", "tightening", "pathSearch"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
                 or isinstance(solver["clearance"], bool) \
                 or not isinstance(solver["clearance"], (int,float)) or not math.isfinite(solver["clearance"]) \
                 or not 0 < solver["clearance"] <= .01 \
@@ -404,6 +404,8 @@ def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> 
                 or isinstance(solver.get("supportDirection", 1), bool) or solver.get("supportDirection", 1) not in (-1,1) \
                 or solver.get("sectionPlane", "fixed") not in ("fixed", "anchor"):
             raise ManifestError("suspension.json nativeRoutes solver settings are invalid")
+        if "pathSearch" in solver and solver["pathSearch"] != "aStar":
+            raise ManifestError("nativeRoutes pathSearch must be aStar when present")
         if "tightening" in solver and solver["tightening"] != "coupled3D":
             raise ManifestError("nativeRoutes tightening must be coupled3D when present")
         for entry in solver["terminalsByStrandID"].values():

@@ -1,0 +1,4470 @@
+{
+  "candidateSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
+  "turnsOverOneDegree": [
+    {
+      "pose": "front-upright",
+      "strand": "left-front",
+      "index": 2,
+      "pointRuntime": [
+        -0.038788944,
+        0.066517497,
+        0.025676104
+      ],
+      "turnDegrees": 1.3861737530880456,
+      "centerlineWoodDistanceMM": 1.6996455822993963,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939633,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.09079459284400225,
+            0.9958696410225044
+          ],
+          "tangentUnitTension": 0.0001241835493195523,
+          "normalUnitTension": -0.024192387245415094
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "left-front",
+      "index": 3,
+      "pointRuntime": [
+        -0.038822211,
+        0.066321699,
+        0.025690547
+      ],
+      "turnDegrees": 1.3865990917191948,
+      "centerlineWoodDistanceMM": 1.6996329185141394,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19963291851413945,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.056442055935747255,
+            0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00015151723682691707,
+          "normalUnitTension": -0.02419965465689655
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "left-front",
+      "index": 4,
+      "pointRuntime": [
+        -0.038835949,
+        0.066240682,
+        0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.6996110024152546,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19961100241525465,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.042227794124546254,
+            0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "left-front",
+      "index": 8,
+      "pointRuntime": [
+        -0.049106994,
+        0.00542621,
+        0.025699843
+      ],
+      "turnDegrees": 5.6258739511254126,
+      "centerlineWoodDistanceMM": 1.6998431876523632,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523632,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.004997035338738624,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.16238830969983414,
+            -0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259665125912,
+          "normalUnitTension": -0.004811138688966208
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "left-front",
+      "index": 9,
+      "pointRuntime": [
+        -0.049161796,
+        0.005099065,
+        0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.70000464910733,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732996,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.16220688938960184,
+            -0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "left-front",
+      "index": 10,
+      "pointRuntime": [
+        -0.049213615,
+        0.004784347,
+        0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.700172287819608,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20017228781960794,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.16218993213916658,
+            -0.98675955830825,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "left-rear",
+      "index": 2,
+      "pointRuntime": [
+        -0.038788944,
+        0.066517497,
+        -0.025676104
+      ],
+      "turnDegrees": 1.3861737530880456,
+      "centerlineWoodDistanceMM": 1.6996455822993928,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939278,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.09079459284400225,
+            -0.9958696410225044
+          ],
+          "tangentUnitTension": 0.0001241835493195523,
+          "normalUnitTension": -0.024192387245415094
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "left-rear",
+      "index": 3,
+      "pointRuntime": [
+        -0.038822211,
+        0.066321699,
+        -0.025690547
+      ],
+      "turnDegrees": 1.3865990917191948,
+      "centerlineWoodDistanceMM": 1.699632918514136,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996329185141359,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.056442055935747255,
+            -0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00015151723682691707,
+          "normalUnitTension": -0.02419965465689655
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "left-rear",
+      "index": 4,
+      "pointRuntime": [
+        -0.038835949,
+        0.066240682,
+        -0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.699611002415251,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996110024152511,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.042227794124546254,
+            -0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "left-rear",
+      "index": 9,
+      "pointRuntime": [
+        -0.049106994,
+        0.00542621,
+        -0.025699843
+      ],
+      "turnDegrees": 5.625873950979674,
+      "centerlineWoodDistanceMM": 1.699843187652356,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523561,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.004997035288816464,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.16238830969983417,
+            -0.9867269312595206,
+            0.0
+          ],
+          "tangentUnitTension": 0.09803259664867577,
+          "normalUnitTension": -0.0048111386897539965
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "left-rear",
+      "index": 10,
+      "pointRuntime": [
+        -0.049161796,
+        0.005099065,
+        -0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.700004649107323,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732307,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.1622068893896021,
+            -0.986756770959566,
+            0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "left-rear",
+      "index": 11,
+      "pointRuntime": [
+        -0.049213615,
+        0.004784347,
+        -0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196015,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.2001722878196015,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.162189932139167,
+            -0.9867595583082498,
+            0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.005592310774013158
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "right-front",
+      "index": 2,
+      "pointRuntime": [
+        0.038788944,
+        0.066517497,
+        0.025676104
+      ],
+      "turnDegrees": 1.3861423812897695,
+      "centerlineWoodDistanceMM": 1.6996455822993963,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939633,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.09079459284400225,
+            0.9958696410225044
+          ],
+          "tangentUnitTension": 0.00012538140811276205,
+          "normalUnitTension": -0.024191833558481972
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "right-front",
+      "index": 4,
+      "pointRuntime": [
+        0.038822211,
+        0.066321699,
+        0.025690547
+      ],
+      "turnDegrees": 1.384606338348837,
+      "centerlineWoodDistanceMM": 1.6996329185141394,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19963291851413945,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.056442055935747255,
+            0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00022237393605662096,
+          "normalUnitTension": -0.02416432823776702
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "right-front",
+      "index": 5,
+      "pointRuntime": [
+        0.038835949,
+        0.066240682,
+        0.025694527
+      ],
+      "turnDegrees": 1.38651670981987,
+      "centerlineWoodDistanceMM": 1.6996110024152546,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19961100241525465,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.042227794124546254,
+            0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020395997540049069,
+          "normalUnitTension": -0.02419783169774569
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "right-front",
+      "index": 11,
+      "pointRuntime": [
+        0.049106994,
+        0.00542621,
+        0.025699843
+      ],
+      "turnDegrees": 5.6258738610705095,
+      "centerlineWoodDistanceMM": 1.6998431876523632,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523632,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.004997004503817132,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.1623883096998345,
+            -0.9867269312595206,
+            0.0
+          ],
+          "tangentUnitTension": 0.09803259505562587,
+          "normalUnitTension": -0.004811139175618636
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "right-front",
+      "index": 12,
+      "pointRuntime": [
+        0.049161796,
+        0.005099065,
+        0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.70000464910733,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732996,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.1622068893896022,
+            -0.986756770959566,
+            0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.038244110207421786
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "right-front",
+      "index": 13,
+      "pointRuntime": [
+        0.049213615,
+        0.004784347,
+        0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196082,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20017228781960816,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.16218993213916694,
+            -0.98675955830825,
+            0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "right-rear",
+      "index": 2,
+      "pointRuntime": [
+        0.038788944,
+        0.066517497,
+        -0.025676104
+      ],
+      "turnDegrees": 1.3861423812897695,
+      "centerlineWoodDistanceMM": 1.6996455822993928,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939278,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.09079459284400225,
+            -0.9958696410225044
+          ],
+          "tangentUnitTension": 0.00012538140811276205,
+          "normalUnitTension": -0.024191833558481972
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "right-rear",
+      "index": 4,
+      "pointRuntime": [
+        0.038822211,
+        0.066321699,
+        -0.025690547
+      ],
+      "turnDegrees": 1.384606338348837,
+      "centerlineWoodDistanceMM": 1.699632918514136,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996329185141359,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.056442055935747255,
+            -0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00022237393605662096,
+          "normalUnitTension": -0.02416432823776702
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "right-rear",
+      "index": 5,
+      "pointRuntime": [
+        0.038835949,
+        0.066240682,
+        -0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.699611002415251,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996110024152511,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.042227794124546254,
+            -0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "right-rear",
+      "index": 10,
+      "pointRuntime": [
+        0.049106994,
+        0.00542621,
+        -0.025699843
+      ],
+      "turnDegrees": 5.625873950979674,
+      "centerlineWoodDistanceMM": 1.699843187652356,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523561,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.004997035288816464,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.16238830969983425,
+            -0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259664867577,
+          "normalUnitTension": -0.0048111386897539965
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "right-rear",
+      "index": 11,
+      "pointRuntime": [
+        0.049161796,
+        0.005099065,
+        -0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.700004649107323,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732307,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.16220688938960198,
+            -0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "front-upright",
+      "strand": "right-rear",
+      "index": 12,
+      "pointRuntime": [
+        0.049213615,
+        0.004784347,
+        -0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196015,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.2001722878196015,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.1621899321391669,
+            -0.98675955830825,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "left-front",
+      "index": 2,
+      "pointRuntime": [
+        -0.038788944,
+        -0.066517497,
+        0.025676104
+      ],
+      "turnDegrees": 1.3861423812897695,
+      "centerlineWoodDistanceMM": 1.6996455822993963,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939633,
+      "faces": [
+        {
+          "face": 62,
+          "normalRuntime": [
+            0.0,
+            -0.09079459284400225,
+            0.9958696410225044
+          ],
+          "tangentUnitTension": 0.00012538140811276205,
+          "normalUnitTension": -0.024191833558481972
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "left-front",
+      "index": 4,
+      "pointRuntime": [
+        -0.038822211,
+        -0.066321699,
+        0.025690547
+      ],
+      "turnDegrees": 1.384606338348837,
+      "centerlineWoodDistanceMM": 1.6996329185141394,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19963291851413945,
+      "faces": [
+        {
+          "face": 62,
+          "normalRuntime": [
+            0.0,
+            -0.056442055935747255,
+            0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00022237393605662096,
+          "normalUnitTension": -0.02416432823776702
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "left-front",
+      "index": 5,
+      "pointRuntime": [
+        -0.038835949,
+        -0.066240682,
+        0.025694527
+      ],
+      "turnDegrees": 1.38651670981987,
+      "centerlineWoodDistanceMM": 1.6996110024152546,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19961100241525465,
+      "faces": [
+        {
+          "face": 62,
+          "normalRuntime": [
+            0.0,
+            -0.042227794124546254,
+            0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020395997540049069,
+          "normalUnitTension": -0.02419783169774569
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "left-front",
+      "index": 12,
+      "pointRuntime": [
+        -0.049106994,
+        -0.00542621,
+        0.025699843
+      ],
+      "turnDegrees": 5.625873943497258,
+      "centerlineWoodDistanceMM": 1.6998431876523632,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523632,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.004997032726859044,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.16238830969983417,
+            0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259651610029,
+          "normalUnitTension": -0.004811138730187254
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "left-front",
+      "index": 13,
+      "pointRuntime": [
+        -0.049161796,
+        -0.005099065,
+        0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.70000464910733,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732996,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.1622068893896021,
+            0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "left-front",
+      "index": 14,
+      "pointRuntime": [
+        -0.049213615,
+        -0.004784347,
+        0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196082,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20017228781960816,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.162189932139167,
+            0.9867595583082498,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.005592310774013158
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "left-rear",
+      "index": 2,
+      "pointRuntime": [
+        -0.038788944,
+        -0.066517497,
+        -0.025676104
+      ],
+      "turnDegrees": 1.3861423812897695,
+      "centerlineWoodDistanceMM": 1.6996455822993928,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939278,
+      "faces": [
+        {
+          "face": 2,
+          "normalRuntime": [
+            0.0,
+            -0.09079459284400225,
+            -0.9958696410225044
+          ],
+          "tangentUnitTension": 0.00012538140811276205,
+          "normalUnitTension": -0.024191833558481972
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "left-rear",
+      "index": 4,
+      "pointRuntime": [
+        -0.038822211,
+        -0.066321699,
+        -0.025690547
+      ],
+      "turnDegrees": 1.384606338348837,
+      "centerlineWoodDistanceMM": 1.699632918514136,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996329185141359,
+      "faces": [
+        {
+          "face": 2,
+          "normalRuntime": [
+            0.0,
+            -0.056442055935747255,
+            -0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00022237393605662096,
+          "normalUnitTension": -0.02416432823776702
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "left-rear",
+      "index": 5,
+      "pointRuntime": [
+        -0.038835949,
+        -0.066240682,
+        -0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.699611002415251,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996110024152511,
+      "faces": [
+        {
+          "face": 2,
+          "normalRuntime": [
+            0.0,
+            -0.042227794124546254,
+            -0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "left-rear",
+      "index": 10,
+      "pointRuntime": [
+        -0.049106994,
+        -0.00542621,
+        -0.025699843
+      ],
+      "turnDegrees": 5.625873908305511,
+      "centerlineWoodDistanceMM": 1.699843187652356,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523561,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.004997020677143005,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.16238830969983414,
+            0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259589255565,
+          "normalUnitTension": -0.004811138920359675
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "left-rear",
+      "index": 11,
+      "pointRuntime": [
+        -0.049161796,
+        -0.005099065,
+        -0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.700004649107323,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732307,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.16220688938960184,
+            0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "left-rear",
+      "index": 12,
+      "pointRuntime": [
+        -0.049213615,
+        -0.004784347,
+        -0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196013,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20017228781960128,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.16218993213916658,
+            0.98675955830825,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "right-front",
+      "index": 2,
+      "pointRuntime": [
+        0.038788944,
+        -0.066517497,
+        0.025676104
+      ],
+      "turnDegrees": 1.3861737530880456,
+      "centerlineWoodDistanceMM": 1.6996455822993963,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939633,
+      "faces": [
+        {
+          "face": 62,
+          "normalRuntime": [
+            0.0,
+            -0.09079459284400225,
+            0.9958696410225044
+          ],
+          "tangentUnitTension": 0.0001241835493195523,
+          "normalUnitTension": -0.024192387245415094
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "right-front",
+      "index": 3,
+      "pointRuntime": [
+        0.038822211,
+        -0.066321699,
+        0.025690547
+      ],
+      "turnDegrees": 1.3865990917191948,
+      "centerlineWoodDistanceMM": 1.6996329185141394,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19963291851413945,
+      "faces": [
+        {
+          "face": 62,
+          "normalRuntime": [
+            0.0,
+            -0.056442055935747255,
+            0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00015151723682691707,
+          "normalUnitTension": -0.02419965465689655
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "right-front",
+      "index": 4,
+      "pointRuntime": [
+        0.038835949,
+        -0.066240682,
+        0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.6996110024152546,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19961100241525465,
+      "faces": [
+        {
+          "face": 62,
+          "normalRuntime": [
+            0.0,
+            -0.042227794124546254,
+            0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "right-front",
+      "index": 10,
+      "pointRuntime": [
+        0.049106994,
+        -0.00542621,
+        0.025699843
+      ],
+      "turnDegrees": 5.625873941642113,
+      "centerlineWoodDistanceMM": 1.6998431876523632,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523632,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.004997032091649692,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.16238830969983425,
+            0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259648322966,
+          "normalUnitTension": -0.004811138740212185
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "right-front",
+      "index": 11,
+      "pointRuntime": [
+        0.049161796,
+        -0.005099065,
+        0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.70000464910733,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732996,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.16220688938960198,
+            0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "right-front",
+      "index": 12,
+      "pointRuntime": [
+        0.049213615,
+        -0.004784347,
+        0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196082,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20017228781960816,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.1621899321391669,
+            0.98675955830825,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "right-rear",
+      "index": 2,
+      "pointRuntime": [
+        0.038788944,
+        -0.066517497,
+        -0.025676104
+      ],
+      "turnDegrees": 1.3861737530880456,
+      "centerlineWoodDistanceMM": 1.6996455822993928,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939278,
+      "faces": [
+        {
+          "face": 2,
+          "normalRuntime": [
+            0.0,
+            -0.09079459284400225,
+            -0.9958696410225044
+          ],
+          "tangentUnitTension": 0.0001241835493195523,
+          "normalUnitTension": -0.024192387245415094
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "right-rear",
+      "index": 3,
+      "pointRuntime": [
+        0.038822211,
+        -0.066321699,
+        -0.025690547
+      ],
+      "turnDegrees": 1.3865990917191948,
+      "centerlineWoodDistanceMM": 1.699632918514136,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996329185141359,
+      "faces": [
+        {
+          "face": 2,
+          "normalRuntime": [
+            0.0,
+            -0.056442055935747255,
+            -0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00015151723682691707,
+          "normalUnitTension": -0.02419965465689655
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "right-rear",
+      "index": 4,
+      "pointRuntime": [
+        0.038835949,
+        -0.066240682,
+        -0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.699611002415251,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996110024152511,
+      "faces": [
+        {
+          "face": 2,
+          "normalRuntime": [
+            0.0,
+            -0.042227794124546254,
+            -0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "right-rear",
+      "index": 9,
+      "pointRuntime": [
+        0.049106994,
+        -0.00542621,
+        -0.025699843
+      ],
+      "turnDegrees": 5.625873899039652,
+      "centerlineWoodDistanceMM": 1.699843187652356,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523561,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.004997017504550915,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.1623883096998345,
+            0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259572838165,
+          "normalUnitTension": -0.0048111389704313815
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "right-rear",
+      "index": 10,
+      "pointRuntime": [
+        0.049161796,
+        -0.005099065,
+        -0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.700004649107323,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732307,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.1622068893896022,
+            0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.038244110207421786
+        }
+      ]
+    },
+    {
+      "pose": "front-inverted",
+      "strand": "right-rear",
+      "index": 11,
+      "pointRuntime": [
+        0.049213615,
+        -0.004784347,
+        -0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196015,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.2001722878196015,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.16218993213916694,
+            0.98675955830825,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "left-front",
+      "index": 2,
+      "pointRuntime": [
+        -0.038788944,
+        0.066517497,
+        0.025676104
+      ],
+      "turnDegrees": 1.3861737530880456,
+      "centerlineWoodDistanceMM": 1.6996455822993963,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939633,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.09079459284400225,
+            0.9958696410225044
+          ],
+          "tangentUnitTension": 0.0001241835493195523,
+          "normalUnitTension": -0.024192387245415094
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "left-front",
+      "index": 3,
+      "pointRuntime": [
+        -0.038822211,
+        0.066321699,
+        0.025690547
+      ],
+      "turnDegrees": 1.3865990917191948,
+      "centerlineWoodDistanceMM": 1.6996329185141394,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19963291851413945,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.056442055935747255,
+            0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00015151723682691707,
+          "normalUnitTension": -0.02419965465689655
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "left-front",
+      "index": 4,
+      "pointRuntime": [
+        -0.038835949,
+        0.066240682,
+        0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.6996110024152546,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19961100241525465,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.042227794124546254,
+            0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "left-front",
+      "index": 8,
+      "pointRuntime": [
+        -0.049106994,
+        0.00542621,
+        0.025699843
+      ],
+      "turnDegrees": 5.6258739511254126,
+      "centerlineWoodDistanceMM": 1.6998431876523632,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523632,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.004997035338738624,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.16238830969983414,
+            -0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259665125912,
+          "normalUnitTension": -0.004811138688966208
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "left-front",
+      "index": 9,
+      "pointRuntime": [
+        -0.049161796,
+        0.005099065,
+        0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.70000464910733,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732996,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.16220688938960184,
+            -0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "left-front",
+      "index": 10,
+      "pointRuntime": [
+        -0.049213615,
+        0.004784347,
+        0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.700172287819608,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20017228781960794,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.16218993213916658,
+            -0.98675955830825,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "left-rear",
+      "index": 2,
+      "pointRuntime": [
+        -0.038788944,
+        0.066517497,
+        -0.025676104
+      ],
+      "turnDegrees": 1.3861737530880456,
+      "centerlineWoodDistanceMM": 1.6996455822993928,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939278,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.09079459284400225,
+            -0.9958696410225044
+          ],
+          "tangentUnitTension": 0.0001241835493195523,
+          "normalUnitTension": -0.024192387245415094
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "left-rear",
+      "index": 3,
+      "pointRuntime": [
+        -0.038822211,
+        0.066321699,
+        -0.025690547
+      ],
+      "turnDegrees": 1.3865990917191948,
+      "centerlineWoodDistanceMM": 1.699632918514136,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996329185141359,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.056442055935747255,
+            -0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00015151723682691707,
+          "normalUnitTension": -0.02419965465689655
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "left-rear",
+      "index": 4,
+      "pointRuntime": [
+        -0.038835949,
+        0.066240682,
+        -0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.699611002415251,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996110024152511,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.042227794124546254,
+            -0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "left-rear",
+      "index": 9,
+      "pointRuntime": [
+        -0.049106994,
+        0.00542621,
+        -0.025699843
+      ],
+      "turnDegrees": 5.625873950979674,
+      "centerlineWoodDistanceMM": 1.699843187652356,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523561,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.004997035288816464,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.16238830969983417,
+            -0.9867269312595206,
+            0.0
+          ],
+          "tangentUnitTension": 0.09803259664867577,
+          "normalUnitTension": -0.0048111386897539965
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "left-rear",
+      "index": 10,
+      "pointRuntime": [
+        -0.049161796,
+        0.005099065,
+        -0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.700004649107323,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732307,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.1622068893896021,
+            -0.986756770959566,
+            0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "left-rear",
+      "index": 11,
+      "pointRuntime": [
+        -0.049213615,
+        0.004784347,
+        -0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196015,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.2001722878196015,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.162189932139167,
+            -0.9867595583082498,
+            0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.005592310774013158
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "right-front",
+      "index": 2,
+      "pointRuntime": [
+        0.038788944,
+        0.066517497,
+        0.025676104
+      ],
+      "turnDegrees": 1.3861423812897695,
+      "centerlineWoodDistanceMM": 1.6996455822993963,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939633,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.09079459284400225,
+            0.9958696410225044
+          ],
+          "tangentUnitTension": 0.00012538140811276205,
+          "normalUnitTension": -0.024191833558481972
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "right-front",
+      "index": 4,
+      "pointRuntime": [
+        0.038822211,
+        0.066321699,
+        0.025690547
+      ],
+      "turnDegrees": 1.384606338348837,
+      "centerlineWoodDistanceMM": 1.6996329185141394,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19963291851413945,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.056442055935747255,
+            0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00022237393605662096,
+          "normalUnitTension": -0.02416432823776702
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "right-front",
+      "index": 5,
+      "pointRuntime": [
+        0.038835949,
+        0.066240682,
+        0.025694527
+      ],
+      "turnDegrees": 1.38651670981987,
+      "centerlineWoodDistanceMM": 1.6996110024152546,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19961100241525465,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.042227794124546254,
+            0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020395997540049069,
+          "normalUnitTension": -0.02419783169774569
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "right-front",
+      "index": 11,
+      "pointRuntime": [
+        0.049106994,
+        0.00542621,
+        0.025699843
+      ],
+      "turnDegrees": 5.6258738610705095,
+      "centerlineWoodDistanceMM": 1.6998431876523632,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523632,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.004997004503817132,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.1623883096998345,
+            -0.9867269312595206,
+            0.0
+          ],
+          "tangentUnitTension": 0.09803259505562587,
+          "normalUnitTension": -0.004811139175618636
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "right-front",
+      "index": 12,
+      "pointRuntime": [
+        0.049161796,
+        0.005099065,
+        0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.70000464910733,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732996,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.1622068893896022,
+            -0.986756770959566,
+            0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.038244110207421786
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "right-front",
+      "index": 13,
+      "pointRuntime": [
+        0.049213615,
+        0.004784347,
+        0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196082,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20017228781960816,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.16218993213916694,
+            -0.98675955830825,
+            0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "right-rear",
+      "index": 2,
+      "pointRuntime": [
+        0.038788944,
+        0.066517497,
+        -0.025676104
+      ],
+      "turnDegrees": 1.3861423812897695,
+      "centerlineWoodDistanceMM": 1.6996455822993928,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939278,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.09079459284400225,
+            -0.9958696410225044
+          ],
+          "tangentUnitTension": 0.00012538140811276205,
+          "normalUnitTension": -0.024191833558481972
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "right-rear",
+      "index": 4,
+      "pointRuntime": [
+        0.038822211,
+        0.066321699,
+        -0.025690547
+      ],
+      "turnDegrees": 1.384606338348837,
+      "centerlineWoodDistanceMM": 1.699632918514136,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996329185141359,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.056442055935747255,
+            -0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00022237393605662096,
+          "normalUnitTension": -0.02416432823776702
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "right-rear",
+      "index": 5,
+      "pointRuntime": [
+        0.038835949,
+        0.066240682,
+        -0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.699611002415251,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996110024152511,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.042227794124546254,
+            -0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "right-rear",
+      "index": 10,
+      "pointRuntime": [
+        0.049106994,
+        0.00542621,
+        -0.025699843
+      ],
+      "turnDegrees": 5.625873950979674,
+      "centerlineWoodDistanceMM": 1.699843187652356,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523561,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.004997035288816464,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.16238830969983425,
+            -0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259664867577,
+          "normalUnitTension": -0.0048111386897539965
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "right-rear",
+      "index": 11,
+      "pointRuntime": [
+        0.049161796,
+        0.005099065,
+        -0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.700004649107323,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732307,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.16220688938960198,
+            -0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "reverse-upright",
+      "strand": "right-rear",
+      "index": 12,
+      "pointRuntime": [
+        0.049213615,
+        0.004784347,
+        -0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196015,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.2001722878196015,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.1621899321391669,
+            -0.98675955830825,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "left-front",
+      "index": 2,
+      "pointRuntime": [
+        -0.038788944,
+        -0.066517497,
+        0.025676104
+      ],
+      "turnDegrees": 1.3861423812897695,
+      "centerlineWoodDistanceMM": 1.6996455822993963,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939633,
+      "faces": [
+        {
+          "face": 62,
+          "normalRuntime": [
+            0.0,
+            -0.09079459284400225,
+            0.9958696410225044
+          ],
+          "tangentUnitTension": 0.00012538140811276205,
+          "normalUnitTension": -0.024191833558481972
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "left-front",
+      "index": 4,
+      "pointRuntime": [
+        -0.038822211,
+        -0.066321699,
+        0.025690547
+      ],
+      "turnDegrees": 1.384606338348837,
+      "centerlineWoodDistanceMM": 1.6996329185141394,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19963291851413945,
+      "faces": [
+        {
+          "face": 62,
+          "normalRuntime": [
+            0.0,
+            -0.056442055935747255,
+            0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00022237393605662096,
+          "normalUnitTension": -0.02416432823776702
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "left-front",
+      "index": 5,
+      "pointRuntime": [
+        -0.038835949,
+        -0.066240682,
+        0.025694527
+      ],
+      "turnDegrees": 1.38651670981987,
+      "centerlineWoodDistanceMM": 1.6996110024152546,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19961100241525465,
+      "faces": [
+        {
+          "face": 62,
+          "normalRuntime": [
+            0.0,
+            -0.042227794124546254,
+            0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020395997540049069,
+          "normalUnitTension": -0.02419783169774569
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "left-front",
+      "index": 12,
+      "pointRuntime": [
+        -0.049106994,
+        -0.00542621,
+        0.025699843
+      ],
+      "turnDegrees": 5.625873943497258,
+      "centerlineWoodDistanceMM": 1.6998431876523632,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523632,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.004997032726859044,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.16238830969983417,
+            0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259651610029,
+          "normalUnitTension": -0.004811138730187254
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "left-front",
+      "index": 13,
+      "pointRuntime": [
+        -0.049161796,
+        -0.005099065,
+        0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.70000464910733,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732996,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.1622068893896021,
+            0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "left-front",
+      "index": 14,
+      "pointRuntime": [
+        -0.049213615,
+        -0.004784347,
+        0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196082,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20017228781960816,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.162189932139167,
+            0.9867595583082498,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.005592310774013158
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "left-rear",
+      "index": 2,
+      "pointRuntime": [
+        -0.038788944,
+        -0.066517497,
+        -0.025676104
+      ],
+      "turnDegrees": 1.3861423812897695,
+      "centerlineWoodDistanceMM": 1.6996455822993928,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939278,
+      "faces": [
+        {
+          "face": 2,
+          "normalRuntime": [
+            0.0,
+            -0.09079459284400225,
+            -0.9958696410225044
+          ],
+          "tangentUnitTension": 0.00012538140811276205,
+          "normalUnitTension": -0.024191833558481972
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "left-rear",
+      "index": 4,
+      "pointRuntime": [
+        -0.038822211,
+        -0.066321699,
+        -0.025690547
+      ],
+      "turnDegrees": 1.384606338348837,
+      "centerlineWoodDistanceMM": 1.699632918514136,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996329185141359,
+      "faces": [
+        {
+          "face": 2,
+          "normalRuntime": [
+            0.0,
+            -0.056442055935747255,
+            -0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00022237393605662096,
+          "normalUnitTension": -0.02416432823776702
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "left-rear",
+      "index": 5,
+      "pointRuntime": [
+        -0.038835949,
+        -0.066240682,
+        -0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.699611002415251,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996110024152511,
+      "faces": [
+        {
+          "face": 2,
+          "normalRuntime": [
+            0.0,
+            -0.042227794124546254,
+            -0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "left-rear",
+      "index": 10,
+      "pointRuntime": [
+        -0.049106994,
+        -0.00542621,
+        -0.025699843
+      ],
+      "turnDegrees": 5.625873908305511,
+      "centerlineWoodDistanceMM": 1.699843187652356,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523561,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.004997020677143005,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.16238830969983414,
+            0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259589255565,
+          "normalUnitTension": -0.004811138920359675
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "left-rear",
+      "index": 11,
+      "pointRuntime": [
+        -0.049161796,
+        -0.005099065,
+        -0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.700004649107323,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732307,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.16220688938960184,
+            0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "left-rear",
+      "index": 12,
+      "pointRuntime": [
+        -0.049213615,
+        -0.004784347,
+        -0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196013,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20017228781960128,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.16218993213916658,
+            0.98675955830825,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "right-front",
+      "index": 2,
+      "pointRuntime": [
+        0.038788944,
+        -0.066517497,
+        0.025676104
+      ],
+      "turnDegrees": 1.3861737530880456,
+      "centerlineWoodDistanceMM": 1.6996455822993963,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939633,
+      "faces": [
+        {
+          "face": 62,
+          "normalRuntime": [
+            0.0,
+            -0.09079459284400225,
+            0.9958696410225044
+          ],
+          "tangentUnitTension": 0.0001241835493195523,
+          "normalUnitTension": -0.024192387245415094
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "right-front",
+      "index": 3,
+      "pointRuntime": [
+        0.038822211,
+        -0.066321699,
+        0.025690547
+      ],
+      "turnDegrees": 1.3865990917191948,
+      "centerlineWoodDistanceMM": 1.6996329185141394,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19963291851413945,
+      "faces": [
+        {
+          "face": 62,
+          "normalRuntime": [
+            0.0,
+            -0.056442055935747255,
+            0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00015151723682691707,
+          "normalUnitTension": -0.02419965465689655
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "right-front",
+      "index": 4,
+      "pointRuntime": [
+        0.038835949,
+        -0.066240682,
+        0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.6996110024152546,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19961100241525465,
+      "faces": [
+        {
+          "face": 62,
+          "normalRuntime": [
+            0.0,
+            -0.042227794124546254,
+            0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "right-front",
+      "index": 10,
+      "pointRuntime": [
+        0.049106994,
+        -0.00542621,
+        0.025699843
+      ],
+      "turnDegrees": 5.625873941642113,
+      "centerlineWoodDistanceMM": 1.6998431876523632,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523632,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.004997032091649692,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.16238830969983425,
+            0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259648322966,
+          "normalUnitTension": -0.004811138740212185
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "right-front",
+      "index": 11,
+      "pointRuntime": [
+        0.049161796,
+        -0.005099065,
+        0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.70000464910733,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732996,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.16220688938960198,
+            0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "right-front",
+      "index": 12,
+      "pointRuntime": [
+        0.049213615,
+        -0.004784347,
+        0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196082,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20017228781960816,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.1621899321391669,
+            0.98675955830825,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "right-rear",
+      "index": 2,
+      "pointRuntime": [
+        0.038788944,
+        -0.066517497,
+        -0.025676104
+      ],
+      "turnDegrees": 1.3861737530880456,
+      "centerlineWoodDistanceMM": 1.6996455822993928,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939278,
+      "faces": [
+        {
+          "face": 2,
+          "normalRuntime": [
+            0.0,
+            -0.09079459284400225,
+            -0.9958696410225044
+          ],
+          "tangentUnitTension": 0.0001241835493195523,
+          "normalUnitTension": -0.024192387245415094
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "right-rear",
+      "index": 3,
+      "pointRuntime": [
+        0.038822211,
+        -0.066321699,
+        -0.025690547
+      ],
+      "turnDegrees": 1.3865990917191948,
+      "centerlineWoodDistanceMM": 1.699632918514136,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996329185141359,
+      "faces": [
+        {
+          "face": 2,
+          "normalRuntime": [
+            0.0,
+            -0.056442055935747255,
+            -0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00015151723682691707,
+          "normalUnitTension": -0.02419965465689655
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "right-rear",
+      "index": 4,
+      "pointRuntime": [
+        0.038835949,
+        -0.066240682,
+        -0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.699611002415251,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996110024152511,
+      "faces": [
+        {
+          "face": 2,
+          "normalRuntime": [
+            0.0,
+            -0.042227794124546254,
+            -0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "right-rear",
+      "index": 9,
+      "pointRuntime": [
+        0.049106994,
+        -0.00542621,
+        -0.025699843
+      ],
+      "turnDegrees": 5.625873899039652,
+      "centerlineWoodDistanceMM": 1.699843187652356,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523561,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.004997017504550915,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.1623883096998345,
+            0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259572838165,
+          "normalUnitTension": -0.0048111389704313815
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "right-rear",
+      "index": 10,
+      "pointRuntime": [
+        0.049161796,
+        -0.005099065,
+        -0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.700004649107323,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732307,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.1622068893896022,
+            0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.038244110207421786
+        }
+      ]
+    },
+    {
+      "pose": "reverse-inverted",
+      "strand": "right-rear",
+      "index": 11,
+      "pointRuntime": [
+        0.049213615,
+        -0.004784347,
+        -0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196015,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.2001722878196015,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.16218993213916694,
+            0.98675955830825,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "left-front",
+      "index": 2,
+      "pointRuntime": [
+        -0.038788944,
+        0.066517497,
+        0.025676104
+      ],
+      "turnDegrees": 1.3861737530880456,
+      "centerlineWoodDistanceMM": 1.6996455822993963,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939633,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.09079459284400225,
+            0.9958696410225044
+          ],
+          "tangentUnitTension": 0.0001241835493195523,
+          "normalUnitTension": -0.024192387245415094
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "left-front",
+      "index": 3,
+      "pointRuntime": [
+        -0.038822211,
+        0.066321699,
+        0.025690547
+      ],
+      "turnDegrees": 1.3865990917191948,
+      "centerlineWoodDistanceMM": 1.6996329185141394,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19963291851413945,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.056442055935747255,
+            0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00015151723682691707,
+          "normalUnitTension": -0.02419965465689655
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "left-front",
+      "index": 4,
+      "pointRuntime": [
+        -0.038835949,
+        0.066240682,
+        0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.6996110024152546,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19961100241525465,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.042227794124546254,
+            0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "left-front",
+      "index": 8,
+      "pointRuntime": [
+        -0.049106994,
+        0.00542621,
+        0.025699843
+      ],
+      "turnDegrees": 5.6258739511254126,
+      "centerlineWoodDistanceMM": 1.6998431876523632,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523632,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.004997035338738624,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.16238830969983414,
+            -0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259665125912,
+          "normalUnitTension": -0.004811138688966208
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "left-front",
+      "index": 9,
+      "pointRuntime": [
+        -0.049161796,
+        0.005099065,
+        0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.70000464910733,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732996,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.16220688938960184,
+            -0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "left-front",
+      "index": 10,
+      "pointRuntime": [
+        -0.049213615,
+        0.004784347,
+        0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.700172287819608,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20017228781960794,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.16218993213916658,
+            -0.98675955830825,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "left-rear",
+      "index": 2,
+      "pointRuntime": [
+        -0.038788944,
+        0.066517497,
+        -0.025676104
+      ],
+      "turnDegrees": 1.3861737530880456,
+      "centerlineWoodDistanceMM": 1.6996455822993928,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939278,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.09079459284400225,
+            -0.9958696410225044
+          ],
+          "tangentUnitTension": 0.0001241835493195523,
+          "normalUnitTension": -0.024192387245415094
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "left-rear",
+      "index": 3,
+      "pointRuntime": [
+        -0.038822211,
+        0.066321699,
+        -0.025690547
+      ],
+      "turnDegrees": 1.3865990917191948,
+      "centerlineWoodDistanceMM": 1.699632918514136,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996329185141359,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.056442055935747255,
+            -0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00015151723682691707,
+          "normalUnitTension": -0.02419965465689655
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "left-rear",
+      "index": 4,
+      "pointRuntime": [
+        -0.038835949,
+        0.066240682,
+        -0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.699611002415251,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996110024152511,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.042227794124546254,
+            -0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "left-rear",
+      "index": 9,
+      "pointRuntime": [
+        -0.049106994,
+        0.00542621,
+        -0.025699843
+      ],
+      "turnDegrees": 5.625873950979674,
+      "centerlineWoodDistanceMM": 1.699843187652356,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523561,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.004997035288816464,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.16238830969983417,
+            -0.9867269312595206,
+            0.0
+          ],
+          "tangentUnitTension": 0.09803259664867577,
+          "normalUnitTension": -0.0048111386897539965
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "left-rear",
+      "index": 10,
+      "pointRuntime": [
+        -0.049161796,
+        0.005099065,
+        -0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.700004649107323,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732307,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.1622068893896021,
+            -0.986756770959566,
+            0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "left-rear",
+      "index": 11,
+      "pointRuntime": [
+        -0.049213615,
+        0.004784347,
+        -0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196015,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.2001722878196015,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.162189932139167,
+            -0.9867595583082498,
+            0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.005592310774013158
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "right-front",
+      "index": 2,
+      "pointRuntime": [
+        0.038788944,
+        0.066517497,
+        0.025676104
+      ],
+      "turnDegrees": 1.3861423812897695,
+      "centerlineWoodDistanceMM": 1.6996455822993963,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939633,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.09079459284400225,
+            0.9958696410225044
+          ],
+          "tangentUnitTension": 0.00012538140811276205,
+          "normalUnitTension": -0.024191833558481972
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "right-front",
+      "index": 4,
+      "pointRuntime": [
+        0.038822211,
+        0.066321699,
+        0.025690547
+      ],
+      "turnDegrees": 1.384606338348837,
+      "centerlineWoodDistanceMM": 1.6996329185141394,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19963291851413945,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.056442055935747255,
+            0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00022237393605662096,
+          "normalUnitTension": -0.02416432823776702
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "right-front",
+      "index": 5,
+      "pointRuntime": [
+        0.038835949,
+        0.066240682,
+        0.025694527
+      ],
+      "turnDegrees": 1.38651670981987,
+      "centerlineWoodDistanceMM": 1.6996110024152546,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19961100241525465,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.042227794124546254,
+            0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020395997540049069,
+          "normalUnitTension": -0.02419783169774569
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "right-front",
+      "index": 11,
+      "pointRuntime": [
+        0.049106994,
+        0.00542621,
+        0.025699843
+      ],
+      "turnDegrees": 5.6258738610705095,
+      "centerlineWoodDistanceMM": 1.6998431876523632,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523632,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.004997004503817132,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.1623883096998345,
+            -0.9867269312595206,
+            0.0
+          ],
+          "tangentUnitTension": 0.09803259505562587,
+          "normalUnitTension": -0.004811139175618636
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "right-front",
+      "index": 12,
+      "pointRuntime": [
+        0.049161796,
+        0.005099065,
+        0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.70000464910733,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732996,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.1622068893896022,
+            -0.986756770959566,
+            0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.038244110207421786
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "right-front",
+      "index": 13,
+      "pointRuntime": [
+        0.049213615,
+        0.004784347,
+        0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196082,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20017228781960816,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.16218993213916694,
+            -0.98675955830825,
+            0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "right-rear",
+      "index": 2,
+      "pointRuntime": [
+        0.038788944,
+        0.066517497,
+        -0.025676104
+      ],
+      "turnDegrees": 1.3861423812897695,
+      "centerlineWoodDistanceMM": 1.6996455822993928,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939278,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.09079459284400225,
+            -0.9958696410225044
+          ],
+          "tangentUnitTension": 0.00012538140811276205,
+          "normalUnitTension": -0.024191833558481972
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "right-rear",
+      "index": 4,
+      "pointRuntime": [
+        0.038822211,
+        0.066321699,
+        -0.025690547
+      ],
+      "turnDegrees": 1.384606338348837,
+      "centerlineWoodDistanceMM": 1.699632918514136,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996329185141359,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.056442055935747255,
+            -0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00022237393605662096,
+          "normalUnitTension": -0.02416432823776702
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "right-rear",
+      "index": 5,
+      "pointRuntime": [
+        0.038835949,
+        0.066240682,
+        -0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.699611002415251,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996110024152511,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.042227794124546254,
+            -0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "right-rear",
+      "index": 10,
+      "pointRuntime": [
+        0.049106994,
+        0.00542621,
+        -0.025699843
+      ],
+      "turnDegrees": 5.625873950979674,
+      "centerlineWoodDistanceMM": 1.699843187652356,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523561,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.004997035288816464,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.16238830969983425,
+            -0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259664867577,
+          "normalUnitTension": -0.0048111386897539965
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "right-rear",
+      "index": 11,
+      "pointRuntime": [
+        0.049161796,
+        0.005099065,
+        -0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.700004649107323,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732307,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.16220688938960198,
+            -0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "outer-upper",
+      "strand": "right-rear",
+      "index": 12,
+      "pointRuntime": [
+        0.049213615,
+        0.004784347,
+        -0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196015,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.2001722878196015,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.1621899321391669,
+            -0.98675955830825,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "left-front",
+      "index": 2,
+      "pointRuntime": [
+        -0.038788944,
+        0.066517497,
+        0.025676104
+      ],
+      "turnDegrees": 1.3861737530880456,
+      "centerlineWoodDistanceMM": 1.6996455822993963,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939633,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.09079459284400225,
+            0.9958696410225044
+          ],
+          "tangentUnitTension": 0.0001241835493195523,
+          "normalUnitTension": -0.024192387245415094
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "left-front",
+      "index": 3,
+      "pointRuntime": [
+        -0.038822211,
+        0.066321699,
+        0.025690547
+      ],
+      "turnDegrees": 1.3865990917191948,
+      "centerlineWoodDistanceMM": 1.6996329185141394,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19963291851413945,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.056442055935747255,
+            0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00015151723682691707,
+          "normalUnitTension": -0.02419965465689655
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "left-front",
+      "index": 4,
+      "pointRuntime": [
+        -0.038835949,
+        0.066240682,
+        0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.6996110024152546,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19961100241525465,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.042227794124546254,
+            0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "left-front",
+      "index": 8,
+      "pointRuntime": [
+        -0.049106994,
+        0.00542621,
+        0.025699843
+      ],
+      "turnDegrees": 5.6258739511254126,
+      "centerlineWoodDistanceMM": 1.6998431876523632,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523632,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.004997035338738624,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.16238830969983414,
+            -0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259665125912,
+          "normalUnitTension": -0.004811138688966208
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "left-front",
+      "index": 9,
+      "pointRuntime": [
+        -0.049161796,
+        0.005099065,
+        0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.70000464910733,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732996,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.16220688938960184,
+            -0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "left-front",
+      "index": 10,
+      "pointRuntime": [
+        -0.049213615,
+        0.004784347,
+        0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.700172287819608,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20017228781960794,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 87,
+          "normalRuntime": [
+            -0.16218993213916658,
+            -0.98675955830825,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "left-rear",
+      "index": 2,
+      "pointRuntime": [
+        -0.038788944,
+        0.066517497,
+        -0.025676104
+      ],
+      "turnDegrees": 1.3861737530880456,
+      "centerlineWoodDistanceMM": 1.6996455822993928,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939278,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.09079459284400225,
+            -0.9958696410225044
+          ],
+          "tangentUnitTension": 0.0001241835493195523,
+          "normalUnitTension": -0.024192387245415094
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "left-rear",
+      "index": 3,
+      "pointRuntime": [
+        -0.038822211,
+        0.066321699,
+        -0.025690547
+      ],
+      "turnDegrees": 1.3865990917191948,
+      "centerlineWoodDistanceMM": 1.699632918514136,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996329185141359,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.056442055935747255,
+            -0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00015151723682691707,
+          "normalUnitTension": -0.02419965465689655
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "left-rear",
+      "index": 4,
+      "pointRuntime": [
+        -0.038835949,
+        0.066240682,
+        -0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.699611002415251,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996110024152511,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.042227794124546254,
+            -0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "left-rear",
+      "index": 9,
+      "pointRuntime": [
+        -0.049106994,
+        0.00542621,
+        -0.025699843
+      ],
+      "turnDegrees": 5.625873950979674,
+      "centerlineWoodDistanceMM": 1.699843187652356,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523561,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.004997035288816464,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.16238830969983417,
+            -0.9867269312595206,
+            0.0
+          ],
+          "tangentUnitTension": 0.09803259664867577,
+          "normalUnitTension": -0.0048111386897539965
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "left-rear",
+      "index": 10,
+      "pointRuntime": [
+        -0.049161796,
+        0.005099065,
+        -0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.700004649107323,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732307,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.1622068893896021,
+            -0.986756770959566,
+            0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "left-rear",
+      "index": 11,
+      "pointRuntime": [
+        -0.049213615,
+        0.004784347,
+        -0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196015,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.2001722878196015,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 10,
+          "normalRuntime": [
+            -0.162189932139167,
+            -0.9867595583082498,
+            0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.005592310774013158
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "right-front",
+      "index": 2,
+      "pointRuntime": [
+        0.038788944,
+        0.066517497,
+        0.025676104
+      ],
+      "turnDegrees": 1.3861423812897695,
+      "centerlineWoodDistanceMM": 1.6996455822993963,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939633,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.09079459284400225,
+            0.9958696410225044
+          ],
+          "tangentUnitTension": 0.00012538140811276205,
+          "normalUnitTension": -0.024191833558481972
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "right-front",
+      "index": 4,
+      "pointRuntime": [
+        0.038822211,
+        0.066321699,
+        0.025690547
+      ],
+      "turnDegrees": 1.384606338348837,
+      "centerlineWoodDistanceMM": 1.6996329185141394,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19963291851413945,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.056442055935747255,
+            0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00022237393605662096,
+          "normalUnitTension": -0.02416432823776702
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "right-front",
+      "index": 5,
+      "pointRuntime": [
+        0.038835949,
+        0.066240682,
+        0.025694527
+      ],
+      "turnDegrees": 1.38651670981987,
+      "centerlineWoodDistanceMM": 1.6996110024152546,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19961100241525465,
+      "faces": [
+        {
+          "face": 69,
+          "normalRuntime": [
+            -0.0,
+            0.042227794124546254,
+            0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020395997540049069,
+          "normalUnitTension": -0.02419783169774569
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "right-front",
+      "index": 11,
+      "pointRuntime": [
+        0.049106994,
+        0.00542621,
+        0.025699843
+      ],
+      "turnDegrees": 5.6258738610705095,
+      "centerlineWoodDistanceMM": 1.6998431876523632,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523632,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.004997004503817132,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.1623883096998345,
+            -0.9867269312595206,
+            0.0
+          ],
+          "tangentUnitTension": 0.09803259505562587,
+          "normalUnitTension": -0.004811139175618636
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "right-front",
+      "index": 12,
+      "pointRuntime": [
+        0.049161796,
+        0.005099065,
+        0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.70000464910733,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732996,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.1622068893896022,
+            -0.986756770959566,
+            0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.038244110207421786
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "right-front",
+      "index": 13,
+      "pointRuntime": [
+        0.049213615,
+        0.004784347,
+        0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196082,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20017228781960816,
+      "faces": [
+        {
+          "face": 82,
+          "normalRuntime": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 105,
+          "normalRuntime": [
+            0.16218993213916694,
+            -0.98675955830825,
+            0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "right-rear",
+      "index": 2,
+      "pointRuntime": [
+        0.038788944,
+        0.066517497,
+        -0.025676104
+      ],
+      "turnDegrees": 1.3861423812897695,
+      "centerlineWoodDistanceMM": 1.6996455822993928,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.19964558229939278,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.09079459284400225,
+            -0.9958696410225044
+          ],
+          "tangentUnitTension": 0.00012538140811276205,
+          "normalUnitTension": -0.024191833558481972
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "right-rear",
+      "index": 4,
+      "pointRuntime": [
+        0.038822211,
+        0.066321699,
+        -0.025690547
+      ],
+      "turnDegrees": 1.384606338348837,
+      "centerlineWoodDistanceMM": 1.699632918514136,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996329185141359,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.056442055935747255,
+            -0.9984058765460798
+          ],
+          "tangentUnitTension": 0.00022237393605662096,
+          "normalUnitTension": -0.02416432823776702
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "right-rear",
+      "index": 5,
+      "pointRuntime": [
+        0.038835949,
+        0.066240682,
+        -0.025694527
+      ],
+      "turnDegrees": 1.3865398241225906,
+      "centerlineWoodDistanceMM": 1.699611002415251,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1996110024152511,
+      "faces": [
+        {
+          "face": 9,
+          "normalRuntime": [
+            0.0,
+            0.042227794124546254,
+            -0.9991080088776063
+          ],
+          "tangentUnitTension": 0.00020479439735697505,
+          "normalUnitTension": -0.024198228055742625
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "right-rear",
+      "index": 10,
+      "pointRuntime": [
+        0.049106994,
+        0.00542621,
+        -0.025699843
+      ],
+      "turnDegrees": 5.625873950979674,
+      "centerlineWoodDistanceMM": 1.699843187652356,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.1998431876523561,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.004997035288816464,
+          "normalUnitTension": -0.09802329671815943
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.16238830969983425,
+            -0.9867269312595206,
+            -0.0
+          ],
+          "tangentUnitTension": 0.09803259664867577,
+          "normalUnitTension": -0.0048111386897539965
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "right-rear",
+      "index": 11,
+      "pointRuntime": [
+        0.049161796,
+        0.005099065,
+        -0.025667171
+      ],
+      "turnDegrees": 11.251701892690765,
+      "centerlineWoodDistanceMM": 1.700004649107323,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.20000464910732307,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.03834526842054249,
+          "normalUnitTension": -0.1922775863966156
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.16220688938960198,
+            -0.986756770959566,
+            -0.0
+          ],
+          "tangentUnitTension": 0.19229773237142972,
+          "normalUnitTension": -0.03824411020742178
+        }
+      ]
+    },
+    {
+      "pose": "pinch-side",
+      "strand": "right-rear",
+      "index": 12,
+      "pointRuntime": [
+        0.049213615,
+        0.004784347,
+        -0.025570411
+      ],
+      "turnDegrees": 1.0709307049843444,
+      "centerlineWoodDistanceMM": 1.7001722878196015,
+      "radiusMM": 1.5,
+      "surfaceGapMM": 0.2001722878196015,
+      "faces": [
+        {
+          "face": 1,
+          "normalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "tangentUnitTension": 0.005598653672424801,
+          "normalUnitTension": -0.017832788981848313
+        },
+        {
+          "face": 31,
+          "normalRuntime": [
+            0.1621899321391669,
+            -0.98675955830825,
+            -0.0
+          ],
+          "tangentUnitTension": 0.017834779113343194,
+          "normalUnitTension": -0.00559231077401316
+        }
+      ]
+    }
+  ],
+  "notes": "Point-normal diagnostic only. Finite polyline bearing arcs cannot establish equilibrium from individual vertex normals. Free-air corners over 5 degrees and 0.25 mm physical surface gap warrant inspection."
+}

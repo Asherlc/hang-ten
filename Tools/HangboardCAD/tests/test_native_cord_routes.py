@@ -211,6 +211,40 @@ def test_anchor_plane_avoids_the_wider_solid_beyond_a_tapered_end():
     assert abs(np.dot(anchor - section.origin, section.normal)) < 1e-10
 
 
+def test_noncoplanar_support_keeps_an_unobstructed_free_span_straight():
+    from native_cord_routes import NativeSection, checked_clearance, length
+    # Port-A-Board's actual upright support/mouth coordinates, with two
+    # deliberate closed boxes: the fixed x-section sees an obstruction that
+    # the real 3D support-to-mouth chord clears. The second box supplies the
+    # terminal's native section. No package geometry or route is inferred.
+    support = np.array([0, .292933085, 0])
+    mouth = np.array([-.05, 0, .024])
+    obstacle = trimesh.creation.box(extents=[.02, .04, .04])
+    obstacle.apply_translation([-.05, .12, 0])
+    terminal_body = trimesh.creation.box(extents=[.02, .02, .06])
+    terminal_body.apply_translation([-.05, 0, -.01])
+    mesh = trimesh.util.concatenate([obstacle, terminal_body])
+    radius, clearance = .0015, .0002
+    assert checked_clearance(mesh, [support, mouth], radius) >= radius - 1e-5
+
+    fixed = NativeSection(mesh, mouth, [1, 0, 0], radius, clearance)
+    old = fixed.route(support, mouth)
+    assert checked_clearance(mesh, old, radius) >= radius - 1e-5
+    assert length(old) > np.linalg.norm(mouth - support) + .004
+
+    section = NativeSection.for_span(mesh, support, mouth, [1, 0, 0], radius, clearance)
+    path = section.route(support, mouth)
+    assert np.array_equal(path[0], support)
+    assert np.array_equal(path[-1], mouth)
+    assert np.max(np.abs((path - section.origin) @ section.normal)) < 1e-10
+    # Clearance alone accepted the old detour. An unobstructed free span must
+    # also remain collinear with its real endpoints, with no artificial knee.
+    deviation = np.linalg.norm(np.cross(path - support, mouth - support), axis=1)
+    assert np.max(deviation) < 1e-12
+    assert length(path) == pytest.approx(np.linalg.norm(mouth - support), abs=1e-12)
+    assert checked_clearance(mesh, path, radius) >= radius - 1e-5
+
+
 def test_source_backed_mouth_axis_does_not_bypass_full_solid_clearance():
     from native_cord_routes import NativeSection, checked_clearance
     mesh = trimesh.creation.revolve(np.array([

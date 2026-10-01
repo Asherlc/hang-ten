@@ -6,6 +6,7 @@ generated visible segment must also clear the complete closed 3D CAD solid.
 """
 from __future__ import annotations
 import heapq
+import copy
 import numpy as np
 import trimesh
 from shapely.geometry import LineString, Point, Polygon
@@ -18,7 +19,7 @@ class _CollarCollision(ValueError):
 
 class NativeSection:
     @classmethod
-    def for_span(cls, mesh, start, finish, preferred_normal, radius, clearance, plane_axis=None, rotation_degrees=0):
+    def for_span(cls, mesh, start, finish, preferred_normal, radius, clearance, plane_axis=None, rotation_degrees=0, path_search="dijkstra"):
         """A section through both endpoints, with optional generated chord rotation."""
         span = np.asarray(finish, dtype=float) - np.asarray(start, dtype=float)
         distance = np.linalg.norm(span)
@@ -37,9 +38,12 @@ class NativeSection:
             # Rotate the SECTION, not either endpoint, around their chord.
             angle = np.radians(rotation_degrees)
             normal = normal*np.cos(angle) + np.cross(axis, normal)*np.sin(angle)
-        return cls(mesh, finish, normal, radius, clearance)
+        return cls(mesh, finish, normal, radius, clearance, path_search=path_search)
 
-    def __init__(self, mesh, origin, normal, radius, clearance):
+    def __init__(self, mesh, origin, normal, radius, clearance, path_search="dijkstra"):
+        if path_search not in ("dijkstra", "aStar"):
+            raise ValueError("native section path search must be dijkstra or aStar")
+        self.path_search = path_search
         self.origin = np.asarray(origin, dtype=float)
         normal = np.asarray(normal, dtype=float)
         self.normal = normal / np.linalg.norm(normal)
@@ -132,6 +136,8 @@ class NativeSection:
                     length = float(np.linalg.norm((start if index==n else finish)-self.to_world(point)))
                     endpoints[index].append((j,length))
                     links.setdefault(j, []).append((index,length))
+        if self.path_search == "aStar":
+            return self._a_star(start, finish, points, endpoints, links)
         distances, previous, queue = {n:0.0},{},[(0.0,n)]
         while queue:
             distance,index = heapq.heappop(queue)
@@ -148,6 +154,37 @@ class NativeSection:
                 if candidate < distances.get(neighbor,float("inf"))-1e-12:
                     distances[neighbor],previous[neighbor] = candidate,index
                     heapq.heappush(queue,(candidate,neighbor))
+        raise ValueError("no exterior native-solid route connects these stations")
+
+
+    def _a_star(self, start, finish, points, endpoints, links):
+        """Admissible Euclidean search on the unchanged visibility graph.
+
+        Every edge retains its physical 3D length. Straight-line distance to
+        the actual finish is a consistent lower bound, including off-plane
+        endpoint links. Deterministic ties use distance-so-far then vertex ID.
+        The default Dijkstra queue and its tie behavior remain untouched.
+        """
+        n = len(self.points)
+        heuristic = np.linalg.norm(self.to_world(points) - finish, axis=1)
+        heuristic[n], heuristic[n+1] = np.linalg.norm(start-finish), 0.0
+        distances, previous = {n: 0.0}, {}
+        queue = [(float(heuristic[n]), 0.0, n)]
+        while queue:
+            _, distance, index = heapq.heappop(queue)
+            if distance > distances[index]+1e-12: continue
+            if index == n+1:
+                indices = [index]
+                while indices[-1] != n: indices.append(previous[indices[-1]])
+                path = self.to_world(points[indices[::-1]])
+                path[0], path[-1] = start, finish
+                return path
+            adjacency = self.neighbors(index) + links.get(index, []) if index < n else endpoints[index]
+            for neighbor, edge in adjacency:
+                candidate = distance+edge
+                if candidate < distances.get(neighbor, float("inf"))-1e-12:
+                    distances[neighbor], previous[neighbor] = candidate, index
+                    heapq.heappush(queue, (candidate+float(heuristic[neighbor]), candidate, neighbor))
         raise ValueError("no exterior native-solid route connects these stations")
 
 
@@ -456,6 +493,24 @@ def solve_native_routes(mesh, data, descriptor):
     The optional method never reads authored wrappedRoutes as an initial guess.
     With no tightening selection, the existing seed generator is unchanged.
     """
+    if "pathSearch" in data["ropeSolver"] and data["ropeSolver"]["pathSearch"] != "aStar":
+        raise ValueError("native pathSearch must be aStar when present")
+    if data["ropeSolver"].get("pathSearch") == "aStar":
+        # Reuse only exactly identical physics within this invocation. Height
+        # is re-solved from zero; cameras never participate in routing. No
+        # rounding, quaternion equivalence or inferred symmetry enters the key.
+        setup = data["suspension"]
+        unique, canonical, frames = {}, {}, {}
+        for pose_id, pose in setup["canonicalPoses"].items():
+            key = (tuple(pose["rotation"]), pose["translation"][0], pose["translation"][2])
+            if key not in frames:
+                frames[key] = pose_id
+                unique[pose_id] = pose
+            canonical[pose_id] = frames[key]
+        if len(unique) != len(canonical):
+            reduced = {**data, "suspension": {**setup, "canonicalPoses": unique}}
+            solved = solve_native_routes(mesh, reduced, descriptor)
+            return {pose_id: copy.deepcopy(solved[source_id]) for pose_id, source_id in canonical.items()}
     if "tightening" not in data["ropeSolver"]:
         return _solve_native_seed(mesh, data, descriptor)
     method = data["ropeSolver"]["tightening"]
@@ -631,6 +686,7 @@ def _solve_native_routes(mesh, data, descriptor, section_rotations=None, allow_c
     anchor+=np.asarray(setup["anchor"]["offsetFromBoardBounds"])
     direction=float(solver.get("supportDirection",1))
     clearance=float(solver["clearance"])
+    path_search = solver.get("pathSearch", "dijkstra")
     plane_mode = solver.get("sectionPlane", "fixed")
     if plane_mode not in ("fixed", "anchor"):
         raise ValueError("nativeRoutes sectionPlane must be fixed or anchor")
@@ -661,13 +717,13 @@ def _solve_native_routes(mesh, data, descriptor, section_rotations=None, allow_c
                 fixed = None
                 if plane_mode != "anchor" or strand["kind"] != "lead":
                     if strand["id"] not in fixed_sections:
-                        fixed_sections[strand["id"]] = NativeSection(mesh, points[0], entry["planeNormal"], strand["radius"], clearance)
+                        fixed_sections[strand["id"]] = NativeSection(mesh, points[0], entry["planeNormal"], strand["radius"], clearance, path_search=path_search)
                     fixed = fixed_sections[strand["id"]]
                 first, last = fixed, fixed
                 if plane_mode == "anchor" and strand["kind"] != "segment":
                     first = NativeSection.for_span(mesh, local, first_point, entry["planeNormal"], strand["radius"], margins[strand["id"]],
                                                    plane_axis=entry.get("planeAxis"),
-                                                   rotation_degrees=(section_rotations or {}).get(strand["id"], 0))
+                                                   rotation_degrees=(section_rotations or {}).get(strand["id"], 0), path_search=path_search)
                     if reserve_collars:
                         for other in strands:
                             other_id = other["id"]
@@ -676,7 +732,7 @@ def _solve_native_routes(mesh, data, descriptor, section_rotations=None, allow_c
                                                    strand["radius"] + other["radius"] + margins[strand["id"]])
                     if strand["kind"] == "loop":
                         last = NativeSection.for_span(mesh, points[1], local, entry["planeNormal"], strand["radius"], clearance,
-                                                      plane_axis=entry.get("planeAxis"))
+                                                      plane_axis=entry.get("planeAxis"), path_search=path_search)
                 result[strand["id"]] = (first, fixed, last)
             return result
 

@@ -289,6 +289,20 @@ solver extracts native-solid sections, retains their holes and separate
 pieces, solves paths around rope-offset boundaries, and settles hanging height.
 `sectionPlane: "anchor"` makes each free lead's section contain its actual
 support and terminal; it iterates with height for tapered or varying sections.
+An optional `pathSearch: "aStar"` searches the same native visibility graph
+using the actual three-dimensional distance to the finish as its lower bound.
+It changes search order, not obstacles, stations, edge costs or clearance gates.
+The endpoint bound uses the actual support even when its projection lies off
+the section plane. Omitting this setting preserves the original Dijkstra
+search. The setting accepts only this value and is removed from the generated
+runtime manifest. A* also reuses a certified result for exactly identical
+rotation and horizontal-translation inputs within one solve; it still solves
+height from the cord lengths. It does not infer symmetry or equivalent poses.
+The [Port-A-Board cord review](source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/cord-physics-review/review.md)
+records the actual-support correction and native path comparison. Use anchor
+sections when the support-to-mouth span needs a lateral component: projecting
+the support into a fixed-X section can introduce a sideways bend that a smooth
+rim cannot support.
 An optional `planeAxis` selects the native axis that the preferred section
 contains. Certified conflict recovery may rotate the free-span section around
 its support-to-derived-collar chord as described below; it does not rotate the

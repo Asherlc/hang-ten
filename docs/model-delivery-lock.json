@@ -62,7 +62,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "b39446d7f609b41d81e3d4ac0f9746be9108611c5bc06dcf11503ebb040efbf1",
+  "sha256Manifest": "15ff6700a3d966c5cf348a72b60d8e0e48833c3053a1d554d83135f8113f527b",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -722,10 +722,10 @@
       "comparison": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/review/index.html",
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/metadata-diff.json",
       "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/app-review/validation.json",
+      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/cord-physics-review/after-app/validation.json",
       "geometryAcceptance": "pending requested one-by-one user review",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-      "suspensionSHA256": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305"
+      "suspensionSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf"
     },
     "mammut-diamond-finger": {
       "source": "Hangboards/mammut-diamond-finger/mammut-diamond-finger.FCStd",
@@ -1150,7 +1150,8 @@
     "a3349681809872a6b65205b4da7cb38beaa3b1ed7b246518d4d225bc87702c11",
     "57c0654a52e3c8b4cb4c3dd6e610dced580daf8ccfb71dbd2f1d4028c4ad66be",
     "d1eff0bbf16d58487e273f9a24a12a4ab2c9bc50b960ff68fdaaee000a068244",
-    "f9f84417bfde7f8689920ac28724ccff4fa6f6a4592cac75a86cd54d84b4d23c"
+    "f9f84417bfde7f8689920ac28724ccff4fa6f6a4592cac75a86cd54d84b4d23c",
+    "b39446d7f609b41d81e3d4ac0f9746be9108611c5bc06dcf11503ebb040efbf1"
   ],
   "individualReviewRevisions": [
     {
@@ -1233,6 +1234,20 @@
       "answer": "Y",
       "question": "Does this cord length look right?",
       "revisionCommit": "1e09ed9be2c690fe98c0a69aa92125a66127f9e0"
+    },
+    {
+      "package": "frictitious-port-a-board",
+      "date": "2026-09-30",
+      "revision": "cord-physics",
+      "request": "Rope physics are off. They go up and then it's coming to a point that there should be no bend.",
+      "scope": "Actual-support native sections and optional A* graph search; regenerated routes and hanging height. Native source/model/descriptor, actual mouths, cord dimensions, pose rotations and cameras preserved.",
+      "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+      "modelSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+      "descriptorSHA256": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+      "suspensionSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
+      "review": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/cord-physics-review/review.md",
+      "geometryAcceptance": "pending revised cord review #5",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/human-review.json"
     }
   ]
 }

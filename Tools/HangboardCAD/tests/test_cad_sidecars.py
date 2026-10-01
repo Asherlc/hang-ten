@@ -152,3 +152,19 @@ def test_native_tightening_rejects_unsupported_entry_topologies(tmp_path, unsupp
         del terminal["mouthAxis"]
     with pytest.raises(cad_source.ManifestError, match="tightening"):
         merge(tmp_path, board, entries)
+
+
+def test_native_astar_is_authoring_only(tmp_path):
+    board, entries = package(tmp_path)
+    solver = front_entry_authoring(entries)
+    solver["pathSearch"] = "aStar"
+    merged = merge(tmp_path, board, entries)
+    assert "pathSearch" not in cad_source.render_board(merged).decode()
+
+
+@pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+def test_native_path_search_rejects_invalid_explicit_selector(tmp_path, selector):
+    board, entries = package(tmp_path)
+    front_entry_authoring(entries)["pathSearch"] = selector
+    with pytest.raises(cad_source.ManifestError, match="pathSearch"):
+        merge(tmp_path, board, entries)
