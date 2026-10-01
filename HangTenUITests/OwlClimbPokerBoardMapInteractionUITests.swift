@@ -9,6 +9,52 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         super.tearDown()
     }
 
+    func testSelectedTopSloperAnimatesWithoutCameraSyncInterruptingIt() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "beastmaker-1000",
+            "HANGTEN_REVIEW_BOARD_DETAIL": "1",
+            "HANGTEN_REVIEW_BOARD_HOLD_ID": "pocket-middle-center",
+            "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+        ]
+        app.launch()
+        let diagnostic = app.otherElements["boardModel.renderDiagnostic"]
+        XCTAssertTrue(diagnostic.waitForExistence(timeout: 30))
+        let sloper = app.buttons["boardDetail.holdLegend.sloper-center"]
+        XCTAssertTrue(sloper.waitForExistence(timeout: 10))
+        XCTAssertTrue(sloper.isHittable)
+        sloper.tap()
+        let selected = app.otherElements["boardDetail.selectedHold.sloper-center"]
+        XCTAssertTrue(selected.waitForExistence(timeout: 10))
+        let completed = NSPredicate { _, _ in
+            guard let value = diagnostic.value as? String,
+                  value.contains("cameraActive=true"),
+                  let target = self.diagnosticNumber("elevation", in: value),
+                  let actual = self.diagnosticNumber("cameraPitch", in: value) else { return false }
+            return target > 0.05 && abs(actual - target) < 0.025
+        }
+        expectation(for: completed, evaluatedWith: diagnostic)
+        waitForExpectations(timeout: 10)
+        addScreenshot(named: "Beastmaker top sloper pivoted")
+        let map = app.otherElements["boardDetail.map"]
+        map.coordinate(withNormalizedOffset: CGVector(dx: 0.35, dy: 0.5))
+            .press(forDuration: 0.1, thenDragTo: map.coordinate(
+                withNormalizedOffset: CGVector(dx: 0.65, dy: 0.5)))
+        let dragged = try XCTUnwrap(diagnostic.value as? String)
+        let manualAzimuth = try XCTUnwrap(diagnosticNumber("azimuth", in: dragged))
+        XCTAssertGreaterThan(abs(manualAzimuth), 0.05, "Manual orbit must still work after selection")
+        sloper.tap()
+        let repeated = try XCTUnwrap(diagnostic.value as? String)
+        XCTAssertEqual(try XCTUnwrap(diagnosticNumber("azimuth", in: repeated)),
+                       manualAzimuth, accuracy: 0.001, "Rendering the same selection must preserve manual orbit")
+    }
+
+    private func diagnosticNumber(_ key: String, in value: String) -> Float? {
+        value.split(separator: ";").first { $0.hasPrefix(key + "=") }
+            .flatMap { Float($0.dropFirst(key.count + 1)) }
+    }
+
     // Named so it sorts before testLandscape* under alphabetical XCTest order.
     func testModelBoardDetailRendersAndSelectsHold() throws {
         let app = XCUIApplication()

@@ -191,6 +191,10 @@ final class BoardModelRealityScene {
     private var viewportSize: CGSize = .zero
     private var lastHighlightedContactIDs: Set<String>?
     private var lastHighlightMode: BoardHighlightMode?
+    private var lastFocusedPositionID: String?
+    private var contactAreaVectors: [Entity: [SIMD3<Float>]] = [:]
+    private var cameraTargetTransform: Transform?
+    private var cameraAnimation: AnimationPlaybackController?
 
     // Config
     private let descriptor: BoardModelDescriptor
@@ -710,8 +714,19 @@ final class BoardModelRealityScene {
     }
 
     func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {
-        guard contactIDs != lastHighlightedContactIDs || mode != lastHighlightMode else { return }
+        let selectionChanged = contactIDs != lastHighlightedContactIDs
+            || activePositionID != lastFocusedPositionID
+        guard selectionChanged || mode != lastHighlightMode else { return }
+        let hadSelection = !(lastHighlightedContactIDs ?? []).isEmpty
         lastHighlightedContactIDs = contactIDs
+        lastFocusedPositionID = activePositionID
+        if selectionChanged, !contactIDs.isEmpty || hadSelection {
+            let adjustment = selectionOrbit(for: contactIDs)
+            orbitAzimuth = adjustment.x
+            orbitElevation = adjustment.y
+            orbitZoom = 1
+            updateCameraTransform(animated: true)
+        }
         lastHighlightMode = mode
         // Apply highlight materials to contact entities
         for (contactID, entities) in contactEntities {
@@ -721,6 +736,111 @@ final class BoardModelRealityScene {
                 applyHighlight(to: entity, color: highlightColor, mode: mode)
             }
         }
+    }
+
+    /// Use the actual contact triangles, including the current board pose and
+    /// reflected instances. Their projected area identifies edge-on surfaces;
+    /// names, grip types, and flat hold outlines do not describe their 3D facing.
+    private func selectionOrbit(for contactIDs: Set<String>) -> SIMD2<Float> {
+        guard let framing = currentFraming else { return .zero }
+        let surfaces = contactIDs.sorted().compactMap { id -> [SIMD3<Float>]? in
+            let vectors = (contactEntities[id] ?? []).flatMap { entity -> [SIMD3<Float>] in
+                let transform = entity.transformMatrix(relativeTo: nil)
+                let linear = simd_float3x3(columns: (
+                    SIMD3(transform.columns.0.x, transform.columns.0.y, transform.columns.0.z),
+                    SIMD3(transform.columns.1.x, transform.columns.1.y, transform.columns.1.z),
+                    SIMD3(transform.columns.2.x, transform.columns.2.y, transform.columns.2.z)))
+                let determinant = simd_determinant(linear)
+                guard determinant.isFinite, abs(determinant) > 1e-8 else { return [] }
+                // Absolute determinant preserves outward normals on mirrored halves.
+                let normalTransform = abs(determinant) * simd_transpose(simd_inverse(linear))
+                return areaVectors(for: entity).map { normalTransform * $0 }
+            }.filter { $0.x.isFinite && $0.y.isFinite && $0.z.isFinite && simd_length($0) > 1e-10 }
+            return vectors.isEmpty ? nil : vectors
+        }
+        guard !surfaces.isEmpty else { return .zero }
+        let areas = surfaces.map { $0.reduce(Float(0)) { $0 + simd_length($1) } }
+        func visibility(_ angles: SIMD2<Float>) -> Float {
+            let direction = orbitRotation(azimuth: angles.x, elevation: angles.y, framing: framing)
+                .act(-framing.direction)
+            // The least visible selected hold governs a bilateral/multiple selection.
+            return zip(surfaces, areas).map { vectors, area in
+                vectors.reduce(Float(0)) { $0 + max(0, simd_dot($1, direction)) } / area
+            }.min() ?? 1
+        }
+        let baseline = visibility(.zero)
+        let readableArea: Float = 0.5
+        guard baseline < readableArea else { return .zero }
+        // Search a small 20-degree neighborhood, closest angles first. Prefer
+        // an upward tilt in ties, while outward normals choose the correct side.
+        let step: Float = .pi / 45
+        var candidates: [SIMD2<Float>] = []
+        for x in -5...5 {
+            for y in -5...5 {
+                let candidate = SIMD2<Float>(Float(x) * step, Float(y) * step)
+                if candidate != .zero, simd_length(candidate) <= step * 5 + 1e-6 {
+                    candidates.append(candidate)
+                }
+            }
+        }
+        candidates.sort {
+            let a = simd_length_squared($0), b = simd_length_squared($1)
+            if abs(a - b) > 1e-6 { return a < b }
+            if $0.y != $1.y { return $0.y > $1.y }
+            return $0.x > $1.x
+        }
+        var best = SIMD2<Float>.zero
+        var bestVisibility = baseline
+        for candidate in candidates {
+            let score = visibility(candidate)
+            if score > bestVisibility + 1e-5 {
+                best = candidate
+                bestVisibility = score
+            }
+            if score >= readableArea { return candidate }
+        }
+        // Avoid moving the board for a negligible or unhelpful improvement.
+        return bestVisibility >= baseline + 0.04 ? best : .zero
+    }
+
+    private func areaVectors(for entity: ModelEntity) -> [SIMD3<Float>] {
+        if let cached = contactAreaVectors[entity] { return cached }
+        guard let mesh = entity.model?.mesh else { return [] }
+        var vectors: [SIMD3<Float>] = []
+        let contents = mesh.contents
+        for model in contents.models {
+            let instances = contents.instances.filter { $0.model == model.id }.map(\.transform)
+            for transform in instances.isEmpty ? [matrix_identity_float4x4] : instances {
+                for part in model.parts {
+                    guard let indices = part.triangleIndices else { continue }
+                    let positions = Array(part.positions)
+                    let triangles = Array(indices)
+                    guard triangles.count >= 3 else { continue }
+                    for i in stride(from: 0, to: triangles.count - 2, by: 3) {
+                        let ids = [Int(triangles[i]), Int(triangles[i + 1]), Int(triangles[i + 2])]
+                        guard ids.allSatisfy({ positions.indices.contains($0) }) else { continue }
+                        let points = ids.map { index -> SIMD3<Float> in
+                            let point = transform * SIMD4<Float>(positions[index], 1)
+                            return SIMD3(point.x, point.y, point.z)
+                        }
+                        // A reflected mesh instance reverses winding. Preserve
+                        // the surface's outward facing before the entity transform.
+                        let facing: Float = simd_determinant(transform) < 0 ? -1 : 1
+                        let vector = facing * simd_cross(points[1] - points[0], points[2] - points[0])
+                        if vector.x.isFinite, vector.y.isFinite, vector.z.isFinite, simd_length(vector) > 1e-10 { vectors.append(vector) }
+                    }
+                }
+            }
+        }
+        contactAreaVectors[entity] = vectors
+        return vectors
+    }
+
+    private func orbitRotation(azimuth: Float, elevation: Float,
+                               framing: SuspendedCameraFraming) -> simd_quatf {
+        let yaw = simd_quatf(angle: azimuth, axis: framing.up)
+        let pitch = simd_quatf(angle: -elevation, axis: simd_normalize(yaw.act(framing.right)))
+        return pitch * yaw
     }
 
     func contactID(for entity: Entity) -> String? {
@@ -923,29 +1043,42 @@ final class BoardModelRealityScene {
     }
 
     private func updateCameraTransform(animated: Bool = false, completion: (() -> Void)? = nil) {
-        // Update camera position based on orbit state and framing
-        let framing = currentFraming
-        let fov = camera.camera.fieldOfViewInDegrees
-        let distanceMultiplier = Float(display.camera.distanceMultiplier ?? 1)
-        let distance = framing.flatMap {
-            Self.perspectiveFitDistance(framing: $0, viewportSize: viewportSize,
-                                       fieldOfViewDegrees: fov,
-                                       distanceMultiplier: distanceMultiplier)
-        } ?? (framing?.distance ?? 1)
-        let zoomedDistance = distance * orbitZoom
-        let target = framing?.target ?? SIMD3<Float>(0, 0, 0)
-        let up = framing?.up ?? SIMD3<Float>(0, 1, 0)
-        let direction = simd_normalize(-(framing?.direction ?? SIMD3<Float>(0, 0, -1)))
-        let right = framing?.right ?? SIMD3<Float>(1, 0, 0)
-        let yaw = simd_quatf(angle: orbitAzimuth, axis: up)
-        let yawedDirection = yaw.act(direction)
-        let yawedRight = simd_normalize(yaw.act(right))
-        let pitch = simd_quatf(angle: -orbitElevation, axis: yawedRight)
-        camera.position = target + pitch.act(yawedDirection) * zoomedDistance
-        camera.look(at: target, from: camera.position, relativeTo: nil)
-
-        if animated {
-            // Animate camera transition
+        guard let framing = currentFraming else { completion?(); return }
+        let rotation = orbitRotation(azimuth: orbitAzimuth, elevation: orbitElevation, framing: framing)
+        let backward = simd_normalize(rotation.act(-framing.direction))
+        let right = simd_normalize(rotation.act(framing.right))
+        let up = simd_normalize(simd_cross(backward, right))
+        var fitted = framing
+        if orbitAzimuth != 0 || orbitElevation != 0 {
+            // Refit the same complete board/cord bounds at the new angle. Keep
+            // the pivot fixed so selecting a hold does not pan to that hold.
+            let relative = framing.includedPoints.map { $0 - framing.target }
+            let width = 2 * (relative.map { abs(simd_dot($0, right)) }.max() ?? framing.width / 2)
+            let height = 2 * (relative.map { abs(simd_dot($0, up)) }.max() ?? framing.height / 2)
+            let depth = 2 * (relative.map { abs(simd_dot($0, backward)) }.max() ?? framing.depth / 2)
+            fitted = SuspendedCameraFraming(
+                target: framing.target, direction: -backward, viewDirection: -backward,
+                right: right, up: up, distance: framing.distance,
+                width: width, height: height, depth: depth,
+                fitPadding: framing.fitPadding, includedPoints: framing.includedPoints)
+        }
+        let distance = Self.perspectiveFitDistance(
+            framing: fitted, viewportSize: viewportSize,
+            fieldOfViewDegrees: camera.camera.fieldOfViewInDegrees,
+            distanceMultiplier: Float(display.camera.distanceMultiplier ?? 1)) ?? framing.distance
+        let target = Transform(
+            scale: .one, rotation: simd_quatf(simd_float3x3(columns: (right, up, backward))),
+            translation: framing.target + backward * distance * orbitZoom)
+        // SwiftUI resynchronizes framing during animations. Reapplying the
+        // same target would cancel the transition on its very next frame.
+        guard target.matrix != cameraTargetTransform?.matrix else { completion?(); return }
+        cameraTargetTransform = target
+        cameraAnimation?.stop()
+        cameraAnimation = nil
+        if animated, camera.isActive, !UIAccessibility.isReduceMotionEnabled {
+            cameraAnimation = camera.move(to: target, relativeTo: nil, duration: 0.28, timingFunction: .easeInOut)
+        } else {
+            camera.transform = target
         }
         completion?()
     }

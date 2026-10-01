@@ -191,7 +191,7 @@ struct BoardModelRealityView: View {
                 applySync(size: size)
                 #if DEBUG
                 if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
-                    let diagnostic = "revision=\(revision);rootActive=\(model.root.isActive);cameraActive=\(model.camera.isActive);sameScene=\(model.root.scene != nil && model.root.scene === model.camera.scene)"
+                    let diagnostic = "revision=\(revision);rootActive=\(model.root.isActive);cameraActive=\(model.camera.isActive);sameScene=\(model.root.scene != nil && model.root.scene === model.camera.scene);azimuth=\(model.orbitAzimuth);elevation=\(model.orbitElevation);cameraPitch=\(asin(model.camera.orientation.act(SIMD3<Float>(0, 0, 1)).y))"
                     Task { @MainActor in
                         if synchronizedCameraDiagnostic != diagnostic {
                             synchronizedCameraDiagnostic = diagnostic
@@ -199,6 +199,13 @@ struct BoardModelRealityView: View {
                     }
                 }
                 #endif
+            }
+            .task(id: CameraSelection(positionID: positionID, contactIDs: highlightedContactIDs)) {
+                for _ in 0..<10 {
+                    try? await Task.sleep(for: .milliseconds(35))
+                    guard !Task.isCancelled else { return }
+                    cameraRevision &+= 1
+                }
             }
             .gesture(orbitGesture(size: size))
             .simultaneousGesture(magnifyGesture)
@@ -228,6 +235,11 @@ struct BoardModelRealityView: View {
         .modifier(BoardModelAccessibilityContainer(
             label: onContactTap == nil ? "\(boardName) hangboard" : nil,
             value: onContactTap == nil ? accessibilityValue : nil))
+    }
+
+    private struct CameraSelection: Hashable {
+        let positionID: String?
+        let contactIDs: Set<String>
     }
 
     private func applySync(size: CGSize) {
@@ -266,8 +278,6 @@ struct BoardModelRealityView: View {
             .onEnded { value in
                 guard let id = model.contactID(for: value.entity),
                       let contact = contacts.first(where: { $0.id == id }) else { return }
-                model.resetCamera(animated: true)
-                cameraRevision &+= 1
                 onContactTap?(contact)
             }
     }
