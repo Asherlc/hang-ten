@@ -1070,3 +1070,44 @@ had zero changed RGB pixels with stable map bounds; DoorMount's orbit changed
 and diagnostics were exported and retained before this fixture correction.
 The passing CI DoorMount used the original 0.25 offset, so the local miss is
 not universal. No rendering fix or environment-only cause is claimed.
+
+
+## Integrated b56 baseline and analytics configuration comparison
+
+The b56 CI run 36894419712 completed 25 board cases with four failures.
+DoorMount and Forge timed out at rendered body visibility; their full-sized
+screenshots show blank map viewports. Evo and Megalith failed rendered orbit
+with zero changed RGB pixels and stable map bounds. Natural and Pro passed
+selection, rendered orbit, native same-contact retap, camera/rendered preservation
+and landscape. The other 19 board cases passed. The renderer log contains
+12 distinct scene attachments across the six Batch05 processes; this does not
+prove simultaneous native host lifetime.
+
+All other checks passed: 1,421 unit tests with three skips and zero failures,
+23 purchase/settings/workout UI tests, 49 native CAD tests, 547 package Python
+tests, 41 CAD Python tests with four skips and two deselections, and lint.
+Full board artifact 11179974619 (156,926,180 bytes) was downloaded, CRC checked
+and extracted. Logs, attachments, diagnostics, pixel comparisons and the
+visually inspected overview were retained before this comparison is pushed.
+
+A confirmed configuration difference remains: CI's board build embeds a
+nonempty analytics key, while the passing local builds explicitly use a blank
+key. TelemetryComposition creates an Amplitude client only when that key is
+configured. The pinned Amplitude 1.18.8 source (9479e134) installs lifecycle,
+context, network and destination plugins and a tracking queue, even with
+autocapture disabled. Screen/interaction autocapture and remote configuration
+are disabled. No direct renderer interaction or violated UIKit/Core Animation
+contract has been established. Sentry's malformed-DSN messages occur locally
+and in CI and do not distinguish the outcomes.
+
+This bounded diagnostic blanks only the board job's analytics xcconfig key,
+matching the passing local configuration. Production app code, other jobs,
+all 25 selectors, rapid Train navigation, the interactive preview, gestures,
+rendered/native assertions, deadlines, toolchain, runtime and device selection
+remain unchanged. Workflow parity, actionlint and 72 CI coverage contracts
+passed. A stale result rejects analytics initialization as necessary for that
+reproduction. A pass establishes association only, with timing and scheduling
+confounds; setup or missing evidence is inconclusive. Retain the full result
+and restore the workflow to b56 after either outcome. No unchanged retry,
+rendering fix, environment-only cause or framework/GPU responsibility is claimed.
+This diagnostic head must never be merged, even if its checks pass.
