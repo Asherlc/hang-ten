@@ -6,6 +6,192 @@ import simd
 
 final class BoardModelRealityTests: XCTestCase {
     @MainActor
+    private func selectionScene() async throws -> BoardModelRealityScene {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-1000"))
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
+        let top = ModelEntity(mesh: .generatePlane(width: 0.05, depth: 0.03))
+        let front = ModelEntity(mesh: .generatePlane(width: 0.05, depth: 0.03))
+        front.orientation = simd_quatf(angle: .pi / 2, axis: [1, 0, 0])
+        let side = ModelEntity(mesh: .generatePlane(width: 0.05, depth: 0.03))
+        side.orientation = simd_quatf(angle: -.pi / 2, axis: [0, 0, 1])
+        for entity in [top, front, side] { scene.root.addChild(entity) }
+        scene.contactEntities = ["top": [top], "front": [front], "side": [side]]
+        scene.frame(in: CGSize(width: 390, height: 240))
+        return scene
+    }
+
+    @MainActor
+    func testSelectingEdgeOnTopSurfaceTiltsViewJustEnough() async throws {
+        let scene = try await selectionScene()
+        scene.highlight(["top"], mode: .active)
+        XCTAssertGreaterThan(scene.orbitElevation, 0.15, "Top surfaces need a view from above")
+        XCTAssertLessThanOrEqual(scene.orbitElevation, 0.4, "Keep the adjustment small")
+        XCTAssertEqual(scene.orbitAzimuth, 0, accuracy: 0.001)
+        XCTAssertEqual(scene.orbitZoom, 1)
+    }
+
+    @MainActor
+    func testSelectingVisibleFrontSurfaceKeepsHeadOnView() async throws {
+        let scene = try await selectionScene()
+        let initial = scene.camera.transform.matrix
+        scene.highlight(["front"], mode: .active)
+        XCTAssertEqual(scene.orbitElevation, 0)
+        XCTAssertEqual(scene.orbitAzimuth, 0)
+        XCTAssertEqual(scene.camera.transform.matrix, initial)
+    }
+
+    @MainActor
+    func testSelectingVisibleFrontSurfacePreservesManualFraming() async throws {
+        let scene = try await selectionScene()
+        scene.highlight(["top"], mode: .active)
+        scene.orbit(azimuth: 0.2, elevation: 0.1, zoomScale: 0.9)
+        let manual = scene.camera.transform.matrix
+        scene.highlight(["front"], mode: .active)
+        XCTAssertEqual(scene.orbitAzimuth, 0.2)
+        XCTAssertEqual(scene.orbitElevation, 0.1)
+        XCTAssertEqual(scene.orbitZoom, 0.9)
+        XCTAssertEqual(scene.camera.transform.matrix, manual)
+        scene.highlight([], mode: .active)
+        XCTAssertEqual(scene.orbitAzimuth, 0)
+        XCTAssertEqual(scene.orbitElevation, 0)
+        XCTAssertEqual(scene.orbitZoom, 1)
+    }
+
+    @MainActor
+    func testSelectionUsesReplacementContactMesh() async throws {
+        let scene = try await selectionScene()
+        let top = try XCTUnwrap(scene.contactEntities["top"]?.first)
+        scene.highlight(["top"], mode: .active)
+        XCTAssertGreaterThan(scene.orbitElevation, 0.15)
+        scene.highlight([], mode: .active)
+        var contents = try XCTUnwrap(top.model?.mesh.contents)
+        for var instance in contents.instances {
+            instance.transform = simd_float4x4(simd_quatf(angle: .pi / 2, axis: SIMD3(1, 0, 0)))
+            contents.instances.update(instance)
+        }
+        top.model?.mesh = try MeshResource.generate(from: contents)
+        scene.highlight(["top"], mode: .active)
+        XCTAssertEqual(scene.orbitElevation, 0, "The replacement surface faces the camera")
+        XCTAssertEqual(scene.orbitAzimuth, 0)
+    }
+
+    @MainActor
+    func testSelectingEdgeOnSideSurfacePivotsHorizontally() async throws {
+        let scene = try await selectionScene()
+        scene.highlight(["side"], mode: .active)
+        XCTAssertGreaterThan(abs(scene.orbitAzimuth), 0.15)
+        XCTAssertLessThanOrEqual(abs(scene.orbitAzimuth), 0.4)
+        XCTAssertEqual(scene.orbitElevation, 0, accuracy: 0.001)
+    }
+
+    @MainActor
+    func testSelectionAdjustmentPreservesManualOrbitAcrossRenderAndModeUpdates() async throws {
+        let scene = try await selectionScene()
+        scene.highlight(["top"], mode: .active)
+        scene.orbit(azimuth: 0.2, elevation: 0.1, zoomScale: 0.9)
+        scene.frame(in: CGSize(width: 390, height: 240))
+        scene.highlight(["top"], mode: .preview)
+        XCTAssertEqual(scene.orbitAzimuth, 0.2)
+        XCTAssertEqual(scene.orbitElevation, 0.1)
+        XCTAssertEqual(scene.orbitZoom, 0.9)
+    }
+
+    @MainActor
+    func testClearingSelectionRestoresDefaultCamera() async throws {
+        let scene = try await selectionScene()
+        let initial = scene.camera.transform.matrix
+        scene.highlight(["top"], mode: .active)
+        XCTAssertNotEqual(scene.camera.transform.matrix, initial)
+        scene.highlight([], mode: .active)
+        XCTAssertEqual(scene.camera.transform.matrix, initial)
+    }
+
+    @MainActor
+    func testMultipleSelectionsExposeBothTopAndFrontSurfaces() async throws {
+        let scene = try await selectionScene()
+        scene.highlight(["top", "front"], mode: .active)
+        XCTAssertGreaterThan(scene.orbitElevation, 0.15)
+        XCTAssertLessThanOrEqual(scene.orbitElevation, 0.4)
+    }
+
+    @MainActor
+    func testMirroredTopSurfaceStillTiltsAboveTheBoard() async throws {
+        let scene = try await selectionScene()
+        let top = try XCTUnwrap(scene.contactEntities["top"]?.first)
+        top.scale.x = -1
+        scene.highlight(["top"], mode: .active)
+        XCTAssertGreaterThan(scene.orbitElevation, 0.15)
+    }
+
+    @MainActor
+    func testUndersideSurfaceTiltsBelowTheBoard() async throws {
+        let scene = try await selectionScene()
+        let top = try XCTUnwrap(scene.contactEntities["top"]?.first)
+        top.orientation = simd_quatf(angle: .pi, axis: [1, 0, 0])
+        scene.highlight(["top"], mode: .active)
+        XCTAssertLessThan(scene.orbitElevation, -0.15)
+        XCTAssertGreaterThanOrEqual(scene.orbitElevation, -0.4)
+    }
+
+    @MainActor
+    func testAutomaticPivotKeepsTheWholeBoardInsideTheViewport() async throws {
+        let scene = try await selectionScene()
+        let viewport = CGSize(width: 390, height: 240)
+        scene.highlight(["top"], mode: .active)
+        let bounds = try XCTUnwrap(scene.instanceEntities.first).visualBounds(relativeTo: nil)
+        let view = simd_inverse(scene.camera.transform.matrix)
+        let tangent = tan(scene.camera.camera.fieldOfViewInDegrees * .pi / 360)
+        for x in [bounds.min.x, bounds.max.x] {
+            for y in [bounds.min.y, bounds.max.y] {
+                for z in [bounds.min.z, bounds.max.z] {
+                    let point = view * SIMD4<Float>(x, y, z, 1)
+                    XCTAssertGreaterThan(-point.z, 0)
+                    XCTAssertLessThanOrEqual(abs(point.y / -point.z / tangent), 1)
+                    XCTAssertLessThanOrEqual(abs(point.x / -point.z / tangent / Float(viewport.width / viewport.height)), 1)
+                }
+            }
+        }
+    }
+
+    @MainActor
+    func testBeastmakerTopSloperSelectionRevealsMoreOfItsSurface() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-1000"))
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
+        scene.frame(in: CGSize(width: 390, height: 240))
+        scene.highlight(["sloper-center"], mode: .active)
+        XCTAssertGreaterThan(scene.orbitElevation, 0, "The shallow top sloper needs a clearer view")
+        XCTAssertLessThanOrEqual(scene.orbitElevation, 0.4)
+    }
+
+    @MainActor
+    func testReflectedMeshInstanceStillTiltsAboveItsTopSurface() async throws {
+        let scene = try await selectionScene()
+        let top = try XCTUnwrap(scene.contactEntities["top"]?.first)
+        var contents = try XCTUnwrap(top.model?.mesh.contents)
+        let original = try XCTUnwrap(contents.instances.first)
+        var reflection = matrix_identity_float4x4
+        reflection.columns.0.x = -1
+        contents.instances = MeshInstanceCollection([
+            MeshResource.Instance(id: original.id, model: original.model, at: reflection)
+        ])
+        top.model?.mesh = try MeshResource.generate(from: contents)
+        scene.highlight(["top"], mode: .active)
+        XCTAssertGreaterThan(scene.orbitElevation, 0.15)
+    }
+
+    @MainActor
+    func testSelectingBeastmakerPocketRevealsItsEdgeOnFingerSurface() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-1000"))
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
+        scene.frame(in: CGSize(width: 390, height: 240))
+        // The authored contact is the inner finger surface, rather than the
+        // front silhouette of the pocket opening. Its floor faces upward.
+        scene.highlight(["pocket-middle-center"], mode: .active)
+        XCTAssertGreaterThan(scene.orbitElevation, 0)
+        XCTAssertLessThanOrEqual(scene.orbitElevation, 0.4)
+    }
+
+    @MainActor
     func testCordAndCADModelShareMeterScale() async throws {
         for (id,width) in [("clavellium-training-block",Float(0.08)),("lattice.mini-bar",Float(0.155))] {
             let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:id))

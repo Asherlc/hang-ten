@@ -3,6 +3,15 @@ import Sentry
 
 @main
 struct HangTenApp: App {
+    #if DEBUG
+    // Hosted unit tests load their bundle in this process. UI tests run in a
+    // separate runner, so they must still launch the full application UI.
+    static var isUnitTestHost: Bool {
+        ProcessInfo.processInfo.environment["XCTestBundlePath"]?
+            .hasSuffix("/HangTenTests.xctest") == true
+    }
+    #endif
+
 	@StateObject private var motherboardBluetoothService: MotherboardBluetoothService
 	@StateObject private var motherboardSettingsStore: MotherboardSettingsStore
 	@StateObject private var purchaseManager: PurchaseManager
@@ -81,7 +90,11 @@ struct HangTenApp: App {
         WindowGroup {
             Group {
                 #if DEBUG
-                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_GRIP_MODEL"] == "1" {
+                if Self.isUnitTestHost {
+                    // Cold RealityKit shader compilation can block the main
+                    // queue and starve unrelated asynchronous unit tests.
+                    EmptyView()
+                } else if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_GRIP_MODEL"] == "1" {
                     GripHandModelReviewView()
                 } else {
                     RootView()
@@ -94,6 +107,9 @@ struct HangTenApp: App {
 				.environmentObject(motherboardBluetoothService)
 				.environmentObject(motherboardSettingsStore)
 				.task {
+                    #if DEBUG
+                    guard !Self.isUnitTestHost else { return }
+                    #endif
 					await purchaseManager.prepare()
 				}
         }
