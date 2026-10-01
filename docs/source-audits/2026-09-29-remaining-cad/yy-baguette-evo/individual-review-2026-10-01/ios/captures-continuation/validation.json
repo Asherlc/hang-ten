@@ -1,0 +1,173 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "simulator": "A485CF9E-D65D-47BD-A5AE-882791CCCE5F",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS26.5",
+  "boardID": "yy.baguette-evo",
+  "sourceSHA256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+  "modelSHA256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+  "descriptorSHA256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+  "suspensionSHA256": "4d0aa10c8914bd41fd79cc825d094ffc5a785aae64aef5406ade19778102a282",
+  "builtBinarySHA256": "11170fd26d48c097ddf7bf8daa1510f1c25cfbb391fec0c1c79eb52f97a3a952",
+  "surfaceFinish": "wood",
+  "checks": [
+    {
+      "image": "edge-central-6.png",
+      "contactID": "edge-central-6",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "central-6-orbit.png",
+      "contactID": "edge-central-6",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "rounded-tray.png",
+      "contactID": "rounded-tray",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "rounded-tray-orbit.png",
+      "contactID": "rounded-tray",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    }
+  ],
+  "commands": [
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "A485CF9E-D65D-47BD-A5AE-882791CCCE5F",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "A485CF9E-D65D-47BD-A5AE-882791CCCE5F"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "A485CF9E-D65D-47BD-A5AE-882791CCCE5F",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette-evo/ios-review-3/captures-continuation/edge-central-6.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "107.48000000000003",
+      "--start-y",
+      "371.5466666666667",
+      "--end-x",
+      "327.9200000000001",
+      "--end-y",
+      "325.28",
+      "--duration",
+      "1.0",
+      "--udid",
+      "A485CF9E-D65D-47BD-A5AE-882791CCCE5F"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "A485CF9E-D65D-47BD-A5AE-882791CCCE5F"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "A485CF9E-D65D-47BD-A5AE-882791CCCE5F",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette-evo/ios-review-3/captures-continuation/central-6-orbit.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "A485CF9E-D65D-47BD-A5AE-882791CCCE5F",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "A485CF9E-D65D-47BD-A5AE-882791CCCE5F"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "A485CF9E-D65D-47BD-A5AE-882791CCCE5F",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette-evo/ios-review-3/captures-continuation/rounded-tray.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "107.48000000000006",
+      "--start-y",
+      "354.18666666666667",
+      "--end-x",
+      "327.9200000000001",
+      "--end-y",
+      "314.12",
+      "--duration",
+      "1.0",
+      "--udid",
+      "A485CF9E-D65D-47BD-A5AE-882791CCCE5F"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "A485CF9E-D65D-47BD-A5AE-882791CCCE5F"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "A485CF9E-D65D-47BD-A5AE-882791CCCE5F",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette-evo/ios-review-3/captures-continuation/rounded-tray-orbit.png"
+    ]
+  ],
+  "humanGeometryAcceptance": "pending user review #17",
+  "limits": "Full-frame fresh app screenshots and AX identity/orbit probes; no factory geometry or ergonomic certification."
+}

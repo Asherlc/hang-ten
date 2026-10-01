@@ -1,0 +1,1920 @@
+{
+  "sourceSHA256Before": "4fb7a667d4bccea4edb2bb3eebfd4fa44bb463fa9b2c68ba9e169a0359cd4f06",
+  "sourceSHA256After": "4fb7a667d4bccea4edb2bb3eebfd4fa44bb463fa9b2c68ba9e169a0359cd4f06",
+  "contacts": [
+    {
+      "contactID": "edge-10-left",
+      "nodeID": "hold_edge_10mm_left_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 656.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -176.0,
+            -14.0,
+            -10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -176.0,
+            -14.0,
+            -10.0
+          ]
+        },
+        {
+          "areaMM2": 164.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -176.0,
+            -9.0,
+            -10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -176.0,
+            -9.0,
+            -10.0
+          ]
+        },
+        {
+          "areaMM2": 916.7878707749144,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -176.0,
+            -5.499999999999998,
+            -4.9999999999999964
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.894427190999916,
+            0.447213595499958
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.447213595499958,
+            0.894427190999916
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -176.0,
+            -5.499999999999998,
+            -4.9999999999999964
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-20-left",
+      "nodeID": "hold_edge_20mm_left_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 550.0727224649515,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -176.0,
+            -1.4999999999999885,
+            3.000000000000023
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.894427190999916,
+            0.447213595499958
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.447213595499958,
+            0.894427190999916
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -176.0,
+            -1.4999999999999871,
+            3.0000000000000258
+          ]
+        },
+        {
+          "areaMM2": 366.7151483099617,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -176.0,
+            1.0000000000000018,
+            8.000000000000004
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.894427190999916,
+            0.447213595499958
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.447213595499958,
+            0.894427190999916
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -176.0,
+            1.0000000000000118,
+            8.000000000000023
+          ]
+        },
+        {
+          "areaMM2": 164.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -176.0,
+            1.0,
+            10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -176.0,
+            1.0,
+            10.0
+          ]
+        },
+        {
+          "areaMM2": 819.9999999999999,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -176.0,
+            -5.0,
+            10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -176.0,
+            -5.0,
+            10.0
+          ]
+        },
+        {
+          "areaMM2": 656.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -176.0,
+            -14.0,
+            10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -176.0,
+            -14.0,
+            10.0
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-15-left",
+      "nodeID": "hold_edge_15mm_left_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 616.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -96.5,
+            -14.0,
+            -10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -96.5,
+            -14.0,
+            -10.0
+          ]
+        },
+        {
+          "areaMM2": 538.9999999999999,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -96.5,
+            -6.5,
+            -10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -96.5,
+            -6.5,
+            -10.0
+          ]
+        },
+        {
+          "areaMM2": 516.5317028024547,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -96.5,
+            -1.49999999999999,
+            -6.9999999999999805
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.894427190999916,
+            0.447213595499958
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.447213595499958,
+            0.894427190999916
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -96.5,
+            -1.49999999999999,
+            -6.99999999999998
+          ]
+        },
+        {
+          "areaMM2": 344.3544685349647,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -96.5,
+            1.0000000000000018,
+            -1.9999999999999964
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.894427190999916,
+            0.447213595499958
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.447213595499958,
+            0.894427190999916
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -96.49999999999999,
+            1.0000000000000122,
+            -1.9999999999999758
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-25-left",
+      "nodeID": "hold_edge_25mm_left_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 860.8861713374185,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -96.5,
+            4.500000000000002,
+            5.0000000000000036
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.894427190999916,
+            0.447213595499958
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.447213595499958,
+            0.894427190999916
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -96.5,
+            4.5000000000000036,
+            5.000000000000007
+          ]
+        },
+        {
+          "areaMM2": 538.9999999999999,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -96.5,
+            3.5,
+            10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -96.5,
+            3.5,
+            10.0
+          ]
+        },
+        {
+          "areaMM2": 769.9999999999999,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -96.5,
+            -5.0,
+            10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -96.5,
+            -5.0,
+            10.0
+          ]
+        },
+        {
+          "areaMM2": 616.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -96.5,
+            -14.0,
+            10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -96.5,
+            -14.0,
+            10.0
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-6-upper",
+      "nodeID": "hold_edge_06mm_left_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 462.00000000000136,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -178.5,
+            -9.0,
+            20.323807579381217
+          ],
+          "outwardNormalNative": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -178.49999999999997,
+            -9.000000000000002,
+            20.323807579381214
+          ]
+        },
+        {
+          "areaMM2": 693.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -178.5,
+            -4.5,
+            17.323807579381203
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -178.5,
+            -4.5,
+            17.323807579381203
+          ]
+        },
+        {
+          "areaMM2": 693.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -178.5,
+            4.5,
+            17.323807579381203
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -178.5,
+            4.5,
+            17.323807579381203
+          ]
+        },
+        {
+          "areaMM2": 462.0000000000013,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -178.5,
+            9.0,
+            20.323807579381217
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -178.49999999999997,
+            9.0,
+            20.32380757938121
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-12-left",
+      "nodeID": "hold_edge_12mm_left_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 924.0000000000027,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -96.5,
+            -9.0,
+            17.323807579381224
+          ],
+          "outwardNormalNative": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -96.49999999999999,
+            -9.000000000000002,
+            17.32380757938122
+          ]
+        },
+        {
+          "areaMM2": 709.9049232115526,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -96.5,
+            -4.499999999999998,
+            12.323807579381203
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.21693045781865616,
+            0.9761870601839528
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.9761870601839528,
+            0.21693045781865616
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -96.5,
+            -4.499999999999998,
+            12.323807579381203
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-8-left",
+      "nodeID": "hold_edge_08mm_left_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 709.9049232115522,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -96.5,
+            4.500000000000002,
+            14.323807579381203
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.21693045781865616,
+            0.9761870601839528
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.9761870601839528,
+            0.21693045781865616
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -96.5,
+            4.500000000000004,
+            14.323807579381205
+          ]
+        },
+        {
+          "areaMM2": 616.0000000000027,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -96.5,
+            9.0,
+            19.323807579381224
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -96.49999999999999,
+            9.0,
+            19.32380757938122
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "rounded-tray",
+      "nodeID": "hold_rounded_left_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 66.8348353668244,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            -139.0,
+            -18.142538861843903,
+            -17.200240801991228
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            -0.7257015544737561,
+            -0.688009632079649
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            -0.688009632079649,
+            0.7257015544737561
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -139.000005,
+            -18.142332997508614,
+            -17.200045629961217
+          ]
+        },
+        {
+          "areaMM2": 1588.756067034079,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            -139.000005,
+            -14.273689358291039,
+            -20.524663020449548
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            -0.5709475743316416,
+            -0.820986520817982
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            -0.820986520817982,
+            0.5709475743316416
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -139.000005,
+            -14.182342418243621,
+            -20.393311894937387
+          ]
+        },
+        {
+          "areaMM2": 1666.6431236941144,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            -139.000005,
+            -5.107741092230513,
+            -24.47265782326758
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            -0.20430964368922053,
+            -0.9789063129307032
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            -0.9789063129307032,
+            0.20430964368922053
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -139.000005,
+            -5.0717766360372085,
+            -24.30034176136745
+          ]
+        },
+        {
+          "areaMM2": 4453.20758646353,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            -139.0,
+            13.062464117898717,
+            -21.316004108852308
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            0.5224985647159487,
+            -0.8526401643540923
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            -0.8526401643540923,
+            -0.5224985647159487
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -139.0,
+            12.414301563083802,
+            -20.258298950243883
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-10-right",
+      "nodeID": "hold_edge_10mm_right_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 656.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            176.0,
+            -14.0,
+            -10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            176.0,
+            -14.0,
+            -10.0
+          ]
+        },
+        {
+          "areaMM2": 164.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            176.0,
+            -9.0,
+            -10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            176.0,
+            -9.0,
+            -10.0
+          ]
+        },
+        {
+          "areaMM2": 916.7878707749144,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            176.0,
+            -5.499999999999998,
+            -4.9999999999999964
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.894427190999916,
+            0.447213595499958
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.447213595499958,
+            0.894427190999916
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            176.0,
+            -5.499999999999998,
+            -4.9999999999999964
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-20-right",
+      "nodeID": "hold_edge_20mm_right_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 550.0727224649515,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            176.0,
+            -1.4999999999999885,
+            3.000000000000023
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.894427190999916,
+            0.447213595499958
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.447213595499958,
+            0.894427190999916
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            176.0,
+            -1.4999999999999871,
+            3.0000000000000258
+          ]
+        },
+        {
+          "areaMM2": 366.7151483099617,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            176.0,
+            1.0000000000000018,
+            8.000000000000004
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.894427190999916,
+            0.447213595499958
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.447213595499958,
+            0.894427190999916
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            176.0,
+            1.0000000000000118,
+            8.000000000000023
+          ]
+        },
+        {
+          "areaMM2": 164.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            176.0,
+            1.0,
+            10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            176.0,
+            1.0,
+            10.0
+          ]
+        },
+        {
+          "areaMM2": 819.9999999999999,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            176.0,
+            -5.0,
+            10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            176.0,
+            -5.0,
+            10.0
+          ]
+        },
+        {
+          "areaMM2": 656.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            176.0,
+            -14.0,
+            10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            176.0,
+            -14.0,
+            10.0
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-15-right",
+      "nodeID": "hold_edge_15mm_right_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 616.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            96.5,
+            -14.0,
+            -10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            96.5,
+            -14.0,
+            -10.0
+          ]
+        },
+        {
+          "areaMM2": 538.9999999999999,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            96.5,
+            -6.5,
+            -10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            96.5,
+            -6.5,
+            -10.0
+          ]
+        },
+        {
+          "areaMM2": 516.5317028024547,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            96.5,
+            -1.49999999999999,
+            -6.9999999999999805
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.894427190999916,
+            0.447213595499958
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.447213595499958,
+            0.894427190999916
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            96.5,
+            -1.49999999999999,
+            -6.99999999999998
+          ]
+        },
+        {
+          "areaMM2": 344.3544685349647,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            96.5,
+            1.0000000000000018,
+            -1.9999999999999964
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.894427190999916,
+            0.447213595499958
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.447213595499958,
+            0.894427190999916
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            96.49999999999999,
+            1.0000000000000122,
+            -1.9999999999999758
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-25-right",
+      "nodeID": "hold_edge_25mm_right_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 860.8861713374185,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            96.5,
+            4.500000000000002,
+            5.0000000000000036
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.894427190999916,
+            0.447213595499958
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.447213595499958,
+            0.894427190999916
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            96.5,
+            4.5000000000000036,
+            5.000000000000007
+          ]
+        },
+        {
+          "areaMM2": 538.9999999999999,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            96.5,
+            3.5,
+            10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            96.5,
+            3.5,
+            10.0
+          ]
+        },
+        {
+          "areaMM2": 769.9999999999999,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            96.5,
+            -5.0,
+            10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            96.5,
+            -5.0,
+            10.0
+          ]
+        },
+        {
+          "areaMM2": 616.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            96.5,
+            -14.0,
+            10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            96.5,
+            -14.0,
+            10.0
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-6-lower",
+      "nodeID": "hold_edge_06mm_right_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 462.00000000000745,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            178.5,
+            -9.0,
+            20.32380757938126
+          ],
+          "outwardNormalNative": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            178.50000000000003,
+            -9.0,
+            20.323807579381253
+          ]
+        },
+        {
+          "areaMM2": 693.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            178.5,
+            -4.5,
+            17.323807579381203
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            178.5,
+            -4.5,
+            17.323807579381203
+          ]
+        },
+        {
+          "areaMM2": 693.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            178.5,
+            4.5,
+            17.323807579381203
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            178.5,
+            4.5,
+            17.323807579381203
+          ]
+        },
+        {
+          "areaMM2": 462.0000000000074,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            178.5,
+            9.0,
+            20.323807579381256
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            178.50000000000006,
+            9.0,
+            20.323807579381253
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-12-right",
+      "nodeID": "hold_edge_12mm_right_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 924.000000000006,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            96.5,
+            -9.0,
+            17.323807579381246
+          ],
+          "outwardNormalNative": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            96.50000000000001,
+            -9.0,
+            17.323807579381242
+          ]
+        },
+        {
+          "areaMM2": 709.9049232115526,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            96.5,
+            -4.499999999999998,
+            12.323807579381203
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.21693045781865616,
+            0.9761870601839528
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.9761870601839528,
+            0.21693045781865616
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            96.5,
+            -4.499999999999998,
+            12.323807579381203
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-8-right",
+      "nodeID": "hold_edge_08mm_right_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 709.9049232115522,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            96.5,
+            4.500000000000002,
+            14.323807579381203
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.21693045781865616,
+            0.9761870601839528
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.9761870601839528,
+            0.21693045781865616
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            96.5,
+            4.500000000000004,
+            14.323807579381205
+          ]
+        },
+        {
+          "areaMM2": 616.000000000006,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            96.5,
+            9.0,
+            19.323807579381246
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            96.50000000000001,
+            9.0,
+            19.323807579381242
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "rounded-tray",
+      "nodeID": "hold_rounded_right_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 66.83483536681722,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            139.0,
+            -18.142538861843885,
+            -17.200240801991242
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            -0.7257015544737554,
+            -0.6880096320796497
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            -0.6880096320796497,
+            0.7257015544737554
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            139.000005,
+            -18.142332997508607,
+            -17.200045629961227
+          ]
+        },
+        {
+          "areaMM2": 1588.756067034079,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            139.000005,
+            -14.273689358291039,
+            -20.524663020449548
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            -0.5709475743316416,
+            -0.820986520817982
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            -0.820986520817982,
+            0.5709475743316416
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            139.000005,
+            -14.182342418243621,
+            -20.393311894937387
+          ]
+        },
+        {
+          "areaMM2": 1666.6431236941144,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            139.000005,
+            -5.107741092230513,
+            -24.47265782326758
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            -0.20430964368922053,
+            -0.9789063129307032
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            -0.9789063129307032,
+            0.20430964368922053
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            139.000005,
+            -5.0717766360372085,
+            -24.30034176136745
+          ]
+        },
+        {
+          "areaMM2": 4453.207586463521,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            139.0,
+            13.062464117898703,
+            -21.31600410885232
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            0.522498564715948,
+            -0.8526401643540926
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            -0.8526401643540926,
+            -0.522498564715948
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            139.0,
+            12.414301563083782,
+            -20.2582989502439
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-central-20",
+      "nodeID": "hold_central_20mm_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 1299.8461447417583,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -19.0,
+            8.124038404635996
+          ],
+          "outwardNormalNative": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            7.625545488552568e-15,
+            -19.0,
+            8.12403840463599
+          ]
+        },
+        {
+          "areaMM2": 300.1538552582462,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -19.0,
+            -1.8759615953640392
+          ],
+          "outwardNormalNative": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -1.1836308668245553e-15,
+            -19.0,
+            -1.8759615953640392
+          ]
+        },
+        {
+          "areaMM2": 128.8689615206144,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -18.499999999999996,
+            -3.1204811022746943
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.7839803546207686,
+            0.6207856341513501
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.6207856341513501,
+            0.7839803546207686
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            5.513684035130825e-16,
+            -18.499999999999996,
+            -3.120481102274694
+          ]
+        },
+        {
+          "areaMM2": 253.98993728870437,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -17.01454184820106,
+            -1.244519506910656
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.7839803546207686,
+            0.6207856341513501
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.6207856341513501,
+            0.7839803546207686
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -5.59504634982802e-16,
+            -17.014541848201056,
+            -1.2445195069106518
+          ]
+        },
+        {
+          "areaMM2": 776.9617548762045,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -13.014541848201056,
+            3.8070172007163876
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.7839803546207686,
+            0.6207856341513501
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.6207856341513501,
+            0.7839803546207686
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            5.487086575117041e-16,
+            -13.014541848201052,
+            3.8070172007163903
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-central-6",
+      "nodeID": "hold_central_06mm_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 1159.82065368552,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -5.5,
+            13.297013197513177
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.7839803546207686,
+            0.6207856341513501
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.6207856341513501,
+            0.7839803546207686
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -7.351578713507809e-16,
+            -5.499999999999995,
+            13.297013197513184
+          ]
+        },
+        {
+          "areaMM2": 480.00000000000455,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -1.0,
+            21.979991993593625
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            1.1250259982868147e-14,
+            -1.0,
+            21.97999199359362
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-central-30",
+      "nodeID": "hold_central_30mm_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 1833.0302779823357,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            11.456439237389617,
+            10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -3.101062734401473e-16,
+            11.456439237389601,
+            10.0
+          ]
+        },
+        {
+          "areaMM2": 566.9697220176641,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -3.5435607626103973,
+            10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -2.2558116857046795e-15,
+            -3.5435607626103973,
+            10.0
+          ]
+        },
+        {
+          "areaMM2": 824.621125123532,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -5.837121525220802,
+            5.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.9701425001453319,
+            0.24253562503633297
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.24253562503633297,
+            -0.9701425001453319
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -6.893277061304076e-16,
+            -5.837121525220802,
+            4.999999999999998
+          ]
+        }
+      ]
+    },
+    {
+      "contactID": "edge-central-25",
+      "nodeID": "hold_central_25mm_mesh_001",
+      "faces": [
+        {
+          "areaMM2": 824.6211251235322,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -3.3371215252208017,
+            -5.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.9701425001453319,
+            0.24253562503633297
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.24253562503633297,
+            -0.9701425001453319
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -1.7233192653260186e-15,
+            -3.3371215252208013,
+            -5.000000000000001
+          ]
+        },
+        {
+          "areaMM2": 166.96972201766414,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -1.0435607626104006,
+            -10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -1.0638796171753375e-15,
+            -1.0435607626104009,
+            -10.0
+          ]
+        },
+        {
+          "areaMM2": 1833.030277982336,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            11.4564392373896,
+            -10.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -7.752656836003963e-15,
+            11.456439237389597,
+            -10.0
+          ]
+        }
+      ]
+    }
+  ]
+}

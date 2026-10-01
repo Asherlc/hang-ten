@@ -1,5 +1,10 @@
 # yy-baguette-evo: CAD source evidence
 
+2026-10-01 individual review: [rounded native cavities, wood finish and nine bearing-up poses](individual-review-2026-10-01/review.md).
+The individual review corrects the native cavity ends and splits opposing
+bearings into nine poses. The five-position statements below describe the
+historical migration. Human acceptance remains pending.
+
 Date: 2026-09-29. Publisher: YY Vertical.
 
 Exact Turn & Pull revision gallery shows a cylindrical bar, multiple rounded cavities, four end bores, and paired exterior cord wraps. 07 shows oblique cavity relief; 03 shows loaded front and four strands; 10 shows the end wrap. Preserve 19 existing contacts across five positions; do not turn the visible exterior return into a hidden connection.

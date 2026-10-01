@@ -1,0 +1,50 @@
+{
+  "timestampUTC": "2026-10-01T21:14:06.778798+00:00",
+  "files": {
+    "Hangboards/yy-baguette-evo/assets/primary.model.json": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921",
+    "Hangboards/yy-baguette-evo/assets/primary.usdz": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+    "Hangboards/yy-baguette-evo/suspension.json": "a8268c4df7ce4eced116b692ad92276394d064aa858b83e5c00b84fd43f75678",
+    "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8"
+  },
+  "archivePassed": true,
+  "schemaPassed": true,
+  "noCanonicalBoardJSON": true,
+  "historicalProofIdentity": {
+    "sourceMatches": true,
+    "modelMatches": true,
+    "descriptorMatches": true,
+    "sidecarMatches": true
+  },
+  "initialMigrationPreserved": {
+    "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd": true,
+    "Hangboards/yy-baguette-evo/suspension.json": true,
+    "Hangboards/yy-baguette-evo/assets/primary.usdz": true,
+    "Hangboards/yy-baguette-evo/assets/primary.model.json": true
+  },
+  "display": {
+    "camera": {
+      "type": "orthographic",
+      "viewDirection": [
+        0,
+        0,
+        -1
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ],
+      "fitPadding": 0.08
+    }
+  },
+  "contactCount": 19,
+  "positionIDs": [
+    "paired-25-20-15-10",
+    "paired-12-8-6",
+    "central-30-25",
+    "central-20-6",
+    "rounded-tray"
+  ]
+}
+Evidence matches True
+USD nodes/triangles 21 22760 materials [] bindings []

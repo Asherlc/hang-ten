@@ -62,7 +62,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "1f376d4fcc767eff72d2055a17d99893ac99edbcb219c8dc7711cf250508089e",
+  "sha256Manifest": "5bfbef360d57f377e9ea2fb43c7bc539d32c3ff8a376381f0319ea1fc28982a7",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -1014,26 +1014,33 @@
     },
     "yy-baguette-evo": {
       "source": "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd",
-      "sourceSHA256": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+      "sourceSHA256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
-      "assetSHA256": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
-      "descriptorSHA256": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921",
+      "assetSHA256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+      "descriptorSHA256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
       "assets": {
         "assets/primary.usdz": {
-          "modelSHA256": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+          "modelSHA256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
           "descriptorPath": "assets/primary.model.json",
-          "descriptorSHA256": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921"
+          "descriptorSHA256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927"
         }
       },
       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
       "provenance": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/README.md",
-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/geometry-review.html",
+      "comparison": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/prior-rounded-front-side-top.png",
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/metadata-diff.json",
-      "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/app-review/validation.json",
-      "geometryAcceptance": "pending requested one-by-one user review",
+      "nativeValidation": "Rounded native solid and all20 contact regions valid;18 depth witnesses/four bores/contact facts preserved; native radius edit/restore passes. Independent compiler check/publish reproducible. Exact final reports and all historical attempts retained in individual review.",
+      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/ios/final-runtime-validation.json",
+      "geometryAcceptance": "pending human review of rounded native cavity ends, wood display and nine bearing-up poses",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-      "suspensionSHA256": "a8268c4df7ce4eced116b692ad92276394d064aa858b83e5c00b84fd43f75678"
+      "suspensionSHA256": "4d0aa10c8914bd41fd79cc825d094ffc5a785aae64aef5406ade19778102a282",
+      "nativeAppHistory": [
+        "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/app-review/validation.json"
+      ],
+      "individualReview": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/review.md",
+      "comparisonHistory": [
+        "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/geometry-review.html"
+      ]
     },
     "yy-penta-evo": {
       "source": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
@@ -1186,7 +1193,10 @@
     "6de82baf4a49ed9a5b5f7a48d67d5f5c3e38a98eb488deeaece1df3908d42847",
     "ec620b346bf520d2f32f2069e02b07ad5d2f9fd6dc8c8ed6063b2d68f5ff38c7",
     "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42",
-    "1673dfdf5cbb83191ec92c4f5c5c8f552ede83790b9562fb2279025bcaf6a846"
+    "1673dfdf5cbb83191ec92c4f5c5c8f552ede83790b9562fb2279025bcaf6a846",
+    "1f376d4fcc767eff72d2055a17d99893ac99edbcb219c8dc7711cf250508089e",
+    "79bfd8aea61d4e6c49dbefbeaec2816d1872810066817c994b45bebeeb21b72e",
+    "0b4056ff49021183b02062aaac5828f03e99b4bf972fe0196b8c7ca733056985"
   ],
   "individualReviewRevisions": [
     {

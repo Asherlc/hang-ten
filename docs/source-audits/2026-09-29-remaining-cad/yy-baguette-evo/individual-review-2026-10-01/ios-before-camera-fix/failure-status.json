@@ -1,0 +1,15 @@
+{
+  "status": "build-passed-targeted-test-failed-before-app-capture",
+  "testExitStatus": "65",
+  "tests": 3,
+  "failedTests": 1,
+  "failedAssertions": 4,
+  "failedTest": "BoardModelTests/testNativeCordMapAspectRatioIncludesCordAndSelectedPosition",
+  "error": "map height80.76960184073606 and97.30055840436528 not greater than100.0; each occurs twice",
+  "passedTests": [
+    "testBaguetteEvoSelectedDepthBearingsFaceUp",
+    "testMapAspectRatioRetainsOrientationAndMissingPositionFallbacks"
+  ],
+  "cleanup": "all verified",
+  "rawSummary": "test-results-summary.json"
+}

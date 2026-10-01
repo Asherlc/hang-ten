@@ -476,20 +476,31 @@
       "boardID": "yy.baguette-evo",
       "name": "YY Vertical Baguette Evo",
       "humanReview": "pending",
-      "sourceSHA256": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
-      "reviewPage": "yy-baguette-evo/geometry-review.html",
+      "sourceSHA256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+      "reviewPage": "yy-baguette-evo/individual-review-2026-10-01/review.md",
       "sourceAudit": "yy-baguette-evo/README.md",
       "comparisons": [
-        "yy-baguette-evo/comparison-sheet.png"
+        "yy-baguette-evo/comparison-sheet.png",
+        "yy-baguette-evo/individual-review-2026-10-01/original-native-front-side-top.png",
+        "yy-baguette-evo/individual-review-2026-10-01/prior-rounded-front-side-top.png",
+        "yy-baguette-evo/individual-review-2026-10-01/rounded-original-native-front-side-top.png",
+        "yy-baguette-evo/individual-review-2026-10-01/original-prior-corrected-front-side-top.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921",
-          "modelSHA256": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3"
+          "descriptorSHA256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+          "modelSHA256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf"
         }
       },
-      "appReview": "yy-baguette-evo/app-review/validation.json",
-      "appReviewPage": "yy-baguette-evo/app-review/index.html"
+      "appReview": "yy-baguette-evo/individual-review-2026-10-01/ios/final-runtime-validation.json",
+      "appReviewPage": "yy-baguette-evo/individual-review-2026-10-01/review.md",
+      "reviewPageHistory": [
+        "yy-baguette-evo/geometry-review.html"
+      ],
+      "appReviewHistory": [
+        "yy-baguette-evo/app-review/validation.json"
+      ],
+      "individualReview": "yy-baguette-evo/individual-review-2026-10-01/review.md"
     },
     {
       "number": 18,
