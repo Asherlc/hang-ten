@@ -64,14 +64,16 @@ if __name__ == "__main__":
     owner = root.name
     result = root / ".context" / f"{owner}-board-replay-export"
     assert not result.exists(), "Owned export directory already exists"
-    result.mkdir(parents=True)
     receipt_path = result / "receipt.json"
     output = result / "products.cms"
     receipt = {"owner": owner, "run": os.environ["GITHUB_RUN_ID"],
                "attempt": os.environ["GITHUB_RUN_ATTEMPT"],
                "purpose": "Exact CI products; never a rendering fix", "encrypted": False}
-    receipt_path.write_text(json.dumps(receipt, indent=2))
+    with Path(os.environ["GITHUB_OUTPUT"]).open("a") as workflow_output:
+        workflow_output.write(f"owner={owner}\nexport_path={result}\n")
     try:
+        result.mkdir(parents=True)
+        receipt_path.write_text(json.dumps(receipt, indent=2))
         products = Path(os.environ["XCTEST_DERIVED_DATA"]) / "Build" / "Products"
         assert list(products.glob("*.xctestrun")), "No XCTest run manifest"
         assert (products / "Debug-iphonesimulator" / "HangTen.app").is_dir()
@@ -99,7 +101,7 @@ if __name__ == "__main__":
         receipt_path.write_text(json.dumps(receipt, indent=2) + "\n")
         print("Exact board products encrypted; only products.cms and receipt.json may be uploaded.")
     except BaseException:
-        output.unlink(missing_ok=True)
-        receipt.update(partialCiphertextDeletedVerified=not output.exists())
-        receipt_path.write_text(json.dumps(receipt, indent=2) + "\n")
+        if result.exists():
+            shutil.rmtree(result)
+        assert not result.exists(), "Partial owned export cleanup failed"
         raise

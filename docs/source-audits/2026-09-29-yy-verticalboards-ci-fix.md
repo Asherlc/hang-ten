@@ -1186,3 +1186,16 @@ or framework cause, and would not replace the required CI checks. Incomplete
 products, setup failure or invalid captures are inconclusive. Remove this
 export after the outcome. Never merge this diagnostic head, even if green;
 no rendering correction, unchanged retry or assertion weakening is claimed.
+
+
+Export review corrections derive the owner and path once in the exporter and
+reuse step outputs for upload and cleanup. Hidden-file inclusion is explicit
+and limited to the two named ciphertext/receipt files. Initialization failures
+and cancellation remove the exact partial export; workflow cleanup handles an
+incomplete initial receipt and preserves a valid foreign receipt. Failure
+injection verified receipt-write failure, cancellation and missing products,
+including renamed checkout paths, with owned scratch deletion verified.
+The recipient certificate is constrained to an end entity with key/data
+encipherment and emailProtection, preserving the RSA key and recipient serial.
+Encryption roundtrip/tamper rejection, 72 contracts and original workflow
+parity passed. Actual artifact contents remain subject to CI verification.
