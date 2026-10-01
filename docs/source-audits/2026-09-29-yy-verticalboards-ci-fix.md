@@ -603,9 +603,10 @@ stale visible board output but do not establish a GPU or framework cause.
 Full result bundles, screenshots, application diagnostics and pixel comparisons
 are retained in workspace-owned `ci-5a3-*` evidence under `.context`.
 
-The next diagnostic preserves the restored production RealityView, departing
-Train preview, original physical gestures, deadlines, assertions and verdicts.
-A Batch05-only DEBUG environment flag installs an iOS 26 `PostProcessEffect`
+The diagnostic preserved the restored production RealityView and the original
+Train preview that disappears during navigation, together with the original
+physical gestures, deadlines, assertions and verdicts.
+A Batch05-only DEBUG environment flag installed an iOS 26 `PostProcessEffect`
 on the interactive RealityView. Its blit copies the normal source framebuffer
 to the required target unchanged. A bounded source readback records completed
 GPU status, source dimensions/format/projection, pixel hashes, and compressed
@@ -636,3 +637,47 @@ Execute the normal 24-test board shard once after all baseline results are
 retained. This diagnostic must never be merged, even if green. Remove its
 environment key, trace state/helper, Metal import, postprocessing hook and
 state-readback calls before final production validation and merge.
+
+## Completed framebuffer comparison and removal
+
+Diagnostic commit `5cc3837b2`, CI 36828023588, tested the same integrated
+main revision `e85a42ee3` as the probe-free baseline. The normal board shard
+ran 24 tests with six failures: Door/Megalith rendered orbit and
+Evo/Forge/Natural/Pro rendered reset. All other 18 board tests passed.
+Units passed 1,295 tests with three skips; purchase passed 23; native CAD
+passed ten with zero skips; Python and workflow lint passed. Complete logs,
+the result bundle, attachments and application diagnostics are retained.
+
+The trace yielded 108 records: 105 valid completed GPU readbacks, 39 decoded
+pixel payloads with verified native hashes, and three malformed log records
+excluded from interpretation. Foundation's compressed payloads used raw
+DEFLATE; decoding that stream preserved and verified the native BGRA8-sRGB
+pixels. Valid samples retained at least eleven unused capture slots. One
+transitional Pro reset sample changed state during GPU work and is excluded;
+later settled samples have matching request/completion guards. Material
+descriptions identify assigned material types, not all material parameters.
+
+| Board | Completed normal framebuffer | Screen evidence |
+| --- | --- | --- |
+| Door | Orbit changes 127,198 RGB pixels and visibly rotates the board | Active/orbit crops have zero changed RGB pixels |
+| Megalith | Orbit changes 158,675 RGB pixels and visibly rotates the board | Active/orbit crops have zero changed RGB pixels |
+| Evo | Orbit changes 123,220 pixels; reset is pixel-identical to its own selected canonical source and authored matrix | Orbit/reset crops have zero changed RGB pixels; screen retains orbit |
+| Natural | Orbit changes 168,499 pixels; reset is pixel-identical to its own selected canonical source and authored matrix | Orbit/reset crops have zero changed RGB pixels; screen retains orbit |
+| Pro | Orbit changes 159,629 pixels; reset is pixel-identical to its own selected canonical source and authored matrix | Orbit/reset crops have zero changed RGB pixels; screen retains orbit |
+| Forge | Orbit changes 39,910 pixels; no post-orbit reset state/readback is retained | Reset assertion fails, but does not establish a presentation failure |
+
+The decoded source geometry was visually inspected alongside screen crops;
+the comparison is not inferred from hashes alone. Source dimensions remained
+stable for the compared pairs. The five valid mismatches localize this
+instrumented reproduction after normal framebuffer production, without proving
+the responsible presentation/composition mechanism or a GPU/framework defect.
+Forge instead needs investigation of its physical reset hit and the permissive
+projected-reset observation. Its unchanged orbited output cannot be attributed
+to presentation without evidence that reset actually reached the camera.
+
+The framebuffer environment key, trace state/helper, Metal import,
+postprocessing hook and all state-readback calls are removed in this cleanup.
+Both affected Swift files are restored byte-for-byte to the probe-free `5a3`
+baseline. Original Train navigation, physical gestures, assertions and deadlines
+remain intact. This removes the diagnostic; it is not a rendering correction,
+and no instrumented pass or native frame is accepted as a UI pass.

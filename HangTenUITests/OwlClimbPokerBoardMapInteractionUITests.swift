@@ -270,7 +270,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": boardID,
-            "HANGTEN_REVIEW_FRAMEBUFFER": "1",
             "HANGTEN_REVIEW_MODEL_DIAGNOSTICS": "1",
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
         ]
