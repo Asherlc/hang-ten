@@ -729,18 +729,12 @@ jobs:
           - shard: boards-grips-picker
             only_testing: >-
               HangTenUITests/Batch05BoardModelInteractionUITests/testDoorMount
-              HangTenUITests/Batch05BoardModelInteractionUITests/testDoorMountScopeTreatment
               HangTenUITests/Batch05BoardModelInteractionUITests/testEvo
-              HangTenUITests/Batch05BoardModelInteractionUITests/testEvoScopeTreatment
               HangTenUITests/Batch05BoardModelInteractionUITests/testMegalith
-              HangTenUITests/Batch05BoardModelInteractionUITests/testMegalithScopeTreatment
               HangTenUITests/IronPalmBoardMapInteractionUITests
               HangTenUITests/Batch05BoardModelInteractionUITests/testNatural
-              HangTenUITests/Batch05BoardModelInteractionUITests/testNaturalScopeTreatment
               HangTenUITests/Batch05BoardModelInteractionUITests/testPro
-              HangTenUITests/Batch05BoardModelInteractionUITests/testProScopeTreatment
               HangTenUITests/Batch05BoardModelInteractionUITests/testForge
-              HangTenUITests/Batch05BoardModelInteractionUITests/testForgeScopeTreatment
               HangTenUITests/OwlClimbPokerBoardMapInteractionUITests
               HangTenUITests/GripCueDiagnosticScreenshotUITests
               HangTenUITests/DualMaxHangsHighlightUITests

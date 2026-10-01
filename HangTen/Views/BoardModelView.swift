@@ -237,14 +237,6 @@ struct BoardModelRealityView: View {
                 }
                 updateRendererDiagnostic(revision: revision)
             }
-            #if DEBUG
-            .transaction { transaction in
-                if let arm = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SELECTION_SCOPE"],
-                   arm == "control" || arm == "treatment" {
-                    BoardSelectionScopeLog.record("model=\(ObjectIdentifier(model)) arm=\(arm) selected=\(highlightedContactIDs.sorted()) effective=\(String(describing: transaction.animation))")
-                }
-            }
-            #endif
             .gesture(orbitGesture(size: size))
             .simultaneousGesture(magnifyGesture)
             .gesture(tapGesture)
@@ -341,15 +333,6 @@ struct BoardModelRealityView: View {
         SpatialTapGesture()
             .targetedToAnyEntity()
             .onEnded { value in
-                #if DEBUG
-                if let arm = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SELECTION_SCOPE"],
-                   arm == "control" || arm == "treatment" {
-                    let resolvedID = model.contactID(for: value.entity)
-                    let matched = resolvedID.flatMap { id in contacts.first(where: { $0.id == id }) }
-                    let hit = value.location
-                    print("[BoardTargetedTap] model=\(ObjectIdentifier(model)) arm=\(arm) entity=\(value.entity.name) entityID=\(ObjectIdentifier(value.entity)) resolved=\(resolvedID ?? "nil") matched=\(matched?.id ?? "nil") location2D=\(hit) azimuth=\(model.orbitAzimuth) elevation=\(model.orbitElevation)")
-                }
-                #endif
                 guard let id = model.contactID(for: value.entity),
                       let contact = contacts.first(where: { $0.id == id }) else { return }
                 model.resetCamera(animated: true)
@@ -426,15 +409,3 @@ private struct BoardModelAccessibilityContainer: ViewModifier {
         }
     }
 }
-
-#if DEBUG
-/// Bounds duplicate transaction logging without publishing view or AX state.
-@MainActor
-private enum BoardSelectionScopeLog {
-    private static var entries: Set<String> = []
-    static func record(_ value: String) {
-        guard entries.count < 64, entries.insert(value).inserted else { return }
-        print("[BoardSelectionModelTransaction] \(value)")
-    }
-}
-#endif

@@ -703,8 +703,8 @@ prior tested base; fresh CI must validate the newly integrated main.
 
 Offline correlation of retained f21/b668/5a3/5cc/d036 application logs rules
 out late Train-renderer construction in the recorded failures: the preview
-attached before the detail load began. Five failed5a3 cases and all six5cc
-cases recorded two RealityView attachments; passing5a3 Door recorded one,
+attached before the detail load began. Five failed 5a3 cases and all six 5cc
+cases recorded two RealityView attachments; passing 5a3 Door recorded one,
 after its preview load was cancelled. That is an association, not proof of
 native overlap, teardown, ownership or a leak. The original selectedBoardCard
 is a preview by purpose but uses the default `isDisplayOnly=false`; its hit
@@ -725,8 +725,8 @@ while preserving the parent selected-card/legend animation and unrelated
 navigation transactions. Logs record inherited/effective scope and the model
 transaction. Existing load/attach/disappear logs provide lifecycle comparisons;
 they do not certify native detachment. Model-transaction logging deduplicates
-at most64 entries per process without SwiftUI/AX publications. The original
-targeted tap callback additionally logs the native targeted entity, iOS2D tap
+at most 64 entries per process without SwiftUI/AX publications. The original
+targeted tap callback additionally logs the native targeted entity, iOS 2D tap
 location, contact lookup and azimuth/elevation before its guard. No additional
 hit query, recognizer, redraw, snapshot, framebuffer effect or camera mutation
 is introduced. An absent callback still does not distinguish collider miss
@@ -743,13 +743,64 @@ remove the environment flag, scope helper/logger, callback logs, six treatment
 methods and their workflow selectors. A separate minimal trace-free correction
 requires all original rendered sequences and required CI/reviews to pass.
 
-The completed integrated baseline CI36836348970 met that gate. All24 board
+This paragraph reports the original 24-test baseline, not the treatment
+comparison. The completed integrated baseline CI 36836348970 met that gate. All 24 board
 tests ran; six failed (Door/Evo/Pro rendered orbit, Forge/Megalith/Natural
-rendered reset), while the other18 passed. Door, Evo and Pro each recorded
+rendered reset), while the other 18 passed. Door, Evo and Pro each recorded
 two distinct scene attachments and zero changed RGB pixels from active to
 orbit with unchanged map bounds; those three qualify independently of the
 reset cases. Their paired crops were visually inspected. Full logs, result
 bundle, screenshots and diagnostics were retained before this diagnostic push.
-Units1406tests/3skips/0fail, purchase23, native49/0skips, Python547 package
-plus41 CAD tests/4skips/2deselected, and workflow lint passed. The baseline
+Units: 1,406 tests, 3 skips, 0 failures, purchase: 23 tests, native: 49 tests, 0 skips, Python: 547 package tests plus 41 CAD tests, 4 skips and 2 deselections, and workflow lint passed. The baseline
 remains a rendering failure; no production correction is claimed.
+
+## Completed selection-animation comparison and removal
+
+Comparison CI 36842945855 ran all 30 cases once, in the registered interleaved
+control/treatment order. All six controls failed rendered orbit. Treatment
+Door failed rendered reset after passing rendered orbit; all five other
+treatments failed rendered orbit. The other 18 original cases passed.
+
+| Board | Control | Treatment |
+| --- | --- | --- |
+| Door | Rendered orbit failed | Rendered reset failed |
+| Evo | Rendered orbit failed | Rendered orbit failed |
+| Forge | Rendered orbit failed | Rendered orbit failed |
+| Megalith | Rendered orbit failed | Rendered orbit failed |
+| Natural | Rendered orbit failed | Rendered orbit failed |
+| Pro | Rendered orbit failed | Rendered orbit failed |
+
+Every case recorded two distinct scene attachments. The actual model transaction
+contained the selection animation in each control and nil animation in each
+treatment. These guards verify the intervention and comparable recorded
+attachment exposure, not native overlap or teardown. All 11 failed-orbit crops
+had zero changed RGB pixels with unchanged map bounds. Treatment Door changed
+113,492 RGB pixels on orbit, then zero pixels from orbit to failed reset.
+Animation scoping is therefore rejected as a sufficient correction; no
+production animation change is retained and no framework mechanism is claimed.
+
+Forge's native selection callback resolved `hold__left_rail_002` to
+`variable-edge-rail-right` in both arms. Neither reached the reset step because
+rendered orbit failed first, so this run cannot settle the prior missing-reset
+callback/input issue. Treatment Door did receive a second callback resolving
+the expected contact while its camera was orbited; that case still failed the
+rendered-reset assertion. No tap fixture or assertion was changed.
+
+Full job logs, result bundle, screenshots and diagnostics were retained under
+`ci-866-*` before removal. `ci-866-animation-evidence.json`,
+`ci-866-comparison-guards.json`, `ci-866-order-verification.json` and
+`ci-866-screen-comparison.json` preserve the raw events, actual scope, lifecycle
+exposure and pixel comparisons. Unit tests passed (1,406 tests, 3 skips),
+purchase tests passed (23), native CAD passed (49, zero skips), Python passed
+(547 package tests plus 41 CAD tests, 4 skips and 2 deselections), and lint passed.
+
+All temporary scope flags, map helper, transaction/tap loggers, six treatment
+methods and workflow selectors were removed. The four code/workflow files
+exactly match the probe-free integrated ddd9923e2 baseline. Rendering remains
+unresolved; cleanup is not a rendering fix or a local UI pass.
+
+Removal validation passed: generic arm64 Simulator build-for-testing, all 72
+CI contracts, Swift parse and diff checks. A source search found none of the
+temporary scope/tap symbols, and exact owned DerivedData deletion was verified.
+The treatment crops were visually inspected against the active captures.
+No local UI pass or production rendering correction is claimed.

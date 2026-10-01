@@ -318,7 +318,7 @@ struct BoardDetailMapView: View {
             ForEach(contentOrder, id: \.self) { section in
                 switch section {
                 case .map:
-                    reviewMapContent(map)
+                    mapContent(map)
                 case .selectedHold:
                     selectedHoldContent
                 case .holdLegend:
@@ -327,26 +327,6 @@ struct BoardDetailMapView: View {
             }
         }
         .animation(.easeInOut(duration: 0.18), value: selectedHoldID)
-    }
-
-    /// Keeps the two DEBUG comparison arms on the same view structure.
-    @ViewBuilder
-    private func reviewMapContent(_ map: BoardDetailHoldMap) -> some View {
-        #if DEBUG
-        let arm = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SELECTION_SCOPE"]
-        if arm == "control" || arm == "treatment" {
-            mapContent(map)
-                .transaction(value: selectedHoldID) { transaction in
-                    let inherited = String(describing: transaction.animation)
-                    if arm == "treatment" { transaction.animation = nil }
-                    print("[BoardSelectionScope] board=\(board.id) arm=\(arm ?? "missing") selected=\(selectedHoldID ?? "nil") inherited=\(inherited) effective=\(String(describing: transaction.animation))")
-                }
-        } else {
-            mapContent(map)
-        }
-        #else
-        mapContent(map)
-        #endif
     }
 
     @ViewBuilder
