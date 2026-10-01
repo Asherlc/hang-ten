@@ -212,8 +212,6 @@ final class BoardModelRealityScene {
     private var lastHighlightMode: BoardHighlightMode?
     private var lastFocusedPositionID: String?
     private var viewingMeshes: [Entity: (mesh: MeshResource, geometry: BoardViewingMesh)] = [:]
-    private var viewingOcclusion: (sources: [(entity: ModelEntity, mesh: MeshResource, transform: simd_float4x4)],
-                                   geometry: BoardViewingMesh)?
     private var cameraTargetTransform: Transform?
     private var cameraAnimation: AnimationPlaybackController?
 
@@ -1058,32 +1056,37 @@ final class BoardModelRealityScene {
     /// faces front; contact normals alone cannot distinguish those geometries.
     private func selectionOrbit(for contactIDs: Set<String>) -> SIMD2<Float> {
         guard let framing = currentFraming, !contactIDs.isEmpty else { return .zero }
-        var sources: [(entity: ModelEntity, mesh: MeshResource, transform: simd_float4x4)] = []
+        var sources: [(geometry: BoardViewingMesh, inverse: simd_float4x4,
+                       minimum: SIMD3<Float>, maximum: SIMD3<Float>)] = []
+        var sceneMinimum = SIMD3<Float>(repeating: .infinity), sceneMaximum = -sceneMinimum
         for instance in instanceEntities {
             traverseEntities(instance) { entity in
-                guard let entity = entity as? ModelEntity, let mesh = entity.model?.mesh else { return }
+                guard let entity = entity as? ModelEntity,
+                      let geometry = viewingMesh(for: entity) else { return }
                 let transform = entity.transformMatrix(relativeTo: nil)
                 let determinant = simd_determinant(transform)
-                guard determinant.isFinite, abs(determinant) > 1e-8 else { return }
-                sources.append((entity, mesh, transform))
+                guard determinant.isFinite, abs(determinant) > 1e-8,
+                      let bounds = geometry.bounds(transformedBy: transform) else { return }
+                sources.append((geometry, simd_inverse(transform), bounds.minimum, bounds.maximum))
+                sceneMinimum = simd_min(sceneMinimum, bounds.minimum)
+                sceneMaximum = simd_max(sceneMaximum, bounds.maximum)
             }
         }
-        let occlusion: BoardViewingMesh
-        if let cached = viewingOcclusion, cached.sources.count == sources.count,
-           zip(cached.sources, sources).allSatisfy({
-               $0.entity === $1.entity && $0.mesh === $1.mesh && $0.transform == $1.transform
-           }) {
-            occlusion = cached.geometry
-        } else {
-            let triangles = sources.flatMap { source -> [BoardViewingMesh.Triangle] in
-                guard let geometry = viewingMesh(for: source.entity) else { return [] }
-                return geometry.triangles.map { $0.transformed(by: source.transform, facing: 1) }
+        let rayLength = sources.isEmpty ? 0.1 : max(simd_length(sceneMaximum - sceneMinimum) * 2, 0.1)
+        func blocked(_ origin: SIMD3<Float>, _ direction: SIMD3<Float>, length: Float? = nil) -> Bool {
+            let delta = direction * (length ?? rayLength)
+            return sources.contains { source in
+                // Cheap world bounds reject unrelated meshes before transforming
+                // a ray. The mesh-local BVH survives every instance pose change.
+                guard BoardViewingMesh.intersectsBox(origin: origin, delta: delta,
+                    minimum: source.minimum, maximum: source.maximum) else { return false }
+                let localOrigin = source.inverse * SIMD4<Float>(origin, 1)
+                let localDelta = source.inverse * SIMD4<Float>(delta, 0)
+                // Keep the segment parameterization through nonuniform scales;
+                // normalizing this transformed delta would change its reach.
+                return source.geometry.intersects(origin: SIMD3(localOrigin.x, localOrigin.y, localOrigin.z),
+                    delta: SIMD3(localDelta.x, localDelta.y, localDelta.z))
             }
-            occlusion = BoardViewingMesh(triangles: triangles)
-            viewingOcclusion = (sources, occlusion)
-        }
-        func blocked(_ origin: SIMD3<Float>, _ direction: SIMD3<Float>) -> Bool {
-            occlusion.intersects(origin: origin, delta: direction * occlusion.rayLength)
         }
         struct Sample {
             let origin: SIMD3<Float>
@@ -1103,6 +1106,15 @@ final class BoardModelRealityScene {
             triangles = triangles.filter { $0.area > 1e-10 }
             let area = triangles.reduce(Float(0)) { $0 + $1.area }
             guard area > 0 else { return nil }
+            let low = triangles.reduce(SIMD3<Float>(repeating: .infinity)) {
+                simd_min($0, simd_min($1.a, simd_min($1.b, $1.c)))
+            }
+            let high = triangles.reduce(SIMD3<Float>(repeating: -.infinity)) {
+                simd_max($0, simd_max($1.a, simd_max($1.b, $1.c)))
+            }
+            // A cavity roof is nearby on the contact's own scale. A distant
+            // instance along the normal does not make an exposed surface enclosed.
+            let enclosureReach = max(simd_length(high - low), 0.01)
             // Equal-area stratification bounds ray queries independently of mesh
             // tessellation, while giving tiny facets proportionally little weight.
             let count = 32
@@ -1117,7 +1129,8 @@ final class BoardModelRealityScene {
                 let normal = triangle.normal
                 // Step into the air to avoid hitting the contact's own triangle.
                 let origin = triangle.center + normal * 0.0001
-                return Sample(origin: origin, normal: normal, enclosed: blocked(origin, normal))
+                return Sample(origin: origin, normal: normal,
+                              enclosed: blocked(origin, normal, length: enclosureReach))
             }
             return samples
         }
@@ -1862,7 +1875,7 @@ final class BoardModelRealityLoader {
     }
 }
 
-/// Cached local triangles and a combined world-space tree for viewing rays.
+/// Cached mesh-local triangles and a mesh-local tree for viewing rays.
 /// Unlike the physics collider, this accepts open contact meshes and queries
 /// both windings: either side of a board surface can obstruct an opening.
 private struct BoardViewingMesh {
@@ -1925,10 +1938,10 @@ private struct BoardViewingMesh {
                 }
             }
         }
-        self.init(triangles: triangles, buildTree: false)
+        self.init(triangles: triangles)
     }
 
-    private init(triangles: [Triangle], buildTree: Bool) {
+    private init(triangles: [Triangle]) {
         var nodes: [Node] = []
         func build(_ faces: [Int]) -> Int {
             var low = SIMD3<Float>(repeating: .infinity), high = -low
@@ -1951,41 +1964,48 @@ private struct BoardViewingMesh {
             }
             return index
         }
-        if buildTree, !triangles.isEmpty { _ = build(Array(triangles.indices)) }
+        if !triangles.isEmpty { _ = build(Array(triangles.indices)) }
         self.triangles = triangles
         self.nodes = nodes
     }
 
-    init(triangles: [Triangle]) {
-        self.init(triangles: triangles.filter {
-            $0.area.isFinite && $0.area > 1e-10
-                && [$0.a, $0.b, $0.c].allSatisfy { $0.x.isFinite && $0.y.isFinite && $0.z.isFinite }
-        }, buildTree: true)
+    func bounds(transformedBy transform: simd_float4x4) -> (minimum: SIMD3<Float>, maximum: SIMD3<Float>)? {
+        guard let root = nodes.first else { return nil }
+        var low = SIMD3<Float>(repeating: .infinity), high = -low
+        for x in [root.low.x, root.high.x] {
+            for y in [root.low.y, root.high.y] {
+                for z in [root.low.z, root.high.z] {
+                    let p = transform * SIMD4<Float>(x, y, z, 1)
+                    guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { return nil }
+                    let point = SIMD3(p.x, p.y, p.z)
+                    low = simd_min(low, point); high = simd_max(high, point)
+                }
+            }
+        }
+        return (low, high)
     }
 
-    var rayLength: Float {
-        guard let root = nodes.first else { return 0.1 }
-        return max(simd_length(root.high - root.low) * 2, 0.1)
+    static func intersectsBox(origin: SIMD3<Float>, delta: SIMD3<Float>,
+                              minimum: SIMD3<Float>, maximum: SIMD3<Float>) -> Bool {
+        var near: Float = 0, far: Float = 1
+        func clip(_ start: Float, _ delta: Float, _ low: Float, _ high: Float) -> Bool {
+            if abs(delta) < 1e-10 { return start >= low && start <= high }
+            let a = (low - start) / delta, b = (high - start) / delta
+            near = max(near, min(a, b)); far = min(far, max(a, b))
+            return near <= far
+        }
+        return clip(origin.x, delta.x, minimum.x, maximum.x)
+            && clip(origin.y, delta.y, minimum.y, maximum.y)
+            && clip(origin.z, delta.z, minimum.z, maximum.z)
     }
 
     func intersects(origin: SIMD3<Float>, delta: SIMD3<Float>) -> Bool {
         guard !nodes.isEmpty else { return false }
-        func intersectsBox(_ node: Node) -> Bool {
-            var near: Float = 0, far: Float = 1
-            func clip(_ start: Float, _ delta: Float, _ low: Float, _ high: Float) -> Bool {
-                if abs(delta) < 1e-10 { return start >= low && start <= high }
-                let a = (low - start) / delta, b = (high - start) / delta
-                near = max(near, min(a, b)); far = min(far, max(a, b))
-                return near <= far
-            }
-            return clip(origin.x, delta.x, node.low.x, node.high.x)
-                && clip(origin.y, delta.y, node.low.y, node.high.y)
-                && clip(origin.z, delta.z, node.low.z, node.high.z)
-        }
         var stack = [0]
         while let index = stack.popLast() {
             let node = nodes[index]
-            guard intersectsBox(node) else { continue }
+            guard Self.intersectsBox(origin: origin, delta: delta,
+                                     minimum: node.low, maximum: node.high) else { continue }
             if node.left >= 0 {
                 stack.append(node.left); stack.append(node.right)
                 continue

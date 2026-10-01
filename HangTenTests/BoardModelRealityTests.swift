@@ -85,6 +85,35 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
+    func testDistantGeometryDoesNotEncloseAnExposedSideContact() async throws {
+        let scene = try await selectionScene()
+        let side = try XCTUnwrap(scene.contactEntities["side"]?.first)
+        let distantWall = ModelEntity(mesh: .generateBox(width: 0.01, height: 0.1, depth: 0.1))
+        distantWall.position = side.position + [0.3, 0, 0]
+        scene.instanceEntities[0].addChild(distantWall, preservingWorldTransform: true)
+        scene.highlight(["side"], mode: .active)
+        XCTAssertGreaterThan(abs(scene.orbitAzimuth), 0.15,
+                             "An unrelated distant surface must not suppress the side pivot")
+        XCTAssertEqual(scene.orbitElevation, 0, accuracy: 0.001)
+    }
+
+    @MainActor
+    func testViewingRaysFollowAnInstancePoseChange() async throws {
+        let scene = try await selectionScene()
+        let surface = try XCTUnwrap(scene.contactEntities["top"]?.first)
+        let instance = try XCTUnwrap(scene.instanceEntities.first)
+        surface.position = [0, -1, 0]
+        instance.addChild(surface, preservingWorldTransform: true)
+        scene.highlight(["top"], mode: .active)
+        XCTAssertGreaterThan(scene.orbitElevation, 0.15)
+        scene.highlight([], mode: .active)
+        instance.orientation = simd_quatf(angle: -.pi / 2, axis: [0, 0, 1])
+        scene.highlight(["top"], mode: .active)
+        XCTAssertGreaterThan(abs(scene.orbitAzimuth), 0.15)
+        XCTAssertEqual(scene.orbitElevation, 0, accuracy: 0.001)
+    }
+
+    @MainActor
     func testDiagonalSurfaceCalculatesBothViewingAngles() async throws {
         let scene = try await selectionScene()
         let surface = try XCTUnwrap(scene.contactEntities["top"]?.first)

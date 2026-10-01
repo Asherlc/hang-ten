@@ -56,6 +56,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         waitForExpectations(timeout: 15)
         addScreenshot(named: "Beastmaker manual orbit after selection")
         let pocket = app.buttons["boardDetail.holdLegend.pocket-middle-center"]
+        XCTAssertTrue(pocket.waitForExistence(timeout: 10))
         XCTAssertTrue(pocket.isHittable)
         pocket.tap()
         let front = NSPredicate { _, _ in

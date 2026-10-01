@@ -11,7 +11,10 @@ triangles and surrounding board geometry in the current board pose. Exposed
 surfaces use projected area. Recessed surfaces also use clear sight lines through
 their openings: an upward-facing finger floor underneath a roof does not imply
 that the camera should look down at it. Area-weighted surface samples detect
-that enclosure and test candidate sight lines against the imported board meshes.
+that enclosure within the contact's own geometric extent and test candidate
+sight lines against the imported board meshes. Each mesh keeps a local spatial
+index; pose changes transform rays and conservative bounds, without rebuilding
+or transforming the board-wide triangle data.
 Hold names and types never enter the calculation.
 
 The search is limited to 20 degrees and uses the least-visible selected hold
