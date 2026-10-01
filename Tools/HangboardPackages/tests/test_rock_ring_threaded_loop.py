@@ -70,3 +70,22 @@ def test_instance_sidecar_rejects_invalid_or_duplicate_native_ids(instances):
     board['presentations'][0]['media']['instances'] = instances
     with pytest.raises(ManifestError, match='instanceSuspensions'):
         merge_suspension_sidecar(board, PACKAGE)
+
+
+@pytest.mark.parametrize('count', [0, 1])
+def test_instance_sidecar_rejects_undersized_inventory_even_with_matching_keys(tmp_path, count):
+    from hangboard_packages.cad_source import ManifestError, merge_suspension_sidecar, load_board
+    board = load_board(PACKAGE / 'metolius-rock-rings-3d.FCStd')
+    media = board['presentations'][0]['media']
+    media['instances'] = media['instances'][:count]
+    sidecar = json.loads((PACKAGE / 'suspension.json').read_text())
+    sidecar['instanceSuspensions'] = {
+        instance['equipmentObjectID']: sidecar['instanceSuspensions'][instance['equipmentObjectID']]
+        for instance in media['instances']
+    }
+    (tmp_path / 'suspension.json').write_text(json.dumps(sidecar))
+    descriptor = tmp_path / media['descriptorPath']
+    descriptor.parent.mkdir(parents=True)
+    descriptor.write_bytes((PACKAGE / media['descriptorPath']).read_bytes())
+    with pytest.raises(ManifestError, match='exactly two reusable instances'):
+        merge_suspension_sidecar(board, tmp_path)
