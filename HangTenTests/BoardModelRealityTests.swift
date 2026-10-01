@@ -6,6 +6,27 @@ import simd
 
 final class BoardModelRealityTests: XCTestCase {
     @MainActor
+    func testRenderedXTiltSharesPhysicsCordPivot() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "clavellium-training-block"))
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
+        defer { scene.stopLiveRopes() }
+        XCTAssertTrue(scene.select(positionID: try XCTUnwrap(board.positions.first?.id)))
+        let ready = expectation(description: "Accepted x tilt rendered")
+        scene.onLiveFrame = { ready.fulfill() }
+        scene.onLiveFailure = { XCTFail("X tilt failed"); ready.fulfill() }
+        scene.setLivePhysicalOrientation(simd_quatd(angle: 0.2, axis: SIMD3(1, 0, 0)))
+        scene.advanceLiveRopes(elapsed: 1.0 / 60)
+        await fulfillment(of: [ready], timeout: 30)
+        let frame = try XCTUnwrap(scene.liveFramesForTesting.first)
+        XCTAssertGreaterThan(frame.orientation.imag.x, 0.001)
+        let body = try XCTUnwrap(scene.instanceEntities.first)
+        let center = body.transform.matrix * SIMD4<Float>(0, 0.0025, 0, 1)
+        XCTAssertEqual(center.y, 0.0025 + Float(frame.boardHeight), accuracy: 1e-7)
+        XCTAssertEqual(center.z, 0, accuracy: 1e-8)
+        XCTAssertTrue(frame.metrics.geometryAccepted)
+    }
+
+    @MainActor
     func testCordAndCADModelShareMeterScale() async throws {
         for (id,width) in [("clavellium-training-block",Float(0.08)),("lattice.mini-bar",Float(0.155))] {
             let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:id))

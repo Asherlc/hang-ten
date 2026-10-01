@@ -40,6 +40,7 @@ struct RopeDynamicsSolver: Sendable {
               abs(simd_length(state.orientation.vector)-1)<1e-8,
               state.boardMass>0,state.boardMass.isFinite,state.boardHeight.isFinite,
               state.boardVerticalVelocity.isFinite,!state.ropes.isEmpty,
+              Self.finite(state.rotationPivot),
               state.ropes.allSatisfy({rope in
                   !rope.restLengths.isEmpty &&
                   rope.positions.count == rope.restLengths.count+1 && rope.positions.count == rope.velocities.count &&
@@ -100,7 +101,7 @@ struct RopeDynamicsSolver: Sendable {
                 candidate.acceptedMinimumClearance=metrics.minimumSegmentClearance
                 self=candidate
                 return RopeFrameSnapshot(boardHeight:state.boardHeight,orientation:state.orientation,
-                    ropes:state.ropes.map{RopeChainSnapshot(id:$0.id,radius:$0.radius,positions:$0.positions)},settled:false,metrics:metrics)
+                    ropes:state.ropes.map{RopeChainSnapshot(id:$0.id,radius:$0.radius,positions:$0.positions)},settled:false,metrics:metrics,rotationPivot:state.rotationPivot)
             }
             guard iteration<maxIterations else {break}
             _ = try candidate.correctConstraints(prediction:prediction)
@@ -170,8 +171,8 @@ struct RopeDynamicsSolver: Sendable {
             func deviation(_ i:Int)->Double {
                 if state.ropes[r].attachments[i] != nil {return 0}
                 return RopeMotionSweep.rotationalDeviation(
-                    start:old.ropes[r].positions[i]-SIMD3(0,old.boardHeight,0),
-                    end:state.ropes[r].positions[i]-SIMD3(0,state.boardHeight,0),angle:rotationAngle)
+                    start:old.ropes[r].positions[i]-old.rotationPivot-SIMD3(0,old.boardHeight,0),
+                    end:state.ropes[r].positions[i]-state.rotationPivot-SIMD3(0,state.boardHeight,0),angle:rotationAngle)
             }
             for i in state.ropes[r].restLengths.indices {
                 let a=old.boardPoint(old.ropes[r].positions[i]),b=old.boardPoint(old.ropes[r].positions[i+1])
@@ -220,7 +221,7 @@ struct RopeDynamicsSolver: Sendable {
         let arrived=abs(simd_dot(state.orientation.vector,targetOrientation.vector))>1-1e-12
         let settled=arrived && time>=0.5 && metrics.maximumSpeed<0.001 && metrics.boardDisplacement<0.0001
         return RopeFrameSnapshot(boardHeight:state.boardHeight,orientation:state.orientation,
-            ropes:state.ropes.map{RopeChainSnapshot(id:$0.id,radius:$0.radius,positions:$0.positions)},settled:settled,metrics:metrics)
+            ropes:state.ropes.map{RopeChainSnapshot(id:$0.id,radius:$0.radius,positions:$0.positions)},settled:settled,metrics:metrics,rotationPivot:state.rotationPivot)
     }
 
     mutating func settled(targetOrientation:simd_quatd,maxDuration:Double) throws -> RopeFrameSnapshot {

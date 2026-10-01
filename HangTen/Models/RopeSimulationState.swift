@@ -39,12 +39,15 @@ struct RopeSimulationState: Sendable {
     var boardVerticalVelocity: Double
     var orientation: simd_quatd
     var ropes: [RopeChainState]
+    /// Board-local center of its evidenced cord attachments/passages.
+    /// Height remains a gravity-driven degree of freedom at this pivot.
+    var rotationPivot: SIMD3<Double> = .zero
 
     func boardPoint(_ world: SIMD3<Double>) -> SIMD3<Double> {
-        orientation.inverse.act(world - SIMD3(0,boardHeight,0))
+        rotationPivot + orientation.inverse.act(world - rotationPivot - SIMD3(0,boardHeight,0))
     }
     func worldPoint(_ board: SIMD3<Double>) -> SIMD3<Double> {
-        orientation.act(board) + SIMD3(0,boardHeight,0)
+        orientation.act(board - rotationPivot) + rotationPivot + SIMD3(0,boardHeight,0)
     }
 }
 

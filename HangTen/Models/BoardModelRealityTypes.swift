@@ -195,6 +195,13 @@ final class BoardModelRealityScene {
     private var liveActivity = true
     #if DEBUG
     private var reviewCameraApplied = false
+    private var reviewRotationAxis: SIMD3<Double> {
+        switch ProcessInfo.processInfo.environment["HANGTEN_REVIEW_ROPE_ROTATION_AXIS"] {
+        case "x": SIMD3(1, 0, 0)
+        case "y": SIMD3(0, 1, 0)
+        default: SIMD3(0, 0, 1)
+        }
+    }
     private var reviewRotations: [Double] = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_ROPE_ROTATION_SEQUENCE"]?
         .split(separator:",").compactMap { Double($0) }.filter(\.isFinite) ?? []
     #endif
@@ -645,7 +652,7 @@ final class BoardModelRealityScene {
             activePositionID = positionID
             #if DEBUG
             if let degrees = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_ROPE_ROTATION_DEGREES"].flatMap(Double.init), degrees.isFinite {
-                setLivePhysicalOrientation(simd_quatd(angle:degrees*Double.pi/180,axis:SIMD3(0,0,1)))
+                setLivePhysicalOrientation(simd_quatd(angle:degrees*Double.pi/180,axis:reviewRotationAxis))
             }
             #endif
             return true
@@ -906,14 +913,14 @@ final class BoardModelRealityScene {
         let q=frame.orientation.vector
         let physical=Transform(scale:SIMD3(repeating:1),
             rotation:simd_quatf(ix:Float(q.x),iy:Float(q.y),iz:Float(q.z),r:Float(q.w)),
-            translation:SIMD3(0,Float(frame.boardHeight),0))
+            translation:SIMD3<Float>(frame.boardTranslation))
         instanceEntities[instance].transform=Transform(matrix:base*physical.matrix)
         if frame.settled {
             updateLiveFraming()
             #if DEBUG
             if activePositionID != nil,!reviewRotations.isEmpty {
                 let degrees=reviewRotations.removeFirst()
-                setLivePhysicalOrientation(simd_quatd(angle:degrees*Double.pi/180,axis:SIMD3(0,0,1)))
+                setLivePhysicalOrientation(simd_quatd(angle:degrees*Double.pi/180,axis:reviewRotationAxis))
             }
             #endif
         }
@@ -937,10 +944,11 @@ final class BoardModelRealityScene {
         let maximum=points.reduce(SIMD3<Float>(repeating:-.infinity),simd_max)
         // A conservative body rotation envelope keeps the camera stationary
         // while the board moves; refitting happens only at accepted rest.
-        let radius=Self.boundsCorners(descriptor.modelBounds).map(simd_length).max() ?? 0
         var low=minimum,high=maximum
         for (index,frame) in liveFrames.enumerated() {
-            let world=liveBaseTransforms[index]*SIMD4<Float>(0,Float(frame.boardHeight),0,1)
+            let pivot=SIMD3<Float>(frame.rotationPivot)
+            let radius=Self.boundsCorners(descriptor.modelBounds).map {simd_length($0-pivot)}.max() ?? 0
+            let world=liveBaseTransforms[index]*SIMD4<Float>(pivot+SIMD3(0,Float(frame.boardHeight),0),1)
             let center=SIMD3<Float>(world.x,world.y,world.z)
             low=simd_min(low,center-SIMD3(repeating:radius))
             high=simd_max(high,center+SIMD3(repeating:radius))

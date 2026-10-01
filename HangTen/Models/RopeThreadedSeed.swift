@@ -20,6 +20,21 @@ enum RopeThreadedSeed {
             throw RopePhysicsError.invalid("Invalid seed profile or orientation")
         }
         let portalMap=Dictionary(uniqueKeysWithValues:input.portals.map{($0.id,$0)})
+        let cordPoints = Array(Set(profile.ropes.flatMap(\.nodes).compactMap { node -> SIMD3<Double>? in
+            if node.kind == "attachment" { return node.point }
+            return node.portalID.flatMap { portalMap[$0]?.center }
+        })).sorted {
+            if $0.x != $1.x { return $0.x < $1.x }
+            if $0.y != $1.y { return $0.y < $1.y }
+            return $0.z < $1.z
+        }
+        let pivot = cordPoints.isEmpty ? SIMD3<Double>.zero : cordPoints.reduce(.zero, +) / Double(cordPoints.count)
+        func worldPoint(_ point: SIMD3<Double>, height: Double) -> SIMD3<Double> {
+            orientation.act(point - pivot) + pivot + SIMD3(0, height, 0)
+        }
+        func boardPoint(_ point: SIMD3<Double>, height: Double) -> SIMD3<Double> {
+            pivot + orientation.inverse.act(point - pivot - SIMD3(0, height, 0))
+        }
         let up=orientation.inverse.act(SIMD3<Double>(0,1,0))
         let channelColliders=try RopeChannelColliderCache(channels:input.channels).matchingColliders(for:input.channels)
         func makeRoutes(height: Double) throws -> [Route] {
@@ -38,7 +53,7 @@ enum RopeThreadedSeed {
                         targets.append(region.reduce(.zero,+)/Double(region.count))
                     }
                 } else if let point=node.point {
-                    targets.append(node.kind == "support" ? orientation.inverse.act(point-SIMD3(0,height,0)) : point)
+                    targets.append(node.kind == "support" ? boardPoint(point, height: height) : point)
                 } else { throw RopePhysicsError.invalid("Missing seed graph target") }
             }
             var route=Route(rope:rope,points:[targets[0]],nodeIndices:[0:0],channelEdges:[:])
@@ -118,7 +133,7 @@ enum RopeThreadedSeed {
             for (nodeIndex,pointIndex) in route.nodeIndices {
                 let node=route.rope.nodes[nodeIndex]
                 if node.kind == "support",let point=node.point {
-                    points[pointIndex]=orientation.inverse.act(point-SIMD3(0,height,0))
+                    points[pointIndex]=boardPoint(point, height: height)
                 }
             }
             return points
@@ -127,7 +142,7 @@ enum RopeThreadedSeed {
             zip(points,points.dropFirst()).reduce(0) { $0+simd_distance($1.0,$1.1) }
         }
         let supportHeight=profile.ropes.flatMap{$0.nodes}.filter{$0.kind == "support"}.compactMap{$0.point?.y}.min()!
-        let highestWood=input.collision.vertices.map{orientation.act($0).y}.max()!
+        let highestWood=input.collision.vertices.map{worldPoint($0, height: 0).y}.max()!
         let radius=profile.ropes.map{$0.radius}.max()!
         var low = -max(0.4,profile.ropes.map{$0.restLength}.max()!)
         var high = supportHeight-highestWood-radius-0.003
@@ -163,7 +178,7 @@ enum RopeThreadedSeed {
         var chains:[RopeChainState]=[]
         for route in routes {
             let points=moved(route,height)
-            var positions:[SIMD3<Double>]=[orientation.act(points[0])+SIMD3(0,height,0)]
+            var positions:[SIMD3<Double>]=[worldPoint(points[0], height: height)]
             var rest:[Double]=[], originalToParticle:[Int:Int]=[0:0], channels:[Int:String]=[:]
             for index in 0..<(points.count-1) {
                 let a=points[index],b=points[index+1],distance=simd_distance(a,b)
@@ -174,7 +189,7 @@ enum RopeThreadedSeed {
                 for step in 1...divisions {
                     if let id=route.channelEdges[index] { channels[rest.count]=id }
                     rest.append(distance/Double(divisions))
-                    positions.append(orientation.act(a+(b-a)*(Double(step)/Double(divisions)))+SIMD3(0,height,0))
+                    positions.append(worldPoint(a+(b-a)*(Double(step)/Double(divisions)), height: height))
                 }
                 originalToParticle[index+1]=positions.count-1
             }
@@ -197,7 +212,7 @@ enum RopeThreadedSeed {
                 supports:supports,attachments:attachments,portals:portals,channelSegments:channels))
         }
         var state=RopeSimulationState(profileID:profileID,boardMass:profile.boardMass,boardHeight:height,
-                                   boardVerticalVelocity:0,orientation:orientation,ropes:chains)
+                                   boardVerticalVelocity:0,orientation:orientation,ropes:chains,rotationPivot:pivot)
         try RopePassageTopology.refresh(state:&state,input:input)
         return state
     }

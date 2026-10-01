@@ -6,6 +6,69 @@ import simd
 #endif
 
 final class RopeThreadedSeedTests: XCTestCase {
+    private func attachedBoard() -> RopePhysicsInput {
+        let ropes = [-0.008, 0.008].enumerated().map { index, x in
+            let nodes = [
+                RopeGraphNode(id: "support-\(index)", kind: "support", point: SIMD3(x, 0.12, 0.008), portalID: nil),
+                RopeGraphNode(id: "attachment-\(index)", kind: "attachment", point: SIMD3(x, 0.02, 0.008), portalID: nil)
+            ]
+            return RopePhysicsRope(id: "lead-\(index)", baselineRadius: 0.001, radius: 0.001,
+                restLength: 0.1, linearMass: 0.01, nodes: nodes,
+                edges: [RopeGraphEdge(from: nodes[0].id, to: nodes[1].id, kind: "free", channelID: nil, winding: nil)])
+        }
+        return RopePhysicsInput(modelSHA256: "fixture", sourceSHA256: "fixture",
+            collision: RopeTriangleColliderTests.box(minimum: SIMD3(-0.01, -0.01, -0.01), maximum: SIMD3(0.01, 0.01, 0.01)),
+            portals: [], channels: [], profiles: [RopePhysicsProfile(id: "front", presentationID: "front",
+                instanceID: nil, boardMass: 1, ropes: ropes)])
+    }
+
+    func testXTiltKeepsBoardCordAttachmentsOnTheirAxis() throws {
+        let input = attachedBoard(), collider = try RopeTriangleCollider(input: input)
+        var state = try RopeThreadedSeed.make(input: input, profileID: "front",
+            orientation: simd_quatd(angle: 0, axis: SIMD3(1, 0, 0)), collider: collider)
+        let height = state.boardHeight
+        for angle in [-Double.pi / 2, -0.4, 0, 0.4, Double.pi / 2] {
+            state.orientation = simd_quatd(angle: angle, axis: SIMD3(1, 0, 0))
+            for x in [-0.008, 0.008] {
+                let attachment = SIMD3<Double>(x, 0.02, 0.008)
+                XCTAssertLessThan(simd_distance(state.worldPoint(attachment), attachment + SIMD3(0, height, 0)), 1e-10)
+                XCTAssertLessThan(simd_distance(state.boardPoint(state.worldPoint(attachment)), attachment), 1e-10)
+            }
+        }
+        // At +90 degrees the board origin moves around the cord axis.
+        let origin = state.worldPoint(.zero)
+        XCTAssertEqual(origin.y - height, 0.028, accuracy: 1e-10)
+        XCTAssertEqual(origin.z, -0.012, accuracy: 1e-10)
+    }
+
+    func testTiltedSeedKeepsFixedSupportsAndTautAttachmentLeads() throws {
+        let input = attachedBoard(), collider = try RopeTriangleCollider(input: input)
+        let state = try RopeThreadedSeed.make(input: input, profileID: "front",
+            orientation: simd_quatd(angle: Double.pi / 3, axis: SIMD3(1, 0, 0)), collider: collider)
+        XCTAssertEqual(state.boardHeight, 0, accuracy: 1e-8)
+        for (index, x) in [-0.008, 0.008].enumerated() {
+            let chain = state.ropes[index]
+            XCTAssertLessThan(simd_distance(try XCTUnwrap(chain.positions.first), SIMD3(x, 0.12, 0.008)), 1e-10)
+            XCTAssertLessThan(simd_distance(try XCTUnwrap(chain.positions.last), SIMD3(x, 0.02, 0.008)), 1e-8)
+        }
+        let metrics = try RopeSimulationMetrics.measure(state: state, input: input, collider: collider, boardHistory: [state.boardHeight])
+        XCTAssertTrue(metrics.geometryAccepted)
+    }
+
+    func testThreadedBoardTiltsAroundItsPassageCenter() throws {
+        let input = try Self.clavellium(), collider = try RopeTriangleCollider(input: input)
+        var state = try RopeThreadedSeed.make(input: input, profileID: "front",
+            orientation: simd_quatd(angle: 0, axis: SIMD3(1, 0, 0)), collider: collider)
+        // The front/back mouths are at y=2.5 mm, z=+/-45 mm.
+        // Their central cord axis crosses (0, 2.5 mm, 0).
+        let center = SIMD3<Double>(0, 0.0025, 0)
+        let fixed = center + SIMD3(0, state.boardHeight, 0)
+        for angle in [-0.6, 0, 0.6] {
+            state.orientation = simd_quatd(angle: angle, axis: SIMD3(1, 0, 0))
+            XCTAssertLessThan(simd_distance(state.worldPoint(center), fixed), 1e-10)
+        }
+    }
+
     func testSeedRejectsChannelRegionThatDoesNotContainItsTraversal() throws {
         let source = try Self.clavellium()
         let channels = source.channels.map { region in

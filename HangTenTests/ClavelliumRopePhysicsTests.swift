@@ -78,6 +78,23 @@ final class ClavelliumRopePhysicsTests: XCTestCase {
         }
     }
 
+    func testXTiltAndReturnPreserveCordPivotAndThreading() throws {
+        var solver = try solver()
+        let center = SIMD3<Double>(0, 0.0025, 0)
+        let supports = solver.state.ropes.map(\.supports)
+        for angle in [Double.pi / 9, -Double.pi / 9, 0] {
+            let target = simd_quatd(angle: angle, axis: SIMD3(1, 0, 0))
+            let frame = try solver.settled(targetOrientation: target, maxDuration: 5)
+            assertAccepted(frame)
+            XCTAssertLessThan(simd_distance(solver.state.worldPoint(center), center + SIMD3(0, frame.boardHeight, 0)), 1e-10)
+            for (chain, fixed) in zip(solver.state.ropes, supports) {
+                for (index, point) in fixed {
+                    XCTAssertEqual(chain.positions[index], point)
+                }
+            }
+        }
+    }
+
     func testDeterminismAndHalfTimeStep() throws {
         var first=try solver(),repeatRun=try solver(),halfStep=try solver()
         let a=try first.settled(targetOrientation:upright,maxDuration:5)

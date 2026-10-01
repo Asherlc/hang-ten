@@ -168,6 +168,19 @@ selected position. Do not bake cord, hook, nail, stand, mounting environment,
 cached geometry, or a raster fallback into the USDZ. Do not add a visible
 attachment just to explain the presentation.
 
+For presentations with live rope physics, the board rotates about the center
+of its cord points instead of the model origin. The pivot is the deterministic
+average of unique board-local attachments and portal centers referenced by that
+physics profile; overhead support points are excluded. An x-axis tilt therefore
+uses the line through that pivot parallel to model X. For Clavellium's front/back
+passage, this is the passage's midpoint. This is a presentation convention,
+confirmed by the user, rather than a new manufacturer measurement.
+
+The seed, simulation's world/model coordinate conversions, continuous collision
+checks, published render transform, and camera rotation envelope all use this
+same pivot. The overhead cord support remains fixed in world coordinates, while
+board height and the rope continue to settle under the existing constraints.
+
 For exterior point-passage branches, `meshWrap.clearance` selects the shared
 mesh-driven route solver. The Mini Bar uses `internalLoop` instead: two
 connected U-shaped channels in its FCStd, each with two mouth points in

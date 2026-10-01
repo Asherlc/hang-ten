@@ -12,6 +12,11 @@ struct RopeFrameSnapshot: Sendable {
     let ropes: [RopeChainSnapshot]
     let settled: Bool
     let metrics: RopeSimulationMetrics
+    let rotationPivot: SIMD3<Double>
+
+    var boardTranslation: SIMD3<Double> {
+        rotationPivot - orientation.act(rotationPivot) + SIMD3(0, boardHeight, 0)
+    }
 }
 
 /// Immutable native-channel BVHs, bound to all authored region geometry.
