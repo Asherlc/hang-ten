@@ -120,7 +120,7 @@ XCTAssertTrue(metrics.topologyValid)
 ```
 
 - [x] Run the solver test classes and verify failure before implementation.
-- [x] Implement fixed-step XPBD at 1/240 s, coupled vertical board motion, fixed supports/true attachments, sliding region constraints, length/contact corrections and segment self-contact. Exclude connected neighboring links and the intentional common-support endpoint from self-contact; test that this exclusion does not permit crossings at a mouth or along free spans. Warm-start state through bounded physical rotations. Use displacement-limited substeps/swept queries to prevent wood traversal. Measure both local and global residuals; replace local length projection with a stiff-chain/simultaneous solve if it cannot pass the specified gates.
+- [ ] Implement fixed-step XPBD at 1/240 s, coupled vertical board motion, fixed supports/true attachments, sliding region constraints, length/contact corrections and segment self-contact. Exclude connected neighboring links and the intentional common-support endpoint from self-contact; test that this exclusion does not permit crossings at a mouth or along free spans. Warm-start state through bounded physical rotations. Use displacement-limited substeps/swept queries to prevent wood traversal. Measure both local and global residuals; replace local length projection with a stiff-chain/simultaneous solve if it cannot pass the specified gates.
 - [x] Run deterministic acceptance, 1/480 s comparisons and self-intersection tests against the actual CAD collision solid. Reject a nonconverged/nonfinite solution explicitly; never report a stretched but visually plausible rope as passing.
 - [x] Commit and push only after the numerical gate passes. If it fails, continue correcting the core before adding an enabled app integration.
 
@@ -135,6 +135,12 @@ XCTAssertTrue(metrics.topologyValid)
 - [x] Implement the worker/controller and one cancellable `SceneEvents.Update` subscription per active scene. Integrate pause/resume with visibility and app activity, and stop on scene release. Position selection changes target orientation rather than replacing the chain. Keep the current 8 mm canonical presentation; add DEBUG physical-rotation controls only for testing.
 - [x] Run lifecycle/scene tests. Declared invalid physics enters the existing unavailable state; legacy profiles lacking physics retain the existing path. Verify no subscriptions or work survive scene teardown and no stale snapshot moves a new scene.
 - [x] Commit and push the controller/integration changes.
+
+**2026-10-01 recovery:** the XPBD comparison above was previously marked complete,
+but the retained solver history starts with the simultaneous nonlinear solve;
+no matched-model XPBD failure was found. Existing simultaneous dynamics are real,
+but they do not establish that the specified first comparison was performed.
+See [foundation experiment](../../source-audits/2026-10-01-live-solver-foundation.md).
 
 ## Task 6: Dynamic tube mesh, accessibility, and Reduce Motion
 
