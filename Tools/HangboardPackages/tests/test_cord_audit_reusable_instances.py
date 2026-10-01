@@ -28,7 +28,7 @@ def test_reusable_rock_rings_discovers_documented_per_instance_topology() -> Non
 
     topologies = _model_package_topologies(inventory)
 
-    assert topologies["metolius.rock-rings-3d"] == "pairedLeadCord"
+    assert topologies["metolius.rock-rings-3d"] == "threadedLoopCord"
 
 
 def _paired_lead() -> BoardModelPairedLeadCord:

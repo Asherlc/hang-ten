@@ -22,7 +22,7 @@
       "type": "model",
       "assetPath": "assets/primary.usdz",
       "descriptorPath": "assets/primary.model.json",
-      "display": {"camera": {
+      "display": { "surfaceFinish": "wood", "graniteNodeIDs": ["edge_front_20mm_granite_mesh_001"], "camera": {
         "type": "orthographic",
         "viewDirection": [0, 0, -1],
         "up": [0, 1, 0],
