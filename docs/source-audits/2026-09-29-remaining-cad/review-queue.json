@@ -475,7 +475,7 @@
       "package": "yy-baguette-evo",
       "boardID": "yy.baguette-evo",
       "name": "YY Vertical Baguette Evo",
-      "humanReview": "pending",
+      "humanReview": "reviewed; rounded cavity geometry, cords, wood display and opposing hold poses accepted",
       "sourceSHA256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
       "reviewPage": "yy-baguette-evo/individual-review-2026-10-01/review.md",
       "sourceAudit": "yy-baguette-evo/README.md",
@@ -500,7 +500,11 @@
       "appReviewHistory": [
         "yy-baguette-evo/app-review/validation.json"
       ],
-      "individualReview": "yy-baguette-evo/individual-review-2026-10-01/review.md"
+      "individualReview": "yy-baguette-evo/individual-review-2026-10-01/review.md",
+      "humanReviewRecord": "yy-baguette-evo/human-review.json",
+      "reviewAnswer": "y",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed Baguette Evo revision with rounded native cavity ends, wood finish, visible native-solved cords, nineteen contacts and nine bearing-up poses; rounding radii documented as display estimates."
     },
     {
       "number": 18,

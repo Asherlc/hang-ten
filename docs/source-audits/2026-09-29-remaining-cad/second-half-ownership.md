@@ -7,7 +7,8 @@ This workspace exclusively reviews #16 `yy-baguette`, #17 `yy-baguette-evo`,
 #18 `yy-penta-evo`, #19 `yy-travelboard`, #20 `zlagboard-evo`, and
 #21 `zlagboard-pro`, in that order, one board at a time with the user.
 #16 was accepted by the user on 2026-10-01 (reply “y”, displayed commit
-`a77034f`). #17–21 remain pending until explicit replies accept their revisions.
+`a77034f`). #17 was accepted on 2026-10-01 (reply “y”, displayed commit `112121501`).
+#18–21 remain pending until explicit replies accept their revisions.
 
 The parent `placid-badger` owns #9–15; accepted #1–8 and all other packages
 are outside this workspace's scope. Shared compiler, schema, renderer, and

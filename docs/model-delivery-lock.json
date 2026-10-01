@@ -1031,7 +1031,7 @@
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/metadata-diff.json",
       "nativeValidation": "Rounded native solid and all20 contact regions valid;18 depth witnesses/four bores/contact facts preserved; native radius edit/restore passes. Independent compiler check/publish reproducible. Exact final reports and all historical attempts retained in individual review.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/ios/final-runtime-validation.json",
-      "geometryAcceptance": "pending human review of rounded native cavity ends, wood display and nine bearing-up poses",
+      "geometryAcceptance": "accepted by user reply y on 2026-10-01; displayed revision 112121501",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
       "suspensionSHA256": "4d0aa10c8914bd41fd79cc825d094ffc5a785aae64aef5406ade19778102a282",
       "nativeAppHistory": [
@@ -1040,7 +1040,8 @@
       "individualReview": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/review.md",
       "comparisonHistory": [
         "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/geometry-review.html"
-      ]
+      ],
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/human-review.json"
     },
     "yy-penta-evo": {
       "source": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
