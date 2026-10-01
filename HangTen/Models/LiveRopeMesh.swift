@@ -14,6 +14,12 @@ enum RopeTubeGeometry {
         }
         var vertices: [RopeTubeVertex] = []
         vertices.reserveCapacity(points.count * radialSegments)
+        // The same ring angles apply to every material point. Compute them
+        // once per mesh update without changing tube radius or vertex output.
+        let ring = (0..<radialSegments).map { j -> SIMD2<Float> in
+            let angle = Float(j)*2*Float.pi/Float(radialSegments)
+            return SIMD2(cos(angle),sin(angle))
+        }
         var previousNormal = SIMD3<Float>(1,0,0)
         for i in points.indices {
             let before = points[max(0,i-1)], after = points[min(points.count-1,i+1)]
@@ -27,8 +33,7 @@ enum RopeTubeGeometry {
             normal = simd_normalize(normal); previousNormal = normal
             let binormal = simd_normalize(simd_cross(tangent,normal))
             for j in 0..<radialSegments {
-                let angle = Float(j)*2*Float.pi/Float(radialSegments)
-                let radial = normal*cos(angle)+binormal*sin(angle)
+                let radial = normal*ring[j].x+binormal*ring[j].y
                 vertices.append(RopeTubeVertex(position:points[i]+radius*radial,normal:radial))
             }
         }
