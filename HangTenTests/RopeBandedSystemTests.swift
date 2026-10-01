@@ -4,6 +4,18 @@ import XCTest
 #endif
 
 final class RopeBandedSystemTests: XCTestCase {
+    func testUnborderedFiniteInputsCannotReturnOverflowedSolution() throws {
+        var system = try RopeBandedSystem(size: 1, bandwidth: 0)
+        try system.addSymmetric(row: 0, column: 0, value: 1e-300)
+        XCTAssertThrowsError(try system.solve(
+            rhs: [1e300], borderColumns: [], borderMatrix: [], borderRHS: [])) { error in
+            guard case RopePhysicsError.invalid(let message) = error else {
+                return XCTFail("Expected nonfinite solve rejection, got \(error)")
+            }
+            XCTAssertEqual(message, "Nonfinite rope linear result")
+        }
+    }
+
     func testReusableFactorizationSupportsChangingLoadsAndImmutableCopies() throws {
         var system=try RopeBandedSystem(size:3,bandwidth:1)
         try system.addSymmetric(row:0,column:0,value:2)

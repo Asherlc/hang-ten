@@ -53,6 +53,7 @@ actor LiveRopeWorker {
     private var solver: RopeDynamicsSolver?
     init(solver: RopeDynamicsSolver) { self.solver = solver }
     func advance(steps: Int, target: simd_quatd, settleImmediately: Bool) throws -> RopeFrameSnapshot? {
+        try Task.checkCancellation()
         guard var candidate = solver else { return nil }
         var frame: RopeFrameSnapshot?
         if settleImmediately {
@@ -60,10 +61,12 @@ actor LiveRopeWorker {
         } else {
             guard (0...8).contains(steps) else { throw RopePhysicsError.invalid("Unbounded display step") }
             for _ in 0..<steps {
+                try Task.checkCancellation()
                 frame = try candidate.step(dt: 1.0/240, targetOrientation: target)
                 if frame?.settled == true { break }
             }
         }
+        try Task.checkCancellation()
         solver = candidate
         return frame
     }
@@ -124,6 +127,9 @@ final class LiveRopeController {
                 guard frame.metrics.geometryAccepted else { throw RopePhysicsError.invalid("Rejected display geometry") }
                 self.schedule.accept(settled: frame.settled)
                 self.delivery(sceneID, generation, frame)
+            } catch is CancellationError {
+                self?.busy = false
+                self?.task = nil
             } catch {
                 guard let self else { return }
                 self.busy = false; self.task = nil

@@ -225,7 +225,12 @@ struct RopeDynamicsSolver: Sendable {
 
     mutating func settled(targetOrientation:simd_quatd,maxDuration:Double) throws -> RopeFrameSnapshot {
         guard maxDuration.isFinite,maxDuration>0 else{throw RopePhysicsError.invalid("Invalid settling duration")}
-        for _ in 0..<Int(ceil(maxDuration*240)) {
+        let requestedSteps=ceil(maxDuration*240)
+        guard requestedSteps.isFinite,let steps=Int(exactly:requestedSteps) else {
+            throw RopePhysicsError.invalid("Invalid settling step count")
+        }
+        for _ in 0..<steps {
+            try Task.checkCancellation()
             let frame=try step(dt:1.0/240,targetOrientation:targetOrientation)
             if frame.settled {return frame}
         }
@@ -704,13 +709,20 @@ struct RopeContactWorkingSet {
     init(activeIDs:[Int]) {self.activeIDs=activeIDs}
     mutating func insert(_ id:Int) {activeIDs.append(id);activeIDs.sort()}
 
-    mutating func releaseTensileContact(multipliers:[Double],contacts:[Bool])->Bool {
+    static func blockingMultiplier(activeIDs:[Int],multipliers:[Double],contacts:[Bool],
+                                   feasibleMultipliers:[Int:Double])->(index:Int,fraction:Double)? {
         var blocking:(index:Int,fraction:Double)?
         for j in activeIDs.indices where contacts[j] && multipliers[j]>1e-12 {
             let previous=min(0,feasibleMultipliers[activeIDs[j]] ?? 0)
             let fraction=max(0,min(1,-previous/(multipliers[j]-previous)))
             if fraction<(blocking?.fraction ?? 2) {blocking=(j,fraction)}
         }
+        return blocking
+    }
+
+    mutating func releaseTensileContact(multipliers:[Double],contacts:[Bool])->Bool {
+        let blocking=Self.blockingMultiplier(activeIDs:activeIDs,multipliers:multipliers,
+            contacts:contacts,feasibleMultipliers:feasibleMultipliers)
         if let blocking {
             for j in activeIDs.indices {
                 let id=activeIDs[j],previous=feasibleMultipliers[id] ?? 0

@@ -62,11 +62,16 @@ final class LiveRopeControllerTests: XCTestCase {
         XCTAssertFalse(identity.accepts(sceneID: scene, token: identity.token))
     }
     #if canImport(HangTen)
+    private static let solverFixture: Result<RopeDynamicsSolver, Error> = Result {
+        let input = try RopeThreadedSeedTests.clavellium()
+        let collider = try RopeTriangleCollider(input: input)
+        let orientation = simd_quatd(angle: 0, axis: SIMD3<Double>(0, 0, 1))
+        let state = try RopeThreadedSeed.make(input: input, profileID: "front", orientation: orientation, collider: collider)
+        return try RopeDynamicsSolver(input: input, state: state, collider: collider)
+    }
     func testWorkersKeepIndependentStateAndStopIsTerminal() async throws {
-        let input=try RopeThreadedSeedTests.clavellium(), collider=try RopeTriangleCollider(input:input)
-        let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
-        let state=try RopeThreadedSeed.make(input:input,profileID:"front",orientation:q,collider:collider)
-        let solver=try RopeDynamicsSolver(input:input,state:state,collider:collider)
+        let solver = try Self.solverFixture.get()
+        let q = solver.state.orientation
         let first=LiveRopeWorker(solver:solver),second=LiveRopeWorker(solver:solver)
         let a=try await first.advanceExactly(steps:2,target:q)
         let b=try await second.advanceExactly(steps:1,target:q)
@@ -82,10 +87,8 @@ final class LiveRopeControllerTests: XCTestCase {
 
     @MainActor
     func testReduceMotionDeliversOnlyAcceptedSettledFrame() async throws {
-        let input=try RopeThreadedSeedTests.clavellium(),collider=try RopeTriangleCollider(input:input)
-        let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
-        let state=try RopeThreadedSeed.make(input:input,profileID:"front",orientation:q,collider:collider)
-        let solver=try RopeDynamicsSolver(input:input,state:state,collider:collider)
+        let solver = try Self.solverFixture.get()
+        let q = solver.state.orientation
         let ready=expectation(description:"Accepted settled frame")
         var count=0
         let controller=LiveRopeController(solver:solver,sceneID:UUID(),delivery:{ _,_,frame in
@@ -104,10 +107,7 @@ final class LiveRopeControllerTests: XCTestCase {
 
     @MainActor
     func testControllerDeallocatesWhileWorkerHasPendingWork() async throws {
-        let input=try RopeThreadedSeedTests.clavellium(), collider=try RopeTriangleCollider(input:input)
-        let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
-        let state=try RopeThreadedSeed.make(input:input,profileID:"front",orientation:q,collider:collider)
-        let solver=try RopeDynamicsSolver(input:input,state:state,collider:collider)
+        let solver = try Self.solverFixture.get()
         let callback=expectation(description:"No delivery after release")
         callback.isInverted=true
         var controller:LiveRopeController?=LiveRopeController(solver:solver,sceneID:UUID(),

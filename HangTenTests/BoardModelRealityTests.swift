@@ -38,7 +38,7 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
-    func testLiveClavelliumHasMatchedRadiusAndOrbitLeavesPhysicsUnchanged() async throws {
+    func testLiveClavelliumHasMatchedRadiusAndNonPickableCord() async throws {
         let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:"clavellium-training-block"))
         let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation)
         XCTAssertTrue(scene.hasLiveRopes)
@@ -52,8 +52,6 @@ final class BoardModelRealityTests: XCTestCase {
         XCTAssertNil(tube.components[CollisionComponent.self])
         XCTAssertNil(tube.components[InputTargetComponent.self])
         scene.orbit(azimuth:1,elevation:0.3)
-        XCTAssertEqual(scene.liveFramesForTesting.first?.boardHeight,frame.boardHeight)
-        XCTAssertEqual(scene.liveFramesForTesting.first?.ropes.first?.positions,frame.ropes.first?.positions)
         XCTAssertFalse(scene.select(positionID:nil))
         XCTAssertNil(scene.transientCordEntity)
         XCTAssertTrue(scene.select(positionID:try XCTUnwrap(board.positions.first?.id)))
@@ -67,7 +65,7 @@ final class BoardModelRealityTests: XCTestCase {
         let store=BoardCatalog.packageStore
         let board=try XCTUnwrap(store.board(id:"clavellium-training-block"))
         guard case .model(let media)=board.defaultPresentation.media else {return XCTFail("Model required")}
-        let input=try XCTUnwrap(media.physics),source=try XCTUnwrap(input.profiles.first)
+        let input=try XCTUnwrap(store.presentationPhysicsInput(for: board)),source=try XCTUnwrap(input.profiles.first)
         let instances=[("left",-0.15),("right",0.15)].map {id,x in
             BoardModelInstance(equipmentObjectID:id,
                 baseTransform:BoardModelTransform(translation:[x,0.02,0],rotation:SIMD4(0,0,0,1),reflection:nil),

@@ -85,8 +85,11 @@ tapered or overlapping section pieces. It is authoring metadata and never
 ships in generated `board.json`.
 
 The native solid is tessellated with `export_rope_collision_solid.py` and solved
-with `solve_threaded_rope.py`. The generated pose lowers the board by
-155.287 mm under the fixed support. The measured loop is 550.0000068 mm for
+with `solve_threaded_rope.py`. The initial historical generated pose lowered the board by
+155.287 mm under the fixed support. The shipped `front` cached pose now lowers
+the board by 154.096353 mm (`translation[1] = -0.154096353` in
+`suspension.json`); the initial solve measurements below describe that earlier
+cache, not the current front translation. The measured loop is 550.0000068 mm for
 the declared 550 mm estimate. Every visible leg is sampled at 0.5 mm against
 the watertight native solid; minimum centerline clearance is 2.100 mm for
 the estimated 2 mm radius. The hidden segment passes through the void and is
@@ -185,7 +188,13 @@ After the input milestone, the operator corrected the target from 12 mm to
 physics input now uses radius 3.5 mm and retained baseline radius 2 mm with
 scale 1.75. The owner's statement supplies the diameter; the round-cord
 adaptation of the photographed flat sling remains explicit. The generated
-physics hash is `9ca003c90ffa0ebbce400cbfd0458e1197e80aa6704c2b376cb670b47d0c578f`.
+physics hash was recorded as `9ca003c90ffa0ebbce400cbfd0458e1197e80aa6704c2b376cb670b47d0c578f`
+for that intermediate worktree export; its raw bytes were not retained, so
+that historical digest cannot serve as reproducible delivery evidence. The
+committed `assets/primary.physics.json` has raw-byte SHA-256
+`c60fbd6dfaf59bfd5fb7e6aa8d806f78af7e828a7f64074d326865e08f13e853`
+at this review revision (`shasum -a 256`), which is the reproducible artifact
+binding. Later descriptor edits require checking the current raw-byte digest.
 The native board and USDZ hashes are unchanged. Matching Python validation,
 Swift descriptor, collider and seed tests pass; live settling/rendering is
 still pending its numerical gate. This input correction does not claim that
@@ -248,5 +257,6 @@ iPhone's display cutout; it is not part of the model or cord.
 [Capture provenance](2026-09-29-clavellium-evidence/strong-owl-live-ios-provenance.json)
 records the isolated simulator, build flags, unchanged model hash and DEBUG
 camera controls. Physical 90°/180° review rotations are not manufacturer grip
-assignments. The accepted 8 mm pose remains unchanged. Catalog adaptation and
+assignments. The accepted `cd-crimp-8mm` crimp-shelf pose remains unchanged; 8 mm names
+the shelf, while the cord diameter is 7 mm. Catalog adaptation and
 physical-device profiling remain separate, unfinished gates.

@@ -37,7 +37,8 @@ Clavellium milestone does not complete the catalog rollout.
 Camera orbit remains a camera operation and does not rotate the board
 relative to gravity. Loaded-position changes and explicitly controlled
 board-orientation transitions drive simulation. The current Clavellium
-8 mm presentation remains as accepted by the user. Unknown grip-to-channel
+`cd-crimp-8mm` crimp-shelf presentation remains as accepted by the user
+(the 8 mm names the shelf, not the confirmed 7 mm cord diameter). Unknown grip-to-channel
 mappings are not invented; debug physical rotations can test settling
 without assigning those rotations to real grips.
 
@@ -247,7 +248,7 @@ is an explicit rollout gap to resolve, not an excuse to mark a board covered.
 
 Every canonical pose and every paired instance must pass the same topology,
 strain, collision, convergence, lifecycle, and native visual gates. Refresh
-the cord audit and delivery lock for promoted packages. No simulated cord
+the cord audit, package validation and deterministic rebuild checks for promoted packages. No simulated cord
 is marketed as a load-rating or safety analysis of the physical hangboard.
 Include a per-board fit check for the selected diameter, and retain
 the baseline radius used to derive it so repeated builds do not multiply it

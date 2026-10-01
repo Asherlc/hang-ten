@@ -72,6 +72,9 @@ App.closeDocument(d.Name)
 
 
 def test_clavellium_collision_and_portals_are_native_and_repeatable(tmp_path):
+    pytest.importorskip("numpy")
+    pytest.importorskip("trimesh")
+    pytest.importorskip("rtree")
     output = tmp_path / "physics-geometry.json"
     script = tmp_path / "export.py"
     script.write_text(f'''import FreeCAD as App
@@ -184,3 +187,38 @@ App.closeDocument(d.Name)
     run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(script)],
                          cwd=ROOT, capture_output=True, text=True, timeout=60)
     assert run.returncode == 0, run.stdout + run.stderr
+
+
+def test_compiler_removes_stale_physics_when_authoring_is_removed(tmp_path):
+    import os
+    import shutil
+    pxr = pytest.importorskip("pxr")
+    env = dict(os.environ, HANGTEN_CAD_PYTHONPATH=str(Path(pxr.__file__).parent.parent))
+    source = tmp_path / "clavellium-training-block.FCStd"
+    shutil.copyfile(ROOT / "Hangboards/clavellium-training-block/clavellium-training-block.FCStd", source)
+    assets = tmp_path / "assets"
+    assets.mkdir()
+    stale = assets / "primary.physics.json"
+    stale.write_text("stale physics from a prior build")
+    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(TOOLS / "compile_board.py"),
+                          "--package", "clavellium-training-block", "--source", str(source), "--assets", str(assets)],
+                         cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
+    assert run.returncode == 0, run.stdout + run.stderr
+    assert (assets / "primary.usdz").is_file()
+    assert not stale.exists()
+
+
+def test_compiler_reports_malformed_physics_authoring_as_build_error(tmp_path):
+    import os
+    import shutil
+    pxr = pytest.importorskip("pxr")
+    env = dict(os.environ, HANGTEN_CAD_PYTHONPATH=str(Path(pxr.__file__).parent.parent))
+    source = tmp_path / "clavellium-training-block.FCStd"
+    shutil.copyfile(ROOT / "Hangboards/clavellium-training-block/clavellium-training-block.FCStd", source)
+    (tmp_path / "rope-physics.json").write_text("[]")
+    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(TOOLS / "compile_board.py"),
+                          "--package", "clavellium-training-block", "--source", str(source), "--check"],
+                         cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
+    assert run.returncode != 0
+    assert "BUILD FAILED: invalid rope physics authoring" in run.stdout + run.stderr
+    assert "Traceback" not in run.stdout + run.stderr

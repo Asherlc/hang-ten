@@ -184,19 +184,33 @@ struct BoardModelRealityView: View {
                 content.camera = .virtual
                 content.add(model.root)
                 content.add(model.camera)
-                if model.hasLiveRopes {
-                    model.installLiveUpdateSubscription(content.subscribe(to:SceneEvents.Update.self) { [weak model] event in
-                        let elapsed=event.deltaTime
-                        Task { @MainActor [weak model] in model?.advanceLiveRopes(elapsed:elapsed) }
-                    })
-                }
                 applySync(size: size)
+                if model.hasLiveRopes, positionID != nil {
+                    if !model.hasLiveUpdateSubscription {
+                        model.installLiveUpdateSubscription(content.subscribe(to: SceneEvents.Update.self) { [weak model] event in
+                            let elapsed = event.deltaTime
+                            Task { @MainActor [weak model] in model?.advanceLiveRopes(elapsed: elapsed) }
+                        })
+                    }
+                } else {
+                    model.installLiveUpdateSubscription(nil)
+                }
             } update: { content in
                 // Observe orbit invalidation in the RealityView update itself,
                 // as well as the projected SwiftUI accessibility overlay.
                 let revision = cameraRevision
                 content.camera = .virtual
                 applySync(size: size)
+                if model.hasLiveRopes, positionID != nil {
+                    if !model.hasLiveUpdateSubscription {
+                        model.installLiveUpdateSubscription(content.subscribe(to: SceneEvents.Update.self) { [weak model] event in
+                            let elapsed = event.deltaTime
+                            Task { @MainActor [weak model] in model?.advanceLiveRopes(elapsed: elapsed) }
+                        })
+                    }
+                } else {
+                    model.installLiveUpdateSubscription(nil)
+                }
                 #if DEBUG
                 if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
                     let diagnostic = "revision=\(revision);rootActive=\(model.root.isActive);cameraActive=\(model.camera.isActive);sameScene=\(model.root.scene != nil && model.root.scene === model.camera.scene)"

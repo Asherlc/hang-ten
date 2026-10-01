@@ -238,7 +238,43 @@ final class BoardPackageStoreTests: XCTestCase {
         let board = try XCTUnwrap(store.boards.first)
         guard case .model(let media) = try XCTUnwrap(board.presentations.first).media else { return XCTFail("Expected model") }
         XCTAssertEqual(media.physicsDescriptorPath, "assets/primary.physics.json")
-        XCTAssertEqual(try XCTUnwrap(media.physics).profiles.first?.ropes.first?.radius, 0.006)
+        XCTAssertEqual(try XCTUnwrap(store.presentationPhysicsInput(for: board)).profiles.first?.ropes.first?.radius, 0.006)
+    }
+
+    func testLazyRopePhysicsRejectsFilesMutatedAfterCatalogValidation() throws {
+        for failure in ["ancestor-symlink", "oversized", "stale", "wrong-profile"] {
+            var packageURL: URL!
+            let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { url in
+                packageURL = url
+                try self.addPhysicsFixture(to: url)
+            }
+            defer { fixture.remove() }
+            let store = try BoardPackageStore(bundle: fixture.bundle, modelAssetMode: .onDemand)
+            let board = try XCTUnwrap(store.boards.first)
+            let url = packageURL.appendingPathComponent("assets/primary.physics.json")
+            switch failure {
+            case "ancestor-symlink":
+                let assets = packageURL.appendingPathComponent("assets")
+                let relocated = packageURL.appendingPathComponent("relocated-assets")
+                try FileManager.default.moveItem(at: assets, to: relocated)
+                try FileManager.default.createSymbolicLink(at: assets, withDestinationURL: relocated)
+            case "oversized":
+                let handle = try FileHandle(forWritingTo: url)
+                defer { try? handle.close() }
+                try handle.truncate(atOffset: UInt64(64 * 1024 * 1024 + 1))
+            case "stale":
+                try mutateJSONObject(at: url) { $0["modelSHA256"] = String(repeating: "c", count: 64) }
+            case "wrong-profile":
+                try mutateJSONObject(at: url) { object in
+                    var profiles = try XCTUnwrap(object["profiles"] as? [[String: Any]])
+                    profiles[0]["presentationID"] = "unrelated"
+                    object["profiles"] = profiles
+                }
+            default:
+                XCTFail("Unknown mutation: \(failure)")
+            }
+            XCTAssertThrowsError(try store.presentationPhysicsInput(for: board), failure)
+        }
     }
 
     func testDeclaredRopePhysicsFailsClosed() throws {
@@ -255,10 +291,13 @@ final class BoardPackageStoreTests: XCTestCase {
                     profiles[0]["presentationID"] = "unrelated"
                     object["profiles"] = profiles
                 }
-                default:
+                case "symlink":
                     let target = packageURL.appendingPathComponent("assets/link-target.json")
                     try FileManager.default.moveItem(at: url, to: target)
                     try FileManager.default.createSymbolicLink(at: url, withDestinationURL: target)
+                default:
+                    XCTFail("Unknown failure mode: \(failure)")
+                    return
                 }
             }
             defer { fixture.remove() }

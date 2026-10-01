@@ -10,6 +10,23 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         let scene = try await BoardModelRealityLoader.load(
             board: board, presentation: board.defaultPresentation)
         XCTAssertFalse(scene.root.children.isEmpty)
+        guard case .model(let media) = board.defaultPresentation.media else {
+            return XCTFail("expected model presentation")
+        }
+        let instances = try XCTUnwrap(media.instances)
+        XCTAssertEqual(instances.count, scene.instanceEntities.count)
+        for (entity, authored) in zip(scene.instanceEntities, instances) {
+            // Contacts mapped to this equipment object must belong to this clone.
+            for contactID in authored.contactIDsBySlotID.values {
+                let contacts = try XCTUnwrap(scene.contactEntities[contactID])
+                XCTAssertFalse(contacts.isEmpty)
+                for contact in contacts {
+                    var ancestor = contact.parent
+                    while ancestor != nil && ancestor !== entity { ancestor = ancestor?.parent }
+                    XCTAssertTrue(ancestor === entity, authored.equipmentObjectID)
+                }
+            }
+        }
         for (positionID, xDirection) in [("primary", Float(1)), ("reverse", Float(-1))] {
             XCTAssertTrue(scene.select(positionID: positionID))
             XCTAssertEqual(scene.instanceEntities.count, 2)
@@ -39,7 +56,10 @@ final class SuspendedBoardPresentationTests: XCTestCase {
                     continue
                 }
                 for (positionID, pose) in profile.canonicalPoses {
-                    let routes = try XCTUnwrap(pose.cordContactPoints, "\(boardID)/\(positionID)")
+                    guard let routes = pose.cordContactPoints else {
+                        XCTFail("Missing cached contacts: \(boardID)/\(positionID)")
+                        continue
+                    }
                     XCTAssertEqual(Set(routes.keys), Set(profile.attachments.map(\.id)))
                     do {
                         let solved = try SuspendedBoardPresentation.solve(

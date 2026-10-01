@@ -468,7 +468,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 var typedAssets = Set([media.assetPath, media.descriptorPath])
                 if let physicsPath = media.physicsDescriptorPath {
                     typedAssets.insert(physicsPath)
-                    XCTAssertNotNil(media.physics)
+                    XCTAssertNotNil(try BoardCatalog.packageStore.presentationPhysicsInput(for: board))
                 }
                 if packageEntries.contains("rope-physics.json") {
                     XCTAssertNotNil(media.physicsDescriptorPath)

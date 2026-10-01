@@ -5,6 +5,22 @@ import simd
 #endif
 
 final class RopeInterContactTests:XCTestCase {
+    func testNearGrazingCommonAndTangentialTranslationsHaveSweepCertificates() {
+        let a = SIMD3<Double>(-0.05, -0.05, 0), b = SIMD3<Double>(0.05, 0.05, 0)
+        let gap = simd_normalize(SIMD3<Double>(-1, 1, 0)) * 0.006951
+        let first = Self.chain("first", [a, b])
+        let second = Self.chain("second", [a + gap, b + gap])
+        for tangent in [SIMD3<Double>.zero, SIMD3<Double>(0.03, 0.03, 0)] {
+            var movedFirst = first, movedSecond = second
+            movedFirst.positions = first.positions.map { $0 + SIMD3(0, 0, 0.05) }
+            movedSecond.positions = second.positions.map { $0 + SIMD3(0, 0, 0.05) + tangent }
+            XCTAssertTrue(RopeCordContacts.between(first, second).isEmpty)
+            XCTAssertTrue(RopeCordContacts.between(movedFirst, movedSecond).isEmpty)
+            XCTAssertTrue(RopeCordContacts.sweepValid(previousFirst: first, first: movedFirst,
+                previousSecond: second, second: movedSecond))
+        }
+    }
+
     static func chain(_ id:String,_ points:[SIMD3<Double>],supports:[Int:SIMD3<Double>]=[:],radius:Double=0.0035)->RopeChainState {
         RopeChainState(id:id,radius:radius,linearMass:0.01,
             restLengths:zip(points,points.dropFirst()).map{simd_distance($0,$1)},

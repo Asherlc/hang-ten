@@ -432,7 +432,6 @@ struct BoardModelMedia: Hashable {
     let orientation: BoardModelOrientation?
     let instances: [BoardModelInstance]?
     let physicsDescriptorPath: String?
-    let physics: RopePhysicsInput?
 
     init(
         assetPath: String,
@@ -442,8 +441,7 @@ struct BoardModelMedia: Hashable {
         suspension: BoardModelSuspension? = nil,
         orientation: BoardModelOrientation? = nil,
         instances: [BoardModelInstance]? = nil,
-        physicsDescriptorPath: String? = nil,
-        physics: RopePhysicsInput? = nil
+        physicsDescriptorPath: String? = nil
     ) {
         self.assetPath = assetPath
         self.descriptorPath = descriptorPath
@@ -453,7 +451,6 @@ struct BoardModelMedia: Hashable {
         self.orientation = orientation
         self.instances = instances
         self.physicsDescriptorPath = physicsDescriptorPath
-        self.physics = physics
     }
 }
 

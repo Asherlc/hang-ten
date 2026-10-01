@@ -905,7 +905,7 @@ def build(
             try:
                 physics = build_physics_descriptor(document, source,
                     descriptor_json["modelSHA256"], json.loads(physics_config.read_text()))
-            except (ValueError, TypeError, KeyError) as error:
+            except (OSError, AttributeError, ValueError, TypeError, KeyError, RecursionError) as error:
                 raise BuildError(f"invalid rope physics authoring: {error}") from error
             physics_path = staging / "primary.physics.json"
             physics_path.write_text(json.dumps(physics, indent=2) + "\n")
@@ -956,6 +956,8 @@ def build(
         os.replace(descriptor_temp, descriptor_target)
         if physics_path is not None:
             os.replace(physics_temp, physics_target)
+        else:
+            (assets / "primary.physics.json").unlink(missing_ok=True)
         delivered = json.loads(descriptor_target.read_text())
         delivered_digest = _digest(asset_target)
         if delivered.get("modelSHA256") != delivered_digest:

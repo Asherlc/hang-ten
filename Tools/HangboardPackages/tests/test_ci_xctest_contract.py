@@ -197,8 +197,6 @@ def test_build_required_gate_rejects_missing_required_validation(
             **os.environ,
             "CHANGES_RESULT": "success",
             "BUILD_REQUIRED": required,
-            "NATIVE_CAD_REQUIRED": "false",
-            "NATIVE_CAD_RESULT": "skipped",
             "UNIT_TEST_RESULT": unit,
             "UI_TEST_RESULT": ui,
             "NATIVE_CAD_REQUIRED": native_required,
@@ -334,3 +332,16 @@ def test_required_build_gate_rejects_missing_native_cad_checks(
         check=False,
     )
     assert result.returncode == expected, result.stdout + result.stderr
+
+
+def test_optimized_unit_lane_preserves_swift_debug_assertions() -> None:
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
+    optimized_steps = [
+        step["run"]
+        for job in workflow["jobs"].values()
+        for step in job.get("steps", [])
+        if "SWIFT_OPTIMIZATION_LEVEL = -O" in step.get("run", "")
+    ]
+    assert optimized_steps
+    for run in optimized_steps:
+        assert "OTHER_SWIFT_FLAGS = $(inherited) -assert-config Debug" in run

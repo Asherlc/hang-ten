@@ -37,13 +37,23 @@ not an outward-rounded CAD/mesh error certificate. Closed outward surfaces and
 ordinary floating-point proximity/classification are required.
 
 Independent routing caused the two Captain vertical pocket poses to overlap.
-`solve_pair` now searches a fixed nine-plane family per lead, projects the
-existing estimated approach point onto each candidate plane while preserving
-its entry side, and chooses the shortest pair passing complete segment-pair
-clearance. It retains the shared initial straight rays at the anchor; downstream
-segments require diameter + 1 mm separation. There is no iteration-budget
-escalation or manually authored detour. This remains a bounded static
-approximation, not a global 3D equilibrium, friction or dynamic settling model.
+The initial batch's `solve_pair` searched a fixed nine-plane family per lead,
+projected the existing estimated approach point onto each candidate plane while
+preserving its entry side, and chose the shortest pair passing its then-current
+segment-pair check. That historical check exempted the entire pair of initial
+straight rays at the shared anchor; only downstream segments required diameter
++ 1 mm separation. Its passing results therefore did not establish separation
+outside a finite knot neighborhood.
+
+The revised authoring solver clips the shared-anchor exemption to a ball of
+radius `4 * cordRadius`, then requires diameter + 1 mm separation for all route
+segments outside it, including the remaining portions of the initial rays.
+This bounded-knot guarantee applies to newly solved pairs only. Existing cached
+pairs have not been regenerated or accepted under it; see the diagnostic below.
+There is no iteration-budget escalation or manually authored detour. This
+remains a bounded static approximation, not a global 3D equilibrium, friction
+or dynamic settling model. The knot ball is a numerical contact allowance,
+not a sourced depiction or measurement of a physical knot.
 
 The routes exclude their anchor and terminal in package contact-point caches;
 the renderer reconstructs those endpoints. A direct lead uses its computed
@@ -70,8 +80,9 @@ Workspace-owned evidence lives under `.context/strong-owl-seated-cords/`:
 - `capture-cases.json` and matched prior/current front, side and top screenshots.
 
 The native catalog regression exercises all 16 poses, including both Penta
-instances, through the production renderer's length, self-contact and paired
-clearance gates. A production-asset scene regression additionally loads the
+instances, through the production renderer's length, self-contact and historical
+paired-clearance gates. Those historical within-setup checks used the full
+initial-ray exemption, rather than the revised finite knot neighborhood. A production-asset scene regression additionally loads the
 actual Penta USDZ and selects both orientations. Visual review exposed a
 pre-existing instance selection bug: it passed only the base transform and
 omitted canonical placement/rotation, making the model unavailable. The caller
@@ -97,14 +108,41 @@ Product evidence: [MXEdge Lift](https://latticetraining.com/product/mxedge-lift/
 Neither source documents the bore diameter; any authored value must be labeled
 an estimate.
 
-Live physics remains separate and unpromoted. The closed performance screens
+Live physics remains separate from this exterior-cache batch. It is integrated
+only for Clavellium; the other catalog models remain unpromoted. The closed performance screens
 and the unverified device target remain recorded in their existing audits.
 
 ## Final batch validation
 
-91 native tests passed with zero failures or skips, including the production-asset Penta scene regression. All 13 exterior-authoring regressions passed. Package validation and the delivery lock passed for all 49 models and 117 locked files. All 32 exterior leads passed adaptive whole-segment clearance; all 16 within-setup pairs and both Penta cross-unit poses passed segment-pair clearance. Native CAD checks independently passed all eight J. Bryant/Light Rail leads.
+91 native tests passed with zero failures or skips, including the production-asset Penta scene regression. All 13 exterior-authoring regressions passed. Package validation and the delivery lock passed for all 49 models and 117 locked files. All 32 exterior leads passed adaptive whole-segment clearance; all 16 within-setup pairs passed the historical full-initial-ray-exemption segment-pair check, and both Penta cross-unit poses passed their separate non-exempt segment-pair check. These results do not establish the revised bounded-knot guarantee for the cached within-setup pairs. Native CAD checks independently passed all eight J. Bryant/Light Rail leads.
 
 All 24 matched prior/current simulator views were visually reviewed, covering every canonical pose and representative front/side/top views of each product. Penta’s prior views show the pre-existing unavailable-model failure; current views show both loaded units. Retained final evidence: `integration-final.log`, `integration-summary.json`, `authoring-final.log`, `packages-final.log`, `delivery.json`, `paired-cord-clearance.json`, `native-geometry-identity.json`, and `inputs.json` under the workspace evidence directory.
+
+## Review diagnostic of unchanged pair caches
+
+The review diagnostic in
+`.context/strong-owl-cad-review/cached-pair-diagnostics.json` rechecks the 16
+existing within-setup pose pairs with the revised `4 * cordRadius` knot ball.
+**14 of 16 fail** the required diameter + 1 mm separation outside that ball;
+only the two Light Rail II poses pass. These are unchanged historical caches,
+not newly solved routes or a new visual approval.
+
+| Package | Pose pairs checked | Pass | Fail |
+| --- | ---: | ---: | ---: |
+| Captain Fingerfood DUAL | 4 | 0 | 4 |
+| Captain Fingerfood UNLEVEL | 4 | 0 | 4 |
+| J. Bryant FTG-32 | 2 | 0 | 2 |
+| Metolius Light Rail II | 2 | 2 | 0 |
+| YY Penta Evo, both instances | 4 | 0 | 4 |
+| Total | 16 | 2 | 14 |
+
+This diagnostic narrows the historical pair-clearance claim; it does not
+invalidate the separately recorded cord-to-board whole-segment clearance or
+Penta cross-unit checks. Regenerating and reviewing the failed pair caches is
+an outstanding authoring/visual gate. No cache, suspension geometry, native
+solid or USDZ was changed for this diagnostic. Until that gate passes, the
+bounded separation guarantee must be claimed only for newly solved accepted
+pairs, not for this shipped cache batch.
 
 ## Clavellium static fallback follow-up
 

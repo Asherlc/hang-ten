@@ -78,7 +78,7 @@ def test_joint_routes_avoid_independently_overlapping_leads():
     endpoints=[[0,-.8,0],[0,-1.1,0]]
     approaches=[[0,-.8,.6],[0,-1.1,.6]]
     routes=module.solve_pair(mesh,anchor,endpoints,.02,approaches)
-    assert module.pair_clearance(*routes)>=.041
+    assert module.pair_clearance(*routes, knot_radius=4*.02)>=.041
     for route,end,guide in zip(routes,endpoints,approaches):
         assert np.dot(route[-2]-end,np.asarray(guide)-end)>0
         assert module.validate_route_clearance(mesh,route,.02)>=.02-1e-5
@@ -92,3 +92,26 @@ def test_separate_units_do_not_share_the_anchor_clearance_exception():
 
 def test_coincident_initial_rays_are_not_reported_as_clear():
     assert solver().pair_clearance([[0,2,0],[0,0,0]],[[0,2,0],[0,-1,0]])==0
+
+
+def test_thin_cord_embedded_endpoint_is_rejected():
+    mesh = trimesh.creation.box(extents=[1,1,1])
+    with pytest.raises(ValueError, match="endpoint"):
+        solver().solve_route(mesh, [0,2,0], [0,.5-1e-6,0], 1e-6, [0,0,1])
+
+
+def test_nearly_parallel_first_segments_are_checked_outside_knot():
+    first = [[0,0,0], [0,1,0]]
+    second = [[0,0,0], [.0001,1,0]]
+    assert solver().pair_clearance(first, second, knot_radius=.008) < 1e-6
+
+
+def test_endpoint_tolerance_never_admits_negative_distance(monkeypatch):
+    mesh = trimesh.creation.box(extents=[1,1,1])
+    # Isolate the endpoint gate from later planar/path rejection.
+    monkeypatch.setattr(trimesh.proximity, "signed_distance", lambda mesh, points: np.asarray([-2, 1e-6]))
+    def unexpected_section(**kwargs):
+        raise AssertionError("embedded endpoint reached section solving")
+    monkeypatch.setattr(mesh, "section", unexpected_section)
+    with pytest.raises(ValueError, match="endpoint"):
+        solver().solve_route(mesh, [0,2,0], [0,.5-1e-6,0], 1e-6, [0,0,1])

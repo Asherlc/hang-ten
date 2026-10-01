@@ -739,6 +739,7 @@ final class BoardModelRealityScene {
     }
 
     private func clearSelection() {
+        installLiveUpdateSubscription(nil)
         liveGeneration &+= 1
         liveControllers.forEach { $0.pause() }
         activePositionID = nil
@@ -870,7 +871,9 @@ final class BoardModelRealityScene {
         updateCameraTransform()
     }
 
-    func installLiveUpdateSubscription(_ subscription:EventSubscription) {
+    var hasLiveUpdateSubscription: Bool { liveSubscription != nil }
+
+    func installLiveUpdateSubscription(_ subscription:EventSubscription?) {
         liveSubscription?.cancel(); liveSubscription=subscription
     }
     func advanceLiveRopes(elapsed:Double) {
@@ -1577,7 +1580,7 @@ final class BoardModelRealityLoader {
                 $0.presentationID == presentation.id
             }.map(\.id)),
             instances: media.instances,
-            physics: media.physics,
+            physics: try store.presentationPhysicsInput(for: board, presentationID: presentation.id),
             presentationID: presentation.id,
             resourceLease: source.resourceLease
         )

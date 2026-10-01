@@ -61,9 +61,47 @@ final class RopePhysicsDescriptorTests: XCTestCase {
         XCTAssertThrowsError(try RopePhysicsDescriptor.decode(data).validated(modelSHA256: Self.modelSHA))
     }
 
-    func testDuplicateMembersIncludingEscapedNames() {
-        for raw in [#"{"schemaVersion":1,"schemaVersion":1}"#, #"{"schemaVersion":1,"\u0073chemaVersion":1}"#] {
-            XCTAssertThrowsError(try RopePhysicsDescriptor.decode(Data(raw.utf8)))
+    func testDuplicateMembersIncludingEscapedNames() throws {
+        let raw = String(decoding: Self.fixture, as: UTF8.self)
+        // First prove the complete nested source is valid, then inject duplicates.
+        _ = try RopePhysicsDescriptor.decode(Self.fixture).validated(modelSHA256: Self.modelSHA)
+        for (member, replacement) in [
+            (#""schemaVersion":1"#, #""schemaVersion":1,"schemaVersion":1"#),
+            (#""schemaVersion":1"#, #""schemaVersion":1,"\u0073chemaVersion":1"#),
+            (#""kind":"portal""#, #""kind":"portal","kind":"portal""#),
+            (#""radius":0.006"#, #""radius":0.006,"\u0072adius":0.006"#)
+        ] {
+            let changed = raw.replacingOccurrences(of: member, with: replacement)
+            XCTAssertNotEqual(changed, raw)
+            XCTAssertThrowsError(try RopePhysicsDescriptor.decode(Data(changed.utf8))) { error in
+                guard case RopePhysicsError.invalid(let reason) = error else {
+                    return XCTFail("Expected duplicate-member failure, got \(error)")
+                }
+                XCTAssertTrue(reason.contains("Duplicate physics member"))
+            }
+        }
+    }
+
+    func testOverflowingCollisionArithmeticIsRejected() throws {
+        for scale in [1e100, 1e200] {
+            var object = try XCTUnwrap(JSONSerialization.jsonObject(with: Self.fixture) as? [String:Any])
+            var collision = try XCTUnwrap(object["collision"] as? [String:Any])
+            let vertices = try XCTUnwrap(collision["vertices"] as? [[Double]])
+            collision["vertices"] = vertices.map { $0.map { $0 * scale } }
+            object["collision"] = collision
+            let data = try JSONSerialization.data(withJSONObject: object)
+            XCTAssertThrowsError(try RopePhysicsDescriptor.decode(data).validated(modelSHA256: Self.modelSHA))
+        }
+    }
+
+    func testOversizedPortalFailsBeforeGeometryChecks() throws {
+        var object = try XCTUnwrap(JSONSerialization.jsonObject(with: Self.fixture) as? [String:Any])
+        var portals = try XCTUnwrap(object["portals"] as? [[String:Any]])
+        portals[0]["boundary"] = Array(repeating: [0.0, 0.0, 0.045], count: 257)
+        object["portals"] = portals
+        let data = try JSONSerialization.data(withJSONObject: object)
+        XCTAssertThrowsError(try RopePhysicsDescriptor.decode(data).validated(modelSHA256: Self.modelSHA)) { error in
+            XCTAssertEqual(error as? RopePhysicsError, .invalid("Portal boundary exceeds 256 vertices"))
         }
     }
 

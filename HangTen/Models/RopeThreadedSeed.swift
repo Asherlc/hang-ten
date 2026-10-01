@@ -21,6 +21,7 @@ enum RopeThreadedSeed {
         }
         let portalMap=Dictionary(uniqueKeysWithValues:input.portals.map{($0.id,$0)})
         let up=orientation.inverse.act(SIMD3<Double>(0,1,0))
+        let channelColliders=try RopeChannelColliderCache(channels:input.channels).matchingColliders(for:input.channels)
         func makeRoutes(height: Double) throws -> [Route] {
         var routes:[Route]=[]
         for rope in profile.ropes {
@@ -46,12 +47,23 @@ enum RopeThreadedSeed {
                 let edgePortalID=rope.nodes[index].portalID ?? rope.nodes[index+1].portalID
                 let wrapBelow:Bool = {
                     guard edge.kind != "channel",let id=edgePortalID,let portal=portalMap[id] else{return false}
-                    let sameFace=rope.nodes.compactMap { $0.portalID.flatMap { portalMap[$0] } }
-                        .contains { $0.id != id && simd_dot($0.normal,portal.normal)>0.99 }
+                    guard let winding=edge.winding else{return false}
                     let projectedUp=up-portal.normal*simd_dot(up,portal.normal)
                     let positiveBasis=simd_dot(projectedUp,SIMD3<Double>(0,1,0))*portal.normal.z>0
-                    return sameFace && edge.winding == (positiveBasis ? "counterclockwise":"clockwise")
+                    // Authoring measures turn from support to mouth in the
+                    // model (+Y,+Z) section, independently of graph traversal
+                    // direction. The upper route turns CCW at a +Z mouth;
+                    // the opposite winding must take the lower exterior route.
+                    return winding != (positiveBasis ? "counterclockwise":"clockwise")
                 }()
+                if wrapBelow,let id=edgePortalID,let portal=portalMap[id],
+                   !rope.nodes.compactMap({$0.portalID.flatMap{portalMap[$0]}})
+                    .contains(where:{$0.id != id && simd_dot($0.normal,portal.normal)>0.99}) {
+                    // The lower same-face adapter is not a through-bore
+                    // closure. Without that closure its search can take the
+                    // bore itself and falsely claim an exterior winding.
+                    throw RopePhysicsError.invalid("Opposite-face lower winding requires a reviewed exterior topology adapter")
+                }
                 let path:[SIMD3<Double>]
                 if edge.kind == "channel" {
                     guard let channel=input.channels.first(where:{$0.id == edge.channelID}) else {
@@ -72,6 +84,10 @@ enum RopeThreadedSeed {
                             let f=stations[i]/total
                             return spine[i]+firstOffset*(1-f)+lastOffset*f
                         }
+                    }
+                    guard let channelCollider=channelColliders[channel.id],
+                          zip(path,path.dropFirst()).allSatisfy({channelCollider.containsSegment(from:$0,to:$1)}) else {
+                        throw RopePhysicsError.invalid("Seed traversal leaves its native channel region")
                     }
                     guard zip(path,path.dropFirst()).allSatisfy({first,second in
                         collider.segmentContact(from:first,to:second,radius:rope.radius+RopeRegionGeometry.clearance-1e-9) == nil

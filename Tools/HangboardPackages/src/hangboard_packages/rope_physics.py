@@ -90,9 +90,15 @@ def _mesh(value):
             raise ValueError("invalid collision triangle")
         a, b, c = (vertices[i] for i in face)
         area = _cross(_sub(b, a), _sub(c, a))
-        if _dot(area, area) <= 1e-24:
+        squared_area = _dot(area, area)
+        volume_term = _dot(a, _cross(b, c)) / 6
+        if not math.isfinite(squared_area) or not math.isfinite(volume_term):
+            raise ValueError("collision arithmetic must remain finite")
+        if squared_area <= 1e-24:
             raise ValueError("degenerate collision triangle")
-        volume += _dot(a, _cross(b, c)) / 6
+        volume += volume_term
+        if not math.isfinite(volume):
+            raise ValueError("collision volume must remain finite")
         for i, j in zip(face, face[1:] + face[:1]):
             key = (min(i, j), max(i, j))
             count, direction = edges.get(key, (0, 0))
@@ -109,6 +115,8 @@ def portal_clearance_radius(portal):
         raise ValueError("portal normal must be unit length")
     if not isinstance(portal["boundary"], list) or len(portal["boundary"]) < 3:
         raise ValueError("portal needs a convex planar boundary")
+    if len(portal["boundary"]) > 256:
+        raise ValueError("portal boundary exceeds 256 vertices")
     points = [_vector(p) for p in portal["boundary"]]
     if any(abs(_dot(_sub(p, center), normal)) > 1e-7 for p in points):
         raise ValueError("portal boundary must be planar")
@@ -244,6 +252,6 @@ def load_rope_physics(path: Path, model_sha256: str) -> dict:
         raise ValueError("physics descriptor must be a regular file of at most 64 MiB")
     try:
         document = json.loads(path.read_text(), object_pairs_hook=_unique_keys)
-    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+    except (OSError, UnicodeError, json.JSONDecodeError, RecursionError) as error:
         raise ValueError("invalid rope physics JSON") from error
     return validate_rope_physics(document, model_sha256)

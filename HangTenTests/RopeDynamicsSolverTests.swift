@@ -5,6 +5,46 @@ import simd
 #endif
 
 final class RopeDynamicsSolverTests: XCTestCase {
+    func testConnectedNeighborhoodRejectsCrossingAtEarlierSegmentEndpoint() {
+        let points: [SIMD3<Double>] = [SIMD3(-0.002, 0, 0), .zero,
+            SIMD3(0, 0.001, 0), SIMD3(0, -0.001, 0)]
+        // Link 2 crosses link 0 exactly at its endpoint, but these links do
+        // not share a material knot. The short intervening arc cannot hide it.
+        XCTAssertEqual(RopeSimulationMetrics.selfContactPair(
+            positions: points, radius: 0.0035, supports: [:]), SIMD2(0, 2))
+    }
+
+    func testLargeFiniteSettlingDurationFailsWithoutIntegerConversionTrap() throws {
+        let input = try RopeThreadedSeedTests.clavellium()
+        let collider = try RopeTriangleCollider(input: input)
+        let upright = simd_quatd(angle: 0, axis: SIMD3<Double>(0, 0, 1))
+        let state = try RopeThreadedSeed.make(input: input, profileID: "front", orientation: upright, collider: collider)
+        var solver = try RopeDynamicsSolver(input: input, state: state, collider: collider)
+        for duration in [Double.greatestFiniteMagnitude, Double(Int.max) / 240] {
+            XCTAssertThrowsError(try solver.settled(targetOrientation: upright, maxDuration: duration))
+            XCTAssertEqual(solver.state.boardHeight, state.boardHeight)
+        }
+    }
+
+    func testCancelledSettlingStopsBeforeTakingAnyStep() async throws {
+        let input = try RopeThreadedSeedTests.clavellium()
+        let collider = try RopeTriangleCollider(input: input)
+        let upright = simd_quatd(angle: 0, axis: SIMD3<Double>(0, 0, 1))
+        let state = try RopeThreadedSeed.make(input: input, profileID: "front", orientation: upright, collider: collider)
+        let initial = try RopeDynamicsSolver(input: input, state: state, collider: collider)
+        let task = Task {
+            withUnsafeCurrentTask { $0?.cancel() }
+            var solver = initial
+            do {
+                _ = try solver.settled(targetOrientation: upright, maxDuration: 5)
+                XCTFail("Cancelled settling must throw")
+            } catch is CancellationError {
+                XCTAssertEqual(solver.state.boardHeight, initial.state.boardHeight)
+            }
+        }
+        try await task.value
+    }
+
     func testRejectsNonfiniteStateAndInvalidTimeStep() throws {
         let input=try RopeThreadedSeedTests.clavellium(),collider=try RopeTriangleCollider(input:input)
         let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))

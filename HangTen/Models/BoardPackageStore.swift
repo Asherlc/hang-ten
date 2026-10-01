@@ -186,6 +186,7 @@ struct BoardPackageStore {
     private let boardsByID: [String: BoardRevision]
     private let presentationURLsByBoardID: [String: [String: URL]]
     private let descriptorURLsByBoardID: [String: [String: URL]]
+    private let packageURLsByBoardID: [String: URL]
     private let modelResourcesByBoardID: [String: [String: BoardModelResource]]
     let resourceBundle: Bundle
 
@@ -201,6 +202,7 @@ struct BoardPackageStore {
         var loadedBoards: [BoardRevision] = []
         var loadedPresentationURLs: [String: [String: URL]] = [:]
         var loadedDescriptorURLs: [String: [String: URL]] = [:]
+        var loadedPackageURLs: [String: URL] = [:]
         var loadedModelResources: [String: [String: BoardModelResource]] = [:]
         var seenBoardIDs = Set<String>()
 
@@ -229,6 +231,7 @@ struct BoardPackageStore {
             guard seenBoardIDs.insert(loaded.board.id).inserted else {
                 throw BoardPackageStoreError.duplicateBoardID(loaded.board.id)
             }
+            loadedPackageURLs[loaded.board.id] = packageURL
             loadedBoards.append(loaded.board)
             loadedPresentationURLs[loaded.board.id] = loaded.presentationURLs
             loadedDescriptorURLs[loaded.board.id] = loaded.descriptorURLs
@@ -240,6 +243,7 @@ struct BoardPackageStore {
         self.boardsByID = Dictionary(uniqueKeysWithValues: loadedBoards.map { ($0.id, $0) })
         self.presentationURLsByBoardID = loadedPresentationURLs
         self.descriptorURLsByBoardID = loadedDescriptorURLs
+        self.packageURLsByBoardID = loadedPackageURLs
         self.modelResourcesByBoardID = loadedModelResources
         self.resourceBundle = bundle
     }
@@ -271,6 +275,42 @@ struct BoardPackageStore {
     ) -> URL? {
         let resolvedID = presentationID ?? board.defaultPresentation.id
         return descriptorURLsByBoardID[board.id]?[resolvedID]
+    }
+
+    /// The catalog validates physics on load but retains only its package path.
+    /// Decode the heavy collision payload only when a scene actually needs it.
+    func presentationPhysicsInput(
+        for board: BoardRevision,
+        presentationID: String? = nil
+    ) throws -> RopePhysicsInput? {
+        guard let registeredBoard = boardsByID[board.id] else {
+            throw RopePhysicsError.invalid("Unknown physics board")
+        }
+        let resolvedID = presentationID ?? registeredBoard.defaultPresentation.id
+        guard case .model(let media) = registeredBoard.presentation(id: resolvedID)?.media,
+              let path = media.physicsDescriptorPath else { return nil }
+        guard let packageURL = packageURLsByBoardID[board.id] else {
+            throw RopePhysicsError.invalid("Missing physics package URL")
+        }
+        try Self.validateHangboardsRoot(packageURL.deletingLastPathComponent())
+        guard try Self.isRegularDirectory(packageURL) else {
+            throw BoardPackageStoreError.packagePathEscape(boardID: board.id, path: packageURL.path)
+        }
+        try Self.validatePackageContainer(packageURL, boardID: board.id)
+        try Self.validateAssetPath(path, suffix: ".physics.json", boardID: board.id, packageURL: packageURL)
+        let url = packageURL.appendingPathComponent(path)
+        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
+        guard values.isRegularFile == true, values.isSymbolicLink != true,
+              let size = values.fileSize, size <= 64 * 1024 * 1024 else {
+            throw RopePhysicsError.invalid("Physics descriptor must be a regular file of at most 64 MiB")
+        }
+        let input = try RopePhysicsDescriptor.decode(Data(contentsOf: url)).validated(modelSHA256: media.descriptor.modelSHA256)
+        let profiles = input.profiles.filter { $0.presentationID == resolvedID }
+        let expectedInstances: Set<String?> = media.instances.map { Set($0.map { Optional($0.equipmentObjectID) }) } ?? [nil]
+        guard Set(profiles.map(\.instanceID)) == expectedInstances else {
+            throw RopePhysicsError.invalid("Physics profiles must cover presentation instances exactly")
+        }
+        return input
     }
 
     func modelResource(
@@ -915,7 +955,7 @@ struct BoardPackageStore {
                     instanceDocuments: instanceDocuments
                 )
                 let descriptor = loadedDescriptor.descriptor
-                let physics = try physicsDescriptorPath.map { path -> RopePhysicsInput in
+                _ = try physicsDescriptorPath.map { path -> RopePhysicsInput in
                     do {
                         let url = packageURL.appendingPathComponent(path)
                         let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
@@ -998,8 +1038,7 @@ struct BoardPackageStore {
                         suspension: suspension,
                         orientation: orientation,
                         instances: loadedDescriptor.instances,
-                        physicsDescriptorPath: physicsDescriptorPath,
-                        physics: physics
+                        physicsDescriptorPath: physicsDescriptorPath
                     )
                 )
                 descriptorURLs[presentation.id] = packageURL.appendingPathComponent(descriptorPath)

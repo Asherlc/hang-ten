@@ -10,7 +10,9 @@ The adjacent suspension.json supplies each branch's two mouth coordinates.
 This command reports the measured length between their projections on each
 channel's spine. A channel is either a `PartDesign::SubtractivePipe` (its
 Sketcher spine, as on the Mini Bar) or a straight `Part::Cylinder` through-bore
-(its axis, as on the Helium Mobile). It never edits the CAD source or sidecar.
+(its axis, as on the Helium Mobile), or a `Part::Box` rectangular channel
+with the operator-selected `HangTenChannelAxis` set to x, y, or z (as on
+Clavellium). It never edits the CAD source or sidecar.
 """
 from __future__ import annotations
 

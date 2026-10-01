@@ -191,7 +191,8 @@ The current solver applies when all of these hold:
    to that void in the descriptor/importer coordinate basis.
 3. Each mouth's section plane (below) is representative of the bearing
    surface along that leg. The native solid is watertight for collision checks.
-4. The model has two branches, four distinct point mouths, and one winding
+4. The internal-loop model has one or two branches, two distinct point mouths
+   per branch, and one winding
    choice for each mouth. Each branch's `passageIDs` lists its paired mouths
    in traversal order.
 

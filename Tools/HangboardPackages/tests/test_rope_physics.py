@@ -115,3 +115,27 @@ def test_missing_or_symlink_descriptor_fails(tmp_path):
     link.symlink_to(target)
     with pytest.raises(ValueError, match="regular"):
         load_rope_physics(link, MODEL_SHA)
+
+
+@pytest.mark.parametrize("scale", [1e100, 1e200])
+def test_collision_arithmetic_overflow_fails_closed(scale):
+    document = physics_fixture()
+    document["collision"]["vertices"] = [[x * scale for x in point] for point in document["collision"]["vertices"]]
+    with pytest.raises(ValueError, match="finite"):
+        validate_rope_physics(document, MODEL_SHA)
+
+
+def test_oversized_portal_is_rejected_before_geometry_checks():
+    document = physics_fixture()
+    document["portals"][0]["boundary"] = [[0, 0, .045]] * 257
+    with pytest.raises(ValueError, match="256"):
+        validate_rope_physics(document, MODEL_SHA)
+
+
+def test_nested_json_fails_closed(tmp_path):
+    path = tmp_path / "nested.physics.json"
+    import sys
+    depth = max(sys.getrecursionlimit() + 100, 100000)
+    path.write_text("[" * depth + "0" + "]" * depth)
+    with pytest.raises(ValueError, match="JSON"):
+        load_rope_physics(path, MODEL_SHA)

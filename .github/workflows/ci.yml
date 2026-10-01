@@ -507,9 +507,11 @@ jobs:
           trap 'rm -f "$telemetry_xcconfig"' EXIT
           umask 077
           printf 'ANALYTICS_API_KEY = %s\n' "$ANALYTICS_API_KEY" > "$telemetry_xcconfig"
-          # Keep DEBUG and testability, but execute the full numerical physics
+          # Keep DEBUG, testability and Swift assertions, and run numerical physics
           # suite with optimization; unoptimized settling exhausts the run budget.
-          printf 'SWIFT_OPTIMIZATION_LEVEL = -O\n' >> "$telemetry_xcconfig"
+          # Xcode expands the literal $(inherited) from the xcconfig.
+          # shellcheck disable=SC2016
+          printf 'SWIFT_OPTIMIZATION_LEVEL = -O\nOTHER_SWIFT_FLAGS = $(inherited) -assert-config Debug\n' >> "$telemetry_xcconfig"
           chmod 600 "$telemetry_xcconfig"
           unset ANALYTICS_API_KEY
           XCTEST_XCCONFIG="$telemetry_xcconfig" scripts/ci-run-xctest.sh

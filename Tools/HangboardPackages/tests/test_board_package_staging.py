@@ -184,10 +184,8 @@ def stage_with_xcode_environment(
     return staged[0]
 
 
-def test_legacy_model_bundles_live_physics_without_cad_authoring(tmp_path, monkeypatch):
+def write_physics_descriptor(source: Path, board: dict) -> Path:
     from test_rope_physics import physics_fixture
-    source = make_v3_model_package(tmp_path / "repository" / "Hangboards" / "live-model")
-    board = json.loads((source / "board.json").read_text())
     media = board["presentations"][0]["media"]
     media["physicsDescriptorPath"] = "assets/primary.physics.json"
     descriptor = json.loads((source / media["descriptorPath"]).read_text())
@@ -195,26 +193,26 @@ def test_legacy_model_bundles_live_physics_without_cad_authoring(tmp_path, monke
     physics["modelSHA256"] = descriptor["modelSHA256"]
     physics["profiles"][0]["presentationID"] = board["presentations"][0]["id"]
     (source / "board.json").write_text(json.dumps(board))
-    (source / "assets/primary.physics.json").write_text(json.dumps(physics))
+    path = source / media["physicsDescriptorPath"]
+    path.write_text(json.dumps(physics))
+    return path
+
+
+def test_legacy_model_bundles_live_physics_without_cad_authoring(tmp_path, monkeypatch):
+    source = make_v3_model_package(tmp_path / "repository" / "Hangboards" / "live-model")
+    board = json.loads((source / "board.json").read_text())
+    write_physics_descriptor(source, board)
     staged = stage_with_xcode_environment(source, monkeypatch)
     assert (staged / "assets/primary.physics.json").read_bytes() == (source / "assets/primary.physics.json").read_bytes()
     assert not (staged / "assets/primary.usdz").exists()
 
 
 def test_non_cad_physics_package_rejects_cad_authoring_sidecar(tmp_path):
-    from test_rope_physics import physics_fixture
     from hangboard_packages.board_catalog import discover_board_packages
 
     source = make_v3_model_package(tmp_path / "Hangboards" / "live-model")
     board = json.loads((source / "board.json").read_text())
-    media = board["presentations"][0]["media"]
-    media["physicsDescriptorPath"] = "assets/primary.physics.json"
-    descriptor = json.loads((source / media["descriptorPath"]).read_text())
-    physics = physics_fixture()
-    physics["modelSHA256"] = descriptor["modelSHA256"]
-    physics["profiles"][0]["presentationID"] = board["presentations"][0]["id"]
-    (source / "board.json").write_text(json.dumps(board))
-    (source / "assets/primary.physics.json").write_text(json.dumps(physics))
+    write_physics_descriptor(source, board)
     # Bundled physics remains valid on a legacy model; authoring belongs to CAD.
     assert len(discover_board_packages(source.parent).packages) == 1
     (source / "rope-physics.json").write_text("{}")
@@ -223,16 +221,18 @@ def test_non_cad_physics_package_rejects_cad_authoring_sidecar(tmp_path):
 
 
 def test_declared_missing_or_stale_physics_fails_staging(tmp_path, monkeypatch):
-    from test_rope_physics import physics_fixture
     source = make_v3_model_package(tmp_path / "repository" / "Hangboards" / "live-model")
     board = json.loads((source / "board.json").read_text())
-    board["presentations"][0]["media"]["physicsDescriptorPath"] = "assets/primary.physics.json"
-    (source / "board.json").write_text(json.dumps(board))
+    physics_path = write_physics_descriptor(source, board)
+    physics_path.unlink()
     with pytest.raises(ValueError, match="missing"):
         stage_with_xcode_environment(source, monkeypatch)
     # The staging helper copies tooling only once; invoke the same loaded module
     # for the second attempt after supplying a deliberately stale descriptor.
-    (source / "assets/primary.physics.json").write_text(json.dumps(physics_fixture()))
+    physics_path = write_physics_descriptor(source, board)
+    stale = json.loads(physics_path.read_text())
+    stale["modelSHA256"] = "c" * 64
+    physics_path.write_text(json.dumps(stale))
     destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
     configure_xcode_destination(monkeypatch, destination)
     with pytest.raises(ValueError, match="rope physics model hash mismatch"):

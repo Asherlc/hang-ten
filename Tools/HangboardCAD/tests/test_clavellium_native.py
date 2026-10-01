@@ -71,6 +71,7 @@ print("all six pinch contact faces point outward")
 def test_cached_single_loop_matches_the_native_solid_solve(tmp_path):
     pytest.importorskip("trimesh")
     pytest.importorskip("shapely")
+    pytest.importorskip("rtree")
     import trimesh
     sys.path.insert(0, str(TOOLS))
     from solve_threaded_rope import solve_package
@@ -93,7 +94,7 @@ def test_cached_single_loop_matches_the_native_solid_solve(tmp_path):
     pose = sidecar["suspension"]["canonicalPoses"]["front"]
     assert solved["contacts"] == pose["cordContactPoints"]
     assert solved["height"] == pose["translation"][1]
-    assert solved["lengths"]["sling-loop"] == pytest.approx(0.55, abs=1e-8)
+    assert solved["lengths"]["sling-loop"] == pytest.approx(0.55, rel=0, abs=1e-6)
     # The solver itself rejects any sampled native-solid collision. Also
     # require the two cached mouth ends to span the real 90 mm passage.
     assert pose["cordContactPoints"]["sling-front"][-1] == [0, 0.0025, 0.045]

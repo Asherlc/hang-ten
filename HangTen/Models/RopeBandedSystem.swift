@@ -54,6 +54,7 @@ struct RopeBandedSystem: Sendable {
         dgbsv_(&n,&kl,&ku,&nrhs,&band,&ldab,&pivots,&solutions,&ldb,&info)
         guard info==0 else {throw RopePhysicsError.invalid("Singular rope band factorization (\(info))")}
         let base=Array(solutions.prefix(size))
+        guard base.allSatisfy({$0.isFinite}) else {throw RopePhysicsError.invalid("Nonfinite rope linear result")}
         guard count>0 else{return (base,[])}
         var schur=Array(repeating:0.0,count:count*count),border=borderRHS
         for i in 0..<count {

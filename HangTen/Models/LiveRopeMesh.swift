@@ -13,7 +13,7 @@ enum RopeTubeGeometry {
             throw RopePhysicsError.invalid("Invalid dynamic tube geometry")
         }
         var vertices: [RopeTubeVertex] = []
-        vertices.reserveCapacity(points.count * radialSegments)
+        vertices.reserveCapacity((points.count + 2) * radialSegments)
         var previousNormal = SIMD3<Float>(1,0,0)
         for i in points.indices {
             let before = points[max(0,i-1)], after = points[min(points.count-1,i+1)]
@@ -32,6 +32,14 @@ enum RopeTubeGeometry {
                 vertices.append(RopeTubeVertex(position:points[i]+radius*radial,normal:radial))
             }
         }
+        // Caps share positions with the side rings, but have flat end normals.
+        for (index, sign) in [(0, Float(-1)), (points.count - 1, Float(1))] {
+            let delta = points[min(points.count - 1, index + 1)] - points[max(0, index - 1)]
+            let tangent = simd_length_squared(delta) > 1e-16 ? simd_normalize(delta) : SIMD3<Float>(0, 1, 0)
+            for vertex in Array(vertices[(index * radialSegments)..<((index + 1) * radialSegments)]) {
+                vertices.append(RopeTubeVertex(position: vertex.position, normal: sign * tangent))
+            }
+        }
         return vertices
     }
     static func indices(pointCount: Int, radialSegments: Int) -> [UInt32] {
@@ -46,8 +54,9 @@ enum RopeTubeGeometry {
             }
         }
         for j in 1..<(radialSegments-1) {
-            indices += [0,UInt32(j+1),UInt32(j)]
-            let last=UInt32((pointCount-1)*radialSegments)
+            let first = UInt32(pointCount * radialSegments)
+            indices += [first, first + UInt32(j+1), first + UInt32(j)]
+            let last = first + UInt32(radialSegments)
             indices += [last,last+UInt32(j),last+UInt32(j+1)]
         }
         return indices
@@ -81,7 +90,7 @@ final class LiveRopeMesh {
         entity.name = "live-rope"
     }
     private static func makeBuffer(capacity: Int, radialSegments: Int) throws -> LowLevelMesh {
-        try LowLevelMesh(descriptor:.init(vertexCapacity:capacity*radialSegments,
+        try LowLevelMesh(descriptor:.init(vertexCapacity:(capacity+2)*radialSegments,
             vertexAttributes:[.init(semantic:.position,format:.float3,offset:0),
                               .init(semantic:.normal,format:.float3,offset:MemoryLayout<SIMD3<Float>>.stride)],
             vertexLayouts:[.init(bufferIndex:0,bufferStride:MemoryLayout<RopeTubeVertex>.stride)],
