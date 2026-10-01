@@ -639,6 +639,9 @@ final class BoardModelRealityScene {
                       abs(simd_length(q.vector)-1)<1e-6 else {return false}
                 targets.append(simd_normalize(q))
             }
+            if zip(liveFrames,targets).contains(where: { !$0.0.settled || abs(simd_dot($0.0.orientation.vector,$0.1.vector)) < 1-1e-12 }) {
+                updateLiveFraming(forMotion:true)
+            }
             liveGeneration &+= 1
             for (controller,target) in zip(liveControllers,targets) {
                 controller.setTarget(orientation:target,generation:liveGeneration)
@@ -958,7 +961,8 @@ final class BoardModelRealityScene {
         onLiveFrame?()
     }
 
-    private func updateLiveFraming() {
+    private func updateLiveFraming(forMotion:Bool? = nil) {
+        let includeMotionEnvelope = forMotion ?? !liveFrames.allSatisfy(\.settled)
         var points:[SIMD3<Float>]=[]
         for entity in instanceEntities {
             let bounds=entity.visualBounds(relativeTo:root)
@@ -985,7 +989,7 @@ final class BoardModelRealityScene {
             let center=SIMD3<Float>(world.x,world.y,world.z)
             low=simd_min(low,center-SIMD3(repeating:radius))
             high=simd_max(high,center+SIMD3(repeating:radius))
-            if liveMotionBounds.indices.contains(index),liveMotionBounds[index].minimum.allSatisfy(\.isFinite) {
+            if includeMotionEnvelope,liveMotionBounds.indices.contains(index),liveMotionBounds[index].minimum.allSatisfy(\.isFinite) {
                 for corner in Self.boundsCorners(liveMotionBounds[index]) {
                     let translated=liveBaseTransforms[index]*SIMD4<Float>(corner,1)
                     let point=SIMD3<Float>(translated.x,translated.y,translated.z)
@@ -1039,6 +1043,9 @@ final class BoardModelRealityScene {
         updateCameraTransform()
     }
     func setLivePhysicalOrientation(_ orientation:simd_quatd) {
+        if liveFrames.contains(where: { !$0.settled || abs(simd_dot($0.orientation.vector,orientation.vector)) < 1-1e-12 }) {
+            updateLiveFraming(forMotion:true)
+        }
         liveGeneration &+= 1
         for controller in liveControllers { controller.setTarget(orientation:orientation,generation:liveGeneration) }
     }

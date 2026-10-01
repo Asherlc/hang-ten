@@ -99,7 +99,11 @@ final class BoardModelRealityTests: XCTestCase {
             RopePhysicsProfile(id:id,presentationID:source.presentationID,instanceID:id,boardMass:source.boardMass,
                 ropes:source.ropes.map {rope in
                     RopePhysicsRope(id:id+"-"+rope.id,baselineRadius:rope.baselineRadius,radius:rope.radius,
-                        restLength:rope.restLength,linearMass:rope.linearMass,nodes:rope.nodes,edges:rope.edges)
+                        restLength:rope.restLength,linearMass:rope.linearMass,nodes:rope.nodes.map {node in
+                            let offset=SIMD3<Double>(id == "left" ? 0.012:-0.007,0,id == "left" ? 0.02:-0.025)
+                            return RopeGraphNode(id:node.id,kind:node.kind,
+                                point:node.point.map {node.kind == "support" ? $0+offset:$0},portalID:node.portalID)
+                        },edges:rope.edges)
                 })
         }
         let paired=RopePhysicsInput(modelSHA256:input.modelSHA256,sourceSHA256:input.sourceSHA256,
@@ -123,8 +127,11 @@ final class BoardModelRealityTests: XCTestCase {
                     $0.instanceID == instance.equipmentObjectID
                 })
                 XCTAssertEqual(Set(frame.ropes.map(\.id)), Set(expectedProfile.ropes.map(\.id)))
-                XCTAssertEqual(scene.instanceEntities[index].position.x,Float(instance.baseTransform.translation[0]),accuracy:1e-7)
+                XCTAssertEqual(scene.instanceEntities[index].position.x,Float(instance.baseTransform.translation[0]+frame.boardTranslation.x),accuracy:1e-7)
                 XCTAssertEqual(scene.instanceEntities[index].position.y,Float(frame.boardTranslation.y+0.02),accuracy:1e-7)
+                XCTAssertGreaterThan(abs(frame.boardTranslation.x),0.005)
+                XCTAssertGreaterThan(abs(frame.boardTranslation.z),0.015)
+                XCTAssertEqual(scene.instanceEntities[index].position.z,Float(frame.boardTranslation.z),accuracy:1e-7)
                 let tube=try XCTUnwrap(group.children[index] as? ModelEntity)
                 let mesh=try XCTUnwrap(tube.model?.mesh.lowLevelMesh)
                 let point=try XCTUnwrap(frame.ropes.first?.positions.first)
@@ -150,9 +157,11 @@ final class BoardModelRealityTests: XCTestCase {
         var frameNotifications=0
         scene.onLiveFrame = { frameNotifications += 1 }
         scene.setLiveActivity(false)
+        scene.setLivePhysicalOrientation(simd_quatd(angle:Double.pi/9,axis:SIMD3<Double>(1,0,0)))
+        let motionDistance = simd_length(scene.camera.position)
         scene.advanceLiveRopes(elapsed:100)
         try await Task.sleep(for:.milliseconds(50))
-        XCTAssertEqual(scene.liveFramesForTesting.first?.boardTranslation.y,initial.boardTranslation.y)
+        XCTAssertEqual(scene.liveFramesForTesting.first?.boardTranslation,initial.boardTranslation)
         scene.configureLiveMotion(reduceMotion:true,displayOnly:false)
         scene.setLiveActivity(true)
         scene.advanceLiveRopes(elapsed:1.0/60)
@@ -160,6 +169,9 @@ final class BoardModelRealityTests: XCTestCase {
         await fulfillment(of:[accepted],timeout:30)
         let final=try XCTUnwrap(scene.liveFramesForTesting.first)
         XCTAssertTrue(final.metrics.geometryAccepted);XCTAssertTrue(final.settled)
+        XCTAssertGreaterThan(abs(final.boardTranslation.z),0.005)
+        XCTAssertLessThan(simd_length(scene.camera.position), motionDistance * 0.5,
+            "Accepted rest must refit the board instead of retaining the full translation envelope")
         XCTAssertEqual(frameNotifications,1,"Projected hold controls must refresh with the physical frame")
         var camera=scene.camera.camera
         camera.fieldOfViewInDegrees=30;camera.fieldOfViewOrientation = .vertical
@@ -176,6 +188,26 @@ final class BoardModelRealityTests: XCTestCase {
             XCTAssertLessThanOrEqual(abs(projected.y/depth/tan(Float.pi/12)),1)
         }
         scene.stopLiveRopes()
+    }
+
+    @MainActor
+    func testEnabledLiveFailureRetainsAcceptedTransformAndSignalsUnavailable() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id:"clavellium-training-block"))
+        let scene = try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation)
+        defer {scene.stopLiveRopes()}
+        XCTAssertTrue(scene.select(positionID:try XCTUnwrap(board.positions.first?.id)))
+        let accepted = try XCTUnwrap(scene.liveFramesForTesting.first)
+        let matrix = try XCTUnwrap(scene.instanceEntities.first).transform.matrix
+        let failed = expectation(description:"Enabled failure reaches unavailable callback")
+        scene.onLiveFailure = {failed.fulfill()}
+        scene.setLivePhysicalOrientation(simd_quatd(vector:SIMD4<Double>(.nan,0,0,1)))
+        scene.advanceLiveRopes(elapsed:1.0/60)
+        await fulfillment(of:[failed],timeout:30)
+        XCTAssertEqual(scene.liveFramesForTesting.first?.boardTranslation,accepted.boardTranslation)
+        XCTAssertEqual(scene.instanceEntities.first?.transform.matrix,matrix)
+        XCTAssertNil(scene.transientCordEntity)
+        scene.advanceLiveRopes(elapsed:100)
+        XCTAssertEqual(scene.liveFramesForTesting.first?.boardTranslation,accepted.boardTranslation)
     }
 
     @MainActor

@@ -168,18 +168,24 @@ selected position. Do not bake cord, hook, nail, stand, mounting environment,
 cached geometry, or a raster fallback into the USDZ. Do not add a visible
 attachment just to explain the presentation.
 
-For presentations with live rope physics, the board rotates about the center
-of its cord points instead of the model origin. The pivot is the deterministic
-average of unique board-local attachments and portal centers referenced by that
-physics profile; overhead support points are excluded. An x-axis tilt therefore
-uses the line through that pivot parallel to model X. For Clavellium's front/back
-passage, this is the passage's midpoint. This is a presentation convention,
-confirmed by the user, rather than a new manufacturer measurement.
+For presentations with enabled live rope physics, orientation is prescribed and
+board translation is solved in all three world axes together with the continuous
+cord. The rigid transform is `q.act(localPoint) + boardTranslation`; there is no
+fixed hinge or averaged cord-point pivot. Overhead supports stay fixed,
+attachments move with the board, and cord material can slide through passage
+constraints. This lets an X tilt follow the actual loaded bearing and cord
+length instead of rotating around the model origin.
 
-The seed, simulation's world/model coordinate conversions, continuous collision
-checks, published render transform, and camera rotation envelope all use this
-same pivot. The overhead cord support remains fixed in world coordinates, while
-board height and the rope continue to settle under the existing constraints.
+The shared collision-bounds reference point is a numerical reference for mass,
+velocity, prediction and origin-independent initialization. It is not a pin.
+The seed, collision checks and renderer use the same solved transform. Camera
+bounds cover translation during motion and refit at accepted rest. Flat bearings
+can permit neutral sideways positions; no artificial centering force is added.
+
+Clavellium currently supplies the enabled shipping physics package. Other
+represented setups still use static suspension adapters until their evidence,
+collision geometry, graph, admission and rotation gates are validated. See
+[source audit and catalog handoff](source-audits/2026-10-01-cord-constrained-translation.md).
 
 For exterior point-passage branches, `meshWrap.clearance` selects the shared
 mesh-driven route solver. The Mini Bar uses `internalLoop` instead: two
