@@ -1,0 +1,182 @@
+{
+  "baseCommit": "6b5bed65fb48e99b47e49bfb2a52c75e3c170633",
+  "branch": "feat/live-hangboard-physics",
+  "cleanup": {
+    "allAbsent": true,
+    "currentDrivers": [
+      {
+        "absentNow": true,
+        "pid": 61976,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 66877,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 71308,
+        "receipt": "deleted-and-verified"
+      }
+    ],
+    "ownedGroups": [
+      {
+        "absentNow": true,
+        "group": 61977,
+        "name": "strong-owl-live-physics-primitive-compile",
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "group": 62077,
+        "name": "strong-owl-live-physics-primitive-probe",
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "group": 66878,
+        "name": "strong-owl-live-physics-primitive-compile",
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "group": 66972,
+        "name": "strong-owl-live-physics-primitive-probe",
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "group": 71309,
+        "name": "strong-owl-live-physics-primitive-compile",
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "group": 71413,
+        "name": "strong-owl-live-physics-primitive-probe",
+        "receipt": "deleted-and-verified"
+      }
+    ],
+    "owner": "strong-owl-live-physics"
+  },
+  "coldQPPerformanceAccepted": false,
+  "diagnosticCutoffSeconds": 0.001,
+  "evidenceSHA256": {
+    ".context/strong-owl-live-physics-packed-primitives/PLAN.md": "351baad170283d1190d0b4ba68c8b0b52a610471c62d03d99cd8e000348f240e",
+    ".context/strong-owl-live-physics-packed-primitives/REVIEW.md": "1c23102c437691958766f392176538590293f47a2516a0bcced7f43dc1bce95d",
+    ".context/strong-owl-live-physics-packed-primitives/cleanup.json": "7d1d38e9e7603f7a6915532f2da6530e911443f63d32aed5ea38babc79f705e1",
+    ".context/strong-owl-live-physics-packed-primitives/green/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-packed-primitives/green/provenance.json": "76e162c6df578c2883ab1ba4bd0272cb6e6b7b9ab3c44a1597d06bf7bdb59b9a",
+    ".context/strong-owl-live-physics-packed-primitives/green/result.json": "1a4eae74298848f2cce8b692d484300d8031b59eaef6c662c8663e9803e037e7",
+    ".context/strong-owl-live-physics-packed-primitives/green/run.log": "bccc946944f6bc1ed832a0726bb34ee669daed8fdc08573112555012b4e06210",
+    ".context/strong-owl-live-physics-packed-primitives/green/source-inputs/PackedPrimitive.swift": "5e855c08c63235c0383da3692566d04d2f0905a6b6df6c40f41fab078cf4dcf7",
+    ".context/strong-owl-live-physics-packed-primitives/green/source-inputs/PrimitiveCeiling.swift": "b034b11d222eb2e7dc3510a6ca4208740e83a12bf9f61e5109d7e24c4bd76af6",
+    ".context/strong-owl-live-physics-packed-primitives/green/source-inputs/SparseLDL.swift": "53fceae054e59374952c2f012e5083a97d25d063b0282d8957af98edcf157849",
+    ".context/strong-owl-live-physics-packed-primitives/green/source-inputs/main.swift": "b034b11d222eb2e7dc3510a6ca4208740e83a12bf9f61e5109d7e24c4bd76af6",
+    ".context/strong-owl-live-physics-packed-primitives/green/source-inputs/pattern.json": "b9ab3794ceb32de076e1399d097aca0aea7f651a15fcfd6bcd907827275e237e",
+    ".context/strong-owl-live-physics-packed-primitives/green/source-inputs/run_native_contact_screen.py": "b6940301d49a7db8e5dfc6d4db9c8e031db62e78993ac3012f7596655a2a897e",
+    ".context/strong-owl-live-physics-packed-primitives/green/source-inputs/run_primitive_ceiling.py": "d4ecb91675453d84d5d4b80bdf984f611e2e585313472eba1840cdcf9032bb57",
+    ".context/strong-owl-live-physics-packed-primitives/green/source-inputs/run_primitive_ceiling.sh": "bfc4b3a4ad72a973abbe09b8011ebf1640ea4613783ec208cb5e6bca8b349cdb",
+    ".context/strong-owl-live-physics-packed-primitives/red/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-packed-primitives/red/provenance.json": "5315428de99fee0e3e7cd44b341bae457039bc6532de38c3a404fe3db7621f77",
+    ".context/strong-owl-live-physics-packed-primitives/red/result.json": "84313f7280cb927c09960e30f925ce53ab7edefa325e04c1d7d95ad3f30ba653",
+    ".context/strong-owl-live-physics-packed-primitives/red/run.log": "f733bc953ccc381cde20a0fc1912340dd352b77947a75151af08f4a849f54763",
+    ".context/strong-owl-live-physics-packed-primitives/red/source-inputs/PackedPrimitive.swift": "3213d454e2d136aa35276622e9183bba472f6eb7f2407124744e8b904674f307",
+    ".context/strong-owl-live-physics-packed-primitives/red/source-inputs/PrimitiveCeiling.swift": "4690183ce00278689d79ff130c25ba61beb2369b694490246a35e15cfb6b9321",
+    ".context/strong-owl-live-physics-packed-primitives/red/source-inputs/SparseLDL.swift": "53fceae054e59374952c2f012e5083a97d25d063b0282d8957af98edcf157849",
+    ".context/strong-owl-live-physics-packed-primitives/red/source-inputs/main.swift": "4690183ce00278689d79ff130c25ba61beb2369b694490246a35e15cfb6b9321",
+    ".context/strong-owl-live-physics-packed-primitives/red/source-inputs/pattern.json": "b9ab3794ceb32de076e1399d097aca0aea7f651a15fcfd6bcd907827275e237e",
+    ".context/strong-owl-live-physics-packed-primitives/red/source-inputs/run_native_contact_screen.py": "b6940301d49a7db8e5dfc6d4db9c8e031db62e78993ac3012f7596655a2a897e",
+    ".context/strong-owl-live-physics-packed-primitives/red/source-inputs/run_primitive_ceiling.py": "d4ecb91675453d84d5d4b80bdf984f611e2e585313472eba1840cdcf9032bb57",
+    ".context/strong-owl-live-physics-packed-primitives/red/source-inputs/run_primitive_ceiling.sh": "bfc4b3a4ad72a973abbe09b8011ebf1640ea4613783ec208cb5e6bca8b349cdb",
+    ".context/strong-owl-live-physics-packed-primitives/resources-driver.log": "6265a70b2937271100f8811c6832463a1ab5b27dcb3dbb310a23695340f49ca6",
+    ".context/strong-owl-live-physics-packed-primitives/resources.jsonl": "5ba1d909273c6ec6a3fa5d06da0cbb94e5a7206b68f2942089e67edaf2e6c34a",
+    ".context/strong-owl-live-physics-packed-primitives/reviewed-validation/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-packed-primitives/reviewed-validation/provenance.json": "fd2cbdc2032169be00101e3ad9adbc20730c690f4b18039f999111ed6e0c5036",
+    ".context/strong-owl-live-physics-packed-primitives/reviewed-validation/result.json": "836436e80f7c415af3141bdd379df5c420de0b299a6d6b8bdfa184cfecdff8d6",
+    ".context/strong-owl-live-physics-packed-primitives/reviewed-validation/run.log": "cdcc573d27d656fcb0ab9f9e6bcaeff54a99b4f63f2b6feb125506e423ce408a",
+    ".context/strong-owl-live-physics-packed-primitives/reviewed-validation/source-inputs/PackedPrimitive.swift": "5e855c08c63235c0383da3692566d04d2f0905a6b6df6c40f41fab078cf4dcf7",
+    ".context/strong-owl-live-physics-packed-primitives/reviewed-validation/source-inputs/PrimitiveCeiling.swift": "3c6d749b8d6ea12ade461ac8be955fa5ba8c5a9e8854fcddab282bbaac0bbf57",
+    ".context/strong-owl-live-physics-packed-primitives/reviewed-validation/source-inputs/SparseLDL.swift": "53fceae054e59374952c2f012e5083a97d25d063b0282d8957af98edcf157849",
+    ".context/strong-owl-live-physics-packed-primitives/reviewed-validation/source-inputs/main.swift": "3c6d749b8d6ea12ade461ac8be955fa5ba8c5a9e8854fcddab282bbaac0bbf57",
+    ".context/strong-owl-live-physics-packed-primitives/reviewed-validation/source-inputs/pattern.json": "b9ab3794ceb32de076e1399d097aca0aea7f651a15fcfd6bcd907827275e237e",
+    ".context/strong-owl-live-physics-packed-primitives/reviewed-validation/source-inputs/run_native_contact_screen.py": "b6940301d49a7db8e5dfc6d4db9c8e031db62e78993ac3012f7596655a2a897e",
+    ".context/strong-owl-live-physics-packed-primitives/reviewed-validation/source-inputs/run_primitive_ceiling.py": "fc4bf3f48a64a30736135d5c974ae993f42a2bec20ff00a3c885cbff8f932cd2",
+    ".context/strong-owl-live-physics-packed-primitives/reviewed-validation/source-inputs/run_primitive_ceiling.sh": "bfc4b3a4ad72a973abbe09b8011ebf1640ea4613783ec208cb5e6bca8b349cdb"
+  },
+  "green": {
+    "correctnessAccepted": true,
+    "diagnosticCutoffSeconds": 0.001,
+    "favorableSchedule": {
+      "checksum": -4.828200647288355,
+      "combinedSeconds": 0.006439166667405516,
+      "productSeconds": 0.0012074998812749982,
+      "products": 30,
+      "refactorSeconds": 0.0028388334903866053,
+      "refactors": 15,
+      "solveSeconds": 0.002335916564334184,
+      "solves": 30,
+      "workspaceFirstTouchSeconds": 5.487498128786683e-05
+    },
+    "firstTouchIncluded": true,
+    "observedSchedule": {
+      "checksum": -7.4118957780977865,
+      "combinedSeconds": 0.00791437498992309,
+      "productSeconds": 0.0017630414804443717,
+      "products": 46,
+      "refactorSeconds": 0.002751458261627704,
+      "refactors": 15,
+      "solveSeconds": 0.003390708821825683,
+      "solves": 46,
+      "workspaceFirstTouchSeconds": 6.83334656059742e-06
+    },
+    "owner": "strong-owl-live-physics",
+    "packedIPContinuationAllowed": false,
+    "physicalStepAccepted": false,
+    "reason": "Primitive ceiling fails fixed1ms cutoff; stop packing this15iteration schedule",
+    "runtimeAdoption": false,
+    "scope": "Synthetic well-scaled SQD numerical primitives only; no row/IP/KKT/geometry/recovery/device acceptance",
+    "symbolicAndInputPackingExcluded": true
+  },
+  "owner": "strong-owl-live-physics",
+  "packedIPContinuationAllowed": false,
+  "physicalStepAccepted": false,
+  "red": {
+    "correctnessAccepted": false,
+    "diagnosticCutoffSeconds": 0.001,
+    "firstTouchIncluded": true,
+    "owner": "strong-owl-live-physics",
+    "physicalStepAccepted": false,
+    "reason": "Primitive factor/solve/product did not match reference bits",
+    "runtimeAdoption": false,
+    "scope": "Synthetic well-scaled SQD numerical primitives only; no row/IP/KKT/geometry/recovery/device acceptance",
+    "symbolicAndInputPackingExcluded": true
+  },
+  "review": {
+    "criticalRemaining": 0,
+    "generalInputAPICertified": false,
+    "importantRemaining": 0,
+    "minorFixed": [
+      "cache scope explicit",
+      "shell pycache symlinkcheck"
+    ]
+  },
+  "reviewedValidation": {
+    "codePatternAndInputsWarmedByCorrectnessChecks": true,
+    "correctnessAccepted": true,
+    "diagnosticCutoffSeconds": 0.001,
+    "firstTouchIncluded": true,
+    "freshWorkspaceEachSchedule": true,
+    "observedScheduleFollowsFavorable": true,
+    "owner": "strong-owl-live-physics",
+    "physicalStepAccepted": false,
+    "reason": "Reviewed correctness and transition guards only; no additional timing",
+    "runtimeAdoption": false,
+    "scope": "Synthetic well-scaled SQD numerical primitives only; no row/IP/KKT/geometry/recovery/device acceptance",
+    "scopeIsNotMathematicalLowerBound": true,
+    "symbolicAndInputPackingExcluded": true
+  },
+  "runtimeAdoption": false,
+  "scope": "Freshworkspace synthetic primitive sequences with code/pattern/input warmed by preflight; not a mathematical lowerbound or fullQP proof"
+}
