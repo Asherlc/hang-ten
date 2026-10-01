@@ -261,8 +261,22 @@ jobs:
           owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
           cad_root="$PWD/.context/$owner-transgression-native-ci"
           # Preserve upstream cord-regression pins alongside owned USD compiler staging.
-          python -m pip install -e 'Tools/HangboardPackages[dev]' \
-            numpy==2.2.6 usd-core==26.8 trimesh==5.1.0 shapely==2.1.2 rtree==1.4.1 scipy==1.16.3 networkx==3.6.1
+          install_native_dependencies() {
+            local attempt="$1"
+            shift
+            python -m pip install "$@" -e 'Tools/HangboardPackages[dev]' \
+              numpy==2.2.6 usd-core==26.8 trimesh==5.1.0 shapely==2.1.2 rtree==1.4.1 scipy==1.16.3 networkx==3.6.1 \
+              2>&1 | tee "$cad_root/dependencies-attempt-$attempt.log"
+          }
+          if ! install_native_dependencies 1; then
+            # A hosted runner returned EIO while writing installed packages.
+            # Recover only this setup error, replacing any partial installation.
+            if ! grep -Fq 'OSError: [Errno 5] Input/output error' "$cad_root/dependencies-attempt-1.log"; then
+              exit 1
+            fi
+            echo "Dependency installation hit EIO; reinstalling once before any tests run."
+            install_native_dependencies 2 --force-reinstall
+          fi
           python -m pip install --target "$cad_root/usd" 'usd-core==26.8'
           export HANGTEN_CAD_PYTHONPATH="$cad_root/usd"
           # Fail instead of silently skipping the required YY native checks.
