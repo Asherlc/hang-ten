@@ -203,20 +203,11 @@ final class BoardModelRealityScene {
     var hasLiveRopes: Bool { !liveControllers.isEmpty }
     var liveFramesForTesting: [RopeFrameSnapshot] { liveFrames }
 
-    private struct GeometricCordSegment {
-        let entity: ModelEntity
-        let path: Int
-        let start: Int
-        let length: Float
-        let originalTransform: Transform
-    }
     private struct GeometricCordPose {
         let instance: Int
         let boardTransform: simd_float4x4
         let pivot: SIMD3<Float>
-        let anchor: SIMD3<Float>
-        let paths: [[SIMD3<Float>]]
-        let segments: [GeometricCordSegment]
+        let axis: SIMD3<Float>
         let framingEnvelope: [SIMD3<Float>]
     }
     private var geometricCordPoses: [GeometricCordPose] = []
@@ -713,7 +704,7 @@ final class BoardModelRealityScene {
                         let cord = Self.makeCordEntity(for: solved)
                         cordGroup.addChild(cord)
                         cordPoses.append(try makeGeometricCordPose(solved: solved, suspension: suspension,
-                            cord: cord, instance: index, boardTransform: renderTransform(transform, instance: instance).matrix))
+                            instance: index, boardTransform: renderTransform(transform, instance: instance).matrix))
                     } catch { return false }
                 } else {
                     guard instance.positionTransforms == nil || instance.positionTransforms?[positionID] != nil else {
@@ -805,7 +796,7 @@ final class BoardModelRealityScene {
                     pose: resolvedPose, suspension: suspension, bounds: descriptor.modelBounds)
                 let cord = Self.makeCordEntity(for: solved)
                 let cordPose = try makeGeometricCordPose(solved: solved, suspension: suspension,
-                    cord: cord, instance: 0, boardTransform: solved.boardTransform)
+                    instance: 0, boardTransform: solved.boardTransform)
                 cancelGeometricTilt()
                 geometricCordPoses = [cordPose]
                 displayedCordAngles = .zero
@@ -1466,105 +1457,64 @@ final class BoardModelRealityScene {
     }
 
     private func makeGeometricCordPose(solved: BoardModelSolvedSuspension,
-                                      suspension: BoardModelSuspension, cord: Entity,
+                                      suspension: BoardModelSuspension,
                                       instance: Int, boardTransform: simd_float4x4) throws -> GeometricCordPose {
         let localPoints: [[Double]]
         switch suspension {
         case .singleCord(let profile): localPoints = [profile.attachment.pointInModel]
         case .pairedLeadCord(let profile): localPoints = profile.attachments.map(\.pointInModel)
         case .twoBranchCord(let profile):
-            localPoints = (profile.passages.left + profile.passages.right).flatMap {
-                $0.isThroughBore ? [$0.entryPointInModel, $0.exitPointInModel] : [$0.pointInModel]
+            let passages = profile.passages.left + profile.passages.right
+            // A bore contributes its center to the shared attachment axis.
+            // With just one bore, its two mouths define that axis directly.
+            if passages.count == 1, let passage = passages.first, passage.isThroughBore {
+                localPoints = [passage.entryPointInModel, passage.exitPointInModel]
+            } else {
+                localPoints = passages.map { passage in
+                    passage.isThroughBore
+                        ? zip(passage.entryPointInModel, passage.exitPointInModel).map { ($0 + $1) / 2 }
+                        : passage.pointInModel
+                }
             }
         }
         guard !localPoints.isEmpty else { throw BoardModelRealityError.invalidSuspension }
         let points = localPoints.map { point -> SIMD3<Float> in
-            // solved.boardTransform retains the authored reflection; the
-            // renderer matrix cancels it because reflection is baked in meshes.
+            // Retain authored reflection for the cord coordinates, even when
+            // the corresponding renderer reflection is baked into its mesh.
             let p = solved.boardTransform * SIMD4<Float>(SIMD3(point.map(Float.init)), 1)
             return SIMD3(p.x, p.y, p.z)
         }
         let pivot = points.reduce(.zero, +) / Float(points.count)
-        let paths: [[SIMD3<Float>]]
-        let anchor: SIMD3<Float>
-        switch solved {
-        case .single(let value): paths = [value.cord.samples]; anchor = value.fixedAnchor
-        case .pairedLead(let value): paths = value.leads.map(\.samples); anchor = value.fixedAnchor
-        case .twoBranch(let value): paths = value.branches.flatMap(\.spans); anchor = value.fixedAnchor
-        }
-        let tubes = cord.children.compactMap { $0 as? ModelEntity }
-        var segments: [GeometricCordSegment] = []
-        var attached = Self.boundsCorners(descriptor.modelBounds).map { point -> SIMD3<Float> in
-            let p = solved.boardTransform * SIMD4(point, 1)
-            return SIMD3(p.x, p.y, p.z)
-        }
-        let sampleCount = SuspendedCordSolver.sampleCount
-        for (pathIndex, path) in paths.enumerated() {
-            let lower = path.first == anchor ? sampleCount - 1 : 0
-            let upper = path.last == anchor ? path.count - sampleCount + 1 : path.count
-            guard lower >= 0, upper <= path.count, lower < upper else { throw BoardModelRealityError.invalidSuspension }
-            attached += path[lower..<upper]
-            for (index, pair) in zip(path, path.dropFirst()).enumerated() {
-                let length = simd_distance(pair.0, pair.1)
-                guard length > 1e-6 else { continue }
-                guard segments.count < tubes.count else { throw BoardModelRealityError.invalidSuspension }
-                let tube = tubes[segments.count]
-                segments.append(GeometricCordSegment(entity: tube, path: pathIndex, start: index,
-                    length: length, originalTransform: tube.transform))
+        var axis = solved.cameraFraming.right
+        var largestDistance: Float = 1e-10
+        for (index, start) in points.enumerated() {
+            for end in points.dropFirst(index + 1) {
+                let delta = end - start, distance = simd_length_squared(delta)
+                if distance > largestDistance { largestDistance = distance; axis = simd_normalize(delta) }
             }
         }
-        guard segments.count == tubes.count else { throw BoardModelRealityError.invalidSuspension }
-        let radius = attached.map { simd_distance($0, pivot) }.max() ?? 0
+        // Keep gesture direction consistent with the canonical view. The axis
+        // itself stays fixed when the camera yaws around the hanging board.
+        if simd_dot(axis, solved.cameraFraming.right) < 0 { axis = -axis }
+        let radius = Self.boundsCorners(descriptor.modelBounds).map { point -> Float in
+            let p = solved.boardTransform * SIMD4(point, 1)
+            return simd_distance(SIMD3(p.x, p.y, p.z), pivot)
+        }.max() ?? 0
         let envelope = Self.boundsCorners(BoardModelBounds(
             minimum: [Double(pivot.x-radius), Double(pivot.y-radius), Double(pivot.z-radius)],
             maximum: [Double(pivot.x+radius), Double(pivot.y+radius), Double(pivot.z+radius)]))
         return GeometricCordPose(instance: instance, boardTransform: boardTransform, pivot: pivot,
-            anchor: anchor, paths: paths, segments: segments, framingEnvelope: envelope)
+            axis: axis, framingEnvelope: envelope)
     }
 
     private func applyGeometricCordPose(angles: SIMD2<Float>) {
-        guard !geometricCordPoses.isEmpty, let framing = currentFraming else { return }
-        let yaw = simd_quatf(angle: angles.x, axis: framing.up)
-        let rotation = simd_quatf(angle: angles.y, axis: simd_normalize(yaw.act(framing.right)))
-        let sampleCount = SuspendedCordSolver.sampleCount
         for pose in geometricCordPoses {
-            guard angles.y != 0 else {
-                instanceEntities[pose.instance].transform = Transform(matrix: pose.boardTransform)
-                pose.segments.forEach { $0.entity.transform = $0.originalTransform }
-                continue
-            }
-            let hinge = Self.transform(rotation: rotation, about: pose.pivot)
-            instanceEntities[pose.instance].transform = Transform(matrix: hinge * pose.boardTransform)
-            let paths = pose.paths.map { original -> [SIMD3<Float>] in
-                var moved = original.map { rotation.act($0 - pose.pivot) + pose.pivot }
-                // The canonical solver emits 32 samples for each free lead.
-                // Reconnect that lead to the fixed support; guides stay with
-                // the board. This is display deformation, not rope dynamics.
-                if original.first == pose.anchor {
-                    let end = moved[sampleCount - 1]
-                    for index in 0..<sampleCount {
-                        moved[index] = pose.anchor + (end-pose.anchor) * (Float(index)/Float(sampleCount-1))
-                    }
-                    moved[0] = pose.anchor
-                }
-                if original.last == pose.anchor {
-                    let start = moved.count - sampleCount
-                    let point = moved[start]
-                    for index in 0..<sampleCount {
-                        moved[start+index] = point + (pose.anchor-point) * (Float(index)/Float(sampleCount-1))
-                    }
-                    moved[moved.count-1] = pose.anchor
-                }
-                return moved
-            }
-            for segment in pose.segments {
-                let start = paths[segment.path][segment.start], end = paths[segment.path][segment.start+1]
-                let delta = end-start, length = simd_length(delta)
-                segment.entity.position = (start+end)/2
-                segment.entity.scale = SIMD3(1, length/segment.length, 1)
-                if length > 1e-6 { segment.entity.orientation = simd_quatf(from: SIMD3(0,1,0), to: delta/length) }
-            }
+            let rotation = simd_quatf(angle: angles.y, axis: pose.axis)
+            let matrix = angles.y == 0 ? pose.boardTransform
+                : Self.transform(rotation: rotation, about: pose.pivot) * pose.boardTransform
+            instanceEntities[pose.instance].transform = Transform(matrix: matrix)
         }
+        // The complete cord remains in its canonical pose. Only the board turns.
         displayedCordAngles = angles
     }
 
@@ -1613,10 +1563,11 @@ final class BoardModelRealityScene {
         let right = simd_normalize(rotation.act(framing.right))
         let up = simd_normalize(simd_cross(backward, right))
         let orbitTarget = framing.target
-        let points = framing.includedPoints + (geometricPitch && (orbitElevation != 0 || geometricTiltTask != nil)
-            ? geometricCordPoses.flatMap(\.framingEnvelope) : [])
+        // Fit the full local rotation envelope at rest too, so pitching the
+        // board cannot move the camera and make the fixed cord appear to move.
+        let points = framing.includedPoints + geometricCordPoses.flatMap(\.framingEnvelope)
         var fitted = framing
-        if orbitAzimuth != 0 || orbitElevation != 0 {
+        if geometricPitch || orbitAzimuth != 0 || orbitElevation != 0 {
             // Refit the complete board/cord bounds around the tilted view's
             // target, keeping the cord pivot separate from the fit center.
             let relative = points.map { $0 - orbitTarget }

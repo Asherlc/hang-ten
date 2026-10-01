@@ -53,24 +53,25 @@ match the descriptor, or RealityKit cannot decode it.
 ## Cord-point display tilt
 
 The normal RealityKit viewer uses bundled suspension geometry without starting
-live rope simulation. Pitch rotates each corded board instance around the
-midpoint of its authored attachments or passage mouths. Through-bores contribute
-both mouths; point passages contribute one. The pivot is transformed using the
-canonical instance pose, including authored reflection. The overhead support
-stays fixed, guides move with the board, and free spans reconnect to that support.
-Existing cylinder entities are transformed in place; no meshes are rebuilt per frame.
+live rope simulation. Pitch rotates each corded board instance about the line
+through its authored cord attachments or passage centers. A single through-bore
+uses its mouth-to-mouth axis; a single attachment uses the canonical view's
+horizontal axis through that point. Multiple points use their widest separation
+through their mean. Authored reflection is retained when calculating this axis.
 
-Yaw retains the camera orbit. During pitch, the camera orientation stays fixed
-and framing includes the board's local rotation envelope and fixed support.
-Reset restores the exact canonical body and cord transforms. Hold selection
-computes its adjustment from the canonical pose to avoid accumulating tilt.
-Automatic adjustment animates over 0.28 seconds; Reduce Motion applies it
-immediately. Manual gestures supersede pending animation.
+The entire cord stays in its canonical pose, including guides and free spans.
+Pitch changes only the board transform. The camera fits the board's local
+rotation envelope at rest and keeps the same transform during pitch, so the
+cord also stays fixed on screen. Yaw and manual zoom retain their existing
+camera interaction. Reset restores the exact canonical board transform.
+Automatic hold adjustment is calculated from the canonical pose to avoid
+accumulating tilt and animates over 0.28 seconds; Reduce Motion applies it
+immediately. Manual gestures and lifecycle changes cancel superseded animation.
 
-This is a kinematic display approximation: free-span lengths may change, and
-there is no gravity, rope-length constraint, sliding contact solve or equilibrium
-simulation. Uncorded boards retain camera pitch. The loader's `useLivePhysics`
-opt-in retains the existing solver test lane.
+This is a geometric display hinge, without a rope collision or equilibrium
+solve. Canonical cords are not rerouted when the board turns. Uncorded boards
+retain camera pitch. The loader's `useLivePhysics` opt-in retains the existing
+solver integration test lane.
 
 ## Diagnose by symptom
 

@@ -19,17 +19,25 @@ final class BoardModelRealityTests: XCTestCase {
         let originalTop = originalBody * SIMD4<Float>(0, 0.05, 0, 1)
         let originalCamera = scene.camera.transform.matrix
         let support = SIMD3<Float>(0, 0.07, 0)
+        let originalCord = try XCTUnwrap(scene.transientCordEntity).children.map { $0.transform.matrix }
         for pitch in [Float.pi / 9, -Float.pi / 9] {
             scene.orbit(azimuth: 0, elevation: pitch)
             let placed = body.transformMatrix(relativeTo: scene.root)
             XCTAssertNotEqual(placed, originalBody, "The board must actually rotate, rather than moving only the camera")
             XCTAssertLessThan(simd_distance(placed * pivot, originalPivot), 1e-6)
             XCTAssertGreaterThan(simd_distance(placed * SIMD4<Float>(0, 0.05, 0, 1), originalTop), 0.01)
+            XCTAssertEqual(scene.camera.transform.matrix, originalCamera, "Pitch must not move or zoom the camera and make the fixed cord appear to move")
             for column in 0..<3 {
                 XCTAssertLessThan(simd_distance(scene.camera.transform.matrix[column], originalCamera[column]), 1e-6,
                                   "The camera orientation must stay fixed during board pitch")
             }
             let cord = try XCTUnwrap(scene.transientCordEntity)
+            XCTAssertEqual(cord.children.map { $0.transform.matrix }, originalCord,
+                           "The entire cord must stay fixed while the board turns")
+            for mouth in [SIMD4<Float>(0, 0.0025, 0.045, 1), SIMD4<Float>(0, 0.0025, -0.045, 1)] {
+                XCTAssertLessThan(simd_distance(placed * mouth, originalBody * mouth), 1e-6,
+                                  "The board must rotate around the line through its cord points")
+            }
             let endpoints = cord.children.flatMap { child -> [SIMD3<Float>] in
                 guard let mesh = (child as? ModelEntity)?.model?.mesh else { return [] }
                 let halfLength = mesh.bounds.extents.y / 2

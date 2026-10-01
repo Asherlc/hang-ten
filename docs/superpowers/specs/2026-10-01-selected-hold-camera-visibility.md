@@ -33,15 +33,16 @@ visibility optimum or an authored opening annotation.
   camera uses that position's framing and recomputes hold visibility.
 - Automatic adjustment refits the complete board and cord bounds. For corded
   boards, pitch rotates the actual board about its own authored cord-point
-  midpoint, keeping the overhead support fixed. Guides follow the board and
-  free spans reconnect geometrically. Separate instances use separate pivots.
+  axis, keeping the entire cord fixed. Separate instances use separate axes.
+  The camera fits the local board rotation envelope at rest and does not move
+  during pitch.
   Yaw retains the camera orbit; uncorded boards retain camera pitch.
 - Visibility is evaluated in the canonical pose before each new selection.
   Clearing restores the exact canonical board and cord transforms. Projected
   contact controls refresh during the board's 0.28-second animation; manual
   gestures, position changes and disposal cancel superseded animation.
 - The normal viewer requires no live rope controller. This is a kinematic
-  display approximation with variable free-span length, rather than physical
+  display hinge with unchanged cord geometry, rather than physical
   equilibrium. Live rope physics remains an explicit loader opt-in for tests.
 
 Unit validation covers returning to front, front-opening recesses versus
