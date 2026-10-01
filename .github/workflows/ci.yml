@@ -254,10 +254,21 @@ jobs:
           ditto "$cad_root/mount/FreeCAD.app" "$cad_root/FreeCAD.app"
           echo "HANGTEN_FREECAD_CMD=$cad_root/FreeCAD.app/Contents/Resources/bin/freecadcmd" >> "$GITHUB_ENV"
 
-      - name: Run all five Transgression package and native-edit cases
+      - name: Run Transgression and YY package and native-edit cases
         run: |
+          set -euo pipefail
+          owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
+          cad_root="$PWD/.context/$owner-transgression-native-ci"
           python -m pip install -e 'Tools/HangboardPackages[dev]'
-          python -m pytest Tools/HangboardCAD/tests/test_transgression_packages.py -q
+          python -m pip install --target "$cad_root/usd" 'usd-core==26.8'
+          export HANGTEN_CAD_PYTHONPATH="$cad_root/usd"
+          # Fail instead of silently skipping the required YY native checks.
+          test -f "$HANGTEN_FREECAD_CMD"
+          test -f "$HANGTEN_CAD_PYTHONPATH/pxr/__init__.py"
+          python -m pytest \
+            Tools/HangboardCAD/tests/test_transgression_packages.py \
+            Tools/HangboardCAD/tests/test_verticalboards_native.py \
+            Tools/HangboardCAD/tests/test_verticalboard_validation_reporting.py -q
 
       - name: Delete owned CAD toolchain
         if: always()
