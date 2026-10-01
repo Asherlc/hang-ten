@@ -804,3 +804,39 @@ CI contracts, Swift parse and diff checks. A source search found none of the
 temporary scope/tap symbols, and exact owned DerivedData deletion was verified.
 The treatment crops were visually inspected against the active captures.
 No local UI pass or production rendering correction is claimed.
+
+## Prepared transaction-creator diagnostic (never merge)
+
+Retained application logs associate 37 successful selection/orbit attachments
+with nearby thread-exit uncommitted-transaction warnings; the enclosing intervals
+for 29 rendered-assertion timeouts contain none. These are correlated events,
+not independent causal samples. Passing unrelated cases also emit warnings.
+Attachment timestamps do not measure the first visible frame. The counter-review's
+video sample timing describes whole-screen updates, with approximately 0.3-second
+calibration uncertainty; it has not established map-region timing.
+
+The CI runtime's warning explicitly recommends `CA_DEBUG_TRANSACTIONS=1` for
+backtraces. Independent inspection of matching iOS 26.5 / 23F77 QuartzCore found
+creation-stack capture and a thread-release path that prints the stored stack
+and commits. This supports creator attribution, not proof that the transaction
+contains or blocks this board's presentation.
+
+After the complete probe-free 9d2 baseline and its evidence are retained, and
+only if relevant presentation failures reproduce, the prepared diagnostic adds
+that variable solely to Batch05 app launches. It runs the original 24 cases
+once. Application code, workflow, Train navigation, inputs, coordinates,
+assertions and deadlines remain unchanged. Stack capture and logging can alter
+timing; a passing diagnostic is inconclusive and is never a rendering fix.
+
+Validity requires at least three relevant rendered failures with two recorded
+scene attachments, reproduced warning/update association, and usable creation
+stacks attributed to process/thread. Complete logs and counterexamples must be
+retained. Creation stacks cannot identify all later transaction contents. App,
+renderer or automation frames identify an operation to investigate against its
+actual threading/lifetime contract; their presence alone does not prove fault.
+
+Remove the variable after this single run regardless of outcome. If no concrete
+operation connects to a relevant contract, retain a support evidence package
+and stop speculative probes; do not automatically add another readback or retry.
+All original required checks remain blocking. No production correction, framework
+or GPU cause, or local UI pass is claimed.

@@ -272,6 +272,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             "HANGTEN_REVIEW_BOARD_ID": boardID,
             "HANGTEN_REVIEW_MODEL_DIAGNOSTICS": "1",
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
+            "CA_DEBUG_TRANSACTIONS": "1",
         ]
         app.launch()
         // Preserve the rapid Train-to-Hold-specs transition, including the
