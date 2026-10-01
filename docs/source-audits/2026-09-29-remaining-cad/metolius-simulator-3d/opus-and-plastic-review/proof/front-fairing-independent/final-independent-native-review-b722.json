@@ -1,0 +1,136 @@
+{
+  "status": "pass",
+  "blockingFindings": [],
+  "scope": "Fresh independent native technical gate only; final exports, Opus/app appearance and human acceptance are separate.",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "beforeSourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "nativeContactCount": 30,
+  "publishedDepthCount": 27,
+  "cavityVoidCount": 24,
+  "allCavityBodyIntersectionVolumesAndSolidCountsExactlyZero": true,
+  "envelopeXYZMM": [
+    711.0000002,
+    94.00075012973058,
+    222.00000010067734
+  ],
+  "nativeEdit": {
+    "parameter": "Depth_edge_11_left",
+    "before": 14.0,
+    "after": 16.0,
+    "changedContacts": [
+      "edge-11-left"
+    ],
+    "beforeVolumeMM3": 5746914.1168865645,
+    "editedVolumeMM3": 5744279.490282398,
+    "restoredVolumeMM3": 5746914.116886584,
+    "restoreVolumeDeltaMM3": 1.955777406692505e-08
+  },
+  "lowerFairing": {
+    "nativeSpanCount": 5,
+    "exactAnchors": true,
+    "sharedNonzeroPhysicalDerivatives": true,
+    "monotonicityProof": "Each nonrational cubic has strictly positive depth-coordinate and strictly negative height-coordinate Bernstein derivative controls.",
+    "upperBoundaryZ135PositionAndTangentMatch": true
+  },
+  "protectedUpperBody": {
+    "beforeVolumeMM3": 2304429.1680063563,
+    "afterVolumeMM3": 2304432.8933858867,
+    "differenceVolumesMM3": [
+      0.0,
+      0.0
+    ],
+    "differenceSolidCounts": [
+      0,
+      0
+    ],
+    "beforeShapeValid": true,
+    "afterShapeValid": true
+  },
+  "upperConstructionControls": [
+    {
+      "object": "ForwardCenterJug",
+      "boundsDeltaMM": 0.0,
+      "areaDeltaMM2": 0.0,
+      "volumeDeltaMM3": 0.0
+    },
+    {
+      "object": "ForwardCenterJugWithinEnvelope",
+      "boundsDeltaMM": 0.0,
+      "areaDeltaMM2": 0.0,
+      "volumeDeltaMM3": 0.0
+    },
+    {
+      "object": "FlatSloperRoof",
+      "boundsDeltaMM": 0.0,
+      "areaDeltaMM2": 0.0,
+      "volumeDeltaMM3": 0.0
+    },
+    {
+      "object": "RoundSloperRoof",
+      "boundsDeltaMM": 0.0,
+      "areaDeltaMM2": 0.0,
+      "volumeDeltaMM3": 0.0
+    }
+  ],
+  "freshFunctionalAndLocalChecks": "Front-anchored55/65mm sloper spans, cap14 crest/return/upperroll, pocket15p50, mirroredX47membership, strictrootcarrierBOP and localjoins all passed on this hash.",
+  "wholeNativeTessellation": {
+    "vertices": 36211,
+    "triangles": 72418,
+    "watertight": true,
+    "windingConsistent": true,
+    "actualMeshBoundsXYZMM": [
+      [
+        -355.5,
+        -94.0000001,
+        -2e-15
+      ],
+      [
+        355.5,
+        4.2e-14,
+        221.9999013840869
+      ]
+    ]
+  },
+  "boundsDisposition": "Fresh independent pre-tessellation bounds match author explicit(False,False) native bounds and actual storedmesh extents. Inflated default optimalBoundingBox after author preview tessellation is a cache-dependent bound query, not physical source enlargement. Raw author diagnostic retained; sourced envelope tolerance unchanged.",
+  "maximumNativeToleranceMM": 0.003851557409949,
+  "sourceBytesUnchanged": true,
+  "ownedResourcesCleaned": true,
+  "visualInspection": "Viewed complete native front/side/top comparisons and profile chart: lower repeated bands visibly reduce while upper silhouette/functional grip region remains. No image measurement.",
+  "limits": [
+    "Authored fairing slopes, depth anchors and approximately94mm display thickness are estimates, not manufacturer-certified geometry.",
+    "Upper clipped mass integrals differ3.72537953mm\u00b3 while both Boolean differences have exactlyzero volume andzero solids; raw values retained. Selected upstream upper construction bounds/areas/volumes are exactlyunchanged.",
+    "Inherited small upper normal/semantic seam limitations are not claimed resolved by the lowerfairing.",
+    "No finalUSDZ or app pass is inferred from native checks. Human review8 remains pending."
+  ],
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/metolius-simulator-3d.FCStd": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/bounds-diagnosis.json": "dee7cc48d8ae2f01f8a5a7f4aa55439448ed4887b2f6ef97e3ca4b7c01ecadce",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/check_bounds.py": "72e75d84f681abc043aa2afbc9ed40c78a24520cf8e5c33f1925b9c8c3b8d8a2",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/native-preview-provenance.json": "1e9a4cafd9d7a8e85153dd912967ed5a0a2e63111f0dfffccafce5d28196ee8c",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/final-native-body-mesh.json": "7d5e212155ad184a77946b0074ef166b0997a86ddf11e4a6521c54388716b495",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/native-profile-sections.png": "a8c24dc8893a59262f7710be8cee1092ebe967f2a401e94fae7155d49dd8fc9d",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/native-check-b722.json": "9e110dcf3cb32c16707dd0e6781d88c7fd7d6437a8dadbf386cc7d6037d57fca",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/native-check-b722.log": "d436030888792156459483a4a4ea961178567cab52324f23b07361b3f2010c2e",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/native-check-b722-ownership.json": "534aa2413b49e5f0778ded7132c398080b6954212df3fa0e469dde25f1428769",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/front-fairing-b722.json": "773c81396cb4ce36e2f92c62b0e91f339dc6c117fb1ee8567d43df5f16f82688",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/front-fairing-b722.log": "b4e40e096b26da939c769e8e6603d25eb4b9f87d5af3567debe3d2ead238f7a5",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/front-fairing-b722-ownership.json": "87ae7828c098b7dbef632871b032cbf2ec325be549948b63115d0215e9738a5f",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/cavity-voids-b722.json": "f6f7548993e08b87a68914f39bdb9e70a2a86a19eba2529106080698c0515755",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/cavity-voids-b722.log": "7c62d928e6bdf399a1091e1e327bb7d77153c88ab3514d3b585ff7fdc2c6ab09",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/cavity-voids-b722-ownership.json": "d18c9bd5ac6ea24c055cb8dd50a3c4ab8d95e408fe2cc39cd524cd28835c9d9b",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/functional-sections-b722.json": "fb0763cad6099e54d2a9cf2bb673131a446d1a64463f38a877652012b17edbf5",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/functional-sections-b722.log": "c8b6216f882a68b743d176546617123617d178905c6ffeef6c0088b34522d307",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/functional-sections-b722-ownership.json": "96cf77d329f28431b4fe955381d31b3dbbd7792b5b9e6784c0aad821085f1e9e",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/local-contact-joins-b722.json": "78ff992914ce765f4ed7dedbbbbb78eaf816646fe34d18e5699cd3d6638f1c33",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/local-contact-joins-b722.log": "656cdc1c9444488926f9e954c4d3199c7c24083a2eb2940aa0c7296598a6d797",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/local-contact-joins-b722-ownership.json": "2bf9735e41b065ece0ea5b6789068afa21a3e6d7ce62a5b719f3b2c7701748b6",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_native_candidate.py": "ef8634bbd8b9fe9ea1b0a78e391051cd9682ce74928276546cc2275ed6f3e086",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_front_fairing.py": "94c0efb336bac5c5b0b46c279db2e4203942d8f87540f45485571e63b02c8673",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_cavity_voids.py": "ca5999cdcf8e5f6a03f19b1afc1e10684e77c4ca0bf48aa621420fccf73bad16",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_functional_sections.py": "2f5230cd633496b0018b4f3b3826afd33fb908c34d29376415dc334448698196",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_local_contact_and_joins.py": "daceb649a41fb27ed1193594694074a0ad1e6c835ab98e0c94aa7a7a79d91aec",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/review/comparison-front.png": "e62be15b6622f7b5b24b85247b2d4ad9a5b91d501ac956f6b0b3220f44c9726f",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/review/comparison-side.png": "ba4f5bd879d55cf823c512a786ca30f2a48c825479ea46932587045a36cadae2",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/review/comparison-top.png": "26d457d9f4c7cfbad45d2b8a3b0470b08c4a9bb99a154297a7c7ca256345cff0"
+  }
+}

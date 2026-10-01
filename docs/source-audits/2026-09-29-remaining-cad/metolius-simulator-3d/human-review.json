@@ -5,29 +5,274 @@
   "number": 8,
   "package": "metolius-simulator-3d",
   "boardID": "metolius.simulator-3d",
-  "status": "awaiting jagged appearance correction; not accepted",
-  "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
-  "modelSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
-  "descriptorSHA256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e",
-  "revisionCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
-  "currentRevision": "source-audit.md",
+  "status": "reviewed; corrected Simulator geometry and plastic display accepted",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+  "currentRevision": "opus-and-plastic-review/index.html",
   "sourceAudit": "source-audit.md",
-  "appReview": "app-review/validation.json",
+  "appReview": "opus-and-plastic-review/app/after/validation.json",
   "shownImages": {
-    "sources/product-01.jpg": "5ac1677d6280dc90242cb1dcef47691647fd3f5a9adc3c465838e930075f58a9",
-    "sources/product-03.jpg": "e9561ab3fb6d3a85014097dcbdb0bc3d9c4079f9cb0954bd87965d180329932a",
-    "review/cad-front.png": "bf17b82d051e2d7dbd1913a28f9324eda1970c75cbef724a8378af50d53238de",
-    "review/cad-side.png": "98b5ee0b886e9e669b9943c17cc2db11921fa0f10e3d32acd1859bf21f0307b2",
-    "review/cad-top.png": "3491a2e75ef9635e2dcd586644d08a2bb112330a8ee30b11f3b3bc1c984faa92",
-    "review/comparison-front.png": "04f3ba9fdb8777011e3bfeed441f29e5e950811d2bc40a5759bb3999547beffb",
-    "review/comparison-side.png": "25c96d8e6b170f20dd0b334b9e2df76dd8fff437e234c4a24a2143e8d2d7cbd8",
-    "review/comparison-top.png": "358fa53e3714b3e1232f8e028fe97de8590b16bc518a2e075da3fa0dbf128c76",
-    "app-review/default.png": "fb658cab57c4b8909eee38e7faaa1f37f62bcc67938cf7eec66cdade552ec833",
-    "app-review/contact-selection.png": "6327b3a0156617517788be228dd5f56a972269b4f5e570a631f6d461920d20f0"
+    "opus-and-plastic-review/original-front-side-top-comparison.png": "c3015b4a2fe21d902d8591ae5240e3567621e5e1571fc31e41e618688a3d2506",
+    "opus-and-plastic-review/neutral-front-side-top-comparison.png": "6260b8eabcbabdec029245f55bde324c9cb0208d6c01abdc71b02e9d33a4effd",
+    "opus-and-plastic-review/front-fairing-front-side-top-comparison.png": "b65923d16bdc4f23c4bfd4a51466f5b9fd4349a07d540f8f75e2494f0e11c181",
+    "opus-and-plastic-review/exact-export-front-side-top-comparison.png": "56c3f3ae1b31de079219a6e72002eb2b42bc2f72074d25984eec5056a60c2f26",
+    "opus-and-plastic-review/fairing-exact-export-front-side-top-comparison.png": "f86ba2376abc8ac6debc2abfa012c58a92a0d1087b993e4d61a50fc429dadcd8",
+    "opus-and-plastic-review/app-before-after.png": "35c2a8bcf0626ea272ff794fb54ed85d5ec6293fa15fa78a569188f7d1afb716",
+    "opus-and-plastic-review/app-front-fairing-before-after.png": "e4d6f82a178ea9bf234d3450b5c2b9af68886a68059fae86efcb788b77040684"
   },
   "feedback": [
-    "Jagged"
+    "Jagged",
+    "It should be tagged as plastic so it gets colored",
+    "And ask opus for its take",
+    "center jug has a weird ridge going down the back ... impossible to grab onto",
+    "sloper should extend all the way forward",
+    "why does it look kind of... wavy?"
   ],
-  "reviewScope": "Initial native CAD source, exact prior-versus-CAD front/side/top, complete approved manufacturer evidence and retained representative app selections.",
-  "approvalLimit": "No acceptance. Original app images are retained migration captures, not a fresh run. Estimated depth, openings, relief and transition shapes remain under review."
+  "reviewScope": "Complete original 9449, prior neutral 8fa and prior 3ff3 front/side/top comparisons against this final native and exact exported candidate, plus fresh actual-app plastic views. Estimated transitions, rounding, thickness, adapted center-jug rear return/finger room and forward-anchored sloper surfaces are included. Separate mint-before/mint-after app comparison shows the front-profile fairing; historical neutral-to-plastic app comparison includes both geometry and finish changes. Representative selected contacts, selected/deselected palette checks and critical center-jug front/high-front/end-on/rear-leaning views with recorded swipes are included. Exact exported semantic topology and normal limitations remain explicit; this is not an all 30 contact visual sweep or manufacturer/ergonomic certification.",
+  "approvalLimit": "Any later human acceptance applies to this displayed candidate, its app palette and representative selection coverage. It does not certify manufacturer-exact estimated geometry or color, global roof G1/C1 continuity, or a visual sweep of all 30 contacts. It does not certify welded exported watertightness, universal corner-normal alignment or ergonomic safety.",
+  "revisionBaseCommit": "b097aa5ba34d55e69b9cdac73122b06774947a16",
+  "runtimeValidation": "opus-and-plastic-review/runtime-validation.json",
+  "question": "Does this look right now?",
+  "history": [
+    {
+      "displayedRevision": {
+        "schemaVersion": 1,
+        "date": "2026-10-01",
+        "reviewer": "asherlc",
+        "number": 8,
+        "package": "metolius-simulator-3d",
+        "boardID": "metolius.simulator-3d",
+        "status": "awaiting jagged appearance correction; not accepted",
+        "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+        "modelSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+        "descriptorSHA256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e",
+        "revisionCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
+        "currentRevision": "source-audit.md",
+        "sourceAudit": "source-audit.md",
+        "appReview": "app-review/validation.json",
+        "shownImages": {
+          "sources/product-01.jpg": "5ac1677d6280dc90242cb1dcef47691647fd3f5a9adc3c465838e930075f58a9",
+          "sources/product-03.jpg": "e9561ab3fb6d3a85014097dcbdb0bc3d9c4079f9cb0954bd87965d180329932a",
+          "review/cad-front.png": "bf17b82d051e2d7dbd1913a28f9324eda1970c75cbef724a8378af50d53238de",
+          "review/cad-side.png": "98b5ee0b886e9e669b9943c17cc2db11921fa0f10e3d32acd1859bf21f0307b2",
+          "review/cad-top.png": "3491a2e75ef9635e2dcd586644d08a2bb112330a8ee30b11f3b3bc1c984faa92",
+          "review/comparison-front.png": "04f3ba9fdb8777011e3bfeed441f29e5e950811d2bc40a5759bb3999547beffb",
+          "review/comparison-side.png": "25c96d8e6b170f20dd0b334b9e2df76dd8fff437e234c4a24a2143e8d2d7cbd8",
+          "review/comparison-top.png": "358fa53e3714b3e1232f8e028fe97de8590b16bc518a2e075da3fa0dbf128c76",
+          "app-review/default.png": "fb658cab57c4b8909eee38e7faaa1f37f62bcc67938cf7eec66cdade552ec833",
+          "app-review/contact-selection.png": "6327b3a0156617517788be228dd5f56a972269b4f5e570a631f6d461920d20f0"
+        },
+        "feedback": [
+          "Jagged"
+        ],
+        "reviewScope": "Initial native CAD source, exact prior-versus-CAD front/side/top, complete approved manufacturer evidence and retained representative app selections.",
+        "approvalLimit": "No acceptance. Original app images are retained migration captures, not a fresh run. Estimated depth, openings, relief and transition shapes remain under review."
+      },
+      "feedback": "Jagged",
+      "result": "Superseded candidate offered; no acceptance recorded."
+    },
+    {
+      "displayedRevision": {
+        "schemaVersion": 1,
+        "date": "2026-10-01",
+        "reviewer": "asherlc",
+        "number": 8,
+        "package": "metolius-simulator-3d",
+        "boardID": "metolius.simulator-3d",
+        "status": "awaiting revised review #8; not accepted",
+        "sourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+        "modelSHA256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+        "descriptorSHA256": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d",
+        "currentRevision": "jagged-review/index.html",
+        "sourceAudit": "source-audit.md",
+        "appReview": "jagged-review/app/after/validation.json",
+        "shownImages": {
+          "jagged-review/front-side-top-comparison.png": "64ae29652e8049881bd9cc540f48f0bcaeaa7e1a6c82d58bfe244c603705fcc2",
+          "jagged-review/app-before-after.png": "d0773705cba33b354c6af245a52cdc6dfeeb744ed0cb3edfd20fb8983a245fa4"
+        },
+        "feedback": [
+          "Jagged"
+        ],
+        "reviewScope": "Shown complete native before/after front, side and top views and fresh actual-app view; estimated transitions, rounding and thickness, with representative selected contacts and orbit coverage.",
+        "approvalLimit": "Any later human acceptance applies to this displayed candidate and representative selection coverage. It does not certify manufacturer-exact estimated geometry, global roof G1/C1 continuity or a visual sweep of all contacts.",
+        "revisionBaseCommit": "b097aa5ba34d55e69b9cdac73122b06774947a16",
+        "runtimeValidation": "jagged-review/runtime-validation.json",
+        "question": "Does this look smoother now?",
+        "history": [
+          {
+            "displayedRevision": {
+              "schemaVersion": 1,
+              "date": "2026-10-01",
+              "reviewer": "asherlc",
+              "number": 8,
+              "package": "metolius-simulator-3d",
+              "boardID": "metolius.simulator-3d",
+              "status": "awaiting jagged appearance correction; not accepted",
+              "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+              "modelSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+              "descriptorSHA256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e",
+              "revisionCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
+              "currentRevision": "source-audit.md",
+              "sourceAudit": "source-audit.md",
+              "appReview": "app-review/validation.json",
+              "shownImages": {
+                "sources/product-01.jpg": "5ac1677d6280dc90242cb1dcef47691647fd3f5a9adc3c465838e930075f58a9",
+                "sources/product-03.jpg": "e9561ab3fb6d3a85014097dcbdb0bc3d9c4079f9cb0954bd87965d180329932a",
+                "review/cad-front.png": "bf17b82d051e2d7dbd1913a28f9324eda1970c75cbef724a8378af50d53238de",
+                "review/cad-side.png": "98b5ee0b886e9e669b9943c17cc2db11921fa0f10e3d32acd1859bf21f0307b2",
+                "review/cad-top.png": "3491a2e75ef9635e2dcd586644d08a2bb112330a8ee30b11f3b3bc1c984faa92",
+                "review/comparison-front.png": "04f3ba9fdb8777011e3bfeed441f29e5e950811d2bc40a5759bb3999547beffb",
+                "review/comparison-side.png": "25c96d8e6b170f20dd0b334b9e2df76dd8fff437e234c4a24a2143e8d2d7cbd8",
+                "review/comparison-top.png": "358fa53e3714b3e1232f8e028fe97de8590b16bc518a2e075da3fa0dbf128c76",
+                "app-review/default.png": "fb658cab57c4b8909eee38e7faaa1f37f62bcc67938cf7eec66cdade552ec833",
+                "app-review/contact-selection.png": "6327b3a0156617517788be228dd5f56a972269b4f5e570a631f6d461920d20f0"
+              },
+              "feedback": [
+                "Jagged"
+              ],
+              "reviewScope": "Initial native CAD source, exact prior-versus-CAD front/side/top, complete approved manufacturer evidence and retained representative app selections.",
+              "approvalLimit": "No acceptance. Original app images are retained migration captures, not a fresh run. Estimated depth, openings, relief and transition shapes remain under review."
+            },
+            "feedback": "Jagged",
+            "result": "Superseded candidate offered; no acceptance recorded."
+          }
+        ]
+      },
+      "userSteering": [
+        "It should be tagged as plastic so it gets colored",
+        "And ask opus for its take"
+      ],
+      "advisorFeedback": "Opus source-supported center-jug regression blocker and recommended flat/round sloper join smoothing; exact responses retained.",
+      "result": "Neutral candidate superseded; no human acceptance recorded."
+    },
+    {
+      "displayedNativeCandidate": {
+        "sourceSHA256": "21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d",
+        "status": "Historical native gate only; no final app or human acceptance"
+      },
+      "relayedUserFeedback": [
+        "center jug has a weird ridge going down the back ... impossible to grab onto",
+        "sloper should extend all the way forward"
+      ],
+      "feedbackScope": "Exact excerpts as relayed by root; not asserted to be the complete original user messages.",
+      "evidence": "opus-and-plastic-review/before/superseded-21ca/snapshot.json",
+      "result": "Superseded by further functional correction; no human acceptance recorded."
+    },
+    {
+      "displayedNativeCandidate": {
+        "sourceSHA256": "46df0c88878d3f833c27c7cce12c637fba09572d9223290c850c0e866b4d1264",
+        "status": "Strict native pass; rear ridge/front setback resolved; pre-export local junction correction requested"
+      },
+      "advisorFeedback": "Opus confirms rear ridge and sloper front setback fixed; requests cap shelf/lip above15 and sharp flat-sloper wedge junction fixes before export.",
+      "evidence": "opus-and-plastic-review/before/superseded-46df/snapshot.json",
+      "result": "Superseded by local junction correction; no final export/app/human acceptance recorded."
+    },
+    {
+      "diagnosticNativeCandidate": {
+        "sourceSHA256": "ec348cea477014f3594d586438d1094c7fb8eeb4516f7c44e28b7d57989faa2d",
+        "status": "diagnostic lip source; native contact clipping unresolved; not final validation"
+      },
+      "reason": "Contact clipping/classification diagnostics are being resolved. Author-only source-freeze pass is not independent/native/Opus/export/app acceptance.",
+      "evidence": "opus-and-plastic-review/before/diagnostic-native/diagnostic-ec348-lip-contact-clipping/snapshot.json",
+      "result": "Historical diagnostic checkpoint; its exact pass/blocked statuses remain distinct, with no final acceptance carried forward."
+    },
+    {
+      "diagnosticNativeCandidate": {
+        "sourceSHA256": "ec348cea477014f3594d586438d1094c7fb8eeb4516f7c44e28b7d57989faa2d",
+        "status": "rejected diagnostic native source; C0 carrier/contact clipping failure; not final validation"
+      },
+      "reason": "Independent clipping-review blocks the ec348 carrier at the exact X47 contact split. Correction, exact clipping and all final native/export/app/Opus gates are still pending. No tolerance/ROI expansion or blanket orientation reversal accepted.",
+      "evidence": "opus-and-plastic-review/before/diagnostic-native/diagnostic-ec348-final-clipping-review/snapshot.json",
+      "result": "Historical diagnostic checkpoint; its exact pass/blocked statuses remain distinct, with no final acceptance carried forward."
+    },
+    {
+      "diagnosticNativeCandidate": {
+        "sourceSHA256": "31bec0595a7f05a3ea761dc1f7202547be47f90262062026cb16dd7d56d10030",
+        "status": "intermediate diagnostic: strict native/functional pass; off-station seam gate blocked; not final validation"
+      },
+      "reason": "Exact31bec source passed original native/contact/depth/edit-restore and functional gates, but off-station cap/nose seams at X15 andX38 exceeded the unchanged0.002mm positional gate. No waiver, export/app/Opus/human acceptance.",
+      "evidence": "opus-and-plastic-review/before/diagnostic-native/diagnostic-31bec-native-pass-seam-block/snapshot.json",
+      "result": "Historical diagnostic checkpoint; its exact pass/blocked statuses remain distinct, with no final acceptance carried forward."
+    },
+    {
+      "diagnosticNativeCandidate": {
+        "sourceSHA256": "d4f4c07d5c17afce79350100c3f694ce30043a97ce45a9920e8654355cdb1692",
+        "status": "rejected diagnostic: native trim face BOP failure; not final validation"
+      },
+      "reason": "Native d4f4 rear-root trim face failed strict BOP InvalidCurveOnSurface. Finite pcurve/curve diagnosis retained; no strict BOP waiver or final gate pass.",
+      "evidence": "opus-and-plastic-review/before/diagnostic-native/diagnostic-d4f-native-trim-block/snapshot.json",
+      "result": "Historical diagnostic checkpoint; its exact pass/blocked statuses remain distinct, with no final acceptance carried forward."
+    },
+    {
+      "diagnosticNativeCandidate": {
+        "sourceSHA256": "65e5196aec829a9dff66efadd5b7b9f35fdf140d8355aa8afc0148457e48c5da",
+        "status": "rejected diagnostic: local cubic approximation failed strict native BOP; not final validation"
+      },
+      "reason": "Native cubic approximation retained with sampled deviations and exact endpoint/tangent claims, but its repaired-root-check reports BOP InvalidCurveOnSurface. Final construction instead uses connected exact cap/nose profiles as separate native loft faces; no approximation promotion.",
+      "evidence": "opus-and-plastic-review/before/diagnostic-native/diagnostic-65e-rejected-cubic-approximation/snapshot.json",
+      "result": "Historical diagnostic checkpoint; its exact pass/blocked statuses remain distinct, with no final acceptance carried forward."
+    },
+    {
+      "diagnosticNativeCandidate": {
+        "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+        "status": "intermediate diagnostic: technical pass; unsupported front-band waviness correction required; human review pending"
+      },
+      "reason": "User asked why does it look kind of... wavy? Root, independent native diagnosis and retained Opus review require fairing unsupported inherited full-width front bands. Strict native/export/repro passes remain valid technical history, and actual plastic color/grasp observations are retained; no overall app/human pass or human rejection is recorded.",
+      "evidence": "opus-and-plastic-review/before/diagnostic-native/intermediate-3ff3-completed-app-wavy-block/snapshot.json",
+      "result": "Historical diagnostic checkpoint; its exact pass/blocked statuses remain distinct, with no final acceptance carried forward."
+    },
+    {
+      "diagnosticNativeCandidate": {
+        "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+        "status": "intermediate diagnostic metadata correction;3ff3 waviness correction still required;human review pending"
+      },
+      "reason": "Immutable v2 root feedback corrects actual swipes to after3/finish1/grasp6. Source, image, verdict and visual feedback unchanged; v1 raw retained by exact copy. Technical source/export passes remain historical; no app/human acceptance or human rejection.",
+      "evidence": "opus-and-plastic-review/before/diagnostic-native/intermediate-3ff3-feedback-v2/snapshot.json",
+      "result": "Historical diagnostic checkpoint; its exact pass/blocked statuses remain distinct, with no final acceptance carried forward."
+    },
+    {
+      "diagnosticNativeCandidate": {
+        "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+        "status": "held technical checkpoint; actual-app waviness diagnosis and human review pending"
+      },
+      "reason": "Root relayed user question why does it look kind of... wavy? Technical native/export/repro passes remain valid; source/app fidelity diagnosis is unresolved. This checkpoint does not label geometry rejected or visually accepted.",
+      "evidence": "opus-and-plastic-review/before/diagnostic-native/held-3ff3-wavy-app-question/snapshot.json",
+      "result": "Historical diagnostic checkpoint; its exact pass/blocked statuses remain distinct, with no final acceptance carried forward."
+    },
+    {
+      "date": "2026-10-01",
+      "reviewer": "asherlc",
+      "answer": "lgtm",
+      "acceptedScope": "Displayed corrected Simulator 3-D, including its smooth front taper, forward center-jug crest and rear return, forward-reaching slopers, and existing plastic appearance.",
+      "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+      "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+      "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+      "shownImages": {
+        "opus-and-plastic-review/original-front-side-top-comparison.png": "c3015b4a2fe21d902d8591ae5240e3567621e5e1571fc31e41e618688a3d2506",
+        "opus-and-plastic-review/neutral-front-side-top-comparison.png": "6260b8eabcbabdec029245f55bde324c9cb0208d6c01abdc71b02e9d33a4effd",
+        "opus-and-plastic-review/front-fairing-front-side-top-comparison.png": "b65923d16bdc4f23c4bfd4a51466f5b9fd4349a07d540f8f75e2494f0e11c181",
+        "opus-and-plastic-review/exact-export-front-side-top-comparison.png": "56c3f3ae1b31de079219a6e72002eb2b42bc2f72074d25984eec5056a60c2f26",
+        "opus-and-plastic-review/fairing-exact-export-front-side-top-comparison.png": "f86ba2376abc8ac6debc2abfa012c58a92a0d1087b993e4d61a50fc429dadcd8",
+        "opus-and-plastic-review/app-before-after.png": "35c2a8bcf0626ea272ff794fb54ed85d5ec6293fa15fa78a569188f7d1afb716",
+        "opus-and-plastic-review/app-front-fairing-before-after.png": "e4d6f82a178ea9bf234d3450b5c2b9af68886a68059fae86efcb788b77040684"
+      },
+      "question": "Does this look right now?"
+    }
+  ],
+  "feedbackProvenance": {
+    "functionalExcerpts": [
+      "center jug has a weird ridge going down the back ... impossible to grab onto",
+      "sloper should extend all the way forward"
+    ],
+    "scope": "Exact excerpts as relayed by root; not asserted to be the complete original user messages.",
+    "functionalAdvisorReview": "opus-and-plastic-review/proof/opus/opus-functional-feedback-review.md",
+    "wavinessQuestion": "why does it look kind of... wavy?",
+    "wavinessAdvisorReview": "opus-and-plastic-review/proof/opus/opus-waviness-review.md",
+    "wavinessMeaning": "Geometry correction requested; human review remained pending, with no rejection or acceptance recorded."
+  },
+  "adaptationLimits": "The center-jug rear return and finger-room profile are operator-selected display adaptations responding to user feedback. The retained manufacturer front photographs, comparison sheet and mounting instructions do not establish a definitive rear profile or any incut dimension. The 55/65 mm sloper support depths remain sourced; locating those support bands from the front backward is an explicitly labeled interpretation and display adaptation. No material chemistry, manufacturer mint color, global roof G1/C1 continuity or exact estimated thickness is claimed.",
+  "answer": "lgtm",
+  "acceptedDate": "2026-10-01",
+  "acceptedScope": "Displayed corrected Simulator 3-D, including its smooth front taper, forward center-jug crest and rear return, forward-reaching slopers, and existing plastic appearance."
 }

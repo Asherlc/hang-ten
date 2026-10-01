@@ -1,0 +1,71 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"status\": \"closed\",\n  \"snapshot\": {\n    \"id\": \"918cc0e7-961d-4672-9f95-b4f2918098b7\",\n    \"provider\": \"claude\",\n    \"cwd\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger\",\n    \"workspaceId\": \"wks_d4a549643389e3ab\",\n    \"model\": \"claude-opus-5-5\",\n    \"thinkingOptionId\": \"high\",\n    \"effectiveThinkingOptionId\": \"high\",\n    \"runtimeInfo\": {\n      \"provider\": \"claude\",\n      \"sessionId\": \"42539f7e-e67a-4ca1-973d-f42a8396d61a\",\n      \"model\": \"claude-opus-5-5\",\n      \"modeId\": \"bypassPermissions\",\n      \"extra\": {\n        \"runtimeModel\": \"claude-opus-5-5\"\n      }\n    },\n    \"createdAt\": \"2026-10-01T15:32:19.604Z\",\n    \"updatedAt\": \"2026-10-01T19:09:02.095Z\",\n    \"lastUserMessageAt\": \"2026-10-01T19:07:09.798Z\",\n    \"status\": \"closed\",\n    \"capabilities\": {\n      \"supportsStreaming\": false,\n      \"supportsSessionPersistence\": true,\n      \"supportsDynamicModes\": false,\n      \"supportsMcpServers\": false,\n      \"supportsReasoningStream\": false,\n      \"supportsToolInvocations\": true,\n      \"supportsRewindConversation\": false,\n      \"supportsRewindFiles\": false,\n      \"supportsRewindBoth\": false\n    },\n    \"currentModeId\": \"bypassPermissions\",\n    \"availableModes\": [],\n    \"pendingPermissions\": [],\n    \"persistence\": {\n      \"provider\": \"claude\",\n      \"sessionId\": \"42539f7e-e67a-4ca1-973d-f42a8396d61a\",\n      \"nativeHandle\": \"42539f7e-e67a-4ca1-973d-f42a8396d61a\",\n      \"metadata\": {\n        \"provider\": \"claude\",\n        \"cwd\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger\",\n        \"modeId\": \"bypassPermissions\",\n        \"model\": \"claude-opus-5-5\",\n        \"thinkingOptionId\": \"high\",\n        \"title\": \"[Advisor] placid-badger Simulator shape and plastic\",\n        \"daemonAppendSystemPrompt\": \"Always push new commits to the remote automatically.\\n\\nFor every HTTP development server you start, run /Users/asherlc/bin/paseo-quick-tunnel <port> and keep it running for the server's lifetime. Report only the emitted https://…trycloudflare.com URL to the user; never report a localhost, relay, or asherlc.com URL for that server.\"\n      }\n    },\n    \"title\": \"[Advisor] placid-badger Simulator shape and plastic\",\n    \"requiresAttention\": false,\n    \"attentionReason\": null,\n    \"attentionTimestamp\": null,\n    \"archivedAt\": \"2026-10-01T19:09:02.095Z\",\n    \"labels\": {\n      \"owner\": \"placid-badger\",\n      \"task\": \"simulator-review-8\",\n      \"paseo.parent-agent-id\": \"62e01d1f-0832-4466-9e2c-315d62e8f0cb\"\n    }\n  }\n}"
+    }
+  ],
+  "structuredContent": {
+    "status": "closed",
+    "snapshot": {
+      "id": "918cc0e7-961d-4672-9f95-b4f2918098b7",
+      "provider": "claude",
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+      "workspaceId": "wks_d4a549643389e3ab",
+      "model": "claude-opus-5-5",
+      "thinkingOptionId": "high",
+      "effectiveThinkingOptionId": "high",
+      "runtimeInfo": {
+        "provider": "claude",
+        "sessionId": "42539f7e-e67a-4ca1-973d-f42a8396d61a",
+        "model": "claude-opus-5-5",
+        "modeId": "bypassPermissions",
+        "extra": {
+          "runtimeModel": "claude-opus-5-5"
+        }
+      },
+      "createdAt": "2026-10-01T15:32:19.604Z",
+      "updatedAt": "2026-10-01T19:09:02.095Z",
+      "lastUserMessageAt": "2026-10-01T19:07:09.798Z",
+      "status": "closed",
+      "capabilities": {
+        "supportsStreaming": false,
+        "supportsSessionPersistence": true,
+        "supportsDynamicModes": false,
+        "supportsMcpServers": false,
+        "supportsReasoningStream": false,
+        "supportsToolInvocations": true,
+        "supportsRewindConversation": false,
+        "supportsRewindFiles": false,
+        "supportsRewindBoth": false
+      },
+      "currentModeId": "bypassPermissions",
+      "availableModes": [],
+      "pendingPermissions": [],
+      "persistence": {
+        "provider": "claude",
+        "sessionId": "42539f7e-e67a-4ca1-973d-f42a8396d61a",
+        "nativeHandle": "42539f7e-e67a-4ca1-973d-f42a8396d61a",
+        "metadata": {
+          "provider": "claude",
+          "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+          "modeId": "bypassPermissions",
+          "model": "claude-opus-5-5",
+          "thinkingOptionId": "high",
+          "title": "[Advisor] placid-badger Simulator shape and plastic",
+          "daemonAppendSystemPrompt": "Always push new commits to the remote automatically.\n\nFor every HTTP development server you start, run /Users/asherlc/bin/paseo-quick-tunnel <port> and keep it running for the server's lifetime. Report only the emitted https://…trycloudflare.com URL to the user; never report a localhost, relay, or asherlc.com URL for that server."
+        }
+      },
+      "title": "[Advisor] placid-badger Simulator shape and plastic",
+      "requiresAttention": false,
+      "attentionReason": null,
+      "attentionTimestamp": null,
+      "archivedAt": "2026-10-01T19:09:02.095Z",
+      "labels": {
+        "owner": "placid-badger",
+        "task": "simulator-review-8",
+        "paseo.parent-agent-id": "62e01d1f-0832-4466-9e2c-315d62e8f0cb"
+      }
+    }
+  }
+}

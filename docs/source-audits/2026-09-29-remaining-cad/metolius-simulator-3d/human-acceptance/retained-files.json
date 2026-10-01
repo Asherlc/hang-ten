@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "answer": "lgtm",
+  "reviewNumber": 8,
+  "rawFiles": {
+    "acceptance-verification-b722-v2.json": {
+      "sha256": "c49d702132a37e910a151bffc630a06ea2f92c7fefa4cccd8227a42b37078c14",
+      "bytes": 5441
+    },
+    "acceptance-verification-b722.json": {
+      "sha256": "8fe04bd14f8536aec08b5f4ba45401c10c01986328816c4cf97259fd45d31a35",
+      "bytes": 4707
+    }
+  }
+}

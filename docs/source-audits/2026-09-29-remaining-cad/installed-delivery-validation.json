@@ -1,7 +1,7 @@
 {
   "passed": true,
   "owner": "placid-badger",
-  "simulator": "48059B24-A469-4B02-A47A-A303FB8D978E",
+  "simulator": "72312582-DB46-44A7-9C61-D8C0E9F75876",
   "packages": [
     {
       "package": "aelith-cyclops-011",
@@ -384,12 +384,12 @@
       "package": "metolius-simulator-3d",
       "generatedManifestMatchesCurrentSource": true,
       "generatedBytesMatch": true,
-      "manifestSHA256": "c57e419c5676a51ddb6bafe26926aaa21345d0d885abfc3d83c86784af00b4f0",
+      "manifestSHA256": "4424d0013a0bc374cace6070839baa6508e371aa666437ca5c0364540c3c6f05",
       "models": [
         {
           "presentationID": "primary",
-          "modelSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
-          "descriptorSHA256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e"
+          "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+          "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb"
         }
       ]
     },

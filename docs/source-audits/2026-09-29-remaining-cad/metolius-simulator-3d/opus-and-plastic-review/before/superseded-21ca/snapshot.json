@@ -1,0 +1,785 @@
+{
+  "owner": "placid-badger",
+  "recordedAtUTC": "2026-10-01T16:04:47.892681+00:00",
+  "status": "superseded intermediate; not accepted",
+  "sourceSHA256": "21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d",
+  "reason": "New user functional feedback overrides the earlier native visual gate. A further operator-authored correction is pending.",
+  "userFeedbackRelayedByRoot": [
+    "center jug has a weird ridge going down the back ... impossible to grab onto",
+    "sloper should extend all the way forward"
+  ],
+  "feedbackScope": "Exact excerpts as relayed by root; not asserted to be the complete original user messages.",
+  "humanAcceptance": "pending review #8",
+  "logsMayBePartialAtFreeze": true,
+  "noExportCompletionAssumed": true,
+  "rawCopies": [
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/packet-config.json",
+      "retained": "preparation/packet-config.json",
+      "sha256": "8b99b20f54b39d537ad3ab8be23a4ffd1ad420263ed5779957df3d3ba815c215",
+      "bytes": 16859
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/prepare_simulator_packet.py",
+      "retained": "preparation/prepare_simulator_packet.py",
+      "sha256": "17dea1c239975f6c087adb6ee6ffe333b185d5d2e998a52d2a719de4ed748fc0",
+      "bytes": 51039
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/README.md",
+      "retained": "preparation/README.md",
+      "sha256": "d440288a4b4caf27a14890ca674ed297bb127d533e9d7af0459c97ac78f564f4",
+      "bytes": 5707
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/preparation-check.json",
+      "retained": "preparation/preparation-check.json",
+      "sha256": "2f4a83ad511e40292a4ee33ded4d76a7fbace336da98cefeb308fae15ef0fa2f",
+      "bytes": 783
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/candidate/metolius-simulator-3d.FCStd",
+      "retained": "candidate/metolius-simulator-3d.FCStd",
+      "sha256": "21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d",
+      "bytes": 6386945
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/author-probe-debug-ownership.json",
+      "retained": "author/author-probe-debug-ownership.json",
+      "sha256": "96a180466178c0b01b58f9687f17c1dd0fc2225f50ef9858e110c00846fb866c",
+      "bytes": 374
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/author-probe-debug.log",
+      "retained": "author/author-probe-debug.log",
+      "sha256": "80ae599120a6e4297e9efcb9a8d652c4794b6005e09cc2989beb94604f6226a1",
+      "bytes": 1429
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/author-probe-ownership.json",
+      "retained": "author/author-probe-ownership.json",
+      "sha256": "1f005d4a770da44dde2d081e969f20f9dec52caf2dd9229a8868eb123de6f188",
+      "bytes": 368
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/author-probe-v2-ownership.json",
+      "retained": "author/author-probe-v2-ownership.json",
+      "sha256": "6d72ca1f43398f486783680e31dc288e93adfcd8b33c610de263be8decc2978e",
+      "bytes": 372
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/author-probe-v2.log",
+      "retained": "author/author-probe-v2.log",
+      "sha256": "d4e03debec4e7e6d66fd9d3567e4795711f914d2870067efdebb83e161dbbd2b",
+      "bytes": 530
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/author-probe.log",
+      "retained": "author/author-probe.log",
+      "sha256": "553d343b6ca483d3b318738c56cd069645ceb16617e93f20d6cac6294289f51b",
+      "bytes": 796
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/author_correction_probe.py",
+      "retained": "author/author_correction_probe.py",
+      "sha256": "6a980b78282b04bd61eb68b5960e0f87902c093ed9578785fb5fd22b8d6cd466",
+      "bytes": 6470
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/authored-design.json",
+      "retained": "author/authored-design.json",
+      "sha256": "1c2e0942cd1b0ffe19bc4b5e742503e9aabb3c9d28f9262ba4f8e4e9ac251df4",
+      "bytes": 4419
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/bounded_compile.py",
+      "retained": "author/bounded_compile.py",
+      "sha256": "87d2674bba703cc7ae2dba609599df2768a5b00dab31a0aa0c76951d2b57e105",
+      "bytes": 1857
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/bounded_native.py",
+      "retained": "author/bounded_native.py",
+      "sha256": "0ec3ac866f735902526356902a4f2d90bf05a42576e83dcb33ab700587d09aa9",
+      "bytes": 1422
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/compare_final_uv_normals.py",
+      "retained": "author/compare_final_uv_normals.py",
+      "sha256": "50bf35514ec76a076e45e8377414563c2119a7b2daabe22093b9cce51e7a6286",
+      "bytes": 2430
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/compile-check-ownership.json",
+      "retained": "author/compile-check-ownership.json",
+      "sha256": "4ed4be6cb874af3e82901787bff4809a8aa9c801bdb9878607f4059c9169ff6a",
+      "bytes": 560
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/compile-check.log",
+      "retained": "author/compile-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/compile-ownership.json",
+      "retained": "author/compile-ownership.json",
+      "sha256": "598c348dbcddc7b05be5d0775c2cfa492c66e979e51fbbf108859689d40d259c",
+      "bytes": 543
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/compile.log",
+      "retained": "author/compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/diagnosis-construction.json",
+      "retained": "author/diagnosis-construction.json",
+      "sha256": "a35545166c0dbdc46517bb9526ed05c9b30587842a7fb742cc83574febb95a10",
+      "bytes": 14590
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/envelope-probe.json",
+      "retained": "author/envelope-probe.json",
+      "sha256": "19929ebeea262b418c4c3a80d64579eadb601c5db0af1410de746403d22a6f7a",
+      "bytes": 520
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/extract_final_native_mesh.py",
+      "retained": "author/extract_final_native_mesh.py",
+      "sha256": "2e482e8c2a36280084fa4fe8ae0865123251d15ba7b00f85598b4bf9244221e9",
+      "bytes": 477
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-body-mesh.json",
+      "retained": "author/final-native-body-mesh.json",
+      "sha256": "2e5efd03383a420aff35824ff694a029f5a9c592711b23492d5f065d772d7509",
+      "bytes": 13595383
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-mesh-ownership.json",
+      "retained": "author/final-native-mesh-ownership.json",
+      "sha256": "659794f0b124896738db310df61ee993ec6ebc8bb10b946aa790155b46c0e7e7",
+      "bytes": 376
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-mesh.log",
+      "retained": "author/final-native-mesh.log",
+      "sha256": "9e404f6df5acf4f3ccb90b981acc243800b54c3e218d6770b845402a40847e3e",
+      "bytes": 87
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-preview-provenance.json",
+      "retained": "author/final-native-preview-provenance.json",
+      "sha256": "151e058857d71e06257540f48d92638a2c9d2fb3c81296812a90271983ea4373",
+      "bytes": 2882
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-normal-comparison.json",
+      "retained": "author/final-normal-comparison.json",
+      "sha256": "c2e129a250a92e9fd9901ec41566e1723bf179fc917b7ab9b91ac5ff52eefcf3",
+      "bytes": 24474
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/finish_native_contacts.py",
+      "retained": "author/finish_native_contacts.py",
+      "sha256": "b9d03f2f4c1a087a189cde2fbab866af8a02c223746107e0858266ab7bc652c3",
+      "bytes": 4462
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/freeze.json",
+      "retained": "author/freeze.json",
+      "sha256": "147cc6b1396da6dc7a6ec6fdee02fef539d58e036ac25fa261f61ed25be64461",
+      "bytes": 2695
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/grasp-sections-ownership.json",
+      "retained": "author/grasp-sections-ownership.json",
+      "sha256": "4ffde3f2c4c1448d38e096df4874ca0d37046fc24c81e5320f3e66192987c279",
+      "bytes": 379
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/grasp-sections.log",
+      "retained": "author/grasp-sections.log",
+      "sha256": "1c8191e2b7074d22cfbaa5bf1b6ca5528ebbca8dca10feb4f78ef5d28a19509c",
+      "bytes": 631
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/inspect-envelope-ownership.json",
+      "retained": "author/inspect-envelope-ownership.json",
+      "sha256": "ef1e20a9d7bacb2cbb46f1f1e89fd859a49e83a6682b6c32e9590a9e5d17ca82",
+      "bytes": 365
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/inspect-envelope.log",
+      "retained": "author/inspect-envelope.log",
+      "sha256": "da253f9bbf2e8546ae69b3bb8669e19a13feb369a050a8be737372fb70c11043",
+      "bytes": 533
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/inspect_envelope.py",
+      "retained": "author/inspect_envelope.py",
+      "sha256": "eed25ad999b3fed0571312ea73cc371bae8a49b466604cf5f97d33421cd2e706",
+      "bytes": 500
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/native-contacts-ownership.json",
+      "retained": "author/native-contacts-ownership.json",
+      "sha256": "d36c782b6cf0f8a8703447f1fa7187d654792015f51569501677094b3947f080",
+      "bytes": 373
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/native-contacts-v2-ownership.json",
+      "retained": "author/native-contacts-v2-ownership.json",
+      "sha256": "173c64bc4d12c5da94f8e5210eee15e76fffd92a62ad8a7ba3ff9426fac1a8ba",
+      "bytes": 374
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/native-contacts-v2.log",
+      "retained": "author/native-contacts-v2.log",
+      "sha256": "572a4b2484079cc2f454f940f207086a54030c2c4060767db7f9299289798dac",
+      "bytes": 4052
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/native-contacts.log",
+      "retained": "author/native-contacts.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/native-preview-provenance.json",
+      "retained": "author/native-preview-provenance.json",
+      "sha256": "62928f2f392e20e533eb1b94cb61c918b9d305ad10e4b0168f9e14ad266902f2",
+      "bytes": 3604
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/normal-comparison-ownership.json",
+      "retained": "author/normal-comparison-ownership.json",
+      "sha256": "f926e3387c7a5c203dea0c7111ab863a6246e1256d891fe4fac2990123735200",
+      "bytes": 376
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/normal-comparison-v2-ownership.json",
+      "retained": "author/normal-comparison-v2-ownership.json",
+      "sha256": "8e9ad2ec1b7cae0246841c27628f747225f8c35885a371a40bef63b8d171f221",
+      "bytes": 378
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/normal-comparison-v2.log",
+      "retained": "author/normal-comparison-v2.log",
+      "sha256": "73b7da3bc20bd3aeaa7001d019f9d7457ce7ff7d44213e18f65e022f2c53cc45",
+      "bytes": 555
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/normal-comparison.log",
+      "retained": "author/normal-comparison.log",
+      "sha256": "56ce1ffb8852294248de1c328dbe2ccef370e0fd68a06485939882db46a0db5b",
+      "bytes": 1159
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/probe-body-mesh.json",
+      "retained": "author/probe-body-mesh.json",
+      "sha256": "9cc7ee1ee22e872e7b44957a90b78e8bc9d6b932a8864e4e75e4f7e759ae2421",
+      "bytes": 13586403
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/probe-body.brep",
+      "retained": "author/probe-body.brep",
+      "sha256": "d760583212932b896b61f7e2a1d173ab355e22d9e3a547b4a60466c1e317c222",
+      "bytes": 2303417
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/probe-design.json",
+      "retained": "author/probe-design.json",
+      "sha256": "a594d35fd371603cb60a26eab942b004e6db4856809fa0852ab7905f028ec53f",
+      "bytes": 3433
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/probe-source.FCStd",
+      "retained": "author/probe-source.FCStd",
+      "sha256": "1bbcb61ab32cd02b28f7ddd675086d04db92873988d14c5b2acaa8d6fda3c0cb",
+      "bytes": 3035285
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/render_export_comparisons.py",
+      "retained": "author/render_export_comparisons.py",
+      "sha256": "1e830b75cc651d69c2c547ab6c65c5f138d605bb3fac4ab479700ff8ff69fa97",
+      "bytes": 3038
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/render_final_native_comparisons.py",
+      "retained": "author/render_final_native_comparisons.py",
+      "sha256": "f03bb2e8afc8cd99de5eb9873c9894104a909a74acc83afba0cdb7c77895900e",
+      "bytes": 2925
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/render_native_comparisons.py",
+      "retained": "author/render_native_comparisons.py",
+      "sha256": "04dc2e2be9d4a0e1fc96e78b32e673702cc88eceecfdf339886f2a0a81eb6fef",
+      "bytes": 2899
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/reproduce-ownership.json",
+      "retained": "author/reproduce-ownership.json",
+      "sha256": "b3148a1149484766b544a208125e653ed0bbde8d9f20dee574341cd186ec4761",
+      "bytes": 545
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/reproduce.log",
+      "retained": "author/reproduce.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/source-audit.md",
+      "retained": "author/source-audit.md",
+      "sha256": "5482def77cc1ad2514579650cbcc47ac9614406667bf47cb099aa677bbef9cc2",
+      "bytes": 5003
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/source-freeze.json",
+      "retained": "author/source-freeze.json",
+      "sha256": "b32ef296e5a7a4269f2bfda1052cc2b1a3827da38edf5318911f4ebfe6ba78d1",
+      "bytes": 258
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/all-hangboards-baseline.json",
+      "retained": "independent/all-hangboards-baseline.json",
+      "sha256": "8cebf415d2228b0358002550e8339231f9203744d0f697529734bc45ea69dcad",
+      "bytes": 36535
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/baseline.json",
+      "retained": "independent/baseline.json",
+      "sha256": "ca2562cfae708c90c2601c1f45dd862d862df0ad8d4fe6cdf837afc869950703",
+      "bytes": 13089
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/before-manifest-raw.txt",
+      "retained": "independent/before-manifest-raw.txt",
+      "sha256": "07d2eb6277beee925f45c15d561f1e124c687914ce0f2e933c33e4446dd46bf1",
+      "bytes": 6166
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/before-manifest.json",
+      "retained": "independent/before-manifest.json",
+      "sha256": "825327b05242670c7f928e56d5adb0f48b7b4967b3043a704d456ab2d619b97e",
+      "bytes": 9897
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/before-primary.model.json",
+      "retained": "independent/before-primary.model.json",
+      "sha256": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d",
+      "bytes": 13970
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/check_candidate.py",
+      "retained": "independent/check_candidate.py",
+      "sha256": "47c4086815548618b935d5fd530d000b7632dd78a78da9a25a0953d555a03aea",
+      "bytes": 4706
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/check_export_shape_feedback.py",
+      "retained": "independent/check_export_shape_feedback.py",
+      "sha256": "1fc164d19383ddaa1873deadfa67b4e756499333b0e5be988020dbdee960ce13",
+      "bytes": 4457
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/check_native_candidate.py",
+      "retained": "independent/check_native_candidate.py",
+      "sha256": "174055bd479bb8dbaa04977def3ac7b016f929ab1b536d5ceee2edff198486ba",
+      "bytes": 5366
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/check_restore_surfaces.py",
+      "retained": "independent/check_restore_surfaces.py",
+      "sha256": "fda37c7ba759d5e4b32f9544db124d9108e98ca0d067561dee33c00cafe9535d",
+      "bytes": 4039
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/check_shape_feedback.py",
+      "retained": "independent/check_shape_feedback.py",
+      "sha256": "9168877a98a9593f3f3c27754a0d039bf390cf3f2b8b1fedf4b35f06dfabe04d",
+      "bytes": 4198
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/depth-restore-diagnosis-ownership.json",
+      "retained": "independent/depth-restore-diagnosis-ownership.json",
+      "sha256": "c860ff234bb07e199cbeccc0ebacc7a53d5de6ec9b3cedf3bb8691719112fa1c",
+      "bytes": 368
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/depth-restore-diagnosis.json",
+      "retained": "independent/depth-restore-diagnosis.json",
+      "sha256": "daa2630379315c78040de9c9260f83808a63f14f61f330c9adc11b399873f8fa",
+      "bytes": 7117
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/depth-restore-diagnosis.log",
+      "retained": "independent/depth-restore-diagnosis.log",
+      "sha256": "bbdb797d61c30e0b5858c57147e184e507316f24b06ea661aac8b1b9dab71458",
+      "bytes": 7172
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/diagnose_depth_restore.py",
+      "retained": "independent/diagnose_depth_restore.py",
+      "sha256": "35625a45ac9059c424e4989aea2ff9cf31ba1bd4e21f2bbb0ad3bff5bbe9ce14",
+      "bytes": 2158
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/final-native-check-ownership.json",
+      "retained": "independent/final-native-check-ownership.json",
+      "sha256": "a1329fab8c07881f1f5be36ba1e74b1e0555c96382423cbf1682a8fb1f980787",
+      "bytes": 580
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/final-native-check.log",
+      "retained": "independent/final-native-check.log",
+      "sha256": "18fc15c11786d942ae7b3b094f175c705444194cacf73b9ca5d25326915be430",
+      "bytes": 363
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/final-shape-feedback-ownership.json",
+      "retained": "independent/final-shape-feedback-ownership.json",
+      "sha256": "a43a01e0c74ae20a71a5bb81c1bfb56bb397885adbd554e36fb14b694d19691a",
+      "bytes": 581
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/final-shape-feedback.log",
+      "retained": "independent/final-shape-feedback.log",
+      "sha256": "4a3e3ff847050a4085117d540da5c6df9f6d7d1aa1f861f48d8e997dd082f1e5",
+      "bytes": 326
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/native-check.json",
+      "retained": "independent/native-check.json",
+      "sha256": "883a144231f704bb076d529be14619caf0f6bf442af057712fd725e79db9606c",
+      "bytes": 6095
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/probe-shape-feedback-ownership.json",
+      "retained": "independent/probe-shape-feedback-ownership.json",
+      "sha256": "b34acb98a6555b8995a94ddbf91256d85a512b333d8a6e576c48cb9d70eb6484",
+      "bytes": 569
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/probe-shape-feedback.json",
+      "retained": "independent/probe-shape-feedback.json",
+      "sha256": "ff57dc793f34d7af8c30ebeb34d0beb327598020e38ac9eba7811b911e3838ac",
+      "bytes": 14454
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/probe-shape-feedback.log",
+      "retained": "independent/probe-shape-feedback.log",
+      "sha256": "f96da00114a598189c75112728c6ae0a1fd5d2715aecdf2f3a665853176eb911",
+      "bytes": 332
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/restore-surface-witness-ownership.json",
+      "retained": "independent/restore-surface-witness-ownership.json",
+      "sha256": "12cde5e3c152e19f435e4667249e73f793aecc5a897e01a743a5b69dc2e91627",
+      "bytes": 259
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/restore-surface-witness.log",
+      "retained": "independent/restore-surface-witness.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/run_bounded.py",
+      "retained": "independent/run_bounded.py",
+      "sha256": "a9ad7fe3f2a838c14f341e0726b0004e794cbf05d4e9a279e21b3a90b7e37b98",
+      "bytes": 1160
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/shape-feedback.json",
+      "retained": "independent/shape-feedback.json",
+      "sha256": "b85df8232649778f5f5cd4df23973daebbe5b27245e95fbb75ce74b162fabcea",
+      "bytes": 14454
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/verification-plan.json",
+      "retained": "independent/verification-plan.json",
+      "sha256": "151e4b51857e077ce1e3f1a339b8b6457724908b3cfe4cb7b9139e3e89113029",
+      "bytes": 2438
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/comparison-front.png",
+      "retained": "final-native-review/comparison-front.png",
+      "sha256": "49e2d27a8eed62eb56a413dede633bfc15d9bc040b3731f4469d10ef44cfc9b5",
+      "bytes": 176826
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/comparison-oblique.png",
+      "retained": "final-native-review/comparison-oblique.png",
+      "sha256": "53259d9b2d70ba8e0772f165d02efe7a3513c78095433566c4e2fc00a3850408",
+      "bytes": 198507
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/comparison-raking.png",
+      "retained": "final-native-review/comparison-raking.png",
+      "sha256": "c747d2de1a436e9e363fddc552d8a19d57c592cee52881ec33f22cd3fe503da1",
+      "bytes": 198216
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/comparison-side.png",
+      "retained": "final-native-review/comparison-side.png",
+      "sha256": "41a569b47ff609d2b377bd663c00b8454dfd5e73b0b889f0456d8b9f6327bfe0",
+      "bytes": 56127
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/comparison-top.png",
+      "retained": "final-native-review/comparison-top.png",
+      "sha256": "f763f8a99b9cd7d2d25c76d09ad5d5cfbf03a6ffb35d608cd70f0537878039a6",
+      "bytes": 100025
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/native-correction-front.png",
+      "retained": "final-native-review/native-correction-front.png",
+      "sha256": "115ac10d7b6b4259f6bff6dbe2fa5696ab8b62045a413af40fd809f328fc6586",
+      "bytes": 85808
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/native-correction-oblique.png",
+      "retained": "final-native-review/native-correction-oblique.png",
+      "sha256": "ef65eb356690b610aee1bd0c149b864b83e16a6111085ffcc5afdbaa5d1a3861",
+      "bytes": 82278
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/native-correction-raking.png",
+      "retained": "final-native-review/native-correction-raking.png",
+      "sha256": "804384315ef544ca71ad16113a769d8416163aff8f1f829222d2f0bd71f5748f",
+      "bytes": 85159
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/native-correction-side.png",
+      "retained": "final-native-review/native-correction-side.png",
+      "sha256": "68eef1d71a2832631a086515ba8f39ec25b3ee731cdfed529673c4c880fa7bcc",
+      "bytes": 21850
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/native-correction-top.png",
+      "retained": "final-native-review/native-correction-top.png",
+      "sha256": "47875fd8b850fe1f2881ceff9ebe9e815084170db166eb591ff42de7eaf962fa",
+      "bytes": 42121
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/original-9449-front.png",
+      "retained": "final-native-review/original-9449-front.png",
+      "sha256": "3913d18a5538ca9c41bb7b7a23798df434aa8fc191ff02e8d2f15508787f93ed",
+      "bytes": 73310
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/original-9449-oblique.png",
+      "retained": "final-native-review/original-9449-oblique.png",
+      "sha256": "0195e673d789e0fd38e1b58f86e3ef7e8cbb5e908125187d47e293e3d739aeaf",
+      "bytes": 63766
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/original-9449-raking.png",
+      "retained": "final-native-review/original-9449-raking.png",
+      "sha256": "efe3cf3b36bdf265a10b5747938de73719c2ab27212e7e7d0ceafa363402f7ae",
+      "bytes": 66617
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/original-9449-side.png",
+      "retained": "final-native-review/original-9449-side.png",
+      "sha256": "493e52aea256f7cdd5a470f0206eafbfc7cd816bb0f918a6dd87556abedf3556",
+      "bytes": 18619
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/original-9449-top.png",
+      "retained": "final-native-review/original-9449-top.png",
+      "sha256": "68fd221d54454ff9aced6726d15cbacf880c03f30b60dca4dad0f5a6ab0df860",
+      "bytes": 23610
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/rejected-8fa-front.png",
+      "retained": "final-native-review/rejected-8fa-front.png",
+      "sha256": "8746bc3b05cce598a4c5742e8505dee6fa2e35847f67ba3064c147ffc3f07443",
+      "bytes": 84964
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/rejected-8fa-oblique.png",
+      "retained": "final-native-review/rejected-8fa-oblique.png",
+      "sha256": "9bef7da75ee2e4547a0f8f7b971588bc45456f099a85373ac2037c0f047a6250",
+      "bytes": 82387
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/rejected-8fa-raking.png",
+      "retained": "final-native-review/rejected-8fa-raking.png",
+      "sha256": "ab14b02d96c8d75941ec56906597a9bd436b55e663dc0efd056371a407e7a4dd",
+      "bytes": 82894
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/rejected-8fa-side.png",
+      "retained": "final-native-review/rejected-8fa-side.png",
+      "sha256": "0cff71e6a0db501f5e9cfeb4d556aa6ba1891c93d8b246c9c432d5b44130606c",
+      "bytes": 21008
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/rejected-8fa-top.png",
+      "retained": "final-native-review/rejected-8fa-top.png",
+      "sha256": "2acb1cb6e393b86840c04f2534f8464290143161b0baf6ceebc194a5e8c5c862",
+      "bytes": 42978
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/comparison-front.png",
+      "retained": "review/comparison-front.png",
+      "sha256": "342957783ee8a62d09455bf555c7e75c35d3b4dc6a94b5ea50f00bf473a9bce7",
+      "bytes": 176812
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/comparison-oblique.png",
+      "retained": "review/comparison-oblique.png",
+      "sha256": "7d1bc0b0c84970b721fa2ca9ea81ad063566fe5e2e9eb1ad0a6a1cd8d15ecc9f",
+      "bytes": 199051
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/comparison-raking.png",
+      "retained": "review/comparison-raking.png",
+      "sha256": "1db0ed4fad098a4a288f3695eba2d1c854a3fa2acb0bea4d6b5ae9980a18147a",
+      "bytes": 198110
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/comparison-side.png",
+      "retained": "review/comparison-side.png",
+      "sha256": "f7b336ba6c269ab9ba9bd6ffb5666be7cfe68892b600c80d8294015607d4a4b1",
+      "bytes": 56063
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/comparison-top.png",
+      "retained": "review/comparison-top.png",
+      "sha256": "49e68014a405a932fc113f787c5d0bc364cd3e61a66f793637fee4406e6a1238",
+      "bytes": 100318
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/native-correction-front.png",
+      "retained": "review/native-correction-front.png",
+      "sha256": "c6428d29fc3b5466b7f796d1fae04a1f73098937cf7d1626208ca2aca901d5f7",
+      "bytes": 85846
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/native-correction-oblique.png",
+      "retained": "review/native-correction-oblique.png",
+      "sha256": "821203a8e4bdae107eab803d68714574a65c24ca10ad73dfafbf0da8b12d3def",
+      "bytes": 82238
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/native-correction-raking.png",
+      "retained": "review/native-correction-raking.png",
+      "sha256": "27a852d99a747ec2a3845e3143757a5299e7b1ff6cc31093f7c6ed2302c6ece1",
+      "bytes": 84885
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/native-correction-side.png",
+      "retained": "review/native-correction-side.png",
+      "sha256": "086a6d2893d65d5957ca61d9f5b8571ff02c9583f7f8c083c725bd03b22fbb61",
+      "bytes": 21807
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/native-correction-top.png",
+      "retained": "review/native-correction-top.png",
+      "sha256": "c16b43bf22b114c59472d37d8bae2b3957b8b3c79882210f979a7455f0b6a5e3",
+      "bytes": 42142
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/original-9449-front.png",
+      "retained": "review/original-9449-front.png",
+      "sha256": "3913d18a5538ca9c41bb7b7a23798df434aa8fc191ff02e8d2f15508787f93ed",
+      "bytes": 73310
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/original-9449-oblique.png",
+      "retained": "review/original-9449-oblique.png",
+      "sha256": "0195e673d789e0fd38e1b58f86e3ef7e8cbb5e908125187d47e293e3d739aeaf",
+      "bytes": 63766
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/original-9449-raking.png",
+      "retained": "review/original-9449-raking.png",
+      "sha256": "efe3cf3b36bdf265a10b5747938de73719c2ab27212e7e7d0ceafa363402f7ae",
+      "bytes": 66617
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/original-9449-side.png",
+      "retained": "review/original-9449-side.png",
+      "sha256": "493e52aea256f7cdd5a470f0206eafbfc7cd816bb0f918a6dd87556abedf3556",
+      "bytes": 18619
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/original-9449-top.png",
+      "retained": "review/original-9449-top.png",
+      "sha256": "68fd221d54454ff9aced6726d15cbacf880c03f30b60dca4dad0f5a6ab0df860",
+      "bytes": 23610
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/rejected-8fa-front.png",
+      "retained": "review/rejected-8fa-front.png",
+      "sha256": "8746bc3b05cce598a4c5742e8505dee6fa2e35847f67ba3064c147ffc3f07443",
+      "bytes": 84964
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/rejected-8fa-oblique.png",
+      "retained": "review/rejected-8fa-oblique.png",
+      "sha256": "9bef7da75ee2e4547a0f8f7b971588bc45456f099a85373ac2037c0f047a6250",
+      "bytes": 82387
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/rejected-8fa-raking.png",
+      "retained": "review/rejected-8fa-raking.png",
+      "sha256": "ab14b02d96c8d75941ec56906597a9bd436b55e663dc0efd056371a407e7a4dd",
+      "bytes": 82894
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/rejected-8fa-side.png",
+      "retained": "review/rejected-8fa-side.png",
+      "sha256": "0cff71e6a0db501f5e9cfeb4d556aa6ba1891c93d8b246c9c432d5b44130606c",
+      "bytes": 21008
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/review/rejected-8fa-top.png",
+      "retained": "review/rejected-8fa-top.png",
+      "sha256": "2acb1cb6e393b86840c04f2534f8464290143161b0baf6ceebc194a5e8c5c862",
+      "bytes": 42978
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-first-review.md",
+      "retained": "opus/opus-first-review.md",
+      "sha256": "e8f76f3f115d62060a8bca10d03cf1fdf4984ee5a0ebc7a656db94c9c19c46e5",
+      "bytes": 4847
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-first-activity.json",
+      "retained": "opus/opus-first-activity.json",
+      "sha256": "0a14739d9fe7dd33a28080379ce152657f287593775def6846cb977bb8a57e4d",
+      "bytes": 12360
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-metadata-followup-review.md",
+      "retained": "opus/opus-metadata-followup-review.md",
+      "sha256": "73f640dfdf74f6e114ea5a2549a4da07e692ccb6e0c3a5243e25b511692287b6",
+      "bytes": 2540
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-metadata-followup-activity.json",
+      "retained": "opus/opus-metadata-followup-activity.json",
+      "sha256": "7ac8691f793685dc6a282073015d86d8471cf78de13471a5e793026bd9fd21da",
+      "bytes": 7779
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-native-review.md",
+      "retained": "opus/opus-native-review.md",
+      "sha256": "437eac424305acc4cf7a7b06e0c813152bbe0e40e0e94828ae51672918b8fc51",
+      "bytes": 3258
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-native-activity.json",
+      "retained": "opus/opus-native-activity.json",
+      "sha256": "37bdc1a721ec9260da09a05cfcf623c7299ab78da73491ecffcac494989c87f6",
+      "bytes": 7121
+    }
+  ]
+}

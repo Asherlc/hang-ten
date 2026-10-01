@@ -1,0 +1,273 @@
+{
+  "sourceSHA256": "40e42ed072a72946d11756cd6f92047fd0d5acd79eb33946cb2188441babbbde",
+  "silhouetteBezierSpansRightXZ": [
+    [
+      [
+        0,
+        222
+      ],
+      [
+        24,
+        222
+      ],
+      [
+        31,
+        189.3333333333
+      ],
+      [
+        47,
+        188
+      ]
+    ],
+    [
+      [
+        47,
+        188
+      ],
+      [
+        83,
+        185
+      ],
+      [
+        222,
+        162
+      ],
+      [
+        245,
+        162
+      ]
+    ],
+    [
+      [
+        245,
+        162
+      ],
+      [
+        267,
+        162
+      ],
+      [
+        278,
+        180
+      ],
+      [
+        294,
+        180
+      ]
+    ],
+    [
+      [
+        294,
+        180
+      ],
+      [
+        322,
+        180
+      ],
+      [
+        355.5,
+        156
+      ],
+      [
+        355.5,
+        134
+      ]
+    ],
+    [
+      [
+        355.5,
+        134
+      ],
+      [
+        355.5,
+        104
+      ],
+      [
+        288,
+        0
+      ],
+      [
+        261,
+        0
+      ]
+    ],
+    [
+      [
+        261,
+        0
+      ],
+      [
+        244,
+        0
+      ],
+      [
+        219,
+        7.65
+      ],
+      [
+        190,
+        12
+      ]
+    ],
+    [
+      [
+        190,
+        12
+      ],
+      [
+        110,
+        24
+      ],
+      [
+        56,
+        30.25
+      ],
+      [
+        31,
+        24
+      ]
+    ],
+    [
+      [
+        31,
+        24
+      ],
+      [
+        15,
+        20
+      ],
+      [
+        18,
+        18
+      ],
+      [
+        0,
+        18
+      ]
+    ]
+  ],
+  "transitionSections": [
+    {
+      "transition": "CenterShoulder",
+      "x": 35.0,
+      "floorZ": 145.0,
+      "edgeCount": 3,
+      "origin": "Exact analytic section of existing native shoulder shell, no mesh or imagery sampling"
+    },
+    {
+      "transition": "CenterShoulder",
+      "x": 37.0,
+      "floorZ": 145.0,
+      "edgeCount": 3,
+      "origin": "Exact analytic section of existing native shoulder shell, no mesh or imagery sampling"
+    },
+    {
+      "transition": "CenterShoulder",
+      "x": 63.0,
+      "floorZ": 145.0,
+      "edgeCount": 3,
+      "origin": "Exact analytic section of existing native shoulder shell, no mesh or imagery sampling"
+    },
+    {
+      "transition": "CenterShoulder",
+      "x": 65.0,
+      "floorZ": 145.0,
+      "edgeCount": 3,
+      "origin": "Exact analytic section of existing native shoulder shell, no mesh or imagery sampling"
+    },
+    {
+      "transition": "RoundFlat",
+      "x": 130.0,
+      "floorZ": 135.0,
+      "edgeCount": 3,
+      "origin": "Exact analytic section of existing native shoulder shell, no mesh or imagery sampling"
+    },
+    {
+      "transition": "RoundFlat",
+      "x": 132.0,
+      "floorZ": 135.0,
+      "edgeCount": 3,
+      "origin": "Exact analytic section of existing native shoulder shell, no mesh or imagery sampling"
+    },
+    {
+      "transition": "RoundFlat",
+      "x": 164.0,
+      "floorZ": 135.0,
+      "edgeCount": 3,
+      "origin": "Exact analytic section of existing native shoulder shell, no mesh or imagery sampling"
+    },
+    {
+      "transition": "RoundFlat",
+      "x": 166.0,
+      "floorZ": 135.0,
+      "edgeCount": 3,
+      "origin": "Exact analytic section of existing native shoulder shell, no mesh or imagery sampling"
+    },
+    {
+      "transition": "OuterShoulder",
+      "x": 238.0,
+      "floorZ": 135.0,
+      "edgeCount": 3,
+      "origin": "Exact analytic section of existing native shoulder shell, no mesh or imagery sampling"
+    },
+    {
+      "transition": "OuterShoulder",
+      "x": 240.0,
+      "floorZ": 135.0,
+      "edgeCount": 3,
+      "origin": "Exact analytic section of existing native shoulder shell, no mesh or imagery sampling"
+    },
+    {
+      "transition": "OuterShoulder",
+      "x": 276.0,
+      "floorZ": 135.0,
+      "edgeCount": 3,
+      "origin": "Exact analytic section of existing native shoulder shell, no mesh or imagery sampling"
+    },
+    {
+      "transition": "OuterShoulder",
+      "x": 278.0,
+      "floorZ": 135.0,
+      "edgeCount": 3,
+      "origin": "Exact analytic section of existing native shoulder shell, no mesh or imagery sampling"
+    }
+  ],
+  "depthFloorCorrections": [
+    {
+      "contactID": "pocket-4-left",
+      "floorTranslationMm": -2.6941594943956204
+    },
+    {
+      "contactID": "pocket-4-right",
+      "floorTranslationMm": -2.6941594817252223
+    }
+  ],
+  "allNewGeometryValues": "Operator-selected display estimates; exact native section loops use existing CAD only, no pixels or reference mesh",
+  "finalBody": "BodySolid",
+  "contactCount": 30,
+  "fullyConstrainedSketchCount": 140,
+  "rawManifestUnchanged": true,
+  "envelope": {
+    "manufacturerFaceMm": [
+      711,
+      222
+    ],
+    "authoredEstimatedThicknessMm": 94,
+    "measuredNativeEnvelopeXYZmm": [
+      711.0000002,
+      94.11832462653064,
+      222.0000002
+    ],
+    "thicknessStatus": "Retained audited display estimate; 0.1183 mm increase is not a manufacturer measurement"
+  },
+  "continuity": {
+    "silhouette": "All three native silhouette sketches closed with G1 joins",
+    "shoulders": "Positionally continuous local loft bridges; no blanket G1 roof claim",
+    "maximumReportedEndpointNormalDifferenceDegrees": 6.76976,
+    "symmetryMaximumDistanceMm": 9.4e-07,
+    "independentReports": [
+      "../independent-validation/continuity-check.json",
+      "../independent-validation/continuity-interior.json"
+    ]
+  }
+}

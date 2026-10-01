@@ -1,0 +1,13 @@
+{
+  "sourcePath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/metolius-simulator-3d.FCStd",
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "sectionsSHA256": "4f88ca366288597f47d498c748552e4eb48fbc22389e61f2999960a3c5c29534",
+  "nativeBodyMeshSHA256": "7b302b692526a61fe0a6a88711a2d0f05fe1f55daecb4c32e551c0bc8e671c2b",
+  "images": {
+    "grasp-review/high-front.png": "844a304c41696c67addd6108c6693e840fa074610c7245d3b7725245cc566420",
+    "grasp-review/native-grasp-sections.png": "e99670b51b3563e6b8ebb133cffff68417016bce23086507d1c21928967cb3be",
+    "grasp-review/rear-center.png": "077e9d7ba044a9cd87d4e89126adec3591fb30f64143e5a1e1f43cf013ee5506",
+    "grasp-review/rear-oblique.png": "3fb442401bba99776de9d8451717da88db12dcd52373261e6769084e05a55409"
+  },
+  "method": "Full native final-body and contact sections; orange is actual tagged contact. Whole native mesh views; no source-image processing."
+}

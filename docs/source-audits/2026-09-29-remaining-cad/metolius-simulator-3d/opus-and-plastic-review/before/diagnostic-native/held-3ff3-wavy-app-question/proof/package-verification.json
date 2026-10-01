@@ -1,0 +1,106 @@
+{
+  "original-9449": {
+    "triangleCount": 34634,
+    "nodeCount": 31,
+    "boundsNativeMm": {
+      "min": [
+        -355.5000126361847,
+        -93.99999678134922,
+        -2.5000000421559588e-14
+      ],
+      "max": [
+        355.5000126361847,
+        4.455062430312599e-16,
+        222.00000286102295
+      ]
+    },
+    "materialCount": 0,
+    "shaderCount": 0,
+    "hashes": {
+      "metolius-simulator-3d.FCStd": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+      "assets/primary.usdz": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+      "assets/primary.model.json": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e"
+    }
+  },
+  "intermediate-21ca3": {
+    "triangleCount": 252466,
+    "nodeCount": 31,
+    "boundsNativeMm": {
+      "min": [
+        -355.5000126361847,
+        -94.02291476726536,
+        -6.122750155472343e-15
+      ],
+      "max": [
+        355.5000126361847,
+        4.455062430312599e-16,
+        222.00000286102295
+      ]
+    },
+    "materialCount": 0,
+    "shaderCount": 0,
+    "hashes": {
+      "metolius-simulator-3d.FCStd": "21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d",
+      "assets/primary.usdz": "c3b3e1f928cbfd56fd9ab8b81701957fe2ccd1046bf7d58a7fdf78dba9731dba",
+      "assets/primary.model.json": "d02cb51501188cb004eb18609f6b08722c4b2aec2df5ae44bb57f8d1669a7520"
+    }
+  },
+  "candidate": {
+    "triangleCount": 86039,
+    "nodeCount": 31,
+    "boundsNativeMm": {
+      "min": [
+        -355.5000126361847,
+        -93.99999678134922,
+        -6.122750155472343e-15
+      ],
+      "max": [
+        355.5000126361847,
+        3.7543287820974895e-16,
+        221.99988365173337
+      ]
+    },
+    "materialCount": 0,
+    "shaderCount": 0,
+    "hashes": {
+      "metolius-simulator-3d.FCStd": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+      "assets/primary.usdz": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+      "assets/primary.model.json": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df"
+    }
+  },
+  "reviewViews": [
+    "front",
+    "side",
+    "top",
+    "oblique",
+    "raking"
+  ],
+  "renderer": "Shared preview.py Lambert triangle-face rendering at matching view and size; oblique applies fixed orthographic rotation.",
+  "images": {
+    "export-review/candidate-front.png": "1e952c3a45d8409d37f19d45cdfef846c5922c2694ca068e548524d731eef35a",
+    "export-review/candidate-oblique.png": "070fa690b0c062a82457493b1806131c3a552c09fb0aea4653bca5b107d06afe",
+    "export-review/candidate-raking.png": "767148c4e4cae73b6d178f65666249504ae2f6ede9993023853eae86d345b033",
+    "export-review/candidate-side.png": "b9c5788f983fed856c4c2c018e761d2d9020a0b4079db1329b8bf29b03f92136",
+    "export-review/candidate-top.png": "4ffe16c07c91d5ac7f0f1de10379fd669345d51e5e29db548fc3e854fbc121d2",
+    "export-review/comparison-front.png": "161c8127559f24ef1191933609770aea22e9d37d399449fa79d52d5759be6036",
+    "export-review/comparison-oblique.png": "45a52eaf0c02f9aba03d16760d4603bfe04ecb3f189d8173d4d7948a236f37b1",
+    "export-review/comparison-raking.png": "463492ce4a00af3a5964a0e2f6b5e2bfa881ababbf5a5db0627231b91d8c0834",
+    "export-review/comparison-side.png": "e9ef7361cb4ca0cf242012866f031ad7f13654cd66523a9763f6e0beeef37ab4",
+    "export-review/comparison-top.png": "aaadc1358316ca8061d26db9b3bb80f5c7b66044b426c514ccba4b0ff8443333",
+    "export-review/intermediate-21ca3-front.png": "961e63e968a74c723fb9131d86619d6377816b20c2c4e5eb183de2c57b31fd4e",
+    "export-review/intermediate-21ca3-oblique.png": "277921f0bb11032f916f4e83f9411891ec741be71206f0a9974f8dbe9706e8d8",
+    "export-review/intermediate-21ca3-raking.png": "64434fc19db3df0df14ea7d3b732c632783f306e6f9661532f8695a1d5ae968b",
+    "export-review/intermediate-21ca3-side.png": "28a8fb60a2350867ea0969ec309285ed766e8cff331cbb23aba33e159e35252f",
+    "export-review/intermediate-21ca3-top.png": "84dfc238e18b07497a123421b318b8846dbc37da53fe82af107460ae08efe59d",
+    "export-review/original-9449-front.png": "3913d18a5538ca9c41bb7b7a23798df434aa8fc191ff02e8d2f15508787f93ed",
+    "export-review/original-9449-oblique.png": "0195e673d789e0fd38e1b58f86e3ef7e8cbb5e908125187d47e293e3d739aeaf",
+    "export-review/original-9449-raking.png": "efe3cf3b36bdf265a10b5747938de73719c2ab27212e7e7d0ceafa363402f7ae",
+    "export-review/original-9449-side.png": "493e52aea256f7cdd5a470f0206eafbfc7cd816bb0f918a6dd87556abedf3556",
+    "export-review/original-9449-top.png": "68fd221d54454ff9aced6726d15cbacf880c03f30b60dca4dad0f5a6ab0df860"
+  },
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+  "descriptorSHA256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+  "status": "pass",
+  "scope": "Exact source/export provenance, mesh/material inventory and full technical preview rendering; independent mesh and actual-app gates separate"
+}

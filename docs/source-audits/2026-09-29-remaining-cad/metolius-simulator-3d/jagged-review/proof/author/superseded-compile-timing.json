@@ -1,0 +1,8 @@
+{
+  "atUTC": "2026-10-01T14:07:18.018735+00:00",
+  "reason": "Parent-authorized local native profile compaction; expensive source representation superseded before handoff",
+  "terminatedOwnedProcesses": [
+    "67048 18:08  17:18.74 /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-jagged/native-author/tmp/hangten-freecad-d4vtf3b0/run.py",
+    "81961 07:07   6:47.02 /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-jagged/native-author/export-run/tmp/hangten-freecad-p4ftdc6q/run.py"
+  ]
+}

@@ -1,0 +1,244 @@
+{
+  "status": "pass",
+  "scope": "Completed author-owned native jobs only; no exports started",
+  "resources": [
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-ownership.json",
+      "processGroup": 10139,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v10-ownership.json",
+      "processGroup": 54223,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v10-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v2-ownership.json",
+      "processGroup": 25232,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v2-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v3-ownership.json",
+      "processGroup": 26233,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v3-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v4-ownership.json",
+      "processGroup": 29442,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v4-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v5-ownership.json",
+      "processGroup": 30984,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v5-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v6-ownership.json",
+      "processGroup": 35624,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v6-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v7-ownership.json",
+      "processGroup": 40308,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v7-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v8-ownership.json",
+      "processGroup": 48249,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v8-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v9-ownership.json",
+      "processGroup": 48384,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v9-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/contact-clip-probe-ownership.json",
+      "processGroup": 16979,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/contact-clip-probe-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/contact-clip-probe-v2-ownership.json",
+      "processGroup": 17278,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/contact-clip-probe-v2-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/curve-refit-probe-ownership.json",
+      "processGroup": 24265,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/curve-refit-probe-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/final-native-sections-ownership.json",
+      "processGroup": 12341,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/final-native-sections-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/final-native-sections-v10-ownership.json",
+      "processGroup": 66360,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/final-native-sections-v10-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/final-native-sections-v7-ownership.json",
+      "processGroup": 44742,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/final-native-sections-v7-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/final-root-check-ownership.json",
+      "processGroup": 44754,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/final-root-check-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/final-root-check-v10-ownership.json",
+      "processGroup": 66361,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/final-root-check-v10-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/native-contacts-ownership.json",
+      "processGroup": 11557,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/native-contacts-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/native-contacts-v10-ownership.json",
+      "processGroup": 64670,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/native-contacts-v10-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/native-contacts-v7-ownership.json",
+      "processGroup": 41374,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/native-contacts-v7-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/normal-comparison-ownership.json",
+      "processGroup": 67708,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/normal-comparison-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/nose-seam-check-ownership.json",
+      "processGroup": 51579,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/nose-seam-check-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/nose-seam-check-v10-ownership.json",
+      "processGroup": 64364,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/nose-seam-check-v10-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/orientation-diagnosis-ownership.json",
+      "processGroup": 19594,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/orientation-diagnosis-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/refine-bop-probe-ownership.json",
+      "processGroup": 52567,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/refine-bop-probe-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/repaired-root-check-ownership.json",
+      "processGroup": 39450,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/repaired-root-check-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/repaired-root-check-v10-ownership.json",
+      "processGroup": 64363,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/repaired-root-check-v10-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/repaired-root-check-v7-ownership.json",
+      "processGroup": 41074,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/repaired-root-check-v7-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/repaired-root-check-v9-ownership.json",
+      "processGroup": 51567,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/repaired-root-check-v9-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/root-contact-diagnosis-ownership.json",
+      "processGroup": 16465,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/root-contact-diagnosis-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/sequential-clip-probe-ownership.json",
+      "processGroup": 23528,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/sequential-clip-probe-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/solid-clip-probe-ownership.json",
+      "processGroup": 17625,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/solid-clip-probe-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/solid-clip-probe-v2-ownership.json",
+      "processGroup": 18083,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/solid-clip-probe-v2-tmp",
+      "tempAbsent": true
+    }
+  ]
+}

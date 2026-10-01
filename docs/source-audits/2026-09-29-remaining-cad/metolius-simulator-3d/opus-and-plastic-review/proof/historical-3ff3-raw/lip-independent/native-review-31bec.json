@@ -1,0 +1,48 @@
+{
+  "status": "blocked",
+  "sourceSHA256": "31bec0595a7f05a3ea761dc1f7202547be47f90262062026cb16dd7d56d10030",
+  "blockingFindings": [
+    {
+      "location": "cap-to-nose join Y=-80, off-station X=15 mm",
+      "epsilonMM": 0.0001,
+      "heightDifferenceMM": 0.16446457091285538,
+      "unchangedGateMM": 0.002
+    },
+    {
+      "location": "cap-to-nose join Y=-80, off-station X=38 mm",
+      "epsilonMM": 0.0001,
+      "heightDifferenceMM": 0.027407243705738438,
+      "unchangedGateMM": 0.002
+    }
+  ],
+  "passed": [
+    "30 contacts and pairwise nonoverlap",
+    "27 published support depths",
+    "Exact plastic logical manifest",
+    "711 by222 mm face envelope",
+    "Single ordinary-valid final native solid",
+    "14\u219216\u219214 original strict scalar volume restore",
+    "Explicit mirrored X47 contact membership",
+    "Mirrored root carrier strict BOP",
+    "Sampled upper jug roll membership",
+    "No sampled horizontal nose roof shelf",
+    "Flat-roll sampled positional joins",
+    "55/65 mm sloper spans anchored at actual forward body edge",
+    "Center jug forward crest, lower rear return and actual curved contact samples",
+    "Mirror section witnesses and #15 physical50 mm depth"
+  ],
+  "limits": [
+    "Off-station finite nose seams remain an authoring blocker; no tolerance waiver.",
+    "Missing sampled normals at a few seam probes prevent a blanket G1 claim.",
+    "Export and actual app validation pending; source is not ready for human acceptance.",
+    "Current measured display thickness94.00130745mm remains an estimate."
+  ],
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-check.json": "42a4fa1b37de453ee0c1fda4ca4bb5d563caefed0472da4953f7c91945f61928",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/local-contact-joins.json": "774e9646361336137ff918ade45ac402f69f0e6d8a8277d6405f185b11774d0b",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-check-ownership.json": "6a116561580f96cabe4b9ad409022eef64b11d72cdd35c91e5fad617876015f6",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/local-contact-joins-ownership.json": "c7577fdad8959b9d6781c19f63af58dbd8d7cb95eac9876b93404359c78400e1",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/functional-sections.json": "1e6c566a6706dc88accf1bb884e120e8e308aafb7028e17476511353f3462cec",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/functional-sections-ownership.json": "aed3e3259469685a6aac2519e7293f8823a2080a6f885afb3714d90c4b5ad8e7"
+  }
+}

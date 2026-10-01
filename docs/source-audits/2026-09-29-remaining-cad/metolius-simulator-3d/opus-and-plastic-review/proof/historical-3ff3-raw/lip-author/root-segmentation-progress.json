@@ -1,0 +1,58 @@
+[
+  {
+    "x": 45.5,
+    "method": "Separate native loft roof faces at Y=-80; exact source-surface isocurves at authored X stations, no plane-intersection approximation",
+    "roofEdges": 2,
+    "degrees": [
+      3,
+      3
+    ],
+    "poles": [
+      8,
+      11
+    ],
+    "junctionGapMm": 8.548340702161252e-09
+  },
+  {
+    "x": 45.7,
+    "method": "Separate native loft roof faces at Y=-80; exact source-surface isocurves at authored X stations, no plane-intersection approximation",
+    "roofEdges": 2,
+    "degrees": [
+      3,
+      3
+    ],
+    "poles": [
+      8,
+      11
+    ],
+    "junctionGapMm": 1.1348276984829568e-08
+  },
+  {
+    "x": 59.5,
+    "method": "Separate native loft roof faces at Y=-80; exact source-surface isocurves at authored X stations, no plane-intersection approximation",
+    "roofEdges": 2,
+    "degrees": [
+      3,
+      3
+    ],
+    "poles": [
+      4,
+      4
+    ],
+    "junctionGapMm": 0.0
+  },
+  {
+    "x": 61.0,
+    "method": "Separate native loft roof faces at Y=-80; exact source-surface isocurves at authored X stations, no plane-intersection approximation",
+    "roofEdges": 2,
+    "degrees": [
+      3,
+      3
+    ],
+    "poles": [
+      4,
+      4
+    ],
+    "junctionGapMm": 0.0
+  }
+]

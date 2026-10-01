@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "one-by-one review in progress: first seven shown revisions accepted; Metolius Simulator 3-D review #8 is being refined after jagged feedback",
+  "reviewState": "one-by-one review in progress: first eight shown revisions accepted; Nature Climbing Stone Hanger is review #9",
   "boards": [
     {
       "number": 1,
@@ -223,27 +223,41 @@
       "package": "metolius-simulator-3d",
       "boardID": "metolius.simulator-3d",
       "name": "Metolius Simulator 3-D",
-      "humanReview": "awaiting revision for one-by-one review #8: jagged geometry feedback",
-      "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
-      "reviewPage": "metolius-simulator-3d/source-audit.md",
+      "humanReview": "reviewed; corrected Simulator geometry and plastic display accepted",
+      "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+      "reviewPage": "metolius-simulator-3d/accepted-review.md",
       "sourceAudit": "metolius-simulator-3d/source-audit.md",
       "comparisons": [
-        "metolius-simulator-3d/review/comparison-side.png",
-        "metolius-simulator-3d/review/comparison-top.png",
-        "metolius-simulator-3d/review/comparison-front.png"
+        "metolius-simulator-3d/opus-and-plastic-review/original-front-side-top-comparison.png",
+        "metolius-simulator-3d/opus-and-plastic-review/neutral-front-side-top-comparison.png",
+        "metolius-simulator-3d/opus-and-plastic-review/front-fairing-front-side-top-comparison.png",
+        "metolius-simulator-3d/opus-and-plastic-review/exact-export-front-side-top-comparison.png",
+        "metolius-simulator-3d/opus-and-plastic-review/fairing-exact-export-front-side-top-comparison.png",
+        "metolius-simulator-3d/opus-and-plastic-review/app-before-after.png",
+        "metolius-simulator-3d/opus-and-plastic-review/app-front-fairing-before-after.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e",
-          "modelSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16"
+          "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+          "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b"
         }
       },
-      "appReview": "metolius-simulator-3d/app-review/validation.json",
-      "appReviewPage": "metolius-simulator-3d/app-review/index.html",
+      "appReview": "metolius-simulator-3d/opus-and-plastic-review/app/after/validation.json",
+      "appReviewPage": "metolius-simulator-3d/opus-and-plastic-review/index.html",
       "humanReviewRecord": "metolius-simulator-3d/human-review.json",
       "reviewFeedback": [
-        "Jagged"
-      ]
+        "Jagged",
+        "It should be tagged as plastic so it gets colored",
+        "And ask opus for its take",
+        "center jug has a weird ridge going down the back ... impossible to grab onto",
+        "sloper should extend all the way forward",
+        "why does it look kind of... wavy?"
+      ],
+      "latestRevision": "metolius-simulator-3d/opus-and-plastic-review/review.md",
+      "runtimeRevision": "metolius-simulator-3d/opus-and-plastic-review/runtime-validation.json",
+      "reviewAnswer": "lgtm",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed corrected Simulator 3-D, including its smooth front taper, forward center-jug crest and rear return, forward-reaching slopers, and existing plastic appearance."
     },
     {
       "number": 9,

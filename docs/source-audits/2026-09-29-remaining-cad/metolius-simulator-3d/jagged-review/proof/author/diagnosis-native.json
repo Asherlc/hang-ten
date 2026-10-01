@@ -1,0 +1,355 @@
+{
+  "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+  "nativeValid": true,
+  "nativeFaceCount": 348,
+  "tessellationDeflectionMm": 0.28,
+  "analyticNormalsEnabled": true,
+  "silhouetteJoinMeasurements": [
+    {
+      "edge": 0,
+      "joinXZ": [
+        47.0,
+        188.0
+      ],
+      "tangentDiscontinuityDegrees": 72.97158458138142
+    },
+    {
+      "edge": 1,
+      "joinXZ": [
+        245.0,
+        162.0
+      ],
+      "tangentDiscontinuityDegrees": 16.562360379546025
+    },
+    {
+      "edge": 2,
+      "joinXZ": [
+        294.0,
+        180.0
+      ],
+      "tangentDiscontinuityDegrees": 3.758555685471942
+    },
+    {
+      "edge": 3,
+      "joinXZ": [
+        355.5,
+        134.0
+      ],
+      "tangentDiscontinuityDegrees": 33.744422674755604
+    },
+    {
+      "edge": 4,
+      "joinXZ": [
+        261.0,
+        0.0
+      ],
+      "tangentDiscontinuityDegrees": 43.91907581333932
+    },
+    {
+      "edge": 5,
+      "joinXZ": [
+        190.0,
+        12.0
+      ],
+      "tangentDiscontinuityDegrees": 0.6774523079690424
+    },
+    {
+      "edge": 6,
+      "joinXZ": [
+        31.0,
+        24.0
+      ],
+      "tangentDiscontinuityDegrees": 4.9392155421262265
+    },
+    {
+      "edge": 7,
+      "joinXZ": [
+        0.0,
+        18.0
+      ],
+      "tangentDiscontinuityDegrees": 0.0
+    },
+    {
+      "edge": 8,
+      "joinXZ": [
+        -31.0,
+        24.0
+      ],
+      "tangentDiscontinuityDegrees": 4.9392155421262265
+    },
+    {
+      "edge": 9,
+      "joinXZ": [
+        -190.0,
+        12.0
+      ],
+      "tangentDiscontinuityDegrees": 0.6774523079690424
+    },
+    {
+      "edge": 10,
+      "joinXZ": [
+        -261.0,
+        0.0
+      ],
+      "tangentDiscontinuityDegrees": 43.91907581333932
+    },
+    {
+      "edge": 11,
+      "joinXZ": [
+        -355.5,
+        134.0
+      ],
+      "tangentDiscontinuityDegrees": 33.744422674755604
+    },
+    {
+      "edge": 12,
+      "joinXZ": [
+        -294.0,
+        180.0
+      ],
+      "tangentDiscontinuityDegrees": 3.758555685471942
+    },
+    {
+      "edge": 13,
+      "joinXZ": [
+        -245.0,
+        162.0
+      ],
+      "tangentDiscontinuityDegrees": 16.562360379546025
+    },
+    {
+      "edge": 14,
+      "joinXZ": [
+        -47.0,
+        188.0
+      ],
+      "tangentDiscontinuityDegrees": 72.97158458138142
+    },
+    {
+      "edge": 15,
+      "joinXZ": [
+        0.0,
+        222.0
+      ],
+      "tangentDiscontinuityDegrees": 0.0
+    }
+  ],
+  "roofSectionJumps": [
+    {
+      "x": 47,
+      "y": -10,
+      "leftTopZ": 188.04590460685787,
+      "rightTopZ": 187.83127888422044,
+      "heightJumpMm": 0.21462572263743596
+    },
+    {
+      "x": 47,
+      "y": -40,
+      "leftTopZ": 188.04590460685787,
+      "rightTopZ": 184.8238662378066,
+      "heightJumpMm": 3.222038369051262
+    },
+    {
+      "x": 47,
+      "y": -55,
+      "leftTopZ": 188.0459046068579,
+      "rightTopZ": 180.68788208087565,
+      "heightJumpMm": 7.35802252598225
+    },
+    {
+      "x": 47,
+      "y": -65,
+      "leftTopZ": 188.04590460685787,
+      "rightTopZ": 170.99900990099047,
+      "heightJumpMm": 17.046894705867402
+    },
+    {
+      "x": 148,
+      "y": -10,
+      "leftTopZ": 177.83325908224023,
+      "rightTopZ": 176.27136363636365,
+      "heightJumpMm": 1.561895445876587
+    },
+    {
+      "x": 148,
+      "y": -40,
+      "leftTopZ": 174.8258464358264,
+      "rightTopZ": 171.08954545454546,
+      "heightJumpMm": 3.736300981280948
+    },
+    {
+      "x": 148,
+      "y": -55,
+      "leftTopZ": 170.68986227889545,
+      "rightTopZ": 168.4986363636362,
+      "heightJumpMm": 2.1912259152592526
+    },
+    {
+      "x": 148,
+      "y": -65,
+      "leftTopZ": 161.00099009900953,
+      "rightTopZ": 158.92759740259743,
+      "heightJumpMm": 2.0733926964120997
+    },
+    {
+      "x": 258,
+      "y": -10,
+      "leftTopZ": 161.27409090909092,
+      "rightTopZ": 166.44968710154387,
+      "heightJumpMm": 5.175596192452957
+    },
+    {
+      "x": 258,
+      "y": -40,
+      "leftTopZ": 156.09227272727273,
+      "rightTopZ": 166.44968710154387,
+      "heightJumpMm": 10.357414374271144
+    },
+    {
+      "x": 258,
+      "y": -55,
+      "leftTopZ": 153.50136363636378,
+      "rightTopZ": 166.44968710154387,
+      "heightJumpMm": 12.948323465180096
+    },
+    {
+      "x": 258,
+      "y": -65,
+      "leftTopZ": 148.21525974025974,
+      "rightTopZ": 166.44968710154387,
+      "heightJumpMm": 18.234427361284133
+    }
+  ],
+  "verticalRoofStepFaces": [
+    {
+      "face": 3,
+      "x": 47.0,
+      "area": 8.521878293558823,
+      "zRange": [
+        185.12079606270075,
+        188.0
+      ],
+      "yRange": [
+        -5.884018729209423,
+        4.263e-14
+      ]
+    },
+    {
+      "face": 10,
+      "x": -258.0,
+      "area": 981.5735404680263,
+      "zRange": [
+        142.71594230023672,
+        166.45034604257017
+      ],
+      "yRange": [
+        -92.848472642383,
+        4.263e-14
+      ]
+    },
+    {
+      "face": 23,
+      "x": 258.0,
+      "area": 981.573540461826,
+      "zRange": [
+        142.71594230023672,
+        166.4503460424206
+      ],
+      "yRange": [
+        -92.84847264229121,
+        4.263e-14
+      ]
+    },
+    {
+      "face": 26,
+      "x": 47.0,
+      "area": 985.2007852593711,
+      "zRange": [
+        150.23905847313551,
+        188.01062167171634
+      ],
+      "yRange": [
+        -94.0,
+        -2.923627486768022
+      ]
+    },
+    {
+      "face": 28,
+      "x": 148.0,
+      "area": 205.51119402985114,
+      "zRange": [
+        145.0,
+        178.0
+      ],
+      "yRange": [
+        -80.0,
+        2.8298693734589804e-15
+      ]
+    },
+    {
+      "face": 31,
+      "x": -47.0,
+      "area": 8.521878293558862,
+      "zRange": [
+        185.12079606270075,
+        188.0
+      ],
+      "yRange": [
+        -5.884018729209423,
+        4.263e-14
+      ]
+    },
+    {
+      "face": 32,
+      "x": -47.00000000000001,
+      "area": 985.2007852593706,
+      "zRange": [
+        150.23905847313551,
+        188.01062167171634
+      ],
+      "yRange": [
+        -94.0,
+        -2.923627486768022
+      ]
+    },
+    {
+      "face": 59,
+      "x": -148.0,
+      "area": 205.51119402985114,
+      "zRange": [
+        145.0,
+        178.0
+      ],
+      "yRange": [
+        -80.0,
+        2.8298693734589804e-15
+      ]
+    },
+    {
+      "face": 324,
+      "x": 28.5,
+      "area": 240.0,
+      "zRange": [
+        166.5,
+        171.5
+      ],
+      "yRange": [
+        -92.0000001,
+        -44.000000099999994
+      ]
+    },
+    {
+      "face": 326,
+      "x": -28.5,
+      "area": 240.0,
+      "zRange": [
+        166.5,
+        171.5
+      ],
+      "yRange": [
+        -92.0000001,
+        -44.000000099999994
+      ]
+    }
+  ]
+}

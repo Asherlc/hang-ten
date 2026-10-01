@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "functional-sections-3ff3",
+  "timeoutSeconds": 180,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/check_functional_sections.py",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/metolius-simulator-3d.FCStd",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/functional-sections-3ff3.json"
+  ],
+  "ownedProcessGroup": 67189,
+  "exitCode": 0,
+  "elapsedSeconds": 42.49478641699534,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

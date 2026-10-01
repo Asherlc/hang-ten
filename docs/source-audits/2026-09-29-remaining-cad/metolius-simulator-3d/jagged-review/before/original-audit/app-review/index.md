@@ -1,0 +1,13 @@
+# Metolius Simulator 3-D: app review
+
+Captured in the isolated iPhone 17 Pro simulator on iOS 26.5. Geometry acceptance is pending our one-by-one review.
+
+![jug-1-left](default.png)
+
+jug-1-left; DEBUG initial hold.
+
+![pocket-4-right](contact-selection.png)
+
+pocket-4-right; DEBUG contact review route.
+
+[Exact model hashes and validation](validation.json).

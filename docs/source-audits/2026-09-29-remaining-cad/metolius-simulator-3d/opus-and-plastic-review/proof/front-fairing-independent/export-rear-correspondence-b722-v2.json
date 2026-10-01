@@ -1,0 +1,12 @@
+{
+  "status": "pass",
+  "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "nativeBodyMeshSHA256": "7d5e212155ad184a77946b0074ef166b0997a86ddf11e4a6521c54388716b495",
+  "nativeRearFacets": 583,
+  "exportRearFacets": 583,
+  "missingNativeFacetsAfterExactUSDfloat32Encoding": 0,
+  "unexpectedExportFacets": 0,
+  "maximumNativeVertexFloat32EncodingErrorMM": 1.6242739816924473e-05,
+  "method": "Compare every rear triangle by its three unordered local vertices after the actual writer conversion (native mm * .001 cast to float32). Exact multiset equality verifies the whole rear plate; no positional weld or geometry mutation.",
+  "interpretation": "The sub-.003 mm\u00b2 unquantized planar-union differences are float32 boundary displacement, not missing rear triangles."
+}

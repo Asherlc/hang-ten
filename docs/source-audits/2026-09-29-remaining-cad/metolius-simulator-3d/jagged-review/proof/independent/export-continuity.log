@@ -1,0 +1,12 @@
+{
+  "status": "fail",
+  "blockingFindings": [
+    "finite exported roof step 63/-65: -0.016663983510448413"
+  ],
+  "modelSHA256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+  "nativeSourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+  "nativeCheckSHA256": "8de1d07ecf4a529431c8eb245a51c2120a3033226ba4e32d0e0667b4d1d67b8f",
+  "maxNativeDeviationMM": 0.18996232930578572,
+  "maxExtrapolatedStepMM": 0.016663983510448413,
+  "limits": "Local vertical ray/triangle sections compare actual exported geometry with native solid and prior asset; interpolated authored vertex normals quantify local shading continuity. No global C1/C2 or physical surface certification."
+}

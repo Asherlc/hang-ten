@@ -1,0 +1,19 @@
+{
+  "status": "pass",
+  "sourceSHA256": "21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d",
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "trianglesCompared": 62,
+  "cornersCompared": 186,
+  "allPositionsExact": true,
+  "maxNormalAngleDegrees": 2.9710832210994712e-05,
+  "legacySeconds": 0.4388242500135675,
+  "uvSeconds": 3.3888152500148863,
+  "categoryCounts": {
+    "heavy-face interior": 60,
+    "heavy-face spatial boundary": 54,
+    "legacy fallback boundary": 72
+  }
+}
+
+								
+								

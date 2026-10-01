@@ -1,0 +1,33 @@
+{
+  "status": "prepared-not-run",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "requiredFrozenInputs": [
+    "candidate source with exact b722 hash",
+    "new USDZ and matching descriptor hashes from author",
+    "final native body mesh + source-bound provenance"
+  ],
+  "gates": {
+    "exportFactsMM": 0.001,
+    "surfaceCoverageEuclideanMM": 0.28,
+    "bodyContactRayGapMM": 0.002,
+    "unitNormalSquaredLengthError": 0.0001,
+    "normalizedContactBoundsError": 5e-09,
+    "descriptorRuntimeModelBoundsErrorM": 1e-09,
+    "unrelatedPackageFiles": 203
+  },
+  "note": "Export-facts tolerance tightened to requested.001mm; previousnativechecks remain unchanged. VerticalZray differences on steepfaces arediagnostic; properEuclideandistance enforces unchanged.28mmdeflection.",
+  "diagnostics": [
+    "Exactwelded semantic topology",
+    "Normal-corner winding discrepancies witharea/locations",
+    "Finite wholemesh coverage inbothdirections"
+  ],
+  "lifecycle": "Each hostjob runs under exactowned processgroup with boundedtimeout, unconditionalgroupkill/reap andworkspaceTMPDIR deletion. No exports ornativechecks run duringpreparation.",
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_candidate.py": "47c4086815548618b935d5fd530d000b7632dd78a78da9a25a0953d555a03aea",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_export_facts.py": "0cb7172536b7e3a858c3e6f0a8654052937d631e9dd5cf91e1fd27db425fbaaf",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_export_functional_sections.py": "dc0afca732f75c294a22d2a5ae5884fd66ee900ed3c6727a6ee4e7ec89d31c3d",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_export_coverage.py": "4e4c865172a16c3eafa0f205a3c2c17680ff0b1316c6568147cd0fbbc3793d97",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_export_mesh_topology.py": "5d2de8c2f55751dd635df0a1d84a945e16034597d86cf1187ef9a277753bd6fe",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/run_host_bounded.py": "0b42b8652459ccdcdee2ada2d77cf35ba4ec2ded286423d8c3449fb5e336496b"
+  }
+}

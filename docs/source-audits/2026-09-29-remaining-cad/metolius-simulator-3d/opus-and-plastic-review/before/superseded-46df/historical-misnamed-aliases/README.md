@@ -1,0 +1,1 @@
+These historical misnamed aliases contain INTERMEDIATE 21ca3 geometry / c3b3 USDZ, not 8fa geometry. They were left by an early folder-label rename. Retained as raw history only; excluded from current review evidence. Actual 8fa before remains in the immutable jagged packet.

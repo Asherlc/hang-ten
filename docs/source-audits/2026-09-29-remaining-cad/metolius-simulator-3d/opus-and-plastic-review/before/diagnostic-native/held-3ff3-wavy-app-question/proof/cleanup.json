@@ -1,0 +1,32 @@
+{
+  "status": "pass",
+  "workspaceOwner": "placid-badger",
+  "scope": "All three completed author-owned compiler groups and exact temporary directories; raw logs and reports retained",
+  "resources": [
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile-ownership.json",
+      "processGroup": 74486,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile-check-ownership.json",
+      "processGroup": 74485,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile-check-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/reproduce-ownership.json",
+      "processGroup": 74484,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/reproduce-tmp",
+      "tempAbsent": true
+    }
+  ],
+  "priorNativeCleanup": {
+    "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/native-stage-cleanup.json",
+    "sha256": "a0881da159c7d2a20b0a63e524be125e72afe7955ae2f0326431fb8475b68a3f"
+  }
+}

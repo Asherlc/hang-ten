@@ -1,0 +1,19 @@
+{
+  "owner": "placid-badger",
+  "recordedAtUTC": "2026-10-01T15:51:54.023294+00:00",
+  "status": "deferred-preparation-ready",
+  "scriptSHA256": "b3be7af6906df19084ea7130ecd843e2718ff66c1ea3a4e4be144f9cfa6c33a5",
+  "configSHA256": "9792d750d216d10d708537318b0e0e02ccb3e41260109e746037366c33aeb2da",
+  "neutralPacketFilesPinned": 362,
+  "plasticIntermediateSourceSHA256": "3c516ec27da90e124fd8397470cbba0f127d5929a1fa49c62c4c611992570777",
+  "checks": {
+    "selfTestPassed": true,
+    "syntaxPassed": true,
+    "unsetCandidateBuildFailedClosed": true,
+    "stageAbsent": true,
+    "plannedTrackedUpdatesAbsent": true
+  },
+  "trackedMutation": false,
+  "externalResources": [],
+  "limits": "Preparation only; no final geometry, export, app, test, cleanup or Opus completion claim."
+}

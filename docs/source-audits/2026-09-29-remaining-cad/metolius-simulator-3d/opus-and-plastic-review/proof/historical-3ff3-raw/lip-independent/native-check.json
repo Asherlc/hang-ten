@@ -1,0 +1,257 @@
+{
+  "status": "pass",
+  "blockingFindings": [],
+  "sourceSHA256": "31bec0595a7f05a3ea761dc1f7202547be47f90262062026cb16dd7d56d10030",
+  "envelopeXYZMM": [
+    711.0000002,
+    94.00130745451439,
+    222.00000010067734
+  ],
+  "publishedDepthChecks": {
+    "pocket-4-left": {
+      "expected": 30,
+      "actual": 30.000000000000014
+    },
+    "edge-5-left": {
+      "expected": 25,
+      "actual": 24.999999999999993
+    },
+    "edge-6-left": {
+      "expected": 19,
+      "actual": 19.0
+    },
+    "edge-7-left": {
+      "expected": 36,
+      "actual": 36.000000000000014
+    },
+    "pocket-8-left": {
+      "expected": 15,
+      "actual": 15.0
+    },
+    "pocket-9-left": {
+      "expected": 35,
+      "actual": 35.00000000638301
+    },
+    "pocket-10-left": {
+      "expected": 17,
+      "actual": 17.0
+    },
+    "edge-11-left": {
+      "expected": 14,
+      "actual": 13.999999999954564
+    },
+    "pocket-12-left": {
+      "expected": 30,
+      "actual": 30.000000000350276
+    },
+    "pocket-13-left": {
+      "expected": 14,
+      "actual": 13.999910191304085
+    },
+    "pocket-15-center": {
+      "expected": 50,
+      "actual": 50.000000199999995
+    },
+    "pocket-16-center": {
+      "expected": 37,
+      "actual": 37.00000000000001
+    },
+    "pocket-17-center": {
+      "expected": 28,
+      "actual": 27.999999999999996
+    },
+    "pocket-18-center": {
+      "expected": 32,
+      "actual": 32.00000000000001
+    },
+    "pocket-13-right": {
+      "expected": 14,
+      "actual": 13.999997991935292
+    },
+    "pocket-12-right": {
+      "expected": 30,
+      "actual": 30.000000001795733
+    },
+    "edge-11-right": {
+      "expected": 14,
+      "actual": 13.999999997784006
+    },
+    "pocket-10-right": {
+      "expected": 17,
+      "actual": 17.0
+    },
+    "pocket-9-right": {
+      "expected": 35,
+      "actual": 34.999999999979956
+    },
+    "pocket-8-right": {
+      "expected": 15,
+      "actual": 15.000000000000014
+    },
+    "edge-7-right": {
+      "expected": 36,
+      "actual": 35.99999999999995
+    },
+    "edge-6-right": {
+      "expected": 19,
+      "actual": 18.999999999999993
+    },
+    "edge-5-right": {
+      "expected": 25,
+      "actual": 25.0
+    },
+    "pocket-4-right": {
+      "expected": 30,
+      "actual": 30.0
+    },
+    "flat-sloper-2-left": {
+      "expected": 55,
+      "actual": 55.00000020000005
+    },
+    "flat-sloper-2-right": {
+      "expected": 55,
+      "actual": 55.00000020000005
+    },
+    "round-sloper-3-center": {
+      "expected": 65,
+      "actual": 65.00000020006172
+    }
+  },
+  "sampledFinalShellChecks": {
+    "pocket-4-left": {
+      "faceCount": 9,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "edge-5-left": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "edge-6-left": {
+      "faceCount": 9,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "edge-7-left": {
+      "faceCount": 11,
+      "maxSampledShellDistanceMM": 7.105427357601002e-15
+    },
+    "pocket-8-left": {
+      "faceCount": 9,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "pocket-9-left": {
+      "faceCount": 14,
+      "maxSampledShellDistanceMM": 7.105427357601002e-15
+    },
+    "pocket-10-left": {
+      "faceCount": 11,
+      "maxSampledShellDistanceMM": 7.105427357601002e-15
+    },
+    "edge-11-left": {
+      "faceCount": 9,
+      "maxSampledShellDistanceMM": 3.552713678800501e-15
+    },
+    "pocket-12-left": {
+      "faceCount": 11,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "pocket-13-left": {
+      "faceCount": 14,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "pocket-15-center": {
+      "faceCount": 21,
+      "maxSampledShellDistanceMM": 3.552713678800501e-15
+    },
+    "pocket-16-center": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 3.552713678800501e-15
+    },
+    "pocket-17-center": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "pocket-18-center": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "pocket-13-right": {
+      "faceCount": 14,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "pocket-12-right": {
+      "faceCount": 11,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "edge-11-right": {
+      "faceCount": 9,
+      "maxSampledShellDistanceMM": 3.552713678800501e-15
+    },
+    "pocket-10-right": {
+      "faceCount": 11,
+      "maxSampledShellDistanceMM": 7.105427357601002e-15
+    },
+    "pocket-9-right": {
+      "faceCount": 14,
+      "maxSampledShellDistanceMM": 7.105427357601002e-15
+    },
+    "pocket-8-right": {
+      "faceCount": 9,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "edge-7-right": {
+      "faceCount": 11,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "edge-6-right": {
+      "faceCount": 9,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "edge-5-right": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "pocket-4-right": {
+      "faceCount": 9,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "jug-14-center": {
+      "faceCount": 7,
+      "maxSampledShellDistanceMM": 8.070214144311583e-14
+    },
+    "round-sloper-3-center": {
+      "faceCount": 8,
+      "maxSampledShellDistanceMM": 1.066775685881772e-09
+    },
+    "flat-sloper-2-left": {
+      "faceCount": 3,
+      "maxSampledShellDistanceMM": 5.2461656105122824e-08
+    },
+    "jug-1-left": {
+      "faceCount": 5,
+      "maxSampledShellDistanceMM": 5.2461656105122824e-08
+    },
+    "flat-sloper-2-right": {
+      "faceCount": 3,
+      "maxSampledShellDistanceMM": 5.2461656105122824e-08
+    },
+    "jug-1-right": {
+      "faceCount": 5,
+      "maxSampledShellDistanceMM": 5.2461656105122824e-08
+    }
+  },
+  "contactOverlaps": [],
+  "nativeCavityEdit": {
+    "parameter": "Depth_edge_11_left",
+    "before": 14.0,
+    "after": 16.0,
+    "changedContacts": [
+      "edge-11-left"
+    ],
+    "beforeVolumeMM3": 5737863.737806823,
+    "editedVolumeMM3": 5735229.185329006,
+    "restoredVolumeMM3": 5737863.737806875,
+    "restoreVolumeDeltaMM3": 5.21540641784668e-08
+  },
+  "sourceBytesUnchanged": true,
+  "limits": "Final-shell membership samples each face and vertices; pairwise overlap is checked by native common surface area. Boundary/roof continuity and exported geometry are verified separately."
+}

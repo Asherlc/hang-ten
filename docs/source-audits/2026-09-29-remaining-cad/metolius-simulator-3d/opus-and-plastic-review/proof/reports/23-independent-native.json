@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "cavity-voids-b722",
+  "timeoutSeconds": 240,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_cavity_voids.py",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/metolius-simulator-3d.FCStd",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/cavity-voids-b722.json"
+  ],
+  "ownedProcessGroup": 66690,
+  "exitCode": 0,
+  "elapsedSeconds": 20.643923541007098,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

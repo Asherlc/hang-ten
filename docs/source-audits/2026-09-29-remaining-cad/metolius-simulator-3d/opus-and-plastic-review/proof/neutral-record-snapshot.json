@@ -1,0 +1,33 @@
+{
+  "owner": "placid-badger",
+  "files": {
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/before/assets/primary.model.json": {
+      "sha256": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d",
+      "bytes": 13970
+    },
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/before/assets/primary.usdz": {
+      "sha256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+      "bytes": 5705584
+    },
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/before/human-review.json": {
+      "sha256": "4329f79d9b756f616892212fdc44618d68b1d523ab95bbbc7a89edbe3c05b4e6",
+      "bytes": 3983
+    },
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/before/metolius-simulator-3d.FCStd": {
+      "sha256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+      "bytes": 6805100
+    },
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/before/model-delivery-lock.json": {
+      "sha256": "3e4ebcdcfb6cda3963c857cbda37ff51b6101577364796a353cd8fb9be020dd3",
+      "bytes": 158023
+    },
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/before/review-queue.json": {
+      "sha256": "e0adef45f0c0436dcfc2409645c7f0b0b213d10f905c4db24ce19722a5d39f0d",
+      "bytes": 27413
+    },
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/before/source-audit.md": {
+      "sha256": "2f0645875bd886059c2299cb5ffa4068f214751a4e5420e4f2948e1c7c65281c",
+      "bytes": 5731
+    }
+  }
+}

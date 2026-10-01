@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "lower-cut-probe",
+  "script": ".context/placid-badger/metolius-simulator-3d-front-fairing/probe_lower_cut.py",
+  "timeoutSeconds": 120,
+  "startedUTC": "2026-10-01T18:13:31.716374+00:00",
+  "ownedProcessGroup": 53958,
+  "elapsedSeconds": 4.603055957995821,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

@@ -154,6 +154,61 @@
       "acceptedDate": "2026-10-01",
       "acceptedScope": "Displayed forward-projecting Contact pinch rails and their highlights in the prior-versus-revised front/side/top and actual-app images.",
       "revisionCommit": "ca5024c3b62f5ecc87e669e1ecab398e650b3890"
+    },
+    {
+      "package": "metolius-simulator-3d",
+      "date": "2026-10-01",
+      "revision": "rounded-outline-and-shoulder-transitions",
+      "feedback": "Jagged",
+      "sourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+      "modelSHA256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+      "descriptorSHA256": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d",
+      "report": "metolius-simulator-3d/jagged-review/runtime-validation.json",
+      "postIntegrationTests": {
+        "iOSPassed": 1278,
+        "iOSSkipped": 3,
+        "pythonPassed": 706,
+        "pythonSkipped": 11,
+        "separateNativeCompilerRegressionCases": 9,
+        "failures": 0
+      },
+      "allOtherPackageFilesUnchanged": 203,
+      "boardFactsAndContactIDsUnchanged": true,
+      "geometryAcceptance": "pending revised human review #8",
+      "humanReviewRecord": "metolius-simulator-3d/human-review.json",
+      "limits": "Rounded outline and positionally continuous shoulder joins; thickness94.1183246265mm is estimated and residual roof-normal changes reach6.77degrees. Representative app review only."
+    },
+    {
+      "package": "metolius-simulator-3d",
+      "date": "2026-10-01",
+      "revision": "forward-grasp-fair-face-and-plastic",
+      "feedback": [
+        "Jagged",
+        "Tag as plastic",
+        "Center jug rear ridge prevents grasp",
+        "Sloper should extend all the way forward",
+        "Why does it look kind of wavy?"
+      ],
+      "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+      "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+      "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+      "report": "metolius-simulator-3d/opus-and-plastic-review/runtime-validation.json",
+      "postIntegrationTests": {
+        "iOSPassed": 1278,
+        "iOSSkipped": 3,
+        "pythonPassed": 706,
+        "pythonSkipped": 11,
+        "failures": 0
+      },
+      "allOtherPackageFilesUnchanged": 203,
+      "boardFactsAndContactIDsUnchanged": true,
+      "surfaceFinish": "plastic",
+      "geometryAcceptance": "reviewed; corrected Simulator geometry and plastic display accepted",
+      "humanReviewRecord": "metolius-simulator-3d/human-review.json",
+      "limits": "Lower face taper, rear jug return, forward anchoring, rolls, thickness and blends are display adaptations; mint is the app palette. Native/export checks and representative app views do not certify manufacturer-exact estimated geometry or a visual sweep of all 30 contacts.",
+      "answer": "lgtm",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed corrected Simulator 3-D, including its smooth front taper, forward center-jug crest and rear return, forward-reaching slopers, and existing plastic appearance."
     }
   ]
 }

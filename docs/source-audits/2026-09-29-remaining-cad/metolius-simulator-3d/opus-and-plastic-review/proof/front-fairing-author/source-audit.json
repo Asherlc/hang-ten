@@ -1,0 +1,42 @@
+{
+  "status": "pass",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "primaryEvidence": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/sources/product-01.jpg",
+      "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Simulator-black-white.jpg?v=1759460469",
+      "sha256": "5ac1677d6280dc90242cb1dcef47691647fd3f5a9adc3c465838e930075f58a9",
+      "review": "Complete retained primary image viewed; no pixel measurement or processing."
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/sources/product-03.jpg",
+      "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085",
+      "sha256": "e9561ab3fb6d3a85014097dcbdb0bc3d9c4079f9cb0954bd87965d180329932a",
+      "review": "Complete retained primary image viewed; no pixel measurement or processing."
+    }
+  ],
+  "additionalPrimaryEvidenceIndex": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/sources.json",
+  "sourceBackedInvariants": [
+    "30 logical holds and original metadata apart from parent-authorized plastic finish already present in baseline",
+    "24 cavity depth facts",
+    "55 mm flat support, separately tagged left and right",
+    "65 mm rounded support, one shared logical ID on paired shoulders",
+    "711 x 222 mm face envelope",
+    "Full-width round center dome and visible #15 pocket"
+  ],
+  "explicitDisplayAdaptations": [
+    "Approximately 94 mm overall thickness",
+    "Forward center crest and lower rear return; no published rear incut dimension available",
+    "Forward anchor of the published support spans in response to user feedback",
+    "Center front roll, flat front roll and local blend widths",
+    "Exact native profile/isocurve section stations selected by author",
+    "Lower front taper cubic tangents selected directly by author; existing native depth anchors retained; all geometry at/above Z135 unchanged."
+  ],
+  "limitations": [
+    "No definitive manufacturer rear section",
+    "No blanket G1 assertion across all roof joins; residual approximately 2-degree nose normal transition requires visual judgement",
+    "CPU preview uses triangle-face shading; analytic-normal export and actual-app finish/selection require separate gates"
+  ],
+  "imageDrivenGeometry": false,
+  "noMaterialUSDZPolicy": "Unchanged unbound policy; new exports await native visual gate"
+}

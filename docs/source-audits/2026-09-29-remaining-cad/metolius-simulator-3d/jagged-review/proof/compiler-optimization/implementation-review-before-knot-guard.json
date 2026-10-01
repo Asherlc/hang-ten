@@ -1,0 +1,69 @@
+{
+  "reviewedAtUTC": "2026-10-01T14:40:47.859157+00:00",
+  "status": "focused-validation-passed-integration-pending",
+  "blockingFindings": [],
+  "feature": "Explicit document HangTenUVNodeSurfaceNormals bool, requiring HangTenSurfaceNormals; defaultfalse retains legacy evaluator",
+  "scope": [
+    "compiler opt-in validation and normal cache",
+    "real native focused regression fixtures",
+    "README documentation"
+  ],
+  "testFirst": {
+    "red": "red.log",
+    "result": "Real FreeCAD5tests:4 expected failures, legacydefault1pass, before product edits"
+  },
+  "green": {
+    "native": "green-final.log",
+    "result": "7native regression cases pass through hostpytest1pass",
+    "adjacent": "adjacent-tests.log",
+    "adjacentResult": "84passed"
+  },
+  "behavior": [
+    "Cache only unambiguous exact per-face tessellation facet signatures",
+    "Safely position-match native UV evaluations within0.00002mm; reject absent/multiple matches",
+    "Original inverse-surface evaluator for uninspectable/ambiguous/unmatched cases",
+    "No changes to source geometry, triangles/order, node identity, material policy, normals winding rule or tessellation settings",
+    "Original sources omitflag and keep default calculations; separate old-source full package reproduction delegated to author"
+  ],
+  "nativeBenchmark": {
+    "sourceSHA256": "40e42ed072a72946d11756cd6f92047fd0d5acd79eb33946cb2188441babbbde",
+    "compilerSHA256": "0f3c473cd36aaff03cfc701043e7d5272abd66eda27a7d3b8f8658916c85e815",
+    "triangles": 254770,
+    "points": 127387,
+    "fastPathTriangles": 254486,
+    "fallbackTriangles": 284,
+    "openTessellateAndIndexSeconds": 20.191033500013873,
+    "legacy20TriangleSeconds": 0.18721787497634068,
+    "comparedCorners": 60,
+    "maximumNormalAngleDegrees": 8.537736462515939e-07,
+    "defaultCylinderOutputExactlyMatchesPreChange": true,
+    "sourceBytesUnchanged": true,
+    "limits": "Bounded native cache construction and60corner comparison, not a whole-catalog or full optimized export validation."
+  },
+  "remainingValidation": [
+    "Author full old-source asset+descriptor byte reproduction",
+    "New explicit-flag source compile/export and independent final package validation",
+    "Parent-owned fullPython+iOS integration suite"
+  ],
+  "resources": {
+    "ownedFreeCADChecksExited": true,
+    "testTemporaryDirectoriesAutoRemoved": true,
+    "timeoutCleanup": "test process owns a separate processgroup; timeout/interruption kills group before scratch removal",
+    "simulatorsOrServersCreated": false
+  },
+  "fileSHA256": {
+    "Tools/HangboardCAD/compile_board.py": "0f3c473cd36aaff03cfc701043e7d5272abd66eda27a7d3b8f8658916c85e815",
+    "Tools/HangboardCAD/README.md": "4a5612eb89ddd4971b92ac85bb7cf04430ab5662fcb31e3bddbb509342a602fb",
+    "Tools/HangboardCAD/tests/test_uv_node_normals.py": "6ab1908dca4cc8ab6450aa28e2ebc6ceef594fc26187cdb72d7c1c070375338a",
+    "Tools/HangboardCAD/tests/uv_node_normal_checks.py": "bd767a79d33f37e528a73ba48457287880f3c35548d044579b22e19b2d527d5c",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/red.log": "8635c224a353a36227249f643e2cee06a761372670d0b0febaa8e7ced9c961f5",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/green.log": "2ab5bf1c418c4b50a82bb6d168950ab377ab0a377e4d5187213d9b176905f856",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/green-expanded.log": "808dfae1ed8f9fdc74e04e9f4daf48a799b85ea62a74ce685b5f7c7368c58182",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/green-final.log": "a16353b8dc4c6f9e52d17bebe630d48503c3c8c6f5ac659eb0bfd2d527739fb4",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/adjacent-tests.log": "8cf80cafc6599f72ea0adf661a2ba25485d266edf9819f0b6ee97695730efda7",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/native-cache-benchmark.json": "36dc0f962d567c0d1285b80a1e69d61bccb279762fba051b54da64dd86f7f461",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/native-cache-benchmark.log": "53b437d4c9d86d7013feffcc99b8d745c2786dab3330246aee8721711ca882c6",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/benchmark_native_cache.py": "0a75d8a819ec48a55ce2e87bd27d980f296940b4af2d77443d073bd3f8cd842c",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/legacy_compile_board.py": "34b0a92874d739c70b6bb48c63e8730297b6fda6f610f34c90ccb895c23fe167"
+  }
+}

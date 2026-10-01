@@ -1,0 +1,13 @@
+{
+  "status": "pass",
+  "scope": "Native authoring complete; fresh independent and Opus gates pending",
+  "sourceSHA256": "ec348cea477014f3594d586438d1094c7fb8eeb4516f7c44e28b7d57989faa2d",
+  "sourceBytes": 8949697,
+  "rawPlasticManifestExact": true,
+  "normalFlagsPreserved": true,
+  "frozenPriorSourceSHA256": "46df0c88878d3f833c27c7cce12c637fba09572d9223290c850c0e866b4d1264",
+  "nativeVisualGate": "pending",
+  "exportGate": "pending",
+  "actualAppGate": "pending",
+  "humanAcceptance": "pending"
+}
