@@ -543,5 +543,17 @@
       "appReview": "zlagboard-pro/app-review/validation.json",
       "appReviewPage": "zlagboard-pro/app-review/index.html"
     }
-  ]
+  ],
+  "reviewScope": {
+    "userInstruction": "I only want to review the ones we\u2019re migrating",
+    "eligibility": "Only packages first given a native CAD source by this task; existing CAD packages and externally claimed migrations are excluded.",
+    "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+    "migrationCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
+    "newCADPackages": 21,
+    "queueMatchesAddedFCStdPackages": true,
+    "existingCADPackagesExcluded": 36,
+    "activeMigrationPackagesExcluded": 7,
+    "metoliusContact": "The baseline had board.json and USDZ, but no FCStd. Its native CAD source was first added by this task in the migration commit.",
+    "humanAcceptanceUnchanged": true
+  }
 }
