@@ -1,6 +1,20 @@
 import RealityKit
 import SwiftUI
 import UIKit
+#if DEBUG
+import QuartzCore
+
+private struct ReviewTrainPreviewKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+extension EnvironmentValues {
+    var reviewTrainPreview: Bool {
+        get { self[ReviewTrainPreviewKey.self] }
+        set { self[ReviewTrainPreviewKey.self] = newValue }
+    }
+}
+#endif
 
 struct BoardModelSurface: View {
     enum ResultState {
@@ -22,6 +36,18 @@ struct BoardModelSurface: View {
     let onContactTap: ((PhysicalContact) -> Void)?
     var isDisplayOnly = false
     @State private var result: ResultState = .loading
+    #if DEBUG
+    @Environment(\.reviewTrainPreview) private var reviewTrainPreview
+    #endif
+
+    private var suppressPreviewRenderer: Bool {
+        #if DEBUG
+        return reviewTrainPreview
+            && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_TRAIN_RENDERER"] == "1"
+        #else
+        return false
+        #endif
+    }
 
     init(
         board: BoardRevision,
@@ -46,30 +72,42 @@ struct BoardModelSurface: View {
         // lifecycle modifiers to its changing placeholder/model children.
         ZStack {
             if case .ready(let model) = result {
-                let realityView = BoardModelRealityView(
-                    model: model,
-                    boardName: board.name,
-                    accessibilityValue: highlightedContactCue,
-                    contacts: board.contacts(in: presentation),
-                    positionID: positionID,
-                    highlightedContactIDs: highlightedContactIDs,
-                    highlightMode: highlightMode,
-                    onContactTap: onContactTap,
-                    onUnavailable: { result = .unavailable },
-                    isDisplayOnly: isDisplayOnly
-                )
-                // Display-only picker cards wrap this in a Button; claiming
-                // SwiftUI hits here would intercept the card select tap even
-                // when the hosted RealityView has user interaction disabled.
-                .allowsHitTesting(!isDisplayOnly)
-                if onContactTap == nil {
-                    realityView.accessibilityIdentifier("boardModel.3d")
+                if suppressPreviewRenderer {
+                    Color.clear
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityIdentifier("boardModel.3d")
+                        .onAppear {
+                            #if DEBUG
+                            print("[TrainPreviewComparison] stand-in board=\(board.id) scene=\(ObjectIdentifier(model))")
+                            #endif
+                        }
                 } else {
-                    // A parent accessibility identifier propagates to the
-                    // RealityView's projected contact buttons. Keep their
-                    // per-contact identifiers available to UI automation and
-                    // assistive technology on interactive board maps.
-                    realityView
+                    let realityView = BoardModelRealityView(
+                        model: model,
+                        boardName: board.name,
+                        accessibilityValue: highlightedContactCue,
+                        contacts: board.contacts(in: presentation),
+                        positionID: positionID,
+                        highlightedContactIDs: highlightedContactIDs,
+                        highlightMode: highlightMode,
+                        onContactTap: onContactTap,
+                        onUnavailable: { result = .unavailable },
+                        isDisplayOnly: isDisplayOnly
+                    )
+                    // Display-only picker cards wrap this in a Button; claiming
+                    // SwiftUI hits here would intercept the card select tap even
+                    // when the hosted RealityView has user interaction disabled.
+                    .allowsHitTesting(!isDisplayOnly)
+                    if onContactTap == nil {
+                        realityView.accessibilityIdentifier("boardModel.3d")
+                    } else {
+                        // A parent accessibility identifier propagates to the
+                        // RealityView's projected contact buttons. Keep their
+                        // per-contact identifiers available to UI automation and
+                        // assistive technology on interactive board maps.
+                        realityView
+                    }
                 }
             } else if let loadingMessage = result.loadingMessage {
                 HStack(spacing: 12) {
@@ -91,7 +129,14 @@ struct BoardModelSurface: View {
             }
         }
         .task(id: loadIdentity) {
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled else {
+                    #if DEBUG
+                    if suppressPreviewRenderer {
+                        print("[TrainPreviewComparison] load cancelled board=\(board.id)")
+                    }
+                    #endif
+                    return
+                }
             guard case .model = presentation.media else {
                 result = .unavailable
                 return
@@ -108,7 +153,14 @@ struct BoardModelSurface: View {
                     presentation: presentation,
                     store: BoardCatalog.packageStore
                 )
-                guard !Task.isCancelled else { return }
+                guard !Task.isCancelled else {
+                    #if DEBUG
+                    if suppressPreviewRenderer {
+                        print("[TrainPreviewComparison] load cancelled board=\(board.id)")
+                    }
+                    #endif
+                    return
+                }
                 #if DEBUG
                 if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
                     print("[BoardModelSurface] load ready \(board.id) scene=\(ObjectIdentifier(model)) displayOnly=\(isDisplayOnly)")
@@ -116,7 +168,14 @@ struct BoardModelSurface: View {
                 #endif
                 result = .ready(model)
             } catch {
-                guard !Task.isCancelled else { return }
+                guard !Task.isCancelled else {
+                    #if DEBUG
+                    if suppressPreviewRenderer {
+                        print("[TrainPreviewComparison] load cancelled board=\(board.id)")
+                    }
+                    #endif
+                    return
+                }
                 #if DEBUG
                 print("[BoardModelSurface] RealityKit model load failed: \(error)")
                 #endif
@@ -415,6 +474,9 @@ private struct BoardModelARHost: UIViewRepresentable {
         let panDelegate = OrbitPanGestureDelegate(allowsAllDirections: true)
         private var lastTranslation: CGPoint = .zero
         private var lastScale: CGFloat = 1
+        #if DEBUG
+        private var comparisonSyncCount = 0
+        #endif
 
         /// Retains the current host configuration for scene attachment and input callbacks.
         init(parent: BoardModelARHost) { self.parent = parent }
@@ -424,6 +486,20 @@ private struct BoardModelARHost: UIViewRepresentable {
             anchor.addChild(parent.model.root)
             anchor.addChild(parent.model.camera)
             view.renderer.scene.addAnchor(anchor)
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_TRAIN_RENDERER"] == "1" {
+                print("[TrainPreviewComparison] detail-create container=\(ObjectIdentifier(view)) renderer=\(ObjectIdentifier(view.renderer)) scene=\(ObjectIdentifier(parent.model))")
+                let readback = BoardPreviewReadbackElement(accessibilityContainer: view)
+                readback.accessibilityIdentifier = "boardModel.previewComparisonReadback"
+                readback.accessibilityLabel = "Preview comparison live state"
+                readback.accessibilityFrameInContainerSpace = CGRect(x: 0, y: 0, width: 1, height: 1)
+                readback.readValue = { [weak self, weak view] in
+                    guard let self, let view else { return "detached" }
+                    return self.comparisonReadback(view)
+                }
+                view.accessibilityElements = [readback]
+            }
+            #endif
             view.onLayout = { [weak self] view in self?.synchronize(view) }
             let pan = OrbitPanGestureRecognizer(target: self, action: #selector(orbit(_:)))
             pan.activationDistance = 4
@@ -445,10 +521,19 @@ private struct BoardModelARHost: UIViewRepresentable {
             guard size.width.isFinite, size.height.isFinite,
                   size.width > 0, size.height > 0 else { return }
             parent.synchronize(size)
+            #if DEBUG
+            comparisonSyncCount += 1
+            #endif
         }
 
         /// Releases layout callbacks, input recognizers and the entities attached by this host.
         func detach(from view: BoardModelARContainer) {
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_TRAIN_RENDERER"] == "1" {
+                print("[TrainPreviewComparison] detail-dismantle container=\(ObjectIdentifier(view)) renderer=\(ObjectIdentifier(view.renderer)) scene=\(ObjectIdentifier(parent.model))")
+            }
+            view.accessibilityElements = nil
+            #endif
             view.onLayout = nil
             for gesture in view.renderer.gestureRecognizers ?? [] {
                 view.renderer.removeGestureRecognizer(gesture)
@@ -457,6 +542,33 @@ private struct BoardModelARHost: UIViewRepresentable {
             parent.model.root.removeFromParent()
             parent.model.camera.removeFromParent()
         }
+
+        #if DEBUG
+        /// Reads current UIKit and scene state without synchronization or render requests.
+        private func comparisonReadback(_ view: BoardModelARContainer) -> String {
+            func metalLayers(_ layer: CALayer) -> [String] {
+                let current = (layer as? CAMetalLayer).map {
+                    ["layer=\(ObjectIdentifier($0));drawable=\($0.drawableSize);scale=\($0.contentsScale);transaction=\($0.presentsWithTransaction)"]
+                } ?? []
+                return current + (layer.sublayers ?? []).flatMap(metalLayers)
+            }
+            let materials = parent.model.contactEntities.keys.sorted().map { id in
+                let values = (parent.model.contactEntities[id] ?? []).flatMap { entity in
+                    (entity.model?.materials ?? []).map { material in
+                        if let pbr = material as? PhysicallyBasedMaterial {
+                            return "PBR:\(pbr.baseColor.tint)"
+                        }
+                        if let custom = material as? CustomMaterial {
+                            return "Custom:\(custom.baseColor.tint)"
+                        }
+                        return String(describing: type(of: material))
+                    }
+                }
+                return "\(id)=\(values)"
+            }
+            return "container=\(ObjectIdentifier(view));renderer=\(ObjectIdentifier(view.renderer));scene=\(ObjectIdentifier(parent.model));window=\(view.window != nil);bounds=\(view.renderer.bounds);windowFrame=\(view.renderer.convert(view.renderer.bounds, to: view.window));syncCount=\(comparisonSyncCount);authored=\(parent.model.camera.transform.matrix);native=\(view.renderer.cameraTransform.matrix);metal=\(metalLayers(view.renderer.layer));materials=\(materials)"
+        }
+        #endif
 
         /// Resolves a completed native collision hit before forwarding physical contact selection.
         @objc private func tap(_ gesture: UITapGestureRecognizer) {
@@ -502,6 +614,17 @@ private struct BoardModelARHost: UIViewRepresentable {
         }
     }
 }
+
+#if DEBUG
+@MainActor
+private final class BoardPreviewReadbackElement: UIAccessibilityElement {
+    var readValue: (() -> String)?
+    override var accessibilityValue: String? {
+        get { readValue?() }
+        set { }
+    }
+}
+#endif
 
 private final class BoardModelARContainer: UIView {
     let renderer = ARView(frame: .zero, cameraMode: .nonAR, automaticallyConfigureSession: false)

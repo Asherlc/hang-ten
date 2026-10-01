@@ -140,6 +140,9 @@ struct TrainView: View {
         VStack(alignment: .leading, spacing: 16) {
             BoardMapView(board: store.selectedBoard)
                 .cardPreviewStyle()
+                #if DEBUG
+                .environment(\.reviewTrainPreview, true)
+                #endif
 
             VStack(alignment: .leading, spacing: 5) {
                 SectionLabel(title: "Your board")

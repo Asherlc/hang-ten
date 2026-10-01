@@ -272,6 +272,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             "HANGTEN_REVIEW_BOARD_ID": boardID,
             "HANGTEN_REVIEW_MODEL_DIAGNOSTICS": "1",
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
+            "HANGTEN_REVIEW_SUPPRESS_TRAIN_RENDERER": "1",
         ]
         app.launch()
         // Preserve the rapid Train-to-Hold-specs transition, including the
@@ -311,6 +312,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         let selectionRenderedResult = XCTWaiter.wait(for: [selectionRendered], timeout: 15)
         if selectionRenderedResult != .completed {
             capture("\(boardID)-rendered-selection-failure")
+            captureRendererDiagnostic(app: app, name: "\(boardID)-selection-failure-readback")
         }
         XCTAssertEqual(selectionRenderedResult, .completed,
                        "Selected hold must be highlighted on the rendered surface before orbit")
@@ -373,6 +375,9 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         }, object: nil)
         let renderedResetResult = XCTWaiter.wait(for: [renderedReset], timeout: 30)
         capture("\(boardID)-portrait-reset")
+        if renderedResetResult != .completed {
+            captureRendererDiagnostic(app: app, name: "\(boardID)-reset-failure-readback")
+        }
         XCTAssertEqual(renderedResetResult, .completed,
                        "Camera reset must restore the rendered board, not only its accessibility projection")
 
@@ -409,6 +414,13 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
+        let readback = app.descendants(matching: .any)
+            .matching(identifier: "boardModel.previewComparisonReadback").firstMatch
+        let live = XCTAttachment(string: readback.exists
+            ? String(describing: readback.value ?? "missing-value") : "missing-readback")
+        live.name = "\(name)-live-state"
+        live.lifetime = .keepAlways
+        add(live)
     }
 
     private func mapSnapshot(in frame: CGRect) throws -> Data {
