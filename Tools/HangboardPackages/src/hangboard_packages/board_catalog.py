@@ -43,6 +43,15 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
     sys.modules[_cad_spec.name] = cad_source
     _cad_spec.loader.exec_module(cad_source)
 
+try:
+    from .rope_physics import load_rope_physics
+except ImportError:  # direct-file staging consumers
+    _physics_spec = importlib.util.spec_from_file_location("hangboard_rope_physics", Path(__file__).with_name("rope_physics.py"))
+    assert _physics_spec and _physics_spec.loader
+    _physics_module = importlib.util.module_from_spec(_physics_spec)
+    _physics_spec.loader.exec_module(_physics_module)
+    load_rope_physics = _physics_module.load_rope_physics
+
 
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
@@ -528,6 +537,7 @@ class PresentationMediaModel:
     suspension: "BoardModelSuspension | None" = None
     orientation: "BoardModelOrientation | None" = None
     instances: "tuple[BoardModelInstance, BoardModelInstance] | None" = None
+    physics_descriptor_path: str | None = None
 
 
 PresentationMedia = PresentationMediaRaster | PresentationMediaModel
@@ -630,7 +640,7 @@ class BoardModelPassage:
 @dataclass(frozen=True)
 class BoardModelPassagePairs:
     left: tuple[BoardModelPassage, BoardModelPassage]
-    right: tuple[BoardModelPassage, BoardModelPassage]
+    right: tuple[BoardModelPassage, ...]
 
 
 @dataclass(frozen=True)
@@ -649,7 +659,7 @@ class BoardModelCordBranch:
 @dataclass(frozen=True)
 class BoardModelTwoBranchSuspension:
     passages: BoardModelPassagePairs
-    branches: tuple[BoardModelCordBranch, BoardModelCordBranch]
+    branches: tuple[BoardModelCordBranch, ...]
     anchor: BoardModelInvisibleAnchor
     canonical_poses: Mapping[str, BoardModelCanonicalPose]
     mesh_wrap_clearance: float | None = None
@@ -802,7 +812,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
     payload = _mapping(value, source)
     suspension_type = _string(payload.get("type"), f"{source}.type")
     if suspension_type in ("twoBranchCord", "threadedLoopCord"):
-        single_loop = suspension_type == "threadedLoopCord"
+        threaded_loop = suspension_type == "threadedLoopCord"
         _closed(payload, {"type", "passages", "branches", "anchor", "canonicalPoses"}, source,
                 optional={"meshWrap", "internalLoop"})
         _canonical_member_order(
@@ -813,7 +823,11 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         passages_payload = _mapping(payload["passages"], passages_source)
         _closed(passages_payload, {"left", "right"}, passages_source)
         _canonical_member_order(passages_payload, ("left", "right"), passages_source)
-        parsed_pairs: dict[str, tuple[BoardModelPassage, BoardModelPassage]] = {}
+        # One sling through one CAD channel has two visible legs, not two
+        # separate loops. Retain the wire type and restrict its one-loop form
+        # to connected mouths with a complete native-solid route cache.
+        single_loop = threaded_loop or ("internalLoop" in payload and passages_payload["right"] == [])
+        parsed_pairs: dict[str, tuple[BoardModelPassage, ...]] = {}
         all_passage_ids: set[str] = set()
         for side in ("left", "right"):
             side_source = f"{passages_source}.{side}"
@@ -896,7 +910,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
                 key: _positive_number(value, f"{loop_source}.channelLengthByBranchID.{key}")
                 for key, value in lengths.items()
             }
-        if single_loop:
+        if threaded_loop:
             if internal_loop_clearance is None or "channelPointsByBranchID" not in loop:
                 raise ValueError("threadedLoopCord requires a measured connected channel")
             routes = _mapping(loop["channelPointsByBranchID"], f"{loop_source}.channelPointsByBranchID")
@@ -994,7 +1008,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
             raise ValueError("threadedLoopCord requires solved exterior routes")
         if internal_loop_clearance is not None:
             cached_count = sum(pose.cord_contact_points is not None for pose in poses.values())
-            if cached_count not in (0, len(poses)) or any(
+            if (single_loop and (not poses or cached_count != len(poses))) or cached_count not in (0, len(poses)) or any(
                 pose.cord_contact_points is not None and set(pose.cord_contact_points) != all_passage_ids
                 for pose in poses.values()
             ):
@@ -1320,7 +1334,7 @@ def _load_media(value: Any, source: str) -> PresentationMedia:
             payload,
             {"type", "assetPath", "descriptorPath", "display"},
             source,
-            optional={"suspension", "orientation", "instances"},
+            optional={"suspension", "orientation", "instances", "physicsDescriptorPath"},
         )
         has_instances = "instances" in payload
         raw_instances = payload.get("instances")
@@ -1354,6 +1368,8 @@ def _load_media(value: Any, source: str) -> PresentationMedia:
             )
             if has_instances
             else None,
+            _typed_asset_path(payload["physicsDescriptorPath"], f"{source}.physicsDescriptorPath", ".physics.json", "a physics descriptor")
+            if "physicsDescriptorPath" in payload else None,
         )
     raise ValueError(f"{source}.type must be raster or model")
 
@@ -2146,8 +2162,9 @@ def _validate_model_suspension(
             for side in (suspension.passages.left, suspension.passages.right)
             for passage in side
         )
-        if len(passages) != len(suspension.branches) * 2 or len({passage.id for passage in passages}) != len(passages):
-            raise ValueError("twoBranchCord suspension requires four distinct passages")
+        expected_count = 2 * len(suspension.branches)
+        if len(passages) != expected_count or len({passage.id for passage in passages}) != expected_count:
+            raise ValueError("twoBranchCord suspension requires distinct paired passages")
         if suspension.internal_loop_channel_points_by_branch_id is not None:
             for route in suspension.internal_loop_channel_points_by_branch_id.values():
                 if any(point[axis] < minimum[axis] or point[axis] > maximum[axis] for point in route for axis in range(3)):
@@ -2693,6 +2710,11 @@ def _validate_finished_shape(
     allowed = set(required | {cad_source_name})
     if cad_source.is_cad_package(root) and "suspension.json" in entries:
         allowed.add("suspension.json")
+    if cad_source.is_cad_package(root) and any(
+        isinstance(p.media, PresentationMediaModel) and p.media.physics_descriptor_path
+        for p in board.presentations
+    ):
+        allowed.add("rope-physics.json")
     unknown = entries - allowed
     missing = required - entries
     if unknown:
@@ -2710,6 +2732,8 @@ def _validate_finished_shape(
         expected_assets.add(presentation.asset_path)
         if isinstance(presentation.media, PresentationMediaModel):
             expected_assets.add(presentation.media.descriptor_path)
+            if presentation.media.physics_descriptor_path:
+                expected_assets.add(presentation.media.physics_descriptor_path)
     actual_assets = {
         item.relative_to(root).as_posix() for item in assets.rglob("*") if item.is_file()
     }
@@ -2760,6 +2784,17 @@ def _validate_finished_shape(
     for presentation in board.presentations:
         if not isinstance(presentation.media, PresentationMediaModel):
             continue
+        if presentation.media.physics_descriptor_path:
+            model_document = _load_json(root / presentation.media.descriptor_path, "model descriptor")
+            physics = load_rope_physics(root / presentation.media.physics_descriptor_path, model_document["modelSHA256"])
+            selected_profiles = [p for p in physics["profiles"] if p["presentationID"] == presentation.id]
+            expected_instances = ({i.equipment_object_id for i in presentation.media.instances}
+                                  if presentation.media.instances else {None})
+            if {p.get("instanceID") for p in selected_profiles} != expected_instances:
+                raise ValueError("physics profiles must cover the presentation instances exactly")
+            if cad_source.is_cad_package(root):
+                if physics["sourceSHA256"] != hashlib.sha256(cad_source.package_source_path(root).read_bytes()).hexdigest():
+                    raise ValueError("rope physics CAD source hash mismatch")
         frames = _load_model_descriptor(
             root / presentation.media.descriptor_path,
             root / presentation.media.asset_path,

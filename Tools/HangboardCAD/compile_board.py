@@ -898,6 +898,17 @@ def build(
         descriptor_path.write_text(json.dumps(descriptor_json, indent=2, sort_keys=False) + "\n")
         json.loads(descriptor_path.read_text())
         usdz_writer.read_usdz(asset)
+        physics_path = None
+        physics_config = source.parent / "rope-physics.json"
+        if physics_config.is_file():
+            from export_rope_physics import build_physics_descriptor
+            try:
+                physics = build_physics_descriptor(document, source,
+                    descriptor_json["modelSHA256"], json.loads(physics_config.read_text()))
+            except (OSError, AttributeError, ValueError, TypeError, KeyError, RecursionError) as error:
+                raise BuildError(f"invalid rope physics authoring: {error}") from error
+            physics_path = staging / "primary.physics.json"
+            physics_path.write_text(json.dumps(physics, indent=2) + "\n")
 
         result = {
             "package": package,
@@ -915,6 +926,8 @@ def build(
             "contacts": sorted(descriptor_json.get("contacts", descriptor_json.get("contactSlots", {}))),
             "measuredRegionDepthsMM": measured_depths,
         }
+        if physics_path is not None:
+            result["physicsSHA256"] = _digest(physics_path)
 
         if not publish:
             result["published"] = False
@@ -931,12 +944,20 @@ def build(
         asset_temp = assets / f".{asset_target.name}.staged"
         shutil.copyfile(descriptor_path, descriptor_temp)
         shutil.copyfile(asset, asset_temp)
-        # Two files cannot be replaced in one atomic step. The descriptor is
-        # hash-bound to the asset and is moved last, so an interruption between
-        # the two moves leaves a detectable mismatch rather than a silently
-        # stale pairing; the delivered pair is re-verified immediately after.
+        if physics_path is not None:
+            physics_target = assets / physics_path.name
+            physics_temp = assets / f".{physics_path.name}.staged"
+            shutil.copyfile(physics_path, physics_temp)
+        # The files cannot be replaced in one atomic step. Publish the asset,
+        # its hash-bound model descriptor, then the bound physics descriptor.
+        # An interrupted update leaves a detectable mismatch; verify the
+        # delivered identities immediately after publication.
         os.replace(asset_temp, asset_target)
         os.replace(descriptor_temp, descriptor_target)
+        if physics_path is not None:
+            os.replace(physics_temp, physics_target)
+        else:
+            (assets / "primary.physics.json").unlink(missing_ok=True)
         delivered = json.loads(descriptor_target.read_text())
         delivered_digest = _digest(asset_target)
         if delivered.get("modelSHA256") != delivered_digest:
@@ -944,6 +965,12 @@ def build(
                 "published descriptor does not match the published asset; the pair is "
                 "inconsistent and must be rebuilt"
             )
+        if physics_path is not None:
+            from hangboard_packages.rope_physics import load_rope_physics
+            load_rope_physics(physics_target, delivered_digest)
+            if _digest(physics_target) != result["physicsSHA256"]:
+                raise BuildError("published rope physics changed during delivery")
+            result["physics"] = _display(physics_target)
         result["published"] = True
         result["asset"] = _display(asset_target)
         result["descriptor"] = _display(descriptor_target)

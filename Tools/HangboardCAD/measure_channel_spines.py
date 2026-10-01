@@ -10,10 +10,11 @@ The adjacent suspension.json supplies each branch's two mouth coordinates.
 This command reports the measured length between their projections on each
 channel's spine. A channel is either a `PartDesign::SubtractivePipe` (its
 Sketcher spine, as on the Mini Bar) or a straight `Part::Cylinder` through-bore
-(its axis, as on the Helium Mobile), or a `Part::MultiFuse` with a linked
-ordered Part::Feature Spine (Rock Rings). Schema-2 sidecars require
-HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID to select the instance. It never edits
-the CAD source or sidecar.
+(its axis, as on the Helium Mobile), a `Part::Box` rectangular channel
+with the operator-selected `HangTenChannelAxis` set to x, y, or z (as on
+Clavellium), or a `Part::MultiFuse` with a linked ordered Part::Feature Spine
+(Rock Rings). Schema-2 sidecars require HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID
+to select the instance. It never edits the CAD source or sidecar.
 """
 from __future__ import annotations
 
@@ -26,10 +27,6 @@ import FreeCAD as App
 
 
 ROOT = Path(__file__).resolve().parents[2]
-PACKAGE = os.environ["HANGTEN_CHANNEL_PACKAGE"]
-FEATURES = json.loads(os.environ["HANGTEN_CHANNEL_FEATURES_JSON"])
-SOURCE = ROOT / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
-SIDECAR = SOURCE.with_name("suspension.json")
 
 
 def model_to_native(point):
@@ -60,6 +57,21 @@ def cylinder_axis_samples(feature):
     return [start.add(end.sub(start).multiply(i / (count - 1))) for i in range(count)]
 
 
+def box_axis_samples(feature):
+    """Operator-selected axis of a straight rectangular sling passage."""
+    axis = getattr(feature, "HangTenChannelAxis", "")
+    if axis not in ("x", "y", "z"):
+        raise ValueError(f"{feature.Name} must declare HangTenChannelAxis x, y or z")
+    dimensions = [float(feature.Length), float(feature.Width), float(feature.Height)]
+    first = [length / 2 for length in dimensions]
+    second = first.copy()
+    index = "xyz".index(axis)
+    first[index] = 0
+    second[index] = dimensions[index]
+    return [feature.Placement.multVec(App.Vector(*first)),
+            feature.Placement.multVec(App.Vector(*second))]
+
+
 def channel_samples(feature, name):
     if feature is None:
         raise ValueError(f"{name} is missing")
@@ -67,6 +79,8 @@ def channel_samples(feature, name):
         return spine_samples(feature.Spine[0])
     if feature.TypeId == "Part::Cylinder":
         return cylinder_axis_samples(feature)
+    if feature.TypeId == "Part::Box":
+        return box_axis_samples(feature)
     if feature.TypeId == "Part::MultiFuse" and "Spine" in feature.PropertiesList:
         samples = []
         if feature.Spine is None or feature.Spine.Shape.isNull() or feature.Spine.Shape.ShapeType != "Wire":
@@ -81,6 +95,7 @@ def channel_samples(feature, name):
             raise ValueError(f"{name} has no usable spine")
         return samples
     raise ValueError(f"{name} has no supported native channel spine")
+
 
 
 def station_on_spine(point, samples):
@@ -130,6 +145,10 @@ def native_to_model(point):
 
 
 def main():
+    PACKAGE = os.environ["HANGTEN_CHANNEL_PACKAGE"]
+    FEATURES = json.loads(os.environ["HANGTEN_CHANNEL_FEATURES_JSON"])
+    SOURCE = ROOT / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
+    SIDECAR = SOURCE.with_name("suspension.json")
     document = App.openDocument(str(SOURCE))
     data = json.loads(SIDECAR.read_text())
     if "instanceSuspensions" in data:
@@ -170,4 +189,5 @@ def main():
         Path(destination).write_text(json.dumps(paths, sort_keys=True) + "\n")
 
 
-main()
+if __name__ == "__main__":
+    main()

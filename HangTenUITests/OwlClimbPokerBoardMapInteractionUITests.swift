@@ -30,6 +30,8 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         let completed = NSPredicate { _, _ in
             guard let value = diagnostic.value as? String,
                   value.contains("cameraActive=true"),
+                  value.contains("cameraSettled=true"),
+                  value.split(separator: ";").contains(where: { $0 == "selection=sloper-center" }),
                   let target = self.diagnosticNumber("elevation", in: value),
                   let actual = self.diagnosticNumber("cameraPitch", in: value) else { return false }
             return target > 0.05 && abs(actual - target) < 0.025
@@ -37,17 +39,24 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         expectation(for: completed, evaluatedWith: diagnostic)
         waitForExpectations(timeout: 10)
         addScreenshot(named: "Beastmaker top sloper pivoted")
-        let map = app.otherElements["boardDetail.map"]
-        map.coordinate(withNormalizedOffset: CGVector(dx: 0.35, dy: 0.5))
-            .press(forDuration: 0.1, thenDragTo: map.coordinate(
-                withNormalizedOffset: CGVector(dx: 0.65, dy: 0.5)))
-        let dragged = try XCTUnwrap(diagnostic.value as? String)
-        let manualAzimuth = try XCTUnwrap(diagnosticNumber("azimuth", in: dragged))
-        XCTAssertGreaterThan(abs(manualAzimuth), 0.05, "Manual orbit must still work after selection")
-        sloper.tap()
-        let repeated = try XCTUnwrap(diagnostic.value as? String)
-        XCTAssertEqual(try XCTUnwrap(diagnosticNumber("azimuth", in: repeated)),
-                       manualAzimuth, accuracy: 0.001, "Rendering the same selection must preserve manual orbit")
+        let beforeDrag = try XCTUnwrap(diagnostic.value as? String)
+        let initialAzimuth = try XCTUnwrap(diagnosticNumber("azimuth", in: beforeDrag))
+        let contact = app.buttons["boardModel.contact.sloper-center"]
+        XCTAssertTrue(contact.waitForExistence(timeout: 10))
+        let start = contact.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        start.press(forDuration: 0.3, thenDragTo: start.withOffset(CGVector(dx: 80, dy: 0)),
+                    withVelocity: .slow, thenHoldForDuration: 0.2)
+        let manuallyOrbited = NSPredicate { _, _ in
+            guard let value = diagnostic.value as? String,
+                  let azimuth = self.diagnosticNumber("azimuth", in: value) else { return false }
+            return value != beforeDrag && abs(azimuth - initialAzimuth) > 0.05
+                && value.contains("cameraSettled=true")
+        }
+        expectation(for: manuallyOrbited, evaluatedWith: diagnostic)
+        waitForExpectations(timeout: 15)
+        addScreenshot(named: "Beastmaker manual orbit after selection")
+        // Same-hold reselection is exercised by the six physical-tap cases below;
+        // tapping an unchanged legend entry here would not render a new frame.
     }
 
     private func diagnosticNumber(_ key: String, in value: String) -> Float? {
@@ -327,7 +336,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         if boardID == "zlagboard.evo" || boardID == "zlagboard.pro" {
             try assertModelBodyIsVisible(in: map)
         }
-        waitForStableProjection(of: contact)
+        waitForStableProjection(of: contact, in: app)
         capture("\(boardID)-portrait-neutral")
         let selected = app.otherElements["boardDetail.selectedHold.\(target)"]
         XCTAssertFalse(selected.exists, "The tap must change the initial default contact")
@@ -340,7 +349,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             ?? surfaceCoordinate(for: contact, in: map)
         initialPoint.tap()
         XCTAssertTrue(selected.waitForExistence(timeout: 10), "Real coordinate tap must select \(target)")
-        waitForStableProjection(of: contact)
+        waitForStableProjection(of: contact, in: app, selection: target)
         capture("\(boardID)-portrait-active")
 
         let initialContactFrame = contact.frame
@@ -378,17 +387,26 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
                        "Orbit must change the rendered board, not only its accessibility projection")
         // Reproject after orbit; the initial contact offset no longer tracks
         // the visible surface once the camera has moved.
-        waitForStableProjection(of: contact)
+        waitForStableProjection(of: contact, in: app, selection: target)
         let orbitFrame = contact.frame
         let diagnostic = app.descendants(matching: .any)
             .matching(identifier: "boardModel.renderDiagnostic").firstMatch
         let orbitValue = try XCTUnwrap(diagnostic.value as? String)
         let orbitAzimuth = try XCTUnwrap(diagnosticNumber("azimuth", in: orbitValue))
         let orbitElevation = try XCTUnwrap(diagnosticNumber("elevation", in: orbitValue))
+        let priorTapRevision = try XCTUnwrap(diagnosticNumber("tapRevision", in: orbitValue))
         let reselectionPoint = surfaceCoordinate(for: contact, in: map, offset: reselectionContactOffset)
         reselectionPoint.tap()
+        let pickedAgain = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let value = diagnostic.value as? String,
+                  let tapRevision = self.diagnosticNumber("tapRevision", in: value) else { return false }
+            return tapRevision > priorTapRevision
+                && value.split(separator: ";").contains { $0 == "pickedContact=\(target)" }
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [pickedAgain], timeout: 15), .completed,
+                       "A physical retap must pick the same hold before checking camera preservation")
         XCTAssertTrue(selected.exists, "A physical surface tap must preserve the selected hold")
-        waitForStableProjection(of: contact)
+        waitForStableProjection(of: contact, in: app, selection: target)
         let repeatedValue = try XCTUnwrap(diagnostic.value as? String)
         XCTAssertEqual(try XCTUnwrap(diagnosticNumber("azimuth", in: repeatedValue)),
                        orbitAzimuth, accuracy: 0.001, "Reselecting a hold must preserve manual orbit")
@@ -408,10 +426,21 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         capture("\(boardID)-landscape-active")
     }
 
-    private func waitForStableProjection(of contact: XCUIElement) {
+    private func waitForStableProjection(of contact: XCUIElement, in app: XCUIApplication,
+                                        selection: String? = nil) {
+        let diagnostic = app.descendants(matching: .any)
+            .matching(identifier: "boardModel.renderDiagnostic").firstMatch
         var previousFrame: CGRect?
         var stableSamples = 0
         let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let value = diagnostic.value as? String,
+                  value.contains("cameraSettled=true"),
+                  selection.map({ expected in
+                      value.split(separator: ";").contains { $0 == "selection=\(expected)" }
+                  }) ?? true else {
+                stableSamples = 0
+                return false
+            }
             let frame = contact.frame
             stableSamples = frame == previousFrame ? stableSamples + 1 : 0
             previousFrame = frame

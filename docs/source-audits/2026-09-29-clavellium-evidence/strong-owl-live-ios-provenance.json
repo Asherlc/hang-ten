@@ -1,0 +1,24 @@
+{
+  "simulatorUUID": "3C51E4D9-C4A2-4043-BF75-2157D5FC1763",
+  "name": "Hang Ten Paseo strong-owl Review",
+  "runtime": "iOS 26.4",
+  "sdk": "iOS Simulator 27.0",
+  "model": "iPhone 17 Pro",
+  "build": "Debug, SWIFT_OPTIMIZATION_LEVEL=-O, signing enabled",
+  "solverCommit": "9972d22ad",
+  "integration": "uncommitted current worktree",
+  "modelSHA256": "35417e90919ff4bb75c2e4faaffe04547457e67032de8601451d799d789ca64d",
+  "cordDiameterMM": 7,
+  "viewProof": [
+    "strong-owl-live-ios-front.png",
+    "strong-owl-live-ios-side.png",
+    "strong-owl-live-ios-top.png"
+  ],
+  "debugRotationSequenceDegrees": [
+    0,
+    90,
+    180,
+    0
+  ],
+  "note": "Review camera directions and physical rotation sequence are DEBUG controls, not asserted factory grip mappings. Physics and render radius are identical."
+}

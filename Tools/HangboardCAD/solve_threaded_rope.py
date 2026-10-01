@@ -35,7 +35,7 @@ from pathlib import Path
 
 import numpy as np
 import trimesh
-from shapely.geometry import LineString, Point, Polygon
+from shapely.geometry import LineString, Point, Polygon, box
 from shapely.geometry.polygon import orient
 from shapely.ops import unary_union
 
@@ -48,7 +48,7 @@ def rotate_inverse(quaternion, vector):
     return vector + quaternion[3] * turn + np.cross(xyz, turn)
 
 
-def bearing_section(pieces, mouth, offset):
+def bearing_section(pieces, mouth, offset, channel_profile=None):
     """Rope-centerline-free region of one section, open only at this mouth.
 
     One piece is the ordinary case. Several pieces mean a straight channel in
@@ -60,9 +60,30 @@ def bearing_section(pieces, mouth, offset):
     grown = wood.buffer(offset, quad_segs=12)
     if len(pieces) == 1:
         return grown
-    gap = max(a.distance(b) for i, a in enumerate(pieces) for b in pieces[i + 1:])
-    bridge = gap / 2 + 1e-5
-    closed = wood.buffer(bridge, quad_segs=12).buffer(-bridge, quad_segs=12)
+    if channel_profile == "rectangular":
+        # Circular morphological closing bows inward at a wide square mouth.
+        # An explicitly authored straight rectangular slot has parallel depth
+        # rims: join those rims without changing either remaining wood piece.
+        ordered = sorted(pieces, key=lambda piece: piece.bounds[0])
+        if len(ordered) != 2:
+            raise ValueError("rectangular channel requires two section pieces")
+        lower, upper = (piece.bounds for piece in ordered)
+        if lower[2] >= upper[0] or max(abs(lower[i] - upper[i]) for i in (1, 3)) > 1e-6:
+            raise ValueError("rectangular channel requires separated pieces with matching depth rims")
+        closed = wood.union(box(lower[2], lower[1], upper[0], lower[3]))
+    else:
+        gap = max(a.distance(b) for i, a in enumerate(pieces) for b in pieces[i + 1:])
+        bridge = gap / 2 + 1e-5
+        closed = wood.buffer(bridge, quad_segs=12).buffer(-bridge, quad_segs=12)
+        # A curved exit can have a narrow closest gap but a wider throat.
+        # Keep the existing outline when it succeeds; otherwise increase only
+        # this temporary topological closure, never the actual collision solid.
+        # Every generated route is still checked against the full native wood.
+        for _ in range(3):
+            if closed.geom_type == "Polygon" and not closed.interiors:
+                break
+            bridge *= 2
+            closed = wood.buffer(bridge, quad_segs=12).buffer(-bridge, quad_segs=12)
     if closed.geom_type != "Polygon" or closed.interiors:
         raise ValueError("section channel could not be bridged into one outline")
     channel = closed.buffer(offset, quad_segs=12).difference(grown)
@@ -75,7 +96,7 @@ def bearing_section(pieces, mouth, offset):
 class Section:
     DEPTH = np.array([0.0, 0.0, 1.0])
 
-    def __init__(self, mouth, mesh, radius, clearance, anchor=None):
+    def __init__(self, mouth, mesh, radius, clearance, anchor=None, channel_profile=None):
         """Section through `mouth`: the x-plane, or the plane holding `anchor`.
 
         Plane coordinates are (distance along `up`, model z). For the x-plane
@@ -101,6 +122,7 @@ class Section:
                 [Polygon(self.to_plane(loop)) for loop in cross.discrete],
                 self.to_plane(origin),
                 radius + clearance,
+                channel_profile,
             ),
             1,
         )
@@ -287,8 +309,13 @@ def solve_package(package, mesh, suspension, descriptor):
         setup["anchor"]["offsetFromBoardBounds"], dtype=float
     )
     mouths = {p["id"]: p for side in setup["passages"].values() for p in side}
-    if len(mouths) != 4 or len(setup["branches"]) != 2:
-        raise ValueError("threaded-rope solver expects two loops with four mouths")
+    branch_count = len(setup["branches"])
+    if branch_count not in (1, 2) or len(mouths) != 2 * branch_count:
+        raise ValueError("threaded-rope solver expects one or two loops with two mouths each")
+    paired_ids = [key for branch in setup["branches"] for key in branch["passageIDs"]]
+    if (any(len(branch["passageIDs"]) != 2 for branch in setup["branches"])
+            or len(set(paired_ids)) != len(paired_ids) or set(paired_ids) != set(mouths)):
+        raise ValueError("threaded-rope branches must pair every distinct mouth exactly once")
     radii = {branch["radius"] for branch in setup["branches"]}
     rest_lengths = {branch["restLength"] for branch in setup["branches"]}
     if len(radii) != 1 or len(rest_lengths) != 1:
@@ -297,12 +324,15 @@ def solve_package(package, mesh, suspension, descriptor):
     rest = rest_lengths.pop()
     clearance = setup["internalLoop"]["clearance"]
     plane = suspension.get("ropeSolver", {}).get("sectionPlane", "mouth-x")
+    channel_profile = suspension.get("ropeSolver", {}).get("channelProfile")
+    if channel_profile not in (None, "rectangular") or (channel_profile == "rectangular" and plane != "mouth-x"):
+        raise ValueError("rectangular channelProfile requires the mouth-x section plane")
     if plane not in ("mouth-x", "anchor"):
         raise ValueError(f"unknown ropeSolver.sectionPlane {plane!r}")
 
     def build_sections(local=None):
         built = {
-            key: Section(mouth, mesh, radius, clearance, local)
+            key: Section(mouth, mesh, radius, clearance, local, channel_profile)
             for key, mouth in mouths.items()
         }
         print(
