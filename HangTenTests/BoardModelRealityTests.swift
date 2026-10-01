@@ -5,6 +5,60 @@ import simd
 @testable import HangTen
 
 final class BoardModelRealityTests: XCTestCase {
+    @MainActor
+    func testSplitPalmReflectionPreservesTheFrontThroughSelectionAndClear() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "soill.split-palm"))
+        let scene = try await BoardModelRealityLoader.load(board: board,
+                                                          presentation: board.defaultPresentation)
+        XCTAssertEqual(scene.instanceEntities.count, 2)
+        func checkFrontFacingReflection() {
+            for (index, entity) in scene.instanceEntities.enumerated() {
+                let matrix = entity.transformMatrix(relativeTo: scene.root)
+                // Reflect horizontal coordinates only; depth must still face
+                // the same camera as the original half, including after reset.
+                let expectedX: Float = index == 0 ? -1 : 1
+                XCTAssertEqual(matrix.columns.0.x, expectedX, accuracy: 0.0001)
+                XCTAssertEqual(matrix.columns.0.y, 0, accuracy: 0.0001)
+                XCTAssertEqual(matrix.columns.0.z, 0, accuracy: 0.0001)
+                XCTAssertEqual(matrix.columns.1.y, 1, accuracy: 0.0001)
+                XCTAssertEqual(matrix.columns.2.x, 0, accuracy: 0.0001)
+                XCTAssertEqual(matrix.columns.2.y, 0, accuracy: 0.0001)
+                XCTAssertEqual(matrix.columns.2.z, 1, accuracy: 0.0001)
+            }
+        }
+        checkFrontFacingReflection()
+        XCTAssertTrue(scene.select(positionID: "primary"))
+        checkFrontFacingReflection()
+        XCTAssertFalse(scene.select(positionID: nil))
+        checkFrontFacingReflection()
+        func checkVisibleSurfaces(_ entity: Entity) throws {
+            if let model = (entity as? ModelEntity)?.model {
+                for material in model.materials {
+                    if let material = material as? CustomMaterial {
+                        XCTAssertEqual(material.faceCulling, .none,
+                                       "Reflected plastic surfaces must remain visible")
+                    } else if let material = material as? PhysicallyBasedMaterial {
+                        XCTAssertEqual(material.faceCulling, .none,
+                                       "Fallback and highlighted reflected surfaces must remain visible")
+                    } else {
+                        XCTFail("Unexpected board material")
+                    }
+                }
+            }
+            for child in entity.children { try checkVisibleSurfaces(child) }
+        }
+        try checkVisibleSurfaces(scene.root)
+        let selectedEntities = try XCTUnwrap(scene.contactEntities["left-flat-rail"])
+        XCTAssertFalse(selectedEntities.isEmpty)
+        scene.highlight(["left-flat-rail"], mode: .active)
+        for entity in selectedEntities {
+            XCTAssertTrue(entity.model?.materials.first is PhysicallyBasedMaterial)
+        }
+        try checkVisibleSurfaces(scene.root)
+        scene.highlight([], mode: .active)
+        try checkVisibleSurfaces(scene.root)
+    }
+
     func testRealityTypesCompile() {
         let _ = BoardModelRealityScene.self
         let _ = BoardModelRealityLoader.self

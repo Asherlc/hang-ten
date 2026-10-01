@@ -299,6 +299,7 @@ final class BoardModelRealityScene {
         base.baseColor = .init(tint: UIColor(red: 0.78, green: 0.66, blue: 0.49, alpha: 1))
         base.roughness = .init(floatLiteral: 0.82)
         base.metallic = .init(floatLiteral: 0)
+        base.faceCulling = .none
         guard let device = MTLCreateSystemDefaultDevice(),
               let library = device.makeDefaultLibrary() else { return base }
         do {
@@ -318,6 +319,7 @@ final class BoardModelRealityScene {
         base.baseColor = .init(tint: UIColor(red: 0.25, green: 0.26, blue: 0.27, alpha: 1))
         base.roughness = .init(floatLiteral: 0.92)
         base.metallic = .init(floatLiteral: 0)
+        base.faceCulling = .none
         guard let device = MTLCreateSystemDefaultDevice(),
               let library = device.makeDefaultLibrary() else { return base }
         do {
@@ -338,6 +340,9 @@ final class BoardModelRealityScene {
                                             blue: 178.0 / 255, alpha: 1))
         base.roughness = .init(floatLiteral: 0.78)
         base.metallic = .init(floatLiteral: 0)
+        // Like the neutral finish, retain front surfaces when an instance's
+        // reflection reverses winding. CustomMaterial inherits this setting.
+        base.faceCulling = .none
         guard let device = MTLCreateSystemDefaultDevice(),
               let library = device.makeDefaultLibrary() else { return base }
         do {
