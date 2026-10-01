@@ -10,8 +10,8 @@ the whole board. Every body/hold mesh, including complete recesses and new
 importer children, inherits the mint finish. Attachments and cords retain their
 independent appearance. Legacy whole-node selectors remain supported for
 explicit overrides, but native packages no longer enumerate every mesh.
-Missing board finishes retain the legacy neutral default; all native catalog
-sources now author a choice. The renderer contains no product IDs or per-pocket
+Missing board finishes retain the legacy neutral default; all catalog model
+sources now author a material choice. The renderer contains no product IDs or per-pocket
 coordinate cutoffs. Clearing active or preview highlights restores the complete
 baseline. A mint matte PBR fallback handles unavailable custom shaders.
 
@@ -54,3 +54,8 @@ conflicts and finish coverage across every native CAD source. iOS tests load all
 opted-in catalog models and check every imported body/hold mesh. Review actual
 mint boards at detail and thumbnail size before checking highlight restoration;
 material-type assertions alone do not establish visual correctness.
+
+The [catalog finish audit](source-audits/2026-09-30-catalog-model-finishes.md)
+extends this palette to the remaining model packages, including both
+Transgression revisions. Catalog coverage rejects missing/neutral board
+finishes; neutral remains available for attachments and legacy decoding.

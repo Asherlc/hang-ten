@@ -123,3 +123,8 @@ and mint boards at detail and thumbnail size before checking highlights. Inspect
 all of Stoak’s pocket floors while no hold is selected. Keep the before/after
 screenshots with the audit. `BoardModelRealityTests` covers catalog mesh coverage,
 new-mesh inheritance, attachment isolation and full highlight restoration.
+
+The [catalog finish audit](source-audits/2026-09-30-catalog-model-finishes.md)
+adds the remaining wooden model packages to this finish, including Whetstone,
+Honestone, Original Grindstone and VerticalBoard Evo. The catalog coverage test
+now rejects omitted or neutral board finishes across every model package.

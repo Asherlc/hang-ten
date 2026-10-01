@@ -1,20 +1,5 @@
 import RealityKit
 import SwiftUI
-import UIKit
-#if DEBUG
-import QuartzCore
-
-private struct ReviewTrainPreviewKey: EnvironmentKey {
-    static let defaultValue = false
-}
-
-extension EnvironmentValues {
-    var reviewTrainPreview: Bool {
-        get { self[ReviewTrainPreviewKey.self] }
-        set { self[ReviewTrainPreviewKey.self] = newValue }
-    }
-}
-#endif
 
 struct BoardModelSurface: View {
     enum ResultState {
@@ -36,18 +21,6 @@ struct BoardModelSurface: View {
     let onContactTap: ((PhysicalContact) -> Void)?
     var isDisplayOnly = false
     @State private var result: ResultState = .loading
-    #if DEBUG
-    @Environment(\.reviewTrainPreview) private var reviewTrainPreview
-    #endif
-
-    private var suppressPreviewRenderer: Bool {
-        #if DEBUG
-        return reviewTrainPreview
-            && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_TRAIN_RENDERER"] == "1"
-        #else
-        return false
-        #endif
-    }
 
     init(
         board: BoardRevision,
@@ -72,42 +45,30 @@ struct BoardModelSurface: View {
         // lifecycle modifiers to its changing placeholder/model children.
         ZStack {
             if case .ready(let model) = result {
-                if suppressPreviewRenderer {
-                    Color.clear
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .accessibilityElement(children: .ignore)
-                        .accessibilityIdentifier("boardModel.3d")
-                        .onAppear {
-                            #if DEBUG
-                            print("[TrainPreviewComparison] stand-in board=\(board.id) scene=\(ObjectIdentifier(model))")
-                            #endif
-                        }
+                let realityView = BoardModelRealityView(
+                    model: model,
+                    boardName: board.name,
+                    accessibilityValue: highlightedContactCue,
+                    contacts: board.contacts(in: presentation),
+                    positionID: positionID,
+                    highlightedContactIDs: highlightedContactIDs,
+                    highlightMode: highlightMode,
+                    onContactTap: onContactTap,
+                    onUnavailable: { result = .unavailable },
+                    isDisplayOnly: isDisplayOnly
+                )
+                // Display-only picker cards wrap this in a Button; claiming
+                // SwiftUI hits here would intercept the card select tap even
+                // when the hosted RealityView has user interaction disabled.
+                .allowsHitTesting(!isDisplayOnly)
+                if onContactTap == nil {
+                    realityView.accessibilityIdentifier("boardModel.3d")
                 } else {
-                    let realityView = BoardModelRealityView(
-                        model: model,
-                        boardName: board.name,
-                        accessibilityValue: highlightedContactCue,
-                        contacts: board.contacts(in: presentation),
-                        positionID: positionID,
-                        highlightedContactIDs: highlightedContactIDs,
-                        highlightMode: highlightMode,
-                        onContactTap: onContactTap,
-                        onUnavailable: { result = .unavailable },
-                        isDisplayOnly: isDisplayOnly
-                    )
-                    // Display-only picker cards wrap this in a Button; claiming
-                    // SwiftUI hits here would intercept the card select tap even
-                    // when the hosted RealityView has user interaction disabled.
-                    .allowsHitTesting(!isDisplayOnly)
-                    if onContactTap == nil {
-                        realityView.accessibilityIdentifier("boardModel.3d")
-                    } else {
-                        // A parent accessibility identifier propagates to the
-                        // RealityView's projected contact buttons. Keep their
-                        // per-contact identifiers available to UI automation and
-                        // assistive technology on interactive board maps.
-                        realityView
-                    }
+                    // A parent accessibility identifier propagates to the
+                    // RealityView's projected contact buttons. Keep their
+                    // per-contact identifiers available to UI automation and
+                    // assistive technology on interactive board maps.
+                    realityView
                 }
             } else if let loadingMessage = result.loadingMessage {
                 HStack(spacing: 12) {
@@ -129,14 +90,7 @@ struct BoardModelSurface: View {
             }
         }
         .task(id: loadIdentity) {
-            guard !Task.isCancelled else {
-                    #if DEBUG
-                    if suppressPreviewRenderer {
-                        print("[TrainPreviewComparison] load cancelled board=\(board.id)")
-                    }
-                    #endif
-                    return
-                }
+            guard !Task.isCancelled else { return }
             guard case .model = presentation.media else {
                 result = .unavailable
                 return
@@ -153,14 +107,7 @@ struct BoardModelSurface: View {
                     presentation: presentation,
                     store: BoardCatalog.packageStore
                 )
-                guard !Task.isCancelled else {
-                    #if DEBUG
-                    if suppressPreviewRenderer {
-                        print("[TrainPreviewComparison] load cancelled board=\(board.id)")
-                    }
-                    #endif
-                    return
-                }
+                guard !Task.isCancelled else { return }
                 #if DEBUG
                 if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
                     print("[BoardModelSurface] load ready \(board.id) scene=\(ObjectIdentifier(model)) displayOnly=\(isDisplayOnly)")
@@ -168,14 +115,7 @@ struct BoardModelSurface: View {
                 #endif
                 result = .ready(model)
             } catch {
-                guard !Task.isCancelled else {
-                    #if DEBUG
-                    if suppressPreviewRenderer {
-                        print("[TrainPreviewComparison] load cancelled board=\(board.id)")
-                    }
-                    #endif
-                    return
-                }
+                guard !Task.isCancelled else { return }
                 #if DEBUG
                 print("[BoardModelSurface] RealityKit model load failed: \(error)")
                 #endif
@@ -255,51 +195,29 @@ struct BoardModelRealityView: View {
         let _ = cameraRevision
         GeometryReader { proxy in
             let size = proxy.size
-            Group {
-                if !isDisplayOnly, onContactTap != nil {
-                    BoardModelARHost(
-                        model: model,
-                        synchronize: { viewport in
-                            applySync(size: viewport)
-                            updateRendererDiagnostic(revision: cameraRevision)
-                        },
-                        onEntityTap: { entity in
-                            guard let id = model.contactID(for: entity),
-                                  let contact = contacts.first(where: { $0.id == id }) else { return }
-                            model.resetCamera(animated: true)
-                            cameraRevision &+= 1
-                            onContactTap?(contact)
-                        },
-                        onCameraChange: {
-                            cameraRevision &+= 1
-                        }
-                    )
-                } else {
-                    RealityView { content in
-                        // Board maps use the authored camera, without device tracking
-                        // or the AR session's implicit non-AR fallback.
-                        content.camera = .virtual
-                        content.add(model.root)
-                        content.add(model.camera)
-                        applySync(size: size)
-                        #if DEBUG
-                        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
-                            print("[BoardModelRealityView] attach scene=\(ObjectIdentifier(model)) camera=\(content.camera) size=\(size) transform=\(model.camera.transform.matrix) rootScene=\(String(describing: model.root.scene))")
-                        }
-                        #endif
-                    } update: { content in
-                        // Observe orbit invalidation in the RealityView update itself,
-                        // as well as the projected SwiftUI accessibility overlay.
-                        let revision = cameraRevision
-                        content.camera = .virtual
-                        applySync(size: size)
-                        updateRendererDiagnostic(revision: revision)
-                    }
-                    .gesture(orbitGesture(size: size))
-                    .simultaneousGesture(magnifyGesture)
-                    .gesture(tapGesture)
+            RealityView { content in
+                // Board maps use the authored camera, without device tracking
+                // or the AR session's implicit non-AR fallback.
+                content.camera = .virtual
+                content.add(model.root)
+                content.add(model.camera)
+                applySync(size: size)
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
+                    print("[BoardModelRealityView] attach scene=\(ObjectIdentifier(model)) camera=\(content.camera) size=\(size) transform=\(model.camera.transform.matrix) rootScene=\(String(describing: model.root.scene))")
                 }
+                #endif
+            } update: { content in
+                // Observe orbit invalidation in the RealityView update itself,
+                // as well as the projected SwiftUI accessibility overlay.
+                let revision = cameraRevision
+                content.camera = .virtual
+                applySync(size: size)
+                updateRendererDiagnostic(revision: revision)
             }
+            .gesture(orbitGesture(size: size))
+            .simultaneousGesture(magnifyGesture)
+            .gesture(tapGesture)
             .overlay { accessibilityOverlay(size: size) }
             #if DEBUG
             .overlay(alignment: .topLeading) {
@@ -315,8 +233,8 @@ struct BoardModelRealityView: View {
             }
             #endif
             .allowsHitTesting(!isDisplayOnly)
-            // A different scene gets a fresh renderer host and independent
-            // root/camera attachment.
+            // A different scene needs a fresh RealityView make closure so its
+            // root and camera replace the prior scene entities.
             .id(ObjectIdentifier(model))
         }
         // A display-only card is one element (its host Button owns the tap). An
@@ -435,220 +353,6 @@ struct BoardModelRealityView: View {
             // gesture so the nearest visible contact wins, not the overlay.
             .allowsHitTesting(false)
         }
-    }
-}
-
-// Controlled host comparison: interactive maps retain the same scene and camera
-// but use a stable UIKit non-AR renderer. Display-only previews keep RealityView.
-private struct BoardModelARHost: UIViewRepresentable {
-    let model: BoardModelRealityScene
-    let synchronize: (CGSize) -> Void
-    let onEntityTap: (Entity) -> Void
-    let onCameraChange: () -> Void
-
-    /// Creates the coordinator that owns this host’s anchor and gesture state.
-    func makeCoordinator() -> Coordinator { Coordinator(parent: self) }
-
-    /// Creates the non-AR renderer container and attaches this independently loaded scene.
-    func makeUIView(context: Context) -> BoardModelARContainer {
-        let view = BoardModelARContainer(frame: .zero)
-        context.coordinator.attach(to: view)
-        return view
-    }
-
-    /// Refreshes callbacks and synchronizes framing against the renderer’s current bounds.
-    func updateUIView(_ view: BoardModelARContainer, context: Context) {
-        context.coordinator.parent = self
-        context.coordinator.synchronize(view)
-    }
-
-    /// Detaches this host’s scene and recognizers when SwiftUI removes its container.
-    static func dismantleUIView(_ view: BoardModelARContainer, coordinator: Coordinator) {
-        coordinator.detach(from: view)
-    }
-
-    @MainActor
-    final class Coordinator: NSObject {
-        var parent: BoardModelARHost
-        let anchor = AnchorEntity(world: .zero)
-        let panDelegate = OrbitPanGestureDelegate(allowsAllDirections: true)
-        private var lastTranslation: CGPoint = .zero
-        private var lastScale: CGFloat = 1
-        #if DEBUG
-        private var comparisonSyncCount = 0
-        #endif
-
-        /// Retains the current host configuration for scene attachment and input callbacks.
-        init(parent: BoardModelARHost) { self.parent = parent }
-
-        /// Attaches the scene beneath an identity anchor and installs native tap, orbit and pinch input.
-        func attach(to view: BoardModelARContainer) {
-            anchor.addChild(parent.model.root)
-            anchor.addChild(parent.model.camera)
-            view.renderer.scene.addAnchor(anchor)
-            #if DEBUG
-            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_TRAIN_RENDERER"] == "1" {
-                print("[TrainPreviewComparison] detail-create container=\(ObjectIdentifier(view)) renderer=\(ObjectIdentifier(view.renderer)) scene=\(ObjectIdentifier(parent.model))")
-                let readback = BoardPreviewReadbackElement(accessibilityContainer: view)
-                readback.accessibilityIdentifier = "boardModel.previewComparisonReadback"
-                readback.accessibilityLabel = "Preview comparison live state"
-                readback.accessibilityFrameInContainerSpace = CGRect(x: 0, y: 0, width: 1, height: 1)
-                readback.readValue = { [weak self, weak view] in
-                    guard let self, let view else { return "detached" }
-                    return self.comparisonReadback(view)
-                }
-                view.accessibilityElements = [readback]
-            }
-            #endif
-            view.onLayout = { [weak self] view in self?.synchronize(view) }
-            let pan = OrbitPanGestureRecognizer(target: self, action: #selector(orbit(_:)))
-            pan.activationDistance = 4
-            pan.delegate = panDelegate
-            view.renderer.addGestureRecognizer(pan)
-            let tap = UITapGestureRecognizer(target: self, action: #selector(tap(_:)))
-            tap.require(toFail: pan)
-            view.renderer.addGestureRecognizer(tap)
-            let pinch = UIPinchGestureRecognizer(target: self, action: #selector(magnify(_:)))
-            panDelegate.simultaneousPan = pan
-            panDelegate.simultaneousPinch = pinch
-            pinch.delegate = panDelegate
-            view.renderer.addGestureRecognizer(pinch)
-        }
-
-        /// Applies framing and selection only when UIKit reports a finite, positive viewport.
-        func synchronize(_ view: BoardModelARContainer) {
-            let size = view.renderer.bounds.size
-            guard size.width.isFinite, size.height.isFinite,
-                  size.width > 0, size.height > 0 else { return }
-            parent.synchronize(size)
-            #if DEBUG
-            comparisonSyncCount += 1
-            #endif
-        }
-
-        /// Releases layout callbacks, input recognizers and the entities attached by this host.
-        func detach(from view: BoardModelARContainer) {
-            #if DEBUG
-            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_TRAIN_RENDERER"] == "1" {
-                print("[TrainPreviewComparison] detail-dismantle container=\(ObjectIdentifier(view)) renderer=\(ObjectIdentifier(view.renderer)) scene=\(ObjectIdentifier(parent.model))")
-            }
-            view.accessibilityElements = nil
-            #endif
-            view.onLayout = nil
-            for gesture in view.renderer.gestureRecognizers ?? [] {
-                view.renderer.removeGestureRecognizer(gesture)
-            }
-            view.renderer.scene.removeAnchor(anchor)
-            parent.model.root.removeFromParent()
-            parent.model.camera.removeFromParent()
-        }
-
-        #if DEBUG
-        /// Reads current UIKit and scene state without synchronization or render requests.
-        private func comparisonReadback(_ view: BoardModelARContainer) -> String {
-            func metalLayers(_ layer: CALayer) -> [String] {
-                let current = (layer as? CAMetalLayer).map {
-                    ["layer=\(ObjectIdentifier($0));drawable=\($0.drawableSize);scale=\($0.contentsScale);transaction=\($0.presentsWithTransaction)"]
-                } ?? []
-                return current + (layer.sublayers ?? []).flatMap(metalLayers)
-            }
-            let materials = parent.model.contactEntities.keys.sorted().map { id in
-                let values = (parent.model.contactEntities[id] ?? []).flatMap { entity in
-                    (entity.model?.materials ?? []).map { material in
-                        if let pbr = material as? PhysicallyBasedMaterial {
-                            return "PBR:\(pbr.baseColor.tint)"
-                        }
-                        if let custom = material as? CustomMaterial {
-                            return "Custom:\(custom.baseColor.tint)"
-                        }
-                        return String(describing: type(of: material))
-                    }
-                }
-                return "\(id)=\(values)"
-            }
-            return "container=\(ObjectIdentifier(view));renderer=\(ObjectIdentifier(view.renderer));scene=\(ObjectIdentifier(parent.model));window=\(view.window != nil);bounds=\(view.renderer.bounds);windowFrame=\(view.renderer.convert(view.renderer.bounds, to: view.window));syncCount=\(comparisonSyncCount);authored=\(parent.model.camera.transform.matrix);native=\(view.renderer.cameraTransform.matrix);metal=\(metalLayers(view.renderer.layer));materials=\(materials)"
-        }
-        #endif
-
-        /// Resolves a completed native collision hit before forwarding physical contact selection.
-        @objc private func tap(_ gesture: UITapGestureRecognizer) {
-            guard gesture.state == .ended, let view = gesture.view as? ARView else { return }
-            let entity = view.entity(at: gesture.location(in: view))
-            guard let entity else { return }
-            parent.onEntityTap(entity)
-        }
-
-        /// Applies incremental pan deltas using the existing viewport-normalized camera orbit math.
-        @objc private func orbit(_ gesture: UIPanGestureRecognizer) {
-            guard let view = gesture.view else { return }
-            switch gesture.state {
-            case .began, .changed:
-                let translation = gesture.translation(in: view)
-                let deltaX = translation.x - lastTranslation.x
-                let deltaY = translation.y - lastTranslation.y
-                lastTranslation = translation
-                parent.model.orbit(
-                    azimuth: parent.model.orbitAzimuth - Float(deltaX / max(view.bounds.width, 1)) * 0.9,
-                    elevation: parent.model.orbitElevation - Float(deltaY / max(view.bounds.height, 1)) * 0.65)
-                parent.onCameraChange()
-            case .ended, .cancelled, .failed:
-                lastTranslation = .zero
-            default: break
-            }
-        }
-
-        /// Applies incremental pinch ratios to zoom and resets gesture bookkeeping at termination.
-        @objc private func magnify(_ gesture: UIPinchGestureRecognizer) {
-            switch gesture.state {
-            case .began, .changed:
-                let ratio = gesture.scale / max(lastScale, 0.001)
-                lastScale = gesture.scale
-                parent.model.orbit(azimuth: parent.model.orbitAzimuth,
-                                   elevation: parent.model.orbitElevation,
-                                   zoomScale: parent.model.orbitZoom / Float(ratio))
-                parent.onCameraChange()
-            case .ended, .cancelled, .failed:
-                lastScale = 1
-            default: break
-            }
-        }
-    }
-}
-
-#if DEBUG
-@MainActor
-private final class BoardPreviewReadbackElement: UIAccessibilityElement {
-    var readValue: (() -> String)?
-    override var accessibilityValue: String? {
-        get { readValue?() }
-        set { }
-    }
-}
-#endif
-
-private final class BoardModelARContainer: UIView {
-    let renderer = ARView(frame: .zero, cameraMode: .nonAR, automaticallyConfigureSession: false)
-    var onLayout: ((BoardModelARContainer) -> Void)?
-
-    /// Builds a transparent non-AR renderer without starting an automatically configured AR session.
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        backgroundColor = .clear
-        renderer.environment.background = .color(.clear)
-        renderer.backgroundColor = .clear
-        renderer.isOpaque = false
-        addSubview(renderer)
-    }
-
-    /// Rejects storyboard decoding because this container is created programmatically.
-    @available(*, unavailable)
-    required init?(coder: NSCoder) { fatalError("init(coder:) is unavailable") }
-
-    /// Sizes the renderer to actual container bounds before synchronizing camera framing.
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        renderer.frame = bounds
-        onLayout?(self)
     }
 }
 
