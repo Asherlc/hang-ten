@@ -7,14 +7,25 @@ logical hold identity, authored board poses, or cord configuration.
 
 Selecting a hold whose highlighted surface is difficult to see from the
 canonical view chooses a small camera adjustment from the actual contact
-triangles in the current board pose. The search is limited to 20 degrees and
-uses the least-visible selected hold for multiple selections. An adjustment
-must provide a meaningful visibility improvement.
+triangles and surrounding board geometry in the current board pose. Exposed
+surfaces use projected area. Recessed surfaces also use clear sight lines through
+their openings: an upward-facing finger floor underneath a roof does not imply
+that the camera should look down at it. Area-weighted surface samples detect
+that enclosure within the contact's own geometric extent and test candidate
+sight lines against the imported board meshes. Each mesh keeps a local spatial
+index; pose changes transform rays and conservative bounds, without rebuilding
+or transforming the board-wide triangle data.
+Hold names and types never enter the calculation.
 
-- A nonzero adjustment sets the camera to the computed angles and default zoom.
-  It animates over 0.28 seconds when Reduce Motion is disabled.
-- If the selected surfaces need no adjustment, preserve the current camera
-  angles and zoom, including a prior manual inspection view.
+The search is limited to 20 degrees and uses the least-visible selected hold
+for multiple selections. Prefer the front angle when it is readable; otherwise
+choose the smallest readable adjustment or the best meaningful improvement in
+that neighborhood. This is a bounded geometric heuristic, not a global
+visibility optimum or an authored opening annotation.
+
+- Every new selection sets the camera to the computed angles and default zoom,
+  including a zero adjustment that returns to the front angle. It animates over
+  0.28 seconds when Reduce Motion is disabled.
 - Unchanged contact selection and board position, physical same-hold retaps,
   and highlight-mode updates preserve manual orbit and zoom.
 - Clearing an existing selection restores default camera framing.
@@ -23,9 +34,9 @@ must provide a meaningful visibility improvement.
 - Automatic adjustment keeps the framing target fixed and refits the complete
   board and cord bounds. Manual gestures remain available afterward.
 
-Unit validation covers visible-front preservation, edge-on top/side/underside
-surfaces, mirrored geometry, multiple selections, whole-scene framing, clearing,
-and replacement contact meshes. UI validation waits for the expected selection's
+Unit validation covers returning to front, front-opening recesses versus
+exposed surfaces, edge-on top/side/underside surfaces, mirrored geometry,
+multiple selections, whole-scene framing, clearing, and replacement contact meshes. UI validation waits for the expected selection's
 rendered camera to reach its target before using projected hold coordinates.
 Physical reselection tests require a new native pick receipt for the expected
 hold before asserting that camera angles and projection remain unchanged.
