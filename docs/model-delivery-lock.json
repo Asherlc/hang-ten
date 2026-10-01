@@ -697,10 +697,10 @@
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/metadata-diff.json",
       "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-shortening-review/app-review/validation.json",
-      "geometryAcceptance": "pending requested one-by-one user review",
+      "geometryAcceptance": "reviewed; wraparound pinch and shorter display cord accepted",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
       "suspensionSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
-      "reviewRevision": "2026-09-30: upper/lower wraparound pinch accepted; shorter display cord pending review #4.",
+      "reviewRevision": "2026-09-30: shown upper/lower wraparound pinch and shorter display cord accepted in review #4.",
       "nativeCordValidation": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-shortening-review/native-cord/root-24-route-certificates.json",
       "humanReview": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/human-review.json"
     },
@@ -1229,7 +1229,10 @@
       "sidecarSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
       "scope": "110 mm display leads and 50 mm support offset; native-solved heights/routes in all six poses. Accepted wood/contact geometry, 6 mm cord, actual mouths, terminals, topology, cameras and rotations preserved.",
       "review": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-shortening-review/review.md",
-      "geometryAcceptance": "Shorter cord awaiting review #4."
+      "geometryAcceptance": "Shorter shown display cord accepted with Y.",
+      "answer": "Y",
+      "question": "Does this cord length look right?",
+      "revisionCommit": "1e09ed9be2c690fe98c0a69aa92125a66127f9e0"
     }
   ]
 }

@@ -5,7 +5,7 @@
   "number": 4,
   "package": "frictitious-nug",
   "boardID": "frictitious.nug",
-  "status": "pinch highlight accepted; shorter cord awaiting review #4",
+  "status": "reviewed; wraparound pinch and shorter display cord accepted",
   "question": "Does this cord length look right?",
   "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
   "modelSHA256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
@@ -16,7 +16,7 @@
     "cord-shortening-review/default-inverted-cord-overview.png": "df9bec78c92618f6f5cc467cb9661fabbf4e3cb693eaf5e946741734a2a97856",
     "cord-shortening-review/app-review/outer-lower-front.png": "1946e6f0a9467cf8c381aaadfae041c2a393277e3c00feadf74f1976fc8dc9c7"
   },
-  "approvalLimit": "The shown pinch highlight was accepted. The newly shortened displayed cord remains pending; estimates do not establish manufacturer cord length.",
+  "approvalLimit": "The replies accept the shown pinch highlight and shorter displayed cord. Display estimates do not establish manufacturer cord length or unspecified hidden connections.",
   "history": [
     {
       "displayedRevision": {
@@ -63,6 +63,22 @@
         "pinch-contact-review/app-review/outer-upper-front.png": "a83e70c0d3b37cb24a3def670592b12d5986a7236366a63b24aefc7b4490205d"
       },
       "remainingRequest": "Shorter display cord."
+    },
+    {
+      "date": "2026-09-30",
+      "reviewer": "asherlc",
+      "question": "Does this cord length look right?",
+      "answer": "Y",
+      "revisionCommit": "1e09ed9be2c690fe98c0a69aa92125a66127f9e0",
+      "acceptedScope": "Shorter displayed cord shown in the final front/side/top comparisons and app image, with 54.185507 mm vertical support-to-board-top space. Upper/lower wraparound pinch was accepted previously.",
+      "suspensionSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+      "shownImages": {
+        "cord-shortening-review/default-inverted-cord-overview.png": "df9bec78c92618f6f5cc467cb9661fabbf4e3cb693eaf5e946741734a2a97856",
+        "cord-shortening-review/app-review/outer-lower-front.png": "1946e6f0a9467cf8c381aaadfae041c2a393277e3c00feadf74f1976fc8dc9c7"
+      }
     }
-  ]
+  ],
+  "answer": "Y",
+  "acceptedScope": "Shorter displayed cord shown in the final front/side/top comparisons and app image, with 54.185507 mm vertical support-to-board-top space. Upper/lower wraparound pinch was accepted previously.",
+  "revisionCommit": "1e09ed9be2c690fe98c0a69aa92125a66127f9e0"
 }

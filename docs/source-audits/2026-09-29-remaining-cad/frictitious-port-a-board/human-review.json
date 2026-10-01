@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-30",
+  "reviewer": "asherlc",
+  "number": 5,
+  "package": "frictitious-port-a-board",
+  "boardID": "frictitious.port-a-board",
+  "status": "awaiting one-by-one review",
+  "question": "Does this one look right?",
+  "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+  "modelSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+  "descriptorSHA256": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+  "suspensionSHA256": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305",
+  "shownImages": {
+    "individual-review/preview-reference-cad-overview.png": "caedb95c8ffcfd5be13caed48b71d8918b108c9d2e334defa3b428582bae50ca",
+    "individual-review/preview-app-selection-overview.png": "975a1f96a526c8889c17723d631cf15fc7ba209e28babfc6654f9e5a645ddfbe"
+  },
+  "currentRevision": "individual-review/preview-index.html",
+  "revisionCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
+  "sourceAudit": "native-authoring.md",
+  "appReview": "app-review/validation.json",
+  "reviewScope": "Existing Port-A-Board CAD body, exterior contacts and displayed suspension shown in the reference comparison and selected-edge/pinch app views.",
+  "approvalLimit": "No human acceptance yet. Earlier batch app captures match current source/model/descriptor; their validation does not record a sidecar hash. Current suspension is observed separately. Display estimates are not manufacturer specifications."
+}

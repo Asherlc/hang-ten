@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "one-by-one review in progress: Cyclops, DUAL and UNLEVEL shown revisions accepted; The NUG is review #4",
+  "reviewState": "one-by-one review in progress: Cyclops, DUAL, UNLEVEL and The NUG shown revisions accepted; Port-A-Board is review #5",
   "boards": [
     {
       "number": 1,
@@ -102,7 +102,7 @@
       "package": "frictitious-nug",
       "boardID": "frictitious.nug",
       "name": "Frictitious Climbing The NUG",
-      "humanReview": "pinch highlight accepted; shorter cord awaiting review #4",
+      "humanReview": "reviewed; wraparound pinch and shorter display cord accepted",
       "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
       "reviewPage": "frictitious-nug/review/index.html",
       "sourceAudit": "frictitious-nug/README.md",
@@ -133,21 +133,13 @@
       "package": "frictitious-port-a-board",
       "boardID": "frictitious.port-a-board",
       "name": "Frictitious Climbing Port-A-Board",
-      "humanReview": "pending",
+      "humanReview": "awaiting review #5",
       "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
-      "reviewPage": "frictitious-port-a-board/review/index.html",
+      "reviewPage": "frictitious-port-a-board/individual-review/preview-index.html",
       "sourceAudit": "frictitious-port-a-board/native-authoring.md",
       "comparisons": [
-        "frictitious-port-a-board/review/prior-front-inverted.png",
-        "frictitious-port-a-board/review/prior-side.png",
-        "frictitious-port-a-board/review/prior-back.png",
-        "frictitious-port-a-board/review/prior-cord-option-4-20mm-incut.png",
-        "frictitious-port-a-board/review/prior-primary.png",
-        "frictitious-port-a-board/review/prior-back-inverted.png",
-        "frictitious-port-a-board/review/primary-front.png",
-        "frictitious-port-a-board/review/prior-side.png",
-        "frictitious-port-a-board/review/primary-side.png",
-        "frictitious-port-a-board/review/primary-top.png"
+        "frictitious-port-a-board/individual-review/preview-reference-cad-overview.png",
+        "frictitious-port-a-board/individual-review/preview-app-selection-overview.png"
       ],
       "presentations": {
         "primary": {
@@ -156,7 +148,9 @@
         }
       },
       "appReview": "frictitious-port-a-board/app-review/validation.json",
-      "appReviewPage": "frictitious-port-a-board/app-review/index.html"
+      "appReviewPage": "frictitious-port-a-board/app-review/index.html",
+      "humanReviewRecord": "frictitious-port-a-board/human-review.json",
+      "suspensionSHA256": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305"
     },
     {
       "number": 6,

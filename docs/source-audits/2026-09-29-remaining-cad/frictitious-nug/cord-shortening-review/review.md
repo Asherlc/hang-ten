@@ -13,4 +13,4 @@ The [manufacturer page](https://frictitiousclimbing.com/products/the-nug) specif
 
 Fresh native apply/check and the parent's independent promoted-package check agree across all six poses. Complete rounded-route clearance, whole-tube intersection, actual mouth entry and length checks pass at native tolerances for all 24 routes. Full iOS tests pass: 1,264 passed, 3 skipped. All 64 packages validate and Apple/Android staging matches all 64 generated manifests and 60 models. Package tests and full earlier code-suite counts are retained in the linked verification packets. Canonical app views were captured; physical UI orbit and full rope equilibrium remain unclaimed.
 
-The pinch highlight is accepted. This shorter cord is awaiting the next reply in review #4; review #5 has not begun.
+The pinch highlight and shorter displayed cord are accepted. The user replied “Y” to “Does this cord length look right?” for revision `1e09ed9be2c690fe98c0a69aa92125a66127f9e0`. Port-A-Board is now review #5.

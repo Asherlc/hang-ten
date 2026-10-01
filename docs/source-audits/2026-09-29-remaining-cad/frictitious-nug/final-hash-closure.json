@@ -16,5 +16,6 @@
   "pinchReview": "pinch-contact-review/review.md",
   "pinchAcceptance": "Shown upper/lower wraparound highlight accepted.",
   "priorCordAndAppReportsAreHistorical": true,
-  "humanGeometryAcceptance": "Shorter cord pending review #4."
+  "humanGeometryAcceptance": "reviewed; wraparound pinch and shorter display cord accepted",
+  "humanReview": "human-review.json"
 }

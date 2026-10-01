@@ -53,11 +53,12 @@
   "physicalOrbitVerified": false,
   "limits": "Cord lengths/support placement remain display estimates; unknown hidden joins remain unspecified. Native tolerances apply; no physical-equilibrium/global-shortest-route claim.",
   "pinchAcceptance": "looks good",
-  "shortCordAcceptance": "pending review #4",
+  "shortCordAcceptance": "Accepted with Y in response to Does this cord length look right?",
   "resourceLifecycle": {
     "simulatorDeleted": true,
     "derivedDataRemoved": true,
     "ownedResultBundlesRemoved": true,
     "proof": "integration/resource-cleanup.json"
-  }
+  },
+  "humanReview": "../human-review.json"
 }
