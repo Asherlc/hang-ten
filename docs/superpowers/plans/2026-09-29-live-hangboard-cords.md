@@ -195,3 +195,16 @@ as outstanding. Task 8 remains incomplete: other catalog physics profiles need
 source adapters, numerical/visual gates and explicit promotion. Existing static
 exterior caches do not count as live promotion. Continue those remaining gates
 and review regression results after any implementation changes.
+
+Execution checkpoint (1 October 2026): the user-authorized nonlinear primal
+augmented-Lagrangian16-sweep prototype completes the matched loaded Clavellium
+step but rejects:0.984184%strain exceeds0.5%, final numerical convergence fails,
+and host152–165ms exceeds the56.805ms accepted original control. All local trials
+accept and global merit decreases; full proposal replay/rollback is byte identical.
+A separate discarded complete-chain direction improves strain only2.83%and
+misses its prewritten screen. Both configurations are closed without cap/penalty
+or physical-gate tuning. See
+[`2026-10-01-live-nonlinear-augmented.md`](../../source-audits/2026-10-01-live-nonlinear-augmented.md).
+These results establish neither live readiness nor impossibility of a redesigned
+whole-chain solver. Device/trajectory/catalog gates remain outstanding; seated
+cords and the production solver remain available.
