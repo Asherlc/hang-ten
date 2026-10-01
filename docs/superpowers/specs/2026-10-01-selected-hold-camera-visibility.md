@@ -31,8 +31,15 @@ visibility optimum or an authored opening annotation.
 - Clearing an existing selection restores default camera framing.
 - Position changes still apply the package's board pose and cord setup. The
   camera uses that position's framing and recomputes hold visibility.
-- Automatic adjustment keeps the framing target fixed and refits the complete
-  board and cord bounds. Manual gestures remain available afterward.
+- Automatic adjustment refits the complete board and cord bounds. For corded
+  boards, X-axis tilt orbits around the midpoint of the authored attachment
+  points or passage mouths in the current placed board pose. Yaw retains the
+  canonical framing pivot. The camera target follows this geometric orbit;
+  selecting a particular hold never makes that hold the pivot. Uncorded boards
+  retain the fixed framing target. Manual gestures remain available afterward.
+- The normal viewer uses bundled suspension geometry directly. Live rope
+  physics is an explicit loader opt-in for solver integration and tests; it is
+  not required for the cord-point camera pivot.
 
 Unit validation covers returning to front, front-opening recesses versus
 exposed surfaces, edge-on top/side/underside surfaces, mirrored geometry,

@@ -50,6 +50,21 @@ and transient suspension-renderer path. ODR is a plausible boundary only when
 the model is unavailable, its resource URL cannot be resolved, its bytes do not
 match the descriptor, or RealityKit cannot decode it.
 
+## Cord-point display tilt
+
+The normal RealityKit viewer uses the package's deterministic suspension layer,
+without starting a live rope simulation. X-axis camera orbit (manual or selected
+hold adjustment) uses the midpoint of the authored attachment points or passage
+mouths, transformed by the current board/instance pose. Through-bores contribute
+both mouths; point passages contribute one. Reflections baked into meshes are
+applied to the original authored suspension coordinates before averaging.
+
+Yaw retains the canonical framing pivot. The full board/cord envelope is refit
+around the tilted camera target; resetting returns exactly to the original
+view. Neither the board transform nor cord routes move during this display
+orbit. This is a geometric viewing rule, not a physical equilibrium or hinge.
+The loader's `useLivePhysics` opt-in retains the existing solver test lane.
+
 ## Diagnose by symptom
 
 | Symptom | First boundary to inspect | Do not use as a shortcut |

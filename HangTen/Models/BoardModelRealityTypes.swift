@@ -1406,22 +1406,64 @@ final class BoardModelRealityScene {
         entity.model?.materials = [material]
     }
 
+    /// Shared display pivot from authored suspension points, transformed by
+    /// the current pose. It never pins or simulates the board or cord.
+    private var cordOrbitPivot: SIMD3<Float>? {
+        guard transientCordEntity != nil else { return nil }
+        var points: [SIMD3<Float>] = []
+        for (index, entity) in instanceEntities.enumerated() {
+            let instance = instances.flatMap { $0.indices.contains(index) ? $0[index] : nil }
+            guard let setup = instance?.suspension ?? suspension else { continue }
+            let localPoints: [[Double]]
+            switch setup {
+            case .singleCord(let profile):
+                localPoints = [profile.attachment.pointInModel]
+            case .pairedLeadCord(let profile):
+                localPoints = profile.attachments.map(\.pointInModel)
+            case .twoBranchCord(let profile):
+                localPoints = (profile.passages.left + profile.passages.right).flatMap {
+                    $0.isThroughBore ? [$0.entryPointInModel, $0.exitPointInModel] : [$0.pointInModel]
+                }
+            }
+            var transform = entity.transformMatrix(relativeTo: root)
+            if instance?.baseTransform.reflection == .x {
+                // Reflection is baked into the display mesh, but attachment
+                // coordinates are still in the original authored model basis.
+                transform = transform * Self.reflectionMatrix(center: Self.boundsCenter(descriptor.modelBounds))
+            }
+            for point in localPoints where point.count == 3 && point.allSatisfy(\.isFinite) {
+                let world = transform * SIMD4<Float>(SIMD3(point.map(Float.init)), 1)
+                points.append(SIMD3(world.x, world.y, world.z))
+            }
+        }
+        guard !points.isEmpty else { return nil }
+        return points.reduce(.zero, +) / Float(points.count)
+    }
+
     private func updateCameraTransform(animated: Bool = false, completion: (() -> Void)? = nil) {
         guard let framing = currentFraming else { completion?(); return }
         let rotation = orbitRotation(azimuth: orbitAzimuth, elevation: orbitElevation, framing: framing)
         let backward = simd_normalize(rotation.act(-framing.direction))
         let right = simd_normalize(rotation.act(framing.right))
         let up = simd_normalize(simd_cross(backward, right))
+        var orbitTarget = framing.target
+        if orbitElevation != 0, let pivot = cordOrbitPivot {
+            let yaw = simd_quatf(angle: orbitAzimuth, axis: framing.up)
+            let pitch = simd_quatf(angle: -orbitElevation, axis: simd_normalize(yaw.act(framing.right)))
+            // Yaw retains the canonical framing pivot. Only the X-axis tilt
+            // orbits around the board's cord points, without recentering at rest.
+            orbitTarget = pivot + pitch.act(framing.target - pivot)
+        }
         var fitted = framing
         if orbitAzimuth != 0 || orbitElevation != 0 {
-            // Refit the same complete board/cord bounds at the new angle. Keep
-            // the pivot fixed so selecting a hold does not pan to that hold.
-            let relative = framing.includedPoints.map { $0 - framing.target }
+            // Refit the complete board/cord bounds around the tilted view's
+            // target, keeping the cord pivot separate from the fit center.
+            let relative = framing.includedPoints.map { $0 - orbitTarget }
             let width = 2 * (relative.map { abs(simd_dot($0, right)) }.max() ?? framing.width / 2)
             let height = 2 * (relative.map { abs(simd_dot($0, up)) }.max() ?? framing.height / 2)
             let depth = 2 * (relative.map { abs(simd_dot($0, backward)) }.max() ?? framing.depth / 2)
             fitted = SuspendedCameraFraming(
-                target: framing.target, direction: -backward, viewDirection: -backward,
+                target: orbitTarget, direction: -backward, viewDirection: -backward,
                 right: right, up: up, distance: framing.distance,
                 width: width, height: height, depth: depth,
                 fitPadding: framing.fitPadding, includedPoints: framing.includedPoints)
@@ -1440,7 +1482,7 @@ final class BoardModelRealityScene {
             for x in [low.x, high.x] {
                 for y in [low.y, high.y] {
                     for z in [low.z, high.z] {
-                        let offset = SIMD3(x, y, z) - framing.target
+                        let offset = SIMD3(x, y, z) - orbitTarget
                         let span = max(abs(simd_dot(offset, right)) / aspect, abs(simd_dot(offset, up)))
                         distance = max(distance, simd_dot(offset, backward) + span * framing.fitPadding / tangent)
                     }
@@ -1449,7 +1491,7 @@ final class BoardModelRealityScene {
         }
         let target = Transform(
             scale: .one, rotation: simd_quatf(simd_float3x3(columns: (right, up, backward))),
-            translation: framing.target + backward * distance * orbitZoom)
+            translation: orbitTarget + backward * distance * orbitZoom)
         // SwiftUI resynchronizes framing during animations. Reapplying the
         // same target would cancel the transition on its very next frame.
         guard target.matrix != cameraTargetTransform?.matrix else { completion?(); return }
@@ -1821,7 +1863,8 @@ final class BoardModelRealityLoader {
         board: BoardRevision,
         presentation: BoardPresentation,
         store: BoardPackageStore = BoardCatalog.packageStore,
-        resourceAccess: BoardModelResourceAccess = .live
+        resourceAccess: BoardModelResourceAccess = .live,
+        useLivePhysics: Bool = false
     ) async throws -> BoardModelRealityScene {
         guard case .model(let media) = presentation.media else {
             throw BoardModelRealityError.presentationNotModel
@@ -1859,7 +1902,7 @@ final class BoardModelRealityLoader {
                 $0.presentationID == presentation.id
             }.map(\.id)),
             instances: media.instances,
-            physics: try store.presentationPhysicsInput(for: board, presentationID: presentation.id),
+            physics: useLivePhysics ? try store.presentationPhysicsInput(for: board, presentationID: presentation.id) : nil,
             presentationID: presentation.id,
             resourceLease: source.resourceLease
         )
