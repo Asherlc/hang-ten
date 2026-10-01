@@ -182,6 +182,8 @@ struct BoardModelRealityView: View {
     @State private var didReportUnavailable = false
     #if DEBUG
     @State private var synchronizedCameraDiagnostic = "pending"
+    @State private var contactTapRevision = 0
+    @State private var lastTappedContactID = ""
     #endif
 
     private var fieldOfViewDegrees: Double {
@@ -235,7 +237,27 @@ struct BoardModelRealityView: View {
                 } else {
                     model.installLiveUpdateSubscription(nil)
                 }
-                updateRendererDiagnostic(revision: revision)
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
+                    let diagnostic = "revision=\(revision);rootActive=\(model.root.isActive);cameraActive=\(model.camera.isActive);sameScene=\(model.root.scene != nil && model.root.scene === model.camera.scene);azimuth=\(model.orbitAzimuth);elevation=\(model.orbitElevation);cameraPitch=\(asin(model.camera.orientation.act(SIMD3<Float>(0, 0, 1)).y));cameraSettled=\(model.isCameraAtTarget);selection=\(highlightedContactIDs.sorted().joined(separator: ","));tapRevision=\(contactTapRevision);pickedContact=\(lastTappedContactID)"
+                    Task { @MainActor in
+                        if synchronizedCameraDiagnostic != diagnostic {
+                            synchronizedCameraDiagnostic = diagnostic
+                        }
+                    }
+                }
+                #endif
+            }
+            .task(id: CameraSelection(positionID: positionID, contactIDs: highlightedContactIDs)) {
+                guard !UIAccessibility.isReduceMotionEnabled else { return }
+                var wasAnimating = false
+                for _ in 0..<10 {
+                    try? await Task.sleep(for: .milliseconds(35))
+                    guard !Task.isCancelled else { return }
+                    let isAnimating = model.isCameraAnimating
+                    if isAnimating || wasAnimating { cameraRevision &+= 1 }
+                    wasAnimating = isAnimating
+                }
             }
             .gesture(orbitGesture(size: size))
             .simultaneousGesture(magnifyGesture)
@@ -275,18 +297,9 @@ struct BoardModelRealityView: View {
             value: onContactTap == nil ? accessibilityValue : nil))
     }
 
-    /// Publishes scene membership and submitted camera revision for opt-in DEBUG review diagnostics.
-    private func updateRendererDiagnostic(revision: Int) {
-        #if DEBUG
-        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
-            let diagnostic = "revision=\(revision);rootActive=\(model.root.isActive);cameraActive=\(model.camera.isActive);sameScene=\(model.root.scene != nil && model.root.scene === model.camera.scene)"
-            Task { @MainActor in
-                if synchronizedCameraDiagnostic != diagnostic {
-                    synchronizedCameraDiagnostic = diagnostic
-                }
-            }
-        }
-        #endif
+    private struct CameraSelection: Hashable {
+        let positionID: String?
+        let contactIDs: Set<String>
     }
 
     private func applySync(size: CGSize) {
@@ -335,8 +348,13 @@ struct BoardModelRealityView: View {
             .onEnded { value in
                 guard let id = model.contactID(for: value.entity),
                       let contact = contacts.first(where: { $0.id == id }) else { return }
-                model.resetCamera(animated: true)
-                cameraRevision &+= 1
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
+                    lastTappedContactID = id
+                    contactTapRevision &+= 1
+                    cameraRevision &+= 1
+                }
+                #endif
                 onContactTap?(contact)
             }
     }

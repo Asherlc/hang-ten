@@ -983,3 +983,50 @@ The latest environment did not resolve the required rendered assertions. No
 supported application correction or runtime-policy correction is established.
 No unchanged retry or additional automatic probe is justified by this result.
 PR 524 remains unmerged with automatic merge disabled.
+
+
+## Main PR532 integration and revised acceptance contract
+
+The user explicitly chose “Adopt the new main behavior” after PR532 merged
+at d1fef47c3. This supersedes the earlier canonical-reset and 0.1-second-drag
+requirements for this integration. Selection now gently pivots a hold into view;
+a physical retap on the same hold preserves the user's manual orbit. The
+upstream sustained 0.3-second drag and settled-projection readiness checks are
+adopted. Rapid Train-to-detail navigation and the interactive Train card remain.
+
+The strengthened Batch05 tests still require a visible board body on every
+board, rendered selection highlighting, a rendered orbit change within 15 seconds,
+and visible landscape geometry. Highlight sampling follows the tapped position
+within the settled contact projection after the selection pivot. Reselection
+requires a successful native pick of the same contact, unchanged camera angles
+and projection, and preservation of the captured rendered orbited board within
+the existing 30-second screen check. No canonical-reset assertion is retained
+for an action that intentionally no longer resets the camera.
+
+The previous af94 CI is fully retained before integration: 24 board cases,
+five failures (Door selection, Forge/Megalith/Natural initial body visibility,
+Pro orbit), with Evo and the other 18 passing. Purchase UI failed because its
+synthesized “120” input was read as “1”; the retained recording still shows the
+keyboard focused. All other checks passed. The upstream optional keyboard-Done
+guard is integrated, but it is not presented as a correction for that input failure.
+
+Local af94 validation used Xcode 27.0, iOS 26.5, iPhone 17 Pro and Apple M1 Max.
+Door, Evo and Pro completed the old rendered selection/orbit/reset/landscape
+sequence; the guided-workout 120-second input/cancel test also passed. Forge's
+initial physical selection failed; Megalith failed rendered reset and Natural
+failed reset state. Both local result bundles, logs, attachments and available
+diagnostics are retained under .context/supreme-zebra-cad-validation. Exact
+owned simulator, DerivedData and temporary configuration deletion was verified.
+These are previous-base observations, not validation of the integrated code.
+The different local compiler/runtime prevents a single-variable GPU comparison;
+transaction warnings also occurred in the passing local run.
+
+No rendering fix, framework responsibility or GPU cause is claimed from this
+integration. Acceptance still requires the revised behavior's rendered checks
+and all required checks on the integrated commit.
+
+Integration's generic arm64 Simulator build-for-testing, 111 CI/staging contract
+tests, Swift parsing and diff checks passed. The resolved merge index was staged
+before the build's tracked-source manifest check. Exact owned DerivedData and
+temporary configuration deletion were verified in main532-integration-cleanup.json.
+Integrated local UI and CI validation remain pending at this commit.

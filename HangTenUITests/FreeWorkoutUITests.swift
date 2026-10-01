@@ -94,7 +94,12 @@ final class FreeWorkoutUITests: XCTestCase {
         tapVisibleControl(duration, in: app, requireHittable: false)
         duration.typeText("120")
         XCTAssertEqual(duration.value as? String, "120")
-        tapVisibleControl(app.buttons["freeWorkout.keyboard.done"], in: app, requireHittable: false)
+        // CI can retain a keyboard accessibility element after the onscreen
+        // keyboard has disappeared. Only tap the toolbar when its button exists.
+        let keyboardDone = app.buttons["freeWorkout.keyboard.done"]
+        if keyboardDone.exists {
+            tapVisibleControl(keyboardDone, in: app, requireHittable: false)
+        }
 
         let startSet = firstMatching(
             in: app,
