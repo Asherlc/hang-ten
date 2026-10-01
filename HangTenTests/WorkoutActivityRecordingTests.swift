@@ -393,6 +393,28 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testRockProdigyReusableFramesResolveToDistinctPhysicalSides() throws {
+        for boardID in ["trango.rock-prodigy-forge", "trango.rock-prodigy-natural",
+                        "trango.rock-prodigy-training-center"] {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            for left in board.contacts where left.id.hasSuffix("-left") {
+                let rightID = String(left.id.dropLast(5)) + "-right"
+                let right = try XCTUnwrap(board.contacts.first { $0.id == rightID })
+                let leftFrame = try XCTUnwrap(left.resolvedFrame(in: board.defaultPresentation))
+                let rightFrame = try XCTUnwrap(right.resolvedFrame(in: board.defaultPresentation))
+                XCTAssertLessThan(leftFrame.rect.maxX, 0.5, left.id)
+                XCTAssertGreaterThan(rightFrame.rect.minX, 0.5, right.id)
+                XCTAssertEqual(leftFrame.rect.minX, 1 - rightFrame.rect.maxX, accuracy: 1e-8, left.id)
+                XCTAssertEqual(leftFrame.rect.midY, rightFrame.rect.midY, accuracy: 1e-8, left.id)
+            }
+            let step = WorkoutStep(id: "side-fixture", number: 1, title: "Fixture",
+                                   instruction: "", accessory: "", duration: 10, phase: .hang)
+            let pair = try ContactResolver.resolve(.edge(selection: .bilateralPair), step: step, board: board)
+            XCTAssertEqual(pair.count, 2, boardID)
+            XCTAssertEqual(Set(pair.map(\.equipmentObjectID)), ["left-half", "right-half"], boardID)
+        }
+    }
+
     func testModelDescriptorFacePlaneAABBResolvesExactlyForWorkoutMatching() {
         let hold = PhysicalContact(id: "model-left", name: "Model left", kind: .edge)
         let expected = HoldFrame(x: 0.1, y: 0.2, width: 0.3, height: 0.4)

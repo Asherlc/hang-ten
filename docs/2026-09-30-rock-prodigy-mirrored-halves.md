@@ -69,3 +69,13 @@ Every retained Forge node's decoded points, triangles, normals, and transforms
 matches its prior committed asset exactly. The retained native shapes' areas,
 volumes, and bounds also match (Natural exactly; Training Center maximum native
 numeric difference `1.46e-11`).
+
+Merge review also verified map and workout frames for reusable halves. Physical
+contact frames now include the owning instance's reflection and nominal placement
+before normalization across the pair. The regression first reproduced overlapping
+left/right frames and failed bilateral selection, then passed for all three boards.
+The reusable Training Center verifier now rebuilds and compares the full descriptor
+from native authored bindings/outlines and exported USDZ points; mutations to model
+bounds or slot frames are rejected. Final checks passed 100 selected iOS tests and
+469 Python tests with 26 subtests. The review simulator and DerivedData were deleted
+and deletion verified.

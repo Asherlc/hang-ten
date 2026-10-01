@@ -154,6 +154,39 @@ def verify_shipped_package(package_root: Path) -> dict[str, object]:
     }
 
 
+def require_reusable_descriptor_matches_source(package, model_bytes, model, descriptor):
+    """Rebuild caches from native authored bindings/outlines and exported points."""
+    import zipfile
+    import xml.etree.ElementTree as ET
+    from contact_model_descriptor import SlotNodeBinding, compile_reusable_descriptor
+
+    with zipfile.ZipFile(package / f"{package.name}.FCStd") as archive:
+        document = ET.fromstring(archive.read("Document.xml"))
+    nodes, outlines = [], {}
+    for obj in document.findall("./ObjectData/Object"):
+        properties = {
+            prop.attrib["name"]: prop.find("String").get("value")
+            for prop in obj.findall("./Properties/Property")
+            if prop.find("String") is not None
+        }
+        role = properties.get("NodeRole")
+        if not role:
+            continue
+        slot = properties.get("ContactSlotID") if role == "contact" else None
+        nodes.append(SlotNodeBinding(properties["NodeID"], role, slot))
+        if slot and properties.get("HangTenHoldOutline"):
+            outlines[slot] = [tuple(value / 1000 for value in point)
+                              for point in json.loads(properties["HangTenHoldOutline"])]
+    vertices = {name: node["points_m"] for name, node in model["nodes"].items()}
+    rebuilt = compile_reusable_descriptor(
+        model_bytes, nodes, vertices,
+        frozenset(node.contact_slot_id for node in nodes if node.role == "contact"),
+        outlines,
+    ).to_json()
+    if rebuilt != descriptor:
+        raise ValueError("descriptor does not match CAD source bindings/outlines and exported USDZ geometry")
+
+
 def _verify_reusable_package(package: Path) -> dict[str, object]:
     """Verify the canonical CAD half and both physical instance bindings."""
     from pxr import Usd, UsdShade
@@ -174,6 +207,7 @@ def _verify_reusable_package(package: Path) -> dict[str, object]:
     model = read_usdz(model_path)
     if set(model["nodes"]) != {n["nodeID"] for n in descriptor["nodes"]}:
         raise ValueError("descriptor node inventory differs from shipped USDZ")
+    require_reusable_descriptor_matches_source(package, model_path.read_bytes(), model, descriptor)
     stage = Usd.Stage.Open(str(model_path))
     for prim in stage.Traverse():
         if prim.IsA(UsdShade.Material) or prim.IsA(UsdShade.Shader) or prim.HasAPI(UsdShade.MaterialBindingAPI):
@@ -205,6 +239,7 @@ def _verify_reusable_package(package: Path) -> dict[str, object]:
         raise ValueError("physical contact coverage is incomplete")
     counts = require_disjoint_pinch_triangles(triangles)
     return {"status": "verified", "modelSHA256": digest,
+            "descriptorMatchesCADAndUSDZ": True,
             "nodeCount": len(model["nodes"]), "canonicalHalfCount": 1,
             "physicalInstanceCount": 2, "contactCount": len(mapped),
             "disjointPinchTriangleCounts": counts}
