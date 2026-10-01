@@ -1111,3 +1111,17 @@ confounds; setup or missing evidence is inconclusive. Retain the full result
 and restore the workflow to b56 after either outcome. No unchanged retry,
 rendering fix, environment-only cause or framework/GPU responsibility is claimed.
 This diagnostic head must never be merged, even if its checks pass.
+
+The e8b comparison completed in CI run 36900283852: 25 board cases, three
+rendered-orbit failures (Megalith, Natural and Pro), with zero changed RGB
+pixels and stable map bounds. DoorMount, Evo and Forge passed the full revised
+sequence, and the other 19 cases passed. The build log confirms the blank
+analytics key. All other checks passed, including 23 purchase/settings/workout
+cases. Artifact 11183670492 (132,709,171 bytes) was CRC verified; full logs,
+attachments, diagnostics and a visually reviewed comparison were retained.
+
+These stale reproductions reject analytics initialization as a necessary cause.
+The passing cases do not establish a correction or an environment-only cause.
+The temporary workflow configuration is removed, restoring the exact b56
+workflow. App code, tests, gestures, deadlines and rendered assertions remain
+unchanged. No rendering fix is claimed, and required checks remain blocking.
