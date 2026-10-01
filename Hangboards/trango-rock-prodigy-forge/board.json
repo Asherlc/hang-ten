@@ -29,6 +29,7 @@
         "assetPath": "assets/primary.usdz",
         "descriptorPath": "assets/primary.model.json",
         "display": {
+          "surfaceFinish": "plastic",
           "camera": {
             "type": "orthographic",
             "viewDirection": [

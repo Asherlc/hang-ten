@@ -79,3 +79,7 @@ from native authored bindings/outlines and exported USDZ points; mutations to mo
 bounds or slot frames are rejected. Final checks passed 100 selected iOS tests and
 469 Python tests with 26 subtests. The review simulator and DerivedData were deleted
 and deletion verified.
+
+Integration with main's Rock Ring framing changes passed 101 selected iOS tests
+and 481 Python tests with 26 subtests. The framing conflict retains the new
+combined framing and applies the corrected mirrored render transform at assignment.

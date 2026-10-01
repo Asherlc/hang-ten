@@ -242,7 +242,7 @@ enum BoardModelLoopWinding: String, Hashable {
 struct BoardModelTwoBranchSuspension: Hashable {
     let passages: BoardModelPassagePairs
     let branches: [BoardModelCordBranch]
-    let anchor: BoardModelInvisibleAnchor
+    var anchor: BoardModelInvisibleAnchor
     let canonicalPoses: [String: BoardModelCanonicalPose]
     /// Runtime convex-section wrap clearance for exterior point passages.
     /// Nil retains explicitly authored routes or direct point-passage spans.
@@ -255,6 +255,7 @@ struct BoardModelTwoBranchSuspension: Hashable {
     var internalLoopWindingByPassageID: [String: BoardModelLoopWinding]? = nil
     /// Length of the connected CAD channel centerline between each mouth pair.
     var internalLoopChannelLengthByBranchID: [String: Double]? = nil
+    var internalLoopChannelPointsByBranchID: [String: [[Double]]]? = nil
 }
 
 enum BoardModelSuspension: Hashable {

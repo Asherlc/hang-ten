@@ -114,7 +114,7 @@ inspection found no materials or shaders. Exported bounds are exactly the
 estimated 650 × 190 × 60 mm envelope. All twelve measured contact depths
 equal their retained nominal facts. Native persisted-edit checks passed.
 The FCStd hash after metadata embedding is
-`a89689c11f0dee7e8ddabc785e418245d809a2f7b5bbc5842511ab00b8d922a5`.
+`f67e4056da41ed3076ff7688a0d3bba4e02e6e880ef2d8cf34c0cecd965ee95f`.
 
 Both `preview.py` and independent `/usr/bin/usdrecord` renders were inspected.
 Hydra front/side/top/three-quarter images show coherent tier geometry, visible
@@ -123,3 +123,10 @@ angled view. `previews/prior-comparison.png` presents all three orthographic
 views beside the prior committed raster. `previews/source-comparison.png`
 shows complete approved photographs beside the CAD renders. These comparison
 layouts do not crop, align or derive any geometry from source images.
+
+## Current display metadata — 2026-09-30
+
+The FCStd hash above includes the catalog wood-finish assignment. The
+[finish audit](2026-09-30-catalog-model-finishes.md) records this metadata-only
+update and verifies every non-Document.xml archive member and runtime asset
+unchanged. The geometry and visual review evidence in this audit still apply.
