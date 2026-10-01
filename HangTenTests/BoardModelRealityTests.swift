@@ -157,7 +157,10 @@ final class BoardModelRealityTests: XCTestCase {
         var frameNotifications=0
         scene.onLiveFrame = { frameNotifications += 1 }
         scene.setLiveActivity(false)
+        scene.configureLiveMotion(reduceMotion:true,displayOnly:false)
+        let reducedCamera=scene.camera.transform.matrix
         scene.setLivePhysicalOrientation(simd_quatd(angle:Double.pi/9,axis:SIMD3<Double>(1,0,0)))
+        XCTAssertEqual(scene.camera.transform.matrix,reducedCamera,"Reduce Motion must not zoom out before the final accepted pose")
         let motionDistance = simd_length(scene.camera.position)
         scene.advanceLiveRopes(elapsed:100)
         try await Task.sleep(for:.milliseconds(50))
@@ -170,8 +173,8 @@ final class BoardModelRealityTests: XCTestCase {
         let final=try XCTUnwrap(scene.liveFramesForTesting.first)
         XCTAssertTrue(final.metrics.geometryAccepted);XCTAssertTrue(final.settled)
         XCTAssertGreaterThan(abs(final.boardTranslation.z),0.005)
-        XCTAssertLessThan(simd_length(scene.camera.position), motionDistance * 0.5,
-            "Accepted rest must refit the board instead of retaining the full translation envelope")
+        XCTAssertLessThan(simd_length(scene.camera.position), motionDistance * 1.35,
+            "Accepted rest must keep the board readable")
         XCTAssertEqual(frameNotifications,1,"Projected hold controls must refresh with the physical frame")
         var camera=scene.camera.camera
         camera.fieldOfViewInDegrees=30;camera.fieldOfViewOrientation = .vertical
@@ -188,6 +191,50 @@ final class BoardModelRealityTests: XCTestCase {
             XCTAssertLessThanOrEqual(abs(projected.y/depth/tan(Float.pi/12)),1)
         }
         scene.stopLiveRopes()
+    }
+
+    @MainActor
+    func testLiveMotionFramingKeepsBoardReadable() async throws {
+        let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:"clavellium-training-block"))
+        let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation)
+        defer {scene.stopLiveRopes()}
+        scene.configureLiveMotion(reduceMotion:true,displayOnly:false)
+        XCTAssertTrue(scene.select(positionID:try XCTUnwrap(board.positions.first?.id)))
+        scene.camera.camera.fieldOfViewInDegrees=30
+        scene.camera.camera.fieldOfViewOrientation = .vertical
+        scene.frame(in:CGSize(width:800,height:500))
+        let bounds=try XCTUnwrap(scene.instanceEntities.first).visualBounds(relativeTo:scene.root)
+        let view=scene.camera.transform.matrix.inverse
+        var projectedY:[Float]=[]
+        for x in [bounds.min.x,bounds.max.x] {for y in [bounds.min.y,bounds.max.y] {for z in [bounds.min.z,bounds.max.z] {
+            let p=view*SIMD4<Float>(x,y,z,1)
+            projectedY.append(p.y / -p.z / tan(Float.pi/12))
+        }}}
+        XCTAssertGreaterThan((try XCTUnwrap(projectedY.max())-XCTUnwrap(projectedY.min()))/2,0.15,
+            "The board must occupy at least 15% of viewport height while opening")
+        scene.advanceLiveRopes(elapsed:1.0/60)
+        let rested=expectation(for:NSPredicate {_,_ in scene.liveFramesForTesting.first?.settled == true},evaluatedWith:nil)
+        await fulfillment(of:[rested],timeout:30)
+        let restDistance=simd_length(scene.camera.position)
+        let restCamera=scene.camera.transform.matrix
+        scene.setLiveActivity(false)
+        scene.setLivePhysicalOrientation(simd_quatd(angle:-Double.pi/9,axis:SIMD3<Double>(1,0,0)))
+        XCTAssertEqual(scene.camera.transform.matrix,restCamera,
+            "Reduce Motion must keep the accepted framing until final pose publication")
+        scene.setLivePhysicalOrientation(simd_quatd(angle:0,axis:SIMD3<Double>(1,0,0)))
+        scene.configureLiveMotion(reduceMotion:false,displayOnly:false)
+        scene.setLiveActivity(true)
+        scene.setLivePhysicalOrientation(simd_quatd(angle:Double.pi/9,axis:SIMD3<Double>(1,0,0)))
+        XCTAssertLessThanOrEqual(simd_length(scene.camera.position),restDistance*1.35,
+            "Normal tilt must remain readable instead of fitting every globally reachable pose")
+        let movingCamera=scene.camera.transform.matrix
+        let moved=expectation(description:"First accepted motion frame")
+        scene.onLiveFrame = { moved.fulfill() }
+        scene.advanceLiveRopes(elapsed:1.0/60)
+        await fulfillment(of:[moved],timeout:30)
+        XCTAssertFalse(try XCTUnwrap(scene.liveFramesForTesting.first).settled)
+        XCTAssertEqual(scene.camera.transform.matrix,movingCamera,
+            "Camera remains stationary while accepted motion fits its initial margin")
     }
 
     @MainActor

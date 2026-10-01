@@ -179,7 +179,9 @@ length instead of rotating around the model origin.
 The shared collision-bounds reference point is a numerical reference for mass,
 velocity, prediction and origin-independent initialization. It is not a pin.
 The seed, collision checks and renderer use the same solved transform. Camera
-bounds cover translation during motion and refit at accepted rest. Flat bearings
+framing uses a readable rotation envelope and a local translation margin. It
+stays fixed while accepted geometry fits, expands only when needed, and refits
+at accepted rest. Reduce Motion skips preparatory camera zoom. Flat bearings
 can permit neutral sideways positions; no artificial centering force is added.
 
 Clavellium currently supplies the enabled shipping physics package. Other
