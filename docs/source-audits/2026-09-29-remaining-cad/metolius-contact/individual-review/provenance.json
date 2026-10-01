@@ -2,7 +2,7 @@
   "createdAt": "2026-10-01T04:24:30.216306+00:00",
   "package": "metolius-contact",
   "reviewNumber": 7,
-  "status": "prepared for human review",
+  "status": "historical pre-correction review; superseded without acceptance",
   "humanAcceptance": "pending",
   "blockingFindings": [],
   "reviewLimitations": [
@@ -302,7 +302,6 @@
     "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/authored-design.json": "41fc4e70a73400f3047134ad9190174086ef0874987a69899be0b927afe46236",
     "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/reproducibility-final.json": "220e22744a94b75e24aba45fc32327ad9a5b388ea180f278274fb9678958888b",
     "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/package-verification.json": "85c335f033456d7ca1eb10863a2789f7a9989b8f513ba21d3b410b7923094642",
-    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/source-audit.md": "499b18254a4fd23d59ef01fc0a7191f7b76df2c009a31b743a9c3c58dd27d1b0",
     "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/metadata-diff.json": "2430ec4a24196d4a142bdb69f144bb0fcde8b93591b835c9b62e38d5de2461d7",
     "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/native-check.json": "e0c4bbc87cd051806a4b8d16b240786f53f0f37c4e66749f1459b76b8315cbee",
     "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/compile.json": "e627870c9a6c8fe631d45599f4dc43f5c0d408467c4e2f401b9a62cdcc56b882",
@@ -325,15 +324,16 @@
     "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources/product-page.html": "042c7ff4df1a18634567594cecb82f4e62273a617a3a7145316d34fe85b55983",
     "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources/product-02.jpg": "6c824af42552a9ed12f7e336dac47d9a2c61441b6f90515d196f3484ad0a1202",
     "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources/product-01.jpg": "b9cf153d82f0072ae2e4b0064821dee1d666ff1d8b34ba21fed1fcfd6944c055",
-    "Hangboards/metolius-contact/metolius-contact.FCStd": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
-    "Hangboards/metolius-contact/assets/primary.usdz": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
-    "Hangboards/metolius-contact/assets/primary.model.json": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7"
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/before/metolius-contact.FCStd": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/before/assets/primary.usdz": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/before/assets/primary.model.json": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/before/source-audit.md": "499b18254a4fd23d59ef01fc0a7191f7b76df2c009a31b743a9c3c58dd27d1b0"
   },
   "outputSHA256": {
     "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/reference-cad-overview.png": "837d50e7436a97656b18c37bb1f09382e48d640c4eaea0fd80126bf49c8090fe",
     "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/app-selection-overview.png": "b63b639caf96c8fd93fd479852726bf0d5acf8fd924867ec0d529e38ee8b8fa7",
-    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/index.md": "ab82bac2c85d876542a2bbcc0035b7b20b4760f185e5dd5c0fe3ecc3cba3bb16",
-    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/index.html": "076d58152e64bf7262509cd32944f34efbb3857532b9eeb7b5546f0a267e52e8",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/index.md": "3cee85950b2680c69fe782745c7933482a23cfda1c8c4e7f38218085e88e1fa0",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/index.html": "1f410afbb48167459a47e5d4588d8edb2da8874ca68a30350153bff023b30b63",
     "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app-selection-overview.png": "47a40c827e1825469878a9d0c087e9fb3ef84130a61335bd09a1c26a98cedf81"
   },
   "sources": [
@@ -403,5 +403,13 @@
       "devices",
       "--json"
     ]
+  },
+  "snapshotCommit": "5cfd5b6386b283b2eb8daefc054a42823fdf852b",
+  "supersededBy": "../pinch-rails-review/index.html",
+  "historicalInputRelocations": {
+    "Hangboards/metolius-contact/metolius-contact.FCStd": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/before/metolius-contact.FCStd",
+    "Hangboards/metolius-contact/assets/primary.usdz": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/before/assets/primary.usdz",
+    "Hangboards/metolius-contact/assets/primary.model.json": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/before/assets/primary.model.json",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/source-audit.md": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/before/source-audit.md"
   }
 }

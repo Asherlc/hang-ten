@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-30",
+  "reviewer": "asherlc",
+  "number": 7,
+  "package": "metolius-contact",
+  "boardID": "metolius.contact",
+  "status": "awaiting one-by-one review",
+  "question": "Does this one look right?",
+  "sourceSHA256": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
+  "modelSHA256": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+  "descriptorSHA256": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7",
+  "currentRevision": "individual-review/index.html",
+  "revisionBaseCommit": "e60142f3ef60456248054bf3cf917c7ab81bf5e6",
+  "sourceAudit": "source-audit.md",
+  "appReview": "individual-review/fresh-app/validation.json",
+  "shownImages": {
+    "individual-review/reference-cad-overview.png": "837d50e7436a97656b18c37bb1f09382e48d640c4eaea0fd80126bf49c8090fe",
+    "individual-review/fresh-app-selection-overview.png": "47a40c827e1825469878a9d0c087e9fb3ef84130a61335bd09a1c26a98cedf81"
+  },
+  "reviewScope": "Existing native CAD geometry and all 33 contact IDs; complete manufacturer references, retained native front/side/top and prior comparisons, fresh pocket and center-edge selections and a real orbit revealing the selected side pinch.",
+  "approvalLimit": "Human acceptance pending. Opening sizes and centres, relief curves, corner radii, central roof angle and unmeasured transitions are display estimates. Fresh captures cover representative contacts, not all 33 visually. No package or rendering change was made for this review."
+}

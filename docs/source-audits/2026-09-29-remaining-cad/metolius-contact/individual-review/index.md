@@ -1,3 +1,7 @@
+This is the historical pre-correction review from commit `5cfd5b6386b283b2eb8daefc054a42823fdf852b`. The user requested projecting pinch rails. See the [current review #7](../pinch-rails-review/index.html). No acceptance was recorded for this earlier revision.
+
+---
+
 # Metolius Contact — review #7
 
 Current package bytes match retained app validation, package verification and exact reproducibility proof. The fresh installed package also matches the native manifest, descriptor and model byte for byte. Original evidence is unchanged. Human acceptance pending.

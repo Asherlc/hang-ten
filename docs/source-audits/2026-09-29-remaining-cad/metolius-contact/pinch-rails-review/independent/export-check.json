@@ -1,0 +1,221 @@
+{
+  "status": "pass",
+  "blockingFindings": [],
+  "candidateSHA256": {
+    ".context/placid-badger/metolius-contact-pinch-rails/native-author/candidate/metolius-contact.FCStd": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+    ".context/placid-badger/metolius-contact-pinch-rails/native-author/candidate/assets/primary.usdz": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+    ".context/placid-badger/metolius-contact-pinch-rails/native-author/candidate/assets/primary.model.json": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f"
+  },
+  "rawManifestSHA256": "7f05fa8db30998f46c1268108b9778c30e869d099f025aa256827fc1b7cc0545",
+  "contactCount": 33,
+  "meshes": [
+    {
+      "name": "body_board_001",
+      "triangles": 11379,
+      "points": 9269,
+      "normalCount": 9269
+    },
+    {
+      "name": "contact_pocket_4_left",
+      "triangles": 457,
+      "points": 479,
+      "normalCount": 479
+    },
+    {
+      "name": "contact_pocket_4_right",
+      "triangles": 459,
+      "points": 481,
+      "normalCount": 481
+    },
+    {
+      "name": "contact_pocket_5_left",
+      "triangles": 480,
+      "points": 504,
+      "normalCount": 504
+    },
+    {
+      "name": "contact_pocket_5_right",
+      "triangles": 477,
+      "points": 501,
+      "normalCount": 501
+    },
+    {
+      "name": "contact_pocket_6_left",
+      "triangles": 450,
+      "points": 472,
+      "normalCount": 472
+    },
+    {
+      "name": "contact_pocket_6_right",
+      "triangles": 454,
+      "points": 476,
+      "normalCount": 476
+    },
+    {
+      "name": "contact_pocket_7_left",
+      "triangles": 477,
+      "points": 494,
+      "normalCount": 494
+    },
+    {
+      "name": "contact_pocket_7_right",
+      "triangles": 479,
+      "points": 496,
+      "normalCount": 496
+    },
+    {
+      "name": "contact_pocket_8_left",
+      "triangles": 520,
+      "points": 535,
+      "normalCount": 535
+    },
+    {
+      "name": "contact_pocket_8_right",
+      "triangles": 515,
+      "points": 530,
+      "normalCount": 530
+    },
+    {
+      "name": "contact_pocket_9_left",
+      "triangles": 490,
+      "points": 506,
+      "normalCount": 506
+    },
+    {
+      "name": "contact_pocket_9_right",
+      "triangles": 500,
+      "points": 516,
+      "normalCount": 516
+    },
+    {
+      "name": "contact_pocket_10_left",
+      "triangles": 582,
+      "points": 586,
+      "normalCount": 586
+    },
+    {
+      "name": "contact_pocket_10_right",
+      "triangles": 586,
+      "points": 590,
+      "normalCount": 590
+    },
+    {
+      "name": "contact_pocket_11_left",
+      "triangles": 660,
+      "points": 651,
+      "normalCount": 651
+    },
+    {
+      "name": "contact_pocket_11_right",
+      "triangles": 659,
+      "points": 650,
+      "normalCount": 650
+    },
+    {
+      "name": "contact_pocket_12_left",
+      "triangles": 535,
+      "points": 551,
+      "normalCount": 551
+    },
+    {
+      "name": "contact_pocket_12_right",
+      "triangles": 537,
+      "points": 553,
+      "normalCount": 553
+    },
+    {
+      "name": "contact_pocket_13_left",
+      "triangles": 527,
+      "points": 544,
+      "normalCount": 544
+    },
+    {
+      "name": "contact_pocket_13_right",
+      "triangles": 535,
+      "points": 552,
+      "normalCount": 552
+    },
+    {
+      "name": "contact_pocket_14_left",
+      "triangles": 542,
+      "points": 553,
+      "normalCount": 553
+    },
+    {
+      "name": "contact_pocket_14_right",
+      "triangles": 543,
+      "points": 554,
+      "normalCount": 554
+    },
+    {
+      "name": "contact_edge_16_center",
+      "triangles": 803,
+      "points": 805,
+      "normalCount": 805
+    },
+    {
+      "name": "contact_edge_17_center",
+      "triangles": 812,
+      "points": 794,
+      "normalCount": 794
+    },
+    {
+      "name": "contact_edge_18_center",
+      "triangles": 775,
+      "points": 759,
+      "normalCount": 759
+    },
+    {
+      "name": "contact_edge_19_center",
+      "triangles": 539,
+      "points": 551,
+      "normalCount": 551
+    },
+    {
+      "name": "contact_flat_sloper_center",
+      "triangles": 8,
+      "points": 12,
+      "normalCount": 12
+    },
+    {
+      "name": "contact_round_sloper_3_left",
+      "triangles": 1468,
+      "points": 800,
+      "normalCount": 800
+    },
+    {
+      "name": "contact_jug_left",
+      "triangles": 1195,
+      "points": 708,
+      "normalCount": 708
+    },
+    {
+      "name": "contact_round_sloper_3_right",
+      "triangles": 1666,
+      "points": 899,
+      "normalCount": 899
+    },
+    {
+      "name": "contact_jug_right",
+      "triangles": 1118,
+      "points": 665,
+      "normalCount": 665
+    },
+    {
+      "name": "contact_pinch_right",
+      "triangles": 2536,
+      "points": 2138,
+      "normalCount": 2138
+    },
+    {
+      "name": "contact_pinch_left",
+      "triangles": 2536,
+      "points": 2138,
+      "normalCount": 2138
+    }
+  ],
+  "forbiddenMaterialPrimsOrBindings": [],
+  "unrelatedPackageChanges": [],
+  "unrelatedFilesExpectedUnchanged": 203,
+  "limits": "Metadata and USD topology inspection only; no factory shape judgment or native physical clearance certification."
+}

@@ -1,3 +1,11 @@
+# Metolius Contact — current native revision
+
+The projecting pinch-rail correction for review #7 is documented in [pinch-rails-review/review.md](pinch-rails-review/review.md), with exact prior-versus-revised front/side/top and app comparisons. The canonical FCStd now includes 140 constrained sketches and the exported asset has 36,299 triangles. All original board facts and 31 non-pinch native contact constructions are unchanged. The current source/model/descriptor identities are pinned in [runtime-validation.json](pinch-rails-review/runtime-validation.json). Human review remains pending.
+
+The original migration audit below is historical. Its unedited bytes are retained in [before/source-audit.md](pinch-rails-review/before/source-audit.md); original compiler/native reports describe that earlier source and remain unchanged.
+
+---
+
 # metolius-contact source audit
 
 Manufacturer photograph and independent numbered depth diagram establish curved symmetric shell, 11 pocket pairs, four central edges, outer jugs, variable pinches, flat center sloper and paired round slopers. Published envelope 32.5 x 11 x 2.625 in. Diagram depths match existing pocket and central-edge facts. Preserve existing IDs and handCapacity fields; another active PR #516 concerns handCapacity only.

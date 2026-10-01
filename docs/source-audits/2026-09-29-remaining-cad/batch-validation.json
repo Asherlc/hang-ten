@@ -129,6 +129,27 @@
       "humanReviewRecord": "mammut-diamond-finger/human-review.json",
       "answer": "Good enough",
       "revisionCommit": "e60142f3ef60456248054bf3cf917c7ab81bf5e6"
+    },
+    {
+      "package": "metolius-contact",
+      "date": "2026-09-30",
+      "revision": "forward-projecting-pinch-rails",
+      "feedback": "The pinch rails need to extend forward otherwise there\u2019s nothing to pinch",
+      "sourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+      "modelSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+      "descriptorSHA256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+      "report": "metolius-contact/pinch-rails-review/runtime-validation.json",
+      "postIntegrationTests": {
+        "iOSPassed": 1278,
+        "iOSSkipped": 3,
+        "pythonPassed": 706,
+        "pythonSkipped": 10,
+        "failures": 0
+      },
+      "allOtherPackageFilesUnchanged": 203,
+      "boardFactsAndContactIDsUnchanged": true,
+      "geometryAcceptance": "pending revised review #7",
+      "humanReviewRecord": "metolius-contact/human-review.json"
     }
   ]
 }

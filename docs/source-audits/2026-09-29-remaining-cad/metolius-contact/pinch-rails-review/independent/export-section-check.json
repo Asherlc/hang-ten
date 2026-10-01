@@ -1,0 +1,261 @@
+{
+  "status": "pass",
+  "blockingFindings": [],
+  "assetSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+  "priorAssetSHA256": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+  "nativeCheckSHA256": "8774b936fa5a2b59cec0c0d1a6f9e97d236b34d582e4fd7b8265b10a161f3e02",
+  "sampleCount": 10,
+  "stations": [
+    {
+      "side": -1,
+      "zMM": -20,
+      "yMM": -55,
+      "exportXLimitsMM": [
+        -362.67724706663336,
+        -331.1021886382501
+      ],
+      "maxNativeEndpointErrorMM": 0.020244797616555843,
+      "triangleNormals": [
+        [
+          -0.8678134700997095,
+          -0.0020949956239611255,
+          0.49688569319999143
+        ],
+        [
+          0.9837344320790237,
+          -0.00037396218276953966,
+          -0.17962858150763938
+        ]
+      ],
+      "exportForwardProjectionMM": 23.516731122117626,
+      "projectionNativeErrorMM": 0.021843096632373715,
+      "originalSectionIntersections": []
+    },
+    {
+      "side": 1,
+      "zMM": -20,
+      "yMM": -55,
+      "exportXLimitsMM": [
+        331.1021886382501,
+        362.67724706663336
+      ],
+      "maxNativeEndpointErrorMM": 0.020244797616555843,
+      "triangleNormals": [
+        [
+          -0.9837344320790237,
+          -0.0003739621827695411,
+          -0.17962858150763938
+        ],
+        [
+          0.8678134700997095,
+          -0.0020949956239612526,
+          0.4968856931999915
+        ]
+      ],
+      "exportForwardProjectionMM": 23.532266194894767,
+      "projectionNativeErrorMM": 0.0063080238552331025,
+      "originalSectionIntersections": []
+    },
+    {
+      "side": -1,
+      "zMM": -40,
+      "yMM": -55,
+      "exportXLimitsMM": [
+        -373.9183828239554,
+        -333.94252903725675
+      ],
+      "maxNativeEndpointErrorMM": 0.03738858526264721,
+      "triangleNormals": [
+        [
+          -0.873882288831589,
+          -0.0025428281391352676,
+          0.486130928137182
+        ],
+        [
+          0.9979693355924373,
+          -0.00033538355147171543,
+          -0.06369531171964377
+        ]
+      ],
+      "exportForwardProjectionMM": 26.50791303351484,
+      "projectionNativeErrorMM": 0.04391303351482634,
+      "originalSectionIntersections": []
+    },
+    {
+      "side": 1,
+      "zMM": -40,
+      "yMM": -55,
+      "exportXLimitsMM": [
+        333.94252903725675,
+        373.91838282395537
+      ],
+      "maxNativeEndpointErrorMM": 0.037388585262704055,
+      "triangleNormals": [
+        [
+          -0.9979693355924373,
+          -0.00033538355147171483,
+          -0.06369531171964377
+        ],
+        [
+          0.873882288831589,
+          -0.0025428281391352676,
+          0.486130928137182
+        ]
+      ],
+      "exportForwardProjectionMM": 26.509394010559376,
+      "projectionNativeErrorMM": 0.045394010559363096,
+      "originalSectionIntersections": []
+    },
+    {
+      "side": -1,
+      "zMM": -60,
+      "yMM": -55,
+      "exportXLimitsMM": [
+        -384.707018009257,
+        -334.7306079180573
+      ],
+      "maxNativeEndpointErrorMM": 0.04157462446158888,
+      "triangleNormals": [
+        [
+          -0.88323470204135,
+          -0.0023220296640854743,
+          0.46892544107583556
+        ],
+        [
+          0.9999869774543038,
+          0.0043963999501712,
+          0.0025916383396955176
+        ]
+      ],
+      "exportForwardProjectionMM": 30.926919134212632,
+      "projectionNativeErrorMM": 0.056264539256773105,
+      "originalSectionIntersections": []
+    },
+    {
+      "side": 1,
+      "zMM": -60,
+      "yMM": -55,
+      "exportXLimitsMM": [
+        334.7306079180573,
+        384.70701800925707
+      ],
+      "maxNativeEndpointErrorMM": 0.04157462446158888,
+      "triangleNormals": [
+        [
+          -0.9999869774543038,
+          0.0043963999501712,
+          0.002591638339695518
+        ],
+        [
+          0.88323470204135,
+          -0.002322029664085458,
+          0.46892544107583556
+        ]
+      ],
+      "exportForwardProjectionMM": 30.927792718743,
+      "projectionNativeErrorMM": 0.05539095472640554,
+      "originalSectionIntersections": []
+    },
+    {
+      "side": -1,
+      "zMM": -80,
+      "yMM": -55,
+      "exportXLimitsMM": [
+        -394.75347034356014,
+        -334.6786540892296
+      ],
+      "maxNativeEndpointErrorMM": 0.015519762359247125,
+      "triangleNormals": [
+        [
+          -0.8957462465450883,
+          -0.0036336457128651315,
+          0.44455085020638424
+        ],
+        [
+          0.9999867590262096,
+          0.0038097130616942016,
+          0.003459459299492734
+        ]
+      ],
+      "exportForwardProjectionMM": 34.949314391664124,
+      "projectionNativeErrorMM": 0.0004164324804278863,
+      "originalSectionIntersections": []
+    },
+    {
+      "side": 1,
+      "zMM": -80,
+      "yMM": -55,
+      "exportXLimitsMM": [
+        334.67865408923,
+        394.75347034356
+      ],
+      "maxNativeEndpointErrorMM": 0.015519762359360811,
+      "triangleNormals": [
+        [
+          -0.9999867590262096,
+          0.0038097130616942037,
+          0.0034594592994927364
+        ],
+        [
+          0.8957462465450883,
+          -0.0036336457128651315,
+          0.44455085020638424
+        ]
+      ],
+      "exportForwardProjectionMM": 34.95062484833135,
+      "projectionNativeErrorMM": 0.001726889147654731,
+      "originalSectionIntersections": []
+    },
+    {
+      "side": -1,
+      "zMM": -100,
+      "yMM": -55,
+      "exportXLimitsMM": [
+        -403.56007913422786,
+        -334.6652194418093
+      ],
+      "maxNativeEndpointErrorMM": 0.07614705290956181,
+      "triangleNormals": [
+        [
+          -0.9279596578966616,
+          -0.002476553537221389,
+          0.37267242988835125
+        ],
+        [
+          0.9997289862485016,
+          -0.0012593151283376235,
+          -0.023245820698592386
+        ]
+      ],
+      "exportForwardProjectionMM": 38.47407358785017,
+      "projectionNativeErrorMM": 0.02165347738747414,
+      "originalSectionIntersections": []
+    },
+    {
+      "side": 1,
+      "zMM": -100,
+      "yMM": -55,
+      "exportXLimitsMM": [
+        334.6652194418093,
+        403.56007913422786
+      ],
+      "maxNativeEndpointErrorMM": 0.07614705290956181,
+      "triangleNormals": [
+        [
+          -0.9997289862485016,
+          -0.0012593151283376235,
+          -0.023245820698592386
+        ],
+        [
+          0.9279596578966616,
+          -0.002476553537221389,
+          0.37267242988835125
+        ]
+      ],
+      "exportForwardProjectionMM": 38.46682328931907,
+      "projectionNativeErrorMM": 0.014403178856376542,
+      "originalSectionIntersections": []
+    }
+  ],
+  "limits": "Five mirrored line-section stations; analytic/native agreement within 0.28 mm tessellation tolerance. This tests exposed opposed mesh surfaces and forward projection, not manufacturer measurements or human hand clearance."
+}

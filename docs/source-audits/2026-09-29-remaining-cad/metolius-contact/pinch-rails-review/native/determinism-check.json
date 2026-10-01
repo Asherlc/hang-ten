@@ -1,0 +1,10 @@
+{
+  "firstPassCheckModelSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+  "secondPassExportModelSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+  "sourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+  "descriptorSHA256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+  "sameModelBytes": true,
+  "sameNodeAndContactInventory": true,
+  "sameMeasuredDepths": true,
+  "sourceUnchangedBothRuns": true
+}

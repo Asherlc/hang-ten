@@ -187,26 +187,33 @@
       "package": "metolius-contact",
       "boardID": "metolius.contact",
       "name": "Metolius Contact",
-      "humanReview": "awaiting one-by-one review; fresh app selections and orbit shown",
-      "sourceSHA256": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
-      "reviewPage": "metolius-contact/individual-review/index.html",
+      "humanReview": "awaiting revised one-by-one review #7; projecting pinch rails shown",
+      "sourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+      "reviewPage": "metolius-contact/pinch-rails-review/index.html",
       "sourceAudit": "metolius-contact/source-audit.md",
       "comparisons": [
-        "metolius-contact/review/comparison-side.png",
-        "metolius-contact/review/comparison-top.png",
-        "metolius-contact/review/comparison-front.png"
+        "metolius-contact/pinch-rails-review/front-side-top-comparison.png",
+        "metolius-contact/pinch-rails-review/app-before-after.png",
+        "metolius-contact/pinch-rails-review/previews/comparison-oblique.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7",
-          "modelSHA256": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb"
+          "descriptorSHA256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+          "modelSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07"
         }
       },
-      "appReview": "metolius-contact/individual-review/fresh-app/validation.json",
-      "appReviewPage": "metolius-contact/individual-review/index.html",
+      "appReview": "metolius-contact/pinch-rails-review/app/validation.json",
+      "appReviewPage": "metolius-contact/pinch-rails-review/index.html",
       "historicalAppReview": "metolius-contact/app-review/validation.json",
       "historicalAppReviewPage": "metolius-contact/app-review/index.html",
-      "humanReviewRecord": "metolius-contact/human-review.json"
+      "humanReviewRecord": "metolius-contact/human-review.json",
+      "latestRevision": "metolius-contact/pinch-rails-review/review.md",
+      "runtimeRevision": "metolius-contact/pinch-rails-review/runtime-validation.json",
+      "revisionBaseCommit": "5cfd5b6386b283b2eb8daefc054a42823fdf852b",
+      "reviewFeedback": [
+        "The pinch rails need to extend forward otherwise there\u2019s nothing to pinch"
+      ],
+      "priorIndividualReview": "metolius-contact/individual-review/index.html"
     },
     {
       "number": 8,

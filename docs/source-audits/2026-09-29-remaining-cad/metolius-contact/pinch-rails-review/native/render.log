@@ -1,0 +1,55 @@
+{
+  "before": {
+    "triangleCount": 32262,
+    "nodeCount": 34,
+    "boundsNativeMm": {
+      "min": [
+        -412.9999876022339,
+        -67.00000166893008,
+        -139.50000703334808
+      ],
+      "max": [
+        412.9999876022339,
+        3.050767168804184e-14,
+        139.50000703334808
+      ]
+    },
+    "materialCount": 0,
+    "shaderCount": 0,
+    "hashes": {
+      "metolius-contact.FCStd": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
+      "assets/primary.usdz": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+      "assets/primary.model.json": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7"
+    }
+  },
+  "candidate": {
+    "triangleCount": 36299,
+    "nodeCount": 34,
+    "boundsNativeMm": {
+      "min": [
+        -412.9999876022339,
+        -67.00000166893008,
+        -139.50000703334808
+      ],
+      "max": [
+        412.9999876022339,
+        3.050767168804184e-14,
+        139.50000703334808
+      ]
+    },
+    "materialCount": 0,
+    "shaderCount": 0,
+    "hashes": {
+      "metolius-contact.FCStd": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+      "assets/primary.usdz": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+      "assets/primary.model.json": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f"
+    }
+  },
+  "reviewViews": [
+    "front",
+    "side",
+    "top",
+    "oblique"
+  ],
+  "renderer": "Shared preview.py Lambert triangle-face rendering at matching view and size; oblique applies fixed orthographic rotation."
+}

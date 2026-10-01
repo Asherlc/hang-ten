@@ -1,0 +1,25 @@
+{
+  "status": "pass",
+  "baselineFileCount": 206,
+  "unrelatedFilesExpectedUnchanged": 203,
+  "unrelatedPackageChanges": [],
+  "allPackageChanges": [
+    "Hangboards/metolius-contact/assets/primary.model.json",
+    "Hangboards/metolius-contact/assets/primary.usdz",
+    "Hangboards/metolius-contact/metolius-contact.FCStd"
+  ],
+  "currentContactHashes": {
+    "Hangboards/metolius-contact/metolius-contact.FCStd": {
+      "sha256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+      "bytes": 4184709
+    },
+    "Hangboards/metolius-contact/assets/primary.usdz": {
+      "sha256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+      "bytes": 1097512
+    },
+    "Hangboards/metolius-contact/assets/primary.model.json": {
+      "sha256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+      "bytes": 15351
+    }
+  }
+}
