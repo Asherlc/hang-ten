@@ -1,8 +1,8 @@
 # Shared cord constraints for board rotation
 
-Status: written for user review. The user approved the goal of making cord
-support a shared physical rule; this document specifies the proposed change.
-Implementation has not started.
+Status: approved by the user on 2026-10-01. The user approved the goal of making
+cord support a shared physical rule and then approved this written design.
+Implementation planning follows; implementation has not started.
 
 ## Intent and observable result
 
