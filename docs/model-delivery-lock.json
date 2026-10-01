@@ -62,7 +62,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42",
+  "sha256Manifest": "1f376d4fcc767eff72d2055a17d99893ac99edbcb219c8dc7711cf250508089e",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -986,26 +986,30 @@
     },
     "yy-baguette": {
       "source": "Hangboards/yy-baguette/yy-baguette.FCStd",
-      "sourceSHA256": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
+      "sourceSHA256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
-      "assetSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
-      "descriptorSHA256": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5",
+      "assetSHA256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea",
+      "descriptorSHA256": "75be5cf44e996606261dfd942f3004058d6cc9cd5bfe66e1c159ceaf1578f934",
       "assets": {
         "assets/primary.usdz": {
-          "modelSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+          "modelSHA256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea",
           "descriptorPath": "assets/primary.model.json",
-          "descriptorSHA256": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5"
+          "descriptorSHA256": "75be5cf44e996606261dfd942f3004058d6cc9cd5bfe66e1c159ceaf1578f934"
         }
       },
       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
       "provenance": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/native-authoring.md",
-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/index.html",
+      "comparison": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/groove-removal-review/prior-revised-front-side-top.png",
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/metadata-diff.json",
       "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/app-review/validation.json",
-      "geometryAcceptance": "pending requested one-by-one user review",
+      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/groove-removal-review/ios/captures/validation.json",
+      "geometryAcceptance": "pending user review of smooth ends; no grooves",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-      "suspensionSHA256": "7765417f4b49ff1efeded274a70a5c69907a3126aeb73f4a7d12d2fec14c688b"
+      "suspensionSHA256": "c69c11dc9708bc1e2dc9f235004f55a7c0ecd524fdf5b073c40dda1d9b0c956f",
+      "individualReview": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/groove-removal-review/review.md",
+      "nativeAppHistory": [
+        "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/app-review/validation.json"
+      ]
     },
     "yy-baguette-evo": {
       "source": "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd",
@@ -1179,7 +1183,9 @@
     "b29f9f55f97072e8e709db56b72ae01fc391e6f927af0f6b9a50a59a30b4ded9",
     "c24ef14e8b83e68824313e7350f9aaf4420ba07f12477483196f7b16883cd3b1",
     "6de82baf4a49ed9a5b5f7a48d67d5f5c3e38a98eb488deeaece1df3908d42847",
-    "ec620b346bf520d2f32f2069e02b07ad5d2f9fd6dc8c8ed6063b2d68f5ff38c7"
+    "ec620b346bf520d2f32f2069e02b07ad5d2f9fd6dc8c8ed6063b2d68f5ff38c7",
+    "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42",
+    "1673dfdf5cbb83191ec92c4f5c5c8f552ede83790b9562fb2279025bcaf6a846"
   ],
   "individualReviewRevisions": [
     {

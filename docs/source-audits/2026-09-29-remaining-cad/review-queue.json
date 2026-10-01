@@ -439,24 +439,32 @@
       "boardID": "yy.baguette",
       "name": "YY Vertical La Baguette",
       "humanReview": "pending",
-      "sourceSHA256": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
-      "reviewPage": "yy-baguette/review/index.html",
+      "sourceSHA256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+      "reviewPage": "yy-baguette/groove-removal-review/review.md",
       "sourceAudit": "yy-baguette/native-authoring.md",
       "comparisons": [
         "yy-baguette/review/prior-reverse-face.png",
         "yy-baguette/review/prior-stepped-face.png",
         "yy-baguette/review/primary-front.png",
         "yy-baguette/review/primary-side.png",
-        "yy-baguette/review/primary-top.png"
+        "yy-baguette/review/primary-top.png",
+        "yy-baguette/groove-removal-review/prior-revised-front-side-top.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5",
-          "modelSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2"
+          "descriptorSHA256": "75be5cf44e996606261dfd942f3004058d6cc9cd5bfe66e1c159ceaf1578f934",
+          "modelSHA256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea"
         }
       },
-      "appReview": "yy-baguette/app-review/validation.json",
-      "appReviewPage": "yy-baguette/app-review/index.html"
+      "appReview": "yy-baguette/groove-removal-review/ios/captures/validation.json",
+      "appReviewPage": "yy-baguette/groove-removal-review/review.md",
+      "individualReview": "yy-baguette/groove-removal-review/review.md",
+      "appReviewHistory": [
+        "yy-baguette/app-review/validation.json"
+      ],
+      "reviewPageHistory": [
+        "yy-baguette/review/index.html"
+      ]
     },
     {
       "number": 17,

@@ -1,0 +1,42 @@
+{
+  "sourceSHA256Before": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
+  "sourceSHA256After": "9e56cec4e8494d26bc97629c8a73a11dc7b4adf9e5071a0963eafe3827c95d52",
+  "archiveMemberNamesUnchanged": true,
+  "changedArchiveMembers": [
+    "Document.xml"
+  ],
+  "allOtherDocumentXMLUnchanged": true,
+  "beforeDisplay": {
+    "camera": {
+      "type": "orthographic",
+      "viewDirection": [
+        0,
+        0,
+        -1
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ],
+      "fitPadding": 0.12
+    }
+  },
+  "afterDisplay": {
+    "camera": {
+      "type": "orthographic",
+      "viewDirection": [
+        0,
+        0,
+        -1
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ],
+      "fitPadding": 0.12
+    },
+    "surfaceFinish": "wood"
+  }
+}

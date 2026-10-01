@@ -1,0 +1,44 @@
+[
+  {
+    "stage": "staged",
+    "relativePath": "Hangboards/yy-baguette/board.json",
+    "sha256": "880322809df37a9e0fbe9a3754ba2db7e0969b715baee14d8748ba8c4abdbe42",
+    "expectedSHA256": "880322809df37a9e0fbe9a3754ba2db7e0969b715baee14d8748ba8c4abdbe42",
+    "bytesEqual": true
+  },
+  {
+    "stage": "staged",
+    "relativePath": "Hangboards/yy-baguette/assets/primary.model.json",
+    "sha256": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5",
+    "expectedSHA256": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5",
+    "bytesEqual": true
+  },
+  {
+    "stage": "staged",
+    "relativePath": "OnDemandResources/com.hangten.training.hang-ten-model-yy-baguette-d72c076b8e459814a11d386b53816c6a.assetpack/Hangboards/yy-baguette/assets/primary.usdz",
+    "sha256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+    "expectedSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "Hangboards/yy-baguette/board.json",
+    "sha256": "880322809df37a9e0fbe9a3754ba2db7e0969b715baee14d8748ba8c4abdbe42",
+    "expectedSHA256": "880322809df37a9e0fbe9a3754ba2db7e0969b715baee14d8748ba8c4abdbe42",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "Hangboards/yy-baguette/assets/primary.model.json",
+    "sha256": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5",
+    "expectedSHA256": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "OnDemandResources/com.hangten.training.hang-ten-model-yy-baguette-d72c076b8e459814a11d386b53816c6a.assetpack/Hangboards/yy-baguette/assets/primary.usdz",
+    "sha256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+    "expectedSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+    "bytesEqual": true
+  }
+]

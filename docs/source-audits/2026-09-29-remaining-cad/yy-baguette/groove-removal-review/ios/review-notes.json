@@ -1,0 +1,31 @@
+{
+  "sourceSHA256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+  "modelSHA256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea",
+  "freshBuild": "passed",
+  "targetedTests": {
+    "count": 3,
+    "failures": 0,
+    "scope": "Surface-finish decoding, wood highlight/clear/picking renderer fixture, exact native CAD route pose fixture; not manufacturer shape validation"
+  },
+  "visualInspected": [
+    "front-edge-20",
+    "front-edge-20-orbit",
+    "edge-25",
+    "edge-30",
+    "edge-15",
+    "edge-10",
+    "tray",
+    "03-physical-contact-reset"
+  ],
+  "actualSceneProbes": "runtime-probes/validation.json",
+  "packageParity": "captures/package-parity.json",
+  "binaryParity": "captures/binary-parity.json",
+  "humanAcceptance": "pending user reply",
+  "limits": [
+    "Paired shallow edges highlight visible lower lip surfaces; no factory dimensional or ergonomic accuracy claimed.",
+    "All six logical AX contact identities present. Detail default is edge-30, not inactive.",
+    "No public clear-selection/reset button exists; exact wood highlight/clear restoration covered by named renderer test.",
+    "Physical cord screen tap left selection and projected contact frames unchanged; cord has no AX element.",
+    "Parity helper initial path-filter failure is retained in parity-probe-initial-failure.log; corrected relative-path filter passed."
+  ]
+}
