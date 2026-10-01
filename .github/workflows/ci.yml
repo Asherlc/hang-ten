@@ -259,8 +259,9 @@ jobs:
         run: |
           set -euo pipefail
           test -x "$HANGTEN_FREECAD_CMD"
+          # Match authoring pins except NetworkX: 3.7 requires Python >=3.12.
           python -m pip install -e 'Tools/HangboardPackages[dev]' \
-            numpy usd-core==26.8 trimesh shapely rtree scipy networkx
+            numpy==2.2.6 usd-core==26.8 trimesh==5.1.0 shapely==2.1.2 rtree==1.4.1 scipy==1.16.3 networkx==3.6.1
           # FreeCAD has its own Python; supply the host's matching Python 3.11
           # site directory for the pinned USD compiler dependency.
           HANGTEN_CAD_PYTHONPATH="$(python -c 'from pathlib import Path; import pxr; print(Path(pxr.__file__).parent.parent)')"
