@@ -2400,7 +2400,6 @@ final class PlanStorageTests: XCTestCase {
             LegacyPlanSeedCatalog.forceF100,
             LegacyPlanSeedCatalog.evaIntHangs,
             LegacyPlanSeedCatalog.ladders,
-            LegacyPlanSeedCatalog.densityHangs,
             LegacyPlanSeedCatalog.zlagboardEndurance
         ]
 
@@ -2409,6 +2408,12 @@ final class PlanStorageTests: XCTestCase {
                 .flatMap(\.steps)
                 .allSatisfy { $0.gripType == nil && $0.fingerConfiguration == nil }
         )
+
+        // Nelson's original Table 2 specifies these grip positions, but no
+        // exact finger selection. Retain only the cues supported by that table.
+        let densityWork = LegacyPlanSeedCatalog.densityHangs.steps.filter { !$0.isRestStep }
+        XCTAssertEqual(densityWork.map(\.gripType), [.openHand, .openHand, .halfCrimp, .halfCrimp])
+        XCTAssertTrue(densityWork.allSatisfy { $0.fingerConfiguration == nil })
 
         let zlagboardStep = try XCTUnwrap(LegacyPlanSeedCatalog.zlagboardEndurance.steps.first)
         XCTAssertEqual(zlagboardStep.instruction, "Hang for 60 seconds, then rest for 60 seconds.")

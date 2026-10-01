@@ -3668,7 +3668,7 @@ enum LegacyPlanSeedCatalog {
                             id: "density-grip-\(index + 1)-rep-\(rep)-recovery",
                             title: "Density · effort recovery",
                             duration: 180,
-                            accessory: "3m recovery · source range 3–5m"
+                            accessory: "3m recovery · 3–5m between efforts"
                         ))
                     }
                 }
@@ -3713,8 +3713,8 @@ enum LegacyPlanSeedCatalog {
             for side in sides {
                 for rep in 1...reps {
                     let instruction = velocity
-                        ? "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. The app uses 2 seconds and 15 seconds of recovery within the source's 10–20-second range. " + (expert ? "Perform 5–8 repetitions or stop when power drops; this session uses 5 and one of the source's 1–2 sets." : "Perform 2–4 repetitions; this session uses 2 and one set.")
-                        : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. The app uses 4 seconds and 90 seconds of recovery within the source's 60–120-second range. " + (expert ? "Perform 4–5 repetitions for 1–2 sets; this session uses 4 and one set." : "Perform 3 repetitions for one set.")
+                        ? "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. " + (expert ? "Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions." : "Perform 2–4 repetitions; this session uses 2 and one set.")
+                        : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. " + (expert ? "Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions." : "Perform 3 repetitions for one set.")
                     steps.append(hangStep(
                         id: "\(method)-\(level.lowercased())-grip-\(index + 1)-\(side.rawValue)-rep-\(rep)",
                         title: "\(velocity ? "Velocity" : "Recruitment") · \(grip.title) · \(side.rawValue) · rep \(rep)",
@@ -3733,7 +3733,7 @@ enum LegacyPlanSeedCatalog {
                             id: "\(method)-\(level.lowercased())-grip-\(index + 1)-\(side.rawValue)-rep-\(rep)-recovery",
                             title: "Effort recovery",
                             duration: recovery,
-                            accessory: "\(Int(recovery))s recovery · source range \(velocity ? "10–20s" : "60–120s")"
+                            accessory: "\(Int(recovery))s recovery · \(velocity ? "10–20s" : "60–120s") between efforts"
                         ))
                     }
                 }
@@ -3778,7 +3778,7 @@ enum LegacyPlanSeedCatalog {
                     let step = guidedTask(
                         id: "density-expert-grip-\(index + 1)-rep-\(rep)",
                         title: "Density · \(grip.title) · effort \(rep) of 3",
-                        instruction: "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. The source permits 1–2 sets; this adapted session uses one. Pause the session timer while completing the hang, then skip to recovery when finished.",
+                        instruction: "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
                         accessory: "20–40s or failure · stopwatch · two arms",
                         phase: .hang,
                         targets: [grip.target],
@@ -3788,7 +3788,7 @@ enum LegacyPlanSeedCatalog {
                     )
                     steps.append(step)
                     if index != grips.count - 1 || rep != 3 {
-                        steps.append(recoveryStep(id: "\(step.id)-recovery", title: "Density · effort recovery", duration: 180, accessory: "3m recovery · source range 3–5m"))
+                        steps.append(recoveryStep(id: "\(step.id)-recovery", title: "Density · effort recovery", duration: 180, accessory: "3m recovery · 3–5m between efforts"))
                     }
                 }
             }

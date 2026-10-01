@@ -192,3 +192,13 @@ returned no UI tree. Compilation completed, but no native test results or
 routine UI screenshots were produced. These runtime and visual checks remain
 unverified; the failed startup is not reported as a test pass. The exact owned
 simulators and DerivedData were removed by their cleanup traps.
+
+CI follow-up: Nelson's work instructions and recovery accessories now state the
+selected effort/recovery durations and permitted ranges directly to the athlete.
+The counts, timing, grip predicates, and termination qualifiers mapped to
+Tables 1–3 above are unchanged; provenance and explanations of the selected
+defaults remain in plan metadata and this audit. Tests now recognize Table 2's
+supported open-hand/half-crimp cues without adding an exact finger selection.
+The custom Max Hangs duplication test compares the complete copied contact
+requirements with the original routine rather than hard-coding the superseded
+20 mm prescription.
