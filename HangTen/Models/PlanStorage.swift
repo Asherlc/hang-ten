@@ -1478,9 +1478,24 @@ enum PlanLibraryValidator {
         in plan: PlanDefinition,
         terminalStep: WorkoutStepDefinition
     ) -> Bool {
+        if plan.id == "research.abrahangs",
+           plan.metadata.provenance == .adapted,
+           plan.metadata.sourceURL == URL(string: "https://www.youtube.com/watch?v=sBTI9qiH4UE"),
+           terminalStep.id == "abrahangs-grip-6-rep-1",
+           terminalStep.duration == 60,
+           terminalStep.activeDuration == 10,
+           terminalStep.segments.count == 2,
+           terminalStep.segments[0].kind == .work,
+           terminalStep.segments[0].timing == .fixed,
+           terminalStep.segments[0].duration == 10,
+           terminalStep.segments[1].kind == .rest,
+           terminalStep.segments[1].timing == .fixed,
+           terminalStep.segments[1].duration == 50 {
+            return true
+        }
         guard plan.id == "research.megos-one-arm-7-3",
               plan.metadata.provenance == .adapted,
-              plan.metadata.sourceURL == URL(string: "https://trainingforclimbing.com/alex-megos-finger-training-power-endurance-protocol/"),
+              plan.metadata.sourceURL == URL(string: "https://www.youtube.com/watch?v=urTeUObQlsg"),
               terminalStep.id == "megos-7-3-set-6-right-rep-4",
               terminalStep.duration == 10,
               terminalStep.activeDuration == 7,
@@ -1971,6 +1986,36 @@ enum BuiltInPlanLibraryDefinition {
                 "Adapted from Eva López's author-published MAW guidance: five sets of 10 seconds, a 3-second margin before failure, and 3-minute rests between sets.",
                 "Choose an 8–20 mm edge before starting. Five sets is a fixed session within the source's 3–5-set range; this is not the full 2012 study's periodized program.",
                 "Complete a progressive warm-up before this timed session; see the original study (doi:10.1080/19346182.2012.716061)."
+            ]
+        } else if plan.id == LegacyPlanSeedCatalog.abrahangs.id {
+            notes = [
+                "The original video description prescribes 3 four-finger crimps, 3 three-finger drags, then one each of middle-two pocket, front-two pocket, middle-two crimp, and front-two crimp.",
+                "All ten efforts retain 10 seconds of loading and 50 seconds of rest, including the final rest. Effort is relative to lifting off: 70–80%, 50–60%, then 30–40% by grip group.",
+                "Crimp angle is not specified in the description, so the app does not add a half-crimp or full-crimp cue. Deep-pocket depth remains unspecified."
+            ]
+        } else if plan.id == LegacyPlanSeedCatalog.ladders.id {
+            notes = [
+                "Bechtel's own interview at 49:21–52:11 prescribes 3, 6, and 9-second hangs on the same hold and load, with rests as long as the athlete needs. The starting load permits a 15-second hang.",
+                "Three ladders is an app session adaptation; the author progresses volume rather than prescribing three rounds in this interview.",
+                "Each ladder is a manual task with a 60-second app preview, not a prescribed work or rest duration. Pause the session clock to complete the task at your own pace."
+            ]
+        } else if plan.id == LegacyPlanSeedCatalog.densityHangs.id {
+            notes = [
+                "Workout 2, Table 2 beginner column: two two-arm grip positions, one set and two repetitions per position; easy open-hand sloper and the chart's 25–25 mm half-crimp edge.",
+                "Slow static hangs continue to muscular failure, approximately 20–40 seconds. Each work step uses a stopwatch; its 60-second app preview is not a prescribed hang duration.",
+                "The app defaults the source's 3–5-minute recovery between efforts to 3 minutes. This session is adapted from the beginner density portion, not the author's full multi-workout training cycle."
+            ]
+        } else if plan.id.hasPrefix("coach.nelson-") {
+            notes = [
+                "Imported from Tyler Nelson's original article and Tables 1–3; source grip positions, hand count and effort qualifiers are retained.",
+                "Adapted timer defaults select values within source ranges: recruitment 4s/90s, velocity 2s/15s, density stopwatch/3m. Expert sessions use one of the source's 1–2 sets; repetition ranges use their lower bound.",
+                "For unilateral work, the app groups left-arm efforts before right-arm efforts on each grip; the source tables do not prescribe side order.",
+                "Beginner velocity work is performed only after completing a cycle of recruitment and density training. Expert velocity work follows recruitment pulls. The article's 4–5-week cycle is guidance, not an added timed task."
+            ]
+        } else if plan.id == LegacyPlanSeedCatalog.megoOneArmSevenThree.id {
+            notes = [
+                "Source: Alexander Megos's own video, How to get Steel Fingers Part 2.",
+                "The app retains six rounds of four 7s/3s efforts per arm and 2-minute recovery between rounds."
             ]
         } else if plan.id == LegacyPlanSeedCatalog.hoopersBetaIntroductory.id {
             notes = [

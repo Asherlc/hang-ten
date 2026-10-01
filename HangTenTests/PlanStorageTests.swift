@@ -1563,9 +1563,9 @@ final class PlanStorageTests: XCTestCase {
     func testSourceBackedAndExplicitlyAdaptedRecoveriesKeepTheirDurations() {
         let recoveryIDs = [
             "horst-753-grip-1-recovery",
-            "ladders-round-1-recovery",
-            "density-hold-1-set-1-recovery",
-            "density-hold-1-recovery"
+            "density-grip-1-rep-1-recovery",
+            "density-grip-1-rep-2-recovery",
+            "density-grip-2-rep-1-recovery"
         ]
         let recoverySteps = LegacyPlanSeedCatalog.all.flatMap(\.steps).filter {
             recoveryIDs.contains($0.id)
@@ -2305,7 +2305,8 @@ final class PlanStorageTests: XCTestCase {
         let terminalSteps = try LegacyPlanSeedCatalog.all
             .filter {
                 $0.id != LegacyPlanSeedCatalog.rptcRepeaters.id &&
-                    $0.id != LegacyPlanSeedCatalog.megoOneArmSevenThree.id
+                    $0.id != LegacyPlanSeedCatalog.megoOneArmSevenThree.id &&
+                    $0.id != LegacyPlanSeedCatalog.abrahangs.id
             }
             .map { plan in
                 try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)
@@ -2322,16 +2323,17 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(megoTerminalStep.duration, 3)
     }
 
-    func testAbrahangsSecondGripKeepsSourceBackedCueWithPairedEdge() throws {
+    func testAbrahangsSecondGripKeepsOriginalThreeFingerPocketCue() throws {
         let step = try XCTUnwrap(
-            LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2" }
+            LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2-rep-1" }
         )
 
-        XCTAssertEqual(step.title, "Abrahang · F3 Open Hang")
+        XCTAssertEqual(step.title, "Abrahang · Three-finger drag · deep pocket · rep 1 of 3")
         XCTAssertEqual(
             step.workRequirements,
-            [ContactRequirement.edge(
-                depth: .range(.init(minimum: 20, maximum: 20)),
+            [ContactRequirement(
+                kind: .pocket,
+                fingerCapacity: 3,
                 selection: .bilateralPair
             )]
         )
@@ -2346,11 +2348,11 @@ final class PlanStorageTests: XCTestCase {
         let store = try PlanLibraryStore(definition: BuiltInPlanLibraryDefinition.document)
         let step = try XCTUnwrap(
             store.plan(id: LegacyPlanSeedCatalog.abrahangs.id)?.steps.first {
-                $0.id == "abrahangs-grip-4.segment-1"
+                $0.id == "abrahangs-grip-4-rep-1.segment-1"
             }
         )
 
-        XCTAssertEqual(step.title, "Abrahang · F2 Open Hang")
+        XCTAssertEqual(step.title, "Abrahang · Front-two pocket · rep 1 of 1")
         XCTAssertEqual(step.gripType, .openHand)
         XCTAssertEqual(
             step.fingerConfiguration,
