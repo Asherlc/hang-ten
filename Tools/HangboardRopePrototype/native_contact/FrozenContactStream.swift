@@ -14,6 +14,8 @@ enum StreamedContactAdmission {
                       observeCertificate: (([String: Double]) -> Void)? = nil,
                       observeSolve: (([String: Double]) -> Void)? = nil,
                       observe: ((Int, Int, Int) -> Void)? = nil) throws -> RopeContactSystem.Solution {
+        let profile=factor.primalProfile,streamStart=profile?.now() ?? 0
+        defer {profile?.record("primalStreamSeconds",streamStart)}
         let size = base.count, count = contacts.count, equalities = Set(factor.equalities)
         guard size == factor.baseCount, border.count == factor.borderCount, size > 0, size+border.count <= 50_256,
               count >= 0, count <= 8_000_000, (1...50).contains(maxIterations), (1...20).contains(maxAdmissions),
@@ -95,6 +97,9 @@ enum StreamedContactAdmission {
             #else
             let solved = try PrimalContactIP.solve(factor: factor, base: base, border: border,
                 contacts: subset, initialMultipliers: warm, maxIterations: maxIterations)
+            var statistics=factor.primalStatistics.seconds
+            if let profile {statistics.merge(profile.seconds,uniquingKeysWith:{_,new in new})}
+            observeSolve?(statistics)
             #endif
             guard solved.base.count == size, solved.border.count == border.count, solved.multipliers.count == ids.count,
                   solved.activeIDs.allSatisfy({ ids.indices.contains($0) }),

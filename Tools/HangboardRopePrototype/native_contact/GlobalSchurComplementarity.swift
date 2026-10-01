@@ -235,6 +235,9 @@ final class GlobalSchurSession {
                 "responseBatches": Double(responseBatches),
                 "newtonFactorizations": Double(factorizations), "newtonFactorSeconds": factorSeconds,
                 "lineSearchTrials": Double(lineTrials)]
+            if let profile=factor.responseProfile {
+                lastStatistics.merge(profile.seconds,uniquingKeysWith:{_,new in new})
+            }
             return RopeContactSystem.Solution(base: solved.base, border: solved.border, multipliers: mu,
                 activeIDs: (0..<m).filter { mu[$0] < -1e-12 })
         }

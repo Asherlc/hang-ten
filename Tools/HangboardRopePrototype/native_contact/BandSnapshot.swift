@@ -38,16 +38,34 @@ extension RopeBandedSystem {
  }
 }
 
+final class ResponseConstructionProfile {
+ var seconds:[String:Double]=[:]
+ func now()->Double {ProcessInfo.processInfo.systemUptime}
+ func record(_ key:String,_ start:Double) {seconds[key,default:0] += now()-start}
+ func count(_ key:String,_ count:Int=1) {seconds[key,default:0] += Double(count)}
+}
+
 struct PrimalPrepared {
  let system:RopeBandedSystem,columns:[[Double]],borderMatrix:[[Double]],equalities:[Int]
  let factor:RopeBandedFactorization
  let useBLASProducts:Bool
+ let responseProfile:ResponseConstructionProfile?
+ let primalProfile:ResponseConstructionProfile?
+ let primalStatistics=ResponseConstructionProfile()
  var baseCount:Int {system.size}
  var borderCount:Int {columns.count}
  init(system:RopeBandedSystem,columns:[[Double]],borderMatrix:[[Double]],equalities:[Int]) throws {
   self.system=system;self.columns=columns;self.borderMatrix=borderMatrix;self.equalities=equalities
   useBLASProducts=ProcessInfo.processInfo.environment["HANGTEN_BLAS_RESPONSE_PRODUCT"] == "1"
+  responseProfile=ProcessInfo.processInfo.environment["HANGTEN_PROFILE_CONTACT_RESPONSES"] == "1" ? ResponseConstructionProfile() : nil
+  primalProfile=ProcessInfo.processInfo.environment["HANGTEN_PROFILE_PRIMAL"] == "1" ? ResponseConstructionProfile() : nil
+  responseProfile?.count("responseProfileCumulative",1)
+  primalProfile?.count("primalProfileCumulative",1)
+  responseProfile?.count("responseBaseCount",system.size)
+  responseProfile?.count("responseBandwidth",system.bandwidth)
+  let started=primalProfile?.now() ?? 0
   factor=try system.factorized(borderColumns:columns,borderMatrix:borderMatrix)
+  primalProfile?.record("primalPreparedSeconds",started)
  }
  func solve(rhs:[Double],borderRHS:[Double]) throws -> (base:[Double],border:[Double]) {
   try factor.solve(rhs:rhs,borderRHS:borderRHS)
@@ -73,6 +91,8 @@ struct PrimalPrepared {
   return result
  }
  func refinedBatch(_ rhs:[[Double]],_ borderRHS:[[Double]]) throws -> [(base:[Double],border:[Double])] {
+  let batchStarted=responseProfile?.now() ?? 0
+  defer {responseProfile?.record("responseBatchSeconds",batchStarted)}
   let count=rhs.count,n=baseCount,nb=borderCount
   guard count<=64,count<=500_000/(n+nb),borderRHS.count==count,
    rhs.allSatisfy({$0.count==n && $0.allSatisfy({$0.isFinite})}),
@@ -80,15 +100,19 @@ struct PrimalPrepared {
    throw RopePhysicsError.invalid("Invalid bounded response batch")
   }
   if count==0 {return []}
-  var result=try factor.solveBatch(rhs:rhs.flatMap{$0},borderRHS:borderRHS.flatMap{$0},count:count)
+  var result=try factor.solveBatch(rhs:rhs.flatMap{$0},borderRHS:borderRHS.flatMap{$0},count:count,profile:responseProfile)
   let limits=(0..<count).map {j in
    1e-12*max(1,(rhs[j]+borderRHS[j]).map{abs($0)}.max()!)
   }
   var converged=Array(repeating:false,count:count)
   for _ in 0..<3 {
+   let residualStarted=responseProfile?.now() ?? 0
    var error=Array(repeating:0.0,count:n*count),borderError=Array(repeating:0.0,count:nb*count)
    for j in 0..<count where !converged[j] {
+    let productStarted=responseProfile?.now() ?? 0
     let value=product(Array(result.base[j*n..<(j+1)*n]),Array(result.border[j*nb..<(j+1)*nb]))
+    responseProfile?.record("responseProductSeconds",productStarted)
+    responseProfile?.count("responseProductCalls")
     var maximum=0.0
     for k in 0..<n {
      let e=rhs[j][k]-value.base[k]
@@ -106,8 +130,10 @@ struct PrimalPrepared {
      for k in 0..<nb {borderError[j*nb+k]=0}
     }
    }
+   responseProfile?.record("responseResidualSeconds",residualStarted)
    if converged.allSatisfy({$0}) {break}
-   let correction=try factor.solveBatch(rhs:error,borderRHS:borderError,count:count)
+   responseProfile?.count("responseRefinementSolves")
+   let correction=try factor.solveBatch(rhs:error,borderRHS:borderError,count:count,profile:responseProfile)
    for j in 0..<count where !converged[j] {
     for k in 0..<n {result.base[j*n+k] += correction.base[j*n+k]}
     for k in 0..<nb {result.border[j*nb+k] += correction.border[j*nb+k]}
@@ -125,7 +151,7 @@ struct PrimalPrepared {
 // This extension compiles in the same captured file as the authoritative
 // factor. It reads immutable factors; only independent RHS columns mutate.
 extension RopeBandedFactorization {
- func solveBatch(rhs:[Double],borderRHS:[Double],count:Int) throws -> (base:[Double],border:[Double]) {
+ func solveBatch(rhs:[Double],borderRHS:[Double],count:Int,profile:ResponseConstructionProfile?=nil) throws -> (base:[Double],border:[Double]) {
   let nb=columns.count
   guard (1...64).contains(count),count<=500_000/(size+nb),
    rhs.count==size*count,borderRHS.count==nb*count,
@@ -135,13 +161,17 @@ extension RopeBandedFactorization {
   var base=rhs,border=borderRHS
   var trans:Int8=78,n=__LAPACK_int(size),kl=__LAPACK_int(bandwidth),ku=kl
   var nrhs=__LAPACK_int(count),ldab=__LAPACK_int(leadingDimension),ldb=n,info:__LAPACK_int=0
+  let bandStarted=profile?.now() ?? 0
   band.withUnsafeBufferPointer {numeric in
    pivots.withUnsafeBufferPointer {indices in
     dgbtrs_(&trans,&n,&kl,&ku,&nrhs,numeric.baseAddress!,&ldab,indices.baseAddress!,&base,&ldb,&info)
    }
   }
+  profile?.record("responseBandSolveSeconds",bandStarted)
+  profile?.count("responseBandSolveCalls")
   guard info==0 else {throw RopePhysicsError.invalid("Invalid reusable rope batch solve (\(info))")}
   if nb>0 {
+   let borderStarted=profile?.now() ?? 0
    for j in 0..<count {for i in 0..<nb {
     var dot=0.0
     for k in 0..<size {dot += columns[i][k]*base[j*size+k]}
@@ -157,6 +187,7 @@ extension RopeBandedFactorization {
    for j in 0..<count {for k in 0..<size {for i in 0..<nb {
     base[j*size+k] -= inverseColumns[i*size+k]*border[j*nb+i]
    }}}
+   profile?.record("responseBorderSeconds",borderStarted)
   }
   guard (base+border).allSatisfy({$0.isFinite}) else {throw RopePhysicsError.invalid("Nonfinite reusable rope batch result")}
   return (base,border)

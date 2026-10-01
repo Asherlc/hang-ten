@@ -1,5 +1,19 @@
 import XCTest
 final class PrimalTests:XCTestCase {
+ func testParityConvergenceDoesNotMoveSoftClearCoordinate() throws {
+  guard ProcessInfo.processInfo.environment["HANGTEN_PRIMAL_PARITY"] == "1" else {
+   throw XCTSkip("Isolated primal convergence/recovery experiment")
+  }
+  var system=try RopeBandedSystem(size:1,bandwidth:0)
+  try system.addSymmetric(row:0,column:0,value:2.480023523170673e-6)
+  let factor=try system.primalPrepared(borderColumns:[],borderMatrix:[])
+  // The exact minimizer is zero: a clear wall has no physical contact force.
+  // Passing force residuals alone cannot bound displacement in this soft mode.
+  let row=RopeLinearContact(indices:[0],coefficients:[1],border:[],residual:0.0001)
+  let answer=try PrimalContactIP.solve(factor:factor,base:[0],border:[],contacts:[row])
+  XCTAssertEqual(answer.base[0],0,accuracy:1e-8)
+  XCTAssertLessThanOrEqual(abs(answer.multipliers[0]*(row.residual+answer.base[0]-1e-8*answer.multipliers[0])),1e-18)
+ }
  func testBatchedResponsesRetainPivotedBandAndEveryBorder() throws {
   var pivot=try RopeBandedSystem(size:2,bandwidth:1)
   try pivot.addSymmetric(row:0,column:1,value:1)
@@ -78,12 +92,18 @@ final class PrimalTests:XCTestCase {
   XCTAssertEqual(session.cachedResponseCount,2)
   XCTAssertEqual(session.lastStatistics["newResponses"],0)
  }
+ #endif
  func testCondensedRecoveryCannotHideOriginalOrderedGap() throws {
+  #if !SCREEN_GLOBAL_SCHUR
+  guard ProcessInfo.processInfo.environment["HANGTEN_PRIMAL_PARITY"] == "1" else {
+   throw XCTSkip("Original-factor recovery experiment")
+  }
+  #endif
   var system=try RopeBandedSystem(size:2,bandwidth:0)
   try system.addSymmetric(row:0,column:0,value:1)
   try system.addSymmetric(row:1,column:1,value:1)
   let factor=try system.primalPrepared(borderColumns:[],borderMatrix:[])
-  let row=RopeLinearContact(indices:[0,1],coefficients:[1,1],border:[],residual:1e16)
+  let row=RopeLinearContact(indices:[0,1,1],coefficients:[1,0.25,0.75],border:[],residual:1e16)
   // Grouping J*x before C cancels the 0.5 gap. A tiny barrier force can then
   // appear complementary while the original ordered affine row is clear.
   do {
@@ -96,7 +116,6 @@ final class PrimalTests:XCTestCase {
    // Condensation may reject when its arithmetic cannot certify the source.
   }
  }
- #endif
  func testIndependentLoopsAndBoardAgainstFullKKT() throws {
   var system=try RopeBandedSystem(size:2,bandwidth:0)
   try system.addSymmetric(row:0,column:0,value:2)
@@ -348,8 +367,8 @@ final class PrimalTests:XCTestCase {
 }
 let suite=PrimalTests.defaultTestSuite;suite.run()
 #if SCREEN_GLOBAL_SCHUR
-let expectedTests=24
+let expectedTests=25
 #else
-let expectedTests=22
+let expectedTests=24
 #endif
 guard let result=suite.testRun,result.executionCount==expectedTests,result.totalFailureCount==0 else {exit(1)}

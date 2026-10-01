@@ -181,6 +181,14 @@ def main():
                         help="isolated BLAS original-band residual product; default scalar path retained")
     parser.add_argument("--batch-responses", action="store_true",
                         help="isolated bounded multi-RHS global contact responses; requires --global-schur")
+    parser.add_argument("--profile-responses", action="store_true",
+                        help="split bounded batch response costs; requires --batch-responses")
+    parser.add_argument("--primal-parity", action="store_true",
+                        help="isolated primal Schur-parity convergence and original-factor recovery")
+    parser.add_argument("--profile-primal", action="store_true",
+                        help="split existing primal CSC solve costs; default primal backend only")
+    parser.add_argument("--end-cluster-order", action="store_true",
+                        help="isolated interior-first symbolic ordering; requires --primal-parity")
     args = parser.parse_args()
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789-_" for c in args.label):
         parser.error("label must use lowercase letters, numbers, hyphen or underscore")
@@ -196,6 +204,14 @@ def main():
         parser.error("--schur-fb requires --global-schur")
     if args.batch_responses and not args.global_schur:
         parser.error("--batch-responses requires --global-schur")
+    if args.profile_responses and not args.batch_responses:
+        parser.error("--profile-responses requires --batch-responses")
+    if args.primal_parity and (args.global_schur or args.complementarity):
+        parser.error("--primal-parity requires the default primal backend")
+    if args.profile_primal and (args.global_schur or args.complementarity):
+        parser.error("--profile-primal requires the default primal backend")
+    if args.end_cluster_order and not args.primal_parity:
+        parser.error("--end-cluster-order requires --primal-parity")
     workspace = Path(os.environ.get("PASEO_WORKTREE_PATH", REPO)).resolve()
     owner = workspace.name
     if workspace != REPO or os.environ.get("HANGTEN_CONTACT_SCREEN_OWNER") != owner:
@@ -275,6 +291,10 @@ def main():
                        HANGTEN_PACKED_CONTACT_SOURCE="1" if args.packed or args.regions else "0",
                        HANGTEN_BLAS_RESPONSE_PRODUCT="1" if args.blas_product else "0",
                        HANGTEN_BATCH_CONTACT_RESPONSES="1" if args.batch_responses else "0",
+                       HANGTEN_PROFILE_CONTACT_RESPONSES="1" if args.profile_responses else "0",
+                       HANGTEN_PRIMAL_PARITY="1" if args.primal_parity else "0",
+                       HANGTEN_PROFILE_PRIMAL="1" if args.profile_primal else "0",
+                       HANGTEN_END_CLUSTER_ORDER="1" if args.end_cluster_order else "0",
                        HANGTEN_AFFINE_REGION_CERTIFICATES="1" if args.regions else "0",
                        HANGTEN_AFFINE_REGION_CROSS_CHECK="1" if args.region_checks else "0",
                        HANGTEN_SCHUR_METHOD="fischer-burmeister" if args.schur_fb else "interior-point",
@@ -282,6 +302,10 @@ def main():
     provenance = {"owner": owner, "runtimeAdoption": False, "sourceSHA256": source_hashes,
                   "blasResponseProduct": args.blas_product,
                   "batchedContactResponses": args.batch_responses,
+                  "profileContactResponses": args.profile_responses,
+                  "primalParity": args.primal_parity,
+                  "profilePrimal": args.profile_primal,
+                  "endClusterOrder": args.end_cluster_order,
                   "sourceSnapshots": source_snapshots,
                   "compileCommand": compile_command, "mode": args.mode, "packedSource": args.packed or args.regions,
                   "complementarityBackend": args.complementarity, "affineRegionCertificates": args.regions,

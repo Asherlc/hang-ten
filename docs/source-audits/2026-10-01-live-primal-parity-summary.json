@@ -1,0 +1,1029 @@
+{
+  "accurateValidation": {
+    "affineRegionCertificates": false,
+    "coldQPPerformanceAccepted": false,
+    "coldRuns": 1,
+    "complementarityBackend": false,
+    "fullScanRegionChecks": false,
+    "globalSchurBackend": false,
+    "globalSchurMethod": null,
+    "independentlyCertifiedRuns": 1,
+    "numericalAccepted": true,
+    "owner": "strong-owl-live-physics",
+    "p95Seconds": null,
+    "packedSource": true,
+    "primalDifference": 2.9659599240036845e-08,
+    "regionRuns": [
+      []
+    ],
+    "residuals": {
+      "allRowFeasibility": 6.061769625004503e-16,
+      "dualViolation": 0.0,
+      "objective": 5.898967491972981e-10,
+      "regularizedComplementarity": 4.5509659604884456e-20,
+      "regularizedContact": 0.0,
+      "regularizedEquality": 4.01087601218514e-20,
+      "slackViolation": 0.0,
+      "stationarity": 2.030753614169516e-22
+    },
+    "runtimeAdoption": false,
+    "scope": "cold equality matrix/factor plus streamed row construction/discovery/solve/full affine certification; frozen input decoding/references, geometry and mesh excluded",
+    "singleRunSeconds": 0.04858241666806862,
+    "solverRuns": [
+      []
+    ],
+    "trace": [
+      {
+        "added": 0,
+        "admission": 1,
+        "selected": 836
+      }
+    ]
+  },
+  "baseCommit": "9df13f132480cfa46c3423ff7555991411c4cf77",
+  "branch": "feat/live-hangboard-physics",
+  "cleanup": {
+    "advisorArchived": true,
+    "advisorGuardAbsent": true,
+    "allAbsent": true,
+    "currentDrivers": [
+      {
+        "absentNow": true,
+        "pid": 10293,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 19814,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 44828,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 45607,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 46344,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 47164,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 51451,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 52893,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 61421,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 62659,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 69924,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 73781,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 77016,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 77035,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 85563,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 73768,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "absentNow": true,
+        "pid": 76930,
+        "receipt": "deleted-and-verified"
+      }
+    ],
+    "ownedCurrentGroups": [
+      {
+        "group": 10295,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 10295,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 13500,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-probe",
+        "owner": "strong-owl-live-physics",
+        "pid": 13500,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 19816,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 19816,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 20343,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-probe",
+        "owner": "strong-owl-live-physics",
+        "pid": 20343,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 44831,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 44831,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 45260,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-probe",
+        "owner": "strong-owl-live-physics",
+        "pid": 45260,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 45610,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 45610,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 46345,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 46345,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 46548,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-probe",
+        "owner": "strong-owl-live-physics",
+        "pid": 46548,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 47165,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 47165,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 47784,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-probe",
+        "owner": "strong-owl-live-physics",
+        "pid": 47784,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 51452,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 51452,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 51866,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-probe",
+        "owner": "strong-owl-live-physics",
+        "pid": 51866,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 52967,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 52967,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 53291,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-probe",
+        "owner": "strong-owl-live-physics",
+        "pid": 53291,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 61423,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 61423,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 61658,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-probe",
+        "owner": "strong-owl-live-physics",
+        "pid": 61658,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 62661,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 62661,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 65703,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-probe",
+        "owner": "strong-owl-live-physics",
+        "pid": 65703,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 69925,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 69925,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 70310,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-probe",
+        "owner": "strong-owl-live-physics",
+        "pid": 70310,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 73782,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 73782,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 76762,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-probe",
+        "owner": "strong-owl-live-physics",
+        "pid": 76762,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 77017,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 77017,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 77036,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 77036,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 77513,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-probe",
+        "owner": "strong-owl-live-physics",
+        "pid": 77513,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 77532,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-probe",
+        "owner": "strong-owl-live-physics",
+        "pid": 77532,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 85564,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 85564,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 86197,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-native-contact-probe",
+        "owner": "strong-owl-live-physics",
+        "pid": 86197,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 62447,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-mesh-compile",
+        "owner": "strong-owl-live-physics",
+        "pid": 62447,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 64103,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-mesh-original-check",
+        "owner": "strong-owl-live-physics",
+        "pid": 64103,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 83572,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-mesh-end-order-check",
+        "owner": "strong-owl-live-physics",
+        "pid": 83572,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 73769,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-channel-fixtures",
+        "owner": "strong-owl-live-physics",
+        "pid": 73769,
+        "receipt": "deleted-and-verified"
+      },
+      {
+        "group": 76943,
+        "groupAbsentNow": true,
+        "name": "strong-owl-live-physics-channel-fixtures",
+        "owner": "strong-owl-live-physics",
+        "pid": 76943,
+        "receipt": "deleted-and-verified"
+      }
+    ]
+  },
+  "coldGateSeconds": 0.002,
+  "default": "Existing primal convergence and Accelerate ordering; experiments default off",
+  "evidenceSHA256": {
+    ".context/strong-owl-live-physics-response-diagnosis/PLAN.md": "0d2aa54ac53edcaf40c7443ae248d6b50aacaf852ef747aa844a9e89c9f46c99",
+    ".context/strong-owl-live-physics-response-diagnosis/PROGRESS.md": "f912b29b85e37aad8fd8f44e4589363575a64a36ff75c4ff21e68d4e27ec6609",
+    ".context/strong-owl-live-physics-response-diagnosis/REVIEW.md": "6ee7712dbf50d582791294ebccf0dc7810014a69b025fc2adc8fd04c78bec821",
+    ".context/strong-owl-live-physics-response-diagnosis/advisor-archive.json": "b3dde50ba04364bea18de21c6c9dac2e0b5ca6149110be32e04d5aacd0a116f0",
+    ".context/strong-owl-live-physics-response-diagnosis/advisor-brief.md": "3fbb42bf3ca384c729482f5a62cfb441961d11620325cfcc3e4ba908c1425490",
+    ".context/strong-owl-live-physics-response-diagnosis/advisor-captured.json": "697cdd5ffaca373a3d7ac827e416a83e8958a1ff315e70d280af896dbcadb27f",
+    ".context/strong-owl-live-physics-response-diagnosis/advisor-final-recommendation.json": "68008a6d98381300d43976e9adb48f8d3e89d73334b96a63bb04af22d83ea846",
+    ".context/strong-owl-live-physics-response-diagnosis/advisor-final-status.json": "3409af79f69039b420b7cbb7f49ebf9f1304d17833c017b6a70964c3d7e8c9eb",
+    ".context/strong-owl-live-physics-response-diagnosis/advisor-guard-resources.log": "25e145466f9c71897373cad193f8aaf57fa290ddd25bb719c542ee3b63060c5f",
+    ".context/strong-owl-live-physics-response-diagnosis/advisor-owned.json": "1eb54756ecc761b821413bf5ac4ca9f40611275f2809349f6bd9cd15edf04e17",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/BandSnapshot.swift": "5595dbb93d579a08a28b00eb058c850acd6dac3f734c91b453541d9d1d8e6ca8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/main.swift": "cbcf20d4ea81fc7e9ef617930a1a852938934c9f2d4f4d35042655d1cd79c4d9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/provenance.json": "df63acec267f5a1ee042a489033ec701e5d70b56403ac41129d82948d07b3a8f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/run.log": "42340a9393ed312fcb76c89be2da54eda7127d271163ab66e823717475c33d76",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/source-inputs/BandSnapshot.swift": "5595dbb93d579a08a28b00eb058c850acd6dac3f734c91b453541d9d1d8e6ca8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/source-inputs/ContactInteriorPoint.swift": "8493e768180831b43c3ac07abe30203bd2a4f755e5ce93eafb9fd0fddd9de9b0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/source-inputs/FrozenContactStream.swift": "39c6961b0f5f7221b5195ea5bdbebb2081c2836aabd90d78d68b750900fd48f5",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/source-inputs/SparseNewtonPattern.swift": "654068b858f0661975eb0be274bce36960ebd5c110776c5b597d2c120b5b9f8b",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/source-inputs/main.swift": "cbcf20d4ea81fc7e9ef617930a1a852938934c9f2d4f4d35042655d1cd79c4d9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/source-inputs/run_native_contact_screen.py": "d1a874345bee72acc05b0dffb7fbb90d6120eeb3b8fdc9b06ef1c19135d8dc37",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-end-order-fixtures/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/BandSnapshot.swift": "d2b0d44c63110f3068db48ff22a036de0c801318c07f7f7d0177ba40b094790e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/main.swift": "ee294fe561ff6a783728fe8c607feafb07c942af6711af36d0af5ecb8a7ba3a4",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/provenance.json": "c238c99b38e4023c4e114d011b97fe168aa769fe3f3335ebc926db4b7a03d462",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/run.log": "ca154bd0c788b851d3c740cc532e0a95d88016723762bfb48b38312604ad088d",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/source-inputs/BandSnapshot.swift": "d2b0d44c63110f3068db48ff22a036de0c801318c07f7f7d0177ba40b094790e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/source-inputs/ContactInteriorPoint.swift": "a9e352a235068632435f434c7e111ac756440677c1b3a4fb633d6b7827dbffcf",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/source-inputs/FrozenContactStream.swift": "39c6961b0f5f7221b5195ea5bdbebb2081c2836aabd90d78d68b750900fd48f5",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/source-inputs/SparseNewtonPattern.swift": "2eb0b32a370c49f49692396d91d393eb0e18b7f7c2d32b888f9afd43cf1337ab",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/source-inputs/main.swift": "ee294fe561ff6a783728fe8c607feafb07c942af6711af36d0af5ecb8a7ba3a4",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/source-inputs/run_native_contact_screen.py": "d1a874345bee72acc05b0dffb7fbb90d6120eeb3b8fdc9b06ef1c19135d8dc37",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-final/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/BandSnapshot.swift": "9fbe6e9677906e78255d38404f8d1f8f866b59d7db5e915787e45858451b5ee8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/main.swift": "cbcf20d4ea81fc7e9ef617930a1a852938934c9f2d4f4d35042655d1cd79c4d9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/provenance.json": "cab8abe4a36ec5703cab9e6a643fd31997a32b8032f14beacbe1bb5fae60d72e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/run.log": "e3c686333e6bc5fc6fe7ad6ab5573c117c5d5cb7d8859a713e541452351705a9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/source-inputs/BandSnapshot.swift": "9fbe6e9677906e78255d38404f8d1f8f866b59d7db5e915787e45858451b5ee8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/source-inputs/ContactInteriorPoint.swift": "6df0e05e12da9f952487eccdf7267c72d6eb2c32bae69149ca4d150e67b6dec3",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/source-inputs/FrozenContactStream.swift": "a749b76541cd81bcb7e2bf234478cc94d63d4d9e3bc2aa5301fc90744b02eb75",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/source-inputs/SparseNewtonPattern.swift": "e730219547608d1554513ce893d7e0148f8e79ea4b7e435d4724b20540cd7331",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/source-inputs/main.swift": "cbcf20d4ea81fc7e9ef617930a1a852938934c9f2d4f4d35042655d1cd79c4d9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/source-inputs/run_native_contact_screen.py": "4624e25529b7415fd2ce9a78bd513bb7cc3a08a0b44885caabab2d882ef266f9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green-fixed/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/BandSnapshot.swift": "9fbe6e9677906e78255d38404f8d1f8f866b59d7db5e915787e45858451b5ee8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/compile.log": "15ec1e446c9e3c75fcc22005d3fcbbe570e6a71884de8f6cc76c634ac2f04e61",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/main.swift": "cbcf20d4ea81fc7e9ef617930a1a852938934c9f2d4f4d35042655d1cd79c4d9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/provenance.json": "432b81f565685d855692ffd55fe27c7ad193f7918be1277f6352866d9756bed8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/source-inputs/BandSnapshot.swift": "9fbe6e9677906e78255d38404f8d1f8f866b59d7db5e915787e45858451b5ee8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/source-inputs/ContactInteriorPoint.swift": "4a3f3e2c362c36c12ea2aa47f05739923fde3bc9fb0804a5cb7e526569912a45",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/source-inputs/FrozenContactStream.swift": "a749b76541cd81bcb7e2bf234478cc94d63d4d9e3bc2aa5301fc90744b02eb75",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/source-inputs/SparseNewtonPattern.swift": "e730219547608d1554513ce893d7e0148f8e79ea4b7e435d4724b20540cd7331",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/source-inputs/main.swift": "cbcf20d4ea81fc7e9ef617930a1a852938934c9f2d4f4d35042655d1cd79c4d9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/source-inputs/run_native_contact_screen.py": "4624e25529b7415fd2ce9a78bd513bb7cc3a08a0b44885caabab2d882ef266f9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-green/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/BandSnapshot.swift": "d2b0d44c63110f3068db48ff22a036de0c801318c07f7f7d0177ba40b094790e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/main.swift": "ee294fe561ff6a783728fe8c607feafb07c942af6711af36d0af5ecb8a7ba3a4",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/provenance.json": "154eaa7b2ed7fc98a4b9e41e75c9812e933f34a48c0ce43bc8a6b20113a07548",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/run.log": "1c431140f6165eeb2e291cdcb9214656e7f810c4f8b9fb3c3e91043ce5bee3d0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/source-inputs/BandSnapshot.swift": "d2b0d44c63110f3068db48ff22a036de0c801318c07f7f7d0177ba40b094790e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/source-inputs/ContactInteriorPoint.swift": "08e3bb5999bba126960847044032e7765cbada8dce49fe55b8f54157db00193c",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/source-inputs/FrozenContactStream.swift": "39c6961b0f5f7221b5195ea5bdbebb2081c2836aabd90d78d68b750900fd48f5",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/source-inputs/SparseNewtonPattern.swift": "4bea809db18368abbc6d6dfe8ddde94cb2ae23b6dfa27c5a277e77ca108003a3",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/source-inputs/main.swift": "ee294fe561ff6a783728fe8c607feafb07c942af6711af36d0af5ecb8a7ba3a4",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/source-inputs/run_native_contact_screen.py": "d1a874345bee72acc05b0dffb7fbb90d6120eeb3b8fdc9b06ef1c19135d8dc37",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-order-reviewed/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/BandSnapshot.swift": "9fbe6e9677906e78255d38404f8d1f8f866b59d7db5e915787e45858451b5ee8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/main.swift": "cbcf20d4ea81fc7e9ef617930a1a852938934c9f2d4f4d35042655d1cd79c4d9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/provenance.json": "82043cd896d7b5298a28abf7777bc74097f40bf10967c652186d76a88575c784",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/run.log": "42a917ceac9486cc6488739c0ceaaec317b768e044fe119c600b1391aca2cdf3",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/source-inputs/BandSnapshot.swift": "9fbe6e9677906e78255d38404f8d1f8f866b59d7db5e915787e45858451b5ee8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/source-inputs/ContactInteriorPoint.swift": "025a00d461ef357fb2379b874a17bbd26b3b36e87db6accd04347d47e04d6141",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/source-inputs/FrozenContactStream.swift": "a749b76541cd81bcb7e2bf234478cc94d63d4d9e3bc2aa5301fc90744b02eb75",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/source-inputs/SparseNewtonPattern.swift": "e730219547608d1554513ce893d7e0148f8e79ea4b7e435d4724b20540cd7331",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/source-inputs/main.swift": "cbcf20d4ea81fc7e9ef617930a1a852938934c9f2d4f4d35042655d1cd79c4d9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/source-inputs/run_native_contact_screen.py": "4624e25529b7415fd2ce9a78bd513bb7cc3a08a0b44885caabab2d882ef266f9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-red/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/BandSnapshot.swift": "d2b0d44c63110f3068db48ff22a036de0c801318c07f7f7d0177ba40b094790e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/main.swift": "ee294fe561ff6a783728fe8c607feafb07c942af6711af36d0af5ecb8a7ba3a4",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/provenance.json": "b228611dd78ca24b957aa211457ceb96896e9d9eafd39892ae39b15225e1180e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/run.log": "d1e129e0e8ab787768a3689719ea8e589c7f7291a35b9652429bd8cefb108b9a",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/source-inputs/BandSnapshot.swift": "d2b0d44c63110f3068db48ff22a036de0c801318c07f7f7d0177ba40b094790e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/source-inputs/ContactInteriorPoint.swift": "08e3bb5999bba126960847044032e7765cbada8dce49fe55b8f54157db00193c",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/source-inputs/FrozenContactStream.swift": "39c6961b0f5f7221b5195ea5bdbebb2081c2836aabd90d78d68b750900fd48f5",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/source-inputs/SparseNewtonPattern.swift": "4bea809db18368abbc6d6dfe8ddde94cb2ae23b6dfa27c5a277e77ca108003a3",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/source-inputs/main.swift": "ee294fe561ff6a783728fe8c607feafb07c942af6711af36d0af5ecb8a7ba3a4",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/source-inputs/run_native_contact_screen.py": "d1a874345bee72acc05b0dffb7fbb90d6120eeb3b8fdc9b06ef1c19135d8dc37",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-default/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/BandSnapshot.swift": "d2b0d44c63110f3068db48ff22a036de0c801318c07f7f7d0177ba40b094790e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/main.swift": "ee294fe561ff6a783728fe8c607feafb07c942af6711af36d0af5ecb8a7ba3a4",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/provenance.json": "1dce7f7254a5cf196e3e94fe7f7a9471cad4d6ded16d9da25b7b1d1ac9ac0178",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/run.log": "443dcd98f937ca23f72cd2604f1c0e2bbcd446720c22e6f957a24134aca97f04",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/source-inputs/BandSnapshot.swift": "d2b0d44c63110f3068db48ff22a036de0c801318c07f7f7d0177ba40b094790e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/source-inputs/FrozenContactStream.swift": "39c6961b0f5f7221b5195ea5bdbebb2081c2836aabd90d78d68b750900fd48f5",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/source-inputs/GlobalSchurComplementarity.swift": "c9ed36a0cdad746076f2894bec848e4b16771e8ebdae43d09626e46632eb131d",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/source-inputs/SparseNewtonPattern.swift": "4bea809db18368abbc6d6dfe8ddde94cb2ae23b6dfa27c5a277e77ca108003a3",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/source-inputs/main.swift": "ee294fe561ff6a783728fe8c607feafb07c942af6711af36d0af5ecb8a7ba3a4",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/source-inputs/run_native_contact_screen.py": "d1a874345bee72acc05b0dffb7fbb90d6120eeb3b8fdc9b06ef1c19135d8dc37",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/fixtures-primal-parity-reviewed-global/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/BandSnapshot.swift": "9fbe6e9677906e78255d38404f8d1f8f866b59d7db5e915787e45858451b5ee8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/main.swift": "b79eda365aa0ab1c84a67563ec58764948d50d1a55775b6dfd3df953170cf4c2",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/provenance.json": "726c504fa962dd2da59005361ab4f08b46f947e0effc84ef358581faca6f3dc6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/replay.json": "e91eefcc066ed1cdf9b81b653cde4584469ffca41b8cfad2923a0f9f807e8aee",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/run.log": "b0f9a925c8f7dba8b7b2b63c98adacd7c1609c9af1f1ed9341be2869f082096f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/source-inputs/BandSnapshot.swift": "9fbe6e9677906e78255d38404f8d1f8f866b59d7db5e915787e45858451b5ee8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/source-inputs/ContactInteriorPoint.swift": "025a00d461ef357fb2379b874a17bbd26b3b36e87db6accd04347d47e04d6141",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/source-inputs/FrozenContactStream.swift": "a749b76541cd81bcb7e2bf234478cc94d63d4d9e3bc2aa5301fc90744b02eb75",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/source-inputs/SparseNewtonPattern.swift": "e730219547608d1554513ce893d7e0148f8e79ea4b7e435d4724b20540cd7331",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/source-inputs/main.swift": "b79eda365aa0ab1c84a67563ec58764948d50d1a55775b6dfd3df953170cf4c2",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/source-inputs/run_native_contact_screen.py": "7b96428c9f5dff59fba3904da2473d20f0ad5132f8cd50df998ece59c2517948",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-cost-screen/validation.json": "18c9199ba4f1a65d80b3cdefb50c86181f8f6f3945072530603a074164da21e3",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/BandSnapshot.swift": "9fbe6e9677906e78255d38404f8d1f8f866b59d7db5e915787e45858451b5ee8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/main.swift": "b79eda365aa0ab1c84a67563ec58764948d50d1a55775b6dfd3df953170cf4c2",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/provenance.json": "7cffa20403591a706edaaf6f7fd39ea9c637bebb6da401ab4ac4a54304457fe7",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/replay.json": "86cbc4b57ee3f03fdfb244586948033177f32fde4913238e8bb61575e76b1fe3",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/run.log": "6e54ffea3bf1fed6ac6f889fc1c6f4e76ebdd2d1ba078a819aaf7b8be4b97361",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/source-inputs/BandSnapshot.swift": "9fbe6e9677906e78255d38404f8d1f8f866b59d7db5e915787e45858451b5ee8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/source-inputs/ContactInteriorPoint.swift": "6df0e05e12da9f952487eccdf7267c72d6eb2c32bae69149ca4d150e67b6dec3",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/source-inputs/FrozenContactStream.swift": "a749b76541cd81bcb7e2bf234478cc94d63d4d9e3bc2aa5301fc90744b02eb75",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/source-inputs/SparseNewtonPattern.swift": "e730219547608d1554513ce893d7e0148f8e79ea4b7e435d4724b20540cd7331",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/source-inputs/main.swift": "b79eda365aa0ab1c84a67563ec58764948d50d1a55775b6dfd3df953170cf4c2",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/source-inputs/run_native_contact_screen.py": "4624e25529b7415fd2ce9a78bd513bb7cc3a08a0b44885caabab2d882ef266f9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-parity/validation.json": "2b77a945961daeeb1a399586cb85d6be44353d1b8f335a2137e81316e024eddb",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/BandSnapshot.swift": "5a7f3cc1a32dcdb1adf820b781c36e946582c6be8ed9d6f9d5abe57a8e2f7900",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/main.swift": "a2cdb30929897741e8c614b098839fb88ae21a5f9b6307bd27458667dff79451",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/provenance.json": "094bc0f0523e9bdc9176e5a5869d90c430e24daf042d909f7fd51c7bc4010bdf",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/replay.json": "2a9d23032b0172c411f484c0567a672ee67c77b280f914db141557bc21853b19",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/run.log": "355d9d7d7ecb954b8c28e0df0242e5113e7901b938a3d56937dabc2abb6ce4a0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/source-inputs/BandSnapshot.swift": "5a7f3cc1a32dcdb1adf820b781c36e946582c6be8ed9d6f9d5abe57a8e2f7900",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/source-inputs/ContactInteriorPoint.swift": "ecd53b23b0f00caecce963d1dae9c6f58a17f5f3f1e357e1c7ba13654b26e7a9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/source-inputs/FrozenContactStream.swift": "d137ad30fdb937e7cbe7e878981ada83fb46b26d6f6a60934e1623bc7b8a683d",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/source-inputs/SparseNewtonPattern.swift": "1630df96f3d7a086216bd3cd5fe6daf7b49ad4d238494b88dc4d054492f340e4",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/source-inputs/main.swift": "a2cdb30929897741e8c614b098839fb88ae21a5f9b6307bd27458667dff79451",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/source-inputs/run_native_contact_screen.py": "c1b67ecfdb7c59f9e40aa7510a24a12a083d101724f52d51a15e32294f84f8ee",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile-control/validation.json": "5b2f99d01636c44280faf0dcc6d1ff9d5f4bd9a4aa2cc1a548c248ba7084802d",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/BandSnapshot.swift": "5a7f3cc1a32dcdb1adf820b781c36e946582c6be8ed9d6f9d5abe57a8e2f7900",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/main.swift": "a2cdb30929897741e8c614b098839fb88ae21a5f9b6307bd27458667dff79451",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/provenance.json": "739db4a8a821ccd8cadb7d95f09cfd2c1ac6e42d0700b8a35b9feee83f47ea70",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/replay.json": "1162257217f2bd2792d35200b6a0221d0556e16ab2ff840b6cc2af584604d5b5",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/run.log": "c0c9ea8dc951aa55acb5b8421dad7f40b2b9474af2519febcc14031685092098",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/source-inputs/BandSnapshot.swift": "5a7f3cc1a32dcdb1adf820b781c36e946582c6be8ed9d6f9d5abe57a8e2f7900",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/source-inputs/ContactInteriorPoint.swift": "ecd53b23b0f00caecce963d1dae9c6f58a17f5f3f1e357e1c7ba13654b26e7a9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/source-inputs/FrozenContactStream.swift": "d137ad30fdb937e7cbe7e878981ada83fb46b26d6f6a60934e1623bc7b8a683d",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/source-inputs/SparseNewtonPattern.swift": "1630df96f3d7a086216bd3cd5fe6daf7b49ad4d238494b88dc4d054492f340e4",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/source-inputs/main.swift": "a2cdb30929897741e8c614b098839fb88ae21a5f9b6307bd27458667dff79451",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/source-inputs/run_native_contact_screen.py": "c1b67ecfdb7c59f9e40aa7510a24a12a083d101724f52d51a15e32294f84f8ee",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-channel-profile/validation.json": "00c2772bf7c38689a79323d477bf476b021eeb898551d1c4c949e5dcd1cfe4f7",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/BandSnapshot.swift": "5595dbb93d579a08a28b00eb058c850acd6dac3f734c91b453541d9d1d8e6ca8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/main.swift": "2b1b9fbbe1eecd80a164fcba0e2772993b801a9364a6b626c6a3db67141f6be4",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/provenance.json": "07f28ff124496447cb2d4db10c4536cf9a4d3a697bea1b889d5282050727ed70",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/replay.json": "82e2f60d75d808c597f08d2f815479ea6286b5a0a1a6011cd3d3daa75b46f3a2",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/run.log": "3d7c96b96faefdd725492f6159394c6fd7181e970ca370601937c0b423f99b2a",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/source-inputs/BandSnapshot.swift": "5595dbb93d579a08a28b00eb058c850acd6dac3f734c91b453541d9d1d8e6ca8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/source-inputs/ContactInteriorPoint.swift": "8493e768180831b43c3ac07abe30203bd2a4f755e5ce93eafb9fd0fddd9de9b0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/source-inputs/FrozenContactStream.swift": "39c6961b0f5f7221b5195ea5bdbebb2081c2836aabd90d78d68b750900fd48f5",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/source-inputs/SparseNewtonPattern.swift": "654068b858f0661975eb0be274bce36960ebd5c110776c5b597d2c120b5b9f8b",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/source-inputs/main.swift": "2b1b9fbbe1eecd80a164fcba0e2772993b801a9364a6b626c6a3db67141f6be4",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/source-inputs/run_native_contact_screen.py": "d1a874345bee72acc05b0dffb7fbb90d6120eeb3b8fdc9b06ef1c19135d8dc37",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-control/validation.json": "a09280d9ca00dba6867e7860b834f32de9534320a8f714b896f8bb139534584b",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/BandSnapshot.swift": "5595dbb93d579a08a28b00eb058c850acd6dac3f734c91b453541d9d1d8e6ca8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/main.swift": "2b1b9fbbe1eecd80a164fcba0e2772993b801a9364a6b626c6a3db67141f6be4",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/provenance.json": "f3d2a2e3d5e15def7410fd0e5b5de80c70103855c0afe15d4481e46cdfcd3c24",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/replay.json": "892e7135d6fca5ae86275c83c3e6ab660dcbee1cf385416d7f79e875c4648dcb",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/run.log": "e97534df81a8fd21f686362f1e80e678743815bdd48c60122850550dfcb29ff9",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/source-inputs/BandSnapshot.swift": "5595dbb93d579a08a28b00eb058c850acd6dac3f734c91b453541d9d1d8e6ca8",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/source-inputs/ContactInteriorPoint.swift": "8493e768180831b43c3ac07abe30203bd2a4f755e5ce93eafb9fd0fddd9de9b0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/source-inputs/FrozenContactStream.swift": "39c6961b0f5f7221b5195ea5bdbebb2081c2836aabd90d78d68b750900fd48f5",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/source-inputs/SparseNewtonPattern.swift": "654068b858f0661975eb0be274bce36960ebd5c110776c5b597d2c120b5b9f8b",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/source-inputs/main.swift": "2b1b9fbbe1eecd80a164fcba0e2772993b801a9364a6b626c6a3db67141f6be4",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/source-inputs/run_native_contact_screen.py": "d1a874345bee72acc05b0dffb7fbb90d6120eeb3b8fdc9b06ef1c19135d8dc37",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/replay-primal-end-order-pilot/validation.json": "c81695e71def86d2b6316a3a08e1db70190ef7f195ddec231e756cc060e12731",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/suite-primal-parity-reviewed-venv/fixtures.log": "b5e4e56bb8512b8cf45e0746f410c203dc8b0c3e6cbeb04e812e518506653d08",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/suite-primal-parity-reviewed-venv/provenance.json": "f14bfe7cca2a194dd0164922fafed98d95ec0f5e8b29a77a944df7394c671bb2",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/suite-primal-parity-reviewed/fixtures.log": "ea9b5d6e1d99fd8e3b67c26d263852c047260f39f9fc981ee389822f2f92262c",
+    ".context/strong-owl-live-physics-response-diagnosis/captured-checkpoints/suite-primal-parity-reviewed/provenance.json": "f14bfe7cca2a194dd0164922fafed98d95ec0f5e8b29a77a944df7394c671bb2",
+    ".context/strong-owl-live-physics-response-diagnosis/current-resource-cleanup.json": "2455219f3ced53aa3b67b803dba5558b3b4b27e24bb8eb22ed66857abf28580d",
+    ".context/strong-owl-live-physics-response-diagnosis/independent-primal-oracle.json": "ea8be1965108e414d2b8614ebc132a12824401183f6a04dda2b9b0fb7e547bee",
+    ".context/strong-owl-live-physics-response-diagnosis/independent-primal-reference.json": "a4f0ba68534f5c193f53f8711e51dd4a11dc06d7a67aefeec7fcc08bd3679f07",
+    ".context/strong-owl-live-physics-response-diagnosis/mesh-check/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/mesh-check/end-order-provenance.json": "0512064bd4251011b014e07f698fa719a5533e5679c6a20d5dbac8e573eae602",
+    ".context/strong-owl-live-physics-response-diagnosis/mesh-check/main.swift": "a9385a26a6558151bc9cbb02a43727bc3cdbf93e789876a156b7cde3b2552ca0",
+    ".context/strong-owl-live-physics-response-diagnosis/mesh-check/physical-check.json": "8ee570abe693451c745538f99f4ba00d2fc2a4d24c85cd215272d08896bae0df",
+    ".context/strong-owl-live-physics-response-diagnosis/mesh-check/physical-end-order.json": "3e4f96c89de41d8e984ddc81bb7ec4d3ee2ce6767b34335a81e43013bcb16e09",
+    ".context/strong-owl-live-physics-response-diagnosis/mesh-check/physical-end-order.log": "9f4a13e6ad0a3953ad42e0a408731bbf215c6ebf20f2f0a159799b05efdd2868",
+    ".context/strong-owl-live-physics-response-diagnosis/mesh-check/physical.log": "5660b49ba53747e5327fc785d4b27c84d21ffa2519cf3e52c07f1edebc1ae751",
+    ".context/strong-owl-live-physics-response-diagnosis/mesh-check/provenance.json": "ab3e4eda964526382ee417603575d3b5074ef35e8c67f11ccf72bfbdb2eebc6e",
+    ".context/strong-owl-live-physics-response-diagnosis/mesh-check/source-inputs/ChannelCheck.swift": "a9385a26a6558151bc9cbb02a43727bc3cdbf93e789876a156b7cde3b2552ca0",
+    ".context/strong-owl-live-physics-response-diagnosis/mesh-check/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/mesh-check/source-inputs/RopeTriangleCollider.swift": "e7f16b650115842ae0eeac5d209c692992ff0c29fda7cb557184337654033b1d",
+    ".context/strong-owl-live-physics-response-diagnosis/primal-recovery-discriminator.json": "4c083e218c0afd6248cf2131c021b3d8e02247877f9defec4cefa22151788980",
+    ".context/strong-owl-live-physics-response-diagnosis/profile-identity.json": "cf56b6423a651126d195a18aeefb02e46839abc31cc034d3b73c18f72e55116a",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/BandSnapshot.swift": "9fbe6e9677906e78255d38404f8d1f8f866b59d7db5e915787e45858451b5ee8",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/main.swift": "b79eda365aa0ab1c84a67563ec58764948d50d1a55775b6dfd3df953170cf4c2",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/provenance.json": "a3e26f178feb63cdb6d02c98c9f092893e46dff121df188bcba7907664fcd52f",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/replay.json": "53aa00a09350173ad78d8134137527425cc2f22af7c4826227ba5069c060dce1",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/run.log": "9c12eca5ad0d38d94e37b375acad243fff01e218bee189953f593cfc0c409b1e",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/source-inputs/AffineRegionCertificate.swift": "c951e252340299cc281b70dcea350e9823302926b823dd5f91cae1d1c3b305b1",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/source-inputs/BandSnapshot.swift": "9fbe6e9677906e78255d38404f8d1f8f866b59d7db5e915787e45858451b5ee8",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/source-inputs/FrozenContactStream.swift": "a749b76541cd81bcb7e2bf234478cc94d63d4d9e3bc2aa5301fc90744b02eb75",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/source-inputs/GlobalSchurComplementarity.swift": "c9ed36a0cdad746076f2894bec848e4b16771e8ebdae43d09626e46632eb131d",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/source-inputs/PackedFrozenRows.swift": "f6892b08eb745512392c48e71eb9fe9490805b60be493bf1ab37a376729f95f6",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/source-inputs/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/source-inputs/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/source-inputs/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/source-inputs/SparseNewtonPattern.swift": "e730219547608d1554513ce893d7e0148f8e79ea4b7e435d4724b20540cd7331",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/source-inputs/main.swift": "b79eda365aa0ab1c84a67563ec58764948d50d1a55775b6dfd3df953170cf4c2",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/source-inputs/run_native_contact_screen.py": "7b96428c9f5dff59fba3904da2473d20f0ad5132f8cd50df998ece59c2517948",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/source-inputs/run_native_contact_screen.sh": "a4373a09602d158ae8a701576bb14354c57690a2b4186877359989c40f73b95f",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/source-inputs/sparse_contact_screen.py": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+    ".context/strong-owl-live-physics-response-diagnosis/replay-response-cost-split/validation.json": "88df8ccfcf61cb551dd06be649ebe4237d7ffeb936d5847063446be95991077e",
+    ".context/strong-owl-live-physics-response-diagnosis/schur-primal-reference.json": "f5e022fdfbc77473b860262006370be5beeccf78b977d97a6dcf81ff13d4e8a8",
+    ".context/strong-owl-live-physics-response-diagnosis/strong-owl-live-physics-advisor-guard.sh": "08d4ad393ab65387e81e528cb5578fc473a93f44607298d0a6d3ac3fdad501ef",
+    ".context/strong-owl-live-physics-response-diagnosis/strong-owl-live-physics-mesh-end-probe.py": "610ab60bc055bcd16af2c621cad35cc87d15637557a34e2a9293d22436f314ab",
+    ".context/strong-owl-live-physics-response-diagnosis/strong-owl-live-physics-mesh-probe.py": "f9a9a643908bf7c74c3b30008ee1f7e5f5db2d1068883bbf77e5e0b3aef1192b"
+  },
+  "fixedInputSHA256": {
+    ".context/strong-owl-live-physics-channel-screen/checkpoint-reviewed-production/candidate.json": "1397e7a50e451a1fad6961cbba403c744f3d72de8464d57ac4bfb600e1f38719",
+    ".context/strong-owl-live-physics-execution/mini-production-frozen/frozen-qp.json": "c43720bccda76df9df92c9a155f3d4a5a11195011a9eca17b7ba42b1e27d1f97",
+    ".context/strong-owl-live-physics-handoff/mini-seven-mm/candidate.physics.json": "071a553221179ef88fbeef9c1c8bbcddb1d8f5ae4ae039b6a30e87891c1473db",
+    ".context/strong-owl-live-physics-native-contact/replay-global-schur-reviewed-production/replay.json": "7fccac859b66a02def86765143f959407955977e2d0d82c77487ddf1893dc3b0"
+  },
+  "flags": [
+    "--primal-parity",
+    "--profile-primal",
+    "--profile-responses",
+    "--end-cluster-order"
+  ],
+  "independentOracle": {
+    "activeRows": 710,
+    "minimumGap": -5.671589178444519e-19,
+    "minimumMu": 0.0,
+    "oracleResiduals": {
+      "allRowFeasibility": 6.060758420395527e-16,
+      "dualViolation": 0.0,
+      "objective": 5.898967293474241e-10,
+      "regularizedComplementarity": 1.8110984013987807e-26,
+      "regularizedContact": 5.671589178444519e-19,
+      "regularizedEquality": 6.42270455665319e-19,
+      "slackViolation": 0.0,
+      "stationarity": 1.228363209641246e-22
+    },
+    "primalDifference": 1.6917690597755605e-09
+  },
+  "orderingAccepted": false,
+  "orderingControl": {
+    "affineRegionCertificates": false,
+    "coldQPPerformanceAccepted": false,
+    "coldRuns": 1,
+    "complementarityBackend": false,
+    "fullScanRegionChecks": false,
+    "globalSchurBackend": false,
+    "globalSchurMethod": null,
+    "independentlyCertifiedRuns": 1,
+    "numericalAccepted": true,
+    "owner": "strong-owl-live-physics",
+    "p95Seconds": null,
+    "packedSource": true,
+    "primalDifference": 2.9659599240041928e-08,
+    "regionRuns": [
+      []
+    ],
+    "residuals": {
+      "allRowFeasibility": 6.061366688537863e-16,
+      "dualViolation": 0.0,
+      "objective": 5.898967491972983e-10,
+      "regularizedComplementarity": 4.550965960474862e-20,
+      "regularizedContact": 0.0,
+      "regularizedEquality": 7.5752433895792e-20,
+      "slackViolation": 0.0,
+      "stationarity": 2.413403670157941e-22
+    },
+    "runtimeAdoption": false,
+    "scope": "cold equality matrix/factor plus streamed row construction/discovery/solve/full affine certification; frozen input decoding/references, geometry and mesh excluded",
+    "singleRunSeconds": 0.13744362496072426,
+    "solverRuns": [
+      [
+        {
+          "primalEndVariables": 132,
+          "primalIterations": 15,
+          "primalNewtonDimension": 5707,
+          "primalNewtonNonzeros": 14864,
+          "primalNonlocalRows": 158,
+          "primalSymbolicFactorBytes": 691276,
+          "primalWorkingRows": 836
+        }
+      ]
+    ],
+    "trace": [
+      {
+        "added": 0,
+        "admission": 1,
+        "selected": 836
+      }
+    ]
+  },
+  "orderingOriginalMesh": {
+    "candidate": {
+      "isolatedWoodClearanceAccepted": true,
+      "maximumLocalStrain": 0.16798447176444875,
+      "maximumTotalLengthError": 0.0015784282805390015,
+      "minimumClearanceMargin": 0.0001036052045936299,
+      "minimumSegmentClearance": 0.00360360520459363,
+      "originalPointAndWholeLinkQueries": 2858,
+      "originalSweepBlocks": 0,
+      "strictWoodClearanceAccepted": true
+    },
+    "maximumPrimalDifference": 1.6070051956919924e-05,
+    "originalFacetControl": {
+      "isolatedWoodClearanceAccepted": true,
+      "maximumLocalStrain": 0.1679844652075948,
+      "maximumTotalLengthError": 0.0015779608368817755,
+      "minimumClearanceMargin": 0.00010318230631765814,
+      "minimumSegmentClearance": 0.0036031823063176582,
+      "originalPointAndWholeLinkQueries": 2858,
+      "originalSweepBlocks": 0,
+      "strictWoodClearanceAccepted": true
+    },
+    "owner": "strong-owl-live-physics",
+    "primalDifferenceAccepted": true,
+    "runtimeAdoption": false,
+    "scope": "One frozen Newton correction checked with original signed point/full-link and sweep queries. Sweep blocks and strain are reported for both candidate and facet control; neither is a complete nonlinear accepted timestep. No region/topology/CCD-acceptance or runtime proof."
+  },
+  "orderingPilot": {
+    "affineRegionCertificates": false,
+    "coldQPPerformanceAccepted": false,
+    "coldRuns": 1,
+    "complementarityBackend": false,
+    "fullScanRegionChecks": false,
+    "globalSchurBackend": false,
+    "globalSchurMethod": null,
+    "independentlyCertifiedRuns": 1,
+    "numericalAccepted": true,
+    "owner": "strong-owl-live-physics",
+    "p95Seconds": null,
+    "packedSource": true,
+    "primalDifference": 1.691769059765396e-09,
+    "regionRuns": [
+      []
+    ],
+    "residuals": {
+      "allRowFeasibility": 6.061366688537863e-16,
+      "dualViolation": 0.0,
+      "objective": 5.898967491972986e-10,
+      "regularizedComplementarity": 4.5509659604612786e-20,
+      "regularizedContact": 0.0,
+      "regularizedEquality": 7.703932778532772e-20,
+      "slackViolation": 0.0,
+      "stationarity": 2.2172341071540987e-22
+    },
+    "runtimeAdoption": false,
+    "scope": "cold equality matrix/factor plus streamed row construction/discovery/solve/full affine certification; frozen input decoding/references, geometry and mesh excluded",
+    "singleRunSeconds": 0.11485887499293312,
+    "solverRuns": [
+      [
+        {
+          "primalEndVariables": 132,
+          "primalIterations": 15,
+          "primalNewtonDimension": 5707,
+          "primalNewtonNonzeros": 14864,
+          "primalNonlocalRows": 158,
+          "primalSymbolicFactorBytes": 3197308,
+          "primalWorkingRows": 836
+        }
+      ]
+    ],
+    "trace": [
+      {
+        "added": 0,
+        "admission": 1,
+        "selected": 836
+      }
+    ]
+  },
+  "orderingSameSource": true,
+  "originalMesh": {
+    "candidate": {
+      "isolatedWoodClearanceAccepted": true,
+      "maximumLocalStrain": 0.16798447176444697,
+      "maximumTotalLengthError": 0.0015784282805391125,
+      "minimumClearanceMargin": 0.0001036052045936299,
+      "minimumSegmentClearance": 0.00360360520459363,
+      "originalPointAndWholeLinkQueries": 2858,
+      "originalSweepBlocks": 0,
+      "strictWoodClearanceAccepted": true
+    },
+    "maximumPrimalDifference": 1.607005195691993e-05,
+    "originalFacetControl": {
+      "isolatedWoodClearanceAccepted": true,
+      "maximumLocalStrain": 0.1679844652075948,
+      "maximumTotalLengthError": 0.0015779608368817755,
+      "minimumClearanceMargin": 0.00010318230631765814,
+      "minimumSegmentClearance": 0.0036031823063176582,
+      "originalPointAndWholeLinkQueries": 2858,
+      "originalSweepBlocks": 0,
+      "strictWoodClearanceAccepted": true
+    },
+    "owner": "strong-owl-live-physics",
+    "primalDifferenceAccepted": true,
+    "runtimeAdoption": false,
+    "scope": "One frozen Newton correction checked with original signed point/full-link and sweep queries. Sweep blocks and strain are reported for both candidate and facet control; neither is a complete nonlinear accepted timestep. No region/topology/CCD-acceptance or runtime proof."
+  },
+  "owner": "strong-owl-live-physics",
+  "performanceAccepted": false,
+  "profilerAccepted": false,
+  "rawPrimalAccuracyAccepted": false,
+  "rawResidualOnlyValidation": {
+    "affineRegionCertificates": false,
+    "coldQPPerformanceAccepted": false,
+    "coldRuns": 1,
+    "complementarityBackend": false,
+    "fullScanRegionChecks": false,
+    "globalSchurBackend": false,
+    "globalSchurMethod": null,
+    "independentlyCertifiedRuns": 1,
+    "numericalAccepted": true,
+    "owner": "strong-owl-live-physics",
+    "p95Seconds": null,
+    "packedSource": true,
+    "primalDifference": null,
+    "regionRuns": [
+      []
+    ],
+    "residuals": {
+      "allRowFeasibility": 6.06143983490749e-16,
+      "dualViolation": 0.0,
+      "objective": 5.899738967495896e-10,
+      "regularizedComplementarity": 1.339879540423931e-16,
+      "regularizedContact": 0.0,
+      "regularizedEquality": 5.180332622598408e-20,
+      "slackViolation": 0.0,
+      "stationarity": 8.081308993926443e-11
+    },
+    "runtimeAdoption": false,
+    "scope": "cold equality matrix/factor plus streamed row construction/discovery/solve/full affine certification; frozen input decoding/references, geometry and mesh excluded",
+    "singleRunSeconds": 0.04689270834205672,
+    "solverRuns": [
+      []
+    ],
+    "trace": [
+      {
+        "added": 0,
+        "admission": 1,
+        "selected": 836
+      }
+    ]
+  },
+  "recoveryDiscriminator": {
+    "activeMuDifference": 8.995579760843566e-12,
+    "inactiveMuDifference": 7.527122469476566e-13,
+    "minimumGap": 3.42916442065659e-10,
+    "muDifference": 8.995579760843566e-12,
+    "multiplierDifference": 3.6250687492706824e-06,
+    "rawDifference": 3.674070697982876e-06,
+    "residuals": {
+      "allRowFeasibility": 6.061445536575651e-16,
+      "dualViolation": 0.0,
+      "objective": 5.899722796843672e-10,
+      "regularizedComplementarity": 1.3220507970149778e-16,
+      "regularizedContact": 0.0,
+      "regularizedEquality": 5.1790091336972095e-20,
+      "slackViolation": 0.0,
+      "stationarity": 1.9769616640017361e-22
+    },
+    "stationarityDrift": 4.900194871219351e-08
+  },
+  "rejectedProfilerIdentity": {
+    "comparison": {
+      "lambda": {
+        "bitIdentical": false,
+        "maxDifference": 1.522012327097571e-22
+      },
+      "mu": {
+        "bitIdentical": false,
+        "maxDifference": 1.257314531080602e-22
+      },
+      "x": {
+        "bitIdentical": false,
+        "maxDifference": 5.854691731421724e-18
+      }
+    },
+    "reason": "Failed fixed bit-identity checkpoint; do not rank stages from these timings",
+    "sameSource": true,
+    "timingsAccepted": false
+  },
+  "review": {
+    "critical": 0,
+    "important": 0,
+    "minor": 2,
+    "minorAddressed": 2,
+    "scope": "Single read-only review; primary directly verified pending logs, broader acceptance unclaimed"
+  },
+  "runtimeAdoption": false,
+  "scope": "One frozen first-Newton QP only; no complete nonlinear accepted step, general channel eligibility, trajectory, geometry speed, verification timing or device proof",
+  "tests": {
+    "default": {
+      "passed": 22,
+      "skipped": 2
+    },
+    "globalBatchProfile": {
+      "passed": 24,
+      "skipped": 1
+    },
+    "primalParityOrderProfile": {
+      "passed": 24,
+      "skipped": 0
+    },
+    "python": {
+      "failed": 3,
+      "passed": 61,
+      "reason": "Same missing historical rope_solver; initial wrong interpreter failed collection, retained"
+    }
+  }
+}

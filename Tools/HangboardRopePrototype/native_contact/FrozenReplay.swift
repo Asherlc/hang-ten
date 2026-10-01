@@ -78,7 +78,9 @@ for id in eq {
 }
 
  let factor=try system.primalPrepared(borderColumns:[column],borderMatrix:[[boardMass]],equalities:eq.map{eqVars[$0]!})
+ let predictorStart=factor.primalProfile?.now() ?? 0
  let initial=try factor.solve(rhs:rhs,borderRHS:[boardRHS])
+ factor.primalProfile?.record("primalPredictorSeconds",predictorStart)
  var trace:[[String:Any]]=[]
  var certificates:[[String:Double]]=[]
  var solverStatistics:[[String:Double]]=[]
@@ -89,6 +91,12 @@ for id in eq {
   observeCertificate:{certificates.append($0)},
   observeSolve:{solverStatistics.append($0)},
   observe:{iteration,selected,added in trace.append(["admission":iteration,"selected":selected,"added":added])})
+ // Stream teardown/full-source certification happens after observeSolve.
+ if let profile=factor.primalProfile {
+  var statistics=factor.primalStatistics.seconds
+  statistics.merge(profile.seconds,uniquingKeysWith:{_,new in new})
+  solverStatistics=[statistics]
+ }
  return (result,trace,certificates,solverStatistics)
 }
 var timings:[Double]=[],failure:String?,last:[String:Any]=[:],regionRuns:[[[String:Double]]]=[],solverRuns:[[[String:Double]]]=[]
