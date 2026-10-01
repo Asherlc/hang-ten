@@ -818,8 +818,10 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         for side in ("left", "right"):
             side_source = f"{passages_source}.{side}"
             raw_passages = passages_payload[side]
-            if not isinstance(raw_passages, list) or len(raw_passages) != (0 if single_loop and side == "right" else 2):
-                raise ValueError(f"{side_source} must contain exactly two passages")
+            expected_count = 0 if single_loop and side == "right" else 2
+            if not isinstance(raw_passages, list) or len(raw_passages) != expected_count:
+                count_label = "zero" if expected_count == 0 else "two"
+                raise ValueError(f"{side_source} must contain exactly {count_label} passages")
             passages: list[BoardModelPassage] = []
             for index, raw_passage in enumerate(raw_passages):
                 passage_source = f"{side_source}[{index}]"
@@ -918,8 +920,10 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
 
         branches_source = f"{source}.branches"
         raw_branches = payload["branches"]
-        if not isinstance(raw_branches, list) or len(raw_branches) != (1 if single_loop else 2):
-            raise ValueError(f"{branches_source} must contain exactly two branches")
+        expected_count = 1 if single_loop else 2
+        if not isinstance(raw_branches, list) or len(raw_branches) != expected_count:
+            count_label = "one branch" if single_loop else "two branches"
+            raise ValueError(f"{branches_source} must contain exactly {count_label}")
         branches: list[BoardModelCordBranch] = []
         expected_pairs = (
             tuple(passage.id for passage in passage_pairs.left),

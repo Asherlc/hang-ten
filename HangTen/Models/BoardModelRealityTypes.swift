@@ -539,6 +539,8 @@ final class BoardModelRealityScene {
             guard instances.count == instanceEntities.count else { return false }
             var selectedFramings: [SuspendedCameraFraming] = []
             var selectedTransforms: [simd_float4x4] = []
+            var framingPose: BoardModelCanonicalPose?
+            var framingTransform: simd_float4x4?
             let cordGroup = Entity()
             for instance in instances {
                 let transform: simd_float4x4
@@ -551,6 +553,10 @@ final class BoardModelRealityScene {
                             pose: pose, suspension: suspension, bounds: descriptor.modelBounds,
                             transform: base)
                         transform = solved.boardTransform
+                        if framingPose == nil {
+                            framingPose = pose
+                            framingTransform = transform
+                        }
                         selectedFramings.append(solved.cameraFraming)
                         cordGroup.addChild(Self.makeCordEntity(for: solved))
                     } catch { return false }
@@ -565,11 +571,17 @@ final class BoardModelRealityScene {
             }
             var combinedFraming: SuspendedCameraFraming?
             if !selectedFramings.isEmpty {
-                guard let pose = instances.first?.suspension?.canonicalPoses[positionID],
+                let allBounds = selectedTransforms.flatMap { transform in
+                    Self.boundsCorners(descriptor.modelBounds).map { point in
+                        let placed = transform * SIMD4<Float>(point, 1)
+                        return SIMD3<Float>(placed.x, placed.y, placed.z)
+                    }
+                }
+                guard let pose = framingPose, let transform = framingTransform,
                       let framing = try? SuspendedBoardPresentation.makeCameraFraming(
-                        pose: pose, transform: selectedTransforms[0],
+                        pose: pose, transform: transform,
                         minimumFitPadding: selectedFramings.map(\.fitPadding).max() ?? 1,
-                        points: selectedFramings.flatMap(\.includedPoints)) else { return false }
+                        points: selectedFramings.flatMap(\.includedPoints) + allBounds) else { return false }
                 combinedFraming = framing
             }
             for (entity, transform) in zip(instanceEntities, selectedTransforms) {

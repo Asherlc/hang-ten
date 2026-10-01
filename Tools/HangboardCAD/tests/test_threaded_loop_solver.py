@@ -51,3 +51,18 @@ def test_single_loop_rejects_a_short_loop():
     setup['branches'][0]['restLength'] = .8
     with pytest.raises(ValueError, match='bracket'):
         solver.solve_package('fixture', mesh, {'suspension': setup}, bounds)
+
+
+def test_single_loop_enforces_configured_clearance_beyond_cord_radius():
+    mesh, setup, bounds = fixture()
+    setup['internalLoop']['clearance'] = .1
+    with pytest.raises(ValueError, match='collides'):
+        solver.solve_package('fixture', mesh, {'suspension': setup}, bounds)
+
+
+@pytest.mark.parametrize('mouth_ids', [['a', 'a'], ['a', 'stale'], ['a']])
+def test_single_loop_rejects_invalid_mouth_inventory(mouth_ids):
+    mesh, setup, bounds = fixture()
+    setup['branches'][0]['passageIDs'] = mouth_ids
+    with pytest.raises(ValueError, match='both distinct mouths'):
+        solver.solve_package('fixture', mesh, {'suspension': setup}, bounds)

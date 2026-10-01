@@ -80,3 +80,13 @@ bindings.
   (`D2619ED2-1C49-437B-8DFC-D26E9E36299C`) stalled during data migration and
   app launch. No app screenshot is claimed as validation. Both owned simulators
   were cleaned up; shared simulators were left alone.
+
+PR review follow-up: 495 package/manifest/solver tests pass after adding
+clearance-margin, invalid-mouth, malformed-instance, and duplicate-ID coverage.
+Native measurement and solve/check still match the lengths and clearance above.
+Native placement and empty-spine probes pass. A fresh generic iOS Simulator
+Debug build passes. The channel span is now between its free spans and is part
+of the centerline and camera fit. Selection tests assert successful selection;
+canonical member-order validation also checks instance-level suspensions.
+The original commit's GitHub CI completed the iOS unit and UI suites despite
+the local Simulator startup limitation.

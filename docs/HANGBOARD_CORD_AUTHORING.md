@@ -19,7 +19,7 @@ These boards use it:
 | --- | --- | --- | --- |
 | Lattice Mini Bar | curved `PartDesign::SubtractivePipe`, two mouths on one face per end | `mouth-x` (default) | constant-section bar; four grip poses |
 | Crimptonite Helium Mobile | straight `Part::Cylinder` through-bore, front and back mouths per end | `anchor` | mouths sit in the rounded ends; one loop of cord through both holes |
-| Metolius Rock Rings | connected `Part::MultiFuse` void with linked ordered spine | direct rising legs | one continuous loop per displayed ring; exact native-solid clearance |
+| Metolius Rock Rings | connected `Part::MultiFuse` void with linked ordered spine | none (direct-leg solve) | one continuous loop per displayed ring; exact native-solid clearance |
 
 Rock Rings extend the topology to one branch with two mouths and retain the
 whole measured channel centerline in `internalLoop.channelPointsByBranchID`.
@@ -196,6 +196,11 @@ The current solver applies when all of these hold:
 4. The model has two branches, four distinct point mouths, and one winding
    choice for each mouth. Each branch's `passageIDs` lists its paired mouths
    in traversal order.
+
+The `threadedLoopCord` extension instead requires one branch with two distinct
+mouths, its complete ordered native channel spine, and unobstructed rising
+legs. It does not use a section plane or surface winding; exact native-solid
+checks enforce cord radius plus the configured internal-loop clearance.
 
 **Channels.** A channel is either a curved `PartDesign::SubtractivePipe`
 (its Sketcher spine is measured) or a straight `Part::Cylinder` through-bore

@@ -2068,7 +2068,9 @@ struct BoardPackageStore {
         guard document.canonicalPoses.values.allSatisfy({ $0.attachmentPoints == nil }),
               document.passages.left.count == 2,
               document.passages.right.count == (document.type == "threadedLoopCord" ? 0 : 2) else {
-            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord suspension requires exactly two passages per side")
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: document.type == "threadedLoopCord"
+                ? "threadedLoopCord requires two left passages and no right passages"
+                : "twoBranchCord suspension requires exactly two passages per side")
         }
         if document.type == "threadedLoopCord" {
             guard document.meshWrap == nil, let loop = document.internalLoop,
@@ -2084,7 +2086,9 @@ struct BoardPackageStore {
                               && zip(point, descriptor.modelBounds.minimum).allSatisfy({ $0 >= $1 })
                               && zip(point, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 })
                       }),
-                      zip(points, points.dropFirst()).allSatisfy({ $0 != $1 }),
+                      zip(points, points.dropFirst()).allSatisfy({ pair in
+                          zip(pair.0, pair.1).reduce(0.0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) } >= 1e-14
+                      }),
                       points.first == document.passages.left.first?.entryPointInModel,
                       points.last == document.passages.left.last?.entryPointInModel else {
                     throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "connected channel must join its two mouths")
@@ -2166,7 +2170,9 @@ struct BoardPackageStore {
               document.branches[0].passageIDs == document.passages.left.map(\.id),
               (document.passages.right.isEmpty || document.branches[1].passageIDs == document.passages.right.map(\.id)),
               Set(document.branches.map(\.id)).count == document.branches.count else {
-            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord branches must be two distinct ordered passage pairs")
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: document.type == "threadedLoopCord"
+                ? "threadedLoopCord requires one branch naming its two ordered mouths"
+                : "twoBranchCord branches must be two distinct ordered passage pairs")
         }
         guard document.branches.allSatisfy({
             $0.passageIDs.count == 2 && $0.hasContactRoute == throughBore &&
@@ -2441,19 +2447,70 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
                   case .string(let mediaType)? = mediaMembers.value(named: "type") else {
                 throw BoardPackageRawJSONError.invalid
             }
-            guard mediaType == "model",
-                  case .object(let suspensionMembers)? = mediaMembers.value(named: "suspension"),
-                  case .string(let suspensionType)? = suspensionMembers.value(named: "type") else {
-                continue
+            guard mediaType == "model" else { continue }
+            var suspensions: [BoardPackageRawJSONValue] = []
+            if let suspension = mediaMembers.value(named: "suspension") {
+                suspensions.append(suspension)
             }
-            if suspensionType == "pairedLeadCord" {
-                try suspensionMembers.requireCanonicalOrder(["type", "attachments", "passages", "anchor", "cord", "canonicalPoses"])
-                guard case .array(let attachments)? = suspensionMembers.value(named: "attachments"),
-                      case .object(let passagesMembers)? = suspensionMembers.value(named: "passages"),
+            if case .array(let instances)? = mediaMembers.value(named: "instances") {
+                for instance in instances {
+                    guard case .object(let members) = instance else { throw BoardPackageRawJSONError.invalid }
+                    if let suspension = members.value(named: "suspension") { suspensions.append(suspension) }
+                }
+            }
+            for suspension in suspensions {
+                guard case .object(let suspensionMembers) = suspension,
+                      case .string(let suspensionType)? = suspensionMembers.value(named: "type") else {
+                    throw BoardPackageRawJSONError.invalid
+                }
+                if suspensionType == "pairedLeadCord" {
+                    try suspensionMembers.requireCanonicalOrder(["type", "attachments", "passages", "anchor", "cord", "canonicalPoses"])
+                    guard case .array(let attachments)? = suspensionMembers.value(named: "attachments"),
+                          case .object(let passagesMembers)? = suspensionMembers.value(named: "passages"),
+                          case .array(let leftPassages)? = passagesMembers.value(named: "left"),
+                          case .array(let rightPassages)? = passagesMembers.value(named: "right"),
+                          case .object(let anchorMembers)? = suspensionMembers.value(named: "anchor"),
+                          case .object(let cordMembers)? = suspensionMembers.value(named: "cord"),
+                          case .object(let poseMembers)? = suspensionMembers.value(named: "canonicalPoses") else {
+                        throw BoardPackageRawJSONError.invalid
+                    }
+                    try passagesMembers.requireCanonicalOrder(["left", "right"])
+                    for passage in leftPassages + rightPassages {
+                        guard case .object(let members) = passage else { throw BoardPackageRawJSONError.invalid }
+                        let pointKeys = members.contains(where: { $0.name == "pointInModel" })
+                            ? ["pointInModel"] : ["entryPointInModel", "exitPointInModel"]
+                        try members.requireCanonicalOrder(["id", "nodeID"] + pointKeys + ["provenance"])
+                    }
+                    for attachment in attachments {
+                        guard case .object(let members) = attachment else { throw BoardPackageRawJSONError.invalid }
+                        try members.requireCanonicalOrder(
+                            ["id", "nodeID", "pointInModel", "contactPointsInModel", "provenance"]
+                                .filter { members.value(named: $0) != nil }
+                        )
+                    }
+                    try anchorMembers.requireCanonicalOrder(["offsetFromBoardBounds", "visibility", "provenance"])
+                    try cordMembers.requireCanonicalOrder(["restLength", "radius", "material", "provenance"])
+                    for pose in poseMembers.mapValues() {
+                        guard case .object(let poseObject) = pose,
+                              case .object(let camera)? = poseObject.value(named: "camera") else {
+                            throw BoardPackageRawJSONError.invalid
+                        }
+                        try poseObject.requireCanonicalOrder(
+                            ["rotation", "translation", "camera", "attachmentPoints", "cordContactPoints"]
+                                .filter { poseObject.value(named: $0) != nil })
+                        try camera.requireCanonicalOrder(["viewDirection", "fitPadding"])
+                    }
+                    continue
+                }
+                guard suspensionType == "twoBranchCord" || suspensionType == "threadedLoopCord" else { continue }
+                try suspensionMembers.requireCanonicalOrder(
+                    ["type", "passages", "branches", "meshWrap", "internalLoop", "anchor", "canonicalPoses"]
+                        .filter { suspensionMembers.value(named: $0) != nil })
+                guard case .object(let passagesMembers)? = suspensionMembers.value(named: "passages"),
                       case .array(let leftPassages)? = passagesMembers.value(named: "left"),
                       case .array(let rightPassages)? = passagesMembers.value(named: "right"),
+                      case .array(let branches)? = suspensionMembers.value(named: "branches"),
                       case .object(let anchorMembers)? = suspensionMembers.value(named: "anchor"),
-                      case .object(let cordMembers)? = suspensionMembers.value(named: "cord"),
                       case .object(let poseMembers)? = suspensionMembers.value(named: "canonicalPoses") else {
                     throw BoardPackageRawJSONError.invalid
                 }
@@ -2464,62 +2521,28 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
                         ? ["pointInModel"] : ["entryPointInModel", "exitPointInModel"]
                     try members.requireCanonicalOrder(["id", "nodeID"] + pointKeys + ["provenance"])
                 }
-                for attachment in attachments {
-                    guard case .object(let members) = attachment else { throw BoardPackageRawJSONError.invalid }
-                    try members.requireCanonicalOrder(
-                        ["id", "nodeID", "pointInModel", "contactPointsInModel", "provenance"]
-                            .filter { members.value(named: $0) != nil }
-                    )
+                for branch in branches {
+                    guard case .object(let members) = branch else { throw BoardPackageRawJSONError.invalid }
+                    let contacts = members.contains(where: { $0.name == "entryContactPoints" })
+                        ? ["entryContactPoints", "exteriorContactPoints", "exitContactPoints"] : []
+                    try members.requireCanonicalOrder(["id", "passageIDs"] + contacts + ["restLength", "radius", "material", "provenance"])
                 }
                 try anchorMembers.requireCanonicalOrder(["offsetFromBoardBounds", "visibility", "provenance"])
-                try cordMembers.requireCanonicalOrder(["restLength", "radius", "material", "provenance"])
+                if case .object(let loopMembers)? = suspensionMembers.value(named: "internalLoop") {
+                    try loopMembers.requireCanonicalOrder(
+                        ["clearance", "windingByPassageID", "channelLengthByBranchID", "channelPointsByBranchID"]
+                            .filter { loopMembers.value(named: $0) != nil })
+                }
                 for pose in poseMembers.mapValues() {
                     guard case .object(let poseObject) = pose,
                           case .object(let camera)? = poseObject.value(named: "camera") else {
                         throw BoardPackageRawJSONError.invalid
                     }
                     try poseObject.requireCanonicalOrder(
-                        ["rotation", "translation", "camera", "attachmentPoints", "cordContactPoints"]
+                        ["rotation", "translation", "camera", "cordContactPoints", "wrappedRoutes"]
                             .filter { poseObject.value(named: $0) != nil })
                     try camera.requireCanonicalOrder(["viewDirection", "fitPadding"])
                 }
-                continue
-            }
-            guard suspensionType == "twoBranchCord" else { continue }
-            try suspensionMembers.requireCanonicalOrder(
-                ["type", "passages", "branches", "meshWrap", "internalLoop", "anchor", "canonicalPoses"]
-                    .filter { suspensionMembers.value(named: $0) != nil })
-            guard case .object(let passagesMembers)? = suspensionMembers.value(named: "passages"),
-                  case .array(let leftPassages)? = passagesMembers.value(named: "left"),
-                  case .array(let rightPassages)? = passagesMembers.value(named: "right"),
-                  case .array(let branches)? = suspensionMembers.value(named: "branches"),
-                  case .object(let anchorMembers)? = suspensionMembers.value(named: "anchor"),
-                  case .object(let poseMembers)? = suspensionMembers.value(named: "canonicalPoses") else {
-                throw BoardPackageRawJSONError.invalid
-            }
-            try passagesMembers.requireCanonicalOrder(["left", "right"])
-            for passage in leftPassages + rightPassages {
-                guard case .object(let members) = passage else { throw BoardPackageRawJSONError.invalid }
-                let pointKeys = members.contains(where: { $0.name == "pointInModel" })
-                    ? ["pointInModel"] : ["entryPointInModel", "exitPointInModel"]
-                try members.requireCanonicalOrder(["id", "nodeID"] + pointKeys + ["provenance"])
-            }
-            for branch in branches {
-                guard case .object(let members) = branch else { throw BoardPackageRawJSONError.invalid }
-                let contacts = members.contains(where: { $0.name == "entryContactPoints" })
-                    ? ["entryContactPoints", "exteriorContactPoints", "exitContactPoints"] : []
-                try members.requireCanonicalOrder(["id", "passageIDs"] + contacts + ["restLength", "radius", "material", "provenance"])
-            }
-            try anchorMembers.requireCanonicalOrder(["offsetFromBoardBounds", "visibility", "provenance"])
-            for pose in poseMembers.mapValues() {
-                guard case .object(let poseObject) = pose,
-                      case .object(let camera)? = poseObject.value(named: "camera") else {
-                    throw BoardPackageRawJSONError.invalid
-                }
-                try poseObject.requireCanonicalOrder(
-                    ["rotation", "translation", "camera", "cordContactPoints", "wrappedRoutes"]
-                        .filter { poseObject.value(named: $0) != nil })
-                try camera.requireCanonicalOrder(["viewDirection", "fitPadding"])
             }
         }
     }

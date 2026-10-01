@@ -257,7 +257,8 @@ def solve_direct_loop(mesh, setup, descriptor, native_solid=None):
             clearance = min(signed_clearance(point) for point in samples)
         else:
             clearance = -float(trimesh.proximity.signed_distance(mesh, samples).max())
-        if clearance < branch["radius"] - 1e-5:
+        required_clearance = branch["radius"] + setup["internalLoop"]["clearance"]
+        if clearance < required_clearance - 1e-5:
             raise ValueError(f"{pose_id}: threaded channel or free leg collides with CAD: {clearance}")
         contacts = {key: [mouths[key]["pointInModel"]] for key in branch["passageIDs"]}
         output[pose_id] = {"height": round(height, 9), "lengths": {branch["id"]: float(length(height))}, "contacts": contacts}
@@ -271,6 +272,9 @@ def solve_package(package, mesh, suspension, descriptor):
         mouths = {p["id"]: p for side in setup["passages"].values() for p in side}
         if len(mouths) != 2 or len(setup["branches"]) != 1:
             raise ValueError("threadedLoopCord requires one connected loop with two mouths")
+        passage_ids = setup["branches"][0]["passageIDs"]
+        if len(passage_ids) != 2 or set(passage_ids) != set(mouths):
+            raise ValueError("threadedLoopCord passageIDs must name both distinct mouths")
         native = mesh.metadata.get("nativeSolid")
         if native is None and (not mesh.is_watertight or not mesh.is_winding_consistent):
             raise ValueError("single loop clearance requires the native CAD solid or a watertight tessellation")

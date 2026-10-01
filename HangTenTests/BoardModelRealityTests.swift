@@ -246,10 +246,12 @@ final class BoardModelRealityTests: XCTestCase {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.rock-rings-3d"))
         let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
         XCTAssertEqual(scene.instanceEntities.count, 2)
+        guard scene.instanceEntities.count == 2 else { return }
         XCTAssertNil(scene.modelEntity?.parent)
         let viewport = CGSize(width: 390, height: 240)
         for positionID: String? in [nil, "primary", nil, "primary"] {
-            _ = scene.select(positionID: positionID)
+            let selected = scene.select(positionID: positionID)
+            if positionID != nil { XCTAssertTrue(selected) }
             scene.frame(in: viewport)
             let left = scene.instanceEntities[0].visualBounds(relativeTo: scene.root)
             let right = scene.instanceEntities[1].visualBounds(relativeTo: scene.root)

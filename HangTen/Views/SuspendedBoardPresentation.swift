@@ -816,8 +816,12 @@ enum SuspendedBoardPresentation {
                   exitContacts.allSatisfy(\.allFinite) else {
                 throw SuspendedPresentationError.invalidPose
             }
+            let channelPoints = suspension.internalLoopChannelPointsByBranchID?[branch.id].map { points in
+                points.map { transformPoint(transform, SIMD3<Float>($0.map(Float.init))) }
+            }
             let rigidRoute = wrappedRoute ?? (usesInternalLoop
-                ? entryContacts + exitContacts
+                ? channelPoints.map { entryContacts + Array($0.dropFirst()) + Array(exitContacts.dropFirst()) }
+                    ?? (entryContacts + exitContacts)
                 : usesAuthoredRoute
                 ? entryContacts + [firstEntry, firstExit] + contactPoints + [secondExit, secondEntry] + exitContacts
                 : [firstEntry, secondEntry])
@@ -841,7 +845,7 @@ enum SuspendedBoardPresentation {
             } else {
                 hiddenLength = mouthChord
             }
-            let hiddenLengthCorrection = usesInternalLoop ? hiddenLength - mouthChord : 0
+            let hiddenLengthCorrection = usesInternalLoop && channelPoints == nil ? hiddenLength - mouthChord : 0
             let rigidLength = visibleRigidLength + hiddenLengthCorrection
             guard rigidLength.isFinite, rigidLength > 1e-7 else {
                 throw SuspendedPresentationError.invalidSuspension
@@ -920,11 +924,9 @@ enum SuspendedBoardPresentation {
                 id: branch.id,
                 passageIDs: branch.passageIDs,
                 spans: usesInternalLoop
-                    ? [firstSpan.samples + Array(entryContacts.dropFirst()),
-                       exitContacts + Array(secondSpan.samples.dropFirst())]
-                        + (suspension.internalLoopChannelPointsByBranchID?[branch.id].map { points in
-                            [points.map { transformPoint(transform, SIMD3<Float>($0.map(Float.init))) }]
-                          } ?? [])
+                    ? [firstSpan.samples + Array(entryContacts.dropFirst())]
+                        + (channelPoints.map { [$0] } ?? [])
+                        + [exitContacts + Array(secondSpan.samples.dropFirst())]
                     : (usesAuthoredRoute || wrappedRoute != nil)
                         ? [firstSpan.samples, rigidRoute, secondSpan.samples]
                         : [firstSpan.samples, secondSpan.samples],

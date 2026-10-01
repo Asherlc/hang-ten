@@ -410,7 +410,12 @@ def merge_suspension_sidecar(board: dict, package_root: Path) -> dict:
         import copy
         instances = media.get("instances")
         setups = document["instanceSuspensions"]
-        if not isinstance(instances, list) or set(setups) != {item.get("equipmentObjectID") for item in instances}:
+        if not isinstance(instances, list) or not all(
+            isinstance(item, dict) and isinstance(item.get("equipmentObjectID"), str)
+            and item["equipmentObjectID"] for item in instances
+        ):
+            raise ManifestError("instanceSuspensions requires reusable instances with valid equipment IDs")
+        if len(setups) != len(instances) or set(setups) != {item["equipmentObjectID"] for item in instances}:
             raise ManifestError("instanceSuspensions must identify every reusable instance exactly once")
         if any("suspension" in item for item in instances) or not all(isinstance(value, dict) for value in setups.values()):
             raise ManifestError("instanceSuspensions cannot replace embedded suspension")
