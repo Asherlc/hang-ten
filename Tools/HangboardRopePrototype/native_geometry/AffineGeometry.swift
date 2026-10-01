@@ -4,7 +4,7 @@ extension RopeTriangleCollider {
     func screenAffinelyClear(from start: SIMD3<Double>, to end: SIMD3<Double>,
                              requiredClearance: Double,
                              startCorrection: SIMD3<Double>, endCorrection: SIMD3<Double>,
-                             thresholdRegions: Bool = false) throws -> Bool {
+                             thresholdRegions: Bool = false, fastRegionBoxes: Bool = false) throws -> Bool {
         func bounded(_ p: SIMD3<Double>) -> Bool {
             (0..<3).allSatisfy { p[$0].isFinite && abs(p[$0]) <= 10 }
         }
@@ -33,6 +33,15 @@ extension RopeTriangleCollider {
             let low = simd_min(start,end),high = simd_max(start,end)
             let squared = (threshold*threshold).nextUp
             func clear(_ minimum: SIMD3<Double>,_ maximum: SIMD3<Double>) -> Bool {
+                if fastRegionBoxes {
+                    let gap = simd_max(simd_max(minimum-high,low-maximum),SIMD3(repeating:0))
+                    // All coordinates are bounded by10m: differences <=20m,
+                    // sum of squared gaps <=1200m². Subtraction/product/sum
+                    // absolute error is below1e-12m² even without fused math.
+                    // Subtract2e-12m², including rounding of this subtraction,
+                    // to obtain a conservative lower bound in one SIMD path.
+                    return simd_length_squared(gap)-2e-12 > squared
+                }
                 var bound = 0.0
                 for axis in 0..<3 {
                     let gap = max(0,max((minimum[axis]-high[axis]).nextDown,(low[axis]-maximum[axis]).nextDown))

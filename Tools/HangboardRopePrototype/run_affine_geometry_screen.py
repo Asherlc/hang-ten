@@ -28,11 +28,14 @@ def main():
     parser.add_argument("--solution", type=Path)
     parser.add_argument("--runs", type=int, default=1)
     parser.add_argument("--regions", action="store_true")
+    parser.add_argument("--fast-boxes", action="store_true")
     args = parser.parse_args()
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789-_" for c in args.label):
         parser.error("label must use lowercase letters, numbers, hyphen or underscore")
     if args.runs not in (1, 50):
         parser.error("fixed construction checkpoint is one run; final timing screen is 50")
+    if args.fast_boxes and not args.regions:
+        parser.error("fast boxes requires the region traversal")
     workspace = Path(os.environ.get("PASEO_WORKTREE_PATH", REPO)).resolve()
     owner = workspace.name
     if workspace != REPO or os.environ.get("HANGTEN_AFFINE_GEOMETRY_OWNER") != owner:
@@ -89,12 +92,13 @@ def main():
         argv[2:2] = ["-F",str(frameworks),"-I",str(libraries),"-L",str(libraries),
                       "-Xlinker","-rpath","-Xlinker",str(frameworks),
                       "-Xlinker","-rpath","-Xlinker",str(libraries),"-lXCTestSwiftSupport"]
-    provenance = {"owner":owner,"runtimeAdoption":False,"thresholdRegions":args.regions,"compileCommand":argv,"sourceSnapshots":captured,
+    provenance = {"owner":owner,"runtimeAdoption":False,"thresholdRegions":args.regions,"fastRegionBoxes":args.fast_boxes,"compileCommand":argv,"sourceSnapshots":captured,
         "sourceSHA256":{str(s.relative_to(REPO)):hashlib.sha256((REPO / captured[str(s.relative_to(REPO))]).read_bytes()).hexdigest() for s in sources},
         "inputSHA256":{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}}
     (output / "provenance.json").write_text(json.dumps(provenance,indent=2,sort_keys=True)+"\n")
     commands = OwnedCommands(owner,root)
-    env = dict(os.environ,HANGTEN_AFFINE_GEOMETRY_METHOD="regions" if args.regions else "nearest")
+    env = dict(os.environ,HANGTEN_AFFINE_GEOMETRY_METHOD="regions" if args.regions else "nearest",
+               HANGTEN_AFFINE_FAST_BOXES="1" if args.fast_boxes else "0")
     signal.signal(signal.SIGINT,commands.interrupted)
     signal.signal(signal.SIGTERM,commands.interrupted)
     try:

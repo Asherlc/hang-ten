@@ -21,6 +21,7 @@ let q = frozen["orientation"] as! [Double]
 let orientation = simd_quatd(ix:q[0],iy:q[1],iz:q[2],r:q[3])
 let last = solution["last"] as! [String:Any],x = last["x"] as! [Double]
 let thresholdRegions = ProcessInfo.processInfo.environment["HANGTEN_AFFINE_GEOMETRY_METHOD"] == "regions"
+let fastRegionBoxes = ProcessInfo.processInfo.environment["HANGTEN_AFFINE_FAST_BOXES"] == "1"
 let multipliers = last["mu"] as! [Double]
 guard positions.map(\.count) == [715,715],weights.map(\.count) == [715,715],
       abs(simd_length(orientation.vector)-1) < 1e-8,
@@ -66,7 +67,7 @@ func evaluate(_ certified: Bool) throws -> Output {
     for query in queries() {
         let clear = certified ? try collider.screenAffinelyClear(from:query.start,to:query.end,
             requiredClearance:query.required,startCorrection:query.da,endCorrection:query.db,
-            thresholdRegions:thresholdRegions):false
+            thresholdRegions:thresholdRegions,fastRegionBoxes:fastRegionBoxes):false
         flags.append(clear);output.append(clear ? []:contacts(query))
     }
     return Output(clear:flags,contacts:output)
@@ -125,7 +126,7 @@ guard contactID == multipliers.count else {throw RopePhysicsError.invalid("Froze
 func percentile(_ values: [Double]) -> Double {values.sorted()[Int(ceil(0.95*Double(values.count)))-1]}
 let speedup = percentile(baseline)/percentile(accelerated)
 let report: [String:Any] = ["owner":ProcessInfo.processInfo.environment["HANGTEN_AFFINE_GEOMETRY_OWNER"]!,
-    "runtimeAdoption":false,"method":thresholdRegions ? "threshold-regions":"original-nearest",
+    "runtimeAdoption":false,"method":thresholdRegions ? (fastRegionBoxes ? "fast-threshold-regions":"threshold-regions"):"original-nearest",
     "scope":"Production first frozen candidate: all point/segment wood manifold generation or original geometry affine proof with exact fallback. Original portal, self/intercord, CCD, solver and mesh are excluded; this is not a complete geometry gate.",
     "queryCount":inputs.count,"certifiedQueries":candidate.clear.filter {$0}.count,
     "originalWoodRows":original.contacts.reduce(0) {$0+$1.count},"certifiedOriginalWoodRows":certifiedRows,

@@ -1,0 +1,63 @@
+{
+  "evidenceSHA256": {
+    ".context/strong-owl-live-physics-affine-geometry/fixtures-fast-region-fixtures/ColliderSnapshot.swift": "ae950a2d68d1d2a84d78bd171905b28d0f9546317d50534bbd8248d806df78ef",
+    ".context/strong-owl-live-physics-affine-geometry/fixtures-fast-region-fixtures/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-affine-geometry/fixtures-fast-region-fixtures/main.swift": "2393dd5bc95cc23d65a672a61959d50d06e7661f51ff2c53ec27ed66995b85d4",
+    ".context/strong-owl-live-physics-affine-geometry/fixtures-fast-region-fixtures/provenance.json": "628e5d3ef8fb09d95aee57ed390c580cbccde395ba53c668e7813bd586500032",
+    ".context/strong-owl-live-physics-affine-geometry/fixtures-fast-region-fixtures/run.log": "11ed5b54a73e5ffa52ac51fb3bf383ed42d89a945211ddacd183c81ff5120f07",
+    ".context/strong-owl-live-physics-affine-geometry/fixtures-fast-region-fixtures/source-inputs/AffineFixtures.swift": "2393dd5bc95cc23d65a672a61959d50d06e7661f51ff2c53ec27ed66995b85d4",
+    ".context/strong-owl-live-physics-affine-geometry/fixtures-fast-region-fixtures/source-inputs/AffineGeometry.swift": "9aa23d5cd6b62708ee55752c68adf3a47e2411fcbb98d13572860759c596d2d4",
+    ".context/strong-owl-live-physics-affine-geometry/fixtures-fast-region-fixtures/source-inputs/RopePhysicsDescriptor.swift": "dc1bb23b0d66b39af26970cf3bda8d16c30ffab74bfc1e02493c68c4dfa6a19e",
+    ".context/strong-owl-live-physics-affine-geometry/fixtures-fast-region-fixtures/source-inputs/RopeTriangleCollider.swift": "5938e1468759278e120ae8df433cb9b730258818119364df8307e26b7a3d3d31",
+    ".context/strong-owl-live-physics-affine-geometry/fixtures-fast-region-fixtures/source-inputs/run_affine_geometry_screen.py": "16ddf651f7b2295a74a1f5aaaacdfd9fc76855d6b965daf242fcec0502b7f788",
+    ".context/strong-owl-live-physics-affine-geometry/fixtures-fast-region-fixtures/source-inputs/run_affine_geometry_screen.sh": "75871c302072d5994cd06fc08df14325a4365b3cc3d94f68f78185747b19037e",
+    ".context/strong-owl-live-physics-affine-geometry/fixtures-fast-region-fixtures/source-inputs/run_native_contact_screen.py": "c52d351a8d0e508a11c97cb4b15db25cbd562024eb1e30540735fdbd3d424b97",
+    ".context/strong-owl-live-physics-affine-geometry/replay-fast-region-production-checkpoint/ColliderSnapshot.swift": "ae950a2d68d1d2a84d78bd171905b28d0f9546317d50534bbd8248d806df78ef",
+    ".context/strong-owl-live-physics-affine-geometry/replay-fast-region-production-checkpoint/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-affine-geometry/replay-fast-region-production-checkpoint/main.swift": "a85a18c53207c0d1f54512293a569369583f3bd5578534e928777fe61662db03",
+    ".context/strong-owl-live-physics-affine-geometry/replay-fast-region-production-checkpoint/provenance.json": "aa985ae7db1d9cfa5fcd4add619b6aaf8a4d99fc6872eee16f05e2dc2fcbf91d",
+    ".context/strong-owl-live-physics-affine-geometry/replay-fast-region-production-checkpoint/report.json": "a2b588fc0cc157180982a88b88efa4c76764ae57f2bf90e6fef3e902f729d318",
+    ".context/strong-owl-live-physics-affine-geometry/replay-fast-region-production-checkpoint/run.log": "a05061c9f6816339f5f3c8adf79da84de4bbf01eb1f41dbd1779ae246841f8eb",
+    ".context/strong-owl-live-physics-affine-geometry/replay-fast-region-production-checkpoint/source-inputs/AffineGeometry.swift": "9aa23d5cd6b62708ee55752c68adf3a47e2411fcbb98d13572860759c596d2d4",
+    ".context/strong-owl-live-physics-affine-geometry/replay-fast-region-production-checkpoint/source-inputs/AffineReplay.swift": "a85a18c53207c0d1f54512293a569369583f3bd5578534e928777fe61662db03",
+    ".context/strong-owl-live-physics-affine-geometry/replay-fast-region-production-checkpoint/source-inputs/RopePhysicsDescriptor.swift": "dc1bb23b0d66b39af26970cf3bda8d16c30ffab74bfc1e02493c68c4dfa6a19e",
+    ".context/strong-owl-live-physics-affine-geometry/replay-fast-region-production-checkpoint/source-inputs/RopeTriangleCollider.swift": "5938e1468759278e120ae8df433cb9b730258818119364df8307e26b7a3d3d31",
+    ".context/strong-owl-live-physics-affine-geometry/replay-fast-region-production-checkpoint/source-inputs/run_affine_geometry_screen.py": "16ddf651f7b2295a74a1f5aaaacdfd9fc76855d6b965daf242fcec0502b7f788",
+    ".context/strong-owl-live-physics-affine-geometry/replay-fast-region-production-checkpoint/source-inputs/run_affine_geometry_screen.sh": "75871c302072d5994cd06fc08df14325a4365b3cc3d94f68f78185747b19037e",
+    ".context/strong-owl-live-physics-affine-geometry/replay-fast-region-production-checkpoint/source-inputs/run_native_contact_screen.py": "c52d351a8d0e508a11c97cb4b15db25cbd562024eb1e30540735fdbd3d424b97",
+    ".context/strong-owl-live-physics-execution/affine-patch-successor/box-roundoff-bound.json": "05507c0a073e3db13e9885219b61d4b8112192d7fa91aea015b9a8cf56588f51",
+    ".context/strong-owl-live-physics-execution/affine-patch-successor/pruning-ceiling.json": "1320c6da34ba106cb4e8c0d12a7ff8f803d36e3b40d29d57c68bad55df040f49",
+    ".context/strong-owl-live-physics-execution/region-bound-audit/resources-driver.log": "5e79d40cd9eeeade2ddeed890179471809695f01a15e2cb962522574074c8177",
+    ".context/strong-owl-live-physics-execution/region-bound-audit/resources.jsonl": "06c8c79b6e557cf1b4a5fbc66a7a04a524142d4ae43ffcdfcbfc8e8854211144",
+    ".context/strong-owl-live-physics-handoff/mini-dynamics-probe/strong-owl-mini-patch-envelopes.json": "e18286f3d5d07ef58b5600f9adafa3c181576ea015bbf66fc32b23f7ba0bd09c"
+  },
+  "fixtureCount": 8,
+  "ownedResourcesDeletedAndVerified": true,
+  "owner": "strong-owl-live-physics",
+  "productionPilot": {
+    "baselineSeconds": [
+      0.19531537499278784
+    ],
+    "certifiedOriginalWoodRows": 119693,
+    "certifiedQueries": 2858,
+    "completeGeometryPerformanceAccepted": false,
+    "fallbackWoodRows": 0,
+    "independentlyCheckedFrozenSupportRows": 119781,
+    "measuredRepetitions": 1,
+    "method": "fast-threshold-regions",
+    "minimumOriginalAffineGap": 3.1823063176555717e-06,
+    "numericalAccepted": true,
+    "originalWoodRows": 119693,
+    "owner": "strong-owl-live-physics",
+    "p95Speedup": null,
+    "preGenerationSeconds": [
+      0.05006079172017053
+    ],
+    "queryCount": 2858,
+    "requiredCompleteGeometrySpeedup": 50,
+    "runtimeAdoption": false,
+    "scope": "Production first frozen candidate: all point/segment wood manifold generation or original geometry affine proof with exact fallback. Original portal, self/intercord, CCD, solver and mesh are excluded; this is not a complete geometry gate.",
+    "singleRunSpeedup": 3.9015638443067457
+  },
+  "runtimeAdoption": false
+}
