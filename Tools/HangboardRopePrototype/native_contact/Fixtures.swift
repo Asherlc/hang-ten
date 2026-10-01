@@ -42,6 +42,60 @@ final class PrimalTests:XCTestCase {
   for (a,b) in zip(answer.base+answer.border,reference.base+[reference.border[0]]) {XCTAssertEqual(a,b,accuracy:1e-10)}
   XCTAssertEqual(answer.multipliers[0],reference.border[1],accuracy:1e-10)
  }
+ // These closed-form cases exposed cycling and serial pivot costs in rejected
+ // direct mixed-KKT experiments. Every successor must satisfy the same QPs.
+ func testCoupledCornerAgainstClosedFormKKT() throws {
+  var system=try RopeBandedSystem(size:2,bandwidth:0)
+  try system.addSymmetric(row:0,column:0,value:2)
+  try system.addSymmetric(row:1,column:1,value:3)
+  let factor=try system.primalPrepared(borderColumns:[],borderMatrix:[])
+  let gradients=[[-2.0,-3],[0,-1],[-3,3],[-2,-2],[3,3],[2,1]]
+  let residuals=[0.001,-0.0002,0.0035,0.0012,-0.0013,-0.0012]
+  let rows=gradients.indices.map{RopeLinearContact(indices:[0,1],coefficients:gradients[$0],border:[],residual:residuals[$0])}
+  let answer=try PrimalContactIP.solve(factor:factor,base:[0,0],border:[],contacts:rows,maxIterations:50)
+  let e=1e-8,x=(0.0014+0.0036*e)/(2+8*e+3*e*e),y=0.0012-(2+e)*x
+  XCTAssertEqual(answer.base[0],x,accuracy:1e-10)
+  XCTAssertEqual(answer.base[1],y,accuracy:1e-10)
+  XCTAssertEqual(answer.multipliers[1],3*y-x,accuracy:1e-10)
+  XCTAssertEqual(answer.multipliers[5],-x,accuracy:1e-10)
+  for id in rows.indices {
+   let gap=residuals[id]+gradients[id][0]*answer.base[0]+gradients[id][1]*answer.base[1]-e*answer.multipliers[id]
+   XCTAssertGreaterThanOrEqual(gap,-1e-10)
+   XCTAssertLessThanOrEqual(answer.multipliers[id],1e-12)
+   XCTAssertLessThanOrEqual(abs(answer.multipliers[id]*gap),1e-14)
+  }
+ }
+ func testInitiallyClearRowsRemainCoupledToHeight() throws {
+  var system=try RopeBandedSystem(size:61,bandwidth:0)
+  for i in 0..<61 {try system.addSymmetric(row:i,column:i,value:1)}
+  let factor=try system.primalPrepared(borderColumns:[Array(repeating:0,count:61)],borderMatrix:[[1]])
+  let rows=[RopeLinearContact(indices:[],coefficients:[],border:[1],residual:-0.001)] +
+   (0..<61).map{RopeLinearContact(indices:[$0],coefficients:[1],border:[-1],residual:0)}
+  let answer=try PrimalContactIP.solve(factor:factor,base:Array(repeating:0,count:61),border:[0],contacts:rows,maxIterations:50)
+  let e=1e-8,height=0.001/(1+e+61*e/(1+e)),position=height/(1+e)
+  XCTAssertEqual(answer.border[0],height,accuracy:1e-10)
+  for i in 0..<61 {
+   XCTAssertEqual(answer.base[i],position,accuracy:1e-10)
+   XCTAssertEqual(answer.multipliers[i+1],-position,accuracy:1e-10)
+   XCTAssertGreaterThanOrEqual(answer.base[i]-answer.border[0]-e*answer.multipliers[i+1],-1e-10)
+  }
+  XCTAssertEqual(answer.multipliers[0],-height-61*position,accuracy:1e-10)
+  XCTAssertGreaterThanOrEqual(answer.border[0]-0.001-e*answer.multipliers[0],-1e-10)
+ }
+ func testManyDependentRowsRetainStrongestInequality() throws {
+  var system=try RopeBandedSystem(size:1,bandwidth:0)
+  try system.addSymmetric(row:0,column:0,value:1)
+  let factor=try system.primalPrepared(borderColumns:[],borderMatrix:[])
+  let rows=(0..<61).map{RopeLinearContact(indices:[0],coefficients:[1],border:[],residual:-(0.001+Double($0)*0.00001))}
+  let answer=try PrimalContactIP.solve(factor:factor,base:[0],border:[],contacts:rows,maxIterations:50)
+  XCTAssertEqual(answer.base[0],0.0016/(1+1e-8),accuracy:1e-10)
+  for (id,row) in rows.enumerated() {
+   let gap=row.residual+answer.base[0]-1e-8*answer.multipliers[id]
+   XCTAssertGreaterThanOrEqual(gap,-1e-10)
+   XCTAssertLessThanOrEqual(answer.multipliers[id],1e-12)
+   XCTAssertLessThanOrEqual(abs(answer.multipliers[id]*gap),1e-14)
+  }
+ }
  func testNonlocalContactStaysGloballyCoupled() throws {
   var system=try RopeBandedSystem(size:4,bandwidth:0)
   for i in 0..<4 {try system.addSymmetric(row:i,column:i,value:Double(i+1))}
@@ -183,4 +237,4 @@ final class PrimalTests:XCTestCase {
 
 }
 let suite=PrimalTests.defaultTestSuite;suite.run()
-guard let result=suite.testRun,result.executionCount==15,result.totalFailureCount==0 else {exit(1)}
+guard let result=suite.testRun,result.executionCount==18,result.totalFailureCount==0 else {exit(1)}

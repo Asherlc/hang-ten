@@ -35,6 +35,35 @@ The [packed-source audit](../../docs/source-audits/2026-09-30-live-packed-contac
 records passing numerical checks and a failed performance gate. This remains an
 experimental tool option, with no app adoption.
 
+The 18 native contact fixtures include a coupled corner with a closed-form KKT
+solution, 61 dependent inequalities, and 61 initially clear constraints coupled
+through board height. These exposed cycling and serial-admission costs in
+rejected direct mixed-KKT screens; the [audit](../../docs/source-audits/2026-09-30-live-mixed-contact.md)
+retains all four outcomes without changing iteration limits.
+
+The [native geometry screen](run_native_geometry_screen.sh) traverses the
+original triangle BVH on Metal using outward integer bounds and returns compact
+candidate lists. Its same-file snapshot adapter preserves the current CPU
+classification, exact witnesses, normals and manifold code. It times all 6,167
+queries from the SHA-bound healthy corpus, including unchanged metric queries.
+Generated files and owned process records go under
+`.context/<workspace-owner>-native-geometry/`. It requires macOS, Xcode and Metal;
+the Python driver reuses the contact screen's owned process lifecycle.
+
+```sh
+rtk proxy bash Tools/HangboardRopePrototype/run_native_geometry_screen.sh fixtures --label numerical
+rtk proxy bash Tools/HangboardRopePrototype/run_native_geometry_screen.sh replay --corpus .context/strong-owl-live-physics-handoff/mini-dynamics-probe/strong-owl-healthy-query-corpus.json --label healthy
+```
+
+Replay compares two complete output passes to the current CPU reference and
+measures 50 repetitions after 10 warmups. Query packing, allocation, submission,
+waits, readback and exact CPU output construction are inside the clock. Static
+mesh/BVH/pipeline setup is excluded equally from both steady-state clocks.
+Replay exits `3` when exact output comparison passes but the required 50×
+complete-geometry speedup fails. The [geometry audit](../../docs/source-audits/2026-09-30-live-bvh-contact.md)
+records that rejection; the tool is unadopted and provides no motion, CCD,
+affine-row, CAD-error or device proof.
+
 The separate [sparse contact screen](sparse_contact_screen.py) targets the
 current coupled live solver's frozen triangle-contact QP. Its
 [30 September audit](../../docs/source-audits/2026-09-30-live-sparse-primal-contact.md)
