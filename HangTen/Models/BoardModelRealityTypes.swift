@@ -211,7 +211,9 @@ final class BoardModelRealityScene {
     private var lastHighlightedContactIDs: Set<String>?
     private var lastHighlightMode: BoardHighlightMode?
     private var lastFocusedPositionID: String?
-    private var contactAreaVectors: [Entity: (mesh: MeshResource, vectors: [SIMD3<Float>])] = [:]
+    private var viewingMeshes: [Entity: (mesh: MeshResource, geometry: BoardViewingMesh)] = [:]
+    private var viewingOcclusion: (sources: [(entity: ModelEntity, mesh: MeshResource, transform: simd_float4x4)],
+                                   geometry: BoardViewingMesh)?
     private var cameraTargetTransform: Transform?
     private var cameraAnimation: AnimationPlaybackController?
 
@@ -1035,12 +1037,10 @@ final class BoardModelRealityScene {
         lastFocusedPositionID = activePositionID
         if selectionChanged, !contactIDs.isEmpty || hadSelection {
             let adjustment = selectionOrbit(for: contactIDs)
-            if contactIDs.isEmpty || adjustment != .zero {
-                orbitAzimuth = adjustment.x
-                orbitElevation = adjustment.y
-                orbitZoom = 1
-                updateCameraTransform(animated: true)
-            }
+            orbitAzimuth = adjustment.x
+            orbitElevation = adjustment.y
+            orbitZoom = 1
+            updateCameraTransform(animated: true)
         }
         lastHighlightMode = mode
         // Apply highlight materials to contact entities
@@ -1053,37 +1053,98 @@ final class BoardModelRealityScene {
         }
     }
 
-    /// Use the actual contact triangles, including the current board pose and
-    /// reflected instances. Their projected area identifies edge-on surfaces;
-    /// names, grip types, and flat hold outlines do not describe their 3D facing.
+    /// Evaluate exposed contact faces and clear sight lines into enclosed
+    /// contacts. A cavity's finger floor can face upward while its opening
+    /// faces front; contact normals alone cannot distinguish those geometries.
     private func selectionOrbit(for contactIDs: Set<String>) -> SIMD2<Float> {
-        guard let framing = currentFraming else { return .zero }
-        let surfaces = contactIDs.sorted().compactMap { id -> [SIMD3<Float>]? in
-            let vectors = (contactEntities[id] ?? []).flatMap { entity -> [SIMD3<Float>] in
+        guard let framing = currentFraming, !contactIDs.isEmpty else { return .zero }
+        var sources: [(entity: ModelEntity, mesh: MeshResource, transform: simd_float4x4)] = []
+        for instance in instanceEntities {
+            traverseEntities(instance) { entity in
+                guard let entity = entity as? ModelEntity, let mesh = entity.model?.mesh else { return }
                 let transform = entity.transformMatrix(relativeTo: nil)
-                let linear = simd_float3x3(columns: (
-                    SIMD3(transform.columns.0.x, transform.columns.0.y, transform.columns.0.z),
-                    SIMD3(transform.columns.1.x, transform.columns.1.y, transform.columns.1.z),
-                    SIMD3(transform.columns.2.x, transform.columns.2.y, transform.columns.2.z)))
-                let determinant = simd_determinant(linear)
-                guard determinant.isFinite, abs(determinant) > 1e-8 else { return [] }
-                // Absolute determinant preserves outward normals on mirrored halves.
-                let normalTransform = abs(determinant) * simd_transpose(simd_inverse(linear))
-                return areaVectors(for: entity).map { normalTransform * $0 }
-            }.filter { $0.x.isFinite && $0.y.isFinite && $0.z.isFinite && simd_length($0) > 1e-10 }
-            return vectors.isEmpty ? nil : vectors
+                let determinant = simd_determinant(transform)
+                guard determinant.isFinite, abs(determinant) > 1e-8 else { return }
+                sources.append((entity, mesh, transform))
+            }
+        }
+        let occlusion: BoardViewingMesh
+        if let cached = viewingOcclusion, cached.sources.count == sources.count,
+           zip(cached.sources, sources).allSatisfy({
+               $0.entity === $1.entity && $0.mesh === $1.mesh && $0.transform == $1.transform
+           }) {
+            occlusion = cached.geometry
+        } else {
+            let triangles = sources.flatMap { source -> [BoardViewingMesh.Triangle] in
+                guard let geometry = viewingMesh(for: source.entity) else { return [] }
+                return geometry.triangles.map { $0.transformed(by: source.transform, facing: 1) }
+            }
+            occlusion = BoardViewingMesh(triangles: triangles)
+            viewingOcclusion = (sources, occlusion)
+        }
+        func blocked(_ origin: SIMD3<Float>, _ direction: SIMD3<Float>) -> Bool {
+            occlusion.intersects(origin: origin, delta: direction * occlusion.rayLength)
+        }
+        struct Sample {
+            let origin: SIMD3<Float>
+            let normal: SIMD3<Float>
+            let enclosed: Bool
+        }
+        let surfaces = contactIDs.sorted().compactMap { id -> [Sample]? in
+            var triangles: [BoardViewingMesh.Triangle] = []
+            for entity in contactEntities[id] ?? [] {
+                guard let geometry = viewingMesh(for: entity) else { continue }
+                let transform = entity.transformMatrix(relativeTo: nil)
+                let determinant = simd_determinant(transform)
+                guard determinant.isFinite, abs(determinant) > 1e-8 else { continue }
+                let facing: Float = determinant < 0 ? -1 : 1
+                triangles += geometry.triangles.map { $0.transformed(by: transform, facing: facing) }
+            }
+            triangles = triangles.filter { $0.area > 1e-10 }
+            let area = triangles.reduce(Float(0)) { $0 + $1.area }
+            guard area > 0 else { return nil }
+            // Equal-area stratification bounds ray queries independently of mesh
+            // tessellation, while giving tiny facets proportionally little weight.
+            let count = 32
+            var index = 0, cumulative = triangles[0].area
+            let samples = (0..<count).map { i -> Sample in
+                let target = area * (Float(i) + 0.5) / Float(count)
+                while cumulative < target, index < triangles.count - 1 {
+                    index += 1
+                    cumulative += triangles[index].area
+                }
+                let triangle = triangles[index]
+                let normal = triangle.normal
+                // Step into the air to avoid hitting the contact's own triangle.
+                let origin = triangle.center + normal * 0.0001
+                return Sample(origin: origin, normal: normal, enclosed: blocked(origin, normal))
+            }
+            return samples
         }
         guard !surfaces.isEmpty else { return .zero }
-        let areas = surfaces.map { $0.reduce(Float(0)) { $0 + simd_length($1) } }
-        func visibility(_ angles: SIMD2<Float>) -> Float {
-            let direction = orbitRotation(azimuth: angles.x, elevation: angles.y, framing: framing)
-                .act(-framing.direction)
-            // The least visible selected hold governs a bilateral/multiple selection.
-            return zip(surfaces, areas).map { vectors, area in
-                vectors.reduce(Float(0)) { $0 + max(0, simd_dot($1, direction)) } / area
-            }.min() ?? 1
+        func surfaceVisibility(_ samples: [Sample], direction: SIMD3<Float>) -> Float {
+            samples.reduce(Float(0)) { score, sample in
+                let contribution = sample.enclosed ? 1 : max(0, simd_dot(sample.normal, direction))
+                guard contribution > 1e-6, !blocked(sample.origin, direction) else { return score }
+                return score + contribution
+            } / Float(samples.count)
         }
-        let baseline = visibility(.zero)
+        let frontDirection = -framing.direction
+        let frontScores = surfaces.map { (samples: $0, score: surfaceVisibility($0, direction: frontDirection)) }
+            .sorted { $0.score < $1.score }
+        let baseline = frontScores.first?.score ?? 1
+        func visibility(_ angles: SIMD2<Float>, floor: Float) -> Float {
+            let direction = orbitRotation(azimuth: angles.x, elevation: angles.y, framing: framing)
+                .act(frontDirection)
+            // Start with the least-visible front surfaces so rejected candidate
+            // angles do not query every otherwise readable opening on the board.
+            var leastVisible: Float = 1
+            for surface in frontScores {
+                leastVisible = min(leastVisible, surfaceVisibility(surface.samples, direction: direction))
+                if leastVisible <= floor { break }
+            }
+            return leastVisible
+        }
         let readableArea: Float = 0.5
         guard baseline < readableArea else { return .zero }
         // Search a small 20-degree neighborhood, closest angles first. Prefer
@@ -1107,7 +1168,7 @@ final class BoardModelRealityScene {
         var best = SIMD2<Float>.zero
         var bestVisibility = baseline
         for candidate in candidates {
-            let score = visibility(candidate)
+            let score = visibility(candidate, floor: bestVisibility)
             if score > bestVisibility + 1e-5 {
                 best = candidate
                 bestVisibility = score
@@ -1118,37 +1179,12 @@ final class BoardModelRealityScene {
         return bestVisibility >= baseline + 0.04 ? best : .zero
     }
 
-    private func areaVectors(for entity: ModelEntity) -> [SIMD3<Float>] {
-        guard let mesh = entity.model?.mesh else { return [] }
-        if let cached = contactAreaVectors[entity], cached.mesh === mesh { return cached.vectors }
-        var vectors: [SIMD3<Float>] = []
-        let contents = mesh.contents
-        for model in contents.models {
-            let instances = contents.instances.filter { $0.model == model.id }.map(\.transform)
-            for transform in instances.isEmpty ? [matrix_identity_float4x4] : instances {
-                for part in model.parts {
-                    guard let indices = part.triangleIndices else { continue }
-                    let positions = Array(part.positions)
-                    let triangles = Array(indices)
-                    guard triangles.count >= 3 else { continue }
-                    for i in stride(from: 0, to: triangles.count - 2, by: 3) {
-                        let ids = [Int(triangles[i]), Int(triangles[i + 1]), Int(triangles[i + 2])]
-                        guard ids.allSatisfy({ positions.indices.contains($0) }) else { continue }
-                        let points = ids.map { index -> SIMD3<Float> in
-                            let point = transform * SIMD4<Float>(positions[index], 1)
-                            return SIMD3(point.x, point.y, point.z)
-                        }
-                        // A reflected mesh instance reverses winding. Preserve
-                        // the surface's outward facing before the entity transform.
-                        let facing: Float = simd_determinant(transform) < 0 ? -1 : 1
-                        let vector = facing * simd_cross(points[1] - points[0], points[2] - points[0])
-                        if vector.x.isFinite, vector.y.isFinite, vector.z.isFinite, simd_length(vector) > 1e-10 { vectors.append(vector) }
-                    }
-                }
-            }
-        }
-        contactAreaVectors[entity] = (mesh, vectors)
-        return vectors
+    private func viewingMesh(for entity: ModelEntity) -> BoardViewingMesh? {
+        guard let mesh = entity.model?.mesh else { return nil }
+        if let cached = viewingMeshes[entity], cached.mesh === mesh { return cached.geometry }
+        let geometry = BoardViewingMesh(mesh: mesh)
+        viewingMeshes[entity] = (mesh, geometry)
+        return geometry
     }
 
     private func orbitRotation(azimuth: Float, elevation: Float,
@@ -1823,5 +1859,151 @@ final class BoardModelRealityLoader {
         // Do NOT release it here.
 
         return scene
+    }
+}
+
+/// Cached local triangles and a combined world-space tree for viewing rays.
+/// Unlike the physics collider, this accepts open contact meshes and queries
+/// both windings: either side of a board surface can obstruct an opening.
+private struct BoardViewingMesh {
+    struct Triangle {
+        let a: SIMD3<Float>
+        let b: SIMD3<Float>
+        let c: SIMD3<Float>
+        let facing: Float
+        let area: Float
+        let normal: SIMD3<Float>
+        let center: SIMD3<Float>
+
+        init(a: SIMD3<Float>, b: SIMD3<Float>, c: SIMD3<Float>, facing: Float) {
+            self.a = a; self.b = b; self.c = c; self.facing = facing
+            let vector = facing * simd_cross(b - a, c - a)
+            self.area = simd_length(vector)
+            self.normal = simd_normalize(vector)
+            self.center = (a + b + c) / 3
+        }
+
+        func transformed(by matrix: simd_float4x4, facing: Float) -> Triangle {
+            func point(_ p: SIMD3<Float>) -> SIMD3<Float> {
+                let q = matrix * SIMD4<Float>(p, 1)
+                return SIMD3(q.x, q.y, q.z)
+            }
+            return Triangle(a: point(a), b: point(b), c: point(c), facing: self.facing * facing)
+        }
+    }
+    private struct Node {
+        let low: SIMD3<Float>
+        let high: SIMD3<Float>
+        let left: Int
+        let right: Int
+        let faces: [Int]
+    }
+    let triangles: [Triangle]
+    private let nodes: [Node]
+
+    init(mesh: MeshResource) {
+        var triangles: [Triangle] = []
+        let contents = mesh.contents
+        for model in contents.models {
+            let instances = contents.instances.filter { $0.model == model.id }.map(\.transform)
+            for transform in instances.isEmpty ? [matrix_identity_float4x4] : instances {
+                for part in model.parts {
+                    guard let indices = part.triangleIndices else { continue }
+                    let positions = Array(part.positions), ids = Array(indices)
+                    guard ids.count >= 3 else { continue }
+                    for i in stride(from: 0, to: ids.count - 2, by: 3) {
+                        let indices = [Int(ids[i]), Int(ids[i + 1]), Int(ids[i + 2])]
+                        guard indices.allSatisfy({ positions.indices.contains($0) }) else { continue }
+                        let triangle = Triangle(a: positions[indices[0]], b: positions[indices[1]],
+                            c: positions[indices[2]], facing: 1).transformed(by: transform,
+                                facing: simd_determinant(transform) < 0 ? -1 : 1)
+                        guard [triangle.a, triangle.b, triangle.c].allSatisfy({
+                            $0.x.isFinite && $0.y.isFinite && $0.z.isFinite
+                        }), triangle.area.isFinite, triangle.area > 1e-10 else { continue }
+                        triangles.append(triangle)
+                    }
+                }
+            }
+        }
+        self.init(triangles: triangles, buildTree: false)
+    }
+
+    private init(triangles: [Triangle], buildTree: Bool) {
+        var nodes: [Node] = []
+        func build(_ faces: [Int]) -> Int {
+            var low = SIMD3<Float>(repeating: .infinity), high = -low
+            for i in faces {
+                for point in [triangles[i].a, triangles[i].b, triangles[i].c] {
+                    low = simd_min(low, point); high = simd_max(high, point)
+                }
+            }
+            let index = nodes.count
+            nodes.append(Node(low: low, high: high, left: -1, right: -1, faces: []))
+            if faces.count <= 8 {
+                nodes[index] = Node(low: low, high: high, left: -1, right: -1, faces: faces)
+            } else {
+                let span = high - low
+                let axis = span.x >= span.y && span.x >= span.z ? 0 : (span.y >= span.z ? 1 : 2)
+                let sorted = faces.sorted { triangles[$0].center[axis] < triangles[$1].center[axis] }
+                let split = sorted.count / 2
+                let left = build(Array(sorted[..<split])), right = build(Array(sorted[split...]))
+                nodes[index] = Node(low: low, high: high, left: left, right: right, faces: [])
+            }
+            return index
+        }
+        if buildTree, !triangles.isEmpty { _ = build(Array(triangles.indices)) }
+        self.triangles = triangles
+        self.nodes = nodes
+    }
+
+    init(triangles: [Triangle]) {
+        self.init(triangles: triangles.filter {
+            $0.area.isFinite && $0.area > 1e-10
+                && [$0.a, $0.b, $0.c].allSatisfy { $0.x.isFinite && $0.y.isFinite && $0.z.isFinite }
+        }, buildTree: true)
+    }
+
+    var rayLength: Float {
+        guard let root = nodes.first else { return 0.1 }
+        return max(simd_length(root.high - root.low) * 2, 0.1)
+    }
+
+    func intersects(origin: SIMD3<Float>, delta: SIMD3<Float>) -> Bool {
+        guard !nodes.isEmpty else { return false }
+        func intersectsBox(_ node: Node) -> Bool {
+            var near: Float = 0, far: Float = 1
+            func clip(_ start: Float, _ delta: Float, _ low: Float, _ high: Float) -> Bool {
+                if abs(delta) < 1e-10 { return start >= low && start <= high }
+                let a = (low - start) / delta, b = (high - start) / delta
+                near = max(near, min(a, b)); far = min(far, max(a, b))
+                return near <= far
+            }
+            return clip(origin.x, delta.x, node.low.x, node.high.x)
+                && clip(origin.y, delta.y, node.low.y, node.high.y)
+                && clip(origin.z, delta.z, node.low.z, node.high.z)
+        }
+        var stack = [0]
+        while let index = stack.popLast() {
+            let node = nodes[index]
+            guard intersectsBox(node) else { continue }
+            if node.left >= 0 {
+                stack.append(node.left); stack.append(node.right)
+                continue
+            }
+            for face in node.faces {
+                let triangle = triangles[face]
+                let e1 = triangle.b - triangle.a, e2 = triangle.c - triangle.a
+                let cross = simd_cross(delta, e2), determinant = simd_dot(e1, cross)
+                guard abs(determinant) > 1e-12 else { continue }
+                let inverse = 1 / determinant, offset = origin - triangle.a
+                let u = simd_dot(offset, cross) * inverse
+                guard u >= -1e-6, u <= 1 + 1e-6 else { continue }
+                let q = simd_cross(offset, e1), v = simd_dot(delta, q) * inverse
+                guard v >= -1e-6, u + v <= 1 + 1e-6 else { continue }
+                let t = simd_dot(e2, q) * inverse
+                if t > 1e-6, t <= 1 { return true }
+            }
+        }
+        return false
     }
 }

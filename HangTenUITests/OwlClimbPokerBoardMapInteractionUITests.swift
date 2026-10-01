@@ -9,7 +9,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         super.tearDown()
     }
 
-    func testSelectedTopSloperAnimatesWithoutCameraSyncInterruptingIt() throws {
+    func testSelectedTopSloperAnimatesAndPocketReturnsToFront() throws {
         let app = XCUIApplication()
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": "beastmaker-1000",
@@ -55,8 +55,21 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         expectation(for: manuallyOrbited, evaluatedWith: diagnostic)
         waitForExpectations(timeout: 15)
         addScreenshot(named: "Beastmaker manual orbit after selection")
-        // Same-hold reselection is exercised by the six physical-tap cases below;
-        // tapping an unchanged legend entry here would not render a new frame.
+        let pocket = app.buttons["boardDetail.holdLegend.pocket-middle-center"]
+        XCTAssertTrue(pocket.isHittable)
+        pocket.tap()
+        let front = NSPredicate { _, _ in
+            guard let value = diagnostic.value as? String,
+                  value.contains("cameraSettled=true"),
+                  value.split(separator: ";").contains(where: { $0 == "selection=pocket-middle-center" }),
+                  let azimuth = self.diagnosticNumber("azimuth", in: value),
+                  let elevation = self.diagnosticNumber("elevation", in: value),
+                  let actual = self.diagnosticNumber("cameraPitch", in: value) else { return false }
+            return abs(azimuth) < 0.001 && abs(elevation) < 0.001 && abs(actual) < 0.025
+        }
+        expectation(for: front, evaluatedWith: diagnostic)
+        waitForExpectations(timeout: 10)
+        addScreenshot(named: "Beastmaker pocket returns to front")
     }
 
     private func diagnosticNumber(_ key: String, in value: String) -> Float? {

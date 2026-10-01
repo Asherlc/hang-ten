@@ -14,7 +14,10 @@ final class BoardModelRealityTests: XCTestCase {
         front.orientation = simd_quatf(angle: .pi / 2, axis: [1, 0, 0])
         let side = ModelEntity(mesh: .generatePlane(width: 0.05, depth: 0.03))
         side.orientation = simd_quatf(angle: -.pi / 2, axis: [0, 0, 1])
-        for entity in [top, front, side] { scene.root.addChild(entity) }
+        for entity in [top, front, side] {
+            entity.position = [0, -0.1, -0.1]
+            scene.root.addChild(entity)
+        }
         scene.contactEntities = ["top": [top], "front": [front], "side": [side]]
         scene.frame(in: CGSize(width: 390, height: 240))
         return scene
@@ -41,20 +44,77 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
-    func testSelectingVisibleFrontSurfacePreservesManualFraming() async throws {
+    func testSelectingVisibleFrontSurfaceResetsPriorTiltAndZoom() async throws {
         let scene = try await selectionScene()
         scene.highlight(["top"], mode: .active)
         scene.orbit(azimuth: 0.2, elevation: 0.1, zoomScale: 0.9)
-        let manual = scene.camera.transform.matrix
         scene.highlight(["front"], mode: .active)
-        XCTAssertEqual(scene.orbitAzimuth, 0.2)
-        XCTAssertEqual(scene.orbitElevation, 0.1)
-        XCTAssertEqual(scene.orbitZoom, 0.9)
-        XCTAssertEqual(scene.camera.transform.matrix, manual)
-        scene.highlight([], mode: .active)
         XCTAssertEqual(scene.orbitAzimuth, 0)
         XCTAssertEqual(scene.orbitElevation, 0)
         XCTAssertEqual(scene.orbitZoom, 1)
+    }
+
+    @MainActor
+    func testRecessedSurfaceUsesItsFrontOpeningRatherThanFloorNormal() async throws {
+        let scene = try await selectionScene()
+        let floor = try XCTUnwrap(scene.contactEntities["top"]?.first)
+        // A roof encloses this same upward-facing contact. No hold metadata changes.
+        let roof = ModelEntity(mesh: .generateBox(width: 0.06, height: 0.01, depth: 0.04))
+        roof.position = floor.position + [0, 0.025, 0]
+        scene.instanceEntities[0].addChild(roof, preservingWorldTransform: true)
+        scene.highlight(["side"], mode: .active)
+        scene.highlight(["top"], mode: .active)
+        XCTAssertEqual(scene.orbitElevation, 0, "View the opening head-on, rather than tilting toward the roof")
+        XCTAssertEqual(scene.orbitAzimuth, 0)
+        XCTAssertNotNil(floor.model)
+    }
+
+    @MainActor
+    func testOpeningCalculationChangesWhenRoofIsRemoved() async throws {
+        let scene = try await selectionScene()
+        let floor = try XCTUnwrap(scene.contactEntities["top"]?.first)
+        let roof = ModelEntity(mesh: .generateBox(width: 0.06, height: 0.01, depth: 0.04))
+        roof.position = floor.position + [0, 0.025, 0]
+        scene.instanceEntities[0].addChild(roof, preservingWorldTransform: true)
+        scene.highlight(["top"], mode: .active)
+        XCTAssertEqual(scene.orbitElevation, 0)
+        roof.removeFromParent()
+        scene.highlight([], mode: .active)
+        scene.highlight(["top"], mode: .active)
+        XCTAssertGreaterThan(scene.orbitElevation, 0.15)
+    }
+
+    @MainActor
+    func testDiagonalSurfaceCalculatesBothViewingAngles() async throws {
+        let scene = try await selectionScene()
+        let surface = try XCTUnwrap(scene.contactEntities["top"]?.first)
+        surface.orientation = simd_quatf(from: SIMD3<Float>(0, 1, 0),
+                                        to: simd_normalize(SIMD3<Float>(0.7, 0.7, 0.1)))
+        scene.highlight(["top"], mode: .active)
+        XCTAssertGreaterThan(abs(scene.orbitAzimuth), 0.05)
+        XCTAssertGreaterThan(scene.orbitElevation, 0.05)
+        XCTAssertLessThanOrEqual(simd_length(SIMD2(scene.orbitAzimuth, scene.orbitElevation)), .pi / 9 + 0.001)
+    }
+
+    @MainActor
+    func testFrontOpeningPocketsAcrossBoardMeshes() async throws {
+        for (boardID, contacts) in [
+            ("beastmaker-1000", ["pocket-bottom-inner-left", "pocket-top-right", "pocket-middle-center"]),
+            ("metolius.simulator-3d", ["pocket-10-left", "pocket-15-center", "pocket-16-center"]),
+            ("trango.rock-prodigy-natural", ["upper-pocket-right"])
+        ] {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
+            scene.frame(in: CGSize(width: 390, height: 240))
+            for contact in contacts {
+                XCTAssertNotNil(scene.contactEntities[contact], "\(boardID): \(contact)")
+                scene.orbit(azimuth: 0.2, elevation: 0.3, zoomScale: 0.9)
+                scene.highlight([contact], mode: .active)
+                XCTAssertEqual(scene.orbitAzimuth, 0, "\(boardID): \(contact)")
+                XCTAssertEqual(scene.orbitElevation, 0, "\(boardID): \(contact)")
+                XCTAssertEqual(scene.orbitZoom, 1, "\(boardID): \(contact)")
+            }
+        }
     }
 
     @MainActor
@@ -180,15 +240,15 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
-    func testSelectingBeastmakerPocketRevealsItsEdgeOnFingerSurface() async throws {
+    func testSelectingBeastmakerPocketReturnsToFrontOpening() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-1000"))
         let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
         scene.frame(in: CGSize(width: 390, height: 240))
-        // The authored contact is the inner finger surface, rather than the
-        // front silhouette of the pocket opening. Its floor faces upward.
-        scene.highlight(["pocket-middle-center"], mode: .active)
+        scene.highlight(["jug-left"], mode: .active)
         XCTAssertGreaterThan(scene.orbitElevation, 0)
-        XCTAssertLessThanOrEqual(scene.orbitElevation, 0.4)
+        scene.highlight(["pocket-middle-center"], mode: .active)
+        XCTAssertEqual(scene.orbitElevation, 0)
+        XCTAssertEqual(scene.orbitAzimuth, 0)
     }
 
     @MainActor
@@ -511,6 +571,7 @@ final class BoardModelRealityTests: XCTestCase {
                 }
                 checkBoardSurfaces()
                 XCTAssertGreaterThan(meshesChecked, 0, "\(board.id)/\(presentation.id)")
+                print("Checking viewing geometry: \(board.id)/\(presentation.id)")
                 let contactIDs = Set(scene.contactEntities.keys)
                 XCTAssertFalse(contactIDs.isEmpty, "\(board.id)/\(presentation.id)")
                 for mode: BoardHighlightMode in [.active, .preview] {
