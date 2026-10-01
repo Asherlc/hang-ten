@@ -28,4 +28,19 @@ func fixture() throws {
  } catch RopePhysicsError.invalid {print("PASS conflicting rows reject within budget")}
 
 }
-do {try fixture()} catch {print("FAIL",error);exit(1)}
+func inexactFixture() throws {
+ var system=try RopeBandedSystem(size:1,bandwidth:0)
+ try system.addSymmetric(row:0,column:0,value:2)
+ let factor=try system.factorized(borderColumns:[[0.5]],borderMatrix:[[1]])
+ let rows=[RopeLinearContact(indices:[0],coefficients:[1],border:[0],residual:-1),
+           RopeLinearContact(indices:[0],coefficients:[-1],border:[0],residual:0)]
+ let solved=try BlockImpulse.solve(factor:factor,base:[0],border:[0],contacts:rows,allowInexact:true)
+ guard !BlockImpulse.certifies(solved.base+solved.border,multipliers:solved.multipliers,contacts:rows,size:1),
+       BlockImpulse.diagnostics.last!["passed"] as? Bool == false,
+       BlockImpulse.diagnostics.last!["sweeps"] as? Int == 16 else {fatalError("Inexact result mislabeled as certified")}
+ let stationarity=2*solved.base[0]+0.5*solved.border[0]+solved.multipliers[0]-solved.multipliers[1]
+ let boardResidual=0.5*solved.base[0]+solved.border[0]
+ guard abs(stationarity)<1e-10,abs(boardResidual)<1e-10 else {fatalError("Inexact correction loses inertial stationarity")}
+ print("PASS bounded inexact correction retains objective and failed certificate")
+}
+do {try fixture();try inexactFixture()} catch {print("FAIL",error);exit(1)}

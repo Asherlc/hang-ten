@@ -17,7 +17,7 @@ enum BlockImpulse {
         }
         return true
     }
-    static func solve(factor:RopeBandedFactorization,base:[Double],border:[Double],contacts:[RopeLinearContact],maxSweeps:Int=16) throws -> RopeContactSystem.Solution {
+    static func solve(factor:RopeBandedFactorization,base:[Double],border:[Double],contacts:[RopeLinearContact],maxSweeps:Int=16,allowInexact:Bool=false) throws -> RopeContactSystem.Solution {
         let started=ProcessInfo.processInfo.systemUptime,size=base.count
         var x=base+border,multipliers=Array(repeating:0.0,count:contacts.count)
         var responses:[Int:[Double]]=[:],masses:[Int:Double]=[:]
@@ -66,9 +66,26 @@ enum BlockImpulse {
                     worstQ=min(worstQ,q);gapError=max(gapError,max(0,-gap))
                     complementarity=max(complementarity,abs(multipliers[id]*gap))
                 }
-                diagnostics.append(["sweeps":sweep+1,"rows":contacts.count,"responses":responses.count,"seconds":ProcessInfo.processInfo.systemUptime-started,"gapError":gapError,"complementarity":complementarity,"minimumQ":worstQ,"passed":true])
+                let allQ=contacts.map{$0.residual+dot($0,x)}
+                let allGaps=allQ.indices.map{allQ[$0]-1e-8*multipliers[$0]}
+                diagnostics.append(["affineResiduals":allQ,"regularizedGaps":allGaps,"multipliers":multipliers,"sweeps":sweep+1,"rows":contacts.count,"responses":responses.count,"seconds":ProcessInfo.processInfo.systemUptime-started,"gapError":gapError,"complementarity":complementarity,"minimumQ":worstQ,"passed":true])
                 return RopeContactSystem.Solution(base:Array(x.prefix(size)),border:Array(x.dropFirst(size)),multipliers:multipliers,activeIDs:multipliers.indices.filter{multipliers[$0]<0})
             }
+        }
+        if allowInexact {
+            x=base+border
+            for id in responses.keys.sorted() {for i in x.indices {x[i] -= responses[id]![i]*multipliers[id]}}
+            guard x.allSatisfy({$0.isFinite}),multipliers.allSatisfy({$0.isFinite && $0<=0}) else {
+                throw RopePhysicsError.invalid("Invalid inexact block proposal")
+            }
+            let q=contacts.map{$0.residual+dot($0,x)}
+            let gaps=q.indices.map{q[$0]-1e-8*multipliers[$0]}
+            guard (q+gaps).allSatisfy({$0.isFinite}) else {throw RopePhysicsError.invalid("Nonfinite inexact residual")}
+            gapError=gaps.map{max(0,-$0)}.max() ?? 0
+            worstQ=min(0,q.min() ?? 0)
+            complementarity=gaps.indices.map{abs(gaps[$0]*multipliers[$0])}.max() ?? 0
+            diagnostics.append(["sweeps":maxSweeps,"rows":contacts.count,"responses":responses.count,"seconds":ProcessInfo.processInfo.systemUptime-started,"gapError":gapError,"complementarity":complementarity,"minimumQ":worstQ,"passed":certifies(x,multipliers:multipliers,contacts:contacts,size:size),"inexactProposal":true,"affineResiduals":q,"regularizedGaps":gaps,"multipliers":multipliers])
+            return RopeContactSystem.Solution(base:Array(x.prefix(size)),border:Array(x.dropFirst(size)),multipliers:multipliers,activeIDs:multipliers.indices.filter{multipliers[$0]<0})
         }
         diagnostics.append(["sweeps":maxSweeps,"rows":contacts.count,"responses":responses.count,"seconds":ProcessInfo.processInfo.systemUptime-started,"gapError":gapError,"complementarity":complementarity,"minimumQ":worstQ,"passed":false])
         throw RopePhysicsError.invalid("Bounded block impulse exhausted")
