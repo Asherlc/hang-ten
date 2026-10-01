@@ -1,5 +1,11 @@
 # Suspended portable hangboard presentation
 
+The camera reset policy in this historical design is superseded by the
+[selected-hold visibility contract](2026-10-01-selected-hold-camera-visibility.md).
+Board position selection still applies the authored board pose and cord setup;
+camera selection now follows that newer contract, including preservation when
+no visibility adjustment is needed and on same-hold retaps.
+
 ## Goal
 
 Extend the 3D hangboard migration contract so a portable board with usable
