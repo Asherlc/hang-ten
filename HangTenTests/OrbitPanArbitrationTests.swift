@@ -78,6 +78,8 @@ final class OrbitPanArbitrationTests: XCTestCase {
         }
         pan.stubTranslation = CGPoint(x: 0, y: 12)
         XCTAssertFalse(preview.gestureRecognizerShouldBegin(pan))
+        pan.stubTranslation = CGPoint(x: 12, y: 0)
+        XCTAssertTrue(preview.gestureRecognizerShouldBegin(pan))
     }
 
     @MainActor

@@ -35,6 +35,7 @@ final class BoardModelRealityTests: XCTestCase {
                     XCTAssertNotNil(entity.model, "\(boardID): \(contactID) must render")
                     XCTAssertNotNil(entity.collision, "\(boardID): \(contactID) must be pickable")
                     XCTAssertNotNil(entity.components[InputTargetComponent.self], "\(boardID): \(contactID)")
+                    XCTAssertEqual(scene.contactID(for: entity), contactID, "\(boardID): reverse picking identity")
                 }
             }
         }

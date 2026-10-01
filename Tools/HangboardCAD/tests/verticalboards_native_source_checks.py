@@ -73,20 +73,29 @@ EXPECTED = {
     },
 }
 TOLERANCE_MM = 1e-3
+FAILURES: list[str] = []
 
 
-def check(label: str, condition: bool, detail="") -> None:
-    """Print a labeled native validation result and fail immediately when its condition is false."""
+def check(label: str, condition: bool, detail="", *, fatal: bool = False) -> None:
+    """Report independent failures together; stop only when a prerequisite is unsafe."""
     print(f"{'PASS' if condition else 'FAIL'} {label}: {detail}", flush=True)
     if not condition:
-        raise AssertionError(label)
+        FAILURES.append(f"{label}: {detail}")
+        if fatal:
+            raise AssertionError("\n".join(FAILURES))
+
+
+def finish_checks() -> None:
+    """Fail with every collected validation label after independent checks finish."""
+    if FAILURES:
+        raise AssertionError("Native validation failures:\n" + "\n".join(FAILURES))
 
 
 def inventory(document):
     """Return the single exported body and uniquely bound contact surfaces from the document."""
     bodies = [o for o in document.Objects if getattr(o, "NodeRole", "") == "body"]
     regions = [o for o in document.Objects if getattr(o, "NodeRole", "") == "contact"]
-    check("one exported body", len(bodies) == 1)
+    check("one exported body", len(bodies) == 1, fatal=True)
     contacts = {o.ContactID: o for o in regions}
     check("unique contact bindings", len(contacts) == len(regions))
     return bodies[0], contacts
@@ -141,6 +150,9 @@ def verify_edit(document, before, edited_ids, new_depth):
     after = depths(contacts)
     check("edited contact inventory stable", set(after) == set(before))
     for cid, previous in before.items():
+        if cid not in after:
+            check(f"{cid} depth after edit", False, "contact missing")
+            continue
         expected = new_depth if cid in edited_ids else previous
         check(f"{cid} depth after edit", abs(after[cid] - expected) < TOLERANCE_MM,
               f"expected {expected:.6f}, actual {after[cid]:.6f}")
@@ -148,22 +160,24 @@ def verify_edit(document, before, edited_ids, new_depth):
     # body, stale floor faces and contact surfaces detached from the new cavity.
     shell = Part.makeShell(body.Shape.Faces)
     for cid in edited_ids:
-        check_boundary_and_cavity(cid, contacts[cid], shell, new_depth)
+        if cid in contacts:
+            check_boundary_and_cavity(cid, contacts[cid], shell, new_depth)
 
 
 def main() -> int:
     """Validate the pinned native source, edit a scratch copy, reopen it and preserve original source bytes."""
+    FAILURES.clear()
     source = Path(sys.argv[1]).resolve()
     scratch = Path(sys.argv[2]).resolve()
     spec = EXPECTED[source.stem]
     check("scratch is separate from source package", scratch != source.parent
-          and source.parent not in scratch.parents)
+          and source.parent not in scratch.parents, fatal=True)
     scratch.mkdir(parents=True, exist_ok=True)
     digest = hashlib.sha256(source.read_bytes()).hexdigest()
     document = None
     try:
-        check("pinned FreeCAD version", App.Version()[:3] == ["1", "1", "3"], App.Version()[:3])
-        check("pinned OpenUSD version", Usd.GetVersion() == (0, 26, 8), Usd.GetVersion())
+        check("pinned FreeCAD version", App.Version()[:3] == ["1", "1", "3"], App.Version()[:3], fatal=True)
+        check("pinned OpenUSD version", Usd.GetVersion() == (0, 26, 8), Usd.GetVersion(), fatal=True)
         document = App.openDocument(str(source))
         document.recompute()
         body, contacts = inventory(document)
@@ -195,15 +209,21 @@ def main() -> int:
         shell = Part.makeShell(body.Shape.Faces)
         for cid, published in expected.items():
             if published is not None:
-                check(f"{cid} manifest depth fact", facts[cid].get("depth") == {
+                check(f"{cid} manifest depth fact", facts.get(cid, {}).get("depth") == {
                     "range": {"minimum": published, "maximum": published}
                 })
-            check_boundary_and_cavity(cid, contacts[cid], shell, published)
+            if cid not in contacts:
+                check(f"{cid} contact exists", False, "contact missing")
+                continue
+            try:
+                check_boundary_and_cavity(cid, contacts[cid], shell, published)
+            except Exception as error:
+                check(f"{cid} boundary/cavity evaluation", False, repr(error))
         before = depths(contacts)
         feature_name, property_name, edited_depth, edited_ids = spec["edit"]
         feature = document.getObject(feature_name)
         check("native edit parameter exists", feature is not None
-              and property_name in feature.PropertiesList, f"{feature_name}.{property_name}")
+              and property_name in feature.PropertiesList, f"{feature_name}.{property_name}", fatal=True)
         setattr(feature, property_name, edited_depth)
         document.recompute()
         verify_edit(document, before, edited_ids, edited_depth)
@@ -217,12 +237,14 @@ def main() -> int:
         value = parameter.Value if hasattr(parameter, "Value") else float(parameter)
         check("parameter survives saved reopen", abs(value - edited_depth) < TOLERANCE_MM)
         verify_edit(document, before, edited_ids, edited_depth)
-        print(f"all {source.stem} native source checks passed", flush=True)
-        return 0
+
     finally:
         if document is not None:
             App.closeDocument(document.Name)
         check("original source bytes unchanged", hashlib.sha256(source.read_bytes()).hexdigest() == digest)
+    finish_checks()
+    print(f"all {source.stem} native source checks passed", flush=True)
+    return 0
 
 
 if __name__ == "__main__":

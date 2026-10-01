@@ -273,12 +273,12 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             "HANGTEN_REVIEW_MODEL_DIAGNOSTICS": "1",
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
         ]
-        let commitProbeEnabled = ["frictitious.megalith", "zlagboard.pro"].contains(boardID)
-        if commitProbeEnabled { app.launchEnvironment["HANGTEN_REVIEW_COMMIT_PROBE"] = "1" }
         app.launch()
         // Preserve the rapid Train-to-Hold-specs transition, including the
         // departing display-only preview, when validating the interactive host.
-        app.buttons["View hold specs"].tap()
+        let holdSpecs = app.buttons["View hold specs"]
+        XCTAssertTrue(holdSpecs.waitForExistence(timeout: 30))
+        holdSpecs.tap()
         XCTAssertTrue(app.navigationBars["Hold specs"].waitForExistence(timeout: 30))
         let contact = app.buttons["boardModel.contact.\(target)"]
         XCTAssertTrue(contact.waitForExistence(timeout: 120))
@@ -344,7 +344,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         let visibleOrbitResult = XCTWaiter.wait(for: [visibleOrbit], timeout: 15)
         capture("\(boardID)-portrait-orbit")
         captureRendererDiagnostic(app: app, name: "\(boardID)-after-orbit")
-        if visibleOrbitResult == .timedOut, commitProbeEnabled { captureCommitProbe(boardID) }
         XCTAssertEqual(visibleOrbitResult, .completed,
                        "Orbit must change the rendered board, not only its accessibility projection")
         // Reproject after orbit; the initial contact offset no longer tracks
@@ -374,7 +373,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         }, object: nil)
         let renderedResetResult = XCTWaiter.wait(for: [renderedReset], timeout: 30)
         capture("\(boardID)-portrait-reset")
-        if renderedResetResult == .timedOut, commitProbeEnabled { captureCommitProbe(boardID) }
         XCTAssertEqual(renderedResetResult, .completed,
                        "Camera reset must restore the rendered board, not only its accessibility projection")
 
@@ -387,17 +385,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCTAssertLessThanOrEqual(map.frame.maxY, app.frame.maxY)
         try assertModelBodyIsVisible(in: map)
         capture("\(boardID)-landscape-active")
-    }
-
-    /// Preserves the failed verdict and observes one app-owned marker transaction.
-    private func captureCommitProbe(_ boardID: String) {
-        capture("\(boardID)-commit-probe-before")
-        CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(),
-            CFNotificationName("com.hangten.supreme-zebra.presentation-commit" as CFString), nil, nil, true)
-        Thread.sleep(forTimeInterval: 0.5)
-        capture("\(boardID)-commit-probe-half-second")
-        Thread.sleep(forTimeInterval: 1.5)
-        capture("\(boardID)-commit-probe-two-seconds")
     }
 
     private func surfaceCoordinate(for contact: XCUIElement, in map: XCUIElement,

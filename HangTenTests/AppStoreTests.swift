@@ -1817,7 +1817,12 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         // Append completion schedules a main-actor Task. Suspend this main-actor
         // test so that task can finish before checking the persisted result.
         while !condition(), ContinuousClock.now < deadline {
-            try? await Task.sleep(for: .milliseconds(10))
+            do {
+                try await Task.sleep(for: .milliseconds(10))
+            } catch {
+                XCTFail("Persistence wait was cancelled", file: file, line: line)
+                return
+            }
         }
         XCTAssertTrue(condition(), file: file, line: line)
     }

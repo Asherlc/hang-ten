@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -45,28 +46,12 @@ def test_verticalboard_native_source_and_persisted_edit(slug):
     owner = Path(os.environ.get("PASEO_WORKTREE_PATH", str(REPOSITORY))).name
     with tempfile.TemporaryDirectory(prefix=f"{owner}-verticalboards-", dir=context) as temp:
         scratch = Path(temp)
-        wrapper = scratch / "run.py"
-        wrapper.write_text(
-            "import sys, traceback\n"
-            f"path = {str(SCRIPT)!r}\n"
-            f"sys.argv = [path, {str(source)!r}, {str(scratch)!r}]\n"
-            "try:\n"
-            "    exec(compile(open(path).read(), path, 'exec'), "
-            "{'__name__': '__main__', '__file__': path})\n"
-            "except SystemExit:\n"
-            "    raise\n"
-            "except BaseException:\n"
-            "    traceback.print_exc()\n"
-            "    raise SystemExit(3)\n"
-            "finally:\n"
-            "    sys.stdout.flush()\n"
-            "    sys.stderr.flush()\n"
-        )
         environment = dict(os.environ)
         environment["HANGTEN_CAD_PYTHONPATH"] = EXTRA_PATH
         environment["TMPDIR"] = str(scratch)
         result = subprocess.run(
-            [str(FREECAD_CMD), str(wrapper)],
+            [sys.executable, str(REPOSITORY / "Tools/HangboardCAD/run_freecad.py"),
+             "--freecad", str(FREECAD_CMD), str(SCRIPT), str(source), str(scratch)],
             cwd=REPOSITORY,
             env=environment,
             capture_output=True,
@@ -75,4 +60,6 @@ def test_verticalboard_native_source_and_persisted_edit(slug):
         )
         assert result.returncode == 0, result.stdout + result.stderr
         assert f"all {slug} native source checks passed" in result.stdout
+    # Verify the exact workspace-owned directory was deleted after all subprocess
+    # outputs (including saved edit files) were cleaned by TemporaryDirectory.
     assert not scratch.exists(), "workspace-owned native-check scratch was not removed"
