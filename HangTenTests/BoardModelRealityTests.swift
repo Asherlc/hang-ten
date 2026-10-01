@@ -6,37 +6,68 @@ import simd
 
 final class BoardModelRealityTests: XCTestCase {
     @MainActor
-    func testClavelliumPitchOrbitsAroundItsCordPointsWithoutPhysics() async throws {
+    func testClavelliumPitchMovesBoardAroundCordPivotWhileSupportAndCameraStayFixed() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "clavellium-training-block"))
         let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
         XCTAssertFalse(scene.hasLiveRopes)
         XCTAssertTrue(scene.select(positionID: try XCTUnwrap(board.positions.first?.id)))
         scene.frame(in: CGSize(width: 800, height: 500))
         let body = try XCTUnwrap(scene.instanceEntities.first)
-        let bodyTransform = body.transformMatrix(relativeTo: scene.root)
-        // The front/back mouths are (0, .0025, +/-.045) in the authored model.
-        let pivot = bodyTransform * SIMD4<Float>(0, 0.0025, 0, 1)
-        let cord = try XCTUnwrap(scene.transientCordEntity)
-        let cordTransforms = cord.children.map { $0.transform.matrix }
+        let originalBody = body.transformMatrix(relativeTo: scene.root)
+        let pivot = SIMD4<Float>(0, 0.0025, 0, 1)
+        let originalPivot = originalBody * pivot
+        let originalTop = originalBody * SIMD4<Float>(0, 0.05, 0, 1)
         let originalCamera = scene.camera.transform.matrix
-        for yaw in [Float(0), 0.35] {
-            scene.orbit(azimuth: yaw, elevation: 0)
-            let before = scene.camera.transform.matrix.inverse * pivot
-            for pitch in [Float.pi / 9, -Float.pi / 9] {
-                scene.orbit(azimuth: yaw, elevation: pitch)
-                let after = scene.camera.transform.matrix.inverse * pivot
-                XCTAssertEqual(after.x, before.x, accuracy: 1e-6, "Pitch must keep the cord pivot's camera-space horizontal position")
-                XCTAssertEqual(after.y, before.y, accuracy: 1e-6, "Pitch must keep the cord pivot's camera-space vertical position")
-                XCTAssertEqual(body.transformMatrix(relativeTo: scene.root), bodyTransform)
-                XCTAssertEqual(cord.children.map { $0.transform.matrix }, cordTransforms)
+        let support = SIMD3<Float>(0, 0.07, 0)
+        for pitch in [Float.pi / 9, -Float.pi / 9] {
+            scene.orbit(azimuth: 0, elevation: pitch)
+            let placed = body.transformMatrix(relativeTo: scene.root)
+            XCTAssertNotEqual(placed, originalBody, "The board must actually rotate, rather than moving only the camera")
+            XCTAssertLessThan(simd_distance(placed * pivot, originalPivot), 1e-6)
+            XCTAssertGreaterThan(simd_distance(placed * SIMD4<Float>(0, 0.05, 0, 1), originalTop), 0.01)
+            for column in 0..<3 {
+                XCTAssertLessThan(simd_distance(scene.camera.transform.matrix[column], originalCamera[column]), 1e-6,
+                                  "The camera orientation must stay fixed during board pitch")
             }
+            let cord = try XCTUnwrap(scene.transientCordEntity)
+            let endpoints = cord.children.flatMap { child -> [SIMD3<Float>] in
+                guard let mesh = (child as? ModelEntity)?.model?.mesh else { return [] }
+                let halfLength = mesh.bounds.extents.y / 2
+                return [-halfLength, halfLength].map { y in
+                    let p = child.transformMatrix(relativeTo: scene.root) * SIMD4<Float>(0, y, 0, 1)
+                    return SIMD3(p.x, p.y, p.z)
+                }
+            }
+            XCTAssertLessThan(try XCTUnwrap(endpoints.map { simd_distance($0, support) }.min()), 1e-5,
+                              "Overhead cord support must not rotate with the board")
         }
         scene.resetCamera(animated: false)
+        XCTAssertEqual(body.transformMatrix(relativeTo: scene.root), originalBody)
         XCTAssertEqual(scene.camera.transform.matrix, originalCamera)
     }
 
     @MainActor
-    func testCordPivotUsesPairedAttachmentsBoreMouthsAndPlacedInstances() async throws {
+    func testCordedTopSelectionTiltsBoardAndClearingRestoresCanonicalPose() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "clavellium-training-block"))
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
+        XCTAssertTrue(scene.select(positionID: try XCTUnwrap(board.positions.first?.id)))
+        scene.frame(in: CGSize(width: 800, height: 500))
+        let body = try XCTUnwrap(scene.instanceEntities.first)
+        let original = body.transform.matrix
+        scene.highlight(["cd-pinch-100mm-top"], mode: .active)
+        XCTAssertGreaterThan(scene.orbitElevation, 0.15)
+        XCTAssertNotEqual(body.transform.matrix, original)
+        let selected = body.transform.matrix
+        scene.frame(in: CGSize(width: 800, height: 500))
+        scene.highlight(["cd-pinch-100mm-top"], mode: .active)
+        XCTAssertEqual(body.transform.matrix, selected, "Repeated updates must not compound the board tilt")
+        scene.highlight([], mode: .active)
+        XCTAssertEqual(body.transform.matrix, original)
+        XCTAssertFalse(scene.hasLiveRopes)
+    }
+
+    @MainActor
+    func testBoardPitchUsesPairedAttachmentsBoreMouthsAndIndependentInstancePivots() async throws {
         let cases: [(String, SIMD3<Float>)] = [
             ("nature.stone-hanger", [0, -0.0024, 0]),
             ("tension.flash-board", [0.25, 0.047999999, 0.038669699]),
@@ -48,14 +79,14 @@ final class BoardModelRealityTests: XCTestCase {
             XCTAssertFalse(scene.hasLiveRopes, id)
             XCTAssertTrue(scene.select(positionID: try XCTUnwrap(board.positions.first?.id)), id)
             scene.frame(in: CGSize(width: 800, height: 500))
-            let points = scene.instanceEntities.map { $0.transformMatrix(relativeTo: scene.root) * SIMD4(localPivot, 1) }
-            let pivot = points.reduce(SIMD4<Float>.zero, +) / Float(points.count)
-            let before = scene.camera.transform.matrix.inverse * pivot
+            let before = scene.instanceEntities.map { $0.transformMatrix(relativeTo: scene.root) }
             for pitch in [Float.pi / 9, -Float.pi / 9] {
                 scene.orbit(azimuth: 0, elevation: pitch)
-                let after = scene.camera.transform.matrix.inverse * pivot
-                XCTAssertEqual(after.x, before.x, accuracy: 1e-6, id)
-                XCTAssertEqual(after.y, before.y, accuracy: 1e-6, id)
+                for (index, body) in scene.instanceEntities.enumerated() {
+                    let after = body.transformMatrix(relativeTo: scene.root)
+                    XCTAssertNotEqual(after, before[index], id)
+                    XCTAssertLessThan(simd_distance(after * SIMD4(localPivot, 1), before[index] * SIMD4(localPivot, 1)), 1e-6, id)
+                }
             }
         }
     }

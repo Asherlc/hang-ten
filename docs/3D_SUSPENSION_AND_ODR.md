@@ -52,18 +52,25 @@ match the descriptor, or RealityKit cannot decode it.
 
 ## Cord-point display tilt
 
-The normal RealityKit viewer uses the package's deterministic suspension layer,
-without starting a live rope simulation. X-axis camera orbit (manual or selected
-hold adjustment) uses the midpoint of the authored attachment points or passage
-mouths, transformed by the current board/instance pose. Through-bores contribute
-both mouths; point passages contribute one. Reflections baked into meshes are
-applied to the original authored suspension coordinates before averaging.
+The normal RealityKit viewer uses bundled suspension geometry without starting
+live rope simulation. Pitch rotates each corded board instance around the
+midpoint of its authored attachments or passage mouths. Through-bores contribute
+both mouths; point passages contribute one. The pivot is transformed using the
+canonical instance pose, including authored reflection. The overhead support
+stays fixed, guides move with the board, and free spans reconnect to that support.
+Existing cylinder entities are transformed in place; no meshes are rebuilt per frame.
 
-Yaw retains the canonical framing pivot. The full board/cord envelope is refit
-around the tilted camera target; resetting returns exactly to the original
-view. Neither the board transform nor cord routes move during this display
-orbit. This is a geometric viewing rule, not a physical equilibrium or hinge.
-The loader's `useLivePhysics` opt-in retains the existing solver test lane.
+Yaw retains the camera orbit. During pitch, the camera orientation stays fixed
+and framing includes the board's local rotation envelope and fixed support.
+Reset restores the exact canonical body and cord transforms. Hold selection
+computes its adjustment from the canonical pose to avoid accumulating tilt.
+Automatic adjustment animates over 0.28 seconds; Reduce Motion applies it
+immediately. Manual gestures supersede pending animation.
+
+This is a kinematic display approximation: free-span lengths may change, and
+there is no gravity, rope-length constraint, sliding contact solve or equilibrium
+simulation. Uncorded boards retain camera pitch. The loader's `useLivePhysics`
+opt-in retains the existing solver test lane.
 
 ## Diagnose by symptom
 

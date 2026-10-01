@@ -23,7 +23,7 @@ choose the smallest readable adjustment or the best meaningful improvement in
 that neighborhood. This is a bounded geometric heuristic, not a global
 visibility optimum or an authored opening annotation.
 
-- Every new selection sets the camera to the computed angles and default zoom,
+- Every new selection sets the display to the computed angles and default zoom,
   including a zero adjustment that returns to the front angle. It animates over
   0.28 seconds when Reduce Motion is disabled.
 - Unchanged contact selection and board position, physical same-hold retaps,
@@ -32,14 +32,17 @@ visibility optimum or an authored opening annotation.
 - Position changes still apply the package's board pose and cord setup. The
   camera uses that position's framing and recomputes hold visibility.
 - Automatic adjustment refits the complete board and cord bounds. For corded
-  boards, X-axis tilt orbits around the midpoint of the authored attachment
-  points or passage mouths in the current placed board pose. Yaw retains the
-  canonical framing pivot. The camera target follows this geometric orbit;
-  selecting a particular hold never makes that hold the pivot. Uncorded boards
-  retain the fixed framing target. Manual gestures remain available afterward.
-- The normal viewer uses bundled suspension geometry directly. Live rope
-  physics is an explicit loader opt-in for solver integration and tests; it is
-  not required for the cord-point camera pivot.
+  boards, pitch rotates the actual board about its own authored cord-point
+  midpoint, keeping the overhead support fixed. Guides follow the board and
+  free spans reconnect geometrically. Separate instances use separate pivots.
+  Yaw retains the camera orbit; uncorded boards retain camera pitch.
+- Visibility is evaluated in the canonical pose before each new selection.
+  Clearing restores the exact canonical board and cord transforms. Projected
+  contact controls refresh during the board's 0.28-second animation; manual
+  gestures, position changes and disposal cancel superseded animation.
+- The normal viewer requires no live rope controller. This is a kinematic
+  display approximation with variable free-span length, rather than physical
+  equilibrium. Live rope physics remains an explicit loader opt-in for tests.
 
 Unit validation covers returning to front, front-opening recesses versus
 exposed surfaces, edge-on top/side/underside surfaces, mirrored geometry,
