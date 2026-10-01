@@ -26,7 +26,7 @@ The source URL in each row is also retained in `PlanDefinition.metadata.sourceUR
 | `metolius.simulator-3d.advanced` | [Simulator 3D guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide) | Default except minute 6's one-arm tasks; minutes 2, 4, and 9 are offsets. |
 | `metolius.rock-rings.ten-minute` | [Rock Ring guide](https://www.metoliusclimbing.com/pages/rock-ring-training-guide) | Default; minutes 3 and 8 combine four- and two-finger holds, then reverse. |
 | `rptc.seven-three-repeaters` | [Trango RPTC instructions](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155) | Each of seven source-prescribed two-handed hangs has two `target: "any"` entries because the athlete chooses the grip. |
-| `research.max-hangs` | [Lattice Max Hangs](https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/) | Default. |
+| `research.max-hangs` | [Eva López MAW guidance](https://en-eva-lopez.blogspot.com/2018/05/fingerboard-training-guide-II-Maxhangs-SubHangs-and-Inthangs-methodology.html) | Two hands; see [updated source audit](2026-10-01-lopez-max-hangs.md). |
 | `research.force-feedback-f80` | [Force feedback study](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full) | Source says both hands for F80. |
 | `research.force-feedback-f100` | [Force feedback study](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full) | Its 24 right/left hand steps are each one-hand tasks with the stated side. |
 | `research.eva-int-hangs` | [Eva López comparison](https://pubmed.ncbi.nlm.nih.gov/30988852/) | Default; hold choice stays `target: "any"`. |

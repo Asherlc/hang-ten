@@ -747,7 +747,7 @@ final class PlanStorageTests: XCTestCase {
 
     func testPlanSourcePresentationContainsOnlySourceName() {
         let plan = LegacyPlanSeedCatalog.maxHangs
-        XCTAssertEqual(PlanSourcePresentationContent.label(for: plan), "Source: Lattice max hang protocol")
+        XCTAssertEqual(PlanSourcePresentationContent.label(for: plan), "Source: Eva López · MaxHangs (MAW)")
     }
 
     func testGripTypeRoundTripsDistinctCurrentRawValues() throws {
@@ -2359,6 +2359,24 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(step.fingerConfiguration?.orderedFingers, [.index, .middle])
     }
 
+    func testMaxHangsUsesLopezMAWTimingAndSource() throws {
+        let plan = PlanCatalog.maxHangs
+        XCTAssertEqual(plan.sourceURL, URL(string: "https://en-eva-lopez.blogspot.com/2018/05/fingerboard-training-guide-II-Maxhangs-SubHangs-and-Inthangs-methodology.html"))
+        XCTAssertEqual(plan.provenance, .adapted)
+        let workSteps = plan.steps.filter { !$0.isRestStep }
+        let restSteps = plan.steps.filter(\.isRestStep)
+        XCTAssertEqual(workSteps.count, 5)
+        XCTAssertEqual(restSteps.count, 4)
+        XCTAssertTrue(restSteps.allSatisfy { $0.duration == 180 })
+        XCTAssertEqual(plan.duration, 770)
+        for step in workSteps {
+            XCTAssertEqual(step.activeDuration, 10)
+            XCTAssertEqual(step.duration, 10)
+            XCTAssertEqual(step.gripType, .halfCrimp)
+            XCTAssertTrue(step.instruction.contains("3-second margin"))
+        }
+    }
+
     func testMaxHangsWorkStepsKeepSourceBackedFourFingerCue() {
         let workSteps = PlanCatalog.maxHangs.steps.filter {
             $0.id.hasPrefix("max-hangs-")
@@ -2615,12 +2633,12 @@ final class PlanStorageTests: XCTestCase {
                     kind: .work,
                     target: .fromLegacyTargets([
                         ContactRequirement.edge(
-                            depth: .range(.init(minimum: 20, maximum: 20)),
+                            depth: .range(.init(minimum: 9, maximum: 19)),
                             selection: .bilateralPair
                         )
                     ]),
                     timing: .fixed,
-                    duration: 7
+                    duration: 10
                 ),
                 WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 180)
             ]

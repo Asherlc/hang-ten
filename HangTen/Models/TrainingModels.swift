@@ -2014,6 +2014,56 @@ struct TrainingPlan: Identifiable, Hashable {
     }
 }
 
+/// Athlete-selected edge size for the adapted López MAW session. The bundled
+/// plan retains a semantic range; the session narrows it without changing the
+/// catalog or recording a different hold from the one shown in the preview.
+enum MaxHangsEdgeSelection {
+    static func availableDepths(for plan: TrainingPlan, on board: BoardRevision) -> [Double] {
+        guard plan.id == "research.max-hangs" else { return [] }
+        let depths = Set(board.contacts.compactMap { contact -> Double? in
+            guard contact.kind == .edge,
+                  case .range(let depth) = contact.depth,
+                  depth.minimum == depth.maximum,
+                  (8...20).contains(depth.minimum) else { return nil }
+            return depth.minimum
+        })
+        return depths.filter { selecting($0, in: plan, on: board) != nil }.sorted(by: >)
+    }
+
+    static func selecting(_ depth: Double, in plan: TrainingPlan, on board: BoardRevision) -> TrainingPlan? {
+        guard plan.id == "research.max-hangs", depth.isFinite, (8...20).contains(depth) else { return nil }
+        let predicate = PlanContactPredicate(kind: .edge, depth: .measured(.init(minimum: depth, maximum: depth)))
+        let target = WorkoutSegmentTarget.tasks([[PlanHandTarget(target: predicate), PlanHandTarget(target: predicate)]])
+        let steps = plan.steps.map { step in
+            WorkoutStep(
+                id: step.id, number: step.number, title: step.title,
+                instruction: step.instruction, accessory: step.accessory,
+                duration: step.duration, phase: step.phase,
+                segments: step.segments.map { segment in
+                    guard segment.kind == .work else { return segment }
+                    return WorkoutSegment(kind: .work, target: target, timing: segment.timing, duration: segment.duration)
+                },
+                gripType: step.gripType, fingerConfiguration: step.fingerConfiguration,
+                handUse: step.handUse, side: step.side, action: step.action,
+                repetitions: step.repetitions, externalLoadKGF: step.externalLoadKGF,
+                timedWorkDuration: step.timedWorkDuration
+            )
+        }
+        // Numeric matching has a tolerance. Offer a size only when its resolved
+        // physical contacts actually have that exact measured point depth.
+        guard steps.filter({ !$0.isRestStep }).allSatisfy({ step in
+            guard let contacts = try? ContactResolver.resolve(target, step: step, board: board).first,
+                  contacts.count == 2 else { return false }
+            return contacts.allSatisfy { $0.depth == .range(.init(minimum: depth, maximum: depth)) }
+        }) else { return nil }
+        return TrainingPlan(
+            id: plan.id, title: plan.title, subtitle: plan.subtitle, level: plan.level,
+            sourceLabel: plan.sourceLabel, sourceURL: plan.sourceURL,
+            provenance: plan.provenance, boardID: plan.boardID, steps: steps
+        )
+    }
+}
+
 enum BoardCatalog {
 
     static let packageStore: BoardPackageStore = {
@@ -3009,11 +3059,17 @@ enum LegacyPlanSeedCatalog {
         }
     }
 
-    /// Lattice max-hang and Abrahangs protocols both name a 20 mm edge and are
-    /// two-handed hangs. `.bilateralPair` resolves the board's paired left/right
-    /// 20 mm holds.
+    /// Source-specific paired 20 mm edges for Lattice-derived protocols.
     private static let lattice20mmEdgePairTarget = ContactRequirement.edge(
         depth: .range(.init(minimum: 20, maximum: 20)),
+        selection: .bilateralPair
+    )
+
+    /// López's MAW guidance permits a chosen 8–20 mm edge. The resolver's
+    /// 1 mm tolerance means 9–19 matches measured point depths from 8–20.
+    /// Selection remains bilateral; the plan page narrows it to the chosen size.
+    private static let lopezMaxHangsEdgePairTarget = ContactRequirement.edge(
+        depth: .range(.init(minimum: 9, maximum: 19)),
         selection: .bilateralPair
     )
 
@@ -3107,21 +3163,21 @@ enum LegacyPlanSeedCatalog {
     static let maxHangs = TrainingPlan(
         id: "research.max-hangs",
         title: "Max Hangs",
-        subtitle: "Five near-maximal 7-second half-crimp hangs on a 20 mm edge.",
+        subtitle: "Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve.",
         level: "Advanced",
-        sourceLabel: "Lattice max hang protocol",
-        sourceURL: URL(string: "https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/")!,
+        sourceLabel: "Eva López · MaxHangs (MAW)",
+        sourceURL: URL(string: "https://en-eva-lopez.blogspot.com/2018/05/fingerboard-training-guide-II-Maxhangs-SubHangs-and-Inthangs-methodology.html")!,
         provenance: .adapted,
         boardID: nil,
         steps: numbered([
             hangStep(
                 id: "max-hangs-1",
                 title: "Max hang · set 1",
-                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
-                accessory: "7s hang · 3m recovery · half crimp",
-                active: 7,
+                instruction: "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+                accessory: "10s hang · 3m recovery · half crimp · 3s in reserve",
+                active: 10,
                 rest: 180,
-                targets: [lattice20mmEdgePairTarget],
+                targets: [lopezMaxHangsEdgePairTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .double
@@ -3129,11 +3185,11 @@ enum LegacyPlanSeedCatalog {
             hangStep(
                 id: "max-hangs-2",
                 title: "Max hang · set 2",
-                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
-                accessory: "7s hang · 3m recovery · half crimp",
-                active: 7,
+                instruction: "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+                accessory: "10s hang · 3m recovery · half crimp · 3s in reserve",
+                active: 10,
                 rest: 180,
-                targets: [lattice20mmEdgePairTarget],
+                targets: [lopezMaxHangsEdgePairTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .double
@@ -3141,11 +3197,11 @@ enum LegacyPlanSeedCatalog {
             hangStep(
                 id: "max-hangs-3",
                 title: "Max hang · set 3",
-                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
-                accessory: "7s hang · 3m recovery · half crimp",
-                active: 7,
+                instruction: "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+                accessory: "10s hang · 3m recovery · half crimp · 3s in reserve",
+                active: 10,
                 rest: 180,
-                targets: [lattice20mmEdgePairTarget],
+                targets: [lopezMaxHangsEdgePairTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .double
@@ -3153,11 +3209,11 @@ enum LegacyPlanSeedCatalog {
             hangStep(
                 id: "max-hangs-4",
                 title: "Max hang · set 4",
-                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
-                accessory: "7s hang · 3m recovery · half crimp",
-                active: 7,
+                instruction: "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+                accessory: "10s hang · 3m recovery · half crimp · 3s in reserve",
+                active: 10,
                 rest: 180,
-                targets: [lattice20mmEdgePairTarget],
+                targets: [lopezMaxHangsEdgePairTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .double
@@ -3165,11 +3221,11 @@ enum LegacyPlanSeedCatalog {
             hangStep(
                 id: "max-hangs-5",
                 title: "Max hang · set 5",
-                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
-                accessory: "7s hang · half crimp",
-                active: 7,
+                instruction: "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+                accessory: "10s hang · half crimp · 3s in reserve",
+                active: 10,
                 rest: 0,
-                targets: [lattice20mmEdgePairTarget],
+                targets: [lopezMaxHangsEdgePairTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .double

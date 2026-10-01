@@ -333,6 +333,31 @@ final class InitialWeightSetupUITests: XCTestCase {
 }
 
 final class DualMaxHangsHighlightUITests: XCTestCase {
+    func testLopezEdgePickerChangesTheBeastmaker1000Preview() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "beastmaker-1000",
+            "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+            "HANGTEN_REVIEW_PLAN": "1",
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0"
+        ]
+        app.launch()
+        XCTAssertTrue(app.navigationBars["Plan"].waitForExistence(timeout: 20))
+        let picker = app.buttons["plan.maxHangs.edgePicker"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        picker.tap()
+        app.buttons["10 mm"].tap()
+        app.swipeUp()
+        let board = app.otherElements["boardModel.3d"]
+        XCTAssertTrue(board.waitForExistence(timeout: 30))
+        let selectedCue = app.staticTexts.containing(NSPredicate(format: "label CONTAINS[c] %@", "10 mm")).firstMatch
+        XCTAssertTrue(selectedCue.waitForExistence(timeout: 10))
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "López MaxHangs selected 10 mm Beastmaker 1000 edges"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
     func testDualBoardExposesTheResolvedMaxHangHold() throws {
         let app = XCUIApplication()
         // HANGTEN_REVIEW_WORKOUT was removed; plan detail is the stable surface that

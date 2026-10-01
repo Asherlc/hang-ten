@@ -1966,6 +1966,12 @@ enum BuiltInPlanLibraryDefinition {
             notes = [
                 "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
             ]
+        } else if plan.id == LegacyPlanSeedCatalog.maxHangs.id {
+            notes = [
+                "Adapted from Eva López's author-published MAW guidance: five sets of 10 seconds, a 3-second margin before failure, and 3-minute rests between sets.",
+                "Choose an 8–20 mm edge before starting. Five sets is a fixed session within the source's 3–5-set range; this is not the full 2012 study's periodized program.",
+                "Complete a progressive warm-up before this timed session; see the original study (doi:10.1080/19346182.2012.716061)."
+            ]
         } else if plan.id == LegacyPlanSeedCatalog.hoopersBetaIntroductory.id {
             notes = [
                 "Exact round order, counts, hold durations, rest intervals, and optional Round 5 guidance are retained.",

@@ -756,11 +756,26 @@ struct PlanDetailView: View {
     @State private var manualWeight = 0.0
     @State private var manualWeightIncludesBodyweight = false
 
-    private var currentPlan: TrainingPlan? {
+    @State private var selectedMaxHangsDepth: Double?
+
+    private var basePlan: TrainingPlan? {
         PlanDetailPlanResolver.resolve(
             capturedPlan: plan,
             eligiblePlans: store.plans
         )
+    }
+
+    private var maxHangsDepths: [Double] {
+        guard let basePlan else { return [] }
+        return MaxHangsEdgeSelection.availableDepths(for: basePlan, on: store.board(for: basePlan))
+    }
+
+    private var currentPlan: TrainingPlan? {
+        guard let basePlan else { return nil }
+        guard let depth = selectedMaxHangsDepth.flatMap({ maxHangsDepths.contains($0) ? $0 : nil }) ?? maxHangsDepths.first else {
+            return basePlan
+        }
+        return MaxHangsEdgeSelection.selecting(depth, in: basePlan, on: store.board(for: basePlan)) ?? basePlan
     }
 
     @MainActor
@@ -860,6 +875,27 @@ struct PlanDetailView: View {
                 .font(.system(size: 15, weight: .medium, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
+
+            if currentPlan.id == "research.max-hangs", !maxHangsDepths.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    SectionLabel(title: "Training edge")
+                    Picker("Edge depth", selection: Binding(
+                        get: { selectedMaxHangsDepth.flatMap { maxHangsDepths.contains($0) ? $0 : nil } ?? maxHangsDepths.first ?? 20 },
+                        set: { selectedMaxHangsDepth = $0 }
+                    )) {
+                        ForEach(maxHangsDepths, id: \.self) { depth in
+                            Text("\(depth, format: .number) mm").tag(depth)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .accessibilityIdentifier("plan.maxHangs.edgePicker")
+                    Text("Choose one edge size for this session. Adjust added weight to keep 3 seconds in reserve. Warm up progressively before starting.")
+                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .hangCard()
+            }
 
             initialWeightSetupCard
 
