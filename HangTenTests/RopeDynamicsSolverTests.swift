@@ -5,19 +5,19 @@ import simd
 #endif
 
 final class RopeDynamicsSolverTests: XCTestCase {
-    private func attachedFixture(orientation: simd_quatd, translation: SIMD3<Double>, count: Int = 2, boardMass: Double = 1)
+    private func attachedFixture(orientation: simd_quatd, translation: SIMD3<Double>, count: Int = 2, boardMass: Double = 1, leadLength: Double = 0.1)
         throws -> (RopePhysicsInput, RopeSimulationState, RopeTriangleCollider) {
         let locals = count == 1 ? [SIMD3<Double>(0, 0.02, 0.008)] :
             [SIMD3<Double>(-0.008, 0.02, 0.008), SIMD3<Double>(0.008, 0.02, 0.008)]
         let chains = locals.enumerated().map { index, local in
-            let end = orientation.act(local) + translation, start = end + SIMD3<Double>(0, 0.1, 0)
+            let end = orientation.act(local) + translation, start = end + SIMD3<Double>(0, leadLength, 0)
             return RopeChainState(id: "lead-\(index)", radius: 0.001, linearMass: 0.01,
-                restLengths: [0.1], positions: [start, end], previousPositions: [start, end],
+                restLengths: [leadLength], positions: [start, end], previousPositions: [start, end],
                 velocities: [.zero, .zero], supports: [0: start], attachments: [1: local], portals: [:], channelSegments: [:])
         }
         let sources = chains.map { chain in
             RopePhysicsRope(id: chain.id, baselineRadius: chain.radius, radius: chain.radius,
-                restLength: 0.1, linearMass: chain.linearMass,
+                restLength: leadLength, linearMass: chain.linearMass,
                 nodes: [RopeGraphNode(id: "start", kind: "support", point: chain.positions[0], portalID: nil),
                         RopeGraphNode(id: "end", kind: "attachment", point: chain.attachments[1], portalID: nil)],
                 edges: [RopeGraphEdge(from: "start", to: "end", kind: "free", channelID: nil, winding: nil)])
@@ -56,6 +56,59 @@ final class RopeDynamicsSolverTests: XCTestCase {
         XCTAssertLessThan(simd_distance(frame.boardTranslation, SIMD3(0, 0, 0.03)), 0.0002)
         XCTAssertTrue(frame.metrics.geometryAccepted)
         XCTAssertEqual(solver.state.ropes[0].positions[0], initial.ropes[0].positions[0])
+    }
+
+    func testInfeasibleTiltRollsBackAndLaterValidTargetStillWorks() throws {
+        let q = simd_quatd(angle: 0, axis: SIMD3<Double>(1,0,0))
+        let (input, state, collider) = try attachedFixture(orientation: q, translation: .zero, leadLength: 0.00001)
+        var solver = try RopeDynamicsSolver(input: input, state: state, collider: collider)
+        XCTAssertThrowsError(try solver.step(dt: 1.0/240, targetOrientation: simd_quatd(angle: .pi/2, axis: SIMD3(0,1,0)))) {
+            XCTAssertTrue($0.localizedDescription.contains("Bounded solve"))
+        }
+        assertUnchanged(solver.state, state)
+        let frame = try solver.step(dt: 1.0/960, targetOrientation: q)
+        XCTAssertTrue(frame.metrics.geometryAccepted)
+    }
+
+    func testLateralSweptWoodTraversalRejectsClearEndpointTeleport() throws {
+        let points = [SIMD3<Double>(0,-0.1,0), SIMD3<Double>(0,0.1,0)]
+        let chain = RopeInterContactTests.chain("fixed", points, supports: [0:points[0],1:points[1]], radius: 0.001)
+        let source = RopePhysicsRope(id: chain.id, baselineRadius: chain.radius, radius: chain.radius,
+            restLength: 0.2, linearMass: chain.linearMass,
+            nodes: [RopeGraphNode(id: "a", kind: "support", point: points[0], portalID: nil),
+                    RopeGraphNode(id: "b", kind: "support", point: points[1], portalID: nil)],
+            edges: [RopeGraphEdge(from: "a", to: "b", kind: "free", channelID: nil, winding: nil)])
+        let mesh = RopeTriangleColliderTests.box(minimum: SIMD3(repeating: -0.01), maximum: SIMD3(repeating: 0.01))
+        let input = RopePhysicsInput(modelSHA256: "fixture", sourceSHA256: "fixture", collision: mesh,
+            portals: [], channels: [], profiles: [RopePhysicsProfile(id: "sweep", presentationID: "sweep", instanceID: nil, boardMass: 1, ropes: [source])])
+        let collider = try RopeTriangleCollider(input: input)
+        let state = RopeSimulationState(profileID: "sweep", boardMass: 1, boardTranslation: SIMD3(-0.02,0,0),
+            boardLinearVelocity: SIMD3(10,0,0), orientation: simd_quatd(angle: 0, axis: SIMD3<Double>(1,0,0)), ropes: [chain])
+        var end = state
+        end.boardTranslation.x = 0.02
+        XCTAssertNil(collider.segmentContact(from: state.boardPoint(points[0]), to: state.boardPoint(points[1]), radius: chain.radius))
+        XCTAssertNil(collider.segmentContact(from: end.boardPoint(points[0]), to: end.boardPoint(points[1]), radius: chain.radius))
+        XCTAssertNotNil(collider.sweptSegmentContact(previousStart: state.boardPoint(points[0]), previousEnd: state.boardPoint(points[1]),
+            start: end.boardPoint(points[0]), end: end.boardPoint(points[1]), radius: chain.radius))
+        var solver = try RopeDynamicsSolver(input: input, state: state, collider: collider)
+        XCTAssertThrowsError(try solver.step(dt: 1.0/240, targetOrientation: state.orientation)) {
+            XCTAssertTrue($0.localizedDescription.contains("Bounded solve"))
+            print("lateral swept-wood rejection: \($0)")
+        }
+        assertUnchanged(solver.state, state)
+    }
+
+    private func assertUnchanged(_ actual: RopeSimulationState, _ expected: RopeSimulationState,
+        file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertEqual(actual.boardTranslation, expected.boardTranslation, file: file, line: line)
+        XCTAssertEqual(actual.boardLinearVelocity, expected.boardLinearVelocity, file: file, line: line)
+        XCTAssertEqual(actual.orientation.vector, expected.orientation.vector, file: file, line: line)
+        for (a,b) in zip(actual.ropes,expected.ropes) {
+            XCTAssertEqual(a.positions,b.positions,file:file,line:line)
+            XCTAssertEqual(a.previousPositions,b.previousPositions,file:file,line:line)
+            XCTAssertEqual(a.velocities,b.velocities,file:file,line:line)
+            XCTAssertEqual(a.restLengths,b.restLengths,file:file,line:line)
+        }
     }
 
     func testLateralBoardVelocityPreventsSettling() throws {
@@ -252,6 +305,18 @@ final class RopeDynamicsSolverTests: XCTestCase {
         for row in contacts {
             XCTAssertGreaterThanOrEqual(row.residual + simd_dot(row.boardGradient, correction.boardCorrection), -1e-8)
         }
+        var prediction = state
+        prediction.boardTranslation += SIMD3(0.000003,0,-0.000004)
+        for r in prediction.ropes.indices {
+            for (i,local) in prediction.ropes[r].attachments { prediction.ropes[r].positions[i] = prediction.worldPoint(local) }
+        }
+        let moved = try solver.contactCorrection(rows: equalities+contacts, weights: weights, prediction: prediction)
+        let direct = try solver.constraintBackbone(rows: equalities+[contacts[1]], weights: weights, prediction: prediction)
+        XCTAssertEqual(direct.border.count,4,"Nonlocal contact must follow X/Y/Z")
+        XCTAssertLessThan(simd_distance(moved.boardCorrection,SIMD3(direct.border[0],direct.border[1],direct.border[2])),1e-7)
+        for row in contacts {
+            XCTAssertGreaterThanOrEqual(row.residual+simd_dot(row.boardGradient,moved.boardCorrection),-1e-8)
+        }
     }
 
     private func trustChain(_ lengths:[Double],supports:[Int:SIMD3<Double>]=[:],attachments:[Int:SIMD3<Double>]=[:])->RopeChainState {
@@ -329,12 +394,7 @@ final class RopeDynamicsSolverTests: XCTestCase {
             }
             XCTAssertTrue(reason.hasPrefix("Bounded solve could not resolve"))
         }
-        XCTAssertEqual(solver.state.boardTranslation, state.boardTranslation)
-        XCTAssertEqual(solver.state.orientation.vector, state.orientation.vector)
-        XCTAssertEqual(solver.state.ropes[0].previousPositions, state.ropes[0].previousPositions)
-        XCTAssertEqual(solver.state.ropes[0].restLengths, state.ropes[0].restLengths)
-        XCTAssertEqual(solver.state.ropes[0].positions, points)
-        XCTAssertEqual(solver.state.boardLinearVelocity, state.boardLinearVelocity)
+        assertUnchanged(solver.state, state)
     }
 
     func testConnectedNeighborhoodRejectsCrossingAtEarlierSegmentEndpoint() {
@@ -416,9 +476,7 @@ final class RopeDynamicsSolverTests: XCTestCase {
             XCTAssertTrue(error.localizedDescription.contains("Bounded solve could not resolve"), "\(error)")
             XCTAssertTrue(error.localizedDescription.contains("Lost ordered portal crossing"), "\(error)")
         }
-        XCTAssertEqual(solver.state.ropes[0].positions,state.ropes[0].positions)
-        XCTAssertEqual(solver.state.boardTranslation.y,state.boardTranslation.y)
-        XCTAssertEqual(solver.state.orientation.vector,state.orientation.vector)
+        assertUnchanged(solver.state, state)
     }
 
     func testTautAttachmentTransfersBoardLoadWithoutStretch() throws {
