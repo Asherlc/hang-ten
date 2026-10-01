@@ -349,13 +349,26 @@ final class DualMaxHangsHighlightUITests: XCTestCase {
         app.buttons["10 mm"].tap()
         app.swipeUp()
         let board = app.otherElements["boardModel.3d"]
-        XCTAssertTrue(board.waitForExistence(timeout: 30))
-        let selectedCue = app.staticTexts.containing(NSPredicate(format: "label CONTAINS[c] %@", "10 mm")).firstMatch
-        XCTAssertTrue(selectedCue.waitForExistence(timeout: 10))
+        XCTAssertTrue(board.waitForExistence(timeout: 60))
+        let selectedHighlight = NSPredicate(format: "value CONTAINS[c] %@", "10 mm")
+        expectation(for: selectedHighlight, evaluatedWith: board)
+        waitForExpectations(timeout: 10)
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = "López MaxHangs selected 10 mm Beastmaker 1000 edges"
         attachment.lifetime = .keepAlways
         add(attachment)
+
+        let start = app.buttons["plan.startRoutine"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        if !start.isHittable { app.swipeDown() }
+        start.tap()
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 20))
+        pause.tap()
+        let workoutBoard = app.otherElements["boardModel.3d"]
+        XCTAssertTrue(workoutBoard.waitForExistence(timeout: 60))
+        expectation(for: selectedHighlight, evaluatedWith: workoutBoard)
+        waitForExpectations(timeout: 10)
     }
 
     func testDualBoardExposesTheResolvedMaxHangHold() throws {

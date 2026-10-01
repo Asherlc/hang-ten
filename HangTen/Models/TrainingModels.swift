@@ -2018,8 +2018,9 @@ struct TrainingPlan: Identifiable, Hashable {
 /// plan retains a semantic range; the session narrows it without changing the
 /// catalog or recording a different hold from the one shown in the preview.
 enum MaxHangsEdgeSelection {
-    static func availableDepths(for plan: TrainingPlan, on board: BoardRevision) -> [Double] {
-        guard plan.id == "research.max-hangs" else { return [] }
+    /// Resolve each eligible edge once so plan views can retain these snapshots.
+    static func resolvedPlans(for plan: TrainingPlan, on board: BoardRevision) -> [Double: TrainingPlan] {
+        guard plan.id == "research.max-hangs" else { return [:] }
         let depths = Set(board.contacts.compactMap { contact -> Double? in
             guard contact.kind == .edge,
                   case .range(let depth) = contact.depth,
@@ -2027,7 +2028,13 @@ enum MaxHangsEdgeSelection {
                   (8...20).contains(depth.minimum) else { return nil }
             return depth.minimum
         })
-        return depths.filter { selecting($0, in: plan, on: board) != nil }.sorted(by: >)
+        return depths.reduce(into: [:]) { resolved, depth in
+            resolved[depth] = selecting(depth, in: plan, on: board)
+        }
+    }
+
+    static func availableDepths(for plan: TrainingPlan, on board: BoardRevision) -> [Double] {
+        resolvedPlans(for: plan, on: board).keys.sorted(by: >)
     }
 
     static func selecting(_ depth: Double, in plan: TrainingPlan, on board: BoardRevision) -> TrainingPlan? {
@@ -3060,12 +3067,6 @@ enum LegacyPlanSeedCatalog {
             step.withNumber(index + 1)
         }
     }
-
-    /// Source-specific paired 20 mm edges for Lattice-derived protocols.
-    private static let lattice20mmEdgePairTarget = ContactRequirement.edge(
-        depth: .range(.init(minimum: 20, maximum: 20)),
-        selection: .bilateralPair
-    )
 
     /// López's MAW guidance permits a chosen 8–20 mm edge. The resolver's
     /// 1 mm tolerance means 9–19 matches measured point depths from 8–20.

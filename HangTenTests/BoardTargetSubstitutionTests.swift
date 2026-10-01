@@ -5,12 +5,18 @@ final class ContactResolverTests: XCTestCase {
     func testLopezMaxHangsOffersBothBeastmakersAndRecordsChosenEdges() throws {
         for (boardID, depth, ids) in [
             ("beastmaker-1000", 20.0, Set(["pocket-bottom-outer-left", "pocket-bottom-outer-right"])),
+            ("beastmaker-1000", 10.0, Set(["pocket-top-outer-left", "pocket-top-outer-right"])),
             ("beastmaker-2000", 15.0, Set(["front-lower-1", "front-lower-9"]))
         ] {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
             let plan = PlanCatalog.maxHangs
             XCTAssertTrue(MaxHangsEdgeSelection.availableDepths(for: plan, on: board).contains(depth))
-            let selected = try XCTUnwrap(MaxHangsEdgeSelection.selecting(depth, in: plan, on: board))
+            let selected = try XCTUnwrap(MaxHangsEdgeSelection.resolvedPlans(for: plan, on: board)[depth])
+            let accessibleCue = try XCTUnwrap(BoardModelSurface.highlightedContactCue(
+                for: board.contacts,
+                highlightedContactIDs: ids
+            ))
+            XCTAssertTrue(accessibleCue.contains("\(Int(depth)) mm"))
             for step in selected.steps where !step.isRestStep {
                 XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: step, on: board)), ids)
             }

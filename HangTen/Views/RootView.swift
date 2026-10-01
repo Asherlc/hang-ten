@@ -742,6 +742,11 @@ private enum PlanDetailResolutionError: LocalizedError {
     }
 }
 
+private struct MaxHangsEdgeResolutionInput: Hashable {
+    let plan: TrainingPlan
+    let board: BoardRevision
+}
+
 struct PlanDetailView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
@@ -757,6 +762,8 @@ struct PlanDetailView: View {
     @State private var manualWeightIncludesBodyweight = false
 
     @State private var selectedMaxHangsDepth: Double?
+    @State private var resolvedMaxHangsInput: MaxHangsEdgeResolutionInput?
+    @State private var resolvedMaxHangsPlans: [Double: TrainingPlan] = [:]
 
     private var basePlan: TrainingPlan? {
         PlanDetailPlanResolver.resolve(
@@ -765,17 +772,23 @@ struct PlanDetailView: View {
         )
     }
 
+    private var maxHangsResolutionInput: MaxHangsEdgeResolutionInput? {
+        guard let basePlan, basePlan.id == "research.max-hangs" else { return nil }
+        return MaxHangsEdgeResolutionInput(plan: basePlan, board: store.board(for: basePlan))
+    }
+
     private var maxHangsDepths: [Double] {
-        guard let basePlan else { return [] }
-        return MaxHangsEdgeSelection.availableDepths(for: basePlan, on: store.board(for: basePlan))
+        guard resolvedMaxHangsInput == maxHangsResolutionInput else { return [] }
+        return resolvedMaxHangsPlans.keys.sorted(by: >)
     }
 
     private var currentPlan: TrainingPlan? {
         guard let basePlan else { return nil }
-        guard let depth = selectedMaxHangsDepth.flatMap({ maxHangsDepths.contains($0) ? $0 : nil }) ?? maxHangsDepths.first else {
-            return basePlan
-        }
-        return MaxHangsEdgeSelection.selecting(depth, in: basePlan, on: store.board(for: basePlan)) ?? basePlan
+        guard basePlan.id == "research.max-hangs" else { return basePlan }
+        guard resolvedMaxHangsInput == maxHangsResolutionInput else { return nil }
+        let depth = selectedMaxHangsDepth.flatMap { resolvedMaxHangsPlans[$0] != nil ? $0 : nil }
+            ?? maxHangsDepths.first
+        return depth.flatMap { resolvedMaxHangsPlans[$0] } ?? basePlan
     }
 
     @MainActor
@@ -809,9 +822,17 @@ struct PlanDetailView: View {
                     .padding(.top, 18)
                     .padding(.bottom, 116)
                 }
+            } else if maxHangsResolutionInput != resolvedMaxHangsInput {
+                ProgressView()
             } else {
                 unavailableContent
             }
+        }
+        .onChange(of: maxHangsResolutionInput, initial: true) { _, input in
+            resolvedMaxHangsPlans = input.map {
+                MaxHangsEdgeSelection.resolvedPlans(for: $0.plan, on: $0.board)
+            } ?? [:]
+            resolvedMaxHangsInput = input
         }
         .background(Color.hangBackground)
         .navigationTitle("Plan")

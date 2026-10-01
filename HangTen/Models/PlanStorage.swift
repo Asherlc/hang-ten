@@ -1470,10 +1470,10 @@ enum PlanLibraryValidator {
         return step.phase == .rest
     }
 
-    /// The reported Megos protocol defines a 3-second recovery after every
-    /// 7-second work interval, including its final repetition. Preserve that
-    /// source-required terminal recovery rather than silently dropping it to
-    /// satisfy the usual end-on-work-step convention.
+    /// Megos retains 3 seconds of recovery after every 7-second effort;
+    /// Abrahangs retains 50 seconds after every 10-second effort. Preserve
+    /// both source-required final rests rather than dropping them to satisfy
+    /// the usual end-on-work-step convention.
     private static func allowsSourceRequiredTerminalRest(
         in plan: PlanDefinition,
         terminalStep: WorkoutStepDefinition
