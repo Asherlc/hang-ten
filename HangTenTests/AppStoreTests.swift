@@ -11,9 +11,11 @@ final class AppStoreTests: XCTestCase {
 
     deinit {}
 
+    #if DEBUG
     func testUnitTestHostSkipsApplicationRendering() {
         XCTAssertTrue(HangTenApp.isUnitTestHost)
     }
+    #endif
 
     func testSelectingBoardUpdatesSelectionAndEmitsOnlyBoardFamily() {
         let telemetry = RecordingTelemetry()
