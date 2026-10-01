@@ -3,9 +3,10 @@ import Foundation
 /// Immutable source storage, not an oversized working QP. Every original row
 /// is captured/validated once and participates in every full affine scan.
 struct PackedFrozenRows {
-    private let offsets: [Int], indices: [Int], coefficients: [Double]
-    private let residuals: [Double], borders: [Double], groups: [Int]
-    private let borderCount: Int, size: Int
+    // Immutable tool-internal storage also read by the affine certificate tree.
+    let offsets: [Int], indices: [Int], coefficients: [Double]
+    let residuals: [Double], borders: [Double], groups: [Int]
+    let borderCount: Int, size: Int
 
     init(source: FrozenContactStream, size: Int, borderCount: Int, equalities: Set<Int>) throws {
         guard source.count >= 0, source.count <= 8_000_000, size > 0, borderCount >= 0,

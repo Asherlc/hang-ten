@@ -1,5 +1,25 @@
 import XCTest
 final class PrimalTests:XCTestCase {
+ #if SCREEN_GLOBAL_SCHUR
+ func testCondensedRecoveryCannotHideOriginalOrderedGap() throws {
+  var system=try RopeBandedSystem(size:2,bandwidth:0)
+  try system.addSymmetric(row:0,column:0,value:1)
+  try system.addSymmetric(row:1,column:1,value:1)
+  let factor=try system.primalPrepared(borderColumns:[],borderMatrix:[])
+  let row=RopeLinearContact(indices:[0,1],coefficients:[1,1],border:[],residual:1e16)
+  // Grouping J*x before C cancels the 0.5 gap. A tiny barrier force can then
+  // appear complementary while the original ordered affine row is clear.
+  do {
+   let answer=try PrimalContactIP.solve(factor:factor,base:[-1e16,0.5],border:[],contacts:[row])
+   var gap=row.residual-1e-8*answer.multipliers[0]
+   for k in row.indices.indices {gap += row.coefficients[k]*answer.base[row.indices[k]]}
+   XCTAssertGreaterThanOrEqual(gap,-1e-10)
+   XCTAssertLessThanOrEqual(abs(answer.multipliers[0]*gap),1e-14)
+  } catch RopePhysicsError.invalid(_) {
+   // Condensation may reject when its arithmetic cannot certify the source.
+  }
+ }
+ #endif
  func testIndependentLoopsAndBoardAgainstFullKKT() throws {
   var system=try RopeBandedSystem(size:2,bandwidth:0)
   try system.addSymmetric(row:0,column:0,value:2)
@@ -250,4 +270,9 @@ final class PrimalTests:XCTestCase {
 
 }
 let suite=PrimalTests.defaultTestSuite;suite.run()
-guard let result=suite.testRun,result.executionCount==19,result.totalFailureCount==0 else {exit(1)}
+#if SCREEN_GLOBAL_SCHUR
+let expectedTests=20
+#else
+let expectedTests=19
+#endif
+guard let result=suite.testRun,result.executionCount==expectedTests,result.totalFailureCount==0 else {exit(1)}

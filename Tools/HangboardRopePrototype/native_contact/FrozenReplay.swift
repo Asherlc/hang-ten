@@ -47,7 +47,7 @@ let contacts=FrozenContactStream(count:contactsIDs.count,row:{offset in
  return RopeLinearContact(indices:t.filter{$0.0<size}.map{$0.0},coefficients:t.filter{$0.0<size}.map{$0.1},border:[row.board],residual:row.residual)
 })
 
-func cold() throws -> (RopeContactSystem.Solution,[[String:Any]]) {
+func cold() throws -> (RopeContactSystem.Solution,[[String:Any]],[[String:Double]],[[String:Double]]) {
 var system=try RopeBandedSystem(size:size,bandwidth:bandwidth)
 var rhs=Array(repeating:0.0,count:size),column=rhs,boardMass=doc["boardMass"] as! Double
 let boardRHS = -boardMass*((doc["boardHeight"] as! Double)-(doc["predictionHeight"] as! Double))
@@ -80,31 +80,49 @@ for id in eq {
  let factor=try system.primalPrepared(borderColumns:[column],borderMatrix:[[boardMass]],equalities:eq.map{eqVars[$0]!})
  let initial=try factor.solve(rhs:rhs,borderRHS:[boardRHS])
  var trace:[[String:Any]]=[]
+ var certificates:[[String:Double]]=[]
+ var solverStatistics:[[String:Double]]=[]
  let result=try StreamedContactAdmission.solve(factor:factor,base:initial.base,border:initial.border,contacts:contacts,
   packSource:ProcessInfo.processInfo.environment["HANGTEN_PACKED_CONTACT_SOURCE"]=="1",
+  regionSource:ProcessInfo.processInfo.environment["HANGTEN_AFFINE_REGION_CERTIFICATES"]=="1",
+  crossCheckRegions:ProcessInfo.processInfo.environment["HANGTEN_AFFINE_REGION_CROSS_CHECK"]=="1",
+  observeCertificate:{certificates.append($0)},
+  observeSolve:{solverStatistics.append($0)},
   observe:{iteration,selected,added in trace.append(["admission":iteration,"selected":selected,"added":added])})
- return (result,trace)
+ return (result,trace,certificates,solverStatistics)
 }
-var timings:[Double]=[],failure:String?,last:[String:Any]=[:]
+var timings:[Double]=[],failure:String?,last:[String:Any]=[:],regionRuns:[[[String:Double]]]=[],solverRuns:[[[String:Double]]]=[]
+var solutions:[[String:Any]]=[]
 for run in 0..<repetitions {
  let start=ProcessInfo.processInfo.systemUptime
  do {
-  let (solution,trace)=try cold()
+  let (solution,trace,certificates,solverStatistics)=try cold()
   let seconds=ProcessInfo.processInfo.systemUptime-start
   timings.append(seconds)
+  regionRuns.append(certificates)
+  solverRuns.append(solverStatistics)
   var x:[Double]=[]
   for r in weights.indices {for i in weights[r].indices where weights[r][i]>0 {
    for axis in 0..<3 {x.append(solution.base[vars[r][i][axis]])}
   }}
   x.append(solution.border[0])
-  last=["x":x,"lambda":eq.map{solution.base[eqVars[$0]!]},"mu":solution.multipliers.map{-$0},"trace":trace]
+  let lambda=eq.map{solution.base[eqVars[$0]!]}
+  // Retain every accepted cold solution for independent posthoc certification.
+  // Exactly zero source forces are represented sparsely, without dropping rows.
+  let entries=solution.multipliers.indices.filter{solution.multipliers[$0] != 0}.map{
+    [Double($0),-solution.multipliers[$0]]
+  }
+  solutions.append(["x":x,"lambda":lambda,"forceEntries":entries])
+  last=["x":x,"lambda":lambda,"mu":solution.multipliers.map{-$0},"trace":trace]
   print("cold",run,"seconds",seconds,"selected",trace.last!);fflush(stdout)
  } catch {
   failure=String(describing:error);print("rejected",failure!);fflush(stdout);break
  }
 }
 let report:[String:Any]=["owner":owner,"scope":"cold equality matrix/factor plus streamed row construction/discovery/solve/full affine certification; frozen input decoding/references, geometry and mesh excluded",
- "runtimeAdoption":false,"inputPath":inputPath,"sourceRows":contacts.count,"times":timings,"failure":failure as Any? ?? NSNull(),"last":last]
+ "runtimeAdoption":false,"inputPath":inputPath,"sourceRows":contacts.count,"times":timings,
+ "regionRuns":regionRuns,"solverRuns":solverRuns,"solutions":solutions,
+ "failure":failure as Any? ?? NSNull(),"last":last]
 try JSONSerialization.data(withJSONObject:report,options:[.prettyPrinted,.sortedKeys]).write(to:URL(fileURLWithPath:outputPath))
 if failure != nil {exit(1)}
 private struct DiagnosticJSON:Decodable {

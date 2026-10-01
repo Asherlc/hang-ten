@@ -10,6 +10,7 @@ import argparse
 import ctypes
 import errno
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -168,6 +169,14 @@ def main():
                         help="capture/validate each frozen row once inside the clock, then scan packed arrays")
     parser.add_argument("--complementarity", action="store_true",
                         help="experimental globalized Fischer-Burmeister solve of the original coupled KKT")
+    parser.add_argument("--regions", action="store_true",
+                        help="experimental outward-rounded affine region certificates; implies packed source")
+    parser.add_argument("--region-checks", action="store_true",
+                        help="cross-check every region query against every original packed row inside the cold clock")
+    parser.add_argument("--global-schur", action="store_true",
+                        help="experimental simultaneous contact solve with exact coupled chain/height responses")
+    parser.add_argument("--schur-fb", action="store_true",
+                        help="reproduce the rejected condensed Fischer-Burmeister globalization; requires --global-schur")
     args = parser.parse_args()
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789-_" for c in args.label):
         parser.error("label must use lowercase letters, numbers, hyphen or underscore")
@@ -175,6 +184,12 @@ def main():
         parser.error("cold replay count must be between 1 and 50")
     if args.mode == "replay" and args.frozen is None:
         parser.error("replay requires --frozen")
+    if args.region_checks and not args.regions:
+        parser.error("--region-checks requires --regions")
+    if args.global_schur and args.complementarity:
+        parser.error("select either --global-schur or --complementarity")
+    if args.schur_fb and not args.global_schur:
+        parser.error("--schur-fb requires --global-schur")
     workspace = Path(os.environ.get("PASEO_WORKTREE_PATH", REPO)).resolve()
     owner = workspace.name
     if workspace != REPO or os.environ.get("HANGTEN_CONTACT_SCREEN_OWNER") != owner:
@@ -190,10 +205,10 @@ def main():
         directory.mkdir(parents=True, exist_ok=True)
     files = {
         "BandSnapshot.swift": Path("HangTen/Models/RopeBandedSystem.swift"),
-        "main.swift": SOURCE / ("Fixtures.swift" if args.mode == "fixtures" else "FrozenReplay.swift"),
+        "main.swift": SOURCE / (("RegionFixtures.swift" if args.regions else "Fixtures.swift") if args.mode == "fixtures" else "FrozenReplay.swift"),
     }
     targets = [*files, "compile.log", "run.log", "provenance.json", "replay.json", "validation.json",
-               "module-cache", f"{owner}-native-contact-probe"]
+               "schur-failure.json", "source-inputs", "module-cache", f"{owner}-native-contact-probe"]
     for target in targets:
         if (output / target).is_symlink():
             parser.error("owned output must not be a symlink")
@@ -203,25 +218,52 @@ def main():
     (output / "BandSnapshot.swift").write_text(band.read_text() + "\n" + (SOURCE / "BandSnapshot.swift").read_text())
     (output / "main.swift").write_text(files["main.swift"].read_text())
     core = [REPO / "HangTen/Models/RopePhysicsDescriptor.swift", REPO / "HangTen/Models/RopeContactSystem.swift"]
-    backend = "ContactComplementarity.swift" if args.complementarity else "ContactInteriorPoint.swift"
-    native = [SOURCE / name for name in [backend, "SparseNewtonPattern.swift", "FrozenContactStream.swift", "PackedFrozenRows.swift"]]
+    backend = "GlobalSchurComplementarity.swift" if args.global_schur else ("ContactComplementarity.swift" if args.complementarity else "ContactInteriorPoint.swift")
+    native = [SOURCE / name for name in [backend, "SparseNewtonPattern.swift", "FrozenContactStream.swift", "PackedFrozenRows.swift", "AffineRegionCertificate.swift"]]
     sources = [*core, output / "BandSnapshot.swift", *native, output / "main.swift"]
+    # Compile exactly the retained bytes rather than mutable repository paths.
+    # Later experiments can change the tool without orphaning past provenance.
+    captured = output / "source-inputs"
+    captured.mkdir(exist_ok=True)
+    source_hashes, source_snapshots, compile_sources = {}, {}, []
+    validator = SOURCE.parent / "sparse_contact_screen.py"
+    for source in [*sources, Path(__file__), Path(__file__).with_suffix(".sh"), validator]:
+        snapshot = captured / source.name
+        if snapshot.is_symlink():
+            parser.error("owned source snapshot must not be a symlink")
+        data = source.read_bytes()
+        snapshot.write_bytes(data)
+        relative = str(source.relative_to(REPO))
+        source_hashes[relative] = hashlib.sha256(data).hexdigest()
+        source_snapshots[relative] = str(snapshot.relative_to(REPO))
+        if source in sources:
+            compile_sources.append(snapshot)
     binary = output / f"{owner}-native-contact-probe"
     compile_command = ["xcrun", "swiftc", "-O", "-whole-module-optimization", "-Xcc", "-DACCELERATE_NEW_LAPACK",
                        "-module-cache-path", str(output / "module-cache")]
+    if args.global_schur:
+        compile_command += ["-D", "SCREEN_GLOBAL_SCHUR"]
     if args.mode == "fixtures":
         developer = Path("/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer")
         frameworks, libraries = developer / "Library/Frameworks", developer / "usr/lib"
         compile_command += ["-F", str(frameworks), "-I", str(libraries), "-L", str(libraries),
                             "-Xlinker", "-rpath", "-Xlinker", str(frameworks),
                             "-Xlinker", "-rpath", "-Xlinker", str(libraries), "-lXCTestSwiftSupport"]
-    compile_command += [*[str(p) for p in sources], "-o", str(binary)]
+    compile_command += [*[str(p) for p in compile_sources], "-o", str(binary)]
     environment = dict(os.environ, CLANG_MODULE_CACHE_PATH=str(output / "module-cache"),
                        PYTHONPYCACHEPREFIX=str(root / "pycache"),
-                       HANGTEN_PACKED_CONTACT_SOURCE="1" if args.packed else "0")
-    provenance = {"owner": owner, "runtimeAdoption": False, "sourceSHA256": {str(p.relative_to(REPO)): digest(p) for p in sources},
-                  "compileCommand": compile_command, "mode": args.mode, "packedSource": args.packed,
-                  "complementarityBackend": args.complementarity}
+                       HANGTEN_PACKED_CONTACT_SOURCE="1" if args.packed or args.regions else "0",
+                       HANGTEN_AFFINE_REGION_CERTIFICATES="1" if args.regions else "0",
+                       HANGTEN_AFFINE_REGION_CROSS_CHECK="1" if args.region_checks else "0",
+                       HANGTEN_SCHUR_METHOD="fischer-burmeister" if args.schur_fb else "interior-point",
+                       HANGTEN_SCHUR_FAILURE_OUTPUT=str(output / "schur-failure.json"))
+    provenance = {"owner": owner, "runtimeAdoption": False, "sourceSHA256": source_hashes,
+                  "sourceSnapshots": source_snapshots,
+                  "compileCommand": compile_command, "mode": args.mode, "packedSource": args.packed or args.regions,
+                  "complementarityBackend": args.complementarity, "affineRegionCertificates": args.regions,
+                  "globalSchurBackend": args.global_schur,
+                  "globalSchurMethod": ("fischer-burmeister" if args.schur_fb else "interior-point") if args.global_schur else None,
+                  "fullScanRegionChecks": args.region_checks}
     if args.frozen:
         args.frozen = args.frozen.resolve()
         provenance["frozenSHA256"] = digest(args.frozen)
@@ -248,38 +290,64 @@ def main():
             print((output / "run.log").read_text())
             return 0
         import numpy as np
-        sys.path.insert(0, str(SOURCE.parent))
-        from sparse_contact_screen import load_frozen, residuals
+        spec = importlib.util.spec_from_file_location("captured_sparse_contact_screen", captured / validator.name)
+        validation_module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = validation_module
+        spec.loader.exec_module(validation_module)
+        load_frozen, residuals = validation_module.load_frozen, validation_module.residuals
         raw = json.loads((output / "replay.json").read_text())
         p = load_frozen(args.frozen)
         answer = raw["last"]
-        x, lam, mu = [np.asarray(answer[key]) for key in ["x", "lambda", "mu"]]
-        if raw["failure"] is not None or not all(np.all(np.isfinite(v)) for v in [x, lam, mu]):
+        if raw["failure"] is not None or len(raw["solutions"]) != len(raw["times"]) or not raw["solutions"]:
             raise ValueError("nonfinite or rejected replay")
-        slack = np.maximum(0, p.a @ x + p.cc + p.epsilon * mu)
-        measured = residuals(p, x, lam, mu, slack)
         limits = {"stationarity": 1e-10, "regularizedEquality": 1e-10, "regularizedContact": 1e-10,
                   "regularizedComplementarity": 1e-14, "dualViolation": 1e-12,
                   "slackViolation": 0, "allRowFeasibility": 1e-8}
-        numerical = all(measured[key] <= limit for key, limit in limits.items())
+        numerical, measured = True, {}
         difference = None
-        if args.oracle:
-            expected = np.asarray(json.loads(args.oracle.read_text()))
-            if expected.shape != x.shape or not np.all(np.isfinite(expected)):
-                raise ValueError("invalid oracle dimensions or values")
-            difference = float(np.max(abs(x - expected)))
-            numerical = numerical and difference <= 1e-6
+        expected = np.asarray(json.loads(args.oracle.read_text())) if args.oracle else None
+        for cold in raw["solutions"]:
+            x, lam = np.asarray(cold["x"]), np.asarray(cold["lambda"])
+            mu, seen = np.zeros(len(p.cc)), set()
+            for raw_id, force in cold["forceEntries"]:
+                index = int(raw_id)
+                if index != raw_id or not 0 <= index < len(mu) or index in seen:
+                    raise ValueError("invalid sparse source force evidence")
+                seen.add(index)
+                mu[index] = force
+            if not all(np.all(np.isfinite(v)) for v in [x, lam, mu]):
+                raise ValueError("nonfinite replay solution")
+            slack = np.maximum(0, p.a @ x + p.cc + p.epsilon * mu)
+            current = residuals(p, x, lam, mu, slack)
+            numerical = numerical and all(current[key] <= limit for key, limit in limits.items())
+            for key, value in current.items():
+                measured[key] = max(measured.get(key, value), value)
+            if expected is not None:
+                if expected.shape != x.shape or not np.all(np.isfinite(expected)):
+                    raise ValueError("invalid oracle dimensions or values")
+                error = float(np.max(abs(x - expected)))
+                difference = max(difference or 0, error)
+                numerical = numerical and error <= 1e-6
         times = raw["times"]
         p95 = float(np.quantile(times, .95, method="higher")) if len(times) == 50 else None
         result = {"owner": owner, "runtimeAdoption": False, "coldRuns": len(times), "numericalAccepted": bool(numerical),
-                  "packedSource": args.packed,
+                  "independentlyCertifiedRuns": len(raw["solutions"]),
+                  "packedSource": args.packed or args.regions,
                   "complementarityBackend": args.complementarity,
+                  "globalSchurBackend": args.global_schur,
+                  "globalSchurMethod": ("fischer-burmeister" if args.schur_fb else "interior-point") if args.global_schur else None,
+                  "affineRegionCertificates": args.regions,
+                  "fullScanRegionChecks": args.region_checks,
+                  "regionRuns": raw["regionRuns"],
+                  "solverRuns": raw["solverRuns"],
                   "residuals": measured, "primalDifference": difference, "p95Seconds": p95,
                   "singleRunSeconds": times[0] if len(times) == 1 else None,
                   "coldQPPerformanceAccepted": numerical and p95 is not None and p95 <= .002,
                   "trace": answer["trace"], "scope": raw["scope"]}
         (output / "validation.json").write_text(json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n")
-        print(json.dumps(result, indent=2))
+        displayed = {**result, "regionRuns": result["regionRuns"][:1], "solverRuns": result["solverRuns"][:1]}
+        displayed["profileRunsRetained"] = len(times)
+        print(json.dumps(displayed, indent=2))
         # A numerical pass with a failed/unverified runtime gate is explicitly
         # nonzero, so this cannot accidentally become a green product gate.
         return 0 if result["coldQPPerformanceAccepted"] else (3 if numerical else 1)
