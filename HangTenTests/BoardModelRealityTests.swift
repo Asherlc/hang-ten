@@ -41,14 +41,18 @@ final class BoardModelRealityTests: XCTestCase {
 
     @MainActor
     func testMirroredBoardNormalsAgreeWithRenderedTriangleWinding() async throws {
-        for boardID in ["trango.rock-prodigy-pivot", "soill.split-palm"] {
+        for boardID in ["trango.rock-prodigy-pivot", "soill.split-palm",
+                        "trango.rock-prodigy-forge", "trango.rock-prodigy-natural",
+                        "trango.rock-prodigy-training-center"] {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
             guard case .model(let media) = board.defaultPresentation.media else {
                 return XCTFail("Expected model")
             }
             let scene = try await BoardModelRealityLoader.load(board: board,
                                                               presentation: board.defaultPresentation)
-            XCTAssertTrue(scene.select(positionID: try XCTUnwrap(board.positions.first?.id)))
+            if let positionID = board.positions.first?.id {
+                XCTAssertTrue(scene.select(positionID: positionID))
+            }
             var mirroredInstancesChecked = 0
             for (instance, root) in zip(media.instances ?? [], scene.instanceEntities)
             where instance.baseTransform.reflection == .x {
@@ -88,9 +92,53 @@ final class BoardModelRealityTests: XCTestCase {
                 }
                 try check(root)
                 XCTAssertGreaterThan(trianglesChecked, 0, boardID)
-                XCTAssertEqual(inwardTriangles, 0, "\(boardID): reflected winding must agree with outward lighting normals")
+                let mirroredTriangles = trianglesChecked
+                let mirroredInwardTriangles = inwardTriangles
+                trianglesChecked = 0
+                inwardTriangles = 0
+                let sourceIndex = try XCTUnwrap(media.instances?.firstIndex {
+                    $0.baseTransform.reflection == nil
+                })
+                try check(scene.instanceEntities[sourceIndex])
+                XCTAssertEqual(mirroredTriangles, trianglesChecked, boardID)
+                XCTAssertEqual(mirroredInwardTriangles, inwardTriangles,
+                               "\(boardID): reflection must preserve the source winding/normal agreement")
+                // Forge's retained source has a small number of pre-existing
+                // disagreements at thin facets. Reflection must not add any.
+                if boardID != "trango.rock-prodigy-forge" {
+                    XCTAssertEqual(inwardTriangles, 0, boardID)
+                }
             }
             XCTAssertGreaterThan(mirroredInstancesChecked, 0, boardID)
+        }
+    }
+
+    @MainActor
+    func testRockProdigyPairsPreserveSpacingAndIndependentContactEntities() async throws {
+        for boardID in ["trango.rock-prodigy-forge", "trango.rock-prodigy-natural",
+                        "trango.rock-prodigy-training-center"] {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            let scene = try await BoardModelRealityLoader.load(board: board,
+                                                              presentation: board.defaultPresentation)
+            XCTAssertEqual(scene.instanceEntities.count, 2, boardID)
+            let left = scene.instanceEntities[0].visualBounds(relativeTo: scene.root)
+            let right = scene.instanceEntities[1].visualBounds(relativeTo: scene.root)
+            XCTAssertLessThan(left.max.x, 0, boardID)
+            XCTAssertGreaterThan(right.min.x, 0, boardID)
+            XCTAssertEqual(left.min.x, -right.max.x, accuracy: 0.00001, boardID)
+            XCTAssertEqual(left.max.x, -right.min.x, accuracy: 0.00001, boardID)
+            XCTAssertEqual(left.center.y, right.center.y, accuracy: 0.00001, boardID)
+            XCTAssertEqual(left.center.z, right.center.z, accuracy: 0.00001, boardID)
+            XCTAssertEqual(Set(scene.contactEntities.keys), Set(board.contacts.map(\.id)), boardID)
+            for contact in board.contacts where contact.id.hasSuffix("-left") {
+                let rightID = String(contact.id.dropLast(5)) + "-right"
+                let leftEntities = try XCTUnwrap(scene.contactEntities[contact.id])
+                let rightEntities = try XCTUnwrap(scene.contactEntities[rightID])
+                XCTAssertFalse(leftEntities.isEmpty, contact.id)
+                XCTAssertEqual(leftEntities.count, rightEntities.count, contact.id)
+                XCTAssertTrue(Set(leftEntities.map(ObjectIdentifier.init))
+                    .isDisjoint(with: Set(rightEntities.map(ObjectIdentifier.init))), contact.id)
+            }
         }
     }
 

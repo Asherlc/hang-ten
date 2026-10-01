@@ -79,6 +79,9 @@ def require_disjoint_pinch_triangles(triangles_by_contact: Mapping[str, set[tupl
 
 def verify_shipped_package(package_root: Path) -> dict[str, object]:
     """Hash-check, empty-scene reimport, and descriptor-rebuild the shipped USDZ."""
+    descriptor_path = Path(package_root) / "assets/primary.model.json"
+    if _load_object(descriptor_path, "descriptor").get("schemaVersion") == 2:
+        return _verify_reusable_package(Path(package_root))
     try:
         import bpy
         import contact_model_package as compiler
@@ -149,6 +152,62 @@ def verify_shipped_package(package_root: Path) -> dict[str, object]:
         "distinctBilateralPinchBindings": required_pinch_nodes,
         "disjointPinchTriangleCounts": disjoint_counts,
     }
+
+
+def _verify_reusable_package(package: Path) -> dict[str, object]:
+    """Verify the canonical CAD half and both physical instance bindings."""
+    from pxr import Usd, UsdShade
+    cad_tools = _TOOLS.parent / "HangboardCAD"
+    sys.path.insert(0, str(cad_tools))
+    import board_manifest  # Installs the shared package module search path.
+    from hangboard_packages.cad_source import load_board
+    from usdz_writer import read_usdz
+
+    model_path = package / "assets/primary.usdz"
+    descriptor = _load_object(package / "assets/primary.model.json", "descriptor")
+    board = load_board(package / f"{package.name}.FCStd")
+    if tuple(c["id"] for c in board["contacts"]) != EXPECTED_CONTACT_IDS:
+        raise ValueError("physical Training Center contact inventory changed")
+    digest = hashlib.sha256(model_path.read_bytes()).hexdigest()
+    if descriptor["modelSHA256"] != digest:
+        raise ValueError("descriptor model hash does not match shipped USDZ")
+    model = read_usdz(model_path)
+    if set(model["nodes"]) != {n["nodeID"] for n in descriptor["nodes"]}:
+        raise ValueError("descriptor node inventory differs from shipped USDZ")
+    stage = Usd.Stage.Open(str(model_path))
+    for prim in stage.Traverse():
+        if prim.IsA(UsdShade.Material) or prim.IsA(UsdShade.Shader) or prim.HasAPI(UsdShade.MaterialBindingAPI):
+            raise ValueError("canonical model must remain unbound")
+    if any(p[0] >= 0 for node in model["nodes"].values() for p in node["points_m"]):
+        raise ValueError("canonical asset contains geometry outside its left half")
+    instances = board["presentations"][0]["media"]["instances"]
+    if len(instances) != 2 or instances[1]["baseTransform"].get("reflection") != "x":
+        raise ValueError("expected two instances with the right half reflected")
+    triangles = {}
+    mapped = []
+    for side, instance in zip(("left", "right"), instances):
+        bindings = instance["contactIDsBySlotID"]
+        if set(bindings) != set(descriptor["contactSlots"]):
+            raise ValueError("instance does not bind every canonical slot")
+        for slot, contact_id in bindings.items():
+            if contact_id != f"{slot}-{side}":
+                raise ValueError("left/right contact binding changed")
+            mapped.append(contact_id)
+        for kind in ("medium", "wide"):
+            slot = f"pinch-{kind}"
+            region = set()
+            for node_id in descriptor["contactSlots"][slot]["nodeIDs"]:
+                node = model["nodes"][node_id]
+                for face in node["triangles"]:
+                    region.add(tuple(sorted(tuple(round(v, 9) for v in node["points_m"][i]) for i in face)))
+            triangles[bindings[slot]] = region
+    if len(set(mapped)) != 24 or set(mapped) != set(EXPECTED_CONTACT_IDS):
+        raise ValueError("physical contact coverage is incomplete")
+    counts = require_disjoint_pinch_triangles(triangles)
+    return {"status": "verified", "modelSHA256": digest,
+            "nodeCount": len(model["nodes"]), "canonicalHalfCount": 1,
+            "physicalInstanceCount": 2, "contactCount": len(mapped),
+            "disjointPinchTriangleCounts": counts}
 
 
 def _arguments(argv: Sequence[str]) -> argparse.Namespace:
