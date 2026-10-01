@@ -1,7 +1,7 @@
 {
   "owner": "placid-badger",
   "date": "2026-09-30",
-  "status": "technical validation passed; human review #6 pending",
+  "status": "technical validation passed; shown revised geometry and wood finish accepted",
   "sourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
   "modelSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
   "descriptorSHA256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099",
@@ -37,10 +37,12 @@
     "Generic shared wood is golden tan and is not a calibrated walnut finish.",
     "Inherited 21-surface subtitle versus 16 selectable contacts remains unresolved."
   ],
-  "geometryAcceptance": "pending human review #6",
+  "geometryAcceptance": "reviewed; shown revised geometry and wood finish accepted",
   "currentReviewNumber": 6,
   "allOtherPackagesUnchanged": true,
   "allOtherBoardFieldsUnchanged": true,
   "resourceCleanup": "integration/resource-cleanup-verification.json",
-  "authoredDiffValidation": "authored-diff-validation.json"
+  "authoredDiffValidation": "authored-diff-validation.json",
+  "humanReviewRecord": "../human-review.json",
+  "answer": "Good enough"
 }
