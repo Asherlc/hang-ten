@@ -3,10 +3,13 @@ import XCTest
 
 final class ContactResolverTests: XCTestCase {
     func testLopezMaxHangsOffersBothBeastmakersAndRecordsChosenEdges() throws {
-        for (boardID, depth, ids) in [
-            ("beastmaker-1000", 20.0, Set(["pocket-bottom-outer-left", "pocket-bottom-outer-right"])),
-            ("beastmaker-1000", 10.0, Set(["pocket-top-outer-left", "pocket-top-outer-right"])),
-            ("beastmaker-2000", 15.0, Set(["front-lower-1", "front-lower-9"]))
+        for (boardID, depth, ids, expectedCue) in [
+            ("beastmaker-1000", 20.0, Set(["pocket-bottom-outer-left", "pocket-bottom-outer-right"]),
+             "Pocket Bottom Outer Left, Pocket Bottom Outer Right"),
+            ("beastmaker-1000", 10.0, Set(["pocket-top-outer-left", "pocket-top-outer-right"]),
+             "10 mm 4 Finger Edge Left, 10 mm 4 Finger Edge Right"),
+            ("beastmaker-2000", 15.0, Set(["front-lower-1", "front-lower-9"]),
+             "Front Lower 1, Front Lower 9")
         ] {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
             let plan = PlanCatalog.maxHangs
@@ -16,7 +19,7 @@ final class ContactResolverTests: XCTestCase {
                 for: board.contacts,
                 highlightedContactIDs: ids
             ))
-            XCTAssertTrue(accessibleCue.contains("\(Int(depth)) mm"))
+            XCTAssertEqual(accessibleCue, expectedCue, "\(boardID) / \(depth) mm")
             for step in selected.steps where !step.isRestStep {
                 XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: step, on: board)), ids)
             }
