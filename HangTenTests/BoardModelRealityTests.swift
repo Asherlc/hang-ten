@@ -248,6 +248,8 @@ final class BoardModelRealityTests: XCTestCase {
         XCTAssertEqual(scene.instanceEntities.count, 2)
         guard scene.instanceEntities.count == 2 else { return }
         XCTAssertNil(scene.modelEntity?.parent)
+        scene.camera.camera.fieldOfViewInDegrees = 30
+        scene.camera.camera.fieldOfViewOrientation = .vertical
         let viewport = CGSize(width: 390, height: 240)
         for positionID: String? in [nil, "primary", nil, "primary"] {
             let selected = scene.select(positionID: positionID)
@@ -257,7 +259,9 @@ final class BoardModelRealityTests: XCTestCase {
             let right = scene.instanceEntities[1].visualBounds(relativeTo: scene.root)
             XCTAssertLessThan(left.max.x, right.min.x)
             for contactID in scene.contactEntities.keys {
-                let point = try XCTUnwrap(scene.projectedContactCenter(contactID, viewport: viewport, fieldOfViewDegrees: 40))
+                let point = try XCTUnwrap(scene.projectedContactCenter(
+                    contactID, viewport: viewport,
+                    fieldOfViewDegrees: Double(scene.camera.camera.fieldOfViewInDegrees)))
                 XCTAssertTrue(CGRect(origin: .zero, size: viewport).contains(point), contactID)
             }
         }
