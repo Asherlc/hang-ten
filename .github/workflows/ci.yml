@@ -260,7 +260,7 @@ jobs:
           set -euo pipefail
           test -x "$HANGTEN_FREECAD_CMD"
           python -m pip install -e 'Tools/HangboardPackages[dev]' \
-            numpy usd-core==26.8 trimesh shapely rtree
+            numpy usd-core==26.8 trimesh shapely rtree scipy networkx
           # FreeCAD has its own Python; supply the host's matching Python 3.11
           # site directory for the pinned USD compiler dependency.
           HANGTEN_CAD_PYTHONPATH="$(python -c 'from pathlib import Path; import pxr; print(Path(pxr.__file__).parent.parent)')"
