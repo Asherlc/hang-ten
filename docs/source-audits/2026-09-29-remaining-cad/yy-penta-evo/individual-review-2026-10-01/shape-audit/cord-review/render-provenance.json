@@ -1,0 +1,93 @@
+[
+  {
+    "slot": "edge-25",
+    "source": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/normal-plane/edge-25.json",
+    "sourceSHA256": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e",
+    "height": -0.021364184,
+    "routePoints": 43,
+    "fullPolylineLength": 0.600000000170701,
+    "anchorWorld": [
+      -0.149995619,
+      0.325000002,
+      0.0
+    ]
+  },
+  {
+    "slot": "edge-20",
+    "source": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/normal-plane/edge-20.json",
+    "sourceSHA256": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e",
+    "height": -0.021347116,
+    "routePoints": 43,
+    "fullPolylineLength": 0.6000000041348097,
+    "anchorWorld": [
+      -0.149995619,
+      0.325000002,
+      0.0
+    ]
+  },
+  {
+    "slot": "edge-15",
+    "source": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/edge-15.json",
+    "sourceSHA256": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e",
+    "height": -0.026965253,
+    "routePoints": 30,
+    "fullPolylineLength": 0.5999999942060342,
+    "anchorWorld": [
+      -0.149995619,
+      0.325000002,
+      0.0
+    ]
+  },
+  {
+    "slot": "edge-10",
+    "source": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/edge-10.json",
+    "sourceSHA256": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e",
+    "height": -0.026965271,
+    "routePoints": 30,
+    "fullPolylineLength": 0.6000000043545259,
+    "anchorWorld": [
+      -0.149995619,
+      0.325000002,
+      0.0
+    ]
+  },
+  {
+    "slot": "mono",
+    "source": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/mono.json",
+    "sourceSHA256": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e",
+    "height": -0.021131073,
+    "routePoints": 44,
+    "fullPolylineLength": 0.5999999926201357,
+    "anchorWorld": [
+      -0.149995619,
+      0.325000002,
+      0.0
+    ]
+  },
+  {
+    "slot": "duo",
+    "source": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/duo.json",
+    "sourceSHA256": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e",
+    "height": -0.026964359,
+    "routePoints": 32,
+    "fullPolylineLength": 0.6000000083948286,
+    "anchorWorld": [
+      -0.149995619,
+      0.325000002,
+      0.0
+    ]
+  },
+  {
+    "slot": "tray",
+    "source": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/tray.json",
+    "sourceSHA256": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e",
+    "height": -0.023531686,
+    "routePoints": 31,
+    "fullPolylineLength": 0.6000000049861397,
+    "anchorWorld": [
+      -0.149995619,
+      0.325000002,
+      0.0
+    ]
+  }
+]

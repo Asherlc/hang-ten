@@ -1,0 +1,1665 @@
+{
+  "Parameters": {
+    "type": "Part::Feature",
+    "properties": {
+      "Label": "Parameters",
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "PocketDepthScale": 1.0,
+      "Thickness": 30.0,
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "OuterUnitProfile": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<BSplineCurve object>",
+        "<BSplineCurve object>"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "OuterUnitProfile",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          0.0,
+          -15.0,
+          0.0
+        ],
+        "quaternion": [
+          0.7071067811865475,
+          0.0,
+          0.0,
+          0.7071067811865476
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "edge_15Section0": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>",
+        "<Constraint 'Block' (2)>",
+        "<Constraint 'Block' (3)>",
+        "<Constraint 'Block' (4)>",
+        "<Constraint 'Block' (5)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<Line segment (-28,-12,0) (28,-12,0) >",
+        "ArcOfCircle (Radius : 12, Position : (28, 1.06581e-14, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 12, Position : (28, -7.1e-15, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "<Line segment (28,12,0) (-28,12,0) >",
+        "ArcOfCircle (Radius : 12, Position : (-28, -7.10543e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 12, Position : (-28, 1.04e-14, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "edge_15Section0",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          84.0,
+          -15.0,
+          -34.0
+        ],
+        "quaternion": [
+          -0.5720614028176843,
+          0.4156269377774536,
+          -0.4156269377774535,
+          -0.5720614028176843
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "edge_15Section1": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>",
+        "<Constraint 'Block' (2)>",
+        "<Constraint 'Block' (3)>",
+        "<Constraint 'Block' (4)>",
+        "<Constraint 'Block' (5)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<Line segment (-28,-11.4,0) (28,-11.4,0) >",
+        "ArcOfCircle (Radius : 11.4, Position : (28, 3.55271e-15, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 11.4, Position : (28, -4.6e-15, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "<Line segment (28,11.4,0) (-28,11.4,0) >",
+        "ArcOfCircle (Radius : 11.4, Position : (-28, -3.55271e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 11.4, Position : (-28, -1.42e-14, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "edge_15Section1",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          84.0,
+          -14.4,
+          -34.0
+        ],
+        "quaternion": [
+          -0.5720614028176843,
+          0.4156269377774536,
+          -0.4156269377774535,
+          -0.5720614028176843
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "edge_15Section2": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>",
+        "<Constraint 'Block' (2)>",
+        "<Constraint 'Block' (3)>",
+        "<Constraint 'Block' (4)>",
+        "<Constraint 'Block' (5)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<Line segment (-28,-10,0) (28,-10,0) >",
+        "ArcOfCircle (Radius : 10, Position : (28, 0, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 10, Position : (28, -1.4e-15, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "<Line segment (28,10,0) (-28,10,0) >",
+        "ArcOfCircle (Radius : 10, Position : (-28, 0, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 10, Position : (-28, 6.3e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "edge_15Section2",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          84.0,
+          -13.0,
+          -34.0
+        ],
+        "quaternion": [
+          -0.5720614028176843,
+          0.4156269377774536,
+          -0.4156269377774535,
+          -0.5720614028176843
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "edge_15Section3": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>",
+        "<Constraint 'Block' (2)>",
+        "<Constraint 'Block' (3)>",
+        "<Constraint 'Block' (4)>",
+        "<Constraint 'Block' (5)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<Line segment (-28,-10,0) (28,-10,0) >",
+        "ArcOfCircle (Radius : 10, Position : (28, 0, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 10, Position : (28, -1.4e-15, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "<Line segment (28,10,0) (-28,10,0) >",
+        "ArcOfCircle (Radius : 10, Position : (-28, 0, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 10, Position : (-28, 6.3e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "edge_15Section3",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          84.0,
+          0.0,
+          -34.0
+        ],
+        "quaternion": [
+          -0.5720614028176843,
+          0.4156269377774536,
+          -0.4156269377774535,
+          -0.5720614028176843
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "edge_15Cutter": {
+    "type": "Part::Loft",
+    "properties": {
+      "Closed": false,
+      "Label": "edge_15Cutter",
+      "Linearize": false,
+      "MaxDegree": 5,
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "Ruled": true,
+      "Sections": [
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>"
+      ],
+      "Solid": true,
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "edge_15Wall": {
+    "type": "Part::Loft",
+    "properties": {
+      "Closed": false,
+      "Label": "edge_15Wall",
+      "Linearize": false,
+      "MaxDegree": 5,
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "Ruled": true,
+      "Sections": [
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>"
+      ],
+      "Solid": false,
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "edge_15Floor": {
+    "type": "Part::Face",
+    "properties": {
+      "FaceMakerClass": "Part::FaceMakerBullseye",
+      "Label": "edge_15Floor",
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "Sources": [
+        "<Sketcher::SketchObject>"
+      ],
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "edge_15Surface": {
+    "type": "Part::Compound",
+    "properties": {
+      "Label": "edge_15Surface",
+      "Links": [
+        "<Part::Feature>",
+        "<Part::Feature>"
+      ],
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "edge_10Section0": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>",
+        "<Constraint 'Block' (2)>",
+        "<Constraint 'Block' (3)>",
+        "<Constraint 'Block' (4)>",
+        "<Constraint 'Block' (5)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<Line segment (-28,-12,0) (28,-12,0) >",
+        "ArcOfCircle (Radius : 12, Position : (28, 1.06581e-14, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 12, Position : (28, -7.1e-15, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "<Line segment (28,12,0) (-28,12,0) >",
+        "ArcOfCircle (Radius : 12, Position : (-28, -7.10543e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 12, Position : (-28, 1.04e-14, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "edge_10Section0",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          84.0,
+          15.0,
+          -34.0
+        ],
+        "quaternion": [
+          0.5720614028176844,
+          -0.4156269377774534,
+          -0.4156269377774535,
+          -0.5720614028176843
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "edge_10Section1": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>",
+        "<Constraint 'Block' (2)>",
+        "<Constraint 'Block' (3)>",
+        "<Constraint 'Block' (4)>",
+        "<Constraint 'Block' (5)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<Line segment (-28,-11.4,0) (28,-11.4,0) >",
+        "ArcOfCircle (Radius : 11.4, Position : (28, 3.55271e-15, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 11.4, Position : (28, -4.6e-15, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "<Line segment (28,11.4,0) (-28,11.4,0) >",
+        "ArcOfCircle (Radius : 11.4, Position : (-28, -3.55271e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 11.4, Position : (-28, -1.42e-14, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "edge_10Section1",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          84.0,
+          14.4,
+          -34.0
+        ],
+        "quaternion": [
+          0.5720614028176844,
+          -0.4156269377774534,
+          -0.4156269377774535,
+          -0.5720614028176843
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "edge_10Section2": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>",
+        "<Constraint 'Block' (2)>",
+        "<Constraint 'Block' (3)>",
+        "<Constraint 'Block' (4)>",
+        "<Constraint 'Block' (5)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<Line segment (-28,-10,0) (28,-10,0) >",
+        "ArcOfCircle (Radius : 10, Position : (28, 0, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 10, Position : (28, -1.4e-15, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "<Line segment (28,10,0) (-28,10,0) >",
+        "ArcOfCircle (Radius : 10, Position : (-28, 0, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 10, Position : (-28, 6.3e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "edge_10Section2",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          84.0,
+          13.0,
+          -34.0
+        ],
+        "quaternion": [
+          0.5720614028176844,
+          -0.4156269377774534,
+          -0.4156269377774535,
+          -0.5720614028176843
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "edge_10Section3": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>",
+        "<Constraint 'Block' (2)>",
+        "<Constraint 'Block' (3)>",
+        "<Constraint 'Block' (4)>",
+        "<Constraint 'Block' (5)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<Line segment (-28,-10,0) (28,-10,0) >",
+        "ArcOfCircle (Radius : 10, Position : (28, 0, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 10, Position : (28, -1.4e-15, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "<Line segment (28,10,0) (-28,10,0) >",
+        "ArcOfCircle (Radius : 10, Position : (-28, 0, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 10, Position : (-28, 6.3e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "edge_10Section3",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          84.0,
+          5.0,
+          -34.0
+        ],
+        "quaternion": [
+          0.5720614028176844,
+          -0.4156269377774534,
+          -0.4156269377774535,
+          -0.5720614028176843
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "edge_10Cutter": {
+    "type": "Part::Loft",
+    "properties": {
+      "Closed": false,
+      "Label": "edge_10Cutter",
+      "Linearize": false,
+      "MaxDegree": 5,
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "Ruled": true,
+      "Sections": [
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>"
+      ],
+      "Solid": true,
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "edge_10Wall": {
+    "type": "Part::Loft",
+    "properties": {
+      "Closed": false,
+      "Label": "edge_10Wall",
+      "Linearize": false,
+      "MaxDegree": 5,
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "Ruled": true,
+      "Sections": [
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>"
+      ],
+      "Solid": false,
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "edge_10Floor": {
+    "type": "Part::Face",
+    "properties": {
+      "FaceMakerClass": "Part::FaceMakerBullseye",
+      "Label": "edge_10Floor",
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "Sources": [
+        "<Sketcher::SketchObject>"
+      ],
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "edge_10Surface": {
+    "type": "Part::Compound",
+    "properties": {
+      "Label": "edge_10Surface",
+      "Links": [
+        "<Part::Feature>",
+        "<Part::Feature>"
+      ],
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "monoSection0": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "Circle (Radius : 14.5, Position : (0, 0, 0), Direction : (0, 0, 1))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "monoSection0",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          -86.0,
+          -15.0,
+          -11.0
+        ],
+        "quaternion": [
+          0.7071067811865475,
+          0.0,
+          0.0,
+          0.7071067811865476
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "monoSection1": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "Circle (Radius : 13.5, Position : (0, 0, 0), Direction : (0, 0, 1))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "monoSection1",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          -86.0,
+          -14.4,
+          -11.0
+        ],
+        "quaternion": [
+          0.7071067811865475,
+          0.0,
+          0.0,
+          0.7071067811865476
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "monoSection2": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "Circle (Radius : 12, Position : (0, 0, 0), Direction : (0, 0, 1))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "monoSection2",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          -86.0,
+          -12.5,
+          -11.0
+        ],
+        "quaternion": [
+          0.7071067811865475,
+          0.0,
+          0.0,
+          0.7071067811865476
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "monoSection3": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "Circle (Radius : 12, Position : (0, 0, 0), Direction : (0, 0, 1))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "monoSection3",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          -86.0,
+          12.5,
+          -11.0
+        ],
+        "quaternion": [
+          0.7071067811865475,
+          0.0,
+          0.0,
+          0.7071067811865476
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "monoSection4": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "Circle (Radius : 13.5, Position : (0, 0, 0), Direction : (0, 0, 1))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "monoSection4",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          -86.0,
+          14.399999999999999,
+          -11.0
+        ],
+        "quaternion": [
+          0.7071067811865475,
+          0.0,
+          0.0,
+          0.7071067811865476
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "monoSection5": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "Circle (Radius : 14.5, Position : (0, 0, 0), Direction : (0, 0, 1))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "monoSection5",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          -86.0,
+          15.0,
+          -11.0
+        ],
+        "quaternion": [
+          0.7071067811865475,
+          0.0,
+          0.0,
+          0.7071067811865476
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "monoCutter": {
+    "type": "Part::Loft",
+    "properties": {
+      "Closed": false,
+      "Label": "monoCutter",
+      "Linearize": false,
+      "MaxDegree": 5,
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "Ruled": true,
+      "Sections": [
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>"
+      ],
+      "Solid": true,
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "monoWall": {
+    "type": "Part::Loft",
+    "properties": {
+      "Closed": false,
+      "Label": "monoWall",
+      "Linearize": false,
+      "MaxDegree": 5,
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "Ruled": true,
+      "Sections": [
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>"
+      ],
+      "Solid": false,
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "duoSection0": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>",
+        "<Constraint 'Block' (2)>",
+        "<Constraint 'Block' (3)>",
+        "<Constraint 'Block' (4)>",
+        "<Constraint 'Block' (5)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<Line segment (-13,-13,0) (13,-13,0) >",
+        "ArcOfCircle (Radius : 13, Position : (13, -5.32907e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 13, Position : (13, 2e-15, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+        "<Line segment (13,13,0) (-13,13,0) >",
+        "ArcOfCircle (Radius : 13, Position : (-13, -1.77636e-15, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 13, Position : (-13, -1.1e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "duoSection0",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          -77.0,
+          -15.0,
+          -64.0
+        ],
+        "quaternion": [
+          0.5720614028176843,
+          0.41562693777745346,
+          -0.41562693777745346,
+          0.5720614028176844
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "duoSection1": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>",
+        "<Constraint 'Block' (2)>",
+        "<Constraint 'Block' (3)>",
+        "<Constraint 'Block' (4)>",
+        "<Constraint 'Block' (5)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<Line segment (-13,-12,0) (13,-12,0) >",
+        "ArcOfCircle (Radius : 12, Position : (13, 1.77636e-15, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 12, Position : (13, -2.4e-15, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "<Line segment (13,12,0) (-13,12,0) >",
+        "ArcOfCircle (Radius : 12, Position : (-13, -8.88178e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 12, Position : (-13, -1e-16, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "duoSection1",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          -77.0,
+          -14.4,
+          -64.0
+        ],
+        "quaternion": [
+          0.5720614028176843,
+          0.41562693777745346,
+          -0.41562693777745346,
+          0.5720614028176844
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "duoSection2": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>",
+        "<Constraint 'Block' (2)>",
+        "<Constraint 'Block' (3)>",
+        "<Constraint 'Block' (4)>",
+        "<Constraint 'Block' (5)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<Line segment (-13,-10.5,0) (13,-10.5,0) >",
+        "ArcOfCircle (Radius : 10.5, Position : (13, 1.77636e-15, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 10.5, Position : (13, -5e-16, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+        "<Line segment (13,10.5,0) (-13,10.5,0) >",
+        "ArcOfCircle (Radius : 10.5, Position : (-13, 0, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 10.5, Position : (-13, -1e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "duoSection2",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          -77.0,
+          -12.5,
+          -64.0
+        ],
+        "quaternion": [
+          0.5720614028176843,
+          0.41562693777745346,
+          -0.41562693777745346,
+          0.5720614028176844
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "duoSection3": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>",
+        "<Constraint 'Block' (2)>",
+        "<Constraint 'Block' (3)>",
+        "<Constraint 'Block' (4)>",
+        "<Constraint 'Block' (5)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<Line segment (-13,-10.5,0) (13,-10.5,0) >",
+        "ArcOfCircle (Radius : 10.5, Position : (13, 1.77636e-15, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 10.5, Position : (13, -5e-16, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+        "<Line segment (13,10.5,0) (-13,10.5,0) >",
+        "ArcOfCircle (Radius : 10.5, Position : (-13, 0, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 10.5, Position : (-13, -1e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "duoSection3",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          -77.0,
+          12.5,
+          -64.0
+        ],
+        "quaternion": [
+          0.5720614028176843,
+          0.41562693777745346,
+          -0.41562693777745346,
+          0.5720614028176844
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "duoSection4": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>",
+        "<Constraint 'Block' (2)>",
+        "<Constraint 'Block' (3)>",
+        "<Constraint 'Block' (4)>",
+        "<Constraint 'Block' (5)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<Line segment (-13,-12,0) (13,-12,0) >",
+        "ArcOfCircle (Radius : 12, Position : (13, 1.77636e-15, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 12, Position : (13, -2.4e-15, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "<Line segment (13,12,0) (-13,12,0) >",
+        "ArcOfCircle (Radius : 12, Position : (-13, -8.88178e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 12, Position : (-13, -1e-16, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "duoSection4",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          -77.0,
+          14.399999999999999,
+          -64.0
+        ],
+        "quaternion": [
+          0.5720614028176843,
+          0.41562693777745346,
+          -0.41562693777745346,
+          0.5720614028176844
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "duoSection5": {
+    "type": "Sketcher::SketchObject",
+    "properties": {
+      "ArcFitTolerance": 1e-06,
+      "AttacherEngine": "Engine Plane",
+      "AttacherType": "Attacher::AttachEnginePlane",
+      "AttachmentOffset": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "AttachmentSupport": [],
+      "Constraints": [
+        "<Constraint 'Block' (0)>",
+        "<Constraint 'Block' (1)>",
+        "<Constraint 'Block' (2)>",
+        "<Constraint 'Block' (3)>",
+        "<Constraint 'Block' (4)>",
+        "<Constraint 'Block' (5)>"
+      ],
+      "Exports": [],
+      "ExternalGeo": [
+        "<Line segment (0,0,0) (1,0,0) >",
+        "<Line segment (0,0,0) (0,1,0) >"
+      ],
+      "ExternalGeometry": [],
+      "ExternalTypes": [
+        0
+      ],
+      "FullyConstrained": true,
+      "Geometry": [
+        "<Line segment (-13,-13,0) (13,-13,0) >",
+        "ArcOfCircle (Radius : 13, Position : (13, -5.32907e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 13, Position : (13, 2e-15, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+        "<Line segment (13,13,0) (-13,13,0) >",
+        "ArcOfCircle (Radius : 13, Position : (-13, -1.77636e-15, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+        "ArcOfCircle (Radius : 13, Position : (-13, -1.1e-15, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))"
+      ],
+      "InternalShape": "<Shape object at 0x7a48b685a0>",
+      "Label": "duoSection5",
+      "MakeInternals": false,
+      "MapMode": "Deactivated",
+      "MapPathParameter": 0.0,
+      "MapReversed": false,
+      "Placement": {
+        "base": [
+          -77.0,
+          15.0,
+          -64.0
+        ],
+        "quaternion": [
+          0.5720614028176843,
+          0.41562693777745346,
+          -0.41562693777745346,
+          0.5720614028176844
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5",
+      "_ExternalGeoVersion": 1
+    }
+  },
+  "duoCutter": {
+    "type": "Part::Loft",
+    "properties": {
+      "Closed": false,
+      "Label": "duoCutter",
+      "Linearize": false,
+      "MaxDegree": 5,
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "Ruled": true,
+      "Sections": [
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>"
+      ],
+      "Solid": true,
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "duoWall": {
+    "type": "Part::Loft",
+    "properties": {
+      "Closed": false,
+      "Label": "duoWall",
+      "Linearize": false,
+      "MaxDegree": 5,
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "Ruled": true,
+      "Sections": [
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>",
+        "<Sketcher::SketchObject>"
+      ],
+      "Solid": false,
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "OuterRoundover": {
+    "type": "Part::Fillet",
+    "properties": {
+      "Base": "UnitBlank",
+      "EdgeLinks": [
+        "<Part::Feature>",
+        [
+          "Edge3",
+          "Edge4",
+          "Edge5",
+          "Edge6"
+        ]
+      ],
+      "Edges": [
+        [
+          3,
+          3.0,
+          3.0
+        ],
+        [
+          4,
+          3.0,
+          3.0
+        ],
+        [
+          5,
+          3.0,
+          3.0
+        ],
+        [
+          6,
+          3.0,
+          3.0
+        ]
+      ],
+      "Label": "OuterRoundover",
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "Region_edge_15": {
+    "type": "Part::Common",
+    "properties": {
+      "Base": "Cut6",
+      "ContactSlotID": "edge-15",
+      "History": "None",
+      "Label": "Region_edge_15",
+      "NodeID": "unit_edge_15_001",
+      "NodeRole": "contact",
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "Refine": false,
+      "Tool": "edge_15Surface",
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "Region_edge_10": {
+    "type": "Part::Common",
+    "properties": {
+      "Base": "Cut6",
+      "ContactSlotID": "edge-10",
+      "History": "None",
+      "Label": "Region_edge_10",
+      "NodeID": "unit_edge_10_001",
+      "NodeRole": "contact",
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "Refine": false,
+      "Tool": "edge_10Surface",
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "Region_mono": {
+    "type": "Part::Common",
+    "properties": {
+      "Base": "Cut6",
+      "ContactSlotID": "mono",
+      "History": "None",
+      "Label": "Region_mono",
+      "NodeID": "unit_mono_001",
+      "NodeRole": "contact",
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "Refine": false,
+      "Tool": "monoWall",
+      "_ElementMapVersion": "15.70200.5"
+    }
+  },
+  "Region_duo": {
+    "type": "Part::Common",
+    "properties": {
+      "Base": "Cut6",
+      "ContactSlotID": "duo",
+      "History": "None",
+      "Label": "Region_duo",
+      "NodeID": "unit_duo_001",
+      "NodeRole": "contact",
+      "Placement": {
+        "base": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "Refine": false,
+      "Tool": "duoWall",
+      "_ElementMapVersion": "15.70200.5"
+    }
+  }
+}

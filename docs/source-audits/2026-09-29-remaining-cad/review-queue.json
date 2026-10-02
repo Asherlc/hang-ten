@@ -512,20 +512,28 @@
       "boardID": "yy.penta-evo",
       "name": "YY Vertical Penta Evo",
       "humanReview": "pending",
-      "sourceSHA256": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
-      "reviewPage": "yy-penta-evo/geometry-review.html",
+      "sourceSHA256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "reviewPage": "yy-penta-evo/individual-review-2026-10-01/review.md",
       "sourceAudit": "yy-penta-evo/README.md",
       "comparisons": [
-        "yy-penta-evo/comparison-sheet.png"
+        "yy-penta-evo/comparison-sheet.png",
+        "yy-penta-evo/individual-review-2026-10-01/comparison/original-prior-corrected-views.png"
       ],
       "presentations": {
         "front-pair": {
-          "descriptorSHA256": "b0cd578994a9290d8bd52441ac615c3d8b20b059144b2dadcb85b733c566d764",
-          "modelSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787"
+          "descriptorSHA256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+          "modelSHA256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab"
         }
       },
-      "appReview": "yy-penta-evo/app-review/validation.json",
-      "appReviewPage": "yy-penta-evo/app-review/index.html"
+      "appReview": "yy-penta-evo/individual-review-2026-10-01/ios/final-runtime-validation.json",
+      "appReviewPage": "yy-penta-evo/individual-review-2026-10-01/review.md",
+      "reviewPageHistory": [
+        "yy-penta-evo/geometry-review.html"
+      ],
+      "appReviewHistory": [
+        "yy-penta-evo/app-review/validation.json"
+      ],
+      "individualReview": "yy-penta-evo/individual-review-2026-10-01/review.md"
     },
     {
       "number": 19,

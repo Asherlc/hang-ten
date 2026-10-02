@@ -1,0 +1,36 @@
+{
+  "boardID": "yy.penta-evo",
+  "status": "Direct board review passed; workout bilateral pairing failed before source fix.",
+  "packageEvidence": "source-package-sha256-before-build.json",
+  "build": "build.log",
+  "tests": {
+    "summary": "test-results-summary.json",
+    "passed": 2,
+    "failed": 0
+  },
+  "contactCoverage": "capture-coverage.json",
+  "directCoverage": {
+    "contacts": 14,
+    "poses": 7,
+    "instances": 2,
+    "instancePoseOrbits": 14
+  },
+  "physicalProbes": {
+    "evidence": "physical-probes/validation.json",
+    "passed": true
+  },
+  "packageParity": "captures/package-parity.json",
+  "binaryParity": "captures/binary-parity.json",
+  "workoutFailure": "workout-visual-failure.json",
+  "redRegression": {
+    "summary": "red-regression/test-results-summary.json",
+    "passed": 22,
+    "failed": 3,
+    "resultBundleCleanup": "red-regression/cleanup-verification.json"
+  },
+  "subsequentAppFixRun": "../ios-runtime-retry",
+  "montages": "review-montages/",
+  "appReview": "app-review.png",
+  "humanAcceptance": "pending user reply",
+  "cleanup": "cleanup-verification.json"
+}

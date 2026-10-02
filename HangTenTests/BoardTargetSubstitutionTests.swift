@@ -316,6 +316,69 @@ final class ContactResolverTests: XCTestCase {
         }
     }
 
+    func testMaxHangsResolvesPentaReusableTwentyMillimeterPairAndPose() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
+        let step = try XCTUnwrap(LegacyPlanSeedCatalog.maxHangs.steps.first { $0.id == "max-hangs-1" })
+        let resolved = try ContactResolver.resolve(step.workRequirements, step: step, board: board)
+        let expected: Set<String> = ["edge-20-left", "edge-20-right"]
+        XCTAssertEqual(Set(resolved.map(\.id)), expected)
+        XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: step, on: board)), expected)
+        for contact in resolved {
+            XCTAssertEqual(contact.depth, .range(.init(minimum: 20, maximum: 20)))
+            XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(
+                board: board, presentationID: board.defaultPresentation.id, activeHoldID: contact.id
+            ), "edge-20")
+        }
+    }
+
+    func testReusablePairRejectsDifferentSlotsEvenWhenUnitFramesStraddleMidpoint() throws {
+        let board = try reusablePairFixture(ids: ["edge-25-left", "edge-20-right"])
+        try assertReusablePairRejected(board)
+    }
+
+    func testReusablePairRejectsSameInstanceEvenWhenUnitFramesStraddleMidpoint() throws {
+        let board = try reusablePairFixture(ids: ["edge-25-left", "edge-20-left"])
+        try assertReusablePairRejected(board)
+    }
+
+    func testReusablePairRejectsUnequalContactFacts() throws {
+        for difference in ["kind", "shape", "depth", "fingerCapacity", "handCapacity"] {
+            let board = try reusablePairFixture(ids: ["edge-20-left", "edge-20-right"], difference: difference)
+            try assertReusablePairRejected(board)
+        }
+    }
+
+    private func assertReusablePairRejected(_ board: BoardRevision) throws {
+        // Both synthetic contacts match this broad requirement; the pairing
+        // rules must reject them rather than silently choosing per-unit extrema.
+        let requirement = ContactRequirement(selection: .bilateralPair)
+        XCTAssertThrowsError(try ContactResolver.resolve(
+            requirement, step: fixtureStep(target: requirement), board: board
+        )) { XCTAssertEqual($0 as? ContactResolutionError, .invalidBilateralPair(candidateCount: 2)) }
+    }
+
+    private func reusablePairFixture(ids: [String], difference: String? = nil) throws -> BoardRevision {
+        let original = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
+        let contacts = try ids.enumerated().map { index, id in
+            let source = try XCTUnwrap(original.contacts.first { $0.id == id })
+            let changed = index == 1 ? difference : nil
+            // Synthetic facts isolate each pairing rule; production package
+            // facts, mappings and per-unit descriptor frames remain untouched.
+            return PhysicalContact(id: source.id, equipmentObjectID: source.equipmentObjectID,
+                name: source.name, kind: changed == "kind" ? .jug : .edge,
+                shape: changed == "shape" ? .round : .flat,
+                fingerCapacity: changed == "fingerCapacity" ? 3 : 4,
+                handCapacity: changed == "handCapacity" ? 2 : 1,
+                depth: .range(.init(minimum: changed == "depth" ? 21 : 20,
+                                   maximum: changed == "depth" ? 21 : 20)))
+        }
+        return BoardRevision(id: "fixture.reusable-pair", revisionID: "fixture",
+            manufacturer: "Fixture", name: "Reusable pair", subtitle: "", dimensions: nil,
+            aspectRatio: original.aspectRatio, equipmentObjects: original.equipmentObjects,
+            contacts: contacts, productURL: original.productURL, photoAssetName: nil,
+            presentations: original.presentations, positions: original.positions)
+    }
+
     private func fixtureStep(
         target: ContactRequirement,
         gripType: GripType? = nil,

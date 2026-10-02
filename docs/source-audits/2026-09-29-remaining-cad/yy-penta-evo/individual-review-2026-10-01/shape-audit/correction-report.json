@@ -1,0 +1,213 @@
+{
+  "sourceSHA256": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
+  "correctionNativeYDegrees": 36,
+  "sections": [
+    {
+      "name": "edge_10Section0",
+      "centerMM": [
+        84.0,
+        15.0,
+        -34.0
+      ],
+      "beforeQuaternion": [
+        0.5720614028176844,
+        -0.4156269377774534,
+        -0.4156269377774535,
+        -0.5720614028176843
+      ],
+      "afterQuaternion": [
+        0.41562693777745346,
+        -0.5720614028176844,
+        -0.5720614028176845,
+        -0.4156269377774534
+      ]
+    },
+    {
+      "name": "edge_10Section1",
+      "centerMM": [
+        84.0,
+        14.4,
+        -34.0
+      ],
+      "beforeQuaternion": [
+        0.5720614028176844,
+        -0.4156269377774534,
+        -0.4156269377774535,
+        -0.5720614028176843
+      ],
+      "afterQuaternion": [
+        0.41562693777745346,
+        -0.5720614028176844,
+        -0.5720614028176845,
+        -0.4156269377774534
+      ]
+    },
+    {
+      "name": "edge_10Section2",
+      "centerMM": [
+        84.0,
+        13.0,
+        -34.0
+      ],
+      "beforeQuaternion": [
+        0.5720614028176844,
+        -0.4156269377774534,
+        -0.4156269377774535,
+        -0.5720614028176843
+      ],
+      "afterQuaternion": [
+        0.41562693777745346,
+        -0.5720614028176844,
+        -0.5720614028176845,
+        -0.4156269377774534
+      ]
+    },
+    {
+      "name": "edge_10Section3",
+      "centerMM": [
+        84.0,
+        5.0,
+        -34.0
+      ],
+      "beforeQuaternion": [
+        0.5720614028176844,
+        -0.4156269377774534,
+        -0.4156269377774535,
+        -0.5720614028176843
+      ],
+      "afterQuaternion": [
+        0.41562693777745346,
+        -0.5720614028176844,
+        -0.5720614028176845,
+        -0.4156269377774534
+      ]
+    }
+  ],
+  "volumeMM3": 663779.9959178978,
+  "validSingleSolid": true,
+  "contacts": [
+    {
+      "name": "Region_tray",
+      "slot": "tray",
+      "valid": true,
+      "faces": 5,
+      "areaMM2": 2912.8729385327106,
+      "depthSpanMM": 30.0,
+      "offBodySkinAreaMM2": 0.0,
+      "changedAreaMM2": 0.0
+    },
+    {
+      "name": "Region_edge_25",
+      "slot": "edge-25",
+      "valid": true,
+      "faces": 19,
+      "areaMM2": 5967.562573260829,
+      "depthSpanMM": 25.0,
+      "offBodySkinAreaMM2": 0.0,
+      "changedAreaMM2": 0.0
+    },
+    {
+      "name": "Region_edge_20",
+      "slot": "edge-20",
+      "valid": true,
+      "faces": 19,
+      "areaMM2": 5093.403307901849,
+      "depthSpanMM": 20.000000000000007,
+      "offBodySkinAreaMM2": 0.0,
+      "changedAreaMM2": 0.0
+    },
+    {
+      "name": "Region_edge_15",
+      "slot": "edge-15",
+      "valid": true,
+      "faces": 19,
+      "areaMM2": 4219.244042542869,
+      "depthSpanMM": 15.0,
+      "offBodySkinAreaMM2": 0.0,
+      "changedAreaMM2": 0.0
+    },
+    {
+      "name": "Region_edge_10",
+      "slot": "edge-10",
+      "valid": true,
+      "faces": 19,
+      "areaMM2": 3345.08477718389,
+      "depthSpanMM": 10.000000000000014,
+      "offBodySkinAreaMM2": 0.0,
+      "changedAreaMM2": 5187.9819178371445
+    },
+    {
+      "name": "Region_mono",
+      "slot": "mono",
+      "valid": true,
+      "faces": 5,
+      "areaMM2": 2477.9770390898957,
+      "depthSpanMM": 30.000000000000007,
+      "offBodySkinAreaMM2": 0.0,
+      "changedAreaMM2": 0.0
+    },
+    {
+      "name": "Region_duo",
+      "slot": "duo",
+      "valid": true,
+      "faces": 30,
+      "areaMM2": 3847.7866187006184,
+      "depthSpanMM": 30.000000000000004,
+      "offBodySkinAreaMM2": 0.0,
+      "changedAreaMM2": 0.0
+    }
+  ],
+  "slots": [
+    "duo",
+    "edge-10",
+    "edge-15",
+    "edge-20",
+    "edge-25",
+    "mono",
+    "tray"
+  ],
+  "exportNodes": [
+    {
+      "name": "Cut6",
+      "node": "penta_body_001",
+      "role": "body"
+    },
+    {
+      "name": "Region_tray",
+      "node": "unit_tray_001",
+      "role": "contact"
+    },
+    {
+      "name": "Region_edge_25",
+      "node": "unit_edge_25_001",
+      "role": "contact"
+    },
+    {
+      "name": "Region_edge_20",
+      "node": "unit_edge_20_001",
+      "role": "contact"
+    },
+    {
+      "name": "Region_edge_15",
+      "node": "unit_edge_15_001",
+      "role": "contact"
+    },
+    {
+      "name": "Region_edge_10",
+      "node": "unit_edge_10_001",
+      "role": "contact"
+    },
+    {
+      "name": "Region_mono",
+      "node": "unit_mono_001",
+      "role": "contact"
+    },
+    {
+      "name": "Region_duo",
+      "node": "unit_duo_001",
+      "role": "contact"
+    }
+  ],
+  "allSketchesConstrained": true,
+  "candidateSHA256": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e"
+}

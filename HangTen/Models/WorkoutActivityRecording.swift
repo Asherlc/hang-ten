@@ -590,6 +590,34 @@ enum ContactResolver {
         from candidates: [PhysicalContact],
         in presentation: BoardPresentation
     ) -> [PhysicalContact]? {
+        if case .model(let media) = presentation.media,
+           let instances = media.instances, instances.count == 2, candidates.count == 2 {
+            // Descriptor frames describe one reusable unit. Explicit slot maps
+            // identify the corresponding grip across the two physical units.
+            guard Set(instances.map(\.equipmentObjectID)).count == 2,
+                  instances.allSatisfy({ !$0.equipmentObjectID.isEmpty }),
+                  Set(candidates.map(\.id)).count == 2 else { return nil }
+            var paired: [(contact: PhysicalContact, slotID: String)] = []
+            for instance in instances {
+                let owned = candidates.filter { $0.equipmentObjectID == instance.equipmentObjectID }
+                guard owned.count == 1, let contact = owned.first else { return nil }
+                let slots = instance.contactIDsBySlotID.filter { $0.value == contact.id }
+                let mappingCount = instances.reduce(0) { count, item in
+                    count + item.contactIDsBySlotID.values.filter { $0 == contact.id }.count
+                }
+                guard slots.count == 1, mappingCount == 1, let slotID = slots.keys.first else { return nil }
+                paired.append((contact, slotID))
+            }
+            let first = paired[0], second = paired[1]
+            guard first.slotID == second.slotID,
+                  first.contact.kind == second.contact.kind,
+                  first.contact.shape == second.contact.shape,
+                  first.contact.depth == second.contact.depth,
+                  first.contact.fingerCapacity == second.contact.fingerCapacity,
+                  first.contact.handCapacity == second.contact.handCapacity else { return nil }
+            return paired.map(\.contact)
+        }
+
         let framedCandidates = candidates.compactMap { contact -> (contact: PhysicalContact, frame: HoldFrame)? in
             guard let frame = contact.resolvedFrame(in: presentation) else {
                 return nil

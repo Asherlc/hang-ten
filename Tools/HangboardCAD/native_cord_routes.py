@@ -493,6 +493,25 @@ def solve_native_routes(mesh, data, descriptor):
     The optional method never reads authored wrappedRoutes as an initial guess.
     With no tightening selection, the existing seed generator is unchanged.
     """
+    solver = data["ropeSolver"]
+    if "terminalsByPoseID" in solver:
+        overrides = solver["terminalsByPoseID"]
+        setup = data["suspension"]
+        poses = setup["canonicalPoses"]
+        if not isinstance(overrides, dict) or not overrides or any(key not in poses for key in overrides):
+            raise ValueError("native pose terminals must identify existing canonical poses")
+        if "grooveGuides" in solver:
+            raise ValueError("native pose terminals cannot be combined with grooveGuides")
+        base_solver = {key: value for key, value in solver.items() if key != "terminalsByPoseID"}
+        output = {}
+        # Isolate each effective station map before either pose deduplication
+        # or section caching. Identical rotations can have different bearings.
+        for pose_id, pose in poses.items():
+            one = {**data, "suspension": {**setup, "canonicalPoses": {pose_id: pose}},
+                   "ropeSolver": {**base_solver, "terminalsByStrandID": overrides.get(
+                       pose_id, solver["terminalsByStrandID"])}}
+            output.update(solve_native_routes(mesh, one, descriptor))
+        return output
     if "pathSearch" in data["ropeSolver"] and data["ropeSolver"]["pathSearch"] != "aStar":
         raise ValueError("native pathSearch must be aStar when present")
     if data["ropeSolver"].get("pathSearch") == "aStar":

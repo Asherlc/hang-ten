@@ -23,3 +23,21 @@ agent remain available; they are not temporary validation resources.
 
 Every commit is pushed to this branch. No merge to main or the parent branch
 is authorized by this allocation.
+
+For #18, the parent explicitly coordinated the additive `terminalsByPoseID`
+authoring extension with this branch. The parent retains `grooveGuides`; combining
+the two is rejected. Later explicit integration must preserve its optional
+`source_metadata` argument, guide dispatch and validation, alongside this
+branch's pose station validation/tests and dispatch before route caching.
+Coordination is retained in #18's package-local review packet.
+
+### #18 workout pairing correction
+
+Fresh Penta Evo workout validation exposed an existing resolver assumption: two
+reused unit contacts share a local descriptor frame, so spatial bilateral
+selection fails. Parent confirmed no overlapping edit to
+`WorkoutActivityRecording.swift` and authorized the narrow corresponding-slot
+instance branch with positive/negative regressions. Package geometry, source
+facts, routine prescriptions and renderer remain unchanged by this fix. Preserve
+this addition alongside the parent's independent changes at a later explicitly
+authorized merge. Exact coordination is retained in #18's individual packet.

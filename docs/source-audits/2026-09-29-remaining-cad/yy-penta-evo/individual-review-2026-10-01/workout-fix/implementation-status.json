@@ -1,0 +1,25 @@
+{
+  "timestampUTC": "2026-10-02T00:14:12.822007+00:00",
+  "state": "production_patch_applied_green_pending",
+  "authorization": "Parent explicit approval after coordination; tests first then expected red confirmed by owned iOS worker.",
+  "changedFilesSHA256": {
+    "HangTen/Models/WorkoutActivityRecording.swift": "3ccf1cb1678c2bfdb2b2963aef5d7a18ac5fb5f4dbba6c712c47d30cb7cbe924",
+    "HangTenTests/BoardTargetSubstitutionTests.swift": "b11d6fea355add7aff252966831f7ed1734959182cc43716e259ee41268ef9dc"
+  },
+  "red": {
+    "testClass": "ContactResolverTests",
+    "total": 25,
+    "passed": 22,
+    "failed": 3,
+    "expectedFailures": [
+      "real Penta max-hangs invalidBilateralPair",
+      "different slots falsely accepted via unit frames",
+      "same instance falsely accepted via unit frames"
+    ],
+    "evidenceDirectory": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/red-regression/"
+  },
+  "implementation": "Exactly2instances/2candidates unique logical mappings, matching slot+facts, authored instance order. Invalid pairs fail closed in branch; other cases preserve spatial algorithm.",
+  "gitDiffCheckPassed": true,
+  "packageFactsChanged": false,
+  "schemaOrRendererChanged": false
+}

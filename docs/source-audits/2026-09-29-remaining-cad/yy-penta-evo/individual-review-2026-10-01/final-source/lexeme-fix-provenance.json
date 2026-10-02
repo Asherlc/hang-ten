@@ -1,0 +1,10 @@
+{
+  "previousSourceSHA256": "3948de31bd846c93d87e0b83ff0f4e2e28a6a6b65e565d80c4c643fd12628ee0",
+  "finalSourceSHA256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+  "changedArchiveMembers": [
+    "Document.xml"
+  ],
+  "geometryMembersByteIdentical": true,
+  "correction": "Six baseTransform translation zeros restored to required nine-decimal lexical spelling; numeric values unchanged. Published USDZ/descriptor, solver inputs and routes unchanged. Prior compiler and cord check reports retain original exact source identity. New collider record derived from byte-identical native geometry.",
+  "preservedCompilerReport": "export/compile-2.json"
+}

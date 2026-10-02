@@ -5,6 +5,49 @@ import simd
 final class BoardModelTests: XCTestCase {
 
     @MainActor
+    func testPentaEvoSelectedBearingsFaceUp() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
+        guard case .model(let media) = board.defaultPresentation.media else {
+            return XCTFail("Penta Evo must use its reusable native model")
+        }
+        let instances = try XCTUnwrap(media.instances)
+        XCTAssertEqual(instances.count, 2)
+        // Native bearing witnesses retained in the 2026-10-01 Penta review.
+        // These test the display loading pose, not physical ergonomic accuracy.
+        let bearings: [String: SIMD3<Float>] = [
+            "edge-25": [0.6427876, -0.7660444, 0],
+            "edge-20": [-0.6427876, -0.7660444, 0],
+            "edge-15": [-0.9510565, 0.3090170, 0],
+            "edge-10": [-0.9510565, 0.3090170, 0],
+            "mono": [1, 0, 0],
+            "duo": [0.9510565, 0.3090170, 0],
+            "tray": [0, 1, 0]
+        ]
+        XCTAssertEqual(board.positions.count, bearings.count)
+        var verifiedContacts = Set<String>()
+        for instance in instances {
+            guard case .cadRoutedCord(let suspension) = instance.suspension else {
+                return XCTFail("Penta Evo requires native per-instance cord routes")
+            }
+            var reachablePoses = Set<String>()
+            for (slotID, normal) in bearings {
+                let contactID = try XCTUnwrap(instance.contactIDsBySlotID[slotID])
+                let positionID = try XCTUnwrap(BoardMapPresentationSelection.resolvePositionID(
+                    board: board, presentationID: board.defaultPresentation.id, activeHoldID: contactID
+                ))
+                let pose = try XCTUnwrap(suspension.canonicalPoses[positionID])
+                let q = simd_quatf(ix: Float(pose.rotation[0]), iy: Float(pose.rotation[1]),
+                                   iz: Float(pose.rotation[2]), r: Float(pose.rotation[3]))
+                XCTAssertGreaterThan(q.act(normal).y, 0.999, contactID)
+                verifiedContacts.insert(contactID)
+                reachablePoses.insert(positionID)
+            }
+            XCTAssertEqual(reachablePoses.count, bearings.count)
+        }
+        XCTAssertEqual(verifiedContacts.count, 14)
+    }
+
+    @MainActor
     func testNativeCordMapAspectRatioIncludesCordAndSelectedPosition() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.baguette-evo"))
         let content = BoardMapPresentationContent(board: board, selectedPresentationID: nil)

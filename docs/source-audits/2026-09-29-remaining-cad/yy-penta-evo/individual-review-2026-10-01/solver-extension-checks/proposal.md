@@ -1,0 +1,9 @@
+# Optional nativeRoutes terminal stations per canonical pose
+
+Draft tests only; no production/schema/package files changed. `terminalsByPoseID` is authoring-only and is stripped alongside all ropeSolver metadata during staging. Each present pose key names an existing canonical pose and maps to the complete same-strand terminal map, using all existing point count/vector/normal/axis/topology validation. Omitted pose keys retain global terminals exactly.
+
+Recommended dispatch: resolve each override into a one-pose document with effective terminalsByStrandID and without terminalsByPoseID, then invoke the existing solver. Dispatch before A* deduplication; this avoids the top-level frame cache and the fixed-section cache keyed only by strand. It also preserves the existing coupled3D path without separate axis logic. Never mutate the input. The additive field must not alter runtime schema.
+
+The real fixture is a closed 12-triangle analytic box with a loop through two stations below opposite depth edges. A second pose has identical quaternion and translation but a different section X position. Existing standalone/global-station solves complete in under a second and pass current continuous clearance/tube and tautness checks. Tests compare both combined results byte-for-value to independent existing single-pose solves, verify station inclusion, reconstruct complete support-to-support runtime paths, and certify clearance and 0.5 m length. They run in both default Dijkstra and explicit A* mode. Clearance checks use existing 1e-5 m tolerance rather than claiming a positive manufacturing gap.
+
+Parser malformed-case rejection alone is not evidence of support: before implementation it rejects every override as unknown. The positive merge test and two real combined-routing tests must pass after implementation. Expected preimplementation failures are retained separately.

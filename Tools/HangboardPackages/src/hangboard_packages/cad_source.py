@@ -395,6 +395,22 @@ def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> 
     # Authoring-only settings for Tools/HangboardCAD/solve_threaded_rope.py;
     # never merged into board.json.
     solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
+    if isinstance(solver, dict) and solver.get("method") == "nativeRoutes" and "terminalsByPoseID" in solver:
+        overrides = solver["terminalsByPoseID"]
+        suspension = document.get("suspension")
+        poses = suspension.get("canonicalPoses") if isinstance(suspension, dict) else None
+        if not isinstance(overrides, dict) or not overrides or not isinstance(poses, dict) \
+                or any(not isinstance(key, str) or not key or key not in poses for key in overrides):
+            raise ManifestError("nativeRoutes terminalsByPoseID must identify existing canonical poses")
+        if "grooveGuides" in solver:
+            raise ManifestError("nativeRoutes pose terminals cannot be combined with grooveGuides")
+        # Reuse the complete existing station/topology validator on each
+        # effective map. Merging returns a new board; the input stays untouched.
+        base_solver = {key: value for key, value in solver.items() if key != "terminalsByPoseID"}
+        for terminals in overrides.values():
+            _merge_suspension_entry(board, package_root, {
+                **document, "ropeSolver": {**base_solver, "terminalsByStrandID": terminals}})
+        solver = base_solver
     if isinstance(solver, dict) and solver.get("method") == "nativeRoutes":
         if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane", "tightening", "pathSearch"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
                 or isinstance(solver["clearance"], bool) \
