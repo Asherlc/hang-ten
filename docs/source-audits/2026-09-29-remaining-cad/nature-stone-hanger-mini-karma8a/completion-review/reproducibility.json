@@ -1,0 +1,10 @@
+{
+  "status": "pass",
+  "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+  "primaryCompile": "compile-primary.json",
+  "secondFreshCompile": "compile-repro.json",
+  "modelByteIdentical": true,
+  "descriptorByteIdentical": true,
+  "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+  "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c"
+}

@@ -1,0 +1,19 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+    "Tools/HangboardCAD/run_freecad.py",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma8a-review11/refinement-2026-10-02/root/check_native_and_vertices.py"
+  ],
+  "startedUTC": "2026-10-02T13:55:53.481675+00:00",
+  "timeoutSeconds": 300,
+  "ownedTemporaryDirectory": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/root/placid-badger-karma8a-root-native-tmp",
+  "status": "pass",
+  "ownedProcessGroup": 16568,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 22.267624750002142
+}

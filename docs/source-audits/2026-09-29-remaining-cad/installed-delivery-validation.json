@@ -922,10 +922,47 @@
       "counts",
       "authoringSourcesNotBundled"
     ],
-    "meaning": "These original batch results and captures are retained as historical evidence. Current/source in those fields means the source recorded at that original run, before individual review revisions. They do not establish runtime validation of the revised Mini.",
+    "meaning": "Original batch app results refer to the assets recorded at that run. They do not establish runtime validation for revised Mini #10 or KARMA8A #11.",
     "latestMiniRuntimeStatus": "blocked-environment",
-    "latestMiniRuntimeReport": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/runtime-validation.json",
+    "latestMiniRuntimeReport": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
     "latestMiniUnitCasesExecuted": 0,
-    "latestMiniAppFrames": 0
+    "latestMiniAppFrames": 0,
+    "latestKarma8aRuntimeReport": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
+    "latestKarma8aAppFrames": 0,
+    "latestKarma8aUnitCasesExecuted": 0
+  },
+  "stoneHangerMiniRuntimeRetry20261002": {
+    "date": "2026-10-02",
+    "scope": "One bounded #10 retry; package identity unchanged.",
+    "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
+    "packageSHA256": {
+      "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+      "Hangboards/nature-stone-hanger-mini/assets/primary.usdz": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+      "Hangboards/nature-stone-hanger-mini/assets/primary.model.json": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+      "Hangboards/nature-stone-hanger-mini/suspension.json": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+    },
+    "builtInstalledBinarySHA256": "c4e671fec7e035a2dec4f6ee50f848e6e992206166e002b8e0ccd25e75bc074f",
+    "generatedManifestSHA256": "2125d52a00ff55777505b3ca28777c5dc499955d05f6aaf441226a0d1275b76f",
+    "installedParity": true,
+    "runtimeGate": "blocked-environment",
+    "unitCasesExecuted": 0,
+    "currentAppFrames": 0,
+    "readinessHarnessFailures": 1,
+    "cleanupVerified": true,
+    "humanAcceptanceExtended": false
+  },
+  "stoneHangerKarma8aReview11": {
+    "date": "2026-10-02",
+    "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+    "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+    "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+    "sidecarSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf",
+    "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
+    "scope": "Current compile and resource staging only; no current install or app validation.",
+    "buildPassed": true,
+    "currentRevisionInstalled": false,
+    "unitCasesExecuted": 0,
+    "currentAppFrames": 0,
+    "humanAcceptance": "pending"
   }
 }

@@ -1,0 +1,21 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "python3",
+    "Tools/HangboardCAD/set_board_manifest.py",
+    "--source",
+    ".context/placid-badger/karma8a-review11/refinement-2026-10-02/native-author/nature-stone-hanger-mini-karma8a.FCStd",
+    ".context/placid-badger/karma8a-review11/refinement-2026-10-02/manifest-runtime-finish.json"
+  ],
+  "startedUTC": "2026-10-02T13:47:08.589818+00:00",
+  "timeoutSeconds": 600,
+  "ownedTemporaryDirectory": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-metadata-tmp",
+  "status": "pass",
+  "ownedProcessGroup": 98386,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 0.15141545799997402
+}

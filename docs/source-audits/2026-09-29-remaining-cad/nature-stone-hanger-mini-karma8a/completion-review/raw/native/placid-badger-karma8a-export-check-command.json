@@ -1,0 +1,18 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma8a-review11/refinement-2026-10-02/check_export.py"
+  ],
+  "startedUTC": "2026-10-02T13:49:20.378296+00:00",
+  "timeoutSeconds": 900,
+  "ownedTemporaryDirectory": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-export-check-tmp",
+  "status": "pass",
+  "ownedProcessGroup": 1668,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 1.3940531250009371
+}

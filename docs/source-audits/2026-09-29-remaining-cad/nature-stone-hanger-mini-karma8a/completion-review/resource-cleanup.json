@@ -1,0 +1,222 @@
+{
+  "status": "pass",
+  "owner": "placid-badger",
+  "verifiedUTC": "2026-10-02T14:16:05.793330+00:00",
+  "exactOwnedProcessAndTemporaryChecks": [
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-solve-check-command.json",
+      "processGroup": 2180,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-final-native-command.json",
+      "processGroup": 98741,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-native-export-command.json",
+      "processGroup": 4482,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-solve-apply-venv-command.json",
+      "processGroup": 260,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-seat-diagnostic-command.json",
+      "processGroup": 94301,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-render-command.json",
+      "processGroup": 261,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-export-check-command.json",
+      "processGroup": 1668,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-inspect-command.json",
+      "processGroup": 93342,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-continuous-cert-command.json",
+      "processGroup": 2179,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-solve-apply-command.json",
+      "processGroup": 99867,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-normals-command.json",
+      "processGroup": 3236,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-metadata-command.json",
+      "processGroup": 98386,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-compile-repro-command.json",
+      "processGroup": 98742,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-author-command.json",
+      "processGroup": 95271,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-collision-command.json",
+      "processGroup": 98740,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-compile-primary-command.json",
+      "processGroup": 98392,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-package-validation-command.json",
+      "processGroup": 3235,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/root/placid-badger-karma8a-android-staging-command.json",
+      "processGroup": 30790,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/root/placid-badger-karma8a-model-tool-tests-command.json",
+      "processGroup": 30791,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/root/placid-badger-karma8a-python-tests-command.json",
+      "processGroup": 30788,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/root/placid-badger-karma8a-root-native-command.json",
+      "processGroup": 16568,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/root/placid-badger-karma8a-root-export-command.json",
+      "processGroup": 21207,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/root/placid-badger-karma8a-package-validation-command.json",
+      "processGroup": 30789,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/cord-previews/placid-badger-karma8a-whole-cord-render-command.json",
+      "processGroup": 37936,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/ios-build/build-validation.json",
+      "processGroup": 37292,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/ios-build/attempt1-harness-failure/build-validation.json",
+      "processGroup": 34635,
+      "originalOwnedProcessLifetimeEnded": true,
+      "processGroupAbsentNow": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    }
+  ],
+  "distinctOwnedProcessLifetimesVerifiedEnded": 26,
+  "karmaSimulatorsCreated": 0,
+  "relatedMiniSimulatorUUIDVerifiedAbsent": "2397F02F-15E4-48C9-8E5C-37DE8CC995B2",
+  "derivedDataAndOwnedTemporaryPathsAbsent": true,
+  "noHTTPServersStarted": true,
+  "unrelatedResourcesLeftAlone": true,
+  "miniRetryCleanupEvidence": "../../nature-stone-hanger-mini/runtime-retry-2026-10-02/cleanup-receipt.json"
+}

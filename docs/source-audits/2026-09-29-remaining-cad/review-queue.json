@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final completion review pending; #11 has not been presented",
+  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion acceptance pending; #11 native geometry presented, app and human acceptance pending; #12 not yet presented",
   "boards": [
     {
       "number": 1,
@@ -333,7 +333,7 @@
       "suspensionSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
       "humanReviewRecord": "nature-stone-hanger-mini/human-review.json",
       "latestRevision": "nature-stone-hanger-mini/completion-review/review.md",
-      "runtimeRevision": "nature-stone-hanger-mini/completion-review/runtime-validation.json",
+      "runtimeRevision": "nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
       "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views.",
       "reviewAnswer": "Lgtm",
       "historicalMigrationReview": {
@@ -361,31 +361,60 @@
         },
         "appReview": "nature-stone-hanger-mini/app-review/validation.json",
         "appReviewPage": "nature-stone-hanger-mini/app-review/index.html"
-      }
+      },
+      "latestRuntimeAttempt": "nature-stone-hanger-mini/runtime-retry-2026-10-02/review.md"
     },
     {
       "number": 11,
       "package": "nature-stone-hanger-mini-karma8a",
       "boardID": "nature.stone-hanger-mini-karma8a",
       "name": "Nature Climbing Stone Hanger Mini x KARMA8A",
-      "humanReview": "pending",
-      "sourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
-      "reviewPage": "nature-stone-hanger-mini-karma8a/review/index.html",
+      "humanReview": "Pending #11 geometry review; current app finishes, contacts and workout appearance unverified",
+      "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+      "reviewPage": "nature-stone-hanger-mini-karma8a/completion-review/index.html",
       "sourceAudit": "nature-stone-hanger-mini-karma8a/native-authoring.md",
       "comparisons": [
-        "nature-stone-hanger-mini-karma8a/review/prior-primary.png",
-        "nature-stone-hanger-mini-karma8a/review/primary-front.png",
-        "nature-stone-hanger-mini-karma8a/review/primary-side.png",
-        "nature-stone-hanger-mini-karma8a/review/primary-top.png"
+        "nature-stone-hanger-mini-karma8a/completion-review/comparison-front.png",
+        "nature-stone-hanger-mini-karma8a/completion-review/comparison-side.png",
+        "nature-stone-hanger-mini-karma8a/completion-review/comparison-top.png",
+        "nature-stone-hanger-mini-karma8a/completion-review/comparison-oblique.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4",
-          "modelSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46"
+          "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+          "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d"
         }
       },
-      "appReview": "nature-stone-hanger-mini-karma8a/app-review/validation.json",
-      "appReviewPage": "nature-stone-hanger-mini-karma8a/app-review/index.html"
+      "appReview": "nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
+      "appReviewPage": "nature-stone-hanger-mini-karma8a/completion-review/index.html",
+      "suspensionSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf",
+      "humanReviewRecord": "nature-stone-hanger-mini-karma8a/human-review.json",
+      "latestRevision": "nature-stone-hanger-mini-karma8a/completion-review/review.md",
+      "runtimeRevision": "nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
+      "historicalMigrationReview": {
+        "number": 11,
+        "package": "nature-stone-hanger-mini-karma8a",
+        "boardID": "nature.stone-hanger-mini-karma8a",
+        "name": "Nature Climbing Stone Hanger Mini x KARMA8A",
+        "humanReview": "pending",
+        "sourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
+        "reviewPage": "nature-stone-hanger-mini-karma8a/review/index.html",
+        "sourceAudit": "nature-stone-hanger-mini-karma8a/native-authoring.md",
+        "comparisons": [
+          "nature-stone-hanger-mini-karma8a/review/prior-primary.png",
+          "nature-stone-hanger-mini-karma8a/review/primary-front.png",
+          "nature-stone-hanger-mini-karma8a/review/primary-side.png",
+          "nature-stone-hanger-mini-karma8a/review/primary-top.png"
+        ],
+        "presentations": {
+          "primary": {
+            "descriptorSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4",
+            "modelSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46"
+          }
+        },
+        "appReview": "nature-stone-hanger-mini-karma8a/app-review/validation.json",
+        "appReviewPage": "nature-stone-hanger-mini-karma8a/app-review/index.html"
+      }
     },
     {
       "number": 12,

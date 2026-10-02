@@ -47,7 +47,7 @@
   "completionHumanAcceptance": "pending",
   "completionQuestion": null,
   "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/index.html",
-  "runtimeValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/runtime-validation.json",
+  "runtimeValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
   "postIntegrationTests": {
     "pythonPassed": 284,
     "pythonSkipped": 0,
@@ -60,5 +60,28 @@
     "iOSUnitCasesExecuted": 0,
     "iOSExecutedCaseFailures": 0
   },
-  "approvalLimit": "Prior overall shape approval does not establish final pose/finish acceptance; geometry, rope lengths, surface finish and jug angle are display estimates, not manufacturing or real-load certification."
+  "approvalLimit": "Prior overall shape approval does not establish final pose/finish acceptance; geometry, rope lengths, surface finish and jug angle are display estimates, not manufacturing or real-load certification.",
+  "runtimeAttemptHistory": [
+    {
+      "date": "2026-10-02",
+      "runtimeGate": "blocked-environment",
+      "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
+      "buildPassed": true,
+      "installedBytesVerified": true,
+      "currentAppFrames": 0,
+      "unitCasesExecuted": 0,
+      "readinessHarnessFailures": 1,
+      "acceptanceExtended": false
+    }
+  ],
+  "postIntegrationTestsScope": "Historical October 1 completion attempt; these counts do not describe the October 2 retry.",
+  "latestRuntimeTests": {
+    "date": "2026-10-02",
+    "unitCasesExecuted": 0,
+    "passedCases": 0,
+    "failedCases": 0,
+    "nativeTestHarnessRuns": 0,
+    "readinessHarnessFailures": 1,
+    "usableAppFrames": 0
+  }
 }
