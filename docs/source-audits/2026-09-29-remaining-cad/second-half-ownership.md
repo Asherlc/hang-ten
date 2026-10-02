@@ -217,3 +217,14 @@ visual reviews, raw traces, source/parity and startup limitations remain exact.
 This discriminates contexts without establishing a navigation root cause or
 production fix. Earlier evidence and acceptances are unchanged; coordinated
 owned resources remain live, with cleanup pending.
+
+### Root-navigation control gate and unchanged repeat
+
+The [Evo root-navigation appendix](zlagboard-evo/runtime-root-navigation-2026-10-02/README.md)
+retains the failed direct control and exactly one unchanged repeat. Both show
+early following-Hang blue at +0.25/+1 seconds, then red at +3/+5, despite
+12/12 CPU brackets per run. No NavigationStack arm ran and no navigation root
+cause or production fix is established. Original reports, source snapshots,
+raw frames, parity and separately attributed reviews remain exact. Earlier
+evidence and acceptance records are unchanged; coordinated resources remain
+live with cleanup pending.

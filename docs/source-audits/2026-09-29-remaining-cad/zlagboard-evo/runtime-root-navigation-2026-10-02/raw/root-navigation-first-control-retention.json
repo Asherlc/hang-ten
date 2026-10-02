@@ -1,0 +1,226 @@
+{
+  "allEqual": true,
+  "checks": [
+    {
+      "path": "root-navigation-direct-a-landscape/000-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/000-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/001-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/001-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/002-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/002-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/003-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/003-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/004-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/004-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/005-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/005-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/006-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/006-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/007-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/007-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/008-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/008-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/009-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/009-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/010-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/010-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/011-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/011-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/012-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/012-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/013-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/013-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/014-stderr.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/014-stdout.txt",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/captures.json",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/commands.json",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/events-8DAC3C6C-BD35-4397-B975-651C88B27020.jsonl",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/first-eight-visual-review.json",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/following-preview-tail.json",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/launch-initial-capture.json",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/launch-initial.png",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/launch-review-environment.json",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/phase-0-active-plus-0.25.png",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/phase-0-active-plus-1.png",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/phase-0-active-plus-3.png",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/phase-0-active-plus-5.png",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/phase-1-preview-plus-0.25.png",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/phase-1-preview-plus-1.png",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/phase-1-preview-plus-3.png",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/phase-1-preview-plus-5.png",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/phase-2-active-plus-0.25.png",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/phase-2-active-plus-1.png",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/phase-2-active-plus-3.png",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/phase-2-active-plus-5.png",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/protocol.json",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/structural-correspondence.json",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/trace-copy.json",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/transition-observations.json",
+      "equal": true
+    },
+    {
+      "path": "root-navigation-direct-a-landscape/visual-review.json",
+      "equal": true
+    }
+  ],
+  "priorAggregateSHA256": "3e56c57e278d8c4a565681e4ff3302875295782172211163b444b33fc6172af6"
+}
