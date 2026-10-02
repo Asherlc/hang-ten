@@ -1,0 +1,19 @@
+{
+  "status": "INVALID SETUP: workout remains at Start/Hang00:07 in all four first material-active screenshots; no actual timed phase confirmed",
+  "captureStopped": true,
+  "reason": "No taps/retry permitted; first material active does not prove running workout",
+  "stoppedEpoch": 1790978656.713888,
+  "exactProcess": {
+    "pid": 97388,
+    "ppid": 97367,
+    "command": "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python .context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/workout-root-passive.py direct"
+  },
+  "traceCopies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/3266E786-B62F-4F37-9C79-56DB4B828A7F/Documents/HighlightDiagnostic-placid-badger-cad-second-half-root-workout-direct/events-6BE8226A-1D4D-48F8-84C2-B199C2B09C8E.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-landscape/invalid-setup-events-6BE8226A-1D4D-48F8-84C2-B199C2B09C8E.jsonl",
+      "sha256": "e70be96f84a6d4383722375479d20b1d4cf298b2c4e29b2c207a0464e54e2a82"
+    }
+  ],
+  "records": 69
+}

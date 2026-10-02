@@ -1,0 +1,15 @@
+{
+  "scope": "Root independent promotion verification; artifact bytes unchanged",
+  "firstHelperAttempt": {
+    "exitCode": 1,
+    "output": "Traceback (most recent call last):\n  File \"<stdin>\", line 8, in <module>\nKeyError: 'entries'\n",
+    "scope": "Root helper verified raw manifest entries, then assumed wrong inventory key. No evidence changed; inventory verification incomplete in this attempt."
+  },
+  "correctedHelperAttempt": {
+    "rawVerifiedBothCopies": 183,
+    "inventoryVerified": 186,
+    "manifestSHA": "acb85d1d81d5f00056031f4fd9fb767a3d8e94165500438b6a018140cd674561",
+    "inventorySHA": "4c38443266da8016e793f423084ba4dae1b6b610f30c235e328fea3af790efb9"
+  },
+  "correction": "Read inventory.files, matching actual schema; raw proofs and inventory unchanged."
+}

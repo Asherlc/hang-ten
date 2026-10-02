@@ -205,3 +205,15 @@ and root reviews, source/parity, committee responses and pending-next analysis
 remain exact. No production fix or acceptance is claimed. Previous evidence
 and canonical/global records are unchanged; owned resources and reservations
 remain coordinated and live, with cleanup pending.
+
+### Direct-root versus normal workout comparison
+
+The [Evo root-workout appendix](zlagboard-evo/runtime-root-workout-2026-10-02/README.md)
+retains the invalid extra-autostart setup and its explicit launch-only correction,
+one diagnostic binary, and two valid natural workout cycles. Direct root has
+12/12 correct captured colors; the normal route retains early-rest red and
+following-Hang blue failures despite complete CPU correspondence. All 24 root
+visual reviews, raw traces, source/parity and startup limitations remain exact.
+This discriminates contexts without establishing a navigation root cause or
+production fix. Earlier evidence and acceptances are unchanged; coordinated
+owned resources remain live, with cleanup pending.

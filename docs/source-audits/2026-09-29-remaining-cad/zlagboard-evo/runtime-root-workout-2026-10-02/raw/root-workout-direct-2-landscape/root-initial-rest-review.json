@@ -1,0 +1,78 @@
+{
+  "scope": "First8images only; followingHang pending; nofullsequencepassyet",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-2-landscape/phase-0-active-plus-0.25.png",
+      "sha256": "df5e49b73db5da9a46e9f89f9d9e1db2fe1904ea7869f70768787273311f9cc7",
+      "wholeImageViewed": true,
+      "observedColor": "red",
+      "observedTimer": "00:07",
+      "PauseVisible": true,
+      "artifact": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-2-landscape/phase-0-active-plus-1.png",
+      "sha256": "1bbca3425bc3355fed1fbb28bda85fc0ce885b325d843490d86445094bf45c3e",
+      "wholeImageViewed": true,
+      "observedColor": "red",
+      "observedTimer": "00:06",
+      "PauseVisible": true,
+      "artifact": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-2-landscape/phase-0-active-plus-3.png",
+      "sha256": "0e5c809c9c8fe38383930227a42c402bb402568a34b95f86116f576abaa7ec67",
+      "wholeImageViewed": true,
+      "observedColor": "red",
+      "observedTimer": "00:04",
+      "PauseVisible": true,
+      "artifact": "far-left black capsule outside board"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-2-landscape/phase-0-active-plus-5.png",
+      "sha256": "b25341fc09aade23e63254bde1d1835c96f1d5185a9e0448d2c40736ed1ef566",
+      "wholeImageViewed": true,
+      "observedColor": "red",
+      "observedTimer": "00:02",
+      "PauseVisible": true,
+      "artifact": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-2-landscape/phase-1-preview-plus-0.25.png",
+      "sha256": "a0a34d6ac3bcc45e47d571f01bbf7bef6dafab6a1bc0f60a448f8a81370451f4",
+      "wholeImageViewed": true,
+      "observedColor": "blue",
+      "observedTimer": "03:00",
+      "PauseVisible": true,
+      "artifact": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-2-landscape/phase-1-preview-plus-1.png",
+      "sha256": "1badf4ef59fd18febf9d05eaab4b9a021c3c6510e4834a54bffb62b7eb0c3035",
+      "wholeImageViewed": true,
+      "observedColor": "blue",
+      "observedTimer": "02:59",
+      "PauseVisible": true,
+      "artifact": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-2-landscape/phase-1-preview-plus-3.png",
+      "sha256": "1921c5b5cff9057336b932a63acf3844d9885cad862c2857fca3a7a781d1e41f",
+      "wholeImageViewed": true,
+      "observedColor": "blue",
+      "observedTimer": "02:57",
+      "PauseVisible": true,
+      "artifact": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-2-landscape/phase-1-preview-plus-5.png",
+      "sha256": "4465cc1d25191f2bfac1a5194e605f2fa45da206392f3b8bc93e9be54c1b7cd0",
+      "wholeImageViewed": true,
+      "observedColor": "blue",
+      "observedTimer": "02:55",
+      "PauseVisible": true,
+      "artifact": null
+    }
+  ],
+  "productionFix": false
+}
