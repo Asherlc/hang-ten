@@ -1339,3 +1339,39 @@ assertions, deadlines, analytics and toolchain remain unchanged. There is no
 renderer correction. Missing preflight or guards remains inconclusive. Retain
 the complete result before removing every temporary hook and helper, regardless
 of outcome. Never merge the diagnostic head, including a green result.
+
+
+## Resumed investigation outcome and purchase navigation correction
+
+Run 37014853124 at diagnostic head 295898a07 completed with 26 board cases
+and seven failures: DoorMount/Evo/Megalith/Pro body visibility, Forge/Natural
+rendered orbit, and Contact offset next-hold control existence. Purchase UI
+completed 23 cases with one failure at the manual-weight Start hittability
+assertion. Unit, native CAD, Python and workflow-lint jobs passed. The purchase
+result identifies iPhone 17 Pro / iOS 26.5; its log identifies Xcode 26.5.
+This differs from earlier retained runs and does not establish an environment
+or framework cause.
+
+The controller receipt records fixture clang compilation timing out after
+30 seconds, zero app attempts, all owned children exited, and fixture files
+deleted and verified. No app presentation trace was obtained. The result is
+inconclusive; no retry or renderer correction follows from it. Full logs and
+both artifacts (11234141992, 175309742 bytes; 11233875038, 146840033 bytes)
+passed CRC checks, and finalized results, all attachments, diagnostics and
+controller receipt were retained before cleanup in ci-295-retention-receipt.json.
+All five diagnostic code/workflow files are now restored to the exact 730
+source, with both helpers deleted. The two review findings are valid: capture
+completion without a matching map event cannot establish attribution, and
+temporary debugger helpers must not remain in normal CI. Removing the entire
+capture implementation and integration eliminates those paths.
+
+The purchase recording was inspected at 40 and 53 seconds. It shows the
+manual field containing 12.5 with the decimal keyboard still open; repeated
+full-screen upward flicks pass the Start control and reach the last plan steps
+and source card. Start lives above the steps, so continuing upward cannot
+bring it back into view. The fixture now uses short drags above the keyboard,
+choosing direction from Start's measured position and rejecting invalid
+geometry. It keeps the same four-attempt budget and requires actual Start
+hittability before tapping. Purchase, bodyweight and manual-weight snapshot
+assertions remain unchanged. This corrects test navigation; it is not a
+rendering fix. Fresh trace-free CI must validate the result before any merge.

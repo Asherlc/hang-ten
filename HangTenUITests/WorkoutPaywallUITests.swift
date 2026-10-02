@@ -155,7 +155,27 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertTrue(start.waitForExistence(timeout: 2))
         var remainingScrollAttempts = 4
         while !start.isHittable, remainingScrollAttempts > 0 {
-            app.swipeUp()
+            // A full-screen flick can pass Start while the decimal pad is open.
+            // Scroll toward its measured position in short drags above the keyboard.
+            let viewport = app.frame
+            let navigationBottom = app.navigationBars.firstMatch.frame.maxY
+            let visibleBottom = keyboard.exists ? keyboard.frame.minY : viewport.maxY
+            guard viewport.minX.isFinite, viewport.minY.isFinite,
+                  viewport.width.isFinite, viewport.width > 0,
+                  navigationBottom.isFinite, visibleBottom.isFinite,
+                  visibleBottom > navigationBottom,
+                  start.frame.midY.isFinite else {
+                XCTFail("Start navigation requires finite control and visible content bounds")
+                return
+            }
+            let dragY = (navigationBottom + visibleBottom) / 2
+            let direction: CGFloat = start.frame.midY < dragY ? 1 : -1
+            let dragDistance = min(80, (visibleBottom - navigationBottom) / 4)
+            let origin = app.coordinate(withNormalizedOffset: .zero)
+            origin.withOffset(CGVector(dx: viewport.width / 2, dy: dragY - viewport.minY))
+                .press(forDuration: 0.1, thenDragTo: origin.withOffset(
+                    CGVector(dx: viewport.width / 2, dy: dragY - viewport.minY + direction * dragDistance)
+                ))
             remainingScrollAttempts -= 1
         }
         XCTAssertTrue(start.isHittable)
