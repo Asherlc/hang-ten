@@ -78,6 +78,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": "trango.rock-prodigy-pivot",
             "HANGTEN_REVIEW_BOARD_DETAIL": "1",
+            "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
             "HANGTEN_REVIEW_PORTRAIT": "1",
         ]
         app.launch()
@@ -86,6 +87,10 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         guard selector.exists else { return }
         let contact = app.buttons["boardModel.contact.two-finger-pocket-left"]
         XCTAssertTrue(contact.waitForExistence(timeout: 120))
+        let map = app.descendants(matching: .any).matching(identifier: "boardDetail.map").firstMatch
+        XCTAssertTrue(map.waitForExistence(timeout: 10))
+        let diagnostic = app.otherElements["boardModel.renderDiagnostic"]
+        XCTAssertTrue(diagnostic.waitForExistence(timeout: 10))
         addScreenshot(named: "Pivot position 1")
         for (position, holdID) in [(2, "outer-sloped-crimp-right"),
                                    (3, "outer-sloped-crimp-left"),
@@ -98,6 +103,34 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
                 contact.frame != previousFrame
             }, object: nil)
             XCTAssertEqual(XCTWaiter.wait(for: [changed], timeout: 10), .completed)
+            let target = app.buttons["boardModel.contact.\(holdID)"]
+            XCTAssertTrue(target.waitForExistence(timeout: 10))
+            var previousTargetFrame = CGRect.zero
+            var stableSamples = 0
+            let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                guard let value = diagnostic.value as? String,
+                      value.contains("cameraSettled=true") else {
+                    stableSamples = 0
+                    return false
+                }
+                let frame = target.frame
+                stableSamples = frame == previousTargetFrame ? stableSamples + 1 : 0
+                previousTargetFrame = frame
+                return !frame.isEmpty && stableSamples >= 2
+            }, object: nil)
+            XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 30), .completed)
+            let selected = app.otherElements["boardDetail.selectedHold.\(holdID)"]
+            XCTAssertFalse(selected.exists, "Native picking must change the selected hold")
+            // Tap the live projected contact through the map, exercising RealityKit picking.
+            let frame = target.frame
+            let viewport = map.frame
+            map.coordinate(withNormalizedOffset: CGVector(
+                dx: (frame.midX - viewport.minX) / viewport.width,
+                dy: (frame.midY - viewport.minY) / viewport.height
+            )).tap()
+            XCTAssertTrue(selected.waitForExistence(timeout: 10),
+                          "Native picking must select \(holdID) after rotation")
+            XCTAssertTrue(preset.isSelected, "Native picking must preserve the chosen rotation")
             app.buttons["boardDetail.holdLegend.\(holdID)"].tap()
             XCTAssertTrue(app.otherElements["boardDetail.selectedHold.\(holdID)"].waitForExistence(timeout: 10))
             XCTAssertTrue(preset.isSelected, "Selecting a hold must preserve the chosen rotation")
