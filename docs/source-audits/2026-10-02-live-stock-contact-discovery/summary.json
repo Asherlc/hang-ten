@@ -1,0 +1,33 @@
+{
+  "owner": "strong-owl-live-physics",
+  "runtimeAdoption": false,
+  "engineRevision": "5830c342b90fa087f118aa0f086d541a4950b1d9",
+  "scope": "first frozen original Clav correction; host only",
+  "identity": {
+    "queries": true,
+    "rows": true,
+    "weights": true,
+    "positions": true,
+    "prediction": true,
+    "distanceTension": true,
+    "boardMass": true,
+    "boardHeight": true,
+    "predictionHeight": true,
+    "regularization": true,
+    "reference": true
+  },
+  "acceptedStateByteIdentity": true,
+  "missingCompressiveWitnessRed": true,
+  "strictCertificatePassed": false,
+  "sourceRows": 468,
+  "queries": 559,
+  "candidateQueriesConsumed": 559,
+  "woodWitnesses": 248,
+  "candidateTriangles": 290,
+  "nativeSetupSeconds": 0.000943625,
+  "nativeQuerySeconds": 0.00036245699999999957,
+  "baselineAssemblySeconds": 0.0020588750048773363,
+  "candidateOriginalAssemblySeconds": 0.0011843750035041012,
+  "baselineSolveSeconds": 0.001469958333473187,
+  "candidateSolveSeconds": 0.0015002083309809677
+}

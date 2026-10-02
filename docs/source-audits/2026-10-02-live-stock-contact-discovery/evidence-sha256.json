@@ -1,0 +1,328 @@
+{
+  "owner": "strong-owl-live-physics",
+  "engineRevision": "5830c342b90fa087f118aa0f086d541a4950b1d9",
+  "resourceAbsence": [
+    {
+      "manifest": ".context/strong-owl-live-physics-jolt-discovery/resources.jsonl",
+      "group": 45198,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-jolt-discovery/resources.jsonl",
+      "group": 45435,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-jolt-discovery/resources.jsonl",
+      "group": 46428,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-jolt-discovery/capture/resources.jsonl",
+      "group": 43359,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-jolt-discovery/capture/resources.jsonl",
+      "group": 43755,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-jolt-discovery/reconstruction/resources.jsonl",
+      "group": 50024,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-verified/resources.jsonl",
+      "group": 55198,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-verified/resources.jsonl",
+      "group": 55420,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-verified/resources.jsonl",
+      "group": 55428,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-verified/resources.jsonl",
+      "group": 55435,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-verified/resources.jsonl",
+      "group": 55456,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-verified/resources.jsonl",
+      "group": 55462,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-verified/resources.jsonl",
+      "group": 55468,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-verified/resources.jsonl",
+      "group": 55474,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-verified/resources.jsonl",
+      "group": 55480,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-verified/resources.jsonl",
+      "group": 55717,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-verified/resources.jsonl",
+      "group": 56380,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-verified/resources.jsonl",
+      "group": 56389,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-reviewed/resources.jsonl",
+      "group": 61749,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-reviewed/resources.jsonl",
+      "group": 61916,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-reviewed/resources.jsonl",
+      "group": 61922,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-reviewed/resources.jsonl",
+      "group": 61928,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-reviewed/resources.jsonl",
+      "group": 61940,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-reviewed/resources.jsonl",
+      "group": 61946,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-reviewed/resources.jsonl",
+      "group": 61952,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-reviewed/resources.jsonl",
+      "group": 61958,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-reviewed/resources.jsonl",
+      "group": 61964,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-reviewed/resources.jsonl",
+      "group": 62201,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-reviewed/resources.jsonl",
+      "group": 62809,
+      "status": "absent"
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-candidate-discovery-reviewed/resources.jsonl",
+      "group": 62815,
+      "status": "absent"
+    }
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-accepted-profile/native/after-1.json": "77ea90304d0a05dbd0f2545c96f459b3ce9ba72601c585dbe9edd03cbcd35091",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/CMakeLists.txt": "3235dee34c5d6550806aa95c9cb50a17cd3689551f029046e1ddc35e7b3f2a98",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/Capture.swift": "ad2cccd7b3ff867ef12e52aed4aa3bbfff6fdfe7382d6c9ab1bfc17909289f37",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/JoltPhysics/Jolt/Physics/Collision/CollideShape.h": "7fe92fcbbe248512aba2556e2dd09d282b53505a577395f1d2ed40083421098d",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/JoltPhysics/Jolt/Physics/Collision/CollisionCollectorImpl.h": "15fcdca87503846bec5443b1b2a00b135975ea3ff46280667c103df45e74ff5d",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/JoltPhysics/Jolt/Physics/Collision/CollisionDispatch.cpp": "f8a882e4aac6ec81283c4ef186327c2faa27e834d1cdaf0e558c6901b5fb223f",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/JoltPhysics/Jolt/Physics/Collision/Shape/CapsuleShape.cpp": "3acefa0928076d7935a1084e0e2d5915cc6639751e6e5b339f7e0cb367976d06",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/JoltPhysics/Jolt/Physics/Collision/Shape/MeshShape.cpp": "6f2ac4774d069e436b05ac2fbf8362b4d99421bd070e33abd64c4df1b550c10b",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/JoltPhysics/Jolt/Physics/Collision/Shape/SphereShape.cpp": "63ef9ea81eba736a6f8dc6b7d716905a0f6bfbcbbcb042f85f26a9618fa16210",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/Query.cpp": "5b110ce2f26e8fca3795bc09cfb4cb4bcbb0c7d77d05bf0ea30684dcadf42480",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/build/strong-owl-live-physics-jolt-discovery": "ee3113bd393525e7f5c06c0eb8c1cde47cd7bd7759cf96c1f79a9b37b3422c06",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/build.log": "30729b59be9d76948df432e54a96c5e64699ad0a7fe2e8848976b6ce935ab4fd",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/candidates.json": "1f262d9dad8373128187379cff7b9725f2ac9f2457477a3dcfb1154be3253708",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/after.json": "77ea90304d0a05dbd0f2545c96f459b3ce9ba72601c585dbe9edd03cbcd35091",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/frozen.json": "81fb5576bf2c20382ebecaadafff11048a6adea95099d6b1bb5222bb987bd242",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/sources/Capture.swift": "ad2cccd7b3ff867ef12e52aed4aa3bbfff6fdfe7382d6c9ab1bfc17909289f37",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/sources/ExactCheckpointJSON.swift": "fec607f09b6b06235f80359f91b40704fe08d9aa43a8deb90b50432a3eb4dd02",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/sources/RopeBandedSystem.swift": "d72906a280256e3d760d4b99320b5f0531ca624ae615c4d435f9f2400c18d5aa",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/sources/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/sources/RopeCordContacts.swift": "6c05954e1f2d953f0feeeaf05b4a0176aae8fa14ddfb21e67a4686c01bb601bd",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/sources/RopeDynamicsSolver.swift": "786793ea71b4e68432a3c35fa6b9d7b47f0b5a7ce843c998a818d017937894fd",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/sources/RopeSimulationMetrics.swift": "91abf3c099cc13a17854ae4af80313bb19518b8909bcfbf8f8431158962f2e59",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/sources/RopeSimulationState.swift": "915a55c8422030a3efeb5c449fc9b085b3a24b612d7766a3ba8745e0670514c8",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/sources/RopeThreadedSeed.swift": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/sources/RopeTriangleCollider.swift": "d9a8a609d59f736275adab706e5de6b1db01ef2ce15d1af7cea72a73381506b9",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/sources/main.swift": "2138b2d2df6ffe60969b3afbaddbf690a9328c38ccb1216f7107b9249836d5b5",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture/strong-owl-live-physics-discovery-capture": "3c78eed65872c6a18b519456e1b096da1efb4a6d1051c4d9d999df3598e5f4c3",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/capture.log": "55b8f63720f0243803383240f719b77cdf6ef4d50dfa627fb6c0744dac4c1acb",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/certificate.py": "ecdcbfdc3e58d6baf6a0f0c5af56c21e57d0f3fefc6d119f614e6a065b375aaf",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/certificates.json": "71ec466605cbe0890a19529ee56c9caa47193f5dbd8e174e6c2a9d4f50b74327",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/configure.log": "9ed03306220d4a990deeaddbc6d29f01e2de1b157d7b62690ad7412185d16b78",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/coverage.json": "4b03b4f0a04ea15f9327f670473d99f1402ea25a3f8cbcffe441cd368fcd1e6f",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/driver-source.py": "f06dd0f0abd998d38c968f94a7fe367520945210b296536bc82f404dd0d5cb0e",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/git-checkout.log": "21b4f2338a6575c0589a816ad925c87d9734aa06727422b280c974386d86b441",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/git-fetch.log": "64747e2bab96c8d8747e6ab624f1ae23d34164d54ad6b5c5a9623753881cabf5",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/git-init.log": "93a0850d5edf5805724426fcce624222ac05ad27c1c30a09bbc228d9c20ef61f",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/json.log": "94d1853c71e87033b99ce985678c6be6222023d5fbf7f71aeb0d7074c86b82f0",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/lifecycle-source.py": "b6940301d49a7db8e5dfc6d4db9c8e031db62e78993ac3012f7596655a2a897e",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/main.swift": "2138b2d2df6ffe60969b3afbaddbf690a9328c38ccb1216f7107b9249836d5b5",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/missing-witness-red.json": "957efbaa42b98c24827135b85e34d3299ff01aa5c54aa713ca1da7e75f23166f",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/provenance.json": "96f6b5ca3efd4d36e73198d253322c68f271e79c2e73d7d3795fcb70cb877a73",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/query.log": "e16bb27a02070efa1f7666e2860a0ed26a6ad3ad50066975d3b66c35affeb7a6",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/reconstruct.log": "55b8f63720f0243803383240f719b77cdf6ef4d50dfa627fb6c0744dac4c1acb",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/reconstruction/after.json": "77ea90304d0a05dbd0f2545c96f459b3ce9ba72601c585dbe9edd03cbcd35091",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/reconstruction/frozen.json": "edd41fd5dae4b0a016d92a2840a17c8d085b90712a5ca004a26fdb78f102ce57",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/resources.jsonl": "b006b1ec1ba78adbd00e1001105ca90fa2cc7e5106d11ee0f3f7117e9285ce1e",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/revision.log": "6974004125c105d26bb4dffad9f36f9b138e4bd0c55921d66bda1033b117e910",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/snapshot.py": "df4b5b0c9db3826bebef36c87257c4f3d353eefd1313c0fd64bc82d33e8d01a1",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/source-status.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/stock-driver-dependency.py": "ce24218b5e287a3e33f160675ff427074404a7b3095bb49db9788a532e67c28f",
+    ".context/strong-owl-live-physics-candidate-discovery-reviewed/summary.json": "3b4b768565df9e0b2fb5b6d30f5c1af57c5ed8cb0ebe89fdf6201a91721598d3",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/CMakeLists.txt": "3235dee34c5d6550806aa95c9cb50a17cd3689551f029046e1ddc35e7b3f2a98",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/Capture.swift": "78de806fabadd1db7965a5d8bd8cf442b539a30d0fa5c2a8735c030282ef0186",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/JoltPhysics/Jolt/Physics/Collision/CollideShape.h": "7fe92fcbbe248512aba2556e2dd09d282b53505a577395f1d2ed40083421098d",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/JoltPhysics/Jolt/Physics/Collision/CollisionCollectorImpl.h": "15fcdca87503846bec5443b1b2a00b135975ea3ff46280667c103df45e74ff5d",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/JoltPhysics/Jolt/Physics/Collision/CollisionDispatch.cpp": "f8a882e4aac6ec81283c4ef186327c2faa27e834d1cdaf0e558c6901b5fb223f",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/JoltPhysics/Jolt/Physics/Collision/Shape/CapsuleShape.cpp": "3acefa0928076d7935a1084e0e2d5915cc6639751e6e5b339f7e0cb367976d06",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/JoltPhysics/Jolt/Physics/Collision/Shape/MeshShape.cpp": "6f2ac4774d069e436b05ac2fbf8362b4d99421bd070e33abd64c4df1b550c10b",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/JoltPhysics/Jolt/Physics/Collision/Shape/SphereShape.cpp": "63ef9ea81eba736a6f8dc6b7d716905a0f6bfbcbbcb042f85f26a9618fa16210",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/Query.cpp": "5b110ce2f26e8fca3795bc09cfb4cb4bcbb0c7d77d05bf0ea30684dcadf42480",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/build/strong-owl-live-physics-jolt-discovery": "ee3113bd393525e7f5c06c0eb8c1cde47cd7bd7759cf96c1f79a9b37b3422c06",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/build.log": "146500bdd3e027c8fa0f6fb0e5fbc09014322b59e4031f492498829afaa24fd7",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/candidates.json": "e030455a95f419c5d27567bf909a9f46759a05b400d657d10ea99c31a599c020",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/after.json": "77ea90304d0a05dbd0f2545c96f459b3ce9ba72601c585dbe9edd03cbcd35091",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/frozen.json": "d03d66a4ee637b988453f28fbd38671491adcba8919eb6ee50122225c2b198c4",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/sources/Capture.swift": "78de806fabadd1db7965a5d8bd8cf442b539a30d0fa5c2a8735c030282ef0186",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/sources/ExactCheckpointJSON.swift": "fec607f09b6b06235f80359f91b40704fe08d9aa43a8deb90b50432a3eb4dd02",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/sources/RopeBandedSystem.swift": "d72906a280256e3d760d4b99320b5f0531ca624ae615c4d435f9f2400c18d5aa",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/sources/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/sources/RopeCordContacts.swift": "6c05954e1f2d953f0feeeaf05b4a0176aae8fa14ddfb21e67a4686c01bb601bd",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/sources/RopeDynamicsSolver.swift": "786793ea71b4e68432a3c35fa6b9d7b47f0b5a7ce843c998a818d017937894fd",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/sources/RopeSimulationMetrics.swift": "91abf3c099cc13a17854ae4af80313bb19518b8909bcfbf8f8431158962f2e59",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/sources/RopeSimulationState.swift": "915a55c8422030a3efeb5c449fc9b085b3a24b612d7766a3ba8745e0670514c8",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/sources/RopeThreadedSeed.swift": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/sources/RopeTriangleCollider.swift": "d9a8a609d59f736275adab706e5de6b1db01ef2ce15d1af7cea72a73381506b9",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/sources/main.swift": "2138b2d2df6ffe60969b3afbaddbf690a9328c38ccb1216f7107b9249836d5b5",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture/strong-owl-live-physics-discovery-capture": "4d6878d4b8fb32fbccb74c546118e2be33876c77632896fe3da7a7779c98f844",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/capture.log": "55b8f63720f0243803383240f719b77cdf6ef4d50dfa627fb6c0744dac4c1acb",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/certificate.py": "ecdcbfdc3e58d6baf6a0f0c5af56c21e57d0f3fefc6d119f614e6a065b375aaf",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/certificates.json": "71ec466605cbe0890a19529ee56c9caa47193f5dbd8e174e6c2a9d4f50b74327",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/configure.log": "fb698799ef37cfa5f436dd0b437e91a82b82382d7afaa4505ef3823193fe5a5b",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/coverage.json": "4b03b4f0a04ea15f9327f670473d99f1402ea25a3f8cbcffe441cd368fcd1e6f",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/driver-source.py": "61f9b534c60e34360dab736fe4ff830c53ed8a59003ff286c70a118e32497a56",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/git-checkout.log": "21b4f2338a6575c0589a816ad925c87d9734aa06727422b280c974386d86b441",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/git-fetch.log": "64747e2bab96c8d8747e6ab624f1ae23d34164d54ad6b5c5a9623753881cabf5",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/git-init.log": "b19f740254ec63df9c29344b965fe07970dc38c4ef7ae82cc3a662e91340b811",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/json.log": "889ebaa7b0d061cbe5c66b1478cb7187421d0b2c415a9388bc2aaff1fecec61c",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/lifecycle-source.py": "b6940301d49a7db8e5dfc6d4db9c8e031db62e78993ac3012f7596655a2a897e",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/main.swift": "2138b2d2df6ffe60969b3afbaddbf690a9328c38ccb1216f7107b9249836d5b5",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/missing-witness-red.json": "957efbaa42b98c24827135b85e34d3299ff01aa5c54aa713ca1da7e75f23166f",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/provenance.json": "ab0724d4d654722b336e61826d58a495ce909c297dcc6c009e5f8a925200ba16",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/query.log": "5c88e8c2db1d2cb4f0129c7f7ec9472cefeeee9d0175f087371ea59c0bafd2b0",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/reconstruct.log": "55b8f63720f0243803383240f719b77cdf6ef4d50dfa627fb6c0744dac4c1acb",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/reconstruction/after.json": "77ea90304d0a05dbd0f2545c96f459b3ce9ba72601c585dbe9edd03cbcd35091",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/reconstruction/frozen.json": "17d052930b58508ee3ce8a33e75377682bfd161cbe6b3fec4b02d414eee9cf2e",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/resources.jsonl": "0ca581a99118a3d07c33e73cefa7ae22ad458b3e82c1eb9635964068b18519a0",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/revision.log": "6974004125c105d26bb4dffad9f36f9b138e4bd0c55921d66bda1033b117e910",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/snapshot.py": "261ec5c6840da27c2b22877e8afb5af55aadb744178e87964f55471482d46f3c",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/source-status.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/stock-driver-dependency.py": "ce24218b5e287a3e33f160675ff427074404a7b3095bb49db9788a532e67c28f",
+    ".context/strong-owl-live-physics-candidate-discovery-verified/summary.json": "26be2c35381fef83245c0d862be03ece38999da56a939d0ba832b8be62d09537",
+    ".context/strong-owl-live-physics-jolt-discovery/CMakeLists.txt": "f0aab5327428012d32c963df2914026cdbda8623e9cd2037b27ef44a5ad321bd",
+    ".context/strong-owl-live-physics-jolt-discovery/Capture.swift": "46e9289e079a7d937f9d2ed373248c1b0a49b151dc49d48e3388b4549748c461",
+    ".context/strong-owl-live-physics-jolt-discovery/PLAN.md": "580c7bb740548bd456555be686d3689e16496a0bdc6c0f9edc8d83c004f135a7",
+    ".context/strong-owl-live-physics-jolt-discovery/Query.cpp": "5b110ce2f26e8fca3795bc09cfb4cb4bcbb0c7d77d05bf0ea30684dcadf42480",
+    ".context/strong-owl-live-physics-jolt-discovery/build.log": "83465c3f5b5bf026b5e17f58f6e73ea992cd5844dea38de8193972bc38aa41e5",
+    ".context/strong-owl-live-physics-jolt-discovery/build.py": "23a97252317f19ad9a96ca1721f90675a2a9df725f6cf8ee8aaddcc647177fd6",
+    ".context/strong-owl-live-physics-jolt-discovery/candidates.json": "872fdb8a07f230e72ab21c5096fe5605b0876c48a17279ffeaf9f829fde6a2e9",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/after.json": "77ea90304d0a05dbd0f2545c96f459b3ce9ba72601c585dbe9edd03cbcd35091",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/frozen.json": "6d8aae04bc598c5191dd3577f7553e7cbfd2415f1794185d280e733b6653538a",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/resources.jsonl": "50c51626c3f02e0d39b55e4e02839fe0ec1bf7fdfaa7fca020fd5c6953b3fead",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/run.log": "55b8f63720f0243803383240f719b77cdf6ef4d50dfa627fb6c0744dac4c1acb",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/sources/Capture.swift": "46e9289e079a7d937f9d2ed373248c1b0a49b151dc49d48e3388b4549748c461",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/sources/ExactCheckpointJSON.swift": "fec607f09b6b06235f80359f91b40704fe08d9aa43a8deb90b50432a3eb4dd02",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/sources/RopeBandedSystem.swift": "d72906a280256e3d760d4b99320b5f0531ca624ae615c4d435f9f2400c18d5aa",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/sources/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/sources/RopeCordContacts.swift": "6c05954e1f2d953f0feeeaf05b4a0176aae8fa14ddfb21e67a4686c01bb601bd",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/sources/RopeDynamicsSolver.swift": "568fc096da6dc8e88c92e38251cb895979f59fb93ece908073208d3353f57a0f",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/sources/RopeSimulationMetrics.swift": "91abf3c099cc13a17854ae4af80313bb19518b8909bcfbf8f8431158962f2e59",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/sources/RopeSimulationState.swift": "915a55c8422030a3efeb5c449fc9b085b3a24b612d7766a3ba8745e0670514c8",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/sources/RopeThreadedSeed.swift": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/sources/RopeTriangleCollider.swift": "d9a8a609d59f736275adab706e5de6b1db01ef2ce15d1af7cea72a73381506b9",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/sources/main.swift": "9a54b9163261d06ad3e0d598dec7f5fd0db6a84273d759ca959ccfb0c789f28a",
+    ".context/strong-owl-live-physics-jolt-discovery/capture/strong-owl-live-physics-discovery-capture": "e0dc6c6bb3cc76aed362ed336818f6726c0cf65f60536c6a681de205b7645877",
+    ".context/strong-owl-live-physics-jolt-discovery/check.py": "7697bb8623648016db9b1d3f74848b29dff34ca9d29e1d33496658891420ea29",
+    ".context/strong-owl-live-physics-jolt-discovery/configure.log": "2fa7815ca0182ab970117594690f2bf8044033048c4e72a55ced97bc94ba82ff",
+    ".context/strong-owl-live-physics-jolt-discovery/coverage.json": "39a5ee173c0e0cbe770d43dbf2fc436bbbdeb50084a1f95eae5e4078d68b63d6",
+    ".context/strong-owl-live-physics-jolt-discovery/json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63",
+    ".context/strong-owl-live-physics-jolt-discovery/launch.py": "bdbadb10ceda00b74ccc6ded58f0e38e74e98edbdd72397cc26d92a0967d49ec",
+    ".context/strong-owl-live-physics-jolt-discovery/main.swift": "9a54b9163261d06ad3e0d598dec7f5fd0db6a84273d759ca959ccfb0c789f28a",
+    ".context/strong-owl-live-physics-jolt-discovery/query.log": "1c8af3c591b975bdb693b20e120c1c42c01e1c7b09736bd7d30e7a1ac122de85",
+    ".context/strong-owl-live-physics-jolt-discovery/reconstruction/after.json": "77ea90304d0a05dbd0f2545c96f459b3ce9ba72601c585dbe9edd03cbcd35091",
+    ".context/strong-owl-live-physics-jolt-discovery/reconstruction/frozen.json": "a7037d3608274078236a4f40c6b5ebd5fe5c5b76d1172171d4a5bd1757dad188",
+    ".context/strong-owl-live-physics-jolt-discovery/reconstruction/resources.jsonl": "d01144d4ddef96bbe3b6e6d4e322274e25d68e7fc8583dff1eae1e185856df93",
+    ".context/strong-owl-live-physics-jolt-discovery/reconstruction/run.log": "55b8f63720f0243803383240f719b77cdf6ef4d50dfa627fb6c0744dac4c1acb",
+    ".context/strong-owl-live-physics-jolt-discovery/reference-certificate.json": "11f2bb296d703d796bc549e4de8637d3904623c8fe5feb7c00535cb5d5740232",
+    ".context/strong-owl-live-physics-jolt-discovery/resources.jsonl": "79fda1860417688c653a999a1705ebfa58045cb8d4227c3592f637558be11fdf",
+    ".context/strong-owl-live-physics-jolt-discovery/source-hook-red/HangTen/Models/RopeBandedSystem.swift": "d72906a280256e3d760d4b99320b5f0531ca624ae615c4d435f9f2400c18d5aa",
+    ".context/strong-owl-live-physics-jolt-discovery/source-hook-red/HangTen/Models/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-jolt-discovery/source-hook-red/HangTen/Models/RopeCordContacts.swift": "6c05954e1f2d953f0feeeaf05b4a0176aae8fa14ddfb21e67a4686c01bb601bd",
+    ".context/strong-owl-live-physics-jolt-discovery/source-hook-red/HangTen/Models/RopeDynamicsSolver.swift": "2cf9986ded7ea85aed6ded2e7567d1869aad04b03b43e00a5635551e87e2e2ea",
+    ".context/strong-owl-live-physics-jolt-discovery/source-hook-red/HangTen/Models/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-jolt-discovery/source-hook-red/HangTen/Models/RopeSimulationMetrics.swift": "91abf3c099cc13a17854ae4af80313bb19518b8909bcfbf8f8431158962f2e59",
+    ".context/strong-owl-live-physics-jolt-discovery/source-hook-red/HangTen/Models/RopeSimulationState.swift": "915a55c8422030a3efeb5c449fc9b085b3a24b612d7766a3ba8745e0670514c8",
+    ".context/strong-owl-live-physics-jolt-discovery/source-hook-red/HangTen/Models/RopeThreadedSeed.swift": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a",
+    ".context/strong-owl-live-physics-jolt-discovery/source-hook-red/HangTen/Models/RopeTriangleCollider.swift": "c5bc61d44fe32603bc3fb66580c55b50b73212fe755e114ed982eae56c31e5ef",
+    ".context/strong-owl-live-physics-jolt-discovery/source-hook-red/generated/sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-jolt-discovery/source-hook-red/result.txt": "c8809d6afd5be4d38057d58f0c70b57b0c75b5b6e28ff828b0dee7c9fc213be3",
+    ".context/strong-owl-live-physics-jolt-discovery/summary.json": "9db8ec097a700f78a8de7642ff206f7b437c6f98403e1bf536d2a2cf110839bb",
+    ".context/strong-owl-live-physics-solver-foundation/clav-contact-step/checkpoint.json": "cad349812c3c0c33384378fe368abff97411f2a0c9aeb385d99edebef151c464",
+    "Hangboards/clavellium-training-block/assets/primary.physics.json": "c60fbd6dfaf59bfd5fb7e6aa8d806f78af7e828a7f64074d326865e08f13e853",
+    "Tools/HangboardRopePrototype/contact_discovery/CMakeLists.txt": "3235dee34c5d6550806aa95c9cb50a17cd3689551f029046e1ddc35e7b3f2a98",
+    "Tools/HangboardRopePrototype/contact_discovery/Capture.swift": "ad2cccd7b3ff867ef12e52aed4aa3bbfff6fdfe7382d6c9ab1bfc17909289f37",
+    "Tools/HangboardRopePrototype/contact_discovery/Query.cpp": "5b110ce2f26e8fca3795bc09cfb4cb4bcbb0c7d77d05bf0ea30684dcadf42480",
+    "Tools/HangboardRopePrototype/contact_discovery/certificate.py": "ecdcbfdc3e58d6baf6a0f0c5af56c21e57d0f3fefc6d119f614e6a065b375aaf",
+    "Tools/HangboardRopePrototype/contact_discovery/main.swift": "2138b2d2df6ffe60969b3afbaddbf690a9328c38ccb1216f7107b9249836d5b5",
+    "Tools/HangboardRopePrototype/contact_discovery/snapshot.py": "df4b5b0c9db3826bebef36c87257c4f3d353eefd1313c0fd64bc82d33e8d01a1",
+    "Tools/HangboardRopePrototype/native_contact/ExactCheckpointJSON.swift": "fec607f09b6b06235f80359f91b40704fe08d9aa43a8deb90b50432a3eb4dd02",
+    "Tools/HangboardRopePrototype/run_candidate_discovery_screen.py": "f06dd0f0abd998d38c968f94a7fe367520945210b296536bc82f404dd0d5cb0e",
+    "Tools/HangboardRopePrototype/run_native_contact_screen.py": "b6940301d49a7db8e5dfc6d4db9c8e031db62e78993ac3012f7596655a2a897e",
+    "Tools/HangboardRopePrototype/run_stock_chain_screen.py": "ce24218b5e287a3e33f160675ff427074404a7b3095bb49db9788a532e67c28f",
+    "Tools/HangboardRopePrototype/stock_chain/CheckpointAdapter.swift": "92385d915f17d8b594b5944507e1967e6b7685bf7d40c526d5212417c977039b"
+  }
+}

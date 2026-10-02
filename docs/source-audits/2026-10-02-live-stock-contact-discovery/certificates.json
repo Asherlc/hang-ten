@@ -1,0 +1,26 @@
+{
+  "reference": {
+    "checks": {
+      "stationarity": 8.518822108773312e-18,
+      "regularizedEquality": 9.032223154022553e-18,
+      "equality": 8.290778545465283e-13,
+      "minContactQ": -2.032547459472758e-09,
+      "minRegularizedGap": -2.032547459472758e-09,
+      "positiveContactMultiplier": 0,
+      "complementarity": 5.2538817227164546e-21
+    },
+    "passed": false
+  },
+  "candidate": {
+    "checks": {
+      "stationarity": 8.518822108773312e-18,
+      "regularizedEquality": 9.032223154022553e-18,
+      "equality": 8.290778545465283e-13,
+      "minContactQ": -2.032547459472758e-09,
+      "minRegularizedGap": -2.032547459472758e-09,
+      "positiveContactMultiplier": 0,
+      "complementarity": 5.2538817227164546e-21
+    },
+    "passed": false
+  }
+}
