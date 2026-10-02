@@ -289,6 +289,24 @@ struct BoardMapPresentationSelection: Equatable {
     }
 }
 
+enum BoardMapRotationOptions {
+    static func positions(on board: BoardRevision, presentationID: String) -> [BoardPosition] {
+        guard let presentation = board.presentation(id: presentationID),
+              case .model(let media) = presentation.media,
+              let instances = media.instances, instances.count > 1,
+              instances.allSatisfy({ $0.suspension == nil }) else { return [] }
+        let positions = board.positions.filter { $0.presentationID == presentationID }
+        guard positions.count > 1, let first = positions.first else { return [] }
+        let contacts = Set(board.contactIDs(inPosition: first.id))
+        guard !contacts.isEmpty,
+              positions.allSatisfy({ position in
+                  Set(board.contactIDs(inPosition: position.id)) == contacts
+                      && instances.allSatisfy { $0.positionTransforms?[position.id] != nil }
+              }) else { return [] }
+        return positions
+    }
+}
+
 private struct BoardRotationSelector: View {
     let board: BoardRevision
     let presentationID: String
@@ -296,25 +314,22 @@ private struct BoardRotationSelector: View {
     let accessibilityID: String
 
     var body: some View {
-        // The Pivot package authors these paired poses. Other boards continue
-        // to choose their positions through the existing hold-selection flow.
-        if board.id == "trango.rock-prodigy-pivot" {
-            let positions = board.positions.filter { $0.presentationID == presentationID }
-            if positions.count > 1 {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Rotation")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Picker("Rotation", selection: $positionID) {
-                        ForEach(positions) { position in
-                            Text("Position \(position.id.dropFirst())")
-                                .tag(Optional(position.id))
-                        }
+        let positions = BoardMapRotationOptions.positions(on: board, presentationID: presentationID)
+        if !positions.isEmpty {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Rotation")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Picker("Rotation", selection: $positionID) {
+                    ForEach(Array(positions.enumerated()), id: \.element.id) { index, position in
+                        let number = position.id.hasPrefix("p") ? Int(position.id.dropFirst()) : nil
+                        Text("Position \(number ?? index + 1)")
+                            .tag(Optional(position.id))
                     }
-                    .pickerStyle(.segmented)
-                    .accessibilityLabel("Board rotation")
-                    .accessibilityIdentifier(accessibilityID)
                 }
+                .pickerStyle(.segmented)
+                .accessibilityLabel("Board rotation")
+                .accessibilityIdentifier(accessibilityID)
             }
         }
     }
@@ -405,7 +420,7 @@ struct BoardDetailMapView: View {
                 ),
                 accessibilityID: "boardDetail.rotationSelector"
             )
-            .padding(.bottom, board.id == "trango.rock-prodigy-pivot" ? 8 : 0)
+            .padding(.bottom, BoardMapRotationOptions.positions(on: board, presentationID: map.presentation.id).isEmpty ? 0 : 8)
 
             Group {
                 switch map.presentation.media {

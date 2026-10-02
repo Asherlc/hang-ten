@@ -4,6 +4,27 @@ import simd
 
 final class BoardModelTests: XCTestCase {
 
+    func testRotationOptionsUseAuthoredInstancePosesWithoutBoardIdentityChecks() throws {
+        let pivot = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        XCTAssertEqual(BoardMapRotationOptions.positions(on: pivot, presentationID: "primary").map(\.id),
+                       ["p1", "p2", "p3", "p5"])
+        // Identical capabilities must work after changing package identity.
+        let renamed = BoardRevision(
+            id: "test.rotating-halves", revisionID: pivot.revisionID,
+            manufacturer: pivot.manufacturer, name: pivot.name, subtitle: pivot.subtitle,
+            dimensions: pivot.dimensions, aspectRatio: pivot.aspectRatio,
+            equipmentObjects: pivot.equipmentObjects, contacts: pivot.contacts,
+            productURL: pivot.productURL, photoAssetName: pivot.photoAssetName,
+            presentations: pivot.presentations, positions: pivot.positions,
+            positionTransitions: pivot.positionTransitions
+        )
+        XCTAssertEqual(BoardMapRotationOptions.positions(on: renamed, presentationID: "primary").map(\.id),
+                       ["p1", "p2", "p3", "p5"])
+        XCTAssertTrue(BoardMapRotationOptions.positions(on: pivot, presentationID: "missing").isEmpty)
+        let single = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-1000"))
+        XCTAssertTrue(BoardMapRotationOptions.positions(on: single, presentationID: single.defaultPresentation.id).isEmpty)
+    }
+
     func testPivotChosenRotationSurvivesActiveAndHighlightedHoldChanges() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
         for positionID in ["p2", "p3", "p5"] {
