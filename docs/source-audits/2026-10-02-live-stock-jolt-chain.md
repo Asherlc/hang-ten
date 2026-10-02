@@ -150,3 +150,8 @@ collision workload cheaply, but this configuration fails continuity and strain.
 A structural articulated-chain successor can test elimination of internal joint
 drift, while retaining the original supports, mesh and independent validation.
 That is a next hypothesis, not an implemented or accepted replacement here.
+
+The articulated successor is now implemented and measured in
+[the stock Bullet audit](2026-10-02-live-stock-articulated-chain.md). It eliminates
+internal joint drift, but its contact-enabled default step still fails closing
+support continuity and runtime. Neither stock configuration is adopted.
