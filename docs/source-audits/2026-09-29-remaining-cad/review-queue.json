@@ -545,15 +545,18 @@
       "boardID": "yy.travelboard",
       "name": "YY Vertical TravelBoard",
       "humanReview": "pending",
-      "sourceSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
-      "reviewPage": "yy-travelboard/review/index.html",
+      "sourceSHA256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "reviewPage": "yy-travelboard/individual-review-2026-10-01/review.md",
       "sourceAudit": "yy-travelboard/native-authoring.md",
       "comparisons": [
         "yy-travelboard/review/prior-front-25-15.png",
         "yy-travelboard/review/prior-reverse-10.png",
         "yy-travelboard/review/primary-front.png",
         "yy-travelboard/review/primary-side.png",
-        "yy-travelboard/review/primary-top.png"
+        "yy-travelboard/review/primary-top.png",
+        "yy-travelboard/individual-review-2026-10-01/comparison/original-raster-native-front-rear.png",
+        "yy-travelboard/individual-review-2026-10-01/comparison/native-front-side-top.png",
+        "yy-travelboard/individual-review-2026-10-01/comparison/rear-depth-cue-final.png"
       ],
       "presentations": {
         "primary": {
@@ -561,8 +564,15 @@
           "modelSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f"
         }
       },
-      "appReview": "yy-travelboard/app-review/validation.json",
-      "appReviewPage": "yy-travelboard/app-review/index.html"
+      "appReview": "yy-travelboard/individual-review-2026-10-01/ios/final-runtime-validation.json",
+      "appReviewPage": "yy-travelboard/individual-review-2026-10-01/review.md",
+      "reviewPageHistory": [
+        "yy-travelboard/review/index.html"
+      ],
+      "appReviewHistory": [
+        "yy-travelboard/app-review/validation.json"
+      ],
+      "individualReview": "yy-travelboard/individual-review-2026-10-01/review.md"
     },
     {
       "number": 20,

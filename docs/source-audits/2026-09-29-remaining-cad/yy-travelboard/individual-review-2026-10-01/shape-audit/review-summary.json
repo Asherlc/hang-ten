@@ -1,0 +1,79 @@
+{
+  "board": "yy-travelboard",
+  "scope": "Read-only shape/contact/pose audit and scratch cord display experiment; no package or shared edits",
+  "geometryDecision": "No demonstrated native geometry defect. Retain existing editable source geometry, six contacts and two upright poses.",
+  "sourceSHA256Measured": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+  "finalMetadataOnlySourceSHA256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+  "modelSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+  "nativeValid": true,
+  "nativeSolids": 1,
+  "contactsOffSkinMM2": {
+    "yy_tray": 0.0,
+    "yy_edge_25": 0.0,
+    "yy_edge_15": 0.0,
+    "yy_edge_10": 0.0,
+    "yy_mono_left": 0.0,
+    "yy_mono_right": 0.0
+  },
+  "bearingWorldUpDots": {
+    "yy_tray": 1.0,
+    "yy_edge_25": 1.0,
+    "yy_edge_15": 1.0,
+    "yy_edge_10": 1.0,
+    "yy_mono_left": 1.0,
+    "yy_mono_right": 1.0
+  },
+  "coverage": "Each recessed edge binds thirteen actual floor, rail, end and mouth-round faces. Each mono binds cylindrical bore and both mouth rounds. Tray binds top and front/rear rounds.",
+  "approvedWholeEvidence": [
+    "yy-vertical-agres-nomades-travelboard-3.webp",
+    "yy-vertical-agres-nomades-travelboard-4.webp",
+    "yy-vertical-agres-nomades-travelboard-2.webp"
+  ],
+  "geometryLimits": "Published overall dimensions and depths retained. Native opening dimensions/radii/placements and shallow unconnected cord wells remain explicitly estimated display geometry. Whole evidence reveals no missing required cavity topology or wrongly oriented selected bearing.",
+  "exportWells": "Direct USDZ point inspection proves both rear4mm wells and side mouths exist; front-on equal-face lighting can hide shallow recesses. No tag correction indicated.",
+  "shortCordRecommendation": {
+    "restLengthByStrandID": {
+      "left-upper-visible-lead": 0.25554009585382736,
+      "left-lower-visible-lead": 0.27999999947116905,
+      "right-upper-visible-lead": 0.25554009585382736,
+      "right-lower-visible-lead": 0.27999999947116905
+    },
+    "heightBothPoses": -0.001618635,
+    "preserveAnchorOffset": [
+      0,
+      0.1,
+      0
+    ],
+    "preserveTerminalsAndPlanes": true,
+    "lengthRatios": {
+      "left-upper-visible-lead": 0.9999999999938004,
+      "left-lower-visible-lead": 0.9999999999943475,
+      "right-upper-visible-lead": 0.9999999999938004,
+      "right-lower-visible-lead": 0.9999999999943475
+    },
+    "conservativeContinuousClearanceMetres": {
+      "left-upper-visible-lead": 0.0014904367717173488,
+      "left-lower-visible-lead": 0.001491220669350468,
+      "right-upper-visible-lead": 0.001490436771717344,
+      "right-lower-visible-lead": 0.0014912206693504738
+    },
+    "explicitNumericalToleranceMetres": 1e-05,
+    "visualJudgment": "Both whole-body front/side/oblique/top route sheets reviewed: distinct front/back-side bearing tracks, rim turns and outlet turns stay on actual supported surfaces. No distant free-air knee or body penetration demonstrated.",
+    "nativeBendCenterDistancesMM": [
+      1.6857025043302378,
+      1.7000334519700608
+    ],
+    "scope": "All cord lengths, chosen support and section-plane tilts are display adaptations. Four visible leads do not assert the unproven hidden end-mouth/rear-well connections. Clearance and static visual plausibility do not certify global frictional equilibrium."
+  },
+  "proofs": [
+    "native-six-whole-views.png",
+    "native-measurements.json",
+    "bearing-witnesses.json",
+    "usdz-mouth-evidence.json",
+    "equal-short.json",
+    "matched-short.json",
+    "cord-bend-native-checks.json",
+    "front-25-15-short-review.png",
+    "reverse-10-short-review.png"
+  ]
+}

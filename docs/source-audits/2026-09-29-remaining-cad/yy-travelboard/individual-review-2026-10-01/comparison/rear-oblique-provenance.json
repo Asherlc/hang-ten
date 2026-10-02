@@ -1,0 +1,33 @@
+{
+  "asset": "Hangboards/yy-travelboard/assets/primary.usdz",
+  "modelSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+  "modelBytesUnchanged": true,
+  "wholeMeshRotation": [
+    [
+      -0.882947592858927,
+      -0.4694715627858908,
+      0.0
+    ],
+    [
+      0.42195824553872424,
+      -0.7935880396557845,
+      -0.43837114678907746
+    ],
+    [
+      0.20580278736331134,
+      -0.38705874883622327,
+      0.898794046299167
+    ]
+  ],
+  "renderOnlyLight": [
+    -0.8807710121010884,
+    -0.2752409412815901,
+    0.38533731779422614
+  ],
+  "newImages": {
+    "rear-oblique-raking.png": "667cbb7dfe87f8ffb71125fbedde83a0bca1c343c1f8e2037652372ced4631e4",
+    "rear-depth-cue-comparison.png": "fac8d1946a30cad3a30c479dd5f589790f3bf95bb45a971518dff5b8fdaf0cb8"
+  },
+  "nativeEvidence": "../shape-audit/usdz-mouth-evidence.json",
+  "note": "Shallow rear wells exist in actual USDZ; flat frontal lighting provides limited depth cue. Added whole-mesh oblique/raking light only, without cropping, image feature extraction, geometry or material edits. Original views are unchanged."
+}

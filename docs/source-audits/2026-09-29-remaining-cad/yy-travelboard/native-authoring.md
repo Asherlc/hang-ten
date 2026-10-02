@@ -25,3 +25,7 @@ Source authorization: the first six boards inherit September20 approval only for
 The [continuous cord certificate](cord-continuous-clearance.json) checks the exact rounded runtime routes, including fixed-support legs and final terminals, against the native collision solid using adaptive signed-distance bounds. Every route passes the explicit 0.01 mm numerical tolerance; reported values are conservative lower bounds, not sampled minima.
 
 [Camera correction proof](camera-correction-proof.json) records local front/rear and inverted viewing directions. The correction changes camera metadata only; native assets, routes, heights and cord dimensions remain byte/value identical.
+
+## Individual review, 2026-10-01
+
+[Current review packet](individual-review-2026-10-01/review.md) retains the native geometry and export exactly, adds existing wood finish metadata and a shorter native-solved four-lead display with matched individual lengths. Original raw proofs and historical statuses remain unchanged. Human acceptance remains pending the displayed review.

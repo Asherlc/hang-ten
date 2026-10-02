@@ -1,0 +1,76 @@
+{
+  "modelSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+  "matchesCurrentDescriptor": true,
+  "retainedAstraEvidenceSHA256": "dffad9b15fc335a991a2811454389814fb0f300364dae42328daaaf9c615819e",
+  "retainedEvidenceContainsAssetHash": false,
+  "method": "Actual USD meshes composed to world then inverse native-axis mapping; count actual coplanar floor triangles in each declared native well neighborhood. No image measurement and no export.",
+  "features": [
+    {
+      "feature": "rear-left",
+      "floorNativeMM": [
+        -105.0,
+        11.0,
+        -4.0
+      ],
+      "coplanarFloorTriangles": 130,
+      "floorAreaMM2": 230.50828619110567,
+      "present": true
+    },
+    {
+      "feature": "rear-right",
+      "floorNativeMM": [
+        105.0,
+        11.0,
+        -4.0
+      ],
+      "coplanarFloorTriangles": 130,
+      "floorAreaMM2": 230.50828619110567,
+      "present": true
+    },
+    {
+      "feature": "end-left--0.007",
+      "floorNativeMM": [
+        -166.0,
+        0.0,
+        -7.0
+      ],
+      "coplanarFloorTriangles": 124,
+      "floorAreaMM2": 38.46856202002851,
+      "present": true
+    },
+    {
+      "feature": "end-left--0.031",
+      "floorNativeMM": [
+        -166.0,
+        0.0,
+        -31.0
+      ],
+      "coplanarFloorTriangles": 124,
+      "floorAreaMM2": 38.46855974414185,
+      "present": true
+    },
+    {
+      "feature": "end-right--0.007",
+      "floorNativeMM": [
+        166.0,
+        0.0,
+        -7.0
+      ],
+      "coplanarFloorTriangles": 124,
+      "floorAreaMM2": 38.46856202002851,
+      "present": true
+    },
+    {
+      "feature": "end-right--0.031",
+      "floorNativeMM": [
+        166.0,
+        0.0,
+        -31.0
+      ],
+      "coplanarFloorTriangles": 124,
+      "floorAreaMM2": 38.46855974414185,
+      "present": true
+    }
+  ],
+  "allSixFloorsPresent": true
+}

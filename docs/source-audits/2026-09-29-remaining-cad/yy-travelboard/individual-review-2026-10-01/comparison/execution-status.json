@@ -1,0 +1,11 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    ".context/placid-badger-cad-second-half/yy-baguette/venv/bin/python",
+    ".context/placid-badger-cad-second-half/yy-travelboard/comparison/render_actual_usdz.py"
+  ],
+  "exitCode": 0,
+  "capturedToolOutput": "Rendered five actual USDZ views and three whole-image sheets; package bytes unchanged.\n",
+  "temporaryExternalResourcesCreated": false
+}
