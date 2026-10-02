@@ -1,7 +1,7 @@
 {
   "reviewNumber": 9,
   "boardID": "nature.stone-hanger",
-  "status": "pending",
+  "status": "reviewed; corrected Stone Hanger geometry, finishes and cord display accepted",
   "question": "Does this look right now?",
   "feedback": [
     "the stone hanger needs granite texture where appropriate",
@@ -86,6 +86,35 @@
       },
       "reviewedFrames": 17,
       "reviewedContacts": 8
+    }
+  ],
+  "answer": "Y",
+  "acceptedDate": "2026-10-01",
+  "acceptedScope": "Displayed corrected Stone Hanger: fitted granite insert and clean wood seam, runtime wood and granite finishes, shortened cords entering side holes within the notch guides, and the shown hold positions.",
+  "shownAssetCommit": "395589ff62b78dd1f9a78498f5c497cfc6cd5802",
+  "shownImages": {
+    "granite-seat-review/app/02-edge-front-15mm-flat.png": "d3a8b436b111e3ff2173d5e5456b3add3fe40048898bd6bf3b6195c542401c72",
+    "granite-seat-review/native-front-side-top.png": "74de3f56c4d1516e20a971efef603d351bfbe600ff0389e9169a882fb45b025f"
+  },
+  "history": [
+    {
+      "eventType": "human-acceptance",
+      "package": "nature-stone-hanger",
+      "reviewNumber": 9,
+      "date": "2026-10-01",
+      "reviewer": "asherlc",
+      "answer": "Y",
+      "acceptedScope": "Displayed corrected Stone Hanger: fitted granite insert and clean wood seam, runtime wood and granite finishes, shortened cords entering side holes within the notch guides, and the shown hold positions.",
+      "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+      "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+      "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
+      "suspensionSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
+      "shownAssetCommit": "395589ff62b78dd1f9a78498f5c497cfc6cd5802",
+      "shownImages": {
+        "granite-seat-review/app/02-edge-front-15mm-flat.png": "d3a8b436b111e3ff2173d5e5456b3add3fe40048898bd6bf3b6195c542401c72",
+        "granite-seat-review/native-front-side-top.png": "74de3f56c4d1516e20a971efef603d351bfbe600ff0389e9169a882fb45b025f"
+      },
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/human-review.json"
     }
   ]
 }

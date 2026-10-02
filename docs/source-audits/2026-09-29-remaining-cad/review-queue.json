@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "one-by-one review in progress: first eight shown revisions accepted; Nature Climbing Stone Hanger is review #9",
+  "reviewState": "one-by-one review in progress: first nine shown revisions accepted; Nature Climbing Stone Hanger Mini is review #10",
   "boards": [
     {
       "number": 1,
@@ -264,9 +264,9 @@
       "package": "nature-stone-hanger",
       "boardID": "nature.stone-hanger",
       "name": "Nature Climbing Stone Hanger",
-      "humanReview": "pending",
+      "humanReview": "reviewed; corrected Stone Hanger geometry, finishes and cord display accepted",
       "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
-      "reviewPage": "nature-stone-hanger/granite-seat-review/index.html",
+      "reviewPage": "nature-stone-hanger/accepted-review.md",
       "sourceAudit": "nature-stone-hanger/README.md",
       "comparisons": [
         "nature-stone-hanger/granite-seat-review/native-front-side-top.png",
@@ -302,7 +302,10 @@
         "hiddenConnection": "Visible side-hole entry and exterior notch guidance are established; the concealed connection remains unspecified."
       },
       "latestRevision": "nature-stone-hanger/granite-seat-review/review.md",
-      "runtimeRevision": "nature-stone-hanger/granite-seat-review/runtime-validation.json"
+      "runtimeRevision": "nature-stone-hanger/granite-seat-review/runtime-validation.json",
+      "reviewAnswer": "Y",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed corrected Stone Hanger: fitted granite insert and clean wood seam, runtime wood and granite finishes, shortened cords entering side holes within the notch guides, and the shown hold positions."
     },
     {
       "number": 10,

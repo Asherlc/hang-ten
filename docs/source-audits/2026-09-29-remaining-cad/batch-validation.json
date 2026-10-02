@@ -42,7 +42,7 @@
   "metadataAudit": "metadata-audit.json",
   "historicalReportNotes": "validation-notes.md",
   "appCaptures": "All 21 current-source packages; representative DEBUG contact review routes, plus physical selector taps for all three Plateau depths. RealityKit tests cover all authored presentation positions and transient non-pickable cords.",
-  "geometryAcceptance": "pending requested one-by-one user review",
+  "geometryAcceptance": "First nine shown revisions accepted; remaining migrations pending requested one-by-one user review.",
   "testArtifactSHA256": {
     "test-results/ios-summary.json": "6d38d38ec0659f98565df7ec135a99648db9f4964945c9fb58bdbda699a3febe",
     "test-results/ios-tests.log": "47c5b2b6d584d6df47cbf8e84e5bf2391f4ff3b4c82aa2fe6f8ad883f877e681",
@@ -290,6 +290,25 @@
       "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/human-review.json",
       "limits": "Primary photos establish a seated insert and lower opening shape. Precise insert dimensions, local rounds, pocket shape and runtime texture remain display estimates. The existing solver-generated routes were freshly re-certified against the corrected native solid; they were not regenerated. No hidden construction or real load safety claim. Twenty-five whole app frames and nine drags cover representative views, not every continuous camera angle. Prior revision proofs remain historical and are not carried forward or added to fresh test counts.",
       "priorDeliveryManifestSHA256": "2e59a40776c140376c707d72803fdad70868380e7c79ea47aecfe900fcdb51fb"
+    },
+    {
+      "eventType": "human-acceptance",
+      "package": "nature-stone-hanger",
+      "reviewNumber": 9,
+      "date": "2026-10-01",
+      "reviewer": "asherlc",
+      "answer": "Y",
+      "acceptedScope": "Displayed corrected Stone Hanger: fitted granite insert and clean wood seam, runtime wood and granite finishes, shortened cords entering side holes within the notch guides, and the shown hold positions.",
+      "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+      "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+      "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
+      "suspensionSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
+      "shownAssetCommit": "395589ff62b78dd1f9a78498f5c497cfc6cd5802",
+      "shownImages": {
+        "granite-seat-review/app/02-edge-front-15mm-flat.png": "d3a8b436b111e3ff2173d5e5456b3add3fe40048898bd6bf3b6195c542401c72",
+        "granite-seat-review/native-front-side-top.png": "74de3f56c4d1516e20a971efef603d351bfbe600ff0389e9169a882fb45b025f"
+      },
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/human-review.json"
     }
   ]
 }
