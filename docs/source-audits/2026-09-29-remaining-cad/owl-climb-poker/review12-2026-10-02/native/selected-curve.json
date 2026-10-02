@@ -1,0 +1,152 @@
+{
+  "basis": "native Y,Z millimeters; X extrusion spans unchanged",
+  "degree": 3,
+  "polesNativeYZ": [
+    [
+      -50.0,
+      -20.0
+    ],
+    [
+      -50.0,
+      -12.0
+    ],
+    [
+      -38.160490194369764,
+      13.819480070263886
+    ],
+    [
+      -26.278334143153483,
+      20.583835361842144
+    ],
+    [
+      -14.001082013808901,
+      28.49781265358872
+    ],
+    [
+      -1.7174128456757587,
+      36.424762318376885
+    ],
+    [
+      10.599218883806264,
+      43.41000017357287
+    ],
+    [
+      23.12902236564357,
+      48.564230796542944
+    ],
+    [
+      31.709379596231077,
+      49.96502780900612
+    ],
+    [
+      36.0,
+      50.0
+    ]
+  ],
+  "knots": [
+    0.0,
+    11.856856676623869,
+    26.128389071219765,
+    40.91260803097547,
+    55.696826990731175,
+    69.96835938532706,
+    83.38393299251956,
+    96.01975490049215
+  ],
+  "multiplicities": [
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    4
+  ],
+  "endpointTangentsNativeYZ": {
+    "front": [
+      0.0,
+      1.0
+    ],
+    "back": [
+      0.999966783500628,
+      0.008150576385036861
+    ]
+  },
+  "evaluatedCurveStations": [
+    {
+      "parameterFraction": 0,
+      "nativeYZ": [
+        -50.0,
+        -20.0
+      ]
+    },
+    {
+      "parameterFraction": 0.125,
+      "nativeYZ": [
+        -39.964769372083836,
+        7.272581732856826
+      ]
+    },
+    {
+      "parameterFraction": 0.25,
+      "nativeYZ": [
+        -28.326416361756607,
+        19.490330033806718
+      ]
+    },
+    {
+      "parameterFraction": 0.375,
+      "nativeYZ": [
+        -18.124670872732153,
+        25.846181490780996
+      ]
+    },
+    {
+      "parameterFraction": 0.5,
+      "nativeYZ": [
+        -8.026946004272286,
+        32.33440707935568
+      ]
+    },
+    {
+      "parameterFraction": 0.625,
+      "nativeYZ": [
+        2.2133054842425466,
+        38.5920425714261
+      ]
+    },
+    {
+      "parameterFraction": 0.75,
+      "nativeYZ": [
+        12.855424694322446,
+        44.15737115150623
+      ]
+    },
+    {
+      "parameterFraction": 0.875,
+      "nativeYZ": [
+        24.10950452166974,
+        48.3192693164089
+      ]
+    },
+    {
+      "parameterFraction": 1,
+      "nativeYZ": [
+        36.0,
+        50.0
+      ]
+    }
+  ],
+  "stationProvenance": "Evaluations of the deliberately edited native analytic spline, not photo measurements or manufacturing dimensions. First two poles operator estimates; remaining poles and knot structure retained from frozen native source.",
+  "smoothness": "C2 at simple internal knots; front tangent lies in the Y=-50 face plane; coordinatewise monotone control polygon prevents loop/overshoot.",
+  "frontEndpointEstimate": [
+    -50,
+    -20
+  ],
+  "firstTangentPoleEstimate": [
+    -50,
+    -12
+  ],
+  "sideSourceLimitations": "Approved photos are largely face-on; exact recess sections and radii are not measured or established. The revised endpoint expresses the clear Face A row relationship and remains a display approximation."
+}

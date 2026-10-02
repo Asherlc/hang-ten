@@ -1,0 +1,34 @@
+{
+  "reviewNumber": 12,
+  "boardID": "owl-climb.poker",
+  "status": "Pending #12 human geometry review; current app wood, picking, highlighting and workout appearance unverified",
+  "answer": null,
+  "acceptedDate": null,
+  "identity": {
+    "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+    "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+    "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+    "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1"
+  },
+  "baselineCommit": "ad74a51e1c43991145721ab04ff8c0d3c6c51cca",
+  "acceptedScope": null,
+  "technicalGeometryReviewPresentedDate": "2026-10-02",
+  "completionHumanAcceptance": "pending",
+  "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/index.html",
+  "runtimeValidation": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/runtime-validation.json",
+  "postIntegrationTests": {
+    "pythonPassed": 195,
+    "pythonFailed": 0,
+    "pythonErrors": 0,
+    "pythonSkipped": 0,
+    "canonicalPackagesValidated": 64,
+    "iOSBuildPassed": true,
+    "iOSUnitCasesExecuted": 0,
+    "iOSCurrentAppFrames": 0,
+    "iOSRuntimeStatus": "not run; current app appearance unverified",
+    "androidStagingByteParity": true,
+    "iOSStagingByteParity": true
+  },
+  "sourceFacts": "660 x 100 x 100 mm four-face wood board; 34 logical contacts with 7/9/9/9 by face, repeated mono-then-duo order at both ends. No documented cord; mounting hardware omitted.",
+  "estimateLimits": "Broad profile endpoints, sections, radii and cavity depths are display estimates. No per-contact depth facts are present in the manifest. Neutral CAD and ownership-overlay images do not establish current app finish or selection behavior."
+}

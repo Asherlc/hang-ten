@@ -62,7 +62,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "eef283106fd1636a2bc036d9b64268fa41cbf2bf2286304607513662b86850e8",
+  "sha256Manifest": "fa6fcdde53a95fef8561af7baf12d363372c2a7d9571230ddc3ea600e908fa23",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -909,25 +909,47 @@
     },
     "owl-climb-poker": {
       "source": "Hangboards/owl-climb-poker/owl-climb-poker.FCStd",
-      "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+      "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
-      "assetSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
-      "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac",
+      "assetSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+      "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
       "assets": {
         "assets/primary.usdz": {
-          "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+          "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
           "descriptorPath": "assets/primary.model.json",
-          "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac"
+          "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
         }
       },
       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
       "provenance": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/README.md",
-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/geometry-review.html",
-      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/metadata-diff.json",
-      "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/app-review/validation.json",
-      "geometryAcceptance": "pending requested one-by-one user review",
-      "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0"
+      "comparison": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/index.html",
+      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/independent-manifest-validation.json",
+      "nativeValidation": "Current-source reopen/recompute, native 32-contact preservation, constrained sketches and meaningful depth edit/restore; two identical clean exports, independent exact descriptor/material/mesh checks, unchanged C/D regression and independent Astra physical-shape/contact-extent pass. Reports in review12-2026-10-02.",
+      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/runtime-validation.json",
+      "geometryAcceptance": "Pending #12 human geometry review; current app wood, picking, highlighting and workout appearance unverified",
+      "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+      "historicalMigrationReview": {
+        "source": "Hangboards/owl-climb-poker/owl-climb-poker.FCStd",
+        "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+        "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
+        "assetSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+        "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac",
+        "assets": {
+          "assets/primary.usdz": {
+            "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+            "descriptorPath": "assets/primary.model.json",
+            "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac"
+          }
+        },
+        "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
+        "provenance": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/README.md",
+        "comparison": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/geometry-review.html",
+        "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/metadata-diff.json",
+        "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
+        "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/app-review/validation.json",
+        "geometryAcceptance": "pending requested one-by-one user review",
+        "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0"
+      }
     },
     "plateau-lifting-edge": {
       "source": "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
@@ -1221,6 +1243,12 @@
       "date": "2026-10-02",
       "reason": "KARMA8A fitted granite seat, exposed stone ownership and compact cord revision; prior manifest preserved",
       "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/prior-delivery-checksums.txt"
+    },
+    {
+      "sha256Manifest": "eef283106fd1636a2bc036d9b64268fa41cbf2bf2286304607513662b86850e8",
+      "date": "2026-10-02",
+      "reason": "Poker paired broad-relief entry correction and manufacturer-supported wood finish; prior manifest preserved",
+      "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/prior-delivery-checksums.txt"
     }
   ],
   "individualReviewRevisions": [
@@ -1594,6 +1622,47 @@
       "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/human-review.json",
       "priorDeliveryManifestSHA256": "44e1f436175582271d914849d8a5555dea2ecc4e86ef6920d46db27c2c8a49ba",
       "limits": "Only the free leads have a taut-length target; old cross-return allowances remain. No current app frames or unit cases. Neutral CAD previews and compile-only provenance do not establish runtime appearance. Historical tests/captures stay separate."
+    },
+    {
+      "package": "owl-climb-poker",
+      "date": "2026-10-02",
+      "revision": "paired-a-b-relief-entry-and-wood-finish",
+      "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+      "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+      "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+      "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1",
+      "report": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/runtime-validation.json",
+      "postIntegrationTests": {
+        "pythonPassed": 195,
+        "pythonFailed": 0,
+        "pythonErrors": 0,
+        "pythonSkipped": 0,
+        "canonicalPackagesValidated": 64,
+        "iOSBuildPassed": true,
+        "iOSUnitCasesExecuted": 0,
+        "iOSCurrentAppFrames": 0,
+        "iOSRuntimeStatus": "not run; current app appearance unverified",
+        "androidStagingByteParity": true,
+        "iOSStagingByteParity": true
+      },
+      "boardFactsAndContactIDsUnchanged": true,
+      "allFourPositionsAndRotationsUnchanged": true,
+      "otherPackageFilesUnchanged": 203,
+      "changedNativeSketches": 6,
+      "unchangedNativeContactSurfaces": 32,
+      "cleanCompilesByteIdentical": true,
+      "nativeEnvelopeMM": [
+        660,
+        100,
+        100
+      ],
+      "actualExportTriangles": 91612,
+      "actualExportBytes": 2044005,
+      "sourceBackedWoodFinish": true,
+      "geometryAcceptance": "Pending #12 human geometry review; current app wood, picking, highlighting and workout appearance unverified",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/human-review.json",
+      "priorDeliveryManifestSHA256": "eef283106fd1636a2bc036d9b64268fa41cbf2bf2286304607513662b86850e8",
+      "limits": "All profile/radius/cavity-depth values are display estimates; no per-contact depth facts. No current app frames, guest operations or iOS unit cases. Historical captures and results remain separate."
     }
   ]
 }

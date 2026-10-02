@@ -1,0 +1,501 @@
+{
+  "owner": "placid-badger",
+  "reviewNumber": 12,
+  "package": "owl-climb-poker",
+  "reviewer": "independent delivery-record audit agent",
+  "reviewDate": "2026-10-02",
+  "verifiedUTC": "2026-10-02T16:01:26.743781+00:00",
+  "status": "pass",
+  "blockers": [],
+  "scope": "Read-only final delivery, identity, provenance, link, record-scope and resource cleanup audit. No authoritative physical-shape judgment, human approval or current app validation. No new native compile, test, iOS build, Simulator or HTTP resource was started.",
+  "baselineCommit": "ad74a51e1c43991145721ab04ff8c0d3c6c51cca",
+  "packet": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02",
+  "checks": {
+    "canonicalIdentity": true,
+    "generatedManifestIdentity": true,
+    "contactAndPositionPreservation": true,
+    "noUnsupportedDepthOrSuspension": true,
+    "descriptorPinsFrozenModel": true,
+    "artifactHashes": true,
+    "retentionMappings": true,
+    "approvedSourceHashes": true,
+    "scriptSnapshotHashes": true,
+    "onlyExpectedFutureAuditLinkMissing": true,
+    "rawJUnitExactly195Passing": true,
+    "oneGenericBuildRawSuccess": true,
+    "zeroIOSRuntimeClaims": true,
+    "frozenIOSStagingProvenance": true,
+    "actualAndroidStagingParity": true,
+    "all64CanonicalPackagesValidated": true,
+    "directLocksExactly135WithOnlyPokerChanges": true,
+    "deliveryVerifierBoundToSameSnapshot": true,
+    "all203OtherPackageFilesPreserved": true,
+    "queueAndPriorRecordsScopedToPoker": true,
+    "historicalCountsAndEarlierReviewsPreserved": true,
+    "fiveSharedPathsUnchanged": true,
+    "cleanExportCopiesMatchFrozenBytes": true,
+    "nativeAndIndependentExportRecordsBindCurrentFiles": true,
+    "independentAstraShapeRecordBindsCurrentFiles": true,
+    "freshOwnedCleanup": true,
+    "humanAcceptanceStillPending": true
+  },
+  "canonicalFiles": {
+    "Hangboards/owl-climb-poker/owl-climb-poker.FCStd": {
+      "sha256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+      "bytes": 4249025,
+      "matches": true
+    },
+    "Hangboards/owl-climb-poker/assets/primary.usdz": {
+      "sha256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+      "bytes": 2044005,
+      "matches": true
+    },
+    "Hangboards/owl-climb-poker/assets/primary.model.json": {
+      "sha256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+      "bytes": 16823,
+      "matches": true
+    }
+  },
+  "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1",
+  "manifestContract": {
+    "generatedSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1",
+    "matchesFrozen": true,
+    "matchesPacketBytes": true,
+    "onlyWoodFieldDiff": true,
+    "contactCount": 34,
+    "positionCounts": {
+      "face-a": 7,
+      "face-b": 9,
+      "face-c": 9,
+      "face-d": 9
+    },
+    "perContactDepthFields": 0,
+    "canonicalBoardAbsent": true,
+    "suspensionSidecarAbsent": true,
+    "suspensionMetadataAbsent": true
+  },
+  "artifactIntegrity": {
+    "auditedRows": 132,
+    "mismatches": [],
+    "retainedSourceMappings": 122,
+    "mappingMismatches": [],
+    "localLinkOccurrencesChecked": 92,
+    "uniqueLocalTargets": 47,
+    "substantiveBrokenLinks": [],
+    "expectedPendingAuditLinks": [
+      {
+        "document": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/review.md",
+        "target": "independent-delivery-review.json",
+        "resolvedPath": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/independent-delivery-review.json",
+        "exists": false,
+        "expectedPendingAuditLink": true
+      },
+      {
+        "document": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/index.html",
+        "target": "independent-delivery-review.json",
+        "resolvedPath": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/independent-delivery-review.json",
+        "exists": false,
+        "expectedPendingAuditLink": true
+      }
+    ],
+    "approvedSourceHashes": [
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/evidence/owl-climb-poker-face-a.jpg",
+        "matches": true,
+        "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_0.jpg"
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/evidence/owl-climb-poker-face-b.jpg",
+        "matches": true,
+        "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_1.jpg"
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/evidence/owl-climb-poker-face-c.jpg",
+        "matches": true,
+        "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_2.jpg"
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/evidence/owl-climb-poker-face-d.jpg",
+        "matches": true,
+        "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_3.jpg"
+      }
+    ],
+    "throwawayScriptSnapshotRows": 31,
+    "scriptSnapshotMismatches": [],
+    "artifactIndexSHA256AtAudit": "b7533ad91ca92c420e8ce0081ec3f3753ed2042d98081486667e4c9c8f51c4b9"
+  },
+  "rawTestBuildProvenance": {
+    "hostPythonJUnit": {
+      "tests": 195,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "rawActualTestcaseElementCounts": [
+      {
+        "name": "model-tools-pytest",
+        "actualTestcaseElements": 24,
+        "failureElements": 0,
+        "errorElements": 0,
+        "skippedElements": 0
+      },
+      {
+        "name": "manifest-package-pytest",
+        "actualTestcaseElements": 171,
+        "failureElements": 0,
+        "errorElements": 0,
+        "skippedElements": 0
+      }
+    ],
+    "rawJUnitFiles": [
+      {
+        "file": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/package-validation/placid-badger-poker12-model-tools-pytest-junit.xml",
+        "sha256": "ce5309f4985ffafdb04558dbe72c3e51a13c3eb332f8b59e0559bfff42ab826b",
+        "counts": {
+          "tests": 24,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "file": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/package-validation/placid-badger-poker12-manifest-package-pytest-junit.xml",
+        "sha256": "85084f876433cc6a7759affd9bf871dd50e19ed47eba78b3f204de5d54af5dfa",
+        "counts": {
+          "tests": 171,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      }
+    ],
+    "canonicalPackagesValidated": 64,
+    "actualAndroidByteParity": {
+      "generatedManifest": true,
+      "descriptor": true,
+      "inlineModel": true,
+      "CADExcluded": true,
+      "suspensionSidecarExcluded": true
+    },
+    "genericBuildAttempts": 1,
+    "buildProof": {
+      "status": "passed-compile-and-staging",
+      "commit": "ad74a51e1c43991145721ab04ff8c0d3c6c51cca",
+      "dirtyDiffSHA256Matches": true,
+      "rawLogSHA256Matches": true,
+      "rawLogContainsBuildForTestingSuccess": true,
+      "rawLogContainsRuntimeTestCompletion": false,
+      "genericDestination": "generic/platform=iOS Simulator",
+      "action": "build-for-testing",
+      "unitTestCasesExecuted": 0,
+      "appFramesCaptured": 0,
+      "simulatorsCreated": 0,
+      "simulatorsBooted": 0,
+      "appsInstalled": 0,
+      "appsLaunched": 0
+    },
+    "buildCommit": "ad74a51e1c43991145721ab04ff8c0d3c6c51cca",
+    "buildDirtyDiffSHA256": "b461e0c0ad7852d124a61849f8b45a9f9bc9f55722e3a1b5ffc3ea0572f739f3",
+    "recordedBuiltBinarySHA256": "7ba82cd2b3dc7383892f91c8e6308786eb768fe4482850edbb2a433663f6832e",
+    "buildLogSHA256": "fd97bbf1884f68485652b6bec22d6b5d822bf06c478607a754b666a510786c48",
+    "buildElapsedSeconds": 47.9227661670011,
+    "stagedGeneratedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1",
+    "stagedDescriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+    "odrModelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+    "builtBinaryScope": "Recorded by the exact retained build harness before owned Derived Data deletion; no current app install/runtime is represented."
+  },
+  "deliveryLock": {
+    "directFileCount": 135,
+    "unchangedDirectFiles": 133,
+    "onlyChangedDirectFiles": [
+      "Hangboards/owl-climb-poker/assets/primary.model.json",
+      "Hangboards/owl-climb-poker/owl-climb-poker.FCStd"
+    ],
+    "checksumManifestSHA256": "fa6fcdde53a95fef8561af7baf12d363372c2a7d9571230ddc3ea600e908fa23",
+    "lockPinsSameChecksumManifest": true,
+    "actualLockedFileMismatches": [],
+    "modelPackages": 58,
+    "descriptorPinsCurrentUSDZ": true,
+    "priorManifestSnapshotMatchesHEAD": true,
+    "freshDeliveryVerifierRecord": {
+      "passed": true,
+      "models": 58,
+      "files": 135,
+      "sha256Manifest": "fa6fcdde53a95fef8561af7baf12d363372c2a7d9571230ddc3ea600e908fa23"
+    },
+    "deliveryVerifierRerunByThisAudit": false
+  },
+  "recordScope": {
+    "otherTrackedPackageFilesVerifiedUnchanged": 203,
+    "otherPackageMismatches": [],
+    "onlyChangedQueueBoard": 12,
+    "priorPokerQueueRecordPreservedExactly": true,
+    "priorPokerLockRecordPreservedExactly": true,
+    "allOtherQueueAndMigratedPackageRecordsPreserved": true,
+    "historicalPythonIOSAppCountsPreserved": true,
+    "earlierIndividualReviewsPreserved": true,
+    "sharedReservedFiles": [
+      "HangTen/Models/BoardModelRealityTypes.swift",
+      "HangTen/Views/BoardModelView.swift",
+      "HangTen/Views/RootView.swift",
+      "HangTenTests/BoardModelTests.swift",
+      "HangTenTests/BoardModelRealityTests.swift"
+    ],
+    "sharedReservedFilesChanged": [],
+    "globalDiffPaths": {
+      "docs/model-delivery-lock.json": [
+        "/individualReviewRevisions/17",
+        "/migratedPackages/owl-climb-poker/assetSHA256",
+        "/migratedPackages/owl-climb-poker/assets/assets/primary.usdz/descriptorSHA256",
+        "/migratedPackages/owl-climb-poker/assets/assets/primary.usdz/modelSHA256",
+        "/migratedPackages/owl-climb-poker/comparison",
+        "/migratedPackages/owl-climb-poker/descriptorSHA256",
+        "/migratedPackages/owl-climb-poker/geometryAcceptance",
+        "/migratedPackages/owl-climb-poker/historicalMigrationReview",
+        "/migratedPackages/owl-climb-poker/metadataAudit",
+        "/migratedPackages/owl-climb-poker/nativeAppValidation",
+        "/migratedPackages/owl-climb-poker/nativeValidation",
+        "/migratedPackages/owl-climb-poker/sourceSHA256",
+        "/sha256Manifest",
+        "/sha256ManifestHistory/18"
+      ],
+      "docs/source-audits/2026-09-29-remaining-cad/review-queue.json": [
+        "/boards/11/appReview",
+        "/boards/11/appReviewPage",
+        "/boards/11/comparisons/0",
+        "/boards/11/comparisons/1",
+        "/boards/11/comparisons/2",
+        "/boards/11/historicalMigrationReview",
+        "/boards/11/humanReview",
+        "/boards/11/humanReviewRecord",
+        "/boards/11/latestRevision",
+        "/boards/11/presentations/primary/descriptorSHA256",
+        "/boards/11/presentations/primary/modelSHA256",
+        "/boards/11/reviewPage",
+        "/boards/11/runtimeRevision",
+        "/boards/11/sourceSHA256",
+        "/reviewState"
+      ],
+      "docs/source-audits/2026-09-29-remaining-cad/batch-validation.json": [
+        "/geometryAcceptance",
+        "/historicalBaselineScope/latestPokerAppFrames",
+        "/historicalBaselineScope/latestPokerRuntimeReport",
+        "/historicalBaselineScope/latestPokerUnitCasesExecuted",
+        "/reviewRevisions/14"
+      ],
+      "docs/source-audits/2026-09-29-remaining-cad/delivery-validation.json": [
+        "/owlClimbPokerReview12",
+        "/sha256Manifest"
+      ],
+      "docs/source-audits/2026-09-29-remaining-cad/installed-delivery-validation.json": [
+        "/historicalBaselineScope/latestPokerAppFrames",
+        "/historicalBaselineScope/latestPokerRuntimeReport",
+        "/historicalBaselineScope/latestPokerUnitCasesExecuted",
+        "/owlClimbPokerReview12"
+      ]
+    },
+    "oldAppFramesAreHistorical": true,
+    "currentAppAppearanceVerified": false,
+    "currentRevisionInstalled": false,
+    "humanAcceptance": "pending"
+  },
+  "geometryEvidenceIdentityOnly": {
+    "authority": "Retained independent Astra physical-shape/contact-extent verdict; this audit does not judge shape",
+    "verdictPath": "independent-shape/shape-verdict.json",
+    "verdictStatus": "pass",
+    "verdictHashesMatchCurrent": true,
+    "nativeRecordSourceHashMatchesCurrent": true,
+    "exportRecordHashesMatchCurrent": true,
+    "nativeSketchCount": 187,
+    "unaffectedContactSurfacesRecorded": 32,
+    "unboundMeshNodesRecorded": 35,
+    "actualExportTrianglesRecorded": 91612,
+    "actualExportBytes": 2044005,
+    "cleanExistingExportCopyIdentityChecks": [
+      {
+        "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/compile-1/assets/primary.usdz",
+        "matchesFrozenCanonical": true,
+        "sha256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675"
+      },
+      {
+        "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/compile-1/assets/primary.model.json",
+        "matchesFrozenCanonical": true,
+        "sha256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
+      },
+      {
+        "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/compile-2/assets/primary.usdz",
+        "matchesFrozenCanonical": true,
+        "sha256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675"
+      },
+      {
+        "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/compile-2/assets/primary.model.json",
+        "matchesFrozenCanonical": true,
+        "sha256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
+      }
+    ],
+    "nativeOrUSDZReopenRerunByThisAudit": false
+  },
+  "cleanup": {
+    "processGroupCount": 10,
+    "transientPathCount": 12,
+    "allProcessGroupsAbsentAtAudit": true,
+    "allTransientPathsAbsentAtAudit": true,
+    "processGroups": [
+      {
+        "pgid": 3293,
+        "name": "placid-badger-compile-1",
+        "members": [],
+        "freshMembers": [],
+        "absentNow": true
+      },
+      {
+        "pgid": 8451,
+        "name": "placid-badger-validate-native",
+        "members": [],
+        "freshMembers": [],
+        "absentNow": true
+      },
+      {
+        "pgid": 10623,
+        "name": "placid-badger-compile-2",
+        "members": [],
+        "freshMembers": [],
+        "absentNow": true
+      },
+      {
+        "pgid": 25900,
+        "name": "placid-badger-poker12-independent-export",
+        "members": [],
+        "freshMembers": [],
+        "absentNow": true
+      },
+      {
+        "pgid": 34571,
+        "name": "placid-badger-poker12-model-tools-pytest",
+        "members": [],
+        "freshMembers": [],
+        "absentNow": true
+      },
+      {
+        "pgid": 34617,
+        "name": "placid-badger-poker12-manifest-package-pytest",
+        "members": [],
+        "freshMembers": [],
+        "absentNow": true
+      },
+      {
+        "pgid": 34897,
+        "name": "placid-badger-poker12-canonical-cli",
+        "members": [],
+        "freshMembers": [],
+        "absentNow": true
+      },
+      {
+        "pgid": 34903,
+        "name": "placid-badger-poker12-android-staging",
+        "members": [],
+        "freshMembers": [],
+        "absentNow": true
+      },
+      {
+        "pgid": 34926,
+        "name": "placid-badger-poker12-ios-build",
+        "members": [],
+        "freshMembers": [],
+        "absentNow": true
+      },
+      {
+        "pgid": 98803,
+        "name": "placid-badger-author",
+        "members": [],
+        "freshMembers": [],
+        "absentNow": true
+      }
+    ],
+    "transientPaths": [
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/native-correction-2026-10-02/placid-badger-tmp-author",
+        "insideOwnedRoot": true,
+        "absentNow": true
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/native-correction-2026-10-02/placid-badger-tmp-compile-1",
+        "insideOwnedRoot": true,
+        "absentNow": true
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/native-correction-2026-10-02/placid-badger-tmp-compile-2",
+        "insideOwnedRoot": true,
+        "absentNow": true
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/native-correction-2026-10-02/placid-badger-tmp-validate-native",
+        "insideOwnedRoot": true,
+        "absentNow": true
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-android-stage",
+        "insideOwnedRoot": true,
+        "absentNow": true
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-android-staging-TMP",
+        "insideOwnedRoot": true,
+        "absentNow": true
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-canonical-cli-TMP",
+        "insideOwnedRoot": true,
+        "absentNow": true
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-DD",
+        "insideOwnedRoot": true,
+        "absentNow": true
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-build-TMP",
+        "insideOwnedRoot": true,
+        "absentNow": true
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-manifest-package-pytest-TMP",
+        "insideOwnedRoot": true,
+        "absentNow": true
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-model-tools-pytest-TMP",
+        "insideOwnedRoot": true,
+        "absentNow": true
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/root/placid-badger-poker12-independent-export-tmp",
+        "insideOwnedRoot": true,
+        "absentNow": true
+      }
+    ],
+    "newExternalResourcesStartedByThisAudit": [],
+    "simulatorsCreated": 0,
+    "simulatorsBooted": 0,
+    "appsInstalled": 0,
+    "appsLaunched": 0,
+    "currentAppFrames": 0,
+    "iosUnitCasesExecuted": 0,
+    "parallelWorkspaceInspectedOrMonitoredOrMerged": false
+  },
+  "chronologicalSnapshots": [
+    "Prior migration/preflight and initial source/preparation states remain retained snapshots; current final hash-bound verdict, runtime report and historical scope fields distinguish this revision.",
+    "The script-provenance snapshot verifies 31 exact scripts. Root reports a later ignored post_push_verify.py helper; the snapshot and artifact index will be refreshed during final report retention."
+  ],
+  "finalRetentionAction": {
+    "sourceReport": ".context/placid-badger/poker-review12/root/independent-delivery-review.json",
+    "targetReport": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/independent-delivery-review.json",
+    "required": "Retain this report in the already linked packet target and refresh artifact/provenance indexes. This is the only expected pending local link; the current 132-row snapshot otherwise verifies exactly.",
+    "humanAcceptanceRemainsPending": true
+  },
+  "limitations": [
+    "195 passing host Python cases are distinct from zero iOS runtime cases.",
+    "One generic build-for-testing establishes compile/staging provenance only; zero current app frames and guest operations exist.",
+    "Current wood appearance, picking, highlighting, workout appearance and human geometry acceptance remain unverified/pending."
+  ]
+}

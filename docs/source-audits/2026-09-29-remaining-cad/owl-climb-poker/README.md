@@ -1,3 +1,5 @@
+October 2 update: the [current #12 review](review12-2026-10-02/review.md) contains the corrected reliefs, wood finish, current identities and validation limits. Earlier migration results and app images below are historical.
+
 # owl-climb-poker: CAD source evidence
 
 Date: 2026-09-29. Publisher: Owl Climb.

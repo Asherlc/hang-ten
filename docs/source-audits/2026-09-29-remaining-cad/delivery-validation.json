@@ -61,7 +61,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "eef283106fd1636a2bc036d9b64268fa41cbf2bf2286304607513662b86850e8",
+  "sha256Manifest": "fa6fcdde53a95fef8561af7baf12d363372c2a7d9571230ddc3ea600e908fa23",
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
   "scope": "exact-file identity for committed files; a source-backed board pins its compiled asset through descriptor modelSHA256 and its build-time board.json through the locked FCStd and optional suspension sidecar",
   "stoneHangerMiniReview10": {
@@ -81,5 +81,13 @@
       "Hangboards/nature-stone-hanger-mini-karma8a/suspension.json"
     ],
     "unchangedLockedFiles": 132
+  },
+  "owlClimbPokerReview12": {
+    "report": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/delivery-check.json",
+    "changedLockedFiles": [
+      "Hangboards/owl-climb-poker/assets/primary.model.json",
+      "Hangboards/owl-climb-poker/owl-climb-poker.FCStd"
+    ],
+    "unchangedLockedFiles": 133
   }
 }

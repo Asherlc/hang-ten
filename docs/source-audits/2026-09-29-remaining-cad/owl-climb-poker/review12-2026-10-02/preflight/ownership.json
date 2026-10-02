@@ -1,0 +1,9 @@
+{
+  "owner": "placid-badger",
+  "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+  "task": "owl-climb-poker review 12 read-only package/evidence preflight",
+  "createdAt": "2026-10-02",
+  "generatedDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/preflight-2026-10-02",
+  "externalResources": [],
+  "cleanup": "No external process, simulator, server, or temporary directory was created."
+}

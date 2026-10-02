@@ -42,7 +42,7 @@
   "metadataAudit": "metadata-audit.json",
   "historicalReportNotes": "validation-notes.md",
   "appCaptures": "All 21 current-source packages; representative DEBUG contact review routes, plus physical selector taps for all three Plateau depths. RealityKit tests cover all authored presentation positions and transient non-pickable cords.",
-  "geometryAcceptance": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion acceptance pending; #11 native geometry presented, app and human acceptance pending; #12 not yet presented",
+  "geometryAcceptance": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion acceptance pending; #11 geometry presented, app and human acceptance pending; #12 corrected geometry presented, current app and human acceptance pending",
   "testArtifactSHA256": {
     "test-results/ios-summary.json": "6d38d38ec0659f98565df7ec135a99648db9f4964945c9fb58bdbda699a3febe",
     "test-results/ios-tests.log": "47c5b2b6d584d6df47cbf8e84e5bf2391f4ff3b4c82aa2fe6f8ad883f877e681",
@@ -384,6 +384,47 @@
       "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/human-review.json",
       "priorDeliveryManifestSHA256": "44e1f436175582271d914849d8a5555dea2ecc4e86ef6920d46db27c2c8a49ba",
       "limits": "Only the free leads have a taut-length target; old cross-return allowances remain. No current app frames or unit cases. Neutral CAD previews and compile-only provenance do not establish runtime appearance. Historical tests/captures stay separate."
+    },
+    {
+      "package": "owl-climb-poker",
+      "date": "2026-10-02",
+      "revision": "paired-a-b-relief-entry-and-wood-finish",
+      "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+      "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+      "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+      "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1",
+      "report": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/runtime-validation.json",
+      "postIntegrationTests": {
+        "pythonPassed": 195,
+        "pythonFailed": 0,
+        "pythonErrors": 0,
+        "pythonSkipped": 0,
+        "canonicalPackagesValidated": 64,
+        "iOSBuildPassed": true,
+        "iOSUnitCasesExecuted": 0,
+        "iOSCurrentAppFrames": 0,
+        "iOSRuntimeStatus": "not run; current app appearance unverified",
+        "androidStagingByteParity": true,
+        "iOSStagingByteParity": true
+      },
+      "boardFactsAndContactIDsUnchanged": true,
+      "allFourPositionsAndRotationsUnchanged": true,
+      "otherPackageFilesUnchanged": 203,
+      "changedNativeSketches": 6,
+      "unchangedNativeContactSurfaces": 32,
+      "cleanCompilesByteIdentical": true,
+      "nativeEnvelopeMM": [
+        660,
+        100,
+        100
+      ],
+      "actualExportTriangles": 91612,
+      "actualExportBytes": 2044005,
+      "sourceBackedWoodFinish": true,
+      "geometryAcceptance": "Pending #12 human geometry review; current app wood, picking, highlighting and workout appearance unverified",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/human-review.json",
+      "priorDeliveryManifestSHA256": "eef283106fd1636a2bc036d9b64268fa41cbf2bf2286304607513662b86850e8",
+      "limits": "All profile/radius/cavity-depth values are display estimates; no per-contact depth facts. No current app frames, guest operations or iOS unit cases. Historical captures and results remain separate."
     }
   ],
   "historicalBaselineScope": {
@@ -404,6 +445,9 @@
     "latestMiniAppFrames": 0,
     "latestKarma8aRuntimeReport": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
     "latestKarma8aAppFrames": 0,
-    "latestKarma8aUnitCasesExecuted": 0
+    "latestKarma8aUnitCasesExecuted": 0,
+    "latestPokerRuntimeReport": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/runtime-validation.json",
+    "latestPokerAppFrames": 0,
+    "latestPokerUnitCasesExecuted": 0
   }
 }

@@ -1,0 +1,85 @@
+{
+  "changes": [
+    {
+      "sketch": "S_b_leftProfile",
+      "startNativeYZ": [
+        -50,
+        -20
+      ],
+      "firstTangentPoleNativeYZ": [
+        -50,
+        -12
+      ],
+      "estimate": "operator-selected display geometry; qualitative maker-photo row relationship, no pixel measurements",
+      "poleCount": 10
+    },
+    {
+      "sketch": "S_b_leftBearing",
+      "startNativeYZ": [
+        -50,
+        -20
+      ],
+      "firstTangentPoleNativeYZ": [
+        -50,
+        -12
+      ],
+      "estimate": "operator-selected display geometry; qualitative maker-photo row relationship, no pixel measurements",
+      "poleCount": 10
+    },
+    {
+      "sketch": "S_b_leftEndProfile",
+      "startNativeYZ": [
+        -50,
+        -20
+      ],
+      "firstTangentPoleNativeYZ": [
+        -50,
+        -12
+      ],
+      "estimate": "operator-selected display geometry; qualitative maker-photo row relationship, no pixel measurements",
+      "poleCount": 10
+    },
+    {
+      "sketch": "S_b_rightProfile",
+      "startNativeYZ": [
+        -50,
+        -20
+      ],
+      "firstTangentPoleNativeYZ": [
+        -50,
+        -12
+      ],
+      "estimate": "operator-selected display geometry; qualitative maker-photo row relationship, no pixel measurements",
+      "poleCount": 10
+    },
+    {
+      "sketch": "S_b_rightBearing",
+      "startNativeYZ": [
+        -50,
+        -20
+      ],
+      "firstTangentPoleNativeYZ": [
+        -50,
+        -12
+      ],
+      "estimate": "operator-selected display geometry; qualitative maker-photo row relationship, no pixel measurements",
+      "poleCount": 10
+    },
+    {
+      "sketch": "S_b_rightEndProfile",
+      "startNativeYZ": [
+        -50,
+        -20
+      ],
+      "firstTangentPoleNativeYZ": [
+        -50,
+        -12
+      ],
+      "estimate": "operator-selected display geometry; qualitative maker-photo row relationship, no pixel measurements",
+      "poleCount": 10
+    }
+  ],
+  "preserved": "all other sketch profiles, constraints, parameters and manifest unchanged by authoring",
+  "sourceOriginalSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+  "candidateGeometrySHA256": "a388a82c440f600f8f82aed33d64135890a6fefc25876b845ed2c863c3e40ea0"
+}

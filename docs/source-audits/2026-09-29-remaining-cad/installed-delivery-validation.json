@@ -929,7 +929,10 @@
     "latestMiniAppFrames": 0,
     "latestKarma8aRuntimeReport": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
     "latestKarma8aAppFrames": 0,
-    "latestKarma8aUnitCasesExecuted": 0
+    "latestKarma8aUnitCasesExecuted": 0,
+    "latestPokerRuntimeReport": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/runtime-validation.json",
+    "latestPokerAppFrames": 0,
+    "latestPokerUnitCasesExecuted": 0
   },
   "stoneHangerMiniRuntimeRetry20261002": {
     "date": "2026-10-02",
@@ -959,6 +962,20 @@
     "sidecarSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf",
     "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
     "scope": "Current compile and resource staging only; no current install or app validation.",
+    "buildPassed": true,
+    "currentRevisionInstalled": false,
+    "unitCasesExecuted": 0,
+    "currentAppFrames": 0,
+    "humanAcceptance": "pending"
+  },
+  "owlClimbPokerReview12": {
+    "date": "2026-10-02",
+    "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+    "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+    "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+    "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1",
+    "report": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/runtime-validation.json",
+    "scope": "Compile and staging only; no current install or app validation",
     "buildPassed": true,
     "currentRevisionInstalled": false,
     "unitCasesExecuted": 0,

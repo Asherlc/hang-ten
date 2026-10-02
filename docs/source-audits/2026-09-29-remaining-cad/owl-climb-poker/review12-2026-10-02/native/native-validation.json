@@ -1,0 +1,297 @@
+{
+  "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+  "validSingleSolid": true,
+  "envelopeMM": [
+    660.0,
+    100.00000000000001,
+    100.00000000000014
+  ],
+  "contactIDs": [
+    "face-a-center-pull-up-slot",
+    "face-a-left-dual-pocket",
+    "face-a-left-outer-slot",
+    "face-a-left-single-pocket",
+    "face-a-right-dual-pocket",
+    "face-a-right-outer-slot",
+    "face-a-right-single-pocket",
+    "face-b-center-pull-up-slot",
+    "face-b-left-deep-sloper",
+    "face-b-left-dual-pocket",
+    "face-b-left-outer-slot",
+    "face-b-left-single-pocket",
+    "face-b-right-deep-sloper",
+    "face-b-right-dual-pocket",
+    "face-b-right-outer-slot",
+    "face-b-right-single-pocket",
+    "face-c-center-pull-up-slot",
+    "face-c-left-dual-pocket",
+    "face-c-left-outer-slot",
+    "face-c-left-shallow-half-round",
+    "face-c-left-single-pocket",
+    "face-c-right-dual-pocket",
+    "face-c-right-outer-slot",
+    "face-c-right-shallow-half-round",
+    "face-c-right-single-pocket",
+    "face-d-center-pull-up-slot",
+    "face-d-left-deep-rounded-recess",
+    "face-d-left-dual-pocket",
+    "face-d-left-outer-slot",
+    "face-d-left-single-pocket",
+    "face-d-right-deep-rounded-recess",
+    "face-d-right-dual-pocket",
+    "face-d-right-outer-slot",
+    "face-d-right-single-pocket"
+  ],
+  "allSketchesFullyConstrained": true,
+  "sketchCount": 187,
+  "unchangedNativeContacts": [
+    {
+      "contact": "face-a-left-outer-slot",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-a-right-outer-slot",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-a-left-single-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-a-left-dual-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-a-right-single-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-a-right-dual-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-a-center-pull-up-slot",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-b-left-outer-slot",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-b-right-outer-slot",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-b-left-single-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-b-left-dual-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-b-right-single-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-b-right-dual-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-b-center-pull-up-slot",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-c-left-outer-slot",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-c-right-outer-slot",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-c-left-single-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-c-left-dual-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-c-right-single-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-c-right-dual-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-c-center-pull-up-slot",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-d-left-outer-slot",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-d-right-outer-slot",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-d-left-single-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-d-left-dual-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-d-right-single-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-d-right-dual-pocket",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-d-center-pull-up-slot",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 0.0,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-c-left-shallow-half-round",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 1.7763568394002505e-15,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-d-left-deep-rounded-recess",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 3.552713678800501e-15,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-c-right-shallow-half-round",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 1.7763568394002505e-15,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    },
+    {
+      "contact": "face-d-right-deep-rounded-recess",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundsDeltaMM": 3.552713678800501e-15,
+      "unmatchedNativeSurfaceAreaMM2": 0.0
+    }
+  ],
+  "meaningfulEdit": {
+    "parameter": "PocketDepthScale",
+    "change": [
+      1,
+      1.04,
+      1
+    ],
+    "volumeBefore": 5280558.280228423,
+    "volumeEdited": 5266492.317200438,
+    "volumeRestored": 5280558.280228423,
+    "allSevenFaceADepths": [
+      {
+        "contact": "face-a-left-outer-slot",
+        "depthBeforeMM": 22.000000000000004,
+        "depthEditedMM": 22.880000000000006,
+        "expectedRatio": 1.04
+      },
+      {
+        "contact": "face-a-right-outer-slot",
+        "depthBeforeMM": 22.000000000000004,
+        "depthEditedMM": 22.880000000000006,
+        "expectedRatio": 1.04
+      },
+      {
+        "contact": "face-a-left-single-pocket",
+        "depthBeforeMM": 17.000000000000007,
+        "depthEditedMM": 17.68,
+        "expectedRatio": 1.04
+      },
+      {
+        "contact": "face-a-left-dual-pocket",
+        "depthBeforeMM": 17.000000000000007,
+        "depthEditedMM": 17.680000000000007,
+        "expectedRatio": 1.04
+      },
+      {
+        "contact": "face-a-right-single-pocket",
+        "depthBeforeMM": 17.000000000000007,
+        "depthEditedMM": 17.68,
+        "expectedRatio": 1.04
+      },
+      {
+        "contact": "face-a-right-dual-pocket",
+        "depthBeforeMM": 17.000000000000007,
+        "depthEditedMM": 17.680000000000007,
+        "expectedRatio": 1.04
+      },
+      {
+        "contact": "face-a-center-pull-up-slot",
+        "depthBeforeMM": 17.000000000000007,
+        "depthEditedMM": 17.68,
+        "expectedRatio": 1.04
+      }
+    ]
+  },
+  "sourceBytesUnchanged": true
+}

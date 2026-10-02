@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion acceptance pending; #11 native geometry presented, app and human acceptance pending; #12 not yet presented",
+  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion acceptance pending; #11 geometry presented, app and human acceptance pending; #12 corrected geometry presented, current app and human acceptance pending",
   "boards": [
     {
       "number": 1,
@@ -421,21 +421,47 @@
       "package": "owl-climb-poker",
       "boardID": "owl-climb.poker",
       "name": "Owl Climb Poker",
-      "humanReview": "pending",
-      "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
-      "reviewPage": "owl-climb-poker/geometry-review.html",
+      "humanReview": "Pending #12 human geometry review; current app wood, picking, highlighting and workout appearance unverified",
+      "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+      "reviewPage": "owl-climb-poker/review12-2026-10-02/index.html",
       "sourceAudit": "owl-climb-poker/README.md",
       "comparisons": [
-        "owl-climb-poker/comparison-sheet.png"
+        "owl-climb-poker/review12-2026-10-02/native/comparison-front.png",
+        "owl-climb-poker/review12-2026-10-02/native/comparison-side.png",
+        "owl-climb-poker/review12-2026-10-02/native/comparison-top.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac",
-          "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874"
+          "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+          "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
         }
       },
-      "appReview": "owl-climb-poker/app-review/validation.json",
-      "appReviewPage": "owl-climb-poker/app-review/index.html"
+      "appReview": "owl-climb-poker/review12-2026-10-02/runtime-validation.json",
+      "appReviewPage": "owl-climb-poker/review12-2026-10-02/index.html",
+      "historicalMigrationReview": {
+        "number": 12,
+        "package": "owl-climb-poker",
+        "boardID": "owl-climb.poker",
+        "name": "Owl Climb Poker",
+        "humanReview": "pending",
+        "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+        "reviewPage": "owl-climb-poker/geometry-review.html",
+        "sourceAudit": "owl-climb-poker/README.md",
+        "comparisons": [
+          "owl-climb-poker/comparison-sheet.png"
+        ],
+        "presentations": {
+          "primary": {
+            "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac",
+            "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874"
+          }
+        },
+        "appReview": "owl-climb-poker/app-review/validation.json",
+        "appReviewPage": "owl-climb-poker/app-review/index.html"
+      },
+      "humanReviewRecord": "owl-climb-poker/human-review.json",
+      "latestRevision": "owl-climb-poker/review12-2026-10-02/review.md",
+      "runtimeRevision": "owl-climb-poker/review12-2026-10-02/runtime-validation.json"
     },
     {
       "number": 13,
