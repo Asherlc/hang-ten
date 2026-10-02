@@ -874,5 +874,58 @@
     "humanReviewAnswer": "Y",
     "acceptedDate": "2026-10-01",
     "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/human-review.json"
+  },
+  "stoneHangerMiniCompletionReview10": {
+    "date": "2026-10-01",
+    "scope": "Fresh installed Mini completion only; previous catalog/run reports remain historical.",
+    "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+    "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+    "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+    "sidecarSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
+    "suspensionSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
+    "builtInstalledBinarySHA256": "68777744e4374819a6ffb7d9d6aa3a45636110f73bd4e5303672db37869c630b",
+    "generatedManifestSHA256": "2125d52a00ff55777505b3ca28777c5dc499955d05f6aaf441226a0d1275b76f",
+    "installedParity": "Exact current Mini build/install binary, generated manifest, descriptor and embedded ODR model; no visual/runtime implication.",
+    "runtimeGate": "blocked-environment",
+    "coverage": {
+      "exactContactSelections": 0,
+      "positionIDs": [],
+      "wholeFrameScreenshotsPhysicallyInspected": 0,
+      "actualDragActions": 0,
+      "sameInstanceGraniteToWoodToGraniteRestoration": false,
+      "physicalContactTapCanonicalReset": false,
+      "relaunchReappearance": false,
+      "actualWorkoutDrivenJugPose": false,
+      "packageInstallParity": "Exact current Mini build/install binary, generated manifest, descriptor and embedded ODR model; no visual/runtime implication."
+    },
+    "postIntegrationTests": {
+      "pythonPassed": 284,
+      "pythonSkipped": 0,
+      "iOSPassed": 0,
+      "iOSSkipped": 0,
+      "failures": 1,
+      "iOSRuntimeStatus": "not run; simulator startup blocked",
+      "iOSLauncherFailures": 1,
+      "iOSFailed": 1,
+      "iOSUnitCasesExecuted": 0,
+      "iOSExecutedCaseFailures": 0
+    },
+    "cleanupVerified": true,
+    "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/runtime-validation.json",
+    "humanAcceptance": "Overall Mini shape accepted with Lgtm; final seat, finishes, shorter cords and jug pose review pending; app appearance unverified due simulator startup failure"
+  },
+  "historicalBaselineScope": {
+    "fields": [
+      "passed",
+      "simulator",
+      "packages",
+      "counts",
+      "authoringSourcesNotBundled"
+    ],
+    "meaning": "These original batch results and captures are retained as historical evidence. Current/source in those fields means the source recorded at that original run, before individual review revisions. They do not establish runtime validation of the revised Mini.",
+    "latestMiniRuntimeStatus": "blocked-environment",
+    "latestMiniRuntimeReport": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/runtime-validation.json",
+    "latestMiniUnitCasesExecuted": 0,
+    "latestMiniAppFrames": 0
   }
 }

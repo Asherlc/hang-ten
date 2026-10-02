@@ -61,7 +61,16 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "c147798fd57e30d093fcd2ca868690064d48f35aa2be16bfe2b5b36fed906232",
+  "sha256Manifest": "44e1f436175582271d914849d8a5555dea2ecc4e86ef6920d46db27c2c8a49ba",
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "scope": "exact-file identity for committed files; a source-backed board pins its compiled asset through descriptor modelSHA256 and its build-time board.json through the locked FCStd and optional suspension sidecar"
+  "scope": "exact-file identity for committed files; a source-backed board pins its compiled asset through descriptor modelSHA256 and its build-time board.json through the locked FCStd and optional suspension sidecar",
+  "stoneHangerMiniReview10": {
+    "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/delivery-check.json",
+    "changedLockedFiles": [
+      "Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+      "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "Hangboards/nature-stone-hanger-mini/suspension.json"
+    ],
+    "unchangedLockedFiles": 132
+  }
 }

@@ -27,3 +27,9 @@ The [continuous cord certificate](cord-continuous-clearance.json) checks the exa
 [Camera correction proof](camera-correction-proof.json) records local front/rear and inverted viewing directions. The correction changes camera metadata only; native assets, routes, heights and cord dimensions remain byte/value identical.
 
 Initial compile reports predate metadata-only edits and are superseded for final source identity. [Current-source fresh rebuild proof](reproducibility.json); [batch validation notes](../validation-notes.md).
+
+## October 1 Mini completion revision
+
+The original migration reports above are historical. The user accepted the displayed overall shape with “Lgtm”; that approval is pinned to the prior source and model in [human review](human-review.json). The [current completion packet](completion-review/review.md) supersedes the source, export and cord identities for the scoped revision: fitted lower granite seat with zero wood/stone overlap, full exposed stone-node coverage using existing runtime finishes, preserved factual contacts, four freshly solved compact cord poses, and an estimated opening-up jug display pose.
+
+Whole exact prior/current [front](completion-review/comparison-front.png), [side](completion-review/comparison-side.png) and [top](completion-review/comparison-top.png) previews are retained. The neutral CAD renders show the geometry; they do not show the wood/granite finish or solved cords. Native, export, Python and package checks passed. Current iOS app appearance and interaction remain unverified because the isolated simulator attempts failed before usable app content. Final completion acceptance remains pending; earlier shape approval is not final finish/cord/pose approval.

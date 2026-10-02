@@ -1,0 +1,35 @@
+{
+  "status": "pass",
+  "verifiedUTC": "2026-10-02T05:30:48.816174+00:00",
+  "scope": "Native delivery and review records only; runtime remains environment-blocked.",
+  "frozenMiniFilesVerified": {
+    "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.usdz": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.model.json": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+    "Hangboards/nature-stone-hanger-mini/suspension.json": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+  },
+  "otherPackageFilesUnchanged": 202,
+  "lockedFilesVerified": 135,
+  "lockedChanges": [
+    "Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+    "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+    "Hangboards/nature-stone-hanger-mini/suspension.json"
+  ],
+  "descriptorModelBindingsVerified": 60,
+  "canonicalPackagesValidated": 64,
+  "catalogDrafts": 0,
+  "packageValidationReceipt": "raw/root/placid-badger-mini-final-package-validation-command.json",
+  "generatedManifestSHA256": "2125d52a00ff55777505b3ca28777c5dc499955d05f6aaf441226a0d1275b76f",
+  "logicalContactsPreserved": true,
+  "historicalBaselineEvidencePreserved": true,
+  "humanApprovalScopePreserved": true,
+  "iOSRuntimeStatus": "blocked-environment",
+  "currentAppFrames": 0,
+  "unitCasesExecuted": 0,
+  "iOSLauncherFailures": 1,
+  "wholeCADComparisonsHashChecked": true,
+  "localLinksChecked": 59,
+  "noTrackedAuthoringScripts": true,
+  "authoredWhitespaceCheckScope": "Staged and unstaged authored files; byte-exact tool-generated raw .log/.txt artifacts retain their original whitespace.",
+  "resourceCleanupReport": "resource-cleanup.json"
+}

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "one-by-one review in progress: first nine shown revisions accepted; Nature Climbing Stone Hanger Mini is review #10",
+  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final completion review pending; #11 has not been presented",
   "boards": [
     {
       "number": 1,
@@ -56,7 +56,7 @@
       "appReviewPage": "captain-fingerfood-dual/vertical-tightening-review/app-review/index.html",
       "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
       "reviewFeedback": [
-        "Cord doesn\u2019t go through holes",
+        "Cord doesn’t go through holes",
         "the 90 degree position tho, why does the bottom cord jut out to the side?"
       ],
       "latestRevision": "captain-fingerfood-dual/vertical-tightening-review/review.md",
@@ -211,7 +211,7 @@
       "runtimeRevision": "metolius-contact/pinch-rails-review/runtime-validation.json",
       "revisionBaseCommit": "5cfd5b6386b283b2eb8daefc054a42823fdf852b",
       "reviewFeedback": [
-        "The pinch rails need to extend forward otherwise there\u2019s nothing to pinch"
+        "The pinch rails need to extend forward otherwise there’s nothing to pinch"
       ],
       "priorIndividualReview": "metolius-contact/individual-review/index.html",
       "reviewAnswer": "Y",
@@ -312,26 +312,56 @@
       "package": "nature-stone-hanger-mini",
       "boardID": "nature.stone-hanger-mini",
       "name": "Nature Climbing Stone Hanger Mini",
-      "humanReview": "pending",
-      "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
-      "reviewPage": "nature-stone-hanger-mini/review/index.html",
+      "humanReview": "Overall Mini shape accepted with Lgtm; final seat, finishes, shorter cords and jug pose review pending; app appearance unverified due simulator startup failure",
+      "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+      "reviewPage": "nature-stone-hanger-mini/completion-review/index.html",
       "sourceAudit": "nature-stone-hanger-mini/native-authoring.md",
       "comparisons": [
-        "nature-stone-hanger-mini/review/prior-side.png",
-        "nature-stone-hanger-mini/review/prior-primary.png",
-        "nature-stone-hanger-mini/review/primary-front.png",
-        "nature-stone-hanger-mini/review/prior-side.png",
-        "nature-stone-hanger-mini/review/primary-side.png",
-        "nature-stone-hanger-mini/review/primary-top.png"
+        "nature-stone-hanger-mini/completion-review/comparison-front.png",
+        "nature-stone-hanger-mini/completion-review/comparison-side.png",
+        "nature-stone-hanger-mini/completion-review/comparison-top.png",
+        "nature-stone-hanger-mini/completion-review/comparison-oblique.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
-          "modelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30"
+          "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+          "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57"
         }
       },
-      "appReview": "nature-stone-hanger-mini/app-review/validation.json",
-      "appReviewPage": "nature-stone-hanger-mini/app-review/index.html"
+      "appReview": "nature-stone-hanger-mini/completion-review/runtime-validation.json",
+      "appReviewPage": "nature-stone-hanger-mini/completion-review/index.html",
+      "suspensionSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
+      "humanReviewRecord": "nature-stone-hanger-mini/human-review.json",
+      "latestRevision": "nature-stone-hanger-mini/completion-review/review.md",
+      "runtimeRevision": "nature-stone-hanger-mini/completion-review/runtime-validation.json",
+      "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views.",
+      "reviewAnswer": "Lgtm",
+      "historicalMigrationReview": {
+        "number": 10,
+        "package": "nature-stone-hanger-mini",
+        "boardID": "nature.stone-hanger-mini",
+        "name": "Nature Climbing Stone Hanger Mini",
+        "humanReview": "pending",
+        "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+        "reviewPage": "nature-stone-hanger-mini/review/index.html",
+        "sourceAudit": "nature-stone-hanger-mini/native-authoring.md",
+        "comparisons": [
+          "nature-stone-hanger-mini/review/prior-side.png",
+          "nature-stone-hanger-mini/review/prior-primary.png",
+          "nature-stone-hanger-mini/review/primary-front.png",
+          "nature-stone-hanger-mini/review/prior-side.png",
+          "nature-stone-hanger-mini/review/primary-side.png",
+          "nature-stone-hanger-mini/review/primary-top.png"
+        ],
+        "presentations": {
+          "primary": {
+            "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
+            "modelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30"
+          }
+        },
+        "appReview": "nature-stone-hanger-mini/app-review/validation.json",
+        "appReviewPage": "nature-stone-hanger-mini/app-review/index.html"
+      }
     },
     {
       "number": 11,
@@ -600,7 +630,7 @@
     }
   ],
   "reviewScope": {
-    "userInstruction": "I only want to review the ones we\u2019re migrating",
+    "userInstruction": "I only want to review the ones we’re migrating",
     "eligibility": "Only packages first given a native CAD source by this task; existing CAD packages and externally claimed migrations are excluded.",
     "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
     "migrationCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",

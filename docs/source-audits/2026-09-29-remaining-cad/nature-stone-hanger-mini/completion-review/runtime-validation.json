@@ -1,0 +1,105 @@
+{
+  "status": "blocked-environment",
+  "phase": "mini-completion-current-source",
+  "recordedUTC": "2026-10-02T05:13:02.374608+00:00",
+  "blockingFindings": [
+    "No current Mini app review: owned iOS26.5/26.4 guests failed to become usable; ordinary raster/home control also did not display app content."
+  ],
+  "specificSystemCauseProven": false,
+  "firstLaunchConfigurationCheck": {
+    "owner": "placid-badger",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcodebuild",
+      "-checkFirstLaunchStatus"
+    ],
+    "readOnly": true,
+    "timeoutSeconds": 25,
+    "ownedProcessGroup": 51119,
+    "exitCode": 0,
+    "output": "",
+    "ownedProcessGroupAbsent": true,
+    "elapsedSeconds": 0.16009904199745506
+  },
+  "humanAcceptance": "Earlier overall Mini shape Lgtm accepted; final seat/finish/cord/jug presentation pending.",
+  "packageSHA256": {
+    "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.usdz": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.model.json": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+    "Hangboards/nature-stone-hanger-mini/suspension.json": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+  },
+  "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+  "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+  "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+  "sidecarSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
+  "builtInstalledBinarySHA256": "68777744e4374819a6ffb7d9d6aa3a45636110f73bd4e5303672db37869c630b",
+  "generatedManifestSHA256": "2125d52a00ff55777505b3ca28777c5dc499955d05f6aaf441226a0d1275b76f",
+  "commit": "ac077ec832d99471bbbebb4199ca810308c32140",
+  "dirtyDiffSHA256": "036a7c4c927e28ead862dcd998769dd5a95f1f139ef14d6f1c7ab65d561d06d3",
+  "currentBuiltInstalledRuntime": {
+    "owner": "placid-badger",
+    "simulatorUUID": "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B",
+    "simulatorName": "Hang Ten Paseo placid-badger Review Mini Completion iOS264",
+    "pendingAndOwnedRegistered": true,
+    "cleanupTrap": "ios26.4-clean-session.zsh",
+    "runtimeIdentifier": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+    "runtimeVersion": "26.4",
+    "runtimeBuild": "23E244"
+  },
+  "build": {
+    "exitCode": 0,
+    "elapsedSeconds": 42.47546412498923
+  },
+  "tests": {
+    "status": "not-run-environment",
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0,
+    "launcherFailures": 1,
+    "unitCasesExecuted": 0,
+    "rawHarnessTestCount": 1,
+    "testLaunchAttempts": 2,
+    "cancelledBeforeTestStart": 1,
+    "sourceMethodCounts": {
+      "BoardModelTests": 8,
+      "BoardModelRealityTests": 22,
+      "BoardPackageStoreTests": 161,
+      "SuspendedBoardPresentationTests": 68
+    },
+    "rawSummary": "raw/ios/ios-summary.json",
+    "failure": "Failed to install or launch the test runner. (Underlying Error: The operation couldn\u2019t be completed. (Mach error -308 - (ipc/mig) server died))"
+  },
+  "coverage": {
+    "exactContactSelections": 0,
+    "positionIDs": [],
+    "wholeFrameScreenshotsPhysicallyInspected": 0,
+    "actualDragActions": 0,
+    "sameInstanceGraniteToWoodToGraniteRestoration": false,
+    "physicalContactTapCanonicalReset": false,
+    "relaunchReappearance": false,
+    "actualWorkoutDrivenJugPose": false,
+    "packageInstallParity": "Exact current Mini build/install binary, generated manifest, descriptor and embedded ODR model; no visual/runtime implication."
+  },
+  "cleanup": {
+    "status": "passed",
+    "simulatorUUID": "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B",
+    "allExactOwnedUUIDsVerifiedAbsent": [
+      "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B",
+      "CEC83800-5035-404E-B5A2-E40B826FE00E",
+      "E9D3D8B4-1440-4417-862B-3023AF3841FA",
+      "FAF5CDF7-28BB-44C6-AA5F-0DF2532E6DE1"
+    ],
+    "actualUUIDAbsent": true,
+    "derivedDataAbsent": true,
+    "ownedTmpAbsent": true,
+    "xcresultAbsent": true,
+    "pendingAndOwnedRecordsConsumed": true
+  },
+  "limits": [
+    "Native shape/export/route checks and staging parity remain valid for frozen source; actual runtime appearance, interaction and workout checks are unverified.",
+    "Zero unit cases executed. The xcresult failure is a test-runner launch failure, not a passed test or observed Mini assertion failure.",
+    "Retired binary identities differ after rebuilds and remain historical; this proof uses the final 68777744e\u2026 binary.",
+    "No updater, global installer, developer-selection change or shared CoreSimulator service restart was performed."
+  ]
+}

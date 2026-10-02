@@ -1,0 +1,32 @@
+[
+  {
+    "content_required" : false,
+    "AXLabel" : "Hang Ten",
+    "type" : "Application",
+    "pid" : 91145,
+    "children" : [
+
+    ],
+    "enabled" : true,
+    "traits" : [
+
+    ],
+    "role_description" : "application",
+    "title" : null,
+    "AXValue" : null,
+    "custom_actions" : [
+
+    ],
+    "role" : "AXApplication",
+    "AXFrame" : "{{0, 0}, {402, 874}}",
+    "frame" : {
+      "x" : 0,
+      "width" : 402,
+      "height" : 874,
+      "y" : 0
+    },
+    "AXUniqueId" : null,
+    "subrole" : null,
+    "help" : null
+  }
+]

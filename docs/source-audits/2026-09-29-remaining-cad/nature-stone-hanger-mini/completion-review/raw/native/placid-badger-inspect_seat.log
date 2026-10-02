@@ -1,0 +1,23 @@
+{
+  "woodStoneOverlapMM3": 377.77549472552914,
+  "bodySolidCount": 1,
+  "gapWitnessVolumeMM3": 62.0,
+  "gapWitnessMaterialMM3": 39.56761506806572,
+  "gapWitnessBounds": [
+    -31,
+    31,
+    -12.4,
+    -11.4,
+    -19,
+    -18
+  ],
+  "jugNormal": [
+    0.0,
+    -1.0,
+    2.2e-16
+  ]
+}
+
+								
+								
+								

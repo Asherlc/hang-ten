@@ -1,0 +1,25 @@
+{
+  "owner": "placid-badger",
+  "createdUTC": "2026-10-02T03:31:08.714187+00:00",
+  "files": {
+    "nature-stone-hanger-mini.FCStd": {
+      "scratchPath": ".context/placid-badger/nature-stone-mini-review10/completion/native-author/nature-stone-hanger-mini.FCStd",
+      "sha256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0"
+    },
+    "assets/primary.usdz": {
+      "scratchPath": ".context/placid-badger/nature-stone-mini-review10/completion/assets/primary.usdz",
+      "sha256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57"
+    },
+    "assets/primary.model.json": {
+      "scratchPath": ".context/placid-badger/nature-stone-mini-review10/completion/assets/primary.model.json",
+      "sha256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71"
+    },
+    "suspension.json": {
+      "scratchPath": ".context/placid-badger/nature-stone-mini-review10/completion/suspension.json",
+      "sha256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+    }
+  },
+  "allNativeExportAndCordGatesPass": true,
+  "appReviewPending": true,
+  "humanApprovalScope": "Previously approved overall silhouette only; revised finishes and jug pose remain to be shown."
+}

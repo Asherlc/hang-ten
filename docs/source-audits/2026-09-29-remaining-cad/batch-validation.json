@@ -42,7 +42,7 @@
   "metadataAudit": "metadata-audit.json",
   "historicalReportNotes": "validation-notes.md",
   "appCaptures": "All 21 current-source packages; representative DEBUG contact review routes, plus physical selector taps for all three Plateau depths. RealityKit tests cover all authored presentation positions and transient non-pickable cords.",
-  "geometryAcceptance": "First nine shown revisions accepted; remaining migrations pending requested one-by-one user review.",
+  "geometryAcceptance": "First nine shown revisions accepted; Mini overall shape accepted, final completion review pending; remaining migrations pending requested one-by-one review.",
   "testArtifactSHA256": {
     "test-results/ios-summary.json": "6d38d38ec0659f98565df7ec135a99648db9f4964945c9fb58bdbda699a3febe",
     "test-results/ios-tests.log": "47c5b2b6d584d6df47cbf8e84e5bf2391f4ff3b4c82aa2fe6f8ad883f877e681",
@@ -65,7 +65,7 @@
     {
       "package": "captain-fingerfood-dual",
       "date": "2026-09-30",
-      "feedback": "Cord doesn\u2019t go through holes",
+      "feedback": "Cord doesn’t go through holes",
       "report": "captain-fingerfood-dual/cord-entry-runtime-validation.json",
       "suspensionSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
       "nativeAndCanonicalAppValidation": "passed",
@@ -134,7 +134,7 @@
       "package": "metolius-contact",
       "date": "2026-09-30",
       "revision": "forward-projecting-pinch-rails",
-      "feedback": "The pinch rails need to extend forward otherwise there\u2019s nothing to pinch",
+      "feedback": "The pinch rails need to extend forward otherwise there’s nothing to pinch",
       "sourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
       "modelSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
       "descriptorSHA256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
@@ -309,6 +309,61 @@
         "granite-seat-review/native-front-side-top.png": "74de3f56c4d1516e20a971efef603d351bfbe600ff0389e9169a882fb45b025f"
       },
       "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/human-review.json"
+    },
+    {
+      "package": "nature-stone-hanger-mini",
+      "date": "2026-10-01",
+      "revision": "fitted-granite-seat-runtime-finishes-compact-cords-opening-up-jug",
+      "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+      "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+      "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+      "sidecarSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
+      "suspensionSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
+      "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/runtime-validation.json",
+      "postIntegrationTests": {
+        "pythonPassed": 284,
+        "pythonSkipped": 0,
+        "iOSPassed": 0,
+        "iOSSkipped": 0,
+        "failures": 1,
+        "iOSRuntimeStatus": "not run; simulator startup blocked",
+        "iOSLauncherFailures": 1,
+        "iOSFailed": 1,
+        "iOSUnitCasesExecuted": 0,
+        "iOSExecutedCaseFailures": 0
+      },
+      "boardFactsAndContactIDsUnchanged": true,
+      "otherPackageFilesUnchanged": 202,
+      "nativeWoodStoneOverlapMM3": 0,
+      "actualMeshPlanarOverlapMM2": 0,
+      "nativeEnvelopeMM": [
+        100,
+        25,
+        60
+      ],
+      "fourPoseCordSolveAndFreshCheck": true,
+      "continuousCachedStrandRoutes": 16,
+      "geometryAcceptance": "Overall Mini shape accepted with Lgtm; final seat, finishes, shorter cords and jug pose review pending; app appearance unverified due simulator startup failure",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/human-review.json",
+      "priorDeliveryManifestSHA256": "c147798fd57e30d093fcd2ca868690064d48f35aa2be16bfe2b5b36fed906232",
+      "limits": "Existing jug floor is rotated upward in an estimated display pose. Cord lead lengths and seat details are estimates. Only lead strands have a taut-length target; cross-return allowances are preserved. No current app frames, orbits, finish, contact or workout review; runtime validation is environment-blocked. Historical tests are retained separately and are not added to fresh counts."
     }
-  ]
+  ],
+  "historicalBaselineScope": {
+    "fields": [
+      "passed",
+      "baselineCommit",
+      "python",
+      "iOS",
+      "appCaptures",
+      "sourceAndExportContracts",
+      "unboundUSDZContracts",
+      "testArtifactSHA256"
+    ],
+    "meaning": "These original batch results and captures are retained as historical evidence. Current/source in those fields means the source recorded at that original run, before individual review revisions. They do not establish runtime validation of the revised Mini.",
+    "latestMiniRuntimeStatus": "blocked-environment",
+    "latestMiniRuntimeReport": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/runtime-validation.json",
+    "latestMiniUnitCasesExecuted": 0,
+    "latestMiniAppFrames": 0
+  }
 }
