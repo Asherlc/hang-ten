@@ -30,6 +30,7 @@
     ".context/placid-badger/plateau-review13/root/post_push_verify.py": "53a291fade0b2aa1049906142243ee43aca98f4cb48aed714fe9d7023c8ea93c",
     ".context/placid-badger/plateau-review13/root/prepare_commit.py": "ce47518a330580e732f882bb6aad95ba4e25eb40cf035dac379722f382d263a7",
     ".context/placid-badger/plateau-review13/root/promote.py": "a570f5ba057a8b9fb591ae92b4339e76b7a72113dc8b431a3b32a376d891cf05",
+    ".context/placid-badger/plateau-review13/root/record_shape_acceptance.py": "003c381a2cea878e80bcaa5140d61d70e79b0f426050a4485d08ba4832e7a130",
     ".context/placid-badger/plateau-review13/root/retain_artifacts.py": "548415994b99765df371c3f0ebc13db6a6ee418277247723dcc65ca8c666f688",
     ".context/placid-badger/plateau-review13/root/update_records.py": "bfe4481c4f001cf7a53790259909a32845bced61a110fab4cdb5b6831bf0731d",
     ".context/placid-badger/plateau-review13/root/write_review.py": "feff7098f2ffe81ac12d0024788505bf75e28faafae407eeeb5c9b91ed76d520"

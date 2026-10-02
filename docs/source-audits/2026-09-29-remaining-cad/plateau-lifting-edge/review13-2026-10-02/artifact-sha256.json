@@ -38,6 +38,10 @@
       "sha256": "570e785ec8601905f7afa4ea5bdac1d4447687d96bf6d754ca1ccefee2c667c3",
       "bytes": 61684
     },
+    "human-acceptance.json": {
+      "sha256": "4ce2bbc4246b068dd8c43a1627173cb396b7938a9e2cd6352f8b1ea649e9009c",
+      "bytes": 2235
+    },
     "independent-delivery-audited-artifact-index.json": {
       "sha256": "f13fecf742b9d06e2b1e1f690a823cb263a0bbd73307e1bc8f4d24d01adf5079",
       "bytes": 37875
@@ -83,8 +87,8 @@
       "bytes": 3851
     },
     "index.html": {
-      "sha256": "ca1bee377bde5e42bc4b8816e0834913fa9e24bb94a85ff70cffafc2a05714fd",
-      "bytes": 10885
+      "sha256": "1ec29c880ee11c04e4c70fa54fe5c8ad4a9673336eaf01b35c79ecc661c4d73c",
+      "bytes": 10977
     },
     "material-partition/author-job.json": {
       "sha256": "3c2021778c0cfea11f528a735d8a48a9d124fa2604d2f58eea984bb34dc8b44c",
@@ -923,8 +927,8 @@
       "bytes": 695
     },
     "review.md": {
-      "sha256": "642f6f8f36759c28da8a1e2dfbfe560faa4814eb2865b24b783ad65f1d754ec0",
-      "bytes": 5934
+      "sha256": "1440090f16273f52dd99aa783dfd852ee6f284db809679424c0919dac5da4714",
+      "bytes": 6253
     },
     "runtime-validation.json": {
       "sha256": "776720e3d8393ce5e317ee9e83263bef560dfd3b9af29618a9f4c24a73326a2e",
@@ -943,9 +947,14 @@
       "bytes": 57835
     },
     "throwaway-script-provenance.json": {
-      "sha256": "b1564bc24c6bee1151e5b63f406243c12b6b61baa6a001470837f3a44b21250a",
-      "bytes": 5217
+      "sha256": "e365992bb41599648c861d254a4a7524fdf145f2eb919f1a16bef69302507638",
+      "bytes": 5364
     }
   },
-  "scope": "Exact retained packet bytes, excluding index itself. Sources and canonical files pinned in register and promotion proof."
+  "scope": "Exact retained packet bytes, excluding index itself. Sources and canonical files pinned in register and promotion proof.",
+  "acceptanceUpdate": {
+    "date": "2026-10-02",
+    "record": "human-acceptance.json",
+    "scope": "Shown CAD shape and seated cord accepted; raw historical technical/runtime reports unchanged"
+  }
 }

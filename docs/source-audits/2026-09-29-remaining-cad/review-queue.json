@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 corrected cord/finish geometry shown, current app and human acceptance pending",
+  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 shown CAD shape and seated cord accepted, current app unverified; #14 next for review",
   "boards": [
     {
       "number": 1,
@@ -469,7 +469,7 @@
       "package": "plateau-lifting-edge",
       "boardID": "plateau.lifting-edge",
       "name": "Plateau Climbing Lifting Edge",
-      "humanReview": "Pending #13 human shape review; current app wood, neutral components, cord, picking, highlights and workout appearance unverified",
+      "humanReview": "Shown #13 CAD shape and seated cord accepted; current app wood, neutral components, cord, picking, highlights and workout appearance remain unverified",
       "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
       "reviewPage": "plateau-lifting-edge/review13-2026-10-02/index.html",
       "sourceAudit": "plateau-lifting-edge/native-authoring.md",
@@ -534,7 +534,8 @@
       },
       "humanReviewRecord": "plateau-lifting-edge/human-review.json",
       "latestRevision": "plateau-lifting-edge/review13-2026-10-02/review.md",
-      "runtimeRevision": "plateau-lifting-edge/review13-2026-10-02/runtime-validation.json"
+      "runtimeRevision": "plateau-lifting-edge/review13-2026-10-02/runtime-validation.json",
+      "acceptedGeometryDate": "2026-10-02"
     },
     {
       "number": 14,
