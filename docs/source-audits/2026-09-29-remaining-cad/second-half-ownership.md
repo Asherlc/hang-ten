@@ -171,3 +171,15 @@ normal traces, root reviews and source provenance remain exact. No production
 fix or new acceptance is claimed. Prior packets and canonical/global records
 remain unchanged; owned resources and source reservation stay active, with
 cleanup pending.
+
+### Passive natural-workout reproduction
+
+The [Evo passive-workout appendix](zlagboard-evo/runtime-passive-workout-2026-10-02/README.md)
+retains all 12 independently reviewed frames and the complete 147-record trace
+from the unchanged C/D/E binary. With no AX/tap/Skip after launch/openURL,
+first active is red, sampled rest incorrectly red, and the following natural
+hang incorrectly blue after a 180.016-second rest. Late sampler/census limits
+remain explicit; no middle-rest persistence or SDK root cause is claimed.
+Source links, parity and analysis are retained without changing old packets or
+acceptances. The workflow remains unresolved; owned resources and reservations
+continue under coordinated diagnosis, with cleanup pending.

@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/583488A7-29D8-4AFE-A358-A0BD739178CC/Documents/HighlightDiagnostic-placid-badger-cad-second-half-caption-passive-normal/events-BB0EBB7F-7D6A-488F-81CB-44999DA24AE6.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/events-BB0EBB7F-7D6A-488F-81CB-44999DA24AE6.jsonl",
+      "sha256": "13efd02bebc1d8b00baf9298084fa2adb243029eb9312877dc90e168912efd12"
+    }
+  ],
+  "records": 143,
+  "completeContiguous": true,
+  "copiedEpoch": 1790976115.5790322,
+  "includesSamplerEnd": true
+}
