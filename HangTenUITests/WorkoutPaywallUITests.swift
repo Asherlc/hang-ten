@@ -186,7 +186,7 @@ final class WorkoutPaywallUITests: XCTestCase {
             remainingScrollAttempts -= 1
         }
         XCTAssertTrue(isStartVisible(), "Start must be below the navigation bar and above the keyboard")
-        tapVisibleControl(start)
+        tapVisibleControl(start, in: app)
         XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 10))
 
         app.buttons["paywall.purchase"].tap()
