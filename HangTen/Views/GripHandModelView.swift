@@ -3,7 +3,7 @@ import Metal
 import SwiftUI
 
 /// Rendering parameters, not anatomical measurements or training prescriptions.
-/// Finger membership always comes from the routine's explicit configuration.
+/// Explicit finger selections take precedence; otherwise the display assumes four fingers.
 struct GripHandPose: Equatable {
     let posture: GripType?
     let highlightedFingers: Set<FingerSlot>
@@ -11,7 +11,7 @@ struct GripHandPose: Equatable {
 
     init(posture: GripType?, fingerConfiguration: FingerConfiguration?) {
         self.posture = posture
-        highlightedFingers = fingerConfiguration?.engagedFingers ?? []
+        highlightedFingers = fingerConfiguration?.engagedFingers ?? Set(FingerSlot.allCases)
         hasExplicitFingers = fingerConfiguration != nil
     }
 
@@ -908,10 +908,14 @@ struct GripHandModelInspector: View {
             .accessibilityLabel("Rotatable 3D \(side.accessibilityIdentifier) hand")
     }
 
+    var fingerSummary: String {
+        fingerConfiguration.map { "Highlighted: " + $0.orderedFingers.map(\.rawValue).joined(separator: ", ") }
+            ?? "4 fingers (assumed)"
+    }
+
     private var controls: some View {
         VStack(spacing: 16) {
-            Text(fingerConfiguration.map { "Highlighted: " + $0.orderedFingers.map(\.rawValue).joined(separator: ", ") }
-                 ?? "Fingers not specified")
+            Text(fingerSummary)
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Color.hangInk)
             Text("Drag to rotate · Pinch to zoom")
@@ -934,6 +938,7 @@ struct GripHandModelReviewView: View {
     @State private var posture: GripType = .halfCrimp
     @State private var fingers: Set<FingerSlot> = [.index, .middle, .ring, .pinky]
     @State private var resetToken = 0
+    @State private var layoutOrientation = "unknown"
 
     var body: some View {
         NavigationStack {
@@ -954,8 +959,10 @@ struct GripHandModelReviewView: View {
                 }
                 GripHandPairModelView(posture: posture, fingerConfiguration: configuration,
                                       resetToken: resetToken)
-                Text(fingers.isEmpty ? "Fingers not specified" : "Highlighted: " + FingerSlot.allCases.filter(fingers.contains).map(\.rawValue).joined(separator: ", "))
+                Text(fingers.isEmpty ? "4 fingers (assumed)" : "Highlighted: " + FingerSlot.allCases.filter(fingers.contains).map(\.rawValue).joined(separator: ", "))
                     .font(.caption)
+                    .accessibilityIdentifier("gripModel.review.fingerSummary")
+                    .accessibilityValue(layoutOrientation)
                 Button("Reset view") { resetToken += 1 }
                 Text("Drag to rotate · Pinch to zoom")
                     .font(.caption)
@@ -964,6 +971,14 @@ struct GripHandModelReviewView: View {
             .background(Color.hangCream)
             .navigationTitle("3D hand review")
         }
+        // XCTest's SpringBoard frame does not track the foreground app's rotation.
+        // Report the actual review layout so screenshots wait for SwiftUI to resize.
+        .onGeometryChange(for: String.self) { geometry in
+            let size = geometry.size
+            guard size.width.isFinite, size.height.isFinite,
+                  size.width > 0, size.height > 0 else { return "unknown" }
+            return size.width > size.height ? "landscape" : "portrait"
+        } action: { layoutOrientation = $0 }
         .onAppear {
             let environment = ProcessInfo.processInfo.environment
             if let requested = environment["HANGTEN_REVIEW_GRIP_POSE"].flatMap(GripType.init(rawValue:)) { posture = requested }

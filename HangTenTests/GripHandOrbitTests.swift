@@ -182,7 +182,8 @@ final class GripHandOrbitTests: XCTestCase {
             selectedFingers: [.index]
         )
 
-        XCTAssertEqual(pocketAction.action(), "Pocket0")
+        XCTAssertEqual(pocketAction.action(), "Pocket15")
+        XCTAssertEqual(pocketAction.highlightedFingers, Set(FingerSlot.allCases))
         XCTAssertEqual(explicitPose.action(), "HalfCrimp")
         XCTAssertEqual(pocketColors, explicitPoseColors)
         XCTAssertEqual(pocketColors[0], SIMD4<Float>(0.966, 0.0615, 0.0108, 1))
@@ -426,7 +427,7 @@ final class GripHandOrbitTests: XCTestCase {
     }
 
     @MainActor
-    func testPairKeepsConfiguredGapForEveryBundledPose() throws {
+    func testPairKeepsConfiguredGapForEveryDisplayedPose() throws {
         let asset = try GripHandAsset.bundled.get()
         let scene = GripHandRealityPairScene(assetResult: .success(asset))
         let poses: [GripHandPose] = [
@@ -434,15 +435,18 @@ final class GripHandOrbitTests: XCTestCase {
             GripHandPose(posture: .openHand, fingerConfiguration: nil),
             GripHandPose(posture: .halfCrimp, fingerConfiguration: nil),
             GripHandPose(posture: .fullCrimp, fingerConfiguration: nil),
-            GripHandPose(posture: .sloper, fingerConfiguration: nil)
-        ] + (0..<16).map { mask in
+            GripHandPose(posture: .sloper, fingerConfiguration: nil),
+            GripHandPose(posture: .twoFingerPocket, fingerConfiguration: nil)
+        ] + (1..<16).map { mask in
             let fingers = Set(FingerSlot.allCases.enumerated().compactMap { index, finger in
                 mask & (1 << index) == 0 ? nil : finger
             })
             return GripHandPose(posture: .twoFingerPocket,
                                 fingerConfiguration: FingerConfiguration(engagedFingers: fingers))
         }
-        XCTAssertEqual(Set(poses.map { $0.action() }), Set(asset.poses.keys))
+        // Pocket0 remains in the authored asset, but unspecified fingers now
+        // display Pocket15 and an explicit configuration cannot be empty.
+        XCTAssertEqual(Set(poses.map { $0.action() }), Set(asset.poses.keys).subtracting(["Pocket0"]))
 
         for pose in poses {
             scene.update(pose: pose, viewportSize: CGSize(width: 360, height: 88), resetToken: 0)

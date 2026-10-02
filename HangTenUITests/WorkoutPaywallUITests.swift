@@ -153,14 +153,41 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         let start = app.buttons["plan.startRoutine"]
         XCTAssertTrue(start.waitForExistence(timeout: 2))
-        var remainingScrollAttempts = 4
-        while !start.isHittable, remainingScrollAttempts > 0 {
-            app.swipeUp()
+        // A full-screen swipe with the keyboard open can move Start behind
+        // the navigation bar while XCTest still reports it as hittable.
+        let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let navigationBar = app.navigationBars["Plan"]
+        func contentBottom() -> CGFloat {
+            let viewport = screen.frame
+            guard keyboard.exists else { return viewport.maxY }
+            let frame = keyboard.frame
+            guard frame.minY.isFinite, frame.width.isFinite, frame.height.isFinite,
+                  frame.width > 0, frame.height > 0,
+                  frame.minY > navigationBar.frame.maxY,
+                  frame.intersects(viewport) else { return viewport.maxY }
+            return min(frame.minY, viewport.maxY)
+        }
+        func isStartVisible() -> Bool {
+            let frame = start.frame
+            return start.isHittable
+                && frame.minY >= navigationBar.frame.maxY
+                && frame.maxY <= contentBottom()
+        }
+        var remainingScrollAttempts = 8
+        while !isStartVisible(), remainingScrollAttempts > 0 {
+            let viewport = screen.frame
+            let contentTop = navigationBar.frame.maxY
+            let visibleBottom = contentBottom()
+            let origin = screen.coordinate(withNormalizedOffset: .zero).withOffset(
+                CGVector(dx: viewport.width / 2, dy: (contentTop + visibleBottom) / 2 - viewport.minY)
+            )
+            let scrollDelta: CGFloat = start.frame.minY < contentTop ? 100 : -100
+            origin.press(forDuration: 0.05, thenDragTo: origin.withOffset(CGVector(dx: 0, dy: scrollDelta)))
             remainingScrollAttempts -= 1
         }
-        XCTAssertTrue(start.isHittable)
-        start.tap()
-        XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 2))
+        XCTAssertTrue(isStartVisible(), "Start must be below the navigation bar and above the keyboard")
+        tapVisibleControl(start)
+        XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 10))
 
         app.buttons["paywall.purchase"].tap()
 
