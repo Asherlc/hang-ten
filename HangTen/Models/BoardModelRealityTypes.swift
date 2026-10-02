@@ -211,6 +211,7 @@ final class BoardModelRealityScene {
         let framingEnvelope: [SIMD3<Float>]
     }
     private var geometricCordPoses: [GeometricCordPose] = []
+    private var geometricUncordedPoses: [GeometricCordPose] = []
     private var displayedCordAngles = SIMD2<Float>.zero
     private var targetCordAngles: SIMD2<Float>?
     private var geometricTiltTask: Task<Void, Never>?
@@ -730,7 +731,20 @@ final class BoardModelRealityScene {
                         points: selectedFramings.flatMap(\.includedPoints) + allBounds) else { return false }
                 combinedFraming = framing
             }
+            var uncordedPoses: [GeometricCordPose] = []
+            if !cordPoses.isEmpty, let framing = combinedFraming {
+                // A mixed scene keeps the cord and camera fixed. Give its
+                // uncorded instances the equivalent pitch view by rotating
+                // them inversely to the camera's former pitch around its target.
+                for (index, instance) in instances.enumerated() where instance.suspension == nil {
+                    let matrix = renderTransform(selectedTransforms[index], instance: instance).matrix
+                    uncordedPoses.append(GeometricCordPose(instance: index, boardTransform: matrix,
+                        pivot: framing.target, axis: framing.right,
+                        framingEnvelope: rotationEnvelope(boardTransform: matrix, pivot: framing.target)))
+                }
+            }
             cancelGeometricTilt()
+            geometricUncordedPoses = uncordedPoses
             geometricCordPoses = cordPoses
             displayedCordAngles = .zero
             targetCordAngles = nil
@@ -854,6 +868,7 @@ final class BoardModelRealityScene {
     private func clearSelection() {
         cancelGeometricTilt()
         geometricCordPoses = []
+        geometricUncordedPoses = []
         displayedCordAngles = .zero
         targetCordAngles = nil
         installLiveUpdateSubscription(nil)
@@ -1465,16 +1480,12 @@ final class BoardModelRealityScene {
         case .pairedLeadCord(let profile): localPoints = profile.attachments.map(\.pointInModel)
         case .twoBranchCord(let profile):
             let passages = profile.passages.left + profile.passages.right
-            // A bore contributes its center to the shared attachment axis.
-            // With just one bore, its two mouths define that axis directly.
-            if passages.count == 1, let passage = passages.first, passage.isThroughBore {
-                localPoints = [passage.entryPointInModel, passage.exitPointInModel]
-            } else {
-                localPoints = passages.map { passage in
-                    passage.isThroughBore
-                        ? zip(passage.entryPointInModel, passage.exitPointInModel).map { ($0 + $1) / 2 }
-                        : passage.pointInModel
-                }
+            // Validated packages have at least two passages. A bore
+            // contributes its center to the shared attachment axis.
+            localPoints = passages.map { passage in
+                passage.isThroughBore
+                    ? zip(passage.entryPointInModel, passage.exitPointInModel).map { ($0 + $1) / 2 }
+                    : passage.pointInModel
             }
         }
         guard !localPoints.isEmpty else { throw BoardModelRealityError.invalidSuspension }
@@ -1496,15 +1507,18 @@ final class BoardModelRealityScene {
         // Keep gesture direction consistent with the canonical view. The axis
         // itself stays fixed when the camera yaws around the hanging board.
         if simd_dot(axis, solved.cameraFraming.right) < 0 { axis = -axis }
+        return GeometricCordPose(instance: instance, boardTransform: boardTransform, pivot: pivot,
+            axis: axis, framingEnvelope: rotationEnvelope(boardTransform: solved.boardTransform, pivot: pivot))
+    }
+
+    private func rotationEnvelope(boardTransform: simd_float4x4, pivot: SIMD3<Float>) -> [SIMD3<Float>] {
         let radius = Self.boundsCorners(descriptor.modelBounds).map { point -> Float in
-            let p = solved.boardTransform * SIMD4(point, 1)
+            let p = boardTransform * SIMD4(point, 1)
             return simd_distance(SIMD3(p.x, p.y, p.z), pivot)
         }.max() ?? 0
-        let envelope = Self.boundsCorners(BoardModelBounds(
+        return Self.boundsCorners(BoardModelBounds(
             minimum: [Double(pivot.x-radius), Double(pivot.y-radius), Double(pivot.z-radius)],
             maximum: [Double(pivot.x+radius), Double(pivot.y+radius), Double(pivot.z+radius)]))
-        return GeometricCordPose(instance: instance, boardTransform: boardTransform, pivot: pivot,
-            axis: axis, framingEnvelope: envelope)
     }
 
     private func applyGeometricCordPose(angles: SIMD2<Float>) {
@@ -1514,7 +1528,16 @@ final class BoardModelRealityScene {
                 : Self.transform(rotation: rotation, about: pose.pivot) * pose.boardTransform
             instanceEntities[pose.instance].transform = Transform(matrix: matrix)
         }
-        // The complete cord remains in its canonical pose. Only the board turns.
+        if let framing = currentFraming {
+            let yaw = simd_quatf(angle: angles.x, axis: framing.up)
+            for pose in geometricUncordedPoses {
+                let rotation = simd_quatf(angle: angles.y, axis: simd_normalize(yaw.act(pose.axis)))
+                let matrix = angles.y == 0 ? pose.boardTransform
+                    : Self.transform(rotation: rotation, about: pose.pivot) * pose.boardTransform
+                instanceEntities[pose.instance].transform = Transform(matrix: matrix)
+            }
+        }
+        // The complete cord remains in its canonical pose. Only the boards turn.
         displayedCordAngles = angles
     }
 
@@ -1566,6 +1589,7 @@ final class BoardModelRealityScene {
         // Fit the full local rotation envelope at rest too, so pitching the
         // board cannot move the camera and make the fixed cord appear to move.
         let points = framing.includedPoints + geometricCordPoses.flatMap(\.framingEnvelope)
+            + geometricUncordedPoses.flatMap(\.framingEnvelope)
         var fitted = framing
         if geometricPitch || orbitAzimuth != 0 || orbitElevation != 0 {
             // Refit the complete board/cord bounds around the tilted view's

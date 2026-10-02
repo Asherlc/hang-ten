@@ -54,8 +54,7 @@ match the descriptor, or RealityKit cannot decode it.
 
 The normal RealityKit viewer uses bundled suspension geometry without starting
 live rope simulation. Pitch rotates each corded board instance about the line
-through its authored cord attachments or passage centers. A single through-bore
-uses its mouth-to-mouth axis; a single attachment uses the canonical view's
+through its authored cord attachments or passage centers. A single attachment uses the canonical view's
 horizontal axis through that point. Multiple points use their widest separation
 through their mean. Authored reflection is retained when calculating this axis.
 
@@ -70,7 +69,9 @@ immediately. Manual gestures and lifecycle changes cancel superseded animation.
 
 This is a geometric display hinge, without a rope collision or equilibrium
 solve. Canonical cords are not rerouted when the board turns. Uncorded boards
-retain camera pitch. The loader's `useLivePhysics` opt-in retains the existing
+retain camera pitch when all instances are uncorded. In a mixed scene,
+uncorded instances rotate about the framing target with the inverse of that
+camera pitch, preserving their pitch view alongside the fixed cord. The loader's `useLivePhysics` opt-in retains the existing
 solver integration test lane.
 
 ## Diagnose by symptom

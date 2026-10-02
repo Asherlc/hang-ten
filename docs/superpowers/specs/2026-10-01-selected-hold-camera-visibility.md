@@ -34,9 +34,13 @@ visibility optimum or an authored opening annotation.
 - Automatic adjustment refits the complete board and cord bounds. For corded
   boards, pitch rotates the actual board about its own authored cord-point
   axis, keeping the entire cord fixed. Separate instances use separate axes.
+  A single attachment uses the canonical view's horizontal axis through that
+  point, since one authored point does not define a cord axis.
   The camera fits the local board rotation envelope at rest and does not move
   during pitch.
-  Yaw retains the camera orbit; uncorded boards retain camera pitch.
+  Yaw retains the camera orbit; all-uncorded scenes retain camera pitch.
+  Mixed scenes apply the equivalent pitch to their uncorded instances about
+  the framing target, while the cord and camera remain fixed.
 - Visibility is evaluated in the canonical pose before each new selection.
   Clearing restores the exact canonical board and cord transforms. Projected
   contact controls refresh during the board's 0.28-second animation; manual

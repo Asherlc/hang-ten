@@ -10,9 +10,8 @@ physics branches were imported.
 
 Pitch changes only the board transform. The entire canonical cord, including
 free spans and guides, remains untouched. The board turns around its authored
-attachment axis, independently for each instance. A single through-bore uses
-its mouth-to-mouth line. Multiple passages use their centers and widest
-separation through their mean; paired leads use the attachment line. A single
+attachment axis, independently for each instance. Multiple passages use their
+centers and widest separation through their mean; paired leads use the attachment line. A single
 attachment falls back to the canonical view's horizontal axis through that point.
 The axis includes authored instance reflection and stays fixed through yaw.
 
@@ -63,10 +62,10 @@ optimized Debug build matching the passing test configuration. Its frames share
 the same camera and cord geometry. The unobscured cord image patch at
 (450, 980)–(750, 1300) is pixel-identical across the three rotation states.
 Contact sheet: `.context/geometric-cord-pivot/large-hyena-fixed-cord-sequence.png`;
-loop of captured states: `large-hyena-fixed-cord-rotation.gif`. Normal Debug
+loop of captured states: `.context/geometric-cord-pivot/large-hyena-fixed-cord-rotation.gif`. Normal Debug
 build-for-testing also succeeds, but its first runtime launch showed a blank
 screen; those blank captures are discarded, not presented as visual validation.
-Source/build/capture provenance is in `fixed-cord-provenance.json`.
+Source/build/capture provenance is in `.context/geometric-cord-pivot/fixed-cord-provenance.json`.
 
 ## Resources
 
@@ -75,3 +74,34 @@ Simulator `ADB72BAC-D51A-4779-A49A-9D78B0FE390D`, named
 EXIT/INT/TERM cleanup. Final deletion and removal of workspace DerivedData are
 verified in `.context/geometric-cord-pivot/fixed-cord-cleanup.json`.
 Shared resources and other worktrees were left alone.
+
+## Pre-merge review corrections
+
+Mixed corded/uncorded instance assemblies are allowed by package validation.
+Their uncorded instance previously lost pitch when the shared camera switched
+to fixed-cord mode. The new regression reproduced this with eight assertion
+failures in 1.779 seconds. Mixed scenes now apply the equivalent inverse-camera
+pitch to the uncorded instance about the framing target, including yaw and
+reset, and fit its rotation envelope without moving the cord or camera.
+All-uncorded scenes keep their existing camera pitch.
+
+Removed the unreachable single-passage bore case: package validation requires
+at least two passages. The contract now specifies the single-attachment view-axis
+fallback, artifact references include their full workspace-relative paths, and
+the support check reports the expected endpoint count and an explicit failure
+message if the cord hierarchy changes. Reset framing stays constant as required
+by the user's fixed-cord clarification; the older conditional-envelope code
+mentioned in review was already replaced in `38093f478`.
+
+All 290 affected native tests pass after these corrections (60 RealityKit scene,
+6 model, 159 package store, 65 suspension tests; optimized Debug, 46.443 seconds).
+Receipts: `.context/geometric-cord-pivot/merge-review-red.log`,
+`.context/geometric-cord-pivot/merge-review-green.log`, and
+`.context/geometric-cord-pivot/merge-review-provenance.json`. The Clavellium
+captures above were taken from `38093f478`; the review corrections preserve that
+corded-instance transform and framing behavior, and the complete fixed-cord
+regression still passes.
+
+The pre-merge simulator `0E54FBFA-F87A-4A52-AAB8-3276B46CFCFD` was registered
+and guarded by EXIT/INT/TERM cleanup. Deletion and removal of workspace
+DerivedData are verified in `.context/geometric-cord-pivot/merge-review-cleanup.json`.
