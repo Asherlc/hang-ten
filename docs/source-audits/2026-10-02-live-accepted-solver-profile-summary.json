@@ -1,0 +1,208 @@
+{
+  "scope": "single instrumentation-only accepted original step; not performance acceptance",
+  "wholeStateBitIdentity": true,
+  "matchesPriorAcceptedControl": true,
+  "profile": {
+    "exclusiveSecondsTotal": 0.0579450000000179,
+    "rootStepSeconds": 0.0579450000000179,
+    "sumPass": true,
+    "profileOverheadSeconds": 0.006295916666658741,
+    "wholeStateBitIdentity": true,
+    "matchesPriorAcceptedControl": true,
+    "ranking": [
+      {
+        "bucket": "RopeTriangleCollider.segmentContacts",
+        "calls": 10890,
+        "exclusiveSeconds": 0.0222630416769789,
+        "inclusiveSeconds": 0.035249291665877536
+      },
+      {
+        "bucket": "RopeTriangleCollider.contains",
+        "calls": 20837,
+        "exclusiveSeconds": 0.013632791657983034,
+        "inclusiveSeconds": 0.013632791657983034
+      },
+      {
+        "bucket": "RopeContactSystem.solveFactored",
+        "calls": 9,
+        "exclusiveSeconds": 0.008043416666168923,
+        "inclusiveSeconds": 0.008043416666168923
+      },
+      {
+        "bucket": "RopeTriangleCollider.closestSegment",
+        "calls": 949,
+        "exclusiveSeconds": 0.003233499995076272,
+        "inclusiveSeconds": 0.003233499995076272
+      },
+      {
+        "bucket": "RopeSimulationMetrics.contacts",
+        "calls": 31,
+        "exclusiveSeconds": 0.003038249998098763,
+        "inclusiveSeconds": 0.003038249998098763
+      },
+      {
+        "bucket": "RopeDynamicsSolver.constraintBackbone",
+        "calls": 9,
+        "exclusiveSeconds": 0.0015577916669826664,
+        "inclusiveSeconds": 0.0027568750006139453
+      },
+      {
+        "bucket": "RopeDynamicsSolver.correctConstraints",
+        "calls": 9,
+        "exclusiveSeconds": 0.0013788333435513778,
+        "inclusiveSeconds": 0.052135916666429694
+      },
+      {
+        "bucket": "RopeBandedSystem.factorized",
+        "calls": 9,
+        "exclusiveSeconds": 0.001199083333631279,
+        "inclusiveSeconds": 0.001199083333631279
+      },
+      {
+        "bucket": "RopeDynamicsSolver.merit",
+        "calls": 21,
+        "exclusiveSeconds": 0.0008900833272491582,
+        "inclusiveSeconds": 0.023924750002151995
+      },
+      {
+        "bucket": "RopeDynamicsSolver.contactCorrection",
+        "calls": 9,
+        "exclusiveSeconds": 0.000830583332117385,
+        "inclusiveSeconds": 0.011635708332960348
+      },
+      {
+        "bucket": "RopeTriangleCollider.closestSurface",
+        "calls": 1021,
+        "exclusiveSeconds": 0.0007837500079403981,
+        "inclusiveSeconds": 0.0007837500079403981
+      },
+      {
+        "bucket": "RopeTriangleCollider.sweptSegmentContact",
+        "calls": 210,
+        "exclusiveSeconds": 0.00044212499415152706,
+        "inclusiveSeconds": 0.0034640833314369956
+      },
+      {
+        "bucket": "RopeDynamicsSolver.selfContactValid",
+        "calls": 1,
+        "exclusiveSeconds": 0.0002962500002468005,
+        "inclusiveSeconds": 0.0002962500002468005
+      },
+      {
+        "bucket": "RopeTriangleCollider.segmentClearance",
+        "calls": 279,
+        "exclusiveSeconds": 0.00011424999820519588,
+        "inclusiveSeconds": 0.001689666664788092
+      },
+      {
+        "bucket": "RopeSimulationMetrics.measure",
+        "calls": 1,
+        "exclusiveSeconds": 8.670833403812139e-05,
+        "inclusiveSeconds": 0.0019421250003688328
+      },
+      {
+        "bucket": "RopeDynamicsSolver.advance",
+        "calls": 1,
+        "exclusiveSeconds": 8.362500147995888e-05,
+        "inclusiveSeconds": 0.057930041666622856
+      },
+      {
+        "bucket": "RopeSimulationState.refresh",
+        "calls": 13,
+        "exclusiveSeconds": 5.112499866299913e-05,
+        "inclusiveSeconds": 5.112499866299913e-05
+      },
+      {
+        "bucket": "RopeDynamicsSolver.advanceBounded",
+        "calls": 1,
+        "exclusiveSeconds": 1.2208333373564528e-05,
+        "inclusiveSeconds": 0.05794224999999642
+      },
+      {
+        "bucket": "RopeContactSystem.solve",
+        "calls": 9,
+        "exclusiveSeconds": 4.833334060094785e-06,
+        "inclusiveSeconds": 0.008048250000229018
+      },
+      {
+        "bucket": "RopeDynamicsSolver.step",
+        "calls": 1,
+        "exclusiveSeconds": 2.750000021478627e-06,
+        "inclusiveSeconds": 0.0579450000000179
+      }
+    ]
+  },
+  "profiledSeconds": 0.057945666666910256,
+  "disabledSeconds": 0.051649750000251515,
+  "processGroupAbsenceChecks": [
+    {
+      "manifest": ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/resources.jsonl",
+      "group": 77201,
+      "absent": true
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-accepted-profile/native/resources.jsonl",
+      "group": 77676,
+      "absent": true
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-accepted-profile/native/resources.jsonl",
+      "group": 77787,
+      "absent": true
+    }
+  ],
+  "driverAbsenceVerified": true,
+  "appChanged": false,
+  "boundSHA256": {
+    ".context/strong-owl-live-physics-accepted-profile/CheckpointAdapter.swift": "92385d915f17d8b594b5944507e1967e6b7685bf7d40c526d5212417c977039b",
+    ".context/strong-owl-live-physics-accepted-profile/PLAN.md": "46928863f2e595ab4f2f78a37756a1d84654acdf8338cbfae0199d2b5ccf65f6",
+    ".context/strong-owl-live-physics-accepted-profile/analysis.json": "77adf6a9951811426f2a8deecfffbc86321d02b229bb6bb41a7e6555599af5e8",
+    ".context/strong-owl-live-physics-accepted-profile/drivers.jsonl": "c67e7954fd1cb8de19e9a97c6d78e3f4fd40e1d10c6c864660913408fc9542e0",
+    ".context/strong-owl-live-physics-accepted-profile/launch.py": "77ef6f1a04521472a075902a6a53c0974712c019c27ce98c403c864451688394",
+    ".context/strong-owl-live-physics-accepted-profile/launch.sh": "8ba1171dea7d87ff77ee241f9b80835def1c0ed86a4f3fee74644e6a48b55068",
+    ".context/strong-owl-live-physics-accepted-profile/main.swift": "7f6e3d17838e4280803de56bae582b9e1704808b322bd56f0f01838be4eaf6df",
+    ".context/strong-owl-live-physics-accepted-profile/native/after-0.json": "77ea90304d0a05dbd0f2545c96f459b3ce9ba72601c585dbe9edd03cbcd35091",
+    ".context/strong-owl-live-physics-accepted-profile/native/after-1.json": "77ea90304d0a05dbd0f2545c96f459b3ce9ba72601c585dbe9edd03cbcd35091",
+    ".context/strong-owl-live-physics-accepted-profile/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-accepted-profile/native/provenance.json": "72a137179f7259e96bf45e21928ff29aca31adfe902db0dcc0bb804b5210cbcd",
+    ".context/strong-owl-live-physics-accepted-profile/native/report.json": "435442059d5cd8547353f1a3918e0a0d67d7caec044ef6c47f8a1999f174ab3e",
+    ".context/strong-owl-live-physics-accepted-profile/native/resources.jsonl": "e7f6e4900f0dd23048da7de31896b2e6bde36b3d311fe5393521d5aeeeab6a73",
+    ".context/strong-owl-live-physics-accepted-profile/native/run.log": "dcc00634cf56e701f919ee8bb8557d9b49beb7cb070c3b49eef790035e760efc",
+    ".context/strong-owl-live-physics-accepted-profile/native/sources/AcceptedSolverProfile.swift": "85eab00807ef1f25cace84f62956d57f30cff0474ac7a852f72d80810a148035",
+    ".context/strong-owl-live-physics-accepted-profile/native/sources/ExactCheckpointJSON.swift": "fec607f09b6b06235f80359f91b40704fe08d9aa43a8deb90b50432a3eb4dd02",
+    ".context/strong-owl-live-physics-accepted-profile/native/sources/RopeBandedSystem.swift": "eb5f2249958600b892b261b3dc2d15a9ae558a3a86adbc96dcbcbc4c7a12eadf",
+    ".context/strong-owl-live-physics-accepted-profile/native/sources/RopeContactSystem.swift": "da249ac85ac278421cac637395a3e61c7f2467376e15563486843cd1b54e0900",
+    ".context/strong-owl-live-physics-accepted-profile/native/sources/RopeCordContacts.swift": "93747d5a7114a050d0b1a5cb56c65bbb54420595e483f38df0a82be5abffa20e",
+    ".context/strong-owl-live-physics-accepted-profile/native/sources/RopeDynamicsSolver.swift": "ecf41477fc30150085f2ed37cf5aa3b6cf26c2d6381aea051414485839ca8258",
+    ".context/strong-owl-live-physics-accepted-profile/native/sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-accepted-profile/native/sources/RopeSimulationMetrics.swift": "eee4aa0b6b2cef5dfc55fd644f6d6f8fdcd15b0904c9456b3cd3ab32513fd79a",
+    ".context/strong-owl-live-physics-accepted-profile/native/sources/RopeSimulationState.swift": "d3a2d90eaf962138bd7a13108112734ed82c4cf676cc8741d38b2bc600a7c515",
+    ".context/strong-owl-live-physics-accepted-profile/native/sources/RopeThreadedSeed.swift": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a",
+    ".context/strong-owl-live-physics-accepted-profile/native/sources/RopeTriangleCollider.swift": "75932dce75c540b44e8031fb99915c59585c527ca49148cfdd03cd6eb2786f49",
+    ".context/strong-owl-live-physics-accepted-profile/native/sources/main.swift": "7f6e3d17838e4280803de56bae582b9e1704808b322bd56f0f01838be4eaf6df",
+    ".context/strong-owl-live-physics-accepted-profile/native/strong-owl-live-physics-accepted-profile": "4fdb1c4a292d93c153641a6dd4248ea309a69755dfc36dda2dfcebc05178ace4",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/compile.log": "eb02daaea85242435c61d4e73c8a0dc657a3faf361d5b46de9cd3c59f1768940",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/provenance.json": "1fd41db9ebe7fc849c1a56a307d28ca5c693ea44ecd42fec3c55de0d8c15baf3",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/resources.jsonl": "f550be320c0ca692ba1aa3cffa2e3d1a67450ffebb5a8ba1dd3f821df959b68c",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/sources/AcceptedSolverProfile.swift": "85eab00807ef1f25cace84f62956d57f30cff0474ac7a852f72d80810a148035",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/sources/ExactCheckpointJSON.swift": "fec607f09b6b06235f80359f91b40704fe08d9aa43a8deb90b50432a3eb4dd02",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/sources/RopeBandedSystem.swift": "902e9cecc94e204d10f737802be4eda0cb83e46c2c40cf40ff0ac16f75a433e6",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/sources/RopeContactSystem.swift": "da249ac85ac278421cac637395a3e61c7f2467376e15563486843cd1b54e0900",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/sources/RopeCordContacts.swift": "93747d5a7114a050d0b1a5cb56c65bbb54420595e483f38df0a82be5abffa20e",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/sources/RopeDynamicsSolver.swift": "56d53598926b5c935ee86813a07360aa94e17270fce19d21e3aa4f0bfabb1a00",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/sources/RopeSimulationMetrics.swift": "eee4aa0b6b2cef5dfc55fd644f6d6f8fdcd15b0904c9456b3cd3ab32513fd79a",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/sources/RopeSimulationState.swift": "d3a2d90eaf962138bd7a13108112734ed82c4cf676cc8741d38b2bc600a7c515",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/sources/RopeThreadedSeed.swift": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/sources/RopeTriangleCollider.swift": "75932dce75c540b44e8031fb99915c59585c527ca49148cfdd03cd6eb2786f49",
+    ".context/strong-owl-live-physics-accepted-profile/setup-compile-failure/sources/main.swift": "7f6e3d17838e4280803de56bae582b9e1704808b322bd56f0f01838be4eaf6df",
+    ".context/strong-owl-live-physics-accepted-profile/setup-pattern-failure/sources/RopeCordContacts.swift": "93747d5a7114a050d0b1a5cb56c65bbb54420595e483f38df0a82be5abffa20e",
+    ".context/strong-owl-live-physics-accepted-profile/setup-pattern-failure/sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-accepted-profile/setup-pattern-failure/sources/RopeSimulationMetrics.swift": "eee4aa0b6b2cef5dfc55fd644f6d6f8fdcd15b0904c9456b3cd3ab32513fd79a",
+    ".context/strong-owl-live-physics-accepted-profile/setup-pattern-failure/sources/RopeSimulationState.swift": "d3a2d90eaf962138bd7a13108112734ed82c4cf676cc8741d38b2bc600a7c515",
+    ".context/strong-owl-live-physics-accepted-profile/setup-pattern-failure/sources/RopeThreadedSeed.swift": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a",
+    ".context/strong-owl-live-physics-accepted-profile/setup-pattern-failure/sources/RopeTriangleCollider.swift": "75932dce75c540b44e8031fb99915c59585c527ca49148cfdd03cd6eb2786f49",
+    ".context/strong-owl-live-physics-accepted-profile/verify.py": "91af5f4f9640244cc09aa6c2737c8173d119ff4781e675d86232225577e72819",
+    "Tools/HangboardRopePrototype/native_contact/AcceptedSolverProfile.swift": "85eab00807ef1f25cace84f62956d57f30cff0474ac7a852f72d80810a148035"
+  }
+}
