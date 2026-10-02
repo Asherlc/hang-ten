@@ -88,8 +88,8 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCTAssertTrue(contact.waitForExistence(timeout: 120))
         addScreenshot(named: "Pivot position 1")
         for (position, holdID) in [(2, "outer-sloped-crimp-right"),
-                                   (3, "variable-edge-right"),
-                                   (5, "medium-crimp-left")] {
+                                   (3, "outer-sloped-crimp-left"),
+                                   (5, "upper-sloped-crimp-right")] {
             let previousFrame = contact.frame
             let preset = selector.buttons["Position \(position)"]
             preset.tap()
