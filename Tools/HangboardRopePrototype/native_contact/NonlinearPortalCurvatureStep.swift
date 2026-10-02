@@ -4,6 +4,7 @@ import Foundation
 extension RopeDynamicsSolver {
     private mutating func portalCurvatureCorrect(prediction:RopeSimulationState) throws {
         let initial=state,eps=NonlinearPrimalDual.epsilon
+        let useDefect=ProcessInfo.processInfo.environment["HANGTEN_NONLINEAR_DEFECT"]=="1"
         let weights=state.ropes.map {rope in rope.positions.indices.map {i -> Double in
             if rope.supports[i] != nil || rope.attachments[i] != nil {return 0}
             let length=(i>0 ? rope.restLengths[i-1]:0)+(i<rope.restLengths.count ? rope.restLengths[i]:0)
@@ -264,6 +265,68 @@ extension RopeDynamicsSolver {
                     let next=try evaluate(self,terms,slacks)
                     trials.append(["trial":trial,"alpha":alpha,"score":next.score,"state":AugmentedTrace.points(state)])
                     if next.score<=(1-1e-4*alpha)*e.score {accepted=true;break}
+                    if useDefect {
+                        // One correction of this rejected proposal, with iteration-origin data.
+                        let correctionStart=ProcessInfo.processInfo.systemUptime
+                        let callsBefore=factor.solveCalls,refinementsBefore=factor.refinementSolves
+                        var record:[String:Any]=["attempted":true,"accepted":false]
+                        do {
+                            try AugmentedTrace.budget()
+                            let defectRows=terms.indices.map {k in
+                                NonlinearKKTDefect.Row(jacobian:e.jacobians[k],equalityVariable:equalityVariable(oldTerms[k].feature),
+                                    s:e.rows[k].contact ? -oldTerms[k].dual:0,v:oldSlacks[k],
+                                    ps:alpha*d.s[k],pv:alpha*d.v[k],originB:e.b[k],trialB:next.b[k],originH:e.h[k],trialH:next.h[k])
+                            }
+                            let correction=try NonlinearKKTDefect.solve(factor:factor,entries:entries,masses:masses,
+                                p:d.x.map{alpha*$0},originA:e.a,trialA:next.a,rows:defectRows)
+                            record["linearCertificate"]=["stationarity":correction.stationarity,"equality":correction.equality,
+                                "contact":correction.contact,"complementarity":correction.complementarity]
+                            record["x"]=correction.x;record["s"]=correction.s;record["v"]=correction.v;record["lambda"]=correction.lambda
+                            record["remainderA"]=correction.remainderA;record["remainderB"]=correction.remainderB
+                            record["remainderH"]=correction.remainderH;record["remainderSV"]=correction.remainderSV
+                            state.boardHeight += correction.x[height]
+                            for r in state.ropes.indices {for i in state.ropes[r].positions.indices {
+                                if let local=state.ropes[r].attachments[i] {state.ropes[r].positions[i]=state.worldPoint(local)}
+                                else if let base=variable[r][i] {state.ropes[r].positions[i] += SIMD3(correction.x[base],correction.x[base+1],correction.x[base+2])}
+                            }}
+                            var minS=Double.infinity,minV=Double.infinity,relative=0.0
+                            for k in terms.indices {
+                                terms[k].dual += correction.lambda[k]
+                                if e.rows[k].contact {
+                                    slacks[k] += correction.v[k]
+                                    minS=min(minS,terms[k].dual/oldTerms[k].dual);minV=min(minV,slacks[k]/oldSlacks[k])
+                                }
+                            }
+                            for r in state.ropes.indices {
+                                let rope=state.ropes[r],origin=old.ropes[r]
+                                for i in rope.restLengths.indices {
+                                    let a=rope.positions[i]-origin.positions[i],b=rope.positions[i+1]-origin.positions[i+1]
+                                    relative=max(relative,simd_length(b-a)/rope.restLengths[i])
+                                }
+                            }
+                            record["sFractionMinimum"]=minS;record["vFractionMinimum"]=minV
+                            record["combinedRelativeDisplacementMaximum"]=relative
+                            guard minS>=0.005,minV>=0.005,relative<=0.1,relative.isFinite else {
+                                throw RopePhysicsError.invalid("Corrected trial positivity or combined trust rejected")
+                            }
+                            try RopePassageTopology.refresh(state:&state,input:input)
+                            for rope in state.ropes {for point in rope.positions {
+                                guard !collider.augmentedContains(state.boardPoint(point)) else {throw RopePhysicsError.invalid("Corrected trial entered wood")}
+                            }}
+                            let corrected=try evaluate(self,terms,slacks)
+                            record["correctedEvaluation"]=true;record["score"]=corrected.score
+                            record["state"]=AugmentedTrace.points(state)
+                            accepted=corrected.score<=(1-1e-4*alpha)*e.score
+                            record["accepted"]=accepted
+                        } catch RopePhysicsError.invalid(let reason) {record["invalid"]=reason}
+                        record["extraSolveCalls"]=factor.solveCalls-callsBefore
+                        record["extraRefinementSolves"]=factor.refinementSolves-refinementsBefore
+                        record["correctionSeconds"]=ProcessInfo.processInfo.systemUptime-correctionStart
+                        trials[trials.count-1]["defect"]=record
+                        if accepted {break}
+                        // Reject atomically before returning to the ordinary halving schedule.
+                        state=old;terms=oldTerms;slacks=oldSlacks
+                    }
                 } catch RopePhysicsError.invalid(let reason) {trials.append(["trial":trial,"alpha":alpha,"invalid":reason,"state":AugmentedTrace.points(state)])}
                 alpha *= 0.5
             }
