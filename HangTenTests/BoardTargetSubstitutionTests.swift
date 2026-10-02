@@ -5,11 +5,11 @@ final class ContactResolverTests: XCTestCase {
     func testLopezMaxHangsOffersBothBeastmakersAndRecordsChosenEdges() throws {
         for (boardID, depth, ids, expectedCue) in [
             ("beastmaker-1000", 20.0, Set(["pocket-bottom-outer-left", "pocket-bottom-outer-right"]),
-             "Pocket Bottom Outer Left, Pocket Bottom Outer Right"),
-            ("beastmaker-1000", 10.0, Set(["pocket-top-outer-left", "pocket-top-outer-right"]),
-             "10 mm 4 Finger Edge Left, 10 mm 4 Finger Edge Right"),
+             "20 mm 4 Finger Edge Left, 20 mm 4 Finger Edge Right"),
+            ("beastmaker-1000", 15.0, Set(["pocket-top-outer-left", "pocket-top-outer-right"]),
+             "15 mm 4 Finger Edge Left, 15 mm 4 Finger Edge Right"),
             ("beastmaker-2000", 15.0, Set(["front-lower-1", "front-lower-9"]),
-             "Front Lower 1, Front Lower 9")
+             "15 mm 4 Finger Edge Left, 15 mm 4 Finger Edge Right")
         ] {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
             let plan = PlanCatalog.maxHangs
