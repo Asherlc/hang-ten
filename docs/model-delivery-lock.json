@@ -1097,7 +1097,7 @@
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/metadata-diff.json",
       "nativeValidation": "Native geometry/contact skins and two bearing-up poses preserved; manifest-only wood edit has exact geometry-byte bridge. USDZ and descriptor byte-identical to retained native compiler/reproduction proofs. Short four-lead display regenerated and certified against native solid; hidden joins remain unasserted.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/individual-review-2026-10-01/ios/final-runtime-validation.json",
-      "geometryAcceptance": "pending one-by-one human review of TravelBoard wood display, short native-solved cords and six contact selections",
+      "geometryAcceptance": "reviewed; wood finish, short native-solved cords, six contact selections and both poses accepted",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
       "suspensionSHA256": "7af15a7f897baa87a4da89fcf62c8123dbb7544d8c3cb0bced71474bf9d044e4",
       "nativeAppHistory": [
@@ -1106,7 +1106,12 @@
       "comparisonHistory": [
         "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/review/index.html"
       ],
-      "individualReview": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/individual-review-2026-10-01/review.md"
+      "individualReview": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/individual-review-2026-10-01/review.md",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/human-review.json",
+      "reviewAnswer": "Y",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed TravelBoard revision: wood finish, shorter native-solved visible cords, six contact selections, both poses and 15 mm workout highlighting. Native body geometry unchanged; display estimates remain labeled.",
+      "acceptedRevisionCommit": "61cacdd7f8769b047bbb04321fde07ebea162f1b"
     },
     "zlagboard-evo": {
       "source": "Hangboards/zlagboard-evo/zlagboard-evo.FCStd",

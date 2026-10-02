@@ -544,7 +544,7 @@
       "package": "yy-travelboard",
       "boardID": "yy.travelboard",
       "name": "YY Vertical TravelBoard",
-      "humanReview": "pending",
+      "humanReview": "reviewed; wood finish, short native-solved cords, six contact selections and both poses accepted",
       "sourceSHA256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
       "reviewPage": "yy-travelboard/individual-review-2026-10-01/review.md",
       "sourceAudit": "yy-travelboard/native-authoring.md",
@@ -572,7 +572,11 @@
       "appReviewHistory": [
         "yy-travelboard/app-review/validation.json"
       ],
-      "individualReview": "yy-travelboard/individual-review-2026-10-01/review.md"
+      "individualReview": "yy-travelboard/individual-review-2026-10-01/review.md",
+      "humanReviewRecord": "yy-travelboard/human-review.json",
+      "reviewAnswer": "Y",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed TravelBoard revision: wood finish, shorter native-solved visible cords, six contact selections, both poses and 15 mm workout highlighting. Native body geometry unchanged; display estimates remain labeled."
     },
     {
       "number": 20,
