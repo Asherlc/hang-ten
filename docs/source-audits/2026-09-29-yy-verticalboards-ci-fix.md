@@ -1196,6 +1196,40 @@ incomplete initial receipt and preserves a valid foreign receipt. Failure
 injection verified receipt-write failure, cancellation and missing products,
 including renamed checkout paths, with owned scratch deletion verified.
 The recipient certificate is constrained to an end entity with key/data
-encipherment and emailProtection, preserving the RSA key and recipient serial.
+encipherment and emailProtection. A subsequent review correction gives it a
+fresh random serial while preserving the RSA key; the original public
+certificate is retained locally to identify the completed export's recipient.
 Encryption roundtrip/tamper rejection, 72 contracts and original workflow
 parity passed. Actual artifact contents remain subject to CI verification.
+
+The corrected d17 export completed in run 36933901200. All 25 cases ran:
+Evo, Natural and Pro failed rendered orbit; Forge failed initial physical
+selection. DoorMount and Megalith passed their full sequences, and the other
+19 cases passed. The three orbit failures have zero changed RGB pixels,
+stable map bounds and changed, settled native camera state. Each recorded two
+distinct scene attachments; attachment counts do not prove native overlap.
+All other checks passed. Artifact 11199750257 (133,641,936 bytes) contains a
+finalized result bundle; full attachments, diagnostics and a visually inspected
+overview are retained. Encrypted artifact 11199310962 (118,608,225 bytes)
+contains only the ciphertext and receipt, with verified CRC and ciphertext hash.
+
+One native replay used those exact authenticated products on Xcode 27.0/27A266a,
+iOS 27.0/24A434 and iPhone 18 Pro. Product hashes, modes, symlinks and executable
+UUIDs matched; the original xctestrun needed no path relocation. No rebuild,
+configuration change or assertion change occurred. All 25 cases ran: Evo again
+failed rendered orbit with zero changed RGB pixels and valid camera/bounds
+guards; Forge failed body visibility before its selection/orbit checks. The
+other 23 cases passed, including Natural and Pro's full sequences. Native
+captures and diagnostics are retained and the orbit overview was inspected.
+All six native Batch05 cases recorded two distinct scene attachments, including
+the passing cases. These counts do not establish simultaneous native ownership
+or classify failure.
+
+This reproduces a stale orbit on a native host with the CI-built binary;
+CI-host-only responsibility is insufficient. It does not identify a framework,
+GPU or application contract defect, and the passing cases are not a correction.
+The temporary export steps, helper and public certificate are removed, restoring
+the pre-export workflow exactly. The owned simulator and decrypted products
+were deleted and verified; the private key was deleted after the comparison.
+Required trace-free checks remain blocking. No unchanged retry is authorized
+by this comparison.

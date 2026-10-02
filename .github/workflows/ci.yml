@@ -875,57 +875,6 @@ jobs:
             ${{ runner.temp }}/hang-ten-ui-test-logs/
           if-no-files-found: ignore
 
-      # Temporary diagnostic only: never merge this export, even if CI passes.
-      # Preserve actual products after testing; upload authenticated ciphertext only.
-      - name: Encrypt exact board products for native replay
-        id: board_replay_export
-        if: always()
-        env:
-          XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
-          XCTEST_ONLY_TESTING: ${{ matrix.only_testing }}
-        run: python3 scripts/ci-export-board-replay.py
-
-      - name: Upload encrypted board replay
-        if: always() && steps.board_replay_export.outcome == 'success'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: hang-ten-board-replay-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            ${{ steps.board_replay_export.outputs.export_path }}/products.cms
-            ${{ steps.board_replay_export.outputs.export_path }}/receipt.json
-          include-hidden-files: true
-          if-no-files-found: error
-
-      - name: Delete owned encrypted export after upload
-        if: always() && steps.board_replay_export.outputs.export_path != ''
-        env:
-          REPLAY_EXPORT_PATH: ${{ steps.board_replay_export.outputs.export_path }}
-          REPLAY_EXPORT_OWNER: ${{ steps.board_replay_export.outputs.owner }}
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import json, os, shutil
-          from pathlib import Path
-          root = Path(os.environ.get("PASEO_WORKTREE_PATH", os.getcwd())).resolve()
-          owner = root.name
-          expected = root / ".context" / f"{owner}-board-replay-export"
-          assert os.environ["REPLAY_EXPORT_OWNER"] == owner
-          assert Path(os.environ["REPLAY_EXPORT_PATH"]) == expected
-          receipt_path = expected / "receipt.json"
-          if receipt_path.exists():
-              try:
-                  receipt = json.loads(receipt_path.read_text())
-              except json.JSONDecodeError:
-                  receipt = None  # Cancellation during the initial receipt write.
-              if receipt is not None:
-                  assert receipt["owner"] == owner
-                  assert receipt["run"] == os.environ["GITHUB_RUN_ID"]
-                  assert receipt["attempt"] == os.environ["GITHUB_RUN_ATTEMPT"]
-          if expected.exists():
-              shutil.rmtree(expected)
-          assert not expected.exists()
-          PY
-
       # actions/cache/save v4.2.3
       - name: Save Xcode DerivedData
         if: success()
