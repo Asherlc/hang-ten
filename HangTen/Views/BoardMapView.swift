@@ -551,29 +551,21 @@ private struct BoardDetailMapSizeModifier: ViewModifier {
     let aspectRatio: CGFloat
     let maximumHeight: CGFloat?
 
-    @ViewBuilder
+    /// Fits the map through one modifier chain so compact-height changes preserve its renderer identity.
     func body(content: Content) -> some View {
-        if let maximumHeight {
-            content
-                .aspectRatio(aspectRatio, contentMode: .fit)
-                .frame(maxWidth: max(0, maximumHeight * aspectRatio))
-                // Separate non-interactive a11y node so XCTest does not resolve
-                // boardDetail.map to a ~30pt hold-marker button child.
-                .background {
-                    Color.clear
-                        .accessibilityElement()
-                        .accessibilityIdentifier("boardDetail.map")
-                }
-                .frame(maxWidth: .infinity)
-        } else {
-            content
-                .aspectRatio(aspectRatio, contentMode: .fit)
-                .background {
-                    Color.clear
-                        .accessibilityElement()
-                        .accessibilityIdentifier("boardDetail.map")
-                }
-        }
+        // Preserve the model surface's identity when compact-height metrics
+        // become available or rotation changes the optional height limit.
+        content
+            .aspectRatio(aspectRatio, contentMode: .fit)
+            .frame(maxWidth: maximumHeight.map { max(0, $0 * aspectRatio) })
+            // Keep the accessibility node on the fitted map, before the outer
+            // frame expands to the available width.
+            .background {
+                Color.clear
+                    .accessibilityElement()
+                    .accessibilityIdentifier("boardDetail.map")
+            }
+            .frame(maxWidth: .infinity)
     }
 }
 

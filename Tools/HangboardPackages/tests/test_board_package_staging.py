@@ -8,6 +8,7 @@ import re
 import shutil
 import stat
 import sys
+from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -385,6 +386,9 @@ def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
         "surfaces-for-climbing-transgression-2013",
         "trango-rock-prodigy-forge",
         "trango-rock-prodigy-natural",
+        "yy-verticalboard-first",
+        "yy-verticalboard-light",
+        "yy-verticalboard-one",
         "yy-verticalboard-evo",
         "tension-honestone",
         "tension-grindstone-original",
@@ -395,6 +399,7 @@ def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
 def test_ci_simulator_staging_bundles_model_fixtures_for_ui_interactions(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, slug: str
 ) -> None:
+    """Verify that CI Simulator staging embeds each model fixture needed for native interaction tests."""
     repository_root = tmp_path / "repository"
     for model_slug in (
         "clavellium-training-block",
@@ -406,6 +411,9 @@ def test_ci_simulator_staging_bundles_model_fixtures_for_ui_interactions(
         "surfaces-for-climbing-transgression-2013",
         "trango-rock-prodigy-forge",
         "trango-rock-prodigy-natural",
+        "yy-verticalboard-first",
+        "yy-verticalboard-light",
+        "yy-verticalboard-one",
         "yy-verticalboard-evo",
         "tension-honestone",
         "tension-grindstone-original",
@@ -799,9 +807,20 @@ def test_xcode_staging_phase_intentionally_runs_for_every_build() -> None:
 
 
 def test_xcode_assigns_each_live_model_to_its_own_safe_odr_tag() -> None:
+    """Require unique Xcode objects and one safe, distinct ODR resource registration for every live model."""
     project = (REPO_ROOT / "HangTen.xcodeproj" / "project.pbxproj").read_text(
         encoding="utf-8"
     )
+    # Duplicate definitions are silently collapsed by plist readers, even when
+    # every ODR tag appears in the source text. Each resource needs its own object.
+    object_ids = re.findall(
+        r"^\t\t([A-Z0-9]{24})(?: /\*.*?\*/)? = \{", project, re.MULTILINE
+    )
+    assert object_ids
+    duplicate_ids = sorted(
+        identifier for identifier, count in Counter(object_ids).items() if count > 1
+    )
+    assert not duplicate_ids, f"Duplicate Xcode object identifiers: {duplicate_ids}"
     parser_module = load_staging_module().load_board_package_module(REPO_ROOT)
     inventory = parser_module.discover_board_packages(
         REPO_ROOT / "Hangboards",

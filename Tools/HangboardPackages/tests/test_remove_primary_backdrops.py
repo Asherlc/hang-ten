@@ -28,12 +28,17 @@ def test_iron_palm_is_not_subject_to_seed_based_enclosed_background_clearing() -
     assert "soill-iron-palm-2" not in module._ENCLOSED_BACKGROUND_SEEDS
 
 
+def test_enclosed_background_seeds_have_live_raster_inputs() -> None:
+    module = _load_script()
+    for package in module._ENCLOSED_BACKGROUND_SEEDS:
+        assert (HANGBOARDS_ROOT / package / "assets" / "primary.png").is_file(), package
+
+
 @pytest.mark.parametrize(
     ("package", "hole", "preserved"),
     [
         ("yy-travelboard", (190, 625), (768, 512)),
         ("yy-travelboard", (1348, 625), (768, 512)),
-        ("yy-verticalboard-one", (887, 500), (887, 443)),
     ],
 )
 def test_known_enclosed_background_fixtures_clear_only_the_named_through_holes(
@@ -55,9 +60,10 @@ def test_known_enclosed_background_fixtures_clear_only_the_named_through_holes(
 
 
 @pytest.mark.parametrize(
-    "package", ("beastmaker-1000", "metolius-wood-grips-compact-ii", "soill-training-tiles", "yy-penta-evo", "trango-rock-prodigy-pivot")
+    "package", ("beastmaker-1000", "metolius-wood-grips-compact-ii", "soill-training-tiles", "yy-penta-evo", "trango-rock-prodigy-pivot", "yy-verticalboard-first", "yy-verticalboard-light", "yy-verticalboard-one", "yy-verticalboard-evo", "tension-honestone", "tension-grindstone-original")
 )
 def test_model_only_packages_exclude_raster_backdrop_inputs(package: str) -> None:
+    """Require migrated model packages to ship descriptors and USDZ without raster backdrop inputs."""
     assets = HANGBOARDS_ROOT / package / "assets"
 
     assert (assets / "primary.usdz").is_file()

@@ -285,6 +285,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
         }
     }
 
+    /// Checks each catalog package against the declared raster or model-only asset boundary.
     func testEveryCatalogPackageMatchesTypedMediaBoundary() throws {
         let repositoryRoot = repositoryRootURL()
         let packagePaths = try discoveredPackagePaths(at: repositoryRoot)
@@ -343,8 +344,11 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "trango.rock-prodigy-training-center",
             "target10a.linebreaker-base",
             "yy.baguette-evo",
-            "yy.verticalboard-evo",
-            "yy.penta-evo"
+            "yy.penta-evo",
+            "yy.verticalboard-first",
+            "yy.verticalboard-light",
+            "yy.verticalboard-one",
+            "yy.verticalboard-evo"
         ]
 
         XCTAssertFalse(

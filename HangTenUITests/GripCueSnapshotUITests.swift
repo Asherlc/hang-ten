@@ -261,7 +261,7 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        XCTAssertNotNil(visibleControlCoordinate(bodyweight, requireHittable: false, timeout: 30))
+        XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
         XCTAssertLessThan(
             bodyweight.frame.width,
             XCUIApplication(bundleIdentifier: "com.apple.springboard").frame.width / 3,
@@ -300,7 +300,7 @@ final class InitialWeightSetupUITests: XCTestCase {
         app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        XCTAssertNotNil(visibleControlCoordinate(bodyweight, requireHittable: false, timeout: 30))
+        XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
         XCTAssertEqual(bodyweight.value as? String, "0")
         XCTAssertEqual(bodyweight.label, "Add bodyweight")
 
@@ -528,10 +528,11 @@ final class OneHandedHandChoiceUITests: XCTestCase {
 extension XCTestCase {
     /// Tap a measured screen position without resolving the control's window again.
     /// SwiftUI menus and switches can expose finite control frames beneath
-    /// invalid window containers on iOS 26. SpringBoard provides the screen anchor
-    /// while the tested app remains foregrounded.
+    /// invalid window containers on iOS 26. Use the owning application as the screen anchor
+    /// so events target that application’s process.
     func tapVisibleControl(
         _ element: XCUIElement,
+        in application: XCUIApplication,
         normalizedOffset: CGVector = CGVector(dx: 0.5, dy: 0.5),
         requireHittable: Bool = true,
         timeout: TimeInterval = 10,
@@ -539,7 +540,7 @@ extension XCTestCase {
         line: UInt = #line
     ) {
         visibleControlCoordinate(
-            element, normalizedOffset: normalizedOffset, requireHittable: requireHittable,
+            element, in: application, normalizedOffset: normalizedOffset, requireHittable: requireHittable,
             timeout: timeout, file: file, line: line
         )?.tap()
     }
@@ -548,13 +549,14 @@ extension XCTestCase {
     /// A single hosted query can outlast that budget; a valid result is still ready.
     func visibleControlCoordinate(
         _ element: XCUIElement,
+        in application: XCUIApplication,
         normalizedOffset: CGVector = CGVector(dx: 0.5, dy: 0.5),
         requireHittable: Bool = true,
         timeout: TimeInterval = 10,
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> XCUICoordinate? {
-        let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let screen = application
         let deadline = ProcessInfo.processInfo.systemUptime + timeout
         var lastFrame: CGRect?
         var lastViewport: CGRect?

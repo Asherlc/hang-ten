@@ -121,7 +121,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         // Set the switch before focusing the decimal-pad field. A keyboard-active
         // tap can leave the switch off even when XCTest reports it as hittable.
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        XCTAssertNotNil(visibleControlCoordinate(bodyweight, requireHittable: false, timeout: 30))
+        XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
         XCTAssertEqual(bodyweight.value as? String, "0")
         app.buttons["workout.initialWeight.addBodyweight.label"].tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
@@ -186,7 +186,7 @@ final class WorkoutPaywallUITests: XCTestCase {
             remainingScrollAttempts -= 1
         }
         XCTAssertTrue(isStartVisible(), "Start must be below the navigation bar and above the keyboard")
-        tapVisibleControl(start)
+        tapVisibleControl(start, in: app)
         XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 10))
 
         app.buttons["paywall.purchase"].tap()

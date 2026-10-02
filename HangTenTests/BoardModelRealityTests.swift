@@ -856,6 +856,37 @@ final class BoardModelRealityTests: XCTestCase {
         let _ = BoardModelRealityLoader.self
     }
 
+    /// Loads all three YY CAD packages and checks every preserved contact’s render, collision and input binding.
+    @MainActor
+    func testVerticalBoardCADModelsLoadEveryPhysicalContactForPicking() async throws {
+        let expectedCounts = [
+            ("yy.verticalboard-first", 17),
+            ("yy.verticalboard-light", 12),
+            ("yy.verticalboard-one", 20),
+        ]
+        for (boardID, contactCount) in expectedCounts {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            let presentation = board.defaultPresentation
+            guard case .model = presentation.media else {
+                XCTFail("\(boardID) must use its CAD model")
+                continue
+            }
+            let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+            XCTAssertNotNil(scene.modelEntity, boardID)
+            XCTAssertEqual(scene.contactEntities.count, contactCount, boardID)
+            XCTAssertEqual(Set(scene.contactEntities.keys), Set(board.contacts(in: presentation).map(\.id)), boardID)
+            for (contactID, entities) in scene.contactEntities {
+                XCTAssertFalse(entities.isEmpty, "\(boardID): \(contactID)")
+                for entity in entities {
+                    XCTAssertNotNil(entity.model, "\(boardID): \(contactID) must render")
+                    XCTAssertNotNil(entity.collision, "\(boardID): \(contactID) must be pickable")
+                    XCTAssertNotNil(entity.components[InputTargetComponent.self], "\(boardID): \(contactID)")
+                    XCTAssertEqual(scene.contactID(for: entity), contactID, "\(boardID): reverse picking identity")
+                }
+            }
+        }
+    }
+
     @MainActor
     func testEvoHonestoneAndOriginalGrindstoneLoadEveryContactForPicking() async throws {
         let expectedCounts = [

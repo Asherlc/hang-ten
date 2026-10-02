@@ -259,17 +259,34 @@ jobs:
           ditto "$cad_root/mount/FreeCAD.app" "$cad_root/FreeCAD.app"
           echo "HANGTEN_FREECAD_CMD=$cad_root/FreeCAD.app/Contents/Resources/bin/freecadcmd" >> "$GITHUB_ENV"
 
-      - name: Run native CAD and cord regressions
+      - name: Run native CAD, cord and YY persisted-edit regressions
         run: |
           set -euo pipefail
+          owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
+          cad_root="$PWD/.context/$owner-transgression-native-ci"
+          # Preserve upstream cord-regression pins alongside owned USD compiler staging.
+          install_native_dependencies() {
+            local attempt="$1"
+            shift
+            python -m pip install "$@" -e 'Tools/HangboardPackages[dev]' \
+              numpy==2.2.6 usd-core==26.8 trimesh==5.1.0 shapely==2.1.2 rtree==1.4.1 scipy==1.16.3 networkx==3.6.1 \
+              2>&1 | tee "$cad_root/dependencies-attempt-$attempt.log"
+          }
+          if ! install_native_dependencies 1; then
+            # A hosted runner returned EIO while writing installed packages.
+            # Recover only this setup error, replacing any partial installation.
+            if ! grep -Fq 'OSError: [Errno 5] Input/output error' "$cad_root/dependencies-attempt-1.log"; then
+              exit 1
+            fi
+            echo "Dependency installation hit EIO; reinstalling once before any tests run."
+            install_native_dependencies 2 --force-reinstall
+          fi
+          python -m pip install --target "$cad_root/usd" 'usd-core==26.8'
+          export HANGTEN_CAD_PYTHONPATH="$cad_root/usd"
+          # Fail instead of silently skipping the required YY native checks.
+          test -f "$HANGTEN_FREECAD_CMD"
           test -x "$HANGTEN_FREECAD_CMD"
-          # Match authoring pins except NetworkX: 3.7 requires Python >=3.12.
-          python -m pip install -e 'Tools/HangboardPackages[dev]' \
-            numpy==2.2.6 usd-core==26.8 trimesh==5.1.0 shapely==2.1.2 rtree==1.4.1 scipy==1.16.3 networkx==3.6.1
-          # FreeCAD has its own Python; supply the host's matching Python 3.11
-          # site directory for the pinned USD compiler dependency.
-          HANGTEN_CAD_PYTHONPATH="$(python -c 'from pathlib import Path; import pxr; print(Path(pxr.__file__).parent.parent)')"
-          export HANGTEN_CAD_PYTHONPATH
+          test -f "$HANGTEN_CAD_PYTHONPATH/pxr/__init__.py"
           python -m pytest \
             Tools/HangboardCAD/tests/test_transgression_packages.py \
             Tools/HangboardCAD/tests/test_clavellium_native.py \
@@ -277,7 +294,8 @@ jobs:
             Tools/HangboardCAD/tests/test_rope_physics_export.py \
             Tools/HangboardCAD/tests/test_exterior_rope.py \
             Tools/HangboardCAD/tests/test_rectangular_channel_section.py \
-            -q
+            Tools/HangboardCAD/tests/test_verticalboards_native.py \
+            Tools/HangboardCAD/tests/test_verticalboard_validation_reporting.py -q
 
       - name: Delete owned CAD toolchain
         if: always()
@@ -717,9 +735,11 @@ jobs:
       github.event_name != 'pull_request' ||
       needs.changes.outputs.ios == 'true' ||
       needs.changes.outputs.workflow == 'true'
-    runs-on: macos-26
+    runs-on: xcode-27
     env:
-      DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
+      # The 27.1 alias resolves to Xcode_27.1_beta.app on this image.
+      # Use the latest released toolchain with the latest available simulator.
+      DEVELOPER_DIR: /Applications/Xcode_27.0.app/Contents/Developer
     strategy:
       fail-fast: false
       matrix:
@@ -783,6 +803,47 @@ jobs:
           xcrun simctl list runtimes
           xcrun simctl list devices available
 
+      - name: Ensure Metal compiler is available
+        run: |
+          set -euo pipefail
+          if ! xcrun metal -v; then
+            xcodebuild -downloadComponent MetalToolchain
+          fi
+          xcrun metal -v
+
+      - name: Select latest available iOS Pro simulator for the board comparison
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          xcrun --sdk iphonesimulator --show-sdk-version
+          xcrun simctl list --json | python3 -c '
+          import json
+          import os
+          import re
+          import sys
+
+          inventory = json.load(sys.stdin)
+          candidates = []
+          for runtime in inventory.get("runtimes", []):
+              if not runtime.get("isAvailable", False) or runtime.get("platform") != "iOS":
+                  continue
+              version = tuple(int(part) for part in runtime["version"].split("."))
+              for device in inventory.get("devices", {}).get(runtime["identifier"], []):
+                  match = re.search(r"\.iPhone-(\d+)-Pro$", device.get("deviceTypeIdentifier", ""))
+                  if device.get("isAvailable", False) and match:
+                      candidates.append((version, int(match[1]), device["udid"], runtime, device))
+          if not candidates:
+              raise SystemExit("No available iOS iPhone Pro simulator in runner inventory")
+          _, _, _, runtime, device = max(candidates, key=lambda candidate: candidate[:3])
+          destination = "platform=iOS Simulator,id=" + device["udid"]
+          with open(os.environ["GITHUB_ENV"], "a") as environment:
+              environment.write("XCTEST_DESTINATION=" + destination + "\n")
+          identifier = runtime["identifier"]
+          runtime_version = runtime["version"]
+          device_name = device["name"]
+          print(f"Board comparison selected: {identifier}; version={runtime_version}; device={device_name}; {destination}")
+          '
+
       - name: Run XCTest suite
         id: xctest
         env:
@@ -807,12 +868,13 @@ jobs:
           unset ANALYTICS_API_KEY
           XCTEST_XCCONFIG="$telemetry_xcconfig" scripts/ci-run-xctest.sh
 
+      # Retain passing and failing evidence for the runtime comparison.
       # actions/upload-artifact v4.6.2
-      - name: Upload test diagnostics on failure
-        if: failure() || cancelled()
+      - name: Upload board runtime comparison diagnostics
+        if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: ci-test-results-HangTenUITests-map-${{ matrix.shard }}-${{ github.run_id }}
+          name: ci-test-results-HangTenUITests-map-${{ matrix.shard }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             ${{ runner.temp }}/HangTenUITests-map-${{ matrix.shard }}-run.xcresult
             ${{ runner.temp }}/hang-ten-ui-test-logs/

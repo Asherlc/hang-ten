@@ -334,6 +334,20 @@ def test_required_build_gate_rejects_missing_native_cad_checks(
     assert result.returncode == expected, result.stdout + result.stderr
 
 
+def test_native_ci_runs_yy_persisted_edits_with_required_toolchain() -> None:
+    """Require the YY native battery to execute rather than pass through toolchain skips."""
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
+    steps = workflow["jobs"]["transgression-native"]["steps"]
+    run = next(step["run"] for step in steps if
+               "test_verticalboards_native.py" in step.get("run", ""))
+    assert "usd-core==26.8" in run
+    assert 'export HANGTEN_CAD_PYTHONPATH="$cad_root/usd"' in run
+    assert 'test -f "$HANGTEN_FREECAD_CMD"' in run
+    assert 'test -f "$HANGTEN_CAD_PYTHONPATH/pxr/__init__.py"' in run
+    assert "test_verticalboard_validation_reporting.py" in run
+    cleanup = next(step for step in steps if step["name"] == "Delete owned CAD toolchain")
+    assert cleanup["if"] == "always()"
+    assert 'test ! -e "$cad_root"' in cleanup["run"]
 def test_optimized_unit_lane_preserves_swift_debug_assertions() -> None:
     workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
     optimized_steps = [

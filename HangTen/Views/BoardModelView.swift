@@ -41,7 +41,9 @@ struct BoardModelSurface: View {
     }
 
     var body: some View {
-        Group {
+        // Keep loading and disappearance scoped to this surface. Group forwards
+        // lifecycle modifiers to its changing placeholder/model children.
+        ZStack {
             if case .ready(let model) = result {
                 let realityView = BoardModelRealityView(
                     model: model,
@@ -94,6 +96,11 @@ struct BoardModelSurface: View {
                 return
             }
             result = .loading
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
+                print("[BoardModelSurface] load begin \(board.id) displayOnly=\(isDisplayOnly)")
+            }
+            #endif
             do {
                 let model = try await BoardModelRealityLoader.load(
                     board: board,
@@ -101,6 +108,11 @@ struct BoardModelSurface: View {
                     store: BoardCatalog.packageStore
                 )
                 guard !Task.isCancelled else { return }
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
+                    print("[BoardModelSurface] load ready \(board.id) scene=\(ObjectIdentifier(model)) displayOnly=\(isDisplayOnly)")
+                }
+                #endif
                 result = .ready(model)
             } catch {
                 guard !Task.isCancelled else { return }
@@ -111,6 +123,11 @@ struct BoardModelSurface: View {
             }
         }
         .onDisappear {
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
+                print("[BoardModelSurface] disappear \(board.id) displayOnly=\(isDisplayOnly)")
+            }
+            #endif
             result = .loading
         }
     }
@@ -193,6 +210,8 @@ struct BoardModelRealityView: View {
         GeometryReader { proxy in
             let size = proxy.size
             RealityView { content in
+                // Board maps use the authored camera, without device tracking
+                // or the AR session's implicit non-AR fallback.
                 content.camera = .virtual
                 content.add(model.root)
                 content.add(model.camera)
@@ -207,6 +226,11 @@ struct BoardModelRealityView: View {
                 } else {
                     model.installLiveUpdateSubscription(nil)
                 }
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
+                    print("[BoardModelRealityView] attach scene=\(ObjectIdentifier(model)) camera=\(content.camera) size=\(size) transform=\(model.camera.transform.matrix) rootScene=\(String(describing: model.root.scene))")
+                }
+                #endif
             } update: { content in
                 // Observe orbit invalidation in the RealityView update itself,
                 // as well as the projected SwiftUI accessibility overlay.
@@ -249,6 +273,13 @@ struct BoardModelRealityView: View {
             .simultaneousGesture(magnifyGesture)
             .gesture(tapGesture)
             .overlay { accessibilityOverlay(size: size) }
+            #if targetEnvironment(simulator)
+            .background {
+                if onContactTap != nil {
+                    BoardSimulatorPresentation().allowsHitTesting(false)
+                }
+            }
+            #endif
             #if DEBUG
             .overlay(alignment: .topLeading) {
                 if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
@@ -264,7 +295,7 @@ struct BoardModelRealityView: View {
             #endif
             .allowsHitTesting(!isDisplayOnly)
             // A different scene needs a fresh RealityView make closure so its
-            // root and camera replace the prior scene's entities.
+            // root and camera replace the prior scene entities.
             .id(ObjectIdentifier(model))
         }
         // A display-only card is one element (its host Button owns the tap). An
@@ -313,7 +344,9 @@ struct BoardModelRealityView: View {
         // The unchanged follow-up update must not schedule another invalidation.
         if model.camera.transform.matrix != priorCameraTransform
             || model.instanceEntities.map({ $0.transform.matrix }) != priorInstanceTransforms {
-            Task { @MainActor in cameraRevision &+= 1 }
+            Task { @MainActor in
+                cameraRevision &+= 1
+            }
         }
         if let positionID, !didSelect {
             Task { @MainActor in
@@ -411,3 +444,97 @@ private struct BoardModelAccessibilityContainer: ViewModifier {
         }
     }
 }
+
+#if targetEnvironment(simulator)
+import QuartzCore
+/// Keep Simulator drawable presentation independent of worker-thread CA transactions.
+private struct BoardSimulatorPresentation: UIViewRepresentable {
+    func makeUIView(context: Context) -> PresentationView { PresentationView() }
+    func updateUIView(_ view: PresentationView, context: Context) { view.scheduleConfiguration() }
+
+    final class PresentationView: UIView {
+        private var pending: DispatchWorkItem?
+        private var attempts = 0
+        private var attemptedViewport: CGRect?
+        private weak var configuredLayer: CAMetalLayer?
+
+        override func didMoveToWindow() {
+            super.didMoveToWindow()
+            pending?.cancel()
+            pending = nil
+            attempts = 0
+            attemptedViewport = nil
+            configuredLayer = nil
+            if window != nil { scheduleConfiguration() }
+        }
+
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            scheduleConfiguration()
+        }
+
+        func scheduleConfiguration() {
+            guard let window else { return }
+            let viewport = convert(bounds, to: window)
+            if attemptedViewport != viewport || configuredLayer?.presentsWithTransaction == true {
+                attempts = 0
+                configuredLayer = nil
+                attemptedViewport = viewport
+            }
+            if let configuredLayer, configuredLayer.superlayer != nil,
+               !configuredLayer.presentsWithTransaction { return }
+            guard pending == nil, attempts < 120 else { return }
+            let work = DispatchWorkItem { [weak self] in
+                guard let self else { return }
+                self.pending = nil
+                self.configurePresentation()
+            }
+            pending = work
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05, execute: work)
+        }
+
+        private func configurePresentation() {
+            guard let window, bounds.width > 0, bounds.height > 0 else {
+                attempts += 1
+                scheduleConfiguration()
+                return
+            }
+            let viewport = convert(bounds, to: window)
+            var ancestor = superview
+            while let container = ancestor {
+                var candidates: [CAMetalLayer] = []
+                var visited = 0
+                func collect(_ layer: CALayer) {
+                    visited += 1
+                    guard visited < 4096 else { return }
+                    if let metal = layer as? CAMetalLayer {
+                        let frame = metal.convert(metal.bounds, to: window.layer)
+                        if abs(frame.minX - viewport.minX) < 1,
+                           abs(frame.minY - viewport.minY) < 1,
+                           abs(frame.width - viewport.width) < 1,
+                           abs(frame.height - viewport.height) < 1 {
+                            candidates.append(metal)
+                        }
+                    }
+                    for child in layer.sublayers ?? [] { collect(child) }
+                }
+                collect(container.layer)
+                if candidates.count == 1, visited < 4096 {
+                    let layer = candidates[0]
+                    layer.presentsWithTransaction = false
+                    configuredLayer = layer
+                    #if DEBUG
+                    print("[BoardSimulatorPresentation] asynchronous=\(!layer.presentsWithTransaction) viewport=\(viewport)")
+                    #endif
+                    attempts = 120
+                    return
+                }
+                if container === window { break }
+                ancestor = container.superview
+            }
+            attempts += 1
+            scheduleConfiguration()
+        }
+    }
+}
+#endif
