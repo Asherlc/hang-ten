@@ -1,0 +1,61 @@
+{
+  "evidenceRoot": ".context/strong-owl-live-physics-runtime-debug/20261002T225330Z",
+  "simulatorUUID": "7396060C-E3CF-4634-892C-42F4977609F1",
+  "sourceBaseCommit": "2fe3573237c45cd61f1e6af5dbf704e237c62d34",
+  "builtExecutableSHA256": "90dc5f85094145281d065a6a0dd62b800f080baed9a8b2078374d6b47a32c589",
+  "installedExecutableHashCaptured": false,
+  "runtime": {
+    "acceptedBatches": 83,
+    "maximumDegrees": 29.999999999999996,
+    "lastDegrees": 0.0,
+    "settledDeliveries": 2,
+    "failures": [],
+    "batchMedianMilliseconds": 111.57875,
+    "batchMinimumMilliseconds": 61.613834,
+    "batchMaximumMilliseconds": 743.816042
+  },
+  "clip": {
+    "width": 1206,
+    "ptsMonotonic": false,
+    "retimed": false,
+    "exportPreset": "passthrough",
+    "firstPTS": 0.085,
+    "lastPTS": 18.368333333333332,
+    "nominalFPS": 61.74260330200195,
+    "sampleCount": 1126,
+    "trimStartSeconds": 4.25,
+    "trimDurationSeconds": 18,
+    "height": 2622,
+    "durationSeconds": 18
+  },
+  "timestampVerification": {
+    "clipSamples": 1122,
+    "encodedTimestampOffsetSeconds": 3.8766666666666665,
+    "retimed": false,
+    "maximumRelativeTimestampErrorSeconds": 2.220446049250313e-15,
+    "identicalCompressedSamples": 1122,
+    "sourceSamples": 5592
+  },
+  "verification": {
+    "optimizedDebugBuild": "passed",
+    "nativeExistingScheduleAndIdentityChecks": 4,
+    "iOSXCTestRun": false,
+    "simulatorDeletedAndVerified": true,
+    "physicsChanged": false,
+    "priorStationaryCauseEstablished": false
+  },
+  "sha256": {
+    "strong-owl-live-physics-clavellium-live-motion.mp4": "45cbb69edde879b14331dab28024d5465737752c600149d1bc79a0e918efb0c5",
+    "strong-owl-live-physics-clavellium-demonstration.mp4": "5ff43520a174fc6d87f8eb9b7cfe475442009ae7aa83b881e8aadaf97016a4e0",
+    "build-1.log": "b9d7408116782e845fe75cf6ee96983a3c5da15e454841f110ce50abcba3b850",
+    "action-1-launch-stderr.log": "2e22ee30a59ab4d21a6ae8c909f158344125f948a9f9465cc3bdb5e3cef2d1a5",
+    "runtime-results.json": "75f59b44d849e8e118ed4b40e985b7213c972b0dacecd26ebc02ced5c69d5ed7",
+    "video-metadata.json": "f5b09d1a770db69c12f0975316dd00ebd5b37e7447febb0f6b8414710629be47",
+    "demonstration-metadata.json": "8423eec26eaa27f7905d231dcb20a7eacd0f123ecb0c9be4e8a60670cfe6ffac",
+    "timestamp-verification.json": "d6e5e36b3658c656f96b738e1a0891548aef8b30a7a16f39c8dfc635f3102615",
+    "controller-checks.log": "a66a5b24371239522e36842bbecbb989109abe12e8c2bd9333f933c9d94c2f44",
+    "simulator-cleanup.json": "a30eaf837b4c28736f9477c41b6e648e4c213f88f8fe4f7eb270a7d2f130960d",
+    "debug.py": "3a2cb22fb5b8c6c334d35bbafeec3c81cde41d509edfa8471e9de0b9de933e5d",
+    "run.zsh": "66e56cdf298645dd8ee12a4ec026558727de017cd5f70aaa409dacd2a52cd2bf"
+  }
+}

@@ -612,6 +612,11 @@ final class BoardModelRealityScene {
     }
 
     func select(positionID: String?) -> Bool {
+        #if DEBUG
+        if activePositionID != positionID {
+            LiveRopeReviewTrace.log("scene select position=\(String(describing:positionID)) previous=\(String(describing:activePositionID)) live=\(hasLiveRopes) active=\(liveActivity)")
+        }
+        #endif
         guard let positionID else {
             clearSelection()
             return false
@@ -962,6 +967,9 @@ final class BoardModelRealityScene {
         liveControllers.forEach { $0.advance(elapsed:elapsed) }
     }
     func setLiveActivity(_ active:Bool) {
+        #if DEBUG
+        LiveRopeReviewTrace.log("scene activity requested=\(active) current=\(liveActivity) position=\(String(describing:activePositionID))")
+        #endif
         guard liveActivity != active else { return }
         liveActivity=active
         for controller in liveControllers {
