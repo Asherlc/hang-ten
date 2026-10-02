@@ -1062,7 +1062,7 @@
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/metadata-diff.json",
       "nativeValidation": "Rear10 sketch alignment corrected; other six contact regions exact; all depths preserved; native angle/depth edit-and-restore pass. Exported eight unbound nodes; final manifest spelling fix changes only metadata with exact geometry-byte provenance. All fourteen pose/instance routes reproduce against final source and descriptor.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/ios/final-runtime-validation.json",
-      "geometryAcceptance": "pending human review of rear10 recess correction, wood display and seven grip poses with native per-pose loop bearings",
+      "geometryAcceptance": "reviewed; corrected rear recess, wood display, seven grip poses, cords and workout highlighting accepted",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
       "suspensionSHA256": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97",
       "nativeAppHistory": [
@@ -1071,7 +1071,12 @@
       "comparisonHistory": [
         "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/geometry-review.html"
       ],
-      "individualReview": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/review.md"
+      "individualReview": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/review.md",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/human-review.json",
+      "reviewAnswer": "Y",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed Penta Evo revision: enclosed rear 10 mm recess, wood finish, seven loadable grip poses with native-solved cords, fourteen contact selections and bilateral workout highlighting. Display estimates remain labeled.",
+      "acceptedRevisionCommit": "3da6a781d40788e7fdaacfb14858907fd4fdbc6f"
     },
     "yy-travelboard": {
       "source": "Hangboards/yy-travelboard/yy-travelboard.FCStd",

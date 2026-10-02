@@ -511,7 +511,7 @@
       "package": "yy-penta-evo",
       "boardID": "yy.penta-evo",
       "name": "YY Vertical Penta Evo",
-      "humanReview": "pending",
+      "humanReview": "reviewed; corrected rear recess, wood display, seven grip poses, cords and workout highlighting accepted",
       "sourceSHA256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
       "reviewPage": "yy-penta-evo/individual-review-2026-10-01/review.md",
       "sourceAudit": "yy-penta-evo/README.md",
@@ -533,7 +533,11 @@
       "appReviewHistory": [
         "yy-penta-evo/app-review/validation.json"
       ],
-      "individualReview": "yy-penta-evo/individual-review-2026-10-01/review.md"
+      "individualReview": "yy-penta-evo/individual-review-2026-10-01/review.md",
+      "humanReviewRecord": "yy-penta-evo/human-review.json",
+      "reviewAnswer": "Y",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed Penta Evo revision: enclosed rear 10 mm recess, wood finish, seven loadable grip poses with native-solved cords, fourteen contact selections and bilateral workout highlighting. Display estimates remain labeled."
     },
     {
       "number": 19,
