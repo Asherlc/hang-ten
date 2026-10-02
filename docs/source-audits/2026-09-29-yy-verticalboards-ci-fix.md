@@ -1279,3 +1279,31 @@ lookup replaces process-display-name assumptions. The single workflow owner
 is passed through Xcode's documented TEST_RUNNER_ environment propagation,
 validated before enabling the Evo hook. These are diagnostic safety/viability
 corrections; the authorized app-attempt budget remains one, with zero used.
+
+The corrected run 36961101159 completed all 26 cases with six failures.
+DoorMount, Evo, Megalith and Natural stopped at body visibility; Forge stopped
+at rendered selection without later orbit guards. Pro failed rendered orbit
+with zero changed RGB pixels, stable map bounds and changed, settled orbit
+state. The other 20 cases passed, as did 1,434 unit tests (three skips),
+49 native CAD tests, 23 purchase/settings/workout tests, Python and lint.
+
+The controller receipt records zero app attachments. Fixture preflight stopped
+with an owned-child-group lifecycle error; final cleanup verified all owned
+children exited and fixture files were deleted. There is no application trace
+or drawable/transaction attribution. Evo also failed before orbit, so the
+intended comparable failure is absent. This investigation is inconclusive;
+it provides no production correction and authorizes no retry.
+
+The board job checked out synthetic merge 09d95478b, including main PR536's
+cord-pivot changes. Corded pitch now rotates board entities around fixed cord
+axes, while yaw still affects camera orbit. This source difference prevents
+a single-variable comparison with the earlier baseline. Changed orbit state
+alone does not establish the complete camera transform.
+
+Artifact 11209204515 (166,780,912 bytes) passed CRC verification and contains
+a finalized result bundle. Full logs, screenshots, diagnostics, controller
+receipt and RGB comparisons are retained; Pro's orbit overview and Evo's
+body-failure screenshot were visually inspected. All temporary hooks, scripts
+and workflow wrappers are removed, restoring the five diagnostic files to
+the probe-free 3adc source. Required checks remain blocking; no rendering,
+framework, GPU or environment-only cause is claimed.

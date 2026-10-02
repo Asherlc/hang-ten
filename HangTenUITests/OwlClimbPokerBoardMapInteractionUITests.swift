@@ -340,16 +340,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             "HANGTEN_REVIEW_MODEL_DIAGNOSTICS": "1",
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
         ]
-        if boardID == "zlagboard.evo" {
-            if let owner = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PRESENTATION_OWNER"],
-               !owner.isEmpty,
-               owner.range(of: "^[A-Za-z0-9_-]+$", options: .regularExpression) != nil {
-                app.launchEnvironment["HANGTEN_REVIEW_PRESENTATION_ATTRIBUTION"] = "1"
-                app.launchEnvironment["HANGTEN_REVIEW_PRESENTATION_OWNER"] = owner
-            } else {
-                print("[PresentationAttribution] Valid shared CI owner unavailable; diagnostic disabled")
-            }
-        }
         app.launch()
         // Preserve the rapid Train-to-Hold-specs transition, including the
         // departing interactive Train preview, when validating the detail host.
