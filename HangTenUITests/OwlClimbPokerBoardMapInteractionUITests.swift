@@ -2,6 +2,11 @@ import XCTest
 import UIKit
 
 final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        continueAfterFailure = false
+    }
+
     override func tearDown() {
         // Landscape review launches leave the shared simulator in landscape;
         // reset so later cases/suites on the same device are not poisoned.
