@@ -168,3 +168,31 @@ def test_native_path_search_rejects_invalid_explicit_selector(tmp_path, selector
     front_entry_authoring(entries)["pathSearch"] = selector
     with pytest.raises(cad_source.ManifestError, match="pathSearch"):
         merge(tmp_path, board, entries)
+
+
+def guided_authoring(entries):
+    solver=front_entry_authoring(entries)
+    solver.pop("tightening")
+    entries[0]["suspension"]["canonicalPoses"]={"front":{}}
+    solver["grooveGuides"]={"sourceSHA256":"c"*64,"byPoseID":{"front":{"lead":{"feature":"NativeGroove","boreFeature":"NativeBore","exitSign":1}}}}
+    return solver
+
+
+def test_native_guides_stay_authoring_only_in_generated_manifest(tmp_path):
+    board,entries=package(tmp_path);guided_authoring(entries)
+    merged=merge(tmp_path,board,entries);rendered=cad_source.render_board(merged).decode()
+    assert "grooveGuides" not in rendered and "ropeSolver" not in rendered
+    assert "cadRoutedCord" in rendered
+
+
+@pytest.mark.parametrize("change",["missing-pose","missing-lead","authored-path","bad-source","bad-exit","mixed-tightening"])
+def test_native_guides_reject_incomplete_or_authored_route_contract(tmp_path,change):
+    board,entries=package(tmp_path);solver=guided_authoring(entries);guides=solver["grooveGuides"]
+    if change=="missing-pose":guides["byPoseID"]={}
+    if change=="missing-lead":guides["byPoseID"]["front"]={}
+    if change=="authored-path":guides["byPoseID"]["front"]["lead"]["points"]=[[0,0,0]]
+    if change=="bad-source":guides["sourceSHA256"]="stale"
+    if change=="bad-exit":guides["byPoseID"]["front"]["lead"]["exitSign"]=True
+    if change=="mixed-tightening":solver["tightening"]="coupled3D"
+    with pytest.raises(cad_source.ManifestError,match="grooveGuides"):
+        merge(tmp_path,board,entries)

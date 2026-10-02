@@ -1,0 +1,21 @@
+{
+  "status": "pass-code-review-scope-only",
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "helperSHA256": "2001cb8f4eb141d50146a2f426aa0cc086e729e0e737b4224e7f9dcf0a6fa191",
+  "freezeSHA256": "cef46c7b031eba55bdbcde889fc27d505eedeba137dbee0abb1d3aa74a789012",
+  "findings": [
+    "Native plane is a generated seed only and always released to full 3D.",
+    "The chain Jacobian has the correct incoming-minus-outgoing tangent derivative and sign. Endpoints stay fixed, up to five generated corrections are each bounded to ten micrometres.",
+    "Every accepted path requires freshly fitted nonnegative real material forces and reconstructed facet residuals and weighted cone-error bounds at the unchanged 1e-5 limit.",
+    "The vertex budget is enforced before dense settling.",
+    "Exact resolved native support lines can share only a calculation from this invocation; every output pose independently recertifies clearance, traversal, entry, reactions, length and strand intersections.",
+    "Default native routing dispatch remains unchanged when grooveGuides is absent."
+  ],
+  "blockingFindings": [],
+  "pending": [
+    "All-sixteen route certificates and independent witness audit",
+    "Independent regenerated sidecar byte comparison",
+    "Current-source app visual review and package checks"
+  ],
+  "humanAcceptance": "pending"
+}

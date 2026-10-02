@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "placid-badger-vertical-seed-only",
+  "script": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/solve_front_flat_seed_only.py",
+  "timeoutSeconds": 1200,
+  "startedUTC": "2026-10-01T23:14:07.034849+00:00",
+  "ownedProcessGroup": 3635,
+  "elapsedSeconds": 372.5787456249818,
+  "exitCode": -15,
+  "ownedProcessGroupExited": true
+}

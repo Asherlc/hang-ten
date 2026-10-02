@@ -1,0 +1,38 @@
+{
+  "status": "pass-native-authoring-and-export-only",
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "bodyFeature": "CordSeat_Right",
+  "manifestRawPreserved": true,
+  "contacts": 8,
+  "publishedDepthsMM": {
+    "edge-front-15mm-flat": 15.0,
+    "edge-front-15mm-incut": 15.0,
+    "edge-front-20mm-granite": 20.0,
+    "edge-front-20mm-wood-flat": 20.0,
+    "edge-reverse-06mm-flat": 6.0,
+    "edge-reverse-06mm-incut": 6.0,
+    "edge-reverse-10mm-flat": 10.0,
+    "edge-reverse-10mm-incut": 10.0
+  },
+  "nativeValidity": {
+    "singleValidSolid": true,
+    "reopenedRecomputedAndEditRestored": true
+  },
+  "envelopeNativeXYZMM": [
+    105.0000002,
+    35.000000200000045,
+    105.0000002
+  ],
+  "evidence": {
+    "native-author/author-probe.json": "90523bc7b3dc11fedc31192a04db19808c17131f1a1696cfd654923a00030626",
+    "native-validation.json": "b6d423d79bcc0aaa595f720d2172423677955e904a422c2523d90312bf0daf7a",
+    "compile-reproducibility.json": "5cf4a3bd0c542bcd8ad6685cf8b9f6da7eab8783fbadf56599a8df6231ac7bf0",
+    "native-previews/provenance.json": "045801659cd0cc269e2da5f1b94a3bf4021d0c6ecdbead1321ca9ec1e8c5ed77",
+    "export-previews/provenance.json": "3765560b7de8e38d14c63cd51e014e9b8a728795c9a3582612797df964cdfdd3",
+    "extractor-regression.json": "c307a153521840c2298816ec1b9a9dd0058bc3f40932cb46f1936901539a0b36",
+    "root-native-visual-review.json": "56af38bbbc11960fc4f935f917385de8e328f3f11429f5421b59f030cfeb6d40"
+  },
+  "cordAllPoseGate": "pending",
+  "canonicalApply": "pending",
+  "appAndHumanReview": "pending"
+}

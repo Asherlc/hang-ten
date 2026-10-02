@@ -1,0 +1,4213 @@
+{
+  "status": "diagnostic-requires-admissible-material-normal-check",
+  "sourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+  "scriptSHA256": "de16e2a0124eb00f396f746460960b817322104b7fe87b21e06d1ad366d4f6b3",
+  "inputSHA256": {
+    "notch-guide-implementation/offset-anchor-probe.json": "ae610ee52e8cd20a6687bf408a1585997e45561b885bc2b3eb00e6e7de350686",
+    "notch-guide-implementation/offset-anchor-probe-distributed-reaction-dense.json": "cfe799b97ba0a03fe9cde06fc7c792659ee6a8b5f71cf8db3e1899d78eee08a1",
+    "notch-guide-implementation/distributed_reaction_dense.py": "25b4c71b87e231407f9fcb92fd2c4036eee12d64384ece441177048f998957c0",
+    "notch-guide-implementation/distributed_reaction_probe.py": "f89f3ecd1fa9d246338a2e5c769a075cb316945f77393f2e9b8a6d8629f8621c",
+    "notch-guide-implementation/optimize_offset_anchor.py": "3ee4032774fd369766dd8702ec8cfd6565e33f18e77f2ea6aa71da5d1b75e398",
+    "pose-review/native-collision-final-source.json": "79a27178727825a8ef467ad1526356636b9694dd8f0d6c5028367dff70df2ab6",
+    "pose-review/native-contact-orientation.json": "3d3f42711441fbdc179a680d7ac7e8afadd99e7b28d237a322831e44e05dd4bb",
+    "review-preparation/independent-guide-feasibility/inspection.json": "9c72f09f499dc7b822c1838288d78ae4ffe9c931f2a0b6da629c326fbf0d9594",
+    "review-preparation/packet-config.json": "8b59f325720b4a3edc5421ec4baf53051b950c05a23542168682cae65e669b55"
+  },
+  "method": "Stdlib arithmetic on retained reports and triangulated native mesh; no optimization, CAD job, route authoring, or new resource.",
+  "forceConvention": "Material-on-rope R=T*(incomingForwardUnit-outgoingForwardUnit), equivalent to -T*(two outgoing unit tangents). T is normalized to 1.",
+  "localAssembly": {
+    "passes": true,
+    "activeContributions": 33,
+    "polylineVertices": 13,
+    "nonnegativeWeights": true,
+    "allPointsOnNamedLocalSegments": true,
+    "maxPointInterpolationErrorM": 0.0,
+    "maxRadialVectorError": 1.6653345369377348e-16,
+    "maxForceFirstMomentError": 8.690541527449943e-19,
+    "independentMaxNodalResidual": 1.2414039122611047e-16,
+    "reportedMaxNodalResidual": 1.1443916996305594e-16,
+    "noRemoteConeTransfer": "Each force is applied only to its own segment endpoints using (1-t),t; no unrelated route node receives the force."
+  },
+  "materialNormalCheck": {
+    "meshSignedVolumeM3": 0.00030069875884595495,
+    "footPlaneToleranceM": 2e-09,
+    "footBarycentricTolerance": 1e-06,
+    "coneMethod": "Enumerate nonnegative combinations of one, two, or three incident outward facet normals. Positive cone membership is a necessary local check; it does not prove exact native curved-surface pressure or global closest-feature activity.",
+    "allFootPointsOnRetainedMesh": true,
+    "notInIncidentConeCount": 26,
+    "largestIncidentConeResidual": 0.18261455080551858,
+    "largestIncidentConeAngleDegrees": 10.522087178996516,
+    "finding": "The script collects triangle-wise closest feet from every triangle within 1.53 mm, not solely globally closest material features. Radial vectors to some non-nearest vertex feet are outside the material outward-normal cone and can create tangential directions in NNLS.",
+    "perContribution": [
+      {
+        "contact": 0,
+        "segment": 0,
+        "fraction": 0.9945476575121164,
+        "weight": 0.01003632812633361,
+        "point": [
+          -0.05206096454294319,
+          -0.0033312880811919017,
+          0.018218132379833062
+        ],
+        "foot": [
+          -0.051073907261028624,
+          -0.00341427782439943,
+          0.017053980407394812
+        ],
+        "normal": [
+          -0.6457538059324675,
+          0.054293649934551665,
+          0.7616129080448397
+        ],
+        "distanceMM": 1.5285349816703881,
+        "actualRadiusGapMicrometres": 28.534981670388333,
+        "incidentFaces": [
+          {
+            "triangle": 9305,
+            "vertexIDs": [
+              5133,
+              5138,
+              5139
+            ],
+            "outwardNormal": [
+              -0.524600348699017,
+              -3.735906356101414e-06,
+              0.8513486207958012
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9474,
+            "vertexIDs": [
+              5145,
+              5139,
+              5138
+            ],
+            "outwardNormal": [
+              -0.5185837155429741,
+              4.094810251981973e-06,
+              0.8550268592020229
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 9475,
+            "vertexIDs": [
+              5139,
+              5134,
+              5133
+            ],
+            "outwardNormal": [
+              -0.531028229830295,
+              4.577820083248212e-06,
+              0.8473541285096491
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20684,
+            "vertexIDs": [
+              5139,
+              5145,
+              11044
+            ],
+            "outwardNormal": [
+              -0.8254505619624459,
+              0.5644744187115167,
+              -1.939529761668003e-05
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20685,
+            "vertexIDs": [
+              5139,
+              11044,
+              11045
+            ],
+            "outwardNormal": [
+              -0.8123009404615025,
+              0.5832385286527524,
+              2.8641420864549942e-05
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20686,
+            "vertexIDs": [
+              5134,
+              5139,
+              11045
+            ],
+            "outwardNormal": [
+              -0.8041173155228377,
+              0.5944706407055073,
+              -1.4680898066080347e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.04739799405406031,
+        "incidentConeBasis": {
+          "basis": [
+            2,
+            3
+          ],
+          "weights": [
+            0.917471045832036,
+            0.16152114322265368
+          ]
+        },
+        "incidentConeAngleDegrees": 2.71672288286928
+      },
+      {
+        "contact": 1,
+        "segment": 0,
+        "fraction": 0.9971728594507271,
+        "weight": 0.01067966130922463,
+        "point": [
+          -0.05219838434782812,
+          -0.003206050080836711,
+          0.018036440848559543
+        ],
+        "foot": [
+          -0.05132576570072027,
+          -0.0036975645727182313,
+          0.016880457860958927
+        ],
+        "normal": [
+          -0.5705283314222506,
+          0.3213579538466591,
+          0.7557952689346706
+        ],
+        "distanceMM": 1.5294922250969216,
+        "actualRadiusGapMicrometres": 29.49222509692163,
+        "incidentFaces": [
+          {
+            "triangle": 9471,
+            "vertexIDs": [
+              5280,
+              5282,
+              5283
+            ],
+            "outwardNormal": [
+              -0.6082817694852153,
+              -1.0075690137145353e-05,
+              0.7937211656560608
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9479,
+            "vertexIDs": [
+              5285,
+              5283,
+              5282
+            ],
+            "outwardNormal": [
+              -0.6010918252778523,
+              7.1446794474450515e-06,
+              0.7991799656729974
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 9480,
+            "vertexIDs": [
+              5283,
+              5281,
+              5280
+            ],
+            "outwardNormal": [
+              -0.6162932872729527,
+              7.958374172278935e-06,
+              0.7875167198218473
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20694,
+            "vertexIDs": [
+              5283,
+              11048,
+              11049
+            ],
+            "outwardNormal": [
+              -0.682714682779129,
+              0.7306850629978117,
+              2.509337136174386e-05
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20695,
+            "vertexIDs": [
+              5283,
+              5285,
+              11048
+            ],
+            "outwardNormal": [
+              -0.6840093286333321,
+              0.7294732606951481,
+              1.6533808942574865e-05
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20697,
+            "vertexIDs": [
+              5281,
+              5283,
+              11049
+            ],
+            "outwardNormal": [
+              -0.6579343334639008,
+              0.7530753034309835,
+              -1.4551453822211273e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.18261455080551858,
+        "incidentConeBasis": {
+          "basis": [
+            1,
+            5
+          ],
+          "weights": [
+            0.8331035601739365,
+            0.2878962032631518
+          ]
+        },
+        "incidentConeAngleDegrees": 10.522087178996516
+      },
+      {
+        "contact": 2,
+        "segment": 0,
+        "fraction": 0.999394184168013,
+        "weight": 0.18329634737362904,
+        "point": [
+          -0.052314662644269205,
+          -0.0031000794651515552,
+          0.017882701860558882
+        ],
+        "foot": [
+          -0.0511935895353207,
+          -0.0035643846811066844,
+          0.016976237964455625
+        ],
+        "normal": [
+          -0.7401699516477254,
+          0.3065498284635788,
+          0.5984777734776408
+        ],
+        "distanceMM": 1.5146158074275136,
+        "actualRadiusGapMicrometres": 14.615807427513573,
+        "incidentFaces": [
+          {
+            "triangle": 9284,
+            "vertexIDs": [
+              5113,
+              5114,
+              5115
+            ],
+            "outwardNormal": [
+              -0.5717035025151279,
+              4.429067213298507e-06,
+              0.8204603008021281
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9288,
+            "vertexIDs": [
+              5114,
+              5119,
+              5115
+            ],
+            "outwardNormal": [
+              -0.5613482393426997,
+              -3.83050401001327e-06,
+              0.8275796965683597
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9477,
+            "vertexIDs": [
+              5125,
+              5115,
+              5119
+            ],
+            "outwardNormal": [
+              -0.5576367204214704,
+              4.82390377272627e-06,
+              0.8300851088980677
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20689,
+            "vertexIDs": [
+              5115,
+              11046,
+              11047
+            ],
+            "outwardNormal": [
+              -0.7551214974063718,
+              0.6555848713554758,
+              2.4588276070597195e-05
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20690,
+            "vertexIDs": [
+              5115,
+              5125,
+              11046
+            ],
+            "outwardNormal": [
+              -0.7585032930946096,
+              0.6516692062379696,
+              2.409853723830045e-06
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20692,
+            "vertexIDs": [
+              5113,
+              5115,
+              11047
+            ],
+            "outwardNormal": [
+              -0.7343798015199584,
+              0.678738761865888,
+              -1.6132824079670247e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 3.554447978966673e-16,
+        "incidentConeBasis": {
+          "basis": [
+            2,
+            4,
+            5
+          ],
+          "weights": [
+            0.720989804554525,
+            0.12063604663286061,
+            0.33581632069844025
+          ]
+        },
+        "incidentConeAngleDegrees": 2.0365486769359558e-14
+      },
+      {
+        "contact": 3,
+        "segment": 1,
+        "fraction": 0.52,
+        "weight": 0.0307886911487688,
+        "point": [
+          -0.052397753291841945,
+          -0.003012936420611334,
+          0.017724792609684632
+        ],
+        "foot": [
+          -0.05111214616908868,
+          -0.003466002699944628,
+          0.017030016751365527
+        ],
+        "normal": [
+          -0.8402897453661602,
+          0.2961300865225779,
+          0.4541146503787387
+        ],
+        "distanceMM": 1.5299569343108639,
+        "actualRadiusGapMicrometres": 29.95693431086397,
+        "incidentFaces": [
+          {
+            "triangle": 9301,
+            "vertexIDs": [
+              5124,
+              5133,
+              5134
+            ],
+            "outwardNormal": [
+              -0.5363732505087727,
+              -4.048744318718082e-06,
+              0.8439808861119196
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9475,
+            "vertexIDs": [
+              5139,
+              5134,
+              5133
+            ],
+            "outwardNormal": [
+              -0.531028229830295,
+              4.577820083248212e-06,
+              0.8473541285096491
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 9476,
+            "vertexIDs": [
+              5134,
+              5125,
+              5124
+            ],
+            "outwardNormal": [
+              -0.5440608987527018,
+              4.847550218023748e-06,
+              0.8390457308305095
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20686,
+            "vertexIDs": [
+              5134,
+              5139,
+              11045
+            ],
+            "outwardNormal": [
+              -0.8041173155228377,
+              0.5944706407055073,
+              -1.4680898066080347e-05
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20687,
+            "vertexIDs": [
+              5134,
+              11045,
+              11046
+            ],
+            "outwardNormal": [
+              -0.7850574324108845,
+              0.6194229794363593,
+              1.9042406303851517e-05
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20688,
+            "vertexIDs": [
+              5125,
+              5134,
+              11046
+            ],
+            "outwardNormal": [
+              -0.781777002982639,
+              0.6235581108463616,
+              -2.2802517561036136e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.08057577466352654,
+        "incidentConeBasis": {
+          "basis": [
+            2,
+            3
+          ],
+          "weights": [
+            0.5757779619944073,
+            0.599834539380209
+          ]
+        },
+        "incidentConeAngleDegrees": 4.62166203866701
+      },
+      {
+        "contact": 4,
+        "segment": 1,
+        "fraction": 1.0,
+        "weight": 0.14640765589298524,
+        "point": [
+          -0.052445179493294546,
+          -0.0029591746044250146,
+          0.01761773374571696
+        ],
+        "foot": [
+          -0.05126281751955868,
+          -0.0036373101835626555,
+          0.01692729498563593
+        ],
+        "normal": [
+          -0.7738353219095548,
+          0.4438279273497088,
+          0.451880145026972
+        ],
+        "distanceMM": 1.5279245341479204,
+        "actualRadiusGapMicrometres": 27.92453414792044,
+        "incidentFaces": [
+          {
+            "triangle": 9478,
+            "vertexIDs": [
+              5113,
+              5285,
+              5284
+            ],
+            "outwardNormal": [
+              -0.5862077067047268,
+              5.239410072780186e-06,
+              0.8101608016761448
+            ],
+            "footBarycentric": [
+              0.4030583487879921,
+              0.5969416512120079,
+              -7.220220881114709e-17
+            ]
+          },
+          {
+            "triangle": 20693,
+            "vertexIDs": [
+              5285,
+              5113,
+              11048
+            ],
+            "outwardNormal": [
+              -0.70951483175625,
+              0.7046905018445686,
+              -1.1311525318592031e-05
+            ],
+            "footBarycentric": [
+              0.5969416512119936,
+              0.40305834878800634,
+              2.5176695804695085e-17
+            ]
+          }
+        ],
+        "incidentConeResidual": 5.978733960281817e-16,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            1
+          ],
+          "weights": [
+            0.5577747877533715,
+            0.6298155059237059
+          ]
+        },
+        "incidentConeAngleDegrees": 3.425562227556845e-14
+      },
+      {
+        "contact": 5,
+        "segment": 2,
+        "fraction": 0.28,
+        "weight": 0.03088054781287992,
+        "point": [
+          -0.05246813213259913,
+          -0.0029249629409319458,
+          0.017524024696299958
+        ],
+        "foot": [
+          -0.05141844489654515,
+          -0.003775768348757234,
+          0.016806419125462234
+        ],
+        "normal": [
+          -0.6861036650053152,
+          0.5561091803970987,
+          0.4690462027821368
+        ],
+        "distanceMM": 1.5299251258858146,
+        "actualRadiusGapMicrometres": 29.925125885814623,
+        "incidentFaces": [
+          {
+            "triangle": 9264,
+            "vertexIDs": [
+              5085,
+              5090,
+              5091
+            ],
+            "outwardNormal": [
+              -0.6473644343946654,
+              5.112077054140909e-06,
+              0.7621806144574538
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9469,
+            "vertexIDs": [
+              5090,
+              5279,
+              5091
+            ],
+            "outwardNormal": [
+              -0.6436155451615316,
+              -9.162359570692157e-06,
+              0.7653489595880272
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9481,
+            "vertexIDs": [
+              5281,
+              5091,
+              5279
+            ],
+            "outwardNormal": [
+              -0.6317416092734044,
+              7.366073336863123e-06,
+              0.7751790367769179
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20698,
+            "vertexIDs": [
+              5091,
+              5281,
+              11050
+            ],
+            "outwardNormal": [
+              -0.6314487525485631,
+              0.7754176118634815,
+              -1.0807341650193411e-05
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20700,
+            "vertexIDs": [
+              5085,
+              5091,
+              11050
+            ],
+            "outwardNormal": [
+              -0.6046757116113664,
+              0.7964717719615149,
+              1.599289105254966e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.07905566980083119,
+        "incidentConeBasis": {
+          "basis": [
+            2,
+            4
+          ],
+          "weights": [
+            0.5495423076224358,
+            0.6478684446467827
+          ]
+        },
+        "incidentConeAngleDegrees": 4.5342876810131445
+      },
+      {
+        "contact": 6,
+        "segment": 2,
+        "fraction": 0.52,
+        "weight": 0.004579194982375812,
+        "point": [
+          -0.05248780582343162,
+          -0.002895638657937887,
+          0.01744370265394253
+        ],
+        "foot": [
+          -0.0511935895353207,
+          -0.0035643846811066844,
+          0.016976237964455625
+        ],
+        "normal": [
+          -0.8459218579829906,
+          0.43710381613525356,
+          0.30554290059925054
+        ],
+        "distanceMM": 1.5299478029765503,
+        "actualRadiusGapMicrometres": 29.947802976550292,
+        "incidentFaces": [
+          {
+            "triangle": 9284,
+            "vertexIDs": [
+              5113,
+              5114,
+              5115
+            ],
+            "outwardNormal": [
+              -0.5717035025151279,
+              4.429067213298507e-06,
+              0.8204603008021281
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9288,
+            "vertexIDs": [
+              5114,
+              5119,
+              5115
+            ],
+            "outwardNormal": [
+              -0.5613482393426997,
+              -3.83050401001327e-06,
+              0.8275796965683597
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9477,
+            "vertexIDs": [
+              5125,
+              5115,
+              5119
+            ],
+            "outwardNormal": [
+              -0.5576367204214704,
+              4.82390377272627e-06,
+              0.8300851088980677
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20689,
+            "vertexIDs": [
+              5115,
+              11046,
+              11047
+            ],
+            "outwardNormal": [
+              -0.7551214974063718,
+              0.6555848713554758,
+              2.4588276070597195e-05
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20690,
+            "vertexIDs": [
+              5115,
+              5125,
+              11046
+            ],
+            "outwardNormal": [
+              -0.7585032930946096,
+              0.6516692062379696,
+              2.409853723830045e-06
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20692,
+            "vertexIDs": [
+              5113,
+              5115,
+              11047
+            ],
+            "outwardNormal": [
+              -0.7343798015199584,
+              0.678738761865888,
+              -1.6132824079670247e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.07372981945417333,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            4
+          ],
+          "weights": [
+            0.40955679266347056,
+            0.7488805626848949
+          ]
+        },
+        "incidentConeAngleDegrees": 4.228244245984951
+      },
+      {
+        "contact": 7,
+        "segment": 2,
+        "fraction": 1.0,
+        "weight": 0.1486132749448526,
+        "point": [
+          -0.05252715320509661,
+          -0.002836990091949769,
+          0.01728305856922767
+        ],
+        "foot": [
+          -0.051399444135850056,
+          -0.0037602951717183573,
+          0.016821903880071043
+        ],
+        "normal": [
+          -0.7376978656561296,
+          0.6039857311334904,
+          0.30166719343265347
+        ],
+        "distanceMM": 1.5286869079437293,
+        "actualRadiusGapMicrometres": 28.68690794372924,
+        "incidentFaces": [
+          {
+            "triangle": 9481,
+            "vertexIDs": [
+              5281,
+              5091,
+              5279
+            ],
+            "outwardNormal": [
+              -0.6317416092734044,
+              7.366073336863123e-06,
+              0.7751790367769179
+            ],
+            "footBarycentric": [
+              0.40728336440332275,
+              0.5927166355966773,
+              -5.61413365772214e-17
+            ]
+          },
+          {
+            "triangle": 20698,
+            "vertexIDs": [
+              5091,
+              5281,
+              11050
+            ],
+            "outwardNormal": [
+              -0.6314487525485631,
+              0.7754176118634815,
+              -1.0807341650193411e-05
+            ],
+            "footBarycentric": [
+              0.5927166355966832,
+              0.40728336440331686,
+              -1.1576495268869607e-16
+            ]
+          }
+        ],
+        "incidentConeResidual": 6.206335383118183e-16,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            1
+          ],
+          "weights": [
+            0.3891689494932287,
+            0.7789130079660914
+          ]
+        },
+        "incidentConeAngleDegrees": 3.555968236953807e-14
+      },
+      {
+        "contact": 8,
+        "segment": 3,
+        "fraction": 0.22,
+        "weight": 0.0033943682280208223,
+        "point": [
+          -0.05253660354885534,
+          -0.0028144664009007478,
+          0.01718706697839238
+        ],
+        "foot": [
+          -0.05132576570072027,
+          -0.0036975645727182313,
+          0.016880457860958927
+        ],
+        "normal": [
+          -0.7915494928730988,
+          0.57729935609125,
+          0.20043665779734038
+        ],
+        "distanceMM": 1.5297057973470143,
+        "actualRadiusGapMicrometres": 29.705797347014368,
+        "incidentFaces": [
+          {
+            "triangle": 9471,
+            "vertexIDs": [
+              5280,
+              5282,
+              5283
+            ],
+            "outwardNormal": [
+              -0.6082817694852153,
+              -1.0075690137145353e-05,
+              0.7937211656560608
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9479,
+            "vertexIDs": [
+              5285,
+              5283,
+              5282
+            ],
+            "outwardNormal": [
+              -0.6010918252778523,
+              7.1446794474450515e-06,
+              0.7991799656729974
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 9480,
+            "vertexIDs": [
+              5283,
+              5281,
+              5280
+            ],
+            "outwardNormal": [
+              -0.6162932872729527,
+              7.958374172278935e-06,
+              0.7875167198218473
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20694,
+            "vertexIDs": [
+              5283,
+              11048,
+              11049
+            ],
+            "outwardNormal": [
+              -0.682714682779129,
+              0.7306850629978117,
+              2.509337136174386e-05
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20695,
+            "vertexIDs": [
+              5283,
+              5285,
+              11048
+            ],
+            "outwardNormal": [
+              -0.6840093286333321,
+              0.7294732606951481,
+              1.6533808942574865e-05
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20697,
+            "vertexIDs": [
+              5281,
+              5283,
+              11049
+            ],
+            "outwardNormal": [
+              -0.6579343334639008,
+              0.7530753034309835,
+              -1.4551453822211273e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.05916098385107243,
+        "incidentConeBasis": {
+          "basis": [
+            2,
+            4
+          ],
+          "weights": [
+            0.2917438067300755,
+            0.8395647964020081
+          ]
+        },
+        "incidentConeAngleDegrees": 3.3916551299829045
+      },
+      {
+        "contact": 9,
+        "segment": 3,
+        "fraction": 0.34,
+        "weight": 0.013372970340841688,
+        "point": [
+          -0.05254175828181462,
+          -0.002802180751237645,
+          0.017134707928845853
+        ],
+        "foot": [
+          -0.051607366572694505,
+          -0.0039052260816090064,
+          0.016635182926924945
+        ],
+        "normal": [
+          -0.6109194680705767,
+          0.7211877630236754,
+          0.32659702080280933
+        ],
+        "distanceMM": 1.529484257673338,
+        "actualRadiusGapMicrometres": 29.48425767333788,
+        "incidentFaces": [
+          {
+            "triangle": 9253,
+            "vertexIDs": [
+              5075,
+              5076,
+              5077
+            ],
+            "outwardNormal": [
+              -0.6946333264709176,
+              4.224210564580662e-06,
+              0.7193639841819325
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 9467,
+            "vertexIDs": [
+              5277,
+              5076,
+              5075
+            ],
+            "outwardNormal": [
+              -0.697607217379174,
+              -9.56598696385159e-06,
+              0.7164804045952532
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9482,
+            "vertexIDs": [
+              5075,
+              5278,
+              5277
+            ],
+            "outwardNormal": [
+              -0.71030903316826,
+              8.147095950189122e-06,
+              0.7038899610970429
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20704,
+            "vertexIDs": [
+              5075,
+              5077,
+              11052
+            ],
+            "outwardNormal": [
+              -0.5236299825708333,
+              0.8519457971594409,
+              7.431936026056288e-06
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20705,
+            "vertexIDs": [
+              5075,
+              11052,
+              11053
+            ],
+            "outwardNormal": [
+              -0.5186232195586252,
+              0.8550028977512718,
+              3.117008650907717e-05
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20706,
+            "vertexIDs": [
+              5278,
+              5075,
+              11053
+            ],
+            "outwardNormal": [
+              -0.49674078742411615,
+              0.8678989514479823,
+              -1.3592709349753613e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.07798010190077795,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            5
+          ],
+          "weights": [
+            0.38439498440895187,
+            0.7967481016247223
+          ]
+        },
+        "incidentConeAngleDegrees": 4.47247133141534
+      },
+      {
+        "contact": 10,
+        "segment": 3,
+        "fraction": 0.64,
+        "weight": 0.014010277001488687,
+        "point": [
+          -0.05255464511421287,
+          -0.0027714666270798887,
+          0.01700381030497955
+        ],
+        "foot": [
+          -0.05141844489654515,
+          -0.003775768348757234,
+          0.016806419125462234
+        ],
+        "normal": [
+          -0.742989751411256,
+          0.6567380246261909,
+          0.12907903124802544
+        ],
+        "distanceMM": 1.5292273083304175,
+        "actualRadiusGapMicrometres": 29.2273083304176,
+        "incidentFaces": [
+          {
+            "triangle": 9264,
+            "vertexIDs": [
+              5085,
+              5090,
+              5091
+            ],
+            "outwardNormal": [
+              -0.6473644343946654,
+              5.112077054140909e-06,
+              0.7621806144574538
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9469,
+            "vertexIDs": [
+              5090,
+              5279,
+              5091
+            ],
+            "outwardNormal": [
+              -0.6436155451615316,
+              -9.162359570692157e-06,
+              0.7653489595880272
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9481,
+            "vertexIDs": [
+              5281,
+              5091,
+              5279
+            ],
+            "outwardNormal": [
+              -0.6317416092734044,
+              7.366073336863123e-06,
+              0.7751790367769179
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20698,
+            "vertexIDs": [
+              5091,
+              5281,
+              11050
+            ],
+            "outwardNormal": [
+              -0.6314487525485631,
+              0.7754176118634815,
+              -1.0807341650193411e-05
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20700,
+            "vertexIDs": [
+              5085,
+              5091,
+              11050
+            ],
+            "outwardNormal": [
+              -0.6046757116113664,
+              0.7964717719615149,
+              1.599289105254966e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.06381574118620126,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            3
+          ],
+          "weights": [
+            0.2154201233958838,
+            0.8903468160289956
+          ]
+        },
+        "incidentConeAngleDegrees": 3.6588589272904635
+      },
+      {
+        "contact": 11,
+        "segment": 3,
+        "fraction": 1.0,
+        "weight": 0.10924804524595585,
+        "point": [
+          -0.05257010931309077,
+          -0.002734609678090581,
+          0.016846733156339985
+        ],
+        "foot": [
+          -0.05165628184217313,
+          -0.003933141250324561,
+          0.016585726499608648
+        ],
+        "normal": [
+          -0.5974281676005481,
+          0.7835576668450592,
+          0.17063694584051403
+        ],
+        "distanceMM": 1.5296022525818482,
+        "actualRadiusGapMicrometres": 29.602252581848234,
+        "incidentFaces": [
+          {
+            "triangle": 9483,
+            "vertexIDs": [
+              5278,
+              5276,
+              5275
+            ],
+            "outwardNormal": [
+              -0.7258376166121405,
+              1.0485326592110796e-05,
+              0.6878660874042748
+            ],
+            "footBarycentric": [
+              0.9552966917329198,
+              0.044703308267080265,
+              -2.1837524441129633e-17
+            ]
+          },
+          {
+            "triangle": 20708,
+            "vertexIDs": [
+              5276,
+              5278,
+              11054
+            ],
+            "outwardNormal": [
+              -0.4701372816585396,
+              0.8825933017406752,
+              1.0826474104205608e-05
+            ],
+            "footBarycentric": [
+              0.0447033082670968,
+              0.9552966917329033,
+              -1.2639221373332571e-16
+            ]
+          }
+        ],
+        "incidentConeResidual": 5.613217783960923e-16,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            1
+          ],
+          "weights": [
+            0.24805312743196084,
+            0.8877872338048073
+          ]
+        },
+        "incidentConeAngleDegrees": 3.2161368850873764e-14
+      },
+      {
+        "contact": 12,
+        "segment": 4,
+        "fraction": 0.44,
+        "weight": 0.025504488630522338,
+        "point": [
+          -0.05257371166438422,
+          -0.0026976892823300878,
+          0.016524959089246886
+        ],
+        "foot": [
+          -0.05195951429717582,
+          -0.004064444415861258,
+          0.016217786192924865
+        ],
+        "normal": [
+          -0.4015465695177927,
+          0.8935496381801532,
+          0.20082180314052012
+        ],
+        "distanceMM": 1.5295794157723241,
+        "actualRadiusGapMicrometres": 29.579415772324182,
+        "incidentFaces": [
+          {
+            "triangle": 9230,
+            "vertexIDs": [
+              5042,
+              5043,
+              5044
+            ],
+            "outwardNormal": [
+              -0.8264043430451378,
+              2.184593907955308e-06,
+              0.5630771366263788
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9231,
+            "vertexIDs": [
+              5043,
+              5045,
+              5044
+            ],
+            "outwardNormal": [
+              -0.8131583603512725,
+              -2.4105696841992526e-06,
+              0.5820425078849647
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20717,
+            "vertexIDs": [
+              5044,
+              5045,
+              11057
+            ],
+            "outwardNormal": [
+              -0.32040769287431026,
+              0.947279742368791,
+              -6.684196545493365e-06
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20718,
+            "vertexIDs": [
+              5044,
+              11057,
+              11058
+            ],
+            "outwardNormal": [
+              -0.3065762917463319,
+              0.9518460888101726,
+              2.3576363391779734e-05
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20719,
+            "vertexIDs": [
+              5042,
+              5044,
+              11058
+            ],
+            "outwardNormal": [
+              -0.29770704901906175,
+              0.9546572751325964,
+              -8.764062652739055e-07
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.09029478673457506,
+        "incidentConeBasis": {
+          "basis": [
+            1,
+            4
+          ],
+          "weights": [
+            0.22091003496723524,
+            0.9190987934358329
+          ]
+        },
+        "incidentConeAngleDegrees": 5.180566176678921
+      },
+      {
+        "contact": 13,
+        "segment": 4,
+        "fraction": 0.56,
+        "weight": 0.014421273663757476,
+        "point": [
+          -0.0525746941238279,
+          -0.0026876200834863168,
+          0.016437202525494223
+        ],
+        "foot": [
+          -0.051790880744416,
+          -0.0039998905263014875,
+          0.016436973328894763
+        ],
+        "normal": [
+          -0.5127875552528306,
+          0.8585155215220166,
+          0.00014994534030211558
+        ],
+        "distanceMM": 1.5285343245614431,
+        "actualRadiusGapMicrometres": 28.5343245614431,
+        "incidentFaces": [
+          {
+            "triangle": 9463,
+            "vertexIDs": [
+              5271,
+              5270,
+              5272
+            ],
+            "outwardNormal": [
+              -0.7709790813633696,
+              -9.975702357093384e-06,
+              0.63686046823506
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 9485,
+            "vertexIDs": [
+              5274,
+              5272,
+              5270
+            ],
+            "outwardNormal": [
+              -0.7562174169878036,
+              6.82968087930894e-06,
+              0.6543204247138016
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20711,
+            "vertexIDs": [
+              5272,
+              5274,
+              11055
+            ],
+            "outwardNormal": [
+              -0.4180380447732537,
+              0.9084295201720027,
+              -1.4899949002676203e-06
+            ],
+            "footBarycentric": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20712,
+            "vertexIDs": [
+              5271,
+              5272,
+              11055
+            ],
+            "outwardNormal": [
+              -0.39273058508828645,
+              0.9196535693041443,
+              1.5361156439139686e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.07183220602918561,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            2
+          ],
+          "weights": [
+            0.08368760473272255,
+            0.9672939910272188
+          ]
+        },
+        "incidentConeAngleDegrees": 4.119229876864277
+      },
+      {
+        "contact": 14,
+        "segment": 5,
+        "fraction": 0.006963788300835654,
+        "weight": 0.08388737974079141,
+        "point": [
+          -0.052576076152868356,
+          -0.002648954185374162,
+          0.016015589465795073
+        ],
+        "foot": [
+          -0.05212919920336372,
+          -0.004110115233416971,
+          0.015944020989430804
+        ],
+        "normal": [
+          -0.29214429528078173,
+          0.955229096388577,
+          0.04678764951948302
+        ],
+        "distanceMM": 1.5296446198791498,
+        "actualRadiusGapMicrometres": 29.644619879149786,
+        "incidentFaces": [
+          {
+            "triangle": 9490,
+            "vertexIDs": [
+              5263,
+              5026,
+              5261
+            ],
+            "outwardNormal": [
+              -0.8766266508034944,
+              1.197868711806844e-05,
+              0.4811711909056476
+            ],
+            "footBarycentric": [
+              0.5083576073312106,
+              0.49164239266878934,
+              2.2691278653409747e-17
+            ]
+          },
+          {
+            "triangle": 20725,
+            "vertexIDs": [
+              5026,
+              5263,
+              11060
+            ],
+            "outwardNormal": [
+              -0.21168174294284559,
+              0.9773386514749268,
+              -6.1522823261904e-06
+            ],
+            "footBarycentric": [
+              0.4916423926687476,
+              0.5083576073312521,
+              3.0036072985290774e-16
+            ]
+          }
+        ],
+        "incidentConeResidual": 5.295880929093772e-16,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            1
+          ],
+          "weights": [
+            0.09724951015502878,
+            0.9773766033150982
+          ]
+        },
+        "incidentConeAngleDegrees": 3.0343162604089435e-14
+      },
+      {
+        "contact": 15,
+        "segment": 5,
+        "fraction": 0.9777158774373259,
+        "weight": 0.01242811912452548,
+        "point": [
+          -0.0522665632308014,
+          -0.0024056311575525254,
+          0.002098033896512058
+        ],
+        "foot": [
+          -0.050789354910901884,
+          -0.0020309561180783327,
+          0.001965656794055659
+        ],
+        "normal": [
+          -0.9656710739482077,
+          -0.24493014483918016,
+          0.08653670370873512
+        ],
+        "distanceMM": 1.5297220345017242,
+        "actualRadiusGapMicrometres": 29.722034501724238,
+        "incidentFaces": [
+          {
+            "triangle": 20638,
+            "vertexIDs": [
+              5190,
+              11021,
+              11022
+            ],
+            "outwardNormal": [
+              -0.9737318327451553,
+              -0.22769786482257356,
+              1.5937440105334907e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20640,
+            "vertexIDs": [
+              5197,
+              11022,
+              11023
+            ],
+            "outwardNormal": [
+              -0.9810329856028557,
+              -0.19384086484588417,
+              1.658152476673972e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20641,
+            "vertexIDs": [
+              5197,
+              5190,
+              11022
+            ],
+            "outwardNormal": [
+              -0.9783779134680722,
+              -0.2068251875278839,
+              -1.555368250968057e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23218,
+            "vertexIDs": [
+              12069,
+              11023,
+              11022
+            ],
+            "outwardNormal": [
+              5.622709843127097e-05,
+              -0.1695963036180116,
+              -0.9855136176824857
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23219,
+            "vertexIDs": [
+              12070,
+              12069,
+              11022
+            ],
+            "outwardNormal": [
+              -0.00011320342531777622,
+              -0.1981461419297847,
+              -0.9801724815680789
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23220,
+            "vertexIDs": [
+              12070,
+              11022,
+              11021
+            ],
+            "outwardNormal": [
+              -9.010023676840944e-05,
+              -0.1992515025924006,
+              -0.97994838159804
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.08850069733049186,
+        "incidentConeBasis": {
+          "basis": [
+            0
+          ],
+          "weights": [
+            0.996076114848668
+          ]
+        },
+        "incidentConeAngleDegrees": 5.077359171279437
+      },
+      {
+        "contact": 16,
+        "segment": 5,
+        "fraction": 0.9874651810584958,
+        "weight": 0.008700295233136722,
+        "point": [
+          -0.05226345477964721,
+          -0.002403187454260199,
+          0.001958259306863592
+        ],
+        "foot": [
+          -0.05085564693207876,
+          -0.00299883471961926,
+          0.0019082444958848034
+        ],
+        "normal": [
+          -0.9204661880162692,
+          0.38945170585200345,
+          0.03270115483836412
+        ],
+        "distanceMM": 1.5294509085689163,
+        "actualRadiusGapMicrometres": 29.450908568916475,
+        "incidentFaces": [
+          {
+            "triangle": 20670,
+            "vertexIDs": [
+              5200,
+              11037,
+              11038
+            ],
+            "outwardNormal": [
+              -0.945975698516973,
+              0.3242375325307817,
+              1.7710878377120664e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20671,
+            "vertexIDs": [
+              5189,
+              5200,
+              11038
+            ],
+            "outwardNormal": [
+              -0.942317031000565,
+              0.33472169460070544,
+              -1.5808620105153056e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20672,
+            "vertexIDs": [
+              5189,
+              11038,
+              11039
+            ],
+            "outwardNormal": [
+              -0.9323185629838282,
+              0.3616380742785495,
+              1.8651325751488007e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 23192,
+            "vertexIDs": [
+              12059,
+              11039,
+              11038
+            ],
+            "outwardNormal": [
+              8.128716474415898e-05,
+              0.31639185579540935,
+              -0.9486285822062994
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23193,
+            "vertexIDs": [
+              12060,
+              12059,
+              11038
+            ],
+            "outwardNormal": [
+              -0.0001550492783685639,
+              0.2947551708678994,
+              -0.9555727943000244
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23194,
+            "vertexIDs": [
+              12060,
+              11038,
+              11037
+            ],
+            "outwardNormal": [
+              2.369992807154688e-05,
+              0.28369114489815334,
+              -0.9589157073198291
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.044511129255409884,
+        "incidentConeBasis": {
+          "basis": [
+            2
+          ],
+          "weights": [
+            0.9990088885352363
+          ]
+        },
+        "incidentConeAngleDegrees": 2.551142725666024
+      },
+      {
+        "contact": 17,
+        "segment": 5,
+        "fraction": 1.0,
+        "weight": 0.18270438069721004,
+        "point": [
+          -0.052259458199591824,
+          -0.002400045550027208,
+          0.0017785491201727063
+        ],
+        "foot": [
+          -0.05075542830085092,
+          -0.002534003689647701,
+          0.0019952523291720792
+        ],
+        "normal": [
+          -0.9859553583040024,
+          0.08781523934984814,
+          -0.1420581401031113
+        ],
+        "distanceMM": 1.5254543586314822,
+        "actualRadiusGapMicrometres": 25.454358631482137,
+        "incidentFaces": [
+          {
+            "triangle": 20657,
+            "vertexIDs": [
+              5222,
+              11030,
+              11031
+            ],
+            "outwardNormal": [
+              -0.9968861531040829,
+              0.07885428082569024,
+              1.2033547346436388e-05
+            ],
+            "footBarycentric": [
+              -5.551115123125783e-17,
+              0.5620862104197218,
+              0.4379137895802782
+            ]
+          },
+          {
+            "triangle": 23205,
+            "vertexIDs": [
+              12064,
+              11031,
+              11030
+            ],
+            "outwardNormal": [
+              5.954909756349337e-05,
+              0.06899068992077032,
+              -0.9976173019540916
+            ],
+            "footBarycentric": [
+              0.0,
+              0.4379137895785926,
+              0.5620862104214074
+            ]
+          }
+        ],
+        "incidentConeResidual": 2.763596893083726e-15,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            1
+          ],
+          "weights": [
+            0.9890435688998388,
+            0.14240936031025545
+          ]
+        },
+        "incidentConeAngleDegrees": 1.583424382491645e-13
+      },
+      {
+        "contact": 18,
+        "segment": 6,
+        "fraction": 1.0,
+        "weight": 0.1062968688869972,
+        "point": [
+          -0.052179461002870985,
+          -0.0023998639935966393,
+          0.0014274946207389937
+        ],
+        "foot": [
+          -0.051082222689768496,
+          -0.0013741308771832081,
+          0.001716855425592428
+        ],
+        "normal": [
+          -0.7173193097896928,
+          -0.6705728029252539,
+          -0.18916956356614917
+        ],
+        "distanceMM": 1.5296372175233681,
+        "actualRadiusGapMicrometres": 29.637217523368236,
+        "incidentFaces": [
+          {
+            "triangle": 20614,
+            "vertexIDs": [
+              5121,
+              11008,
+              11009
+            ],
+            "outwardNormal": [
+              -0.8015972937085005,
+              -0.5978643480092405,
+              9.934469955486808e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20615,
+            "vertexIDs": [
+              5126,
+              5121,
+              11009
+            ],
+            "outwardNormal": [
+              -0.815112470663081,
+              -0.5793027360669686,
+              -1.2443953499174135e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20616,
+            "vertexIDs": [
+              5126,
+              11009,
+              11010
+            ],
+            "outwardNormal": [
+              -0.818652898629194,
+              -0.5742886308612355,
+              5.435640827490389e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 23237,
+            "vertexIDs": [
+              12076,
+              11010,
+              11009
+            ],
+            "outwardNormal": [
+              3.414799669050036e-05,
+              -0.5024696541027437,
+              -0.8645948447335222
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23239,
+            "vertexIDs": [
+              12077,
+              12076,
+              11009
+            ],
+            "outwardNormal": [
+              -0.00012811413517930113,
+              -0.5214351991002906,
+              -0.8532908746295186
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23240,
+            "vertexIDs": [
+              12077,
+              11009,
+              11008
+            ],
+            "outwardNormal": [
+              -9.341036029581758e-05,
+              -0.5231678319696317,
+              -0.8522296702572024
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.013988545814128067,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            5
+          ],
+          "weights": [
+            0.9041972548821031,
+            0.22922710372358465
+          ]
+        },
+        "incidentConeAngleDegrees": 0.8015107779842283
+      },
+      {
+        "contact": 19,
+        "segment": 6,
+        "fraction": 1.0,
+        "weight": 0.06514234366581718,
+        "point": [
+          -0.052179461002870985,
+          -0.0023998639935966393,
+          0.0014274946207389937
+        ],
+        "foot": [
+          -0.05105697794462718,
+          -0.003389947508314356,
+          0.0017377667696165861
+        ],
+        "normal": [
+          -0.7343391461750871,
+          0.6477220992336069,
+          -0.20298300559222537
+        ],
+        "distanceMM": 1.5285621964870366,
+        "actualRadiusGapMicrometres": 28.562196487036545,
+        "incidentFaces": [
+          {
+            "triangle": 20685,
+            "vertexIDs": [
+              5139,
+              11044,
+              11045
+            ],
+            "outwardNormal": [
+              -0.8123009404615025,
+              0.5832385286527524,
+              2.8641420864549942e-05
+            ],
+            "footBarycentric": [
+              -4.403279824094497e-12,
+              0.969143582768745,
+              0.030856417235658264
+            ]
+          },
+          {
+            "triangle": 23181,
+            "vertexIDs": [
+              12055,
+              11045,
+              11044
+            ],
+            "outwardNormal": [
+              5.2680129580427e-05,
+              0.5102734254689577,
+              -0.8600122257764594
+            ],
+            "footBarycentric": [
+              5.486722187697524e-13,
+              0.030856417228414746,
+              0.9691435827710366
+            ]
+          }
+        ],
+        "incidentConeResidual": 1.4856364684093388e-15,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            1
+          ],
+          "weights": [
+            0.9040388172971946,
+            0.2360535030361739
+          ]
+        },
+        "incidentConeAngleDegrees": 8.512069953057577e-14
+      },
+      {
+        "contact": 20,
+        "segment": 7,
+        "fraction": 0.52,
+        "weight": 0.10471023685711331,
+        "point": [
+          -0.052121030207242514,
+          -0.0023997570083395215,
+          0.0012915512009224594
+        ],
+        "foot": [
+          -0.05085564693207876,
+          -0.00299883471961926,
+          0.0019082444958848034
+        ],
+        "normal": [
+          -0.8271363104962839,
+          0.39159592001431764,
+          -0.40311060428464923
+        ],
+        "distanceMM": 1.5298364478818751,
+        "actualRadiusGapMicrometres": 29.836447881875074,
+        "incidentFaces": [
+          {
+            "triangle": 20670,
+            "vertexIDs": [
+              5200,
+              11037,
+              11038
+            ],
+            "outwardNormal": [
+              -0.945975698516973,
+              0.3242375325307817,
+              1.7710878377120664e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20671,
+            "vertexIDs": [
+              5189,
+              5200,
+              11038
+            ],
+            "outwardNormal": [
+              -0.942317031000565,
+              0.33472169460070544,
+              -1.5808620105153056e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20672,
+            "vertexIDs": [
+              5189,
+              11038,
+              11039
+            ],
+            "outwardNormal": [
+              -0.9323185629838282,
+              0.3616380742785495,
+              1.8651325751488007e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 23192,
+            "vertexIDs": [
+              12059,
+              11039,
+              11038
+            ],
+            "outwardNormal": [
+              8.128716474415898e-05,
+              0.31639185579540935,
+              -0.9486285822062994
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23193,
+            "vertexIDs": [
+              12060,
+              12059,
+              11038
+            ],
+            "outwardNormal": [
+              -0.0001550492783685639,
+              0.2947551708678994,
+              -0.9555727943000244
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23194,
+            "vertexIDs": [
+              12060,
+              11038,
+              11037
+            ],
+            "outwardNormal": [
+              2.369992807154688e-05,
+              0.28369114489815334,
+              -0.9589157073198291
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.01018047152310528,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            5
+          ],
+          "weights": [
+            0.8710238701231853,
+            0.4175364382207962
+          ]
+        },
+        "incidentConeAngleDegrees": 0.5833081278931568
+      },
+      {
+        "contact": 21,
+        "segment": 7,
+        "fraction": 0.6,
+        "weight": 0.029708983241900088,
+        "point": [
+          -0.052112040854068904,
+          -0.002399740549069196,
+          0.0012706368286429924
+        ],
+        "foot": [
+          -0.051207064336821664,
+          -0.0035793292194018717,
+          0.0016152964385655465
+        ],
+        "normal": [
+          -0.5929713583511922,
+          0.7729065702947407,
+          -0.22583268534550724
+        ],
+        "distanceMM": 1.5261723934923346,
+        "actualRadiusGapMicrometres": 26.17239349233455,
+        "incidentFaces": [
+          {
+            "triangle": 20689,
+            "vertexIDs": [
+              5115,
+              11046,
+              11047
+            ],
+            "outwardNormal": [
+              -0.7551214974063718,
+              0.6555848713554758,
+              2.4588276070597195e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20691,
+            "vertexIDs": [
+              5113,
+              11047,
+              11048
+            ],
+            "outwardNormal": [
+              -0.7205386126128593,
+              0.6934148153089126,
+              4.054679436831065e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20692,
+            "vertexIDs": [
+              5113,
+              5115,
+              11047
+            ],
+            "outwardNormal": [
+              -0.7343798015199584,
+              0.678738761865888,
+              -1.6132824079670247e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23175,
+            "vertexIDs": [
+              12052,
+              11048,
+              11047
+            ],
+            "outwardNormal": [
+              -1.0854889282282175e-06,
+              0.6066718646703936,
+              -0.7949523561926017
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23177,
+            "vertexIDs": [
+              12053,
+              11047,
+              11046
+            ],
+            "outwardNormal": [
+              5.61395217278505e-05,
+              0.5735524370725148,
+              -0.819168846317127
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 23178,
+            "vertexIDs": [
+              12053,
+              12052,
+              11047
+            ],
+            "outwardNormal": [
+              -7.395177614901357e-05,
+              0.6038044086744094,
+              -0.7971325050432215
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.018869322669367434,
+        "incidentConeBasis": {
+          "basis": [
+            1,
+            3
+          ],
+          "weights": [
+            0.8388677109890599,
+            0.2955630305401717
+          ]
+        },
+        "incidentConeAngleDegrees": 1.0811967179553768
+      },
+      {
+        "contact": 22,
+        "segment": 7,
+        "fraction": 1.0,
+        "weight": 0.0639083396261741,
+        "point": [
+          -0.05206709408820085,
+          -0.002399658252717567,
+          0.0011660649672456584
+        ],
+        "foot": [
+          -0.051235622333799205,
+          -0.0011901036728055854,
+          0.0015925297088880614
+        ],
+        "normal": [
+          -0.5439873459124678,
+          -0.7913466478919595,
+          -0.2790129931692577
+        ],
+        "distanceMM": 1.5284762791806494,
+        "actualRadiusGapMicrometres": 28.4762791806495,
+        "incidentFaces": [
+          {
+            "triangle": 20606,
+            "vertexIDs": [
+              5101,
+              11004,
+              11005
+            ],
+            "outwardNormal": [
+              -0.7081005525200691,
+              -0.7061116110096667,
+              1.7835527781626343e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20607,
+            "vertexIDs": [
+              5104,
+              5101,
+              11005
+            ],
+            "outwardNormal": [
+              -0.7283499844390648,
+              -0.6852052976508402,
+              -1.5454376126601115e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20608,
+            "vertexIDs": [
+              5104,
+              11005,
+              11006
+            ],
+            "outwardNormal": [
+              -0.7367990525245921,
+              -0.6761117922959994,
+              2.2741031426533933e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 23243,
+            "vertexIDs": [
+              12078,
+              11006,
+              11005
+            ],
+            "outwardNormal": [
+              4.429909413967199e-05,
+              -0.5915326098663106,
+              -0.8062810735111804
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23245,
+            "vertexIDs": [
+              12079,
+              12078,
+              11005
+            ],
+            "outwardNormal": [
+              -0.00014627698421326675,
+              -0.6038044038656988,
+              -0.7971324986948105
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23246,
+            "vertexIDs": [
+              12079,
+              11005,
+              11004
+            ],
+            "outwardNormal": [
+              4.946528628334554e-05,
+              -0.6177733434911651,
+              -0.7863562129371984
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.018354382307971363,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            5
+          ],
+          "weights": [
+            0.7842546065065578,
+            0.36618288812775285
+          ]
+        },
+        "incidentConeAngleDegrees": 1.051687696799325
+      },
+      {
+        "contact": 23,
+        "segment": 7,
+        "fraction": 1.0,
+        "weight": 0.07636630042274804,
+        "point": [
+          -0.05206709408820085,
+          -0.002399658252717567,
+          0.0011660649672456584
+        ],
+        "foot": [
+          -0.05097317192947214,
+          -0.00325515853023787,
+          0.001807955716181382
+        ],
+        "normal": [
+          -0.7150321818494434,
+          0.5591899068202806,
+          -0.4195659984197364
+        ],
+        "distanceMM": 1.5298922013541527,
+        "actualRadiusGapMicrometres": 29.892201354152576,
+        "incidentFaces": [
+          {
+            "triangle": 20679,
+            "vertexIDs": [
+              5153,
+              11041,
+              11042
+            ],
+            "outwardNormal": [
+              -0.8818769193235649,
+              0.47147969110324506,
+              6.447268286832576e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20680,
+            "vertexIDs": [
+              5146,
+              5153,
+              11042
+            ],
+            "outwardNormal": [
+              -0.8648617706319945,
+              0.5020100772520063,
+              -6.060198633664274e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20681,
+            "vertexIDs": [
+              5146,
+              11042,
+              11043
+            ],
+            "outwardNormal": [
+              -0.8618361327092714,
+              0.507186829542796,
+              1.7177140509457468e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 23184,
+            "vertexIDs": [
+              12056,
+              11043,
+              11042
+            ],
+            "outwardNormal": [
+              3.221465801545775e-05,
+              0.4437489249982669,
+              -0.8961511538379551
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23186,
+            "vertexIDs": [
+              12057,
+              12056,
+              11042
+            ],
+            "outwardNormal": [
+              -0.00014417484722831683,
+              0.4338837346081147,
+              -0.9009688585384783
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23187,
+            "vertexIDs": [
+              12057,
+              11042,
+              11041
+            ],
+            "outwardNormal": [
+              6.910890446722472e-05,
+              0.4124937024856073,
+              -0.9109604495441471
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.010722996688986934,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            5
+          ],
+          "weights": [
+            0.8055189556574093,
+            0.45621549176847065
+          ]
+        },
+        "incidentConeAngleDegrees": 0.6143942285088867
+      },
+      {
+        "contact": 24,
+        "segment": 8,
+        "fraction": 0.44,
+        "weight": 0.08611135619541668,
+        "point": [
+          -0.05200890139522209,
+          -0.0023997807384112937,
+          0.0010829261001737128
+        ],
+        "foot": [
+          -0.05094470846900035,
+          -0.0015977728954197487,
+          0.0018320566743041478
+        ],
+        "normal": [
+          -0.6961430078789683,
+          -0.5246343387611719,
+          -0.490044613452541
+        ],
+        "distanceMM": 1.5286987216378933,
+        "actualRadiusGapMicrometres": 28.698721637893414,
+        "incidentFaces": [
+          {
+            "triangle": 20623,
+            "vertexIDs": [
+              5147,
+              11013,
+              11014
+            ],
+            "outwardNormal": [
+              -0.8815682632651246,
+              -0.47205656131446977,
+              1.1120718888623359e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20624,
+            "vertexIDs": [
+              5150,
+              5147,
+              11014
+            ],
+            "outwardNormal": [
+              -0.8864980588682725,
+              -0.4627323107208571,
+              -1.5418209071110004e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20625,
+            "vertexIDs": [
+              5150,
+              11014,
+              11015
+            ],
+            "outwardNormal": [
+              -0.8957982574577519,
+              -0.44446088889567886,
+              1.3331099300572176e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 23231,
+            "vertexIDs": [
+              12074,
+              11015,
+              11014
+            ],
+            "outwardNormal": [
+              -0.00010622235114727523,
+              -0.38893911871727527,
+              -0.9212634534421961
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23232,
+            "vertexIDs": [
+              12074,
+              11014,
+              11013
+            ],
+            "outwardNormal": [
+              4.216182991085075e-05,
+              -0.41302035397768,
+              -0.9107217936464089
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.023149869000052517,
+        "incidentConeBasis": {
+          "basis": [
+            2,
+            3
+          ],
+          "weights": [
+            0.76631453009146,
+            0.5230500162579618
+          ]
+        },
+        "incidentConeAngleDegrees": 1.326508290911824
+      },
+      {
+        "contact": 25,
+        "segment": 8,
+        "fraction": 1.0,
+        "weight": 0.1164835325793481,
+        "point": [
+          -0.05193483796779456,
+          -0.0023999366292942184,
+          0.0009771129966276
+        ],
+        "foot": [
+          -0.05127200702931222,
+          -0.0036468092161520338,
+          0.001563798830384509
+        ],
+        "normal": [
+          -0.43346952101835035,
+          0.8154134510282393,
+          -0.3836731398343377
+        ],
+        "distanceMM": 1.5291292843961608,
+        "actualRadiusGapMicrometres": 29.129284396160756,
+        "incidentFaces": [
+          {
+            "triangle": 20691,
+            "vertexIDs": [
+              5113,
+              11047,
+              11048
+            ],
+            "outwardNormal": [
+              -0.7205386126128593,
+              0.6934148153089126,
+              4.054679436831065e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20693,
+            "vertexIDs": [
+              5285,
+              5113,
+              11048
+            ],
+            "outwardNormal": [
+              -0.70951483175625,
+              0.7046905018445686,
+              -1.1311525318592031e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20694,
+            "vertexIDs": [
+              5283,
+              11048,
+              11049
+            ],
+            "outwardNormal": [
+              -0.682714682779129,
+              0.7306850629978117,
+              2.509337136174386e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20695,
+            "vertexIDs": [
+              5283,
+              5285,
+              11048
+            ],
+            "outwardNormal": [
+              -0.6840093286333321,
+              0.7294732606951481,
+              1.6533808942574865e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23174,
+            "vertexIDs": [
+              12052,
+              11049,
+              11048
+            ],
+            "outwardNormal": [
+              1.0405710781285815e-06,
+              0.6392692974450719,
+              -0.7689829421664706
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23175,
+            "vertexIDs": [
+              12052,
+              11048,
+              11047
+            ],
+            "outwardNormal": [
+              -1.0854889282282175e-06,
+              0.6066718646703936,
+              -0.7949523561926017
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.019307603001627694,
+        "incidentConeBasis": {
+          "basis": [
+            2,
+            4
+          ],
+          "weights": [
+            0.6528930460055882,
+            0.5113501977476372
+          ]
+        },
+        "incidentConeAngleDegrees": 1.1063129076413076
+      },
+      {
+        "contact": 26,
+        "segment": 8,
+        "fraction": 1.0,
+        "weight": 0.10434172839980749,
+        "point": [
+          -0.05193483796779456,
+          -0.0023999366292942184,
+          0.0009771129966276
+        ],
+        "foot": [
+          -0.05099672401275286,
+          -0.0015040863124092872,
+          0.0017881103586921355
+        ],
+        "normal": [
+          -0.6132220470968995,
+          -0.5855953450646267,
+          -0.5301290529606243
+        ],
+        "distanceMM": 1.529811198868161,
+        "actualRadiusGapMicrometres": 29.811198868161227,
+        "incidentFaces": [
+          {
+            "triangle": 20618,
+            "vertexIDs": [
+              5135,
+              11011,
+              11012
+            ],
+            "outwardNormal": [
+              -0.8512358514142331,
+              -0.5247833126779825,
+              1.344787089428282e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20620,
+            "vertexIDs": [
+              5140,
+              5135,
+              11012
+            ],
+            "outwardNormal": [
+              -0.852757584886926,
+              -0.5223069034081411,
+              -8.367558486544754e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20621,
+            "vertexIDs": [
+              5140,
+              11012,
+              11013
+            ],
+            "outwardNormal": [
+              -0.8667014360041452,
+              -0.4988272454221524,
+              7.273261137318938e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 23234,
+            "vertexIDs": [
+              12075,
+              11013,
+              11012
+            ],
+            "outwardNormal": [
+              -8.057516025995736e-05,
+              -0.4364988628717107,
+              -0.8997048050440473
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23235,
+            "vertexIDs": [
+              12075,
+              11012,
+              11011
+            ],
+            "outwardNormal": [
+              3.674457937155082e-05,
+              -0.4591523341706005,
+              -0.8883575477675221
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.01958568035771192,
+        "incidentConeBasis": {
+          "basis": [
+            2,
+            3
+          ],
+          "weights": [
+            0.6970900830856707,
+            0.5807939798588647
+          ]
+        },
+        "incidentConeAngleDegrees": 1.1222485800709763
+      },
+      {
+        "contact": 27,
+        "segment": 9,
+        "fraction": 0.64,
+        "weight": 0.08675178570921478,
+        "point": [
+          -0.05182229778762523,
+          -0.002399754602555793,
+          0.0008724361345049411
+        ],
+        "foot": [
+          -0.05094470846900035,
+          -0.0015977728954197487,
+          0.0018320566743041478
+        ],
+        "normal": [
+          -0.5744092642192592,
+          -0.5249217515946414,
+          -0.628101227416332
+        ],
+        "distanceMM": 1.5278119161565171,
+        "actualRadiusGapMicrometres": 27.8119161565171,
+        "incidentFaces": [
+          {
+            "triangle": 20623,
+            "vertexIDs": [
+              5147,
+              11013,
+              11014
+            ],
+            "outwardNormal": [
+              -0.8815682632651246,
+              -0.47205656131446977,
+              1.1120718888623359e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20624,
+            "vertexIDs": [
+              5150,
+              5147,
+              11014
+            ],
+            "outwardNormal": [
+              -0.8864980588682725,
+              -0.4627323107208571,
+              -1.5418209071110004e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20625,
+            "vertexIDs": [
+              5150,
+              11014,
+              11015
+            ],
+            "outwardNormal": [
+              -0.8957982574577519,
+              -0.44446088889567886,
+              1.3331099300572176e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 23231,
+            "vertexIDs": [
+              12074,
+              11015,
+              11014
+            ],
+            "outwardNormal": [
+              -0.00010622235114727523,
+              -0.38893911871727527,
+              -0.9212634534421961
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23232,
+            "vertexIDs": [
+              12074,
+              11014,
+              11013
+            ],
+            "outwardNormal": [
+              4.216182991085075e-05,
+              -0.41302035397768,
+              -0.9107217936464089
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.021129749135360726,
+        "incidentConeBasis": {
+          "basis": [
+            2,
+            3
+          ],
+          "weights": [
+            0.6313400457563005,
+            0.6736793698306734
+          ]
+        },
+        "incidentConeAngleDegrees": 1.2107355511288616
+      },
+      {
+        "contact": 28,
+        "segment": 9,
+        "fraction": 1.0,
+        "weight": 0.042872766459776876,
+        "point": [
+          -0.051758993936279994,
+          -0.0023996522125154284,
+          0.0008135553995609455
+        ],
+        "foot": [
+          -0.051186172762317544,
+          -0.00124399046891967,
+          0.0016320667745109696
+        ],
+        "normal": [
+          -0.37497492141914873,
+          -0.7565086473572694,
+          -0.5358063780698937
+        ],
+        "distanceMM": 1.527625292364946,
+        "actualRadiusGapMicrometres": 27.625292364946063,
+        "incidentFaces": [
+          {
+            "triangle": 20608,
+            "vertexIDs": [
+              5104,
+              11005,
+              11006
+            ],
+            "outwardNormal": [
+              -0.7367990525245921,
+              -0.6761117922959994,
+              2.2741031426533933e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20609,
+            "vertexIDs": [
+              5111,
+              5104,
+              11006
+            ],
+            "outwardNormal": [
+              -0.7521106620334835,
+              -0.6590368364541803,
+              -1.5875166129841132e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20610,
+            "vertexIDs": [
+              5111,
+              11006,
+              11007
+            ],
+            "outwardNormal": [
+              -0.7630748086425908,
+              -0.6463101701240692,
+              2.023042882725763e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 23242,
+            "vertexIDs": [
+              12078,
+              11007,
+              11006
+            ],
+            "outwardNormal": [
+              -6.308782133462045e-05,
+              -0.5655302953549167,
+              -0.8247275192787661
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23243,
+            "vertexIDs": [
+              12078,
+              11006,
+              11005
+            ],
+            "outwardNormal": [
+              4.429909413967199e-05,
+              -0.5915326098663106,
+              -0.8062810735111804
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.0125002239300862,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            4
+          ],
+          "weights": [
+            0.519055393860729,
+            0.67192778200371
+          ]
+        },
+        "incidentConeAngleDegrees": 0.7162287274462849
+      },
+      {
+        "contact": 29,
+        "segment": 9,
+        "fraction": 1.0,
+        "weight": 0.06051889389984513,
+        "point": [
+          -0.051758993936279994,
+          -0.0023996522125154284,
+          0.0008135553995609455
+        ],
+        "foot": [
+          -0.05097317192947214,
+          -0.00325515853023787,
+          0.001807955716181382
+        ],
+        "normal": [
+          -0.5139012942103081,
+          0.5594725015001515,
+          -0.6503045285665274
+        ],
+        "distanceMM": 1.5291302350491125,
+        "actualRadiusGapMicrometres": 29.130235049112343,
+        "incidentFaces": [
+          {
+            "triangle": 20679,
+            "vertexIDs": [
+              5153,
+              11041,
+              11042
+            ],
+            "outwardNormal": [
+              -0.8818769193235649,
+              0.47147969110324506,
+              6.447268286832576e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20680,
+            "vertexIDs": [
+              5146,
+              5153,
+              11042
+            ],
+            "outwardNormal": [
+              -0.8648617706319945,
+              0.5020100772520063,
+              -6.060198633664274e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20681,
+            "vertexIDs": [
+              5146,
+              11042,
+              11043
+            ],
+            "outwardNormal": [
+              -0.8618361327092714,
+              0.507186829542796,
+              1.7177140509457468e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 23184,
+            "vertexIDs": [
+              12056,
+              11043,
+              11042
+            ],
+            "outwardNormal": [
+              3.221465801545775e-05,
+              0.4437489249982669,
+              -0.8961511538379551
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23186,
+            "vertexIDs": [
+              12057,
+              12056,
+              11042
+            ],
+            "outwardNormal": [
+              -0.00014417484722831683,
+              0.4338837346081147,
+              -0.9009688585384783
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23187,
+            "vertexIDs": [
+              12057,
+              11042,
+              11041
+            ],
+            "outwardNormal": [
+              6.910890446722472e-05,
+              0.4124937024856073,
+              -0.9109604495441471
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.008000879916113358,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            5
+          ],
+          "weights": [
+            0.5788190555119405,
+            0.7106136290119675
+          ]
+        },
+        "incidentConeAngleDegrees": 0.45842154257849704
+      },
+      {
+        "contact": 30,
+        "segment": 10,
+        "fraction": 0.5,
+        "weight": 0.16970261191244193,
+        "point": [
+          -0.05163095519462162,
+          -0.0023997759190199086,
+          0.0007360557101058062
+        ],
+        "foot": [
+          -0.05083404390702575,
+          -0.0029358080665799753,
+          0.0019268911977934932
+        ],
+        "normal": [
+          -0.5209029789144006,
+          0.3503787018756867,
+          -0.7783924792994932
+        ],
+        "distanceMM": 1.529865099363971,
+        "actualRadiusGapMicrometres": 29.865099363971012,
+        "incidentFaces": [
+          {
+            "triangle": 20668,
+            "vertexIDs": [
+              5207,
+              11036,
+              11037
+            ],
+            "outwardNormal": [
+              -0.9571519685105156,
+              0.2895860994284955,
+              1.3936800878555463e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20669,
+            "vertexIDs": [
+              5200,
+              5207,
+              11037
+            ],
+            "outwardNormal": [
+              -0.9539933918821661,
+              0.29982763041714483,
+              -1.684042846949875e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20670,
+            "vertexIDs": [
+              5200,
+              11037,
+              11038
+            ],
+            "outwardNormal": [
+              -0.945975698516973,
+              0.3242375325307817,
+              1.7710878377120664e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 23194,
+            "vertexIDs": [
+              12060,
+              11038,
+              11037
+            ],
+            "outwardNormal": [
+              2.369992807154688e-05,
+              0.28369114489815334,
+              -0.9589157073198291
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23195,
+            "vertexIDs": [
+              12060,
+              11037,
+              11036
+            ],
+            "outwardNormal": [
+              -2.6336652951536488e-05,
+              0.25338851013341745,
+              -0.9673645963331239
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.010310718666663025,
+        "incidentConeBasis": {
+          "basis": [
+            0,
+            4
+          ],
+          "weights": [
+            0.5411738458668447,
+            0.8020684957268803
+          ]
+        },
+        "incidentConeAngleDegrees": 0.5907711312322173
+      },
+      {
+        "contact": 31,
+        "segment": 10,
+        "fraction": 1.0,
+        "weight": 0.08492337628272417,
+        "point": [
+          -0.05150291645296324,
+          -0.0023998996255243884,
+          0.000658556020650667
+        ],
+        "foot": [
+          -0.05102428651719557,
+          -0.0014593780294035203,
+          0.0017650015042414925
+        ],
+        "normal": [
+          -0.3130314011923535,
+          -0.6151157106652361,
+          -0.7236325064287491
+        ],
+        "distanceMM": 1.5290157279574468,
+        "actualRadiusGapMicrometres": 29.01572795744687,
+        "incidentFaces": [
+          {
+            "triangle": 20618,
+            "vertexIDs": [
+              5135,
+              11011,
+              11012
+            ],
+            "outwardNormal": [
+              -0.8512358514142331,
+              -0.5247833126779825,
+              1.344787089428282e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 20619,
+            "vertexIDs": [
+              5135,
+              11010,
+              11011
+            ],
+            "outwardNormal": [
+              -0.835208128910157,
+              -0.549933979128801,
+              -1.3992979106402912e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23235,
+            "vertexIDs": [
+              12075,
+              11012,
+              11011
+            ],
+            "outwardNormal": [
+              3.674457937155082e-05,
+              -0.4591523341706005,
+              -0.8883575477675221
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23236,
+            "vertexIDs": [
+              12076,
+              11011,
+              11010
+            ],
+            "outwardNormal": [
+              -7.730498487773806e-05,
+              -0.4812146196719695,
+              -0.8766028084816412
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 23238,
+            "vertexIDs": [
+              12076,
+              12075,
+              11011
+            ],
+            "outwardNormal": [
+              -0.00013424339031668529,
+              -0.47825397431194977,
+              -0.8782215654568823
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.00896255130258355,
+        "incidentConeBasis": {
+          "basis": [
+            1,
+            3
+          ],
+          "weights": [
+            0.3800821200381499,
+            0.8297566378135631
+          ]
+        },
+        "incidentConeAngleDegrees": 0.5135232384554109
+      },
+      {
+        "contact": 32,
+        "segment": 11,
+        "fraction": 0.14893617021276595,
+        "weight": 0.053342699140251304,
+        "point": [
+          -0.05124184378975595,
+          -0.002399914574914373,
+          0.0005604732090643974
+        ],
+        "foot": [
+          -0.05091040998858659,
+          -0.003131917753555507,
+          0.0018612620453854188
+        ],
+        "normal": [
+          -0.21677028635429188,
+          0.4787578638221288,
+          -0.8507652736109709
+        ],
+        "distanceMM": 1.5289632483469613,
+        "actualRadiusGapMicrometres": 28.96324834696111,
+        "incidentFaces": [
+          {
+            "triangle": 20674,
+            "vertexIDs": [
+              5175,
+              11039,
+              11040
+            ],
+            "outwardNormal": [
+              -0.9166598012341923,
+              0.399668373365103,
+              1.1531843244373018e-05
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20675,
+            "vertexIDs": [
+              5169,
+              5175,
+              11040
+            ],
+            "outwardNormal": [
+              -0.9151034266983061,
+              0.40321919402400436,
+              -3.956025906458077e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 20676,
+            "vertexIDs": [
+              5169,
+              11040,
+              11041
+            ],
+            "outwardNormal": [
+              -0.8998182730480911,
+              0.4362649143242411,
+              4.291072856778864e-06
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "triangle": 23189,
+            "vertexIDs": [
+              12058,
+              11041,
+              11040
+            ],
+            "outwardNormal": [
+              -5.880064331958308e-06,
+              0.38171494265638245,
+              -0.9242800996009054
+            ],
+            "footBarycentric": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "triangle": 23190,
+            "vertexIDs": [
+              12058,
+              11040,
+              11039
+            ],
+            "outwardNormal": [
+              5.801750439598052e-06,
+              0.3496916102955992,
+              -0.9368648662721912
+            ],
+            "footBarycentric": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "incidentConeResidual": 0.018815560459647617,
+        "incidentConeBasis": {
+          "basis": [
+            2,
+            3
+          ],
+          "weights": [
+            0.2494496163949683,
+            0.9275548320616188
+          ]
+        },
+        "incidentConeAngleDegrees": 1.078115823275477
+      }
+    ]
+  },
+  "contactEnvelope": {
+    "physicalRadiusMM": 1.5,
+    "proposalMarginMM": 0.02,
+    "numericalAllowanceMM": 0.01,
+    "candidateWallDistanceMM": [
+      1.5146158074275136,
+      1.5299569343108639
+    ],
+    "physicalRadiusGapMicrometres": [
+      14.615807427513573,
+      29.95693431086397
+    ],
+    "limitation": "These are near contacts of the explicitly inflated display-authoring envelope, not demonstrated exact contact of a 1.5 mm physical tube. Do not conflate 20 micrometre proposal margin with the unchanged full-radius clearance certificate."
+  },
+  "retainedClearanceCertificate": {
+    "clearance": 0.0014900295665783048,
+    "status": "pass"
+  },
+  "fixedHeightLengthMM": 118.47605311218865,
+  "requestedRestLengthMM": 120,
+  "action": "Before a final reaction gate, retain triangle and closest-feature witnesses and use admissible outward material normals (including genuine active edge/vertex cones). Recompute the same local nonnegative fit after that filter. If the witness remains approximate, explicitly bound and label the approximation rather than claiming exact frictionless string equilibrium.",
+  "limits": [
+    "One left lead, one estimated 30 degree pose and 50 mm anchor offset only; height and all sixteen final routes remain unresolved.",
+    "Barycentric assembly preserves force resultant and moment and establishes a weak/discrete nodal balance. It does not establish continuum equilibrium of each straight polyline edge or board force/torque equilibrium.",
+    "Increasing contact sampling density alone does not refine the 13-vertex centerline or prove continuum convergence.",
+    "The retained triangulated native mesh is the independent normal-check boundary. No fresh FreeCAD normal or topology job was launched.",
+    "This finding does not prove the unchanged groove/bore geometry incapable of a supported route and does not authorize changing it or relaxing any gate."
+  ],
+  "initialInspectionSHA256": "9c72f09f499dc7b822c1838288d78ae4ffe9c931f2a0b6da629c326fbf0d9594",
+  "inputBytesUnchanged": true,
+  "packetFinalReady": false,
+  "packetConfigUnchanged": true,
+  "resourcesCreated": false,
+  "canonicalOrSharedMutation": false
+}

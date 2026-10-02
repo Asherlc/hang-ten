@@ -352,8 +352,88 @@ of global minimum or physical equilibrium; no authored route cache seeds the
 solve. The setting is authoring-only, accepts only this value and topology, and
 its omission preserves the existing section solver exactly.
 
-The default `"fixed"` uses the selected section plane. Both modes certify every
-visible segment against the full closed CAD solid using adaptive signed-distance
+For an evidenced open adjustment groove that guides a lead into a separate
+visible bore, the optional `ropeSolver.grooveGuides` contract selects existing
+native cylinder features, never route points. It is restricted to independent
+leads in anchor sections and cannot be combined with `tightening`. Its
+`sourceSHA256` must match the actual collider/CAD source. `byPoseID` must name
+every canonical pose and every strand; each selection contains only `feature`
+(the groove), `boreFeature`, and `exitSign` (`-1` or `1` along the native groove
+axis). Different native groove choices, pose pitches and anchor offsets require
+an explicit evidence/estimate disposition; they are not manufacturer facts.
+
+Export that offline collider with `HANGTEN_ROPE_GROOVE_FEATURES` and
+`HANGTEN_ROPE_BORE_FEATURES` set to comma-separated existing cylinder names.
+The exporter records finite final-solid wall faces, exact geometry-only axial
+bounds and the actual local bore aperture plane. A cutting cylinder's overshoot
+is not an exterior mouth. The plane must meet that bore's finite outer wall
+boundary, and its finite face must be adjacent to the aperture circle. Opposite
+coaxial bores remain separate. With neither variable set, the exporter keeps
+its original output exactly. Unsupported cylinder orientations fail explicitly.
+
+When a selected longitudinal guide merges with a transverse notch and bore,
+the circular rim may end inward from the exterior side plane. The extractor
+then requires intersecting perpendicular native tools, shared final bore/guide
+wall edges, a connected native void, an outward exterior face adjacent to the
+guide, and zero-material aperture-disk and finite axis-crossing witnesses.
+The recorded exterior mouth remains that actual side plane; the separately
+recorded cylindrical-wall extent is not substituted for it. Missing or opposite
+guides and remote parallel planes cannot certify this merged opening.
+
+When the selected guide and bore axes, terminal and fixed support are
+analytically coplanar, the bounded search retains that native axis-aligned
+plane for its first search phase to avoid numerical drift in an unnecessary
+degree of freedom. The plane is then always released and the native-derived
+seed is checked and settled in full 3D. A bounded unit-tension chain Jacobian
+step can correct small residuals from the independently reconstructed actual
+facet forces:
+endpoints stay fixed, at most five corrections of at most 10 micrometres are
+allowed, and every trial recomputes full 3D clearance and material support.
+These are numerical search bounds, not relaxed acceptance tolerances. Parallel,
+inconsistent and noncoplanar cases retain the full 3D search from the start.
+This search constraint is not a physical certificate: the final full 3D
+solid/tube, seating, entry and actual-facet force gates still apply unchanged.
+
+The guide solver generates section seeds through the selected native groove,
+then releases those seed stations during bounded three-dimensional shortening
+and hanging-height settling. It never reads an existing route cache as a seed.
+The final nine-decimal cache must pass the unchanged full-radius continuous
+solid and tube checks, finite groove traversal, finite bore/end-cap entry,
+settled length and an active-material reaction check. An endpoint touch or a
+clear route outside the groove is insufficient. If evidence authorizes entry
+into an existing visible bore, a terminal may be inset only within its audited
+finite clearance interval; no connection beyond its native display cutoff is
+implied.
+
+Different presentation rotations can resolve to exactly the same native
+support origin and height direction. The solver may reuse that calculation
+within one fresh invocation when the guide selections also match, but it
+independently recertifies every output pose. It never uses a saved route cache
+for this calculation. Reports distinguish presentation rotations from the
+distinct native physics frames.
+
+The reaction check is discrete frictionless feasibility at the numerical cord
+offset, not an exact continuous rope model, global minimum, friction model or
+safety claim. Its force scale is unit tension. Contacts contribute only to their
+own segment endpoints with barycentric weights. The contact envelope is the
+actual radius plus the existing 20 micrometre proposal margin and 10 micrometre
+numerical allowance. A separate 10 micrometre closest-feature tie allowance
+accounts for opposing triangulated junction features. Every direction needs a
+nonempty cone of actual incident outward facet normals; nearby triangle radial
+vectors alone are not material normals. The solver independently recomputes
+both cone and nodal residuals and rejects unsupported forces. It additionally
+recomposes the fitted forces from actual incident-facet cone coefficients,
+checks that nodal residual at the same limit, and records the force-weighted
+cone-error bound. Both the reconstructed nodal residual and the weighted bound
+must be at most 1e-5; cancelling direction errors cannot hide amplified force
+errors. Reports retain facet IDs, closest-distance gaps, cone coefficients and active contact forces
+so those claims can be checked against the exact retained collision mesh.
+All guide metadata remains authoring-only and is removed from generated
+`board.json`; runtime still reads ordinary `cadRoutedCord`/`wrappedRoutes`.
+
+Without groove guidance, the default `tightening: "fixed"` uses the selected
+section plane. Every route mode certifies visible segments against the full
+closed CAD solid using adaptive signed-distance
 Lipschitz bounds, with a 10 micrometre numerical tolerance and bounded work.
 Uncertifiable intervals fail. The same check covers the rounded runtime cache,
 its actual terminal and reconstructed fixed support. Self-crossings, retracing

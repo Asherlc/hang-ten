@@ -209,6 +209,46 @@
       "answer": "lgtm",
       "acceptedDate": "2026-10-01",
       "acceptedScope": "Displayed corrected Simulator 3-D, including its smooth front taper, forward center-jug crest and rear return, forward-reaching slopers, and existing plastic appearance."
+    },
+    {
+      "package": "nature-stone-hanger",
+      "date": "2026-10-02",
+      "revision": "vertical-cord-seats-granite-short-cord-and-weightable-poses",
+      "feedback": [
+        "the stone hanger needs granite texture where appropriate",
+        "also cord is way too long",
+        "and its missing the notches",
+        "and the highlighted hold is in an impossible to weight position",
+        "the cord goes inside the side notches",
+        "there is 1 vertical groove on either side that the cord nestles into"
+      ],
+      "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+      "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+      "descriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+      "suspensionSHA256": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae",
+      "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review/runtime-validation.json",
+      "postIntegrationTests": {
+        "pythonPassed": 260,
+        "pythonSkipped": 0,
+        "iOSPassed": 259,
+        "iOSSkipped": 0,
+        "failures": 0
+      },
+      "allOtherPackageFilesUnchanged": 202,
+      "boardFactsAndContactIDsUnchanged": true,
+      "nativeBodyGeometryChanged": true,
+      "surfaceFinish": "wood",
+      "graniteNodeIDs": [
+        "edge_front_20mm_granite_mesh_001"
+      ],
+      "positions": 8,
+      "certifiedCordBranches": 16,
+      "verticalGrooves": 2,
+      "transverseNotchesPreserved": 6,
+      "geometryAcceptance": "pending one-by-one user review",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/human-review.json",
+      "limits": "One vertical seat each side and existing three transverse adjustment notches per side are separate source-supported features; preserve both. Groove radius, depth, numeric span/entry placement, cord dimensions, support and loaded poses remain deliberate display estimates. The concealed connection remains unspecified beyond visible side-hole entry. All four corrected package identities require fresh native/export/cord/runtime proof. Prior 1b/7c passes are preserved as history without carrying them to the new shape. Raw images remain whole; no crop, registration, tracing or pixel-derived dimensions. Generic runtime wood/granite shaders depict materials; USDZ stays unbound with no baked material/texture. Material-facet frictionless discrete balance and numerical near-contact policy do not certify continuum cable or global board equilibrium or real load safety. Maker video sheets include multiple variants. All 10 original sheets retained; this independent evidence review physically viewed sheets 4 and 5 and four exact-revision primary images. Fresh checks: 260 Python tests, 259 focused iOS tests, all 64 packages. Installed byte parity covers Nature Stone Hanger only; overlapping historical suites are not added. The prior 30 degree pitch and 50 mm forward support offset are superseded adaptations. Current poses use identity or exact axis half-turn rotations, with a centered support and 25 mm initial display offset; solved hanging translations remain estimates. Small polygonal shading bands remain at the tight cord bend beside the seat without changing the route. Whole still frames and recorded drags do not cover every continuous camera angle. The before model/descriptor are exact committed HEAD939916 geometry; the before native source contains later metadata corrections. Earlier app frames are retained historical captures, not a fresh prior-binary run.",
+      "priorDeliveryManifestSHA256": "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42"
     }
   ]
 }

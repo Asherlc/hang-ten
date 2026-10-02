@@ -61,7 +61,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42",
+  "sha256Manifest": "2e59a40776c140376c707d72803fdad70868380e7c79ea47aecfe900fcdb51fb",
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
   "scope": "exact-file identity for committed files; a source-backed board pins its compiled asset through descriptor modelSHA256 and its build-time board.json through the locked FCStd and optional suspension sidecar"
 }

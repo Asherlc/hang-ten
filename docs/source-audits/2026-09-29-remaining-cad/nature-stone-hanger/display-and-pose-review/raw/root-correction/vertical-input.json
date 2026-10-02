@@ -1,0 +1,364 @@
+{
+  "schemaVersion": 1,
+  "presentationID": "primary",
+  "modelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+  "suspension": {
+    "type": "cadRoutedCord",
+    "bodyNodeID": "body_oak_mesh_001",
+    "strands": [
+      {
+        "id": "left-lead",
+        "kind": "lead",
+        "restLength": 0.12,
+        "radius": 0.0015,
+        "material": "matteCord",
+        "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred. Cord radius 1.5 mm is an operator display estimate reviewed against retained manufacturer Stone_Hanger_Granite_3.jpg, replacing the previous 2 mm estimate to fit the unchanged native 2 mm radius visible mouth with 0.2 mm clearance. It is not a published rope specification. Shortened visible lead length 120 mm is an operator display estimate adapting the manufacturer SHORT ROPE description and complete photographs; it is not a measured maker rope length. Native solver regenerates all poses from the existing side bore. The visible terminal sits 2.75 mm inside the actual exterior plane, a display estimate constrained by the unchanged native bore; no hidden connection is inferred. Middle adjustment groove selection, 30 degree display pitch and 50 mm forward support offset are operator estimates. Native finite groove seating, bore entry, full-radius clearance and discrete material-contact support are checked for every pose."
+      },
+      {
+        "id": "right-lead",
+        "kind": "lead",
+        "restLength": 0.12,
+        "radius": 0.0015,
+        "material": "matteCord",
+        "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred. Cord radius 1.5 mm is an operator display estimate reviewed against retained manufacturer Stone_Hanger_Granite_3.jpg, replacing the previous 2 mm estimate to fit the unchanged native 2 mm radius visible mouth with 0.2 mm clearance. It is not a published rope specification. Shortened visible lead length 120 mm is an operator display estimate adapting the manufacturer SHORT ROPE description and complete photographs; it is not a measured maker rope length. Native solver regenerates all poses from the existing side bore. The visible terminal sits 2.75 mm inside the actual exterior plane, a display estimate constrained by the unchanged native bore; no hidden connection is inferred. Middle adjustment groove selection, 30 degree display pitch and 50 mm forward support offset are operator estimates. Native finite groove seating, bore entry, full-radius clearance and discrete material-contact support are checked for every pose."
+      }
+    ],
+    "anchor": {
+      "offsetFromBoardBounds": [
+        0,
+        0.025,
+        0
+      ],
+      "visibility": "invisible",
+      "provenance": "displayEstimate; 25 mm initial vertical offset and 50 mm offset toward the displayed grasp face; settled height solves 120 mm native-guided leads."
+    },
+    "canonicalPoses": {
+      "edge-front-15mm-incut": {
+        "rotation": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "edge-front-15mm-flat": {
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "edge-reverse-10mm-incut": {
+        "rotation": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "edge-reverse-10mm-flat": {
+        "rotation": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "edge-reverse-06mm-flat": {
+        "rotation": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "edge-reverse-06mm-incut": {
+        "rotation": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "edge-front-20mm-wood-flat": {
+        "rotation": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "edge-front-20mm-granite": {
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "fitPadding": 0.1
+        }
+      }
+    }
+  },
+  "ropeSolver": {
+    "method": "nativeRoutes",
+    "clearance": 0.0002,
+    "supportDirection": 1,
+    "terminalsByStrandID": {
+      "left-lead": {
+        "points": [
+          [
+            -0.04975,
+            -0.0024,
+            0
+          ]
+        ],
+        "planeNormal": [
+          0,
+          0,
+          1
+        ],
+        "planeAxis": [
+          0,
+          0,
+          1
+        ],
+        "mouthAxis": [
+          -1,
+          0,
+          0
+        ]
+      },
+      "right-lead": {
+        "points": [
+          [
+            0.04975,
+            -0.0024,
+            0
+          ]
+        ],
+        "planeNormal": [
+          0,
+          0,
+          1
+        ],
+        "planeAxis": [
+          0,
+          0,
+          1
+        ],
+        "mouthAxis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    "sectionPlane": "anchor",
+    "pathSearch": "aStar",
+    "grooveGuides": {
+      "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+      "byPoseID": {
+        "edge-front-15mm-incut": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": -1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": -1
+          }
+        },
+        "edge-front-15mm-flat": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": 1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": 1
+          }
+        },
+        "edge-reverse-10mm-incut": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": -1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": -1
+          }
+        },
+        "edge-reverse-10mm-flat": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": 1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": 1
+          }
+        },
+        "edge-reverse-06mm-flat": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": -1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": -1
+          }
+        },
+        "edge-reverse-06mm-incut": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": 1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": 1
+          }
+        },
+        "edge-front-20mm-wood-flat": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": -1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": -1
+          }
+        },
+        "edge-front-20mm-granite": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": 1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": 1
+          }
+        }
+      }
+    }
+  }
+}

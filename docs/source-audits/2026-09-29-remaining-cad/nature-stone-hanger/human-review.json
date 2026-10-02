@@ -1,0 +1,44 @@
+{
+  "reviewNumber": 9,
+  "boardID": "nature.stone-hanger",
+  "status": "pending",
+  "question": "Does this look right now?",
+  "feedback": [
+    "the stone hanger needs granite texture where appropriate",
+    "also cord is way too long",
+    "and its missing the notches",
+    "and the highlighted hold is in an impossible to weight position",
+    "the cord goes inside the side notches",
+    "there is 1 vertical groove on either side that the cord nestles into"
+  ],
+  "routingClarification": {
+    "question": "Enters center side holes with notch guides, or wraps around block in notch groove?",
+    "status": "answered",
+    "answer": "Enters side holes; notches guide it",
+    "source": "Exact user answer retained in human-feedback.json",
+    "hiddenConnection": "Visible side-hole entry and exterior notch guidance are established; the concealed connection remains unspecified."
+  },
+  "identity": {
+    "originalSourceSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+    "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+    "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+    "descriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+    "sidecarSHA256": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae"
+  },
+  "reviewScope": "Shown whole front/side/top/oblique corrected geometry and fresh actual-app vertical seats, nested cords, all eight contact selections, representative real orbits and wood/granite restoration.",
+  "approvalLimit": "Displayed geometry/material/cord/pose estimates only. No hidden construction, supplied rope dimensions, load safety, continuum/global equilibrium or manufacturer-exact texture certification.",
+  "globalRecordsUpdatedByThisBuilder": false,
+  "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review/index.html",
+  "runtimeValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review/runtime-validation.json",
+  "datePrepared": "2026-10-02",
+  "technicalGates": "pass",
+  "postIntegrationTests": {
+    "pythonPassed": 260,
+    "pythonSkipped": 0,
+    "iOSPassed": 259,
+    "iOSSkipped": 0,
+    "failures": 0
+  },
+  "reviewedFrames": 17,
+  "reviewedContacts": 8
+}

@@ -1,0 +1,49 @@
+{
+  "status": "pass-focused-tests",
+  "fileSHA256": {
+    "Tools/HangboardCAD/native_cord_guides.py": "2001cb8f4eb141d50146a2f426aa0cc086e729e0e737b4224e7f9dcf0a6fa191",
+    "Tools/HangboardCAD/tests/test_native_cord_guides.py": "88c708aa16e459a4fec701535da5f2d1d9fa51df18d340c8815a3d610d534341",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/takeover-red.log": "5d3d958ec52d8c7338b4111e524922d3dec2bbf63c32e57c5a4529e1924534ad",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/takeover-green.log": "599b679e652c00a2951aa5269bca11cb38964523183c2162025594f2db126567",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/run_final_routes.py": "d7b1445810074db7441d9c8e55343943b815947280c4c448fdf4c6f77093484d",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/bounded_final_job.py": "d10215fd2d3438e01edd7d5733fef98c16ceddc55a463c284b7409279e1635dc"
+  },
+  "red": {
+    "failed": 4,
+    "passed": 15,
+    "causes": [
+      "missing per-output certification helper for centered and depth-offset frame cases",
+      "cancelled cone direction errors bypassed weighted bound",
+      "oversized path reached expensive clearance work"
+    ]
+  },
+  "green": {
+    "passed": 81,
+    "failed": 0,
+    "seconds": 46.54,
+    "scope": [
+      "test_native_cord_guides.py",
+      "test_native_cord_routes.py",
+      "test_cad_sidecars.py"
+    ]
+  },
+  "changes": [
+    "Exact resolved native support origin/direction + selected native features key replaces quaternion-only reuse. Reuse is local to fresh solve and independently recertifies every output.",
+    "Weighted material normal-cone error bound is explicitly <=1e-5 even when opposing direction errors cancel in reconstructed force.",
+    "128-vertex guard precedes dense force settling, including direct settling entry."
+  ],
+  "unchanged": [
+    "CAD geometry/export/collider",
+    "default non-groove route branch",
+    "force and clearance tolerances",
+    "120 mm rest lengths and 1.5 mm radius",
+    "fixed endpoints and <=10 micrometres per correction, at most five corrections"
+  ],
+  "remaining": [
+    "all-eight native solve",
+    "independent regeneration",
+    "independent all-sixteen witness audit",
+    "canonical promotion and root runtime validation"
+  ],
+  "blockingFindings": []
+}

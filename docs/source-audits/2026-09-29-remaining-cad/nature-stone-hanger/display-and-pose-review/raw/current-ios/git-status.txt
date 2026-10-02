@@ -1,0 +1,16 @@
+ M Hangboards/nature-stone-hanger/assets/primary.model.json
+ M Hangboards/nature-stone-hanger/assets/primary.usdz
+MM Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd
+MM Hangboards/nature-stone-hanger/suspension.json
+M  Tools/HangboardCAD/export_rope_collision_solid.py
+AM Tools/HangboardCAD/native_cord_features.py
+AM Tools/HangboardCAD/native_cord_guides.py
+M  Tools/HangboardCAD/native_cord_routes.py
+M  Tools/HangboardCAD/solve_threaded_rope.py
+A  Tools/HangboardCAD/tests/fixtures/native_groove_material_normals.json
+AM Tools/HangboardCAD/tests/native_cord_feature_checks.py
+M  Tools/HangboardCAD/tests/test_cad_sidecars.py
+A  Tools/HangboardCAD/tests/test_native_cord_feature_extraction.py
+AM Tools/HangboardCAD/tests/test_native_cord_guides.py
+M  Tools/HangboardPackages/src/hangboard_packages/cad_source.py
+MM docs/HANGBOARD_CORD_AUTHORING.md
