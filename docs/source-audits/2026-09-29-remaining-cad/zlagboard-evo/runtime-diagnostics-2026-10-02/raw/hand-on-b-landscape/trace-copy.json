@@ -1,0 +1,13 @@
+[
+  {
+    "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/3C6A16BD-0608-43DF-8635-04F2FEA2787D/Documents/HighlightDiagnostic-placid-badger-cad-second-half-hand-on-b/events-66A00C55-8E55-4EF5-BF33-AC64F6885FD4.jsonl",
+    "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-on-b-landscape/events-66A00C55-8E55-4EF5-BF33-AC64F6885FD4.jsonl",
+    "sha256": "310a41b324e0743f5f4652f792ca0b8dddd90ed3925fc9bc2cd0659e8216d480",
+    "copyEpoch": 1790967906.7068522,
+    "records": 90,
+    "newlineComplete": true,
+    "allComplete": true,
+    "contiguousSequences": true,
+    "limitReached": false
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "reviewer": "Astra primary agent",
+  "method": "Each critical whole image opened individually; no pixel measurements.",
+  "images": [
+    {
+      "path": "window-15.png",
+      "sha256": "14e7a4f09ecc7870155e58747f5784d8d99fac8e84d40fcd911c255532b6a523",
+      "visualFinding": "Rest03:00; selected surfaces remain red before hide."
+    },
+    {
+      "path": "window-20.png",
+      "sha256": "b1e5e2e58862c63f398b3945b18363d6dd82916121d24afdc6ed79565f111600",
+      "visualFinding": "Rest02:56; selected surfaces absent with visible light openings."
+    },
+    {
+      "path": "window-39.png",
+      "sha256": "52db5738e8aed1ac6a4ef30fa6f1883b94adeb9d06ee079bcb00099250159bb6",
+      "visualFinding": "Rest02:42; selected surfaces remain absent after CPU restoration."
+    }
+  ],
+  "finding": "Visibility as well as material state can remain stale. The disabling intervention affects the observed surfaces, connecting CPU entity identity to displayed geometry. No production remedy established.",
+  "humanAcceptance": false
+}

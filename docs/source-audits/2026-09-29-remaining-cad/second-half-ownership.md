@@ -108,3 +108,19 @@ scene diagnostics are now running in this workspace; this documentation commit
 ships no production renderer fix. The registered temporary Simulator and build
 artifacts remain live under their cleanup controller while validation continues.
 No parent/main integration or out-of-scope package edit is included.
+
+### Complete rendering diagnostics — no production repair established
+
+The [Evo diagnostic appendix](zlagboard-evo/runtime-diagnostics-2026-10-02/README.md)
+retains complete state traces, raw captures, command outcomes, and temporary
+source patches. Multiple independent host probes still fail; recreating the
+board display view also caused disappearance. One hand-host-suppressed run
+passed between failing controls. Its initial visual misclassification remains
+retained with an explicit correction. These results motivate an independent
+architecture review; they do not establish an SDK root cause or a production fix.
+
+The five-path reservation remains active. Parent exact published ref is now
+`d0a54fef261e1c0a7d6f70f1b0db5178d351f0f7`; scratch integration preparation is
+being refreshed for its Plateau package and lock changes. Canonical packages,
+review queue, delivery lock and human acceptance records remain unchanged here.
+Owned validation resources remain live under the existing cleanup controller.

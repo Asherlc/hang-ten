@@ -1,0 +1,45 @@
+--- a/HangTen/Views/BoardModelView.swift
++++ b/HangTen/Views/BoardModelView.swift
+@@ -59,14 +59,27 @@
+                 // SwiftUI hits here would intercept the card select tap even
+                 // when the hosted RealityView has user interaction disabled.
+                 .allowsHitTesting(!isDisplayOnly)
++                #if DEBUG
++                let diagnosticHost = Group {
++                    if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SEMANTIC_BOARD_HOST"] == "1" {
++                        realityView.id(BoardDiagnosticHostIdentity(
++                            scene: ObjectIdentifier(model), contactIDs: highlightedContactIDs,
++                            mode: highlightMode, positionID: positionID))
++                    } else {
++                        realityView
++                    }
++                }
++                #else
++                let diagnosticHost = realityView
++                #endif
+                 if onContactTap == nil {
+-                    realityView.accessibilityIdentifier("boardModel.3d")
++                    diagnosticHost.accessibilityIdentifier("boardModel.3d")
+                 } else {
+                     // A parent accessibility identifier propagates to the
+                     // RealityView's projected contact buttons. Keep their
+                     // per-contact identifiers available to UI automation and
+                     // assistive technology on interactive board maps.
+-                    realityView
++                    diagnosticHost
+                 }
+             } else if let loadingMessage = result.loadingMessage {
+                 HStack(spacing: 12) {
+@@ -473,3 +486,12 @@
+     }
+ }
+ #endif
++
++#if DEBUG
++private struct BoardDiagnosticHostIdentity: Hashable {
++    let scene: ObjectIdentifier
++    let contactIDs: Set<String>
++    let mode: BoardHighlightMode
++    let positionID: String?
++}
++#endif
