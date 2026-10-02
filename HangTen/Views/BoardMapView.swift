@@ -342,7 +342,7 @@ struct BoardDetailMapView: View {
     private let selectedHoldContent: AnyView?
 
     @State private var presentationSelection: BoardMapPresentationSelection
-    @State private var preferredPositionID: String?
+    @State private var preferredPositionIDs: [String: String] = [:]
 
     init(
         board: BoardRevision,
@@ -384,7 +384,7 @@ struct BoardDetailMapView: View {
             }
         }
         .animation(.easeInOut(duration: 0.18), value: selectedHoldID)
-        .onChange(of: board.id) { _, _ in preferredPositionID = nil }
+        .onChange(of: board.id) { _, _ in preferredPositionIDs.removeAll() }
     }
 
     @ViewBuilder
@@ -414,9 +414,9 @@ struct BoardDetailMapView: View {
                 positionID: Binding(
                     get: { BoardMapPresentationSelection.resolvePositionID(
                         board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID,
-                        preferredPositionID: preferredPositionID
+                        preferredPositionID: preferredPositionIDs[map.presentation.id]
                     ) },
-                    set: { preferredPositionID = $0 }
+                    set: { preferredPositionIDs[map.presentation.id] = $0 }
                 ),
                 accessibilityID: "boardDetail.rotationSelector"
             )
@@ -457,7 +457,7 @@ struct BoardDetailMapView: View {
                         presentation: map.presentation,
                         positionID: BoardMapPresentationSelection.resolvePositionID(
                             board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID,
-                            preferredPositionID: preferredPositionID
+                            preferredPositionID: preferredPositionIDs[map.presentation.id]
                         ),
                         highlightedContactIDs: Set([selectedHoldID].compactMap { $0 }),
                         highlightMode: .active,
@@ -611,7 +611,7 @@ struct BoardMapView: View {
     private let isDisplayOnly: Bool
 
     @State private var presentationSelection: BoardMapPresentationSelection
-    @State private var preferredPositionID: String?
+    @State private var preferredPositionIDs: [String: String] = [:]
 
     init(
         board: BoardRevision,
@@ -648,7 +648,7 @@ struct BoardMapView: View {
             presentationID: content.presentation.id,
             activeHoldID: activeHoldID,
             highlightedHoldIDs: highlightedHoldIDs,
-            preferredPositionID: preferredPositionID
+            preferredPositionID: preferredPositionIDs[content.presentation.id]
         )
         let displayedHolds = content.holds
         VStack(spacing: 8) {
@@ -675,7 +675,7 @@ struct BoardMapView: View {
                     presentationID: content.presentation.id,
                     positionID: Binding(
                         get: { selectedPositionID },
-                        set: { preferredPositionID = $0 }
+                        set: { preferredPositionIDs[content.presentation.id] = $0 }
                     ),
                     accessibilityID: "boardMap.rotationSelector"
                 )
@@ -741,7 +741,7 @@ struct BoardMapView: View {
             )
         }
         .onChange(of: board.id) { _, _ in
-            preferredPositionID = nil
+            preferredPositionIDs.removeAll()
             presentationSelection.reset(
                 board: board,
                 requestedPresentationID: requestedPresentationID,

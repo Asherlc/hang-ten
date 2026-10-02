@@ -46,6 +46,56 @@ final class BoardModelTests: XCTestCase {
             preferredPositionID: "p3"))
     }
 
+    func testRotationOptionsRejectInconsistentContactsAndMissingTransforms() throws {
+        let pivot = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        let presentation = pivot.defaultPresentation
+        guard case .model(let media) = presentation.media else {
+            return XCTFail("The fixture requires model media")
+        }
+        func copy(positions: [BoardPosition], presentations: [BoardPresentation]) -> BoardRevision {
+            BoardRevision(
+                id: pivot.id, revisionID: pivot.revisionID,
+                manufacturer: pivot.manufacturer, name: pivot.name, subtitle: pivot.subtitle,
+                dimensions: pivot.dimensions, aspectRatio: pivot.aspectRatio,
+                equipmentObjects: pivot.equipmentObjects, contacts: pivot.contacts,
+                productURL: pivot.productURL, photoAssetName: pivot.photoAssetName,
+                presentations: presentations, positions: positions,
+                positionTransitions: pivot.positionTransitions
+            )
+        }
+        let inconsistentPositions = pivot.positions.map { position in
+            BoardPosition(id: position.id, presentationID: position.presentationID,
+                          contactIDs: position.id == "p5"
+                              ? Array(pivot.contactIDs(inPosition: position.id).dropLast())
+                              : pivot.contactIDs(inPosition: position.id))
+        }
+        let inconsistent = copy(positions: inconsistentPositions, presentations: pivot.presentations)
+        XCTAssertTrue(BoardMapRotationOptions.positions(on: inconsistent, presentationID: presentation.id).isEmpty)
+
+        let instances = try XCTUnwrap(media.instances).enumerated().map { index, instance in
+            var transforms = instance.positionTransforms
+            if index == 0 { transforms?.removeValue(forKey: "p5") }
+            return BoardModelInstance(
+                equipmentObjectID: instance.equipmentObjectID, baseTransform: instance.baseTransform,
+                contactIDsBySlotID: instance.contactIDsBySlotID, suspension: instance.suspension,
+                positionTransforms: transforms
+            )
+        }
+        let missingTransformMedia = BoardModelMedia(
+            assetPath: media.assetPath, descriptorPath: media.descriptorPath,
+            descriptor: media.descriptor, display: media.display, suspension: media.suspension,
+            orientation: media.orientation, instances: instances,
+            physicsDescriptorPath: media.physicsDescriptorPath
+        )
+        let missingTransformPresentation = BoardPresentation(
+            id: presentation.id, name: presentation.name, aspectRatio: presentation.aspectRatio,
+            isDefault: presentation.isDefault, sourcePresentationID: presentation.sourcePresentationID,
+            isInverted: presentation.isInverted, media: .model(missingTransformMedia)
+        )
+        let missingTransform = copy(positions: pivot.positions, presentations: [missingTransformPresentation])
+        XCTAssertTrue(BoardMapRotationOptions.positions(on: missingTransform, presentationID: presentation.id).isEmpty)
+    }
+
     @MainActor
     func testOrientationContainerAspectRatioTracksSelectedPositionProjection() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.baguette-evo"))

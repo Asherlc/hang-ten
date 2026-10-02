@@ -95,6 +95,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         for (position, holdID) in [(2, "outer-sloped-crimp-right"),
                                    (3, "outer-sloped-crimp-left"),
                                    (5, "upper-sloped-crimp-right")] {
+            waitForStableProjection(of: contact, diagnostic: diagnostic)
             let previousFrame = contact.frame
             let preset = selector.buttons["Position \(position)"]
             preset.tap()
@@ -105,20 +106,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
             XCTAssertEqual(XCTWaiter.wait(for: [changed], timeout: 10), .completed)
             let target = app.buttons["boardModel.contact.\(holdID)"]
             XCTAssertTrue(target.waitForExistence(timeout: 10))
-            var previousTargetFrame = CGRect.zero
-            var stableSamples = 0
-            let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-                guard let value = diagnostic.value as? String,
-                      value.contains("cameraSettled=true") else {
-                    stableSamples = 0
-                    return false
-                }
-                let frame = target.frame
-                stableSamples = frame == previousTargetFrame ? stableSamples + 1 : 0
-                previousTargetFrame = frame
-                return !frame.isEmpty && stableSamples >= 2
-            }, object: nil)
-            XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 30), .completed)
+            waitForStableProjection(of: target, diagnostic: diagnostic)
             let selected = app.otherElements["boardDetail.selectedHold.\(holdID)"]
             XCTAssertFalse(selected.exists, "Native picking must change the selected hold")
             // Tap the live projected contact through the map, exercising RealityKit picking.
@@ -136,6 +124,24 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
             XCTAssertTrue(preset.isSelected, "Selecting a hold must preserve the chosen rotation")
             addScreenshot(named: "Pivot position \(position) selected \(holdID)")
         }
+    }
+
+    private func waitForStableProjection(of contact: XCUIElement, diagnostic: XCUIElement) {
+        var previousFrame = CGRect.zero
+        var stableSamples = 0
+        let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let value = diagnostic.value as? String,
+                  value.contains("cameraSettled=true") else {
+                stableSamples = 0
+                return false
+            }
+            let frame = contact.frame
+            stableSamples = frame == previousFrame ? stableSamples + 1 : 0
+            previousFrame = frame
+            return !frame.isEmpty && stableSamples >= 2
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 30), .completed,
+                       "The camera and contact projection must settle before measuring or picking")
     }
 
     private func diagnosticNumber(_ key: String, in value: String) -> Float? {
