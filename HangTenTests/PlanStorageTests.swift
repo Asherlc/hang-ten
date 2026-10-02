@@ -747,7 +747,7 @@ final class PlanStorageTests: XCTestCase {
 
     func testPlanSourcePresentationContainsOnlySourceName() {
         let plan = LegacyPlanSeedCatalog.maxHangs
-        XCTAssertEqual(PlanSourcePresentationContent.label(for: plan), "Source: Lattice max hang protocol")
+        XCTAssertEqual(PlanSourcePresentationContent.label(for: plan), "Source: Eva López · MaxHangs (MAW)")
     }
 
     func testGripTypeRoundTripsDistinctCurrentRawValues() throws {
@@ -1563,9 +1563,9 @@ final class PlanStorageTests: XCTestCase {
     func testSourceBackedAndExplicitlyAdaptedRecoveriesKeepTheirDurations() {
         let recoveryIDs = [
             "horst-753-grip-1-recovery",
-            "ladders-round-1-recovery",
-            "density-hold-1-set-1-recovery",
-            "density-hold-1-recovery"
+            "density-grip-1-rep-1-recovery",
+            "density-grip-1-rep-2-recovery",
+            "density-grip-2-rep-1-recovery"
         ]
         let recoverySteps = LegacyPlanSeedCatalog.all.flatMap(\.steps).filter {
             recoveryIDs.contains($0.id)
@@ -2305,7 +2305,8 @@ final class PlanStorageTests: XCTestCase {
         let terminalSteps = try LegacyPlanSeedCatalog.all
             .filter {
                 $0.id != LegacyPlanSeedCatalog.rptcRepeaters.id &&
-                    $0.id != LegacyPlanSeedCatalog.megoOneArmSevenThree.id
+                    $0.id != LegacyPlanSeedCatalog.megoOneArmSevenThree.id &&
+                    $0.id != LegacyPlanSeedCatalog.abrahangs.id
             }
             .map { plan in
                 try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)
@@ -2322,16 +2323,17 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(megoTerminalStep.duration, 3)
     }
 
-    func testAbrahangsSecondGripKeepsSourceBackedCueWithPairedEdge() throws {
+    func testAbrahangsSecondGripKeepsOriginalThreeFingerPocketCue() throws {
         let step = try XCTUnwrap(
-            LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2" }
+            LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2-rep-1" }
         )
 
-        XCTAssertEqual(step.title, "Abrahang · F3 Open Hang")
+        XCTAssertEqual(step.title, "Abrahang · Three-finger drag · deep pocket · rep 1 of 3")
         XCTAssertEqual(
             step.workRequirements,
-            [ContactRequirement.edge(
-                depth: .range(.init(minimum: 20, maximum: 20)),
+            [ContactRequirement(
+                kind: .pocket,
+                fingerCapacity: 3,
                 selection: .bilateralPair
             )]
         )
@@ -2346,17 +2348,35 @@ final class PlanStorageTests: XCTestCase {
         let store = try PlanLibraryStore(definition: BuiltInPlanLibraryDefinition.document)
         let step = try XCTUnwrap(
             store.plan(id: LegacyPlanSeedCatalog.abrahangs.id)?.steps.first {
-                $0.id == "abrahangs-grip-4.segment-1"
+                $0.id == "abrahangs-grip-4-rep-1.segment-1"
             }
         )
 
-        XCTAssertEqual(step.title, "Abrahang · F2 Open Hang")
+        XCTAssertEqual(step.title, "Abrahang · Front-two pocket · rep 1 of 1")
         XCTAssertEqual(step.gripType, .openHand)
         XCTAssertEqual(
             step.fingerConfiguration,
             FingerConfiguration(engagedFingers: [.index, .middle])
         )
         XCTAssertEqual(step.fingerConfiguration?.orderedFingers, [.index, .middle])
+    }
+
+    func testMaxHangsUsesLopezMAWTimingAndSource() throws {
+        let plan = PlanCatalog.maxHangs
+        XCTAssertEqual(plan.sourceURL, URL(string: "https://en-eva-lopez.blogspot.com/2018/05/fingerboard-training-guide-II-Maxhangs-SubHangs-and-Inthangs-methodology.html"))
+        XCTAssertEqual(plan.provenance, .adapted)
+        let workSteps = plan.steps.filter { !$0.isRestStep }
+        let restSteps = plan.steps.filter(\.isRestStep)
+        XCTAssertEqual(workSteps.count, 5)
+        XCTAssertEqual(restSteps.count, 4)
+        XCTAssertTrue(restSteps.allSatisfy { $0.duration == 180 })
+        XCTAssertEqual(plan.duration, 770)
+        for step in workSteps {
+            XCTAssertEqual(step.activeDuration, 10)
+            XCTAssertEqual(step.duration, 10)
+            XCTAssertEqual(step.gripType, .halfCrimp)
+            XCTAssertTrue(step.instruction.contains("3-second margin"))
+        }
     }
 
     func testMaxHangsWorkStepsKeepSourceBackedFourFingerCue() {
@@ -2380,7 +2400,6 @@ final class PlanStorageTests: XCTestCase {
             LegacyPlanSeedCatalog.forceF100,
             LegacyPlanSeedCatalog.evaIntHangs,
             LegacyPlanSeedCatalog.ladders,
-            LegacyPlanSeedCatalog.densityHangs,
             LegacyPlanSeedCatalog.zlagboardEndurance
         ]
 
@@ -2389,6 +2408,12 @@ final class PlanStorageTests: XCTestCase {
                 .flatMap(\.steps)
                 .allSatisfy { $0.gripType == nil && $0.fingerConfiguration == nil }
         )
+
+        // Nelson's original Table 2 specifies these grip positions, but no
+        // exact finger selection. Retain only the cues supported by that table.
+        let densityWork = LegacyPlanSeedCatalog.densityHangs.steps.filter { !$0.isRestStep }
+        XCTAssertEqual(densityWork.map(\.gripType), [.openHand, .openHand, .halfCrimp, .halfCrimp])
+        XCTAssertTrue(densityWork.allSatisfy { $0.fingerConfiguration == nil })
 
         let zlagboardStep = try XCTUnwrap(LegacyPlanSeedCatalog.zlagboardEndurance.steps.first)
         XCTAssertEqual(zlagboardStep.instruction, "Hang for 60 seconds, then rest for 60 seconds.")
@@ -2615,12 +2640,12 @@ final class PlanStorageTests: XCTestCase {
                     kind: .work,
                     target: .fromLegacyTargets([
                         ContactRequirement.edge(
-                            depth: .range(.init(minimum: 20, maximum: 20)),
+                            depth: .range(.init(minimum: 9, maximum: 19)),
                             selection: .bilateralPair
                         )
                     ]),
                     timing: .fixed,
-                    duration: 7
+                    duration: 10
                 ),
                 WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 180)
             ]

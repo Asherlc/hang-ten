@@ -742,6 +742,11 @@ private enum PlanDetailResolutionError: LocalizedError {
     }
 }
 
+private struct MaxHangsEdgeResolutionInput: Hashable {
+    let plan: TrainingPlan
+    let board: BoardRevision
+}
+
 struct PlanDetailView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
@@ -756,11 +761,34 @@ struct PlanDetailView: View {
     @State private var manualWeight = 0.0
     @State private var manualWeightIncludesBodyweight = false
 
-    private var currentPlan: TrainingPlan? {
+    @State private var selectedMaxHangsDepth: Double?
+    @State private var resolvedMaxHangsInput: MaxHangsEdgeResolutionInput?
+    @State private var resolvedMaxHangsPlans: [Double: TrainingPlan] = [:]
+
+    private var basePlan: TrainingPlan? {
         PlanDetailPlanResolver.resolve(
             capturedPlan: plan,
             eligiblePlans: store.plans
         )
+    }
+
+    private var maxHangsResolutionInput: MaxHangsEdgeResolutionInput? {
+        guard let basePlan, basePlan.id == "research.max-hangs" else { return nil }
+        return MaxHangsEdgeResolutionInput(plan: basePlan, board: store.board(for: basePlan))
+    }
+
+    private var maxHangsDepths: [Double] {
+        guard resolvedMaxHangsInput == maxHangsResolutionInput else { return [] }
+        return resolvedMaxHangsPlans.keys.sorted(by: >)
+    }
+
+    private var currentPlan: TrainingPlan? {
+        guard let basePlan else { return nil }
+        guard basePlan.id == "research.max-hangs" else { return basePlan }
+        guard resolvedMaxHangsInput == maxHangsResolutionInput else { return nil }
+        let depth = selectedMaxHangsDepth.flatMap { resolvedMaxHangsPlans[$0] != nil ? $0 : nil }
+            ?? maxHangsDepths.first
+        return depth.flatMap { resolvedMaxHangsPlans[$0] } ?? basePlan
     }
 
     @MainActor
@@ -794,9 +822,17 @@ struct PlanDetailView: View {
                     .padding(.top, 18)
                     .padding(.bottom, 116)
                 }
+            } else if maxHangsResolutionInput != resolvedMaxHangsInput {
+                ProgressView()
             } else {
                 unavailableContent
             }
+        }
+        .onChange(of: maxHangsResolutionInput, initial: true) { _, input in
+            resolvedMaxHangsPlans = input.map {
+                MaxHangsEdgeSelection.resolvedPlans(for: $0.plan, on: $0.board)
+            } ?? [:]
+            resolvedMaxHangsInput = input
         }
         .background(Color.hangBackground)
         .navigationTitle("Plan")
@@ -860,6 +896,27 @@ struct PlanDetailView: View {
                 .font(.system(size: 15, weight: .medium, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
+
+            if currentPlan.id == "research.max-hangs", !maxHangsDepths.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    SectionLabel(title: "Training edge")
+                    Picker("Edge depth", selection: Binding(
+                        get: { selectedMaxHangsDepth.flatMap { maxHangsDepths.contains($0) ? $0 : nil } ?? maxHangsDepths.first ?? 20 },
+                        set: { selectedMaxHangsDepth = $0 }
+                    )) {
+                        ForEach(maxHangsDepths, id: \.self) { depth in
+                            Text("\(depth, format: .number) mm").tag(depth)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .accessibilityIdentifier("plan.maxHangs.edgePicker")
+                    Text("Choose one edge size for this session. Adjust added weight to keep 3 seconds in reserve. Warm up progressively before starting.")
+                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .hangCard()
+            }
 
             initialWeightSetupCard
 

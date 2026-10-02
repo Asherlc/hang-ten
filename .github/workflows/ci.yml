@@ -181,6 +181,10 @@ jobs:
       - name: Run pytest suite
         run: python -m pytest tests -q --junitxml=pytest-results.xml
 
+      - name: Validate original routine prescriptions
+        working-directory: ${{ github.workspace }}
+        run: python3 scripts/tests/test_original_routine_sources.py
+
       - name: Run CAD board-manifest and source-contract tests
         if: ${{ !cancelled() }}
         run: >-

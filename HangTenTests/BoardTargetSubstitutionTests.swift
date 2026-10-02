@@ -2,6 +2,48 @@ import XCTest
 @testable import HangTen
 
 final class ContactResolverTests: XCTestCase {
+    func testLopezMaxHangsOffersBothBeastmakersAndRecordsChosenEdges() throws {
+        for (boardID, depth, ids, expectedCue) in [
+            ("beastmaker-1000", 20.0, Set(["pocket-bottom-outer-left", "pocket-bottom-outer-right"]),
+             "Pocket Bottom Outer Left, Pocket Bottom Outer Right"),
+            ("beastmaker-1000", 10.0, Set(["pocket-top-outer-left", "pocket-top-outer-right"]),
+             "10 mm 4 Finger Edge Left, 10 mm 4 Finger Edge Right"),
+            ("beastmaker-2000", 15.0, Set(["front-lower-1", "front-lower-9"]),
+             "Front Lower 1, Front Lower 9")
+        ] {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            let plan = PlanCatalog.maxHangs
+            XCTAssertTrue(MaxHangsEdgeSelection.availableDepths(for: plan, on: board).contains(depth))
+            let selected = try XCTUnwrap(MaxHangsEdgeSelection.resolvedPlans(for: plan, on: board)[depth])
+            let accessibleCue = try XCTUnwrap(BoardModelSurface.highlightedContactCue(
+                for: board.contacts,
+                highlightedContactIDs: ids
+            ))
+            XCTAssertEqual(accessibleCue, expectedCue, "\(boardID) / \(depth) mm")
+            for step in selected.steps where !step.isRestStep {
+                XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: step, on: board)), ids)
+            }
+            let recorded = try WorkoutActivityRecorder().segments(for: selected, on: board)
+            let work = recorded.filter { $0.kind == .work }
+            XCTAssertEqual(work.count, 5)
+            XCTAssertTrue(work.allSatisfy { $0.durationSeconds == 10 })
+            for segment in work {
+                guard case .resolvedContacts(let snapshot) = segment.target else {
+                    return XCTFail("Selected edges must be recorded as resolved contacts")
+                }
+                XCTAssertEqual(Set(snapshot.contactIDs), ids)
+            }
+        }
+    }
+
+    func testLopezMaxHangsRejectsUnsupportedAndOutOfRangeEdgeSelections() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-2000"))
+        XCTAssertNil(MaxHangsEdgeSelection.selecting(20, in: PlanCatalog.maxHangs, on: board))
+        XCTAssertNil(MaxHangsEdgeSelection.selecting(22, in: PlanCatalog.maxHangs, on: board))
+        XCTAssertNil(MaxHangsEdgeSelection.selecting(7, in: PlanCatalog.maxHangs, on: board))
+        XCTAssertTrue(MaxHangsEdgeSelection.availableDepths(for: PlanCatalog.abrahangs, on: board).isEmpty)
+    }
+
     func testCatalogSevenThreeCueUsesTwoHandsOnCompactBoard() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
         let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.seven-three-repeaters"))
