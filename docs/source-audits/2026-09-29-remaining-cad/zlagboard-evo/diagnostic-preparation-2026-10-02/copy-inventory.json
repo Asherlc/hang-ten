@@ -1,0 +1,143 @@
+{
+  "timestampUTC": "2026-10-02T15:05:03.683399+00:00",
+  "scope": "evo",
+  "copied": [
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/BoardHighlightDiagnostic-proposal.swift",
+      "relativePath": "BoardHighlightDiagnostic-proposal.swift",
+      "sha256": "4a40a82514efa89a2eab003cd9b9647bba884c7f69edec7111e21ef70640758a",
+      "bytes": 8432
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/README.md",
+      "relativePath": "README.md",
+      "sha256": "7f30526b86950bf51559406dd55db13b7524756cc0bdbcca5a8964971cf8c9a2",
+      "bytes": 874
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/coordination-reservation.md",
+      "relativePath": "coordination-reservation.md",
+      "sha256": "3c61c1eb7ce3f747aea19dde4899957975a54425aee594eb343479baa5f732dc",
+      "bytes": 893
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/design-source-hashes.json",
+      "relativePath": "design-source-hashes.json",
+      "sha256": "5289d910e8685fd7196f24da80bff033a98cfa34fa823c8b829be3e91db11b7b",
+      "bytes": 828
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/findings.json",
+      "relativePath": "findings.json",
+      "sha256": "6aec0aead566db748ac7477e4d4697fe812a1889f1e3de5c420c6389897ea507",
+      "bytes": 7609
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/first-experiment-real-workout.md",
+      "relativePath": "first-experiment-real-workout.md",
+      "sha256": "94517423edebe4f90f93dbc603d44f0a97b8416c873addbf79e6e3692be33dec",
+      "bytes": 1485
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/held-phase-diagnostic-design.md",
+      "relativePath": "held-phase-diagnostic-design.md",
+      "sha256": "3f94e0c30aff5cf7bee9d5f05ceba8da65f6c140b5e78ec976e2cbcc76e29acb",
+      "bytes": 9365
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/hook-diff-proposal.txt",
+      "relativePath": "hook-diff-proposal.txt",
+      "sha256": "37cdcd239222ea994024447fb1acb38e1b9c1af374e586e92e81cc47b930364f",
+      "bytes": 1668
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/minimal-real-workout-diagnostic-inputs.json",
+      "relativePath": "minimal-real-workout-diagnostic-inputs.json",
+      "sha256": "36c0826a0fc844dd749c4f54bfd37bb811836585926dd6f09d236f2a92dc3b66",
+      "bytes": 1885
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/minimal-real-workout-diagnostic.patch",
+      "relativePath": "minimal-real-workout-diagnostic.patch",
+      "sha256": "401b1084a5f8a072a5ca00f17e5f570adf3725d5140ce3875d28d2fdd76c59f6",
+      "bytes": 12392
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/minimal-real-workout-static-checks.json",
+      "relativePath": "minimal-real-workout-static-checks.json",
+      "sha256": "e49a3bfe4edfb21bccba8d0f5af5b5bc0b688216b242f6dbae94c51fa8c497bc",
+      "bytes": 1225
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/proposal/HangTen/Models/BoardModelRealityTypes.swift",
+      "relativePath": "proposal/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "e18e0a0f59139a4c19cf2e197c383698572d487eed0254dcfc28acbf373ceb39",
+      "bytes": 71985
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/proposal/HangTen/Views/BoardModelView.swift",
+      "relativePath": "proposal/HangTen/Views/BoardModelView.swift",
+      "sha256": "aaf5fdaa7d24865c2bf20f5c6fd7c05db59e41cb1b4da2893fb9fbf7edec078f",
+      "bytes": 13414
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/reservation-release.json",
+      "relativePath": "reservation-release.json",
+      "sha256": "bf5dd8d8478a78563dfcd5fd66b07cc04638e621be19994d0ab4fbde6f1dac0b",
+      "bytes": 734
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/revision-before-scene-view-key/BoardHighlightDiagnostic-proposal.swift",
+      "relativePath": "revision-before-scene-view-key/BoardHighlightDiagnostic-proposal.swift",
+      "sha256": "6bfbdff119495cb64ee6d6c465d228e443baec62c83d9e9baf19f6edef4442d2",
+      "bytes": 8061
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/revision-before-scene-view-key/minimal-real-workout-diagnostic-inputs.json",
+      "relativePath": "revision-before-scene-view-key/minimal-real-workout-diagnostic-inputs.json",
+      "sha256": "f38d0d5b496a191e559e71417ef4627f0444b265a32b29e37b3a74ba7414633e",
+      "bytes": 1793
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/revision-before-scene-view-key/minimal-real-workout-diagnostic.patch",
+      "relativePath": "revision-before-scene-view-key/minimal-real-workout-diagnostic.patch",
+      "sha256": "cc404f0f861a11021a567f4b2778ec6b4567e9b1dde0c72b3732f823d42f793e",
+      "bytes": 12013
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/revision-before-scene-view-key/minimal-real-workout-static-checks.json",
+      "relativePath": "revision-before-scene-view-key/minimal-real-workout-static-checks.json",
+      "sha256": "ba98ae716839b5b8c0cb121a0fd25cc33fdc5ce8d62169e281d18dc71779032e",
+      "bytes": 1225
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/revision-before-scene-view-key/proposal/HangTen/Models/BoardModelRealityTypes.swift",
+      "relativePath": "revision-before-scene-view-key/proposal/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "21b1536fe3860a7a80c928c2d4aa7d0d60d43fc0e22b98a53adc301ee73fa1fc",
+      "bytes": 71614
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/revision-before-scene-view-key/proposal/HangTen/Views/BoardModelView.swift",
+      "relativePath": "revision-before-scene-view-key/proposal/HangTen/Views/BoardModelView.swift",
+      "sha256": "aaf5fdaa7d24865c2bf20f5c6fd7c05db59e41cb1b4da2893fb9fbf7edec078f",
+      "bytes": 13414
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/root-static-review.json",
+      "relativePath": "root-static-review.json",
+      "sha256": "38ab310a5ce58a6d6d66b21bdc43a9ddc5c9aeb07a270f67205e710b2497b334",
+      "bytes": 1332
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-packaging-2026-10-02/copy_and_audit.py",
+      "relativePath": "packaging-copy-recipe.py",
+      "sha256": "95e17f3adc2587df9102f4c3b994318340c77cd11fc36a4e4e687cb57efe67c5",
+      "bytes": 7078
+    }
+  ],
+  "copyExact": true,
+  "sourceStable": true,
+  "fileCount": 22,
+  "excludedDuplicateTree": null,
+  "noOriginalEvidenceRewritten": true
+}

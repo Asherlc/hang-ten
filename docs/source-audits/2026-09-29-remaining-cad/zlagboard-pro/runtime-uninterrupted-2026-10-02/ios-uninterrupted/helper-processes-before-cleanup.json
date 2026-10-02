@@ -1,0 +1,13 @@
+{
+  "matchedExactOwnedScriptDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/runtime-resume-2026-10-02/prep",
+  "processes": [
+    {
+      "pid": 84840,
+      "identity": "84840 84652 rtk"
+    },
+    {
+      "pid": 84841,
+      "identity": "84841 84840 /opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python"
+    }
+  ]
+}

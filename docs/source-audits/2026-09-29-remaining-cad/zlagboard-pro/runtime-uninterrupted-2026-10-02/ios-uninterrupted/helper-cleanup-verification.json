@@ -1,0 +1,26 @@
+[
+  {
+    "pid": 84840,
+    "before": "84840 84652 rtk",
+    "after": "",
+    "absent": true
+  },
+  {
+    "pid": 84841,
+    "before": "84841 84840 /opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python",
+    "after": "",
+    "absent": true
+  },
+  {
+    "pid": 84842,
+    "before": "84842 84841 rtk",
+    "after": "",
+    "absent": true
+  },
+  {
+    "pid": 84843,
+    "before": "84843 84842 /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+    "after": "",
+    "absent": true
+  }
+]

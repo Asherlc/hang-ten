@@ -74,3 +74,21 @@ resources were deleted. The user subsequently accepted the displayed native
 geometry with “Y”; app validation remains pending. The immutable review packet
 retains its original pre-acceptance status and failed runtime evidence.
 No shared app, compiler, schema or solver files were changed for #21.
+
+### Runtime continuation — uninterrupted first boot
+
+The [new Pro startup appendix](zlagboard-pro/runtime-uninterrupted-2026-10-02/review.md)
+records one uninterrupted 900-second first boot on a fresh isolated iOS 26.5
+device. It remained in AddressBook migration; all 29 Home checks were negative.
+No build, install or app capture ran, so Pro remains at 0/28 fresh app views.
+The exact temporary Simulator, DerivedData/result paths and helper processes
+were verified absent after cleanup. No shared service was restarted.
+
+The [Evo diagnostic preparation](zlagboard-evo/diagnostic-preparation-2026-10-02/review.md)
+addresses the incomplete earlier trace with unique view/scene identities and
+complete bounded state snapshots. Its scratch patch passed `git apply --check`
+and Swift parsing but remains unapplied, untypechecked and unrun; no fifth
+production fix ships. All five reserved app/test paths remain unchanged and
+the renewed reservation was explicitly released. A working isolated Simulator
+environment is required before these runtime checks can continue.
+All six native geometry approvals and all prior proof bytes remain unchanged.
