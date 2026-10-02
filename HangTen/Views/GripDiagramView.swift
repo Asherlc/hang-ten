@@ -119,7 +119,7 @@ struct GripDiagramView: View {
     private var accessibilityCueLabel: String {
         [
             gripType?.label ?? "Grip not specified",
-            fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" }
+            fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" } ?? "4 fingers (assumed)"
         ]
             .compactMap { $0 }
             .joined(separator: ", ")
@@ -167,7 +167,7 @@ struct GripHandCueCard: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.68)
             if fingerConfiguration == nil {
-                Text("Fingers not specified")
+                Text("4 fingers (assumed)")
                     .font(.system(size: 10, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
                     .lineLimit(1)
@@ -194,7 +194,7 @@ struct GripHandCueCard: View {
     private var accessibilityLabel: String {
         [
             posture?.label ?? "Grip not specified",
-            fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" } ?? "Fingers not specified"
+            fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" } ?? "4 fingers (assumed)"
         ].joined(separator: ", ")
     }
 }

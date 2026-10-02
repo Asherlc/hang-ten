@@ -1,5 +1,30 @@
 import XCTest
 
+final class DefaultGripFingersUITests: XCTestCase {
+    func testUnspecifiedFingersRenderAssumedFourFingerHands() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_GRIP_MODEL": "1",
+            "HANGTEN_REVIEW_GRIP_POSE": "fourFingerPocket",
+            "HANGTEN_REVIEW_GRIP_FINGERS": "",
+        ]
+        defer {
+            app.terminate()
+            XCUIDevice.shared.orientation = .portrait
+        }
+        app.launch()
+        XCTAssertTrue(app.staticTexts["4 fingers (assumed)"].waitForExistence(timeout: 20))
+        XCTAssertFalse(app.staticTexts["Fingers not specified"].exists)
+        for orientation in [UIDeviceOrientation.portrait, .landscapeLeft] {
+            XCUIDevice.shared.orientation = orientation
+            let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+            attachment.name = "Assumed four fingers \(orientation.rawValue)"
+            attachment.lifetime = .keepAlways
+            add(attachment)
+        }
+    }
+}
+
 final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     private let app = XCUIApplication()
     private let workoutDeepLink = URL(string: "hangten://plan/research.max-hangs/workout")!

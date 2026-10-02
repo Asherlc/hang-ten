@@ -3,7 +3,7 @@ import Metal
 import SwiftUI
 
 /// Rendering parameters, not anatomical measurements or training prescriptions.
-/// Finger membership always comes from the routine's explicit configuration.
+/// Explicit finger selections take precedence; otherwise the display assumes four fingers.
 struct GripHandPose: Equatable {
     let posture: GripType?
     let highlightedFingers: Set<FingerSlot>
@@ -11,7 +11,7 @@ struct GripHandPose: Equatable {
 
     init(posture: GripType?, fingerConfiguration: FingerConfiguration?) {
         self.posture = posture
-        highlightedFingers = fingerConfiguration?.engagedFingers ?? []
+        highlightedFingers = fingerConfiguration?.engagedFingers ?? Set(FingerSlot.allCases)
         hasExplicitFingers = fingerConfiguration != nil
     }
 
@@ -911,7 +911,7 @@ struct GripHandModelInspector: View {
     private var controls: some View {
         VStack(spacing: 16) {
             Text(fingerConfiguration.map { "Highlighted: " + $0.orderedFingers.map(\.rawValue).joined(separator: ", ") }
-                 ?? "Fingers not specified")
+                 ?? "4 fingers (assumed)")
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Color.hangInk)
             Text("Drag to rotate · Pinch to zoom")
@@ -954,7 +954,7 @@ struct GripHandModelReviewView: View {
                 }
                 GripHandPairModelView(posture: posture, fingerConfiguration: configuration,
                                       resetToken: resetToken)
-                Text(fingers.isEmpty ? "Fingers not specified" : "Highlighted: " + FingerSlot.allCases.filter(fingers.contains).map(\.rawValue).joined(separator: ", "))
+                Text(fingers.isEmpty ? "4 fingers (assumed)" : "Highlighted: " + FingerSlot.allCases.filter(fingers.contains).map(\.rawValue).joined(separator: ", "))
                     .font(.caption)
                 Button("Reset view") { resetToken += 1 }
                 Text("Drag to rotate · Pinch to zoom")

@@ -65,10 +65,10 @@ final class GripHandCueCardTests: XCTestCase {
         XCTAssertEqual(GripDiagramView.cueLabel(for: unspecified), "20 mm edges")
     }
 
-    func testPocketCountDoesNotInventExactFingerHighlights() {
-        for grip in GripType.allCases {
+    func testUnspecifiedFingersDefaultToFourWithoutBecomingExplicit() {
+        for grip in GripType.allCases.map(Optional.some) + [nil] {
             let pose = GripHandPose(posture: grip, fingerConfiguration: nil)
-            XCTAssertTrue(pose.highlightedFingers.isEmpty, "\(grip) must not imply exact fingers")
+            XCTAssertEqual(pose.highlightedFingers, Set(FingerSlot.allCases))
             XCTAssertFalse(pose.hasExplicitFingers)
         }
     }
@@ -96,7 +96,7 @@ final class GripHandCueCardTests: XCTestCase {
             ([.index, .middle, .ring, .pinky], "Pocket15")
         ]
         for grip in [GripType.twoFingerPocket, .threeFingerPocket, .fourFingerPocket] {
-            XCTAssertEqual(GripHandPose(posture: grip, fingerConfiguration: nil).action(), "Pocket0")
+            XCTAssertEqual(GripHandPose(posture: grip, fingerConfiguration: nil).action(), "Pocket15")
             for (fingers, expected) in cases {
                 let pose = GripHandPose(posture: grip, fingerConfiguration: FingerConfiguration(engagedFingers: fingers))
                 XCTAssertEqual(pose.action(), expected)
