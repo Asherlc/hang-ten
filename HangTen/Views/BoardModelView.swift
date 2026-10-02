@@ -273,6 +273,13 @@ struct BoardModelRealityView: View {
             .simultaneousGesture(magnifyGesture)
             .gesture(tapGesture)
             .overlay { accessibilityOverlay(size: size) }
+            #if targetEnvironment(simulator)
+            .background {
+                if onContactTap != nil {
+                    BoardSimulatorPresentation().allowsHitTesting(false)
+                }
+            }
+            #endif
             #if DEBUG
             .overlay(alignment: .topLeading) {
                 if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
@@ -437,3 +444,97 @@ private struct BoardModelAccessibilityContainer: ViewModifier {
         }
     }
 }
+
+#if targetEnvironment(simulator)
+import QuartzCore
+/// Keep Simulator drawable presentation independent of worker-thread CA transactions.
+private struct BoardSimulatorPresentation: UIViewRepresentable {
+    func makeUIView(context: Context) -> PresentationView { PresentationView() }
+    func updateUIView(_ view: PresentationView, context: Context) { view.scheduleConfiguration() }
+
+    final class PresentationView: UIView {
+        private var pending: DispatchWorkItem?
+        private var attempts = 0
+        private var attemptedViewport: CGRect?
+        private weak var configuredLayer: CAMetalLayer?
+
+        override func didMoveToWindow() {
+            super.didMoveToWindow()
+            pending?.cancel()
+            pending = nil
+            attempts = 0
+            attemptedViewport = nil
+            configuredLayer = nil
+            if window != nil { scheduleConfiguration() }
+        }
+
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            scheduleConfiguration()
+        }
+
+        func scheduleConfiguration() {
+            guard let window else { return }
+            let viewport = convert(bounds, to: window)
+            if attemptedViewport != viewport || configuredLayer?.presentsWithTransaction == true {
+                attempts = 0
+                configuredLayer = nil
+                attemptedViewport = viewport
+            }
+            if let configuredLayer, configuredLayer.superlayer != nil,
+               !configuredLayer.presentsWithTransaction { return }
+            guard pending == nil, attempts < 120 else { return }
+            let work = DispatchWorkItem { [weak self] in
+                guard let self else { return }
+                self.pending = nil
+                self.configurePresentation()
+            }
+            pending = work
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05, execute: work)
+        }
+
+        private func configurePresentation() {
+            guard let window, bounds.width > 0, bounds.height > 0 else {
+                attempts += 1
+                scheduleConfiguration()
+                return
+            }
+            let viewport = convert(bounds, to: window)
+            var ancestor = superview
+            while let container = ancestor {
+                var candidates: [CAMetalLayer] = []
+                var visited = 0
+                func collect(_ layer: CALayer) {
+                    visited += 1
+                    guard visited < 4096 else { return }
+                    if let metal = layer as? CAMetalLayer {
+                        let frame = metal.convert(metal.bounds, to: window.layer)
+                        if abs(frame.minX - viewport.minX) < 1,
+                           abs(frame.minY - viewport.minY) < 1,
+                           abs(frame.width - viewport.width) < 1,
+                           abs(frame.height - viewport.height) < 1 {
+                            candidates.append(metal)
+                        }
+                    }
+                    for child in layer.sublayers ?? [] { collect(child) }
+                }
+                collect(container.layer)
+                if candidates.count == 1, visited < 4096 {
+                    let layer = candidates[0]
+                    layer.presentsWithTransaction = false
+                    configuredLayer = layer
+                    #if DEBUG
+                    print("[BoardSimulatorPresentation] asynchronous=\(!layer.presentsWithTransaction) viewport=\(viewport)")
+                    #endif
+                    attempts = 120
+                    return
+                }
+                if container === window { break }
+                ancestor = container.superview
+            }
+            attempts += 1
+            scheduleConfiguration()
+        }
+    }
+}
+#endif
