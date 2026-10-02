@@ -346,15 +346,15 @@ final class DualMaxHangsHighlightUITests: XCTestCase {
         let picker = app.buttons["plan.maxHangs.edgePicker"]
         XCTAssertTrue(picker.waitForExistence(timeout: 10))
         picker.tap()
-        app.buttons["10 mm"].tap()
+        app.buttons["15 mm"].tap()
         app.swipeUp()
         let board = app.otherElements["boardModel.3d"]
         XCTAssertTrue(board.waitForExistence(timeout: 60))
-        let selectedHighlight = NSPredicate(format: "value CONTAINS[c] %@", "10 mm")
+        let selectedHighlight = NSPredicate(format: "value CONTAINS[c] %@", "15 mm")
         expectation(for: selectedHighlight, evaluatedWith: board)
         waitForExpectations(timeout: 10)
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
-        attachment.name = "López MaxHangs selected 10 mm Beastmaker 1000 edges"
+        attachment.name = "López MaxHangs selected 15 mm Beastmaker 1000 edges"
         attachment.lifetime = .keepAlways
         add(attachment)
 
