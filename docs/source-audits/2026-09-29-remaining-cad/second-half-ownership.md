@@ -57,3 +57,17 @@ Existing Mammut finish, NUG and migration changes remain intact. Temporary
 validation resources were deleted and independently checked. #20’s subsequent acceptance is recorded in `zlagboard-evo/human-review.json`;
 the immutable app packet retains its original pre-acceptance status. #21 proceeds
 from its existing scratch preparation and still requires its own user reply.
+
+### #21 native review preparation
+
+The existing Pro 2.0 source retains its native history and all 28 contacts. Narrow
+top rounds and restored jug crest/corner selection coverage were independently
+reviewed, exported twice with identical USDZ bytes, and checked against a fresh
+descriptor reconstruction. Existing renderer wood finish and a labeled downward
+camera adaptation are embedded in the source. The
+[individual packet](zlagboard-pro/individual-review-2026-10-02/review.md) retains
+the original/prior/current comparison and all startup failures. Fresh app validation is blocked by startup failures on isolated iOS 26.4 and
+26.5 devices; both builds passed but contact coverage is 0/28. Exact temporary
+resources were deleted. App validation and the separate #21 human reply remain
+pending.
+No shared app, compiler, schema or solver files were changed for #21.

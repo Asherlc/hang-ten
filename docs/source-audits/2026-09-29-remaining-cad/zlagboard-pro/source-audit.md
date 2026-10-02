@@ -35,3 +35,18 @@ All three comparisons were visually inspected. These orthographic renders use th
 ![Manufacturer evidence](sources/product-02.png)
 
 The CPU review renders shade triangle face normals; the runtime export retains native CAD surface normals. Native-app screenshots remain the final appearance check.
+
+## Individual review update — 2026-10-02
+
+The [individual review packet](individual-review-2026-10-02/review.md) documents
+narrow native top-transition/lip rounds and restored jug crest/corner selection
+coverage. The 2 mm/1 mm round sizes and downward app camera are labeled display
+adaptations. Existing renderer wood finish follows the retained whole product
+photo; USDZ meshes remain unbound without materials or textures. All 28 contact
+identities, 21 pocket bearing surfaces/depths and published top angles remain
+preserved, including the distinct lower incuts. The existing 7-degree numerical
+incut slope remains an estimate, not a newly sourced dimension. The final source
+is `44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a`.
+Historical source/export/app proofs above retain their original hashes and status;
+new checks and their limitations are retained in the new packet. Human acceptance
+requires the subsequent one-by-one review reply.

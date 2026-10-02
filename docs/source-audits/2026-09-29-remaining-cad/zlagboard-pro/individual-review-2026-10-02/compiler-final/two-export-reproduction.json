@@ -1,0 +1,201 @@
+{
+  "timestampUTC": "2026-10-02T13:50:14.145154+00:00",
+  "sourceSHA256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+  "modelSHA256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+  "descriptorSHA256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+  "rebuiltDescriptorSHA256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+  "nativeTwoRunReportFactsEqual": {
+    "sourceSHA256": true,
+    "modelSHA256": true,
+    "assetBytes": true,
+    "contacts": true,
+    "nodes": true,
+    "triangles": true,
+    "measuredRegionDepthsMM": true,
+    "tessellationDeflectionMM": true
+  },
+  "nativeUSDZOutputsExactSHA256": true,
+  "descriptorIndependentlyReconstructedBytesExact": true,
+  "nativeBindings": [
+    {
+      "object": "Contact_edge_30_left",
+      "nodeID": "contact_edge_30_left",
+      "role": "contact",
+      "contactID": "edge-30-left"
+    },
+    {
+      "object": "Contact_sloper_edge_30_left",
+      "nodeID": "contact_sloper_edge_30_left",
+      "role": "contact",
+      "contactID": "sloper-edge-30-left"
+    },
+    {
+      "object": "Contact_sloper_edge_25_left",
+      "nodeID": "contact_sloper_edge_25_left",
+      "role": "contact",
+      "contactID": "sloper-edge-25-left"
+    },
+    {
+      "object": "Contact_edge_35_center",
+      "nodeID": "contact_edge_35_center",
+      "role": "contact",
+      "contactID": "edge-35-center"
+    },
+    {
+      "object": "Contact_sloper_edge_25_right",
+      "nodeID": "contact_sloper_edge_25_right",
+      "role": "contact",
+      "contactID": "sloper-edge-25-right"
+    },
+    {
+      "object": "Contact_sloper_edge_30_right",
+      "nodeID": "contact_sloper_edge_30_right",
+      "role": "contact",
+      "contactID": "sloper-edge-30-right"
+    },
+    {
+      "object": "Contact_edge_30_right",
+      "nodeID": "contact_edge_30_right",
+      "role": "contact",
+      "contactID": "edge-30-right"
+    },
+    {
+      "object": "Contact_edge_20_left",
+      "nodeID": "contact_edge_20_left",
+      "role": "contact",
+      "contactID": "edge-20-left"
+    },
+    {
+      "object": "Contact_sloper_edge_25_lower_left",
+      "nodeID": "contact_sloper_edge_25_lower_left",
+      "role": "contact",
+      "contactID": "sloper-edge-25-lower-left"
+    },
+    {
+      "object": "Contact_edge_30_inner_left",
+      "nodeID": "contact_edge_30_inner_left",
+      "role": "contact",
+      "contactID": "edge-30-inner-left"
+    },
+    {
+      "object": "Contact_sloper_edge_30_center",
+      "nodeID": "contact_sloper_edge_30_center",
+      "role": "contact",
+      "contactID": "sloper-edge-30-center"
+    },
+    {
+      "object": "Contact_edge_30_inner_right",
+      "nodeID": "contact_edge_30_inner_right",
+      "role": "contact",
+      "contactID": "edge-30-inner-right"
+    },
+    {
+      "object": "Contact_sloper_edge_25_lower_right",
+      "nodeID": "contact_sloper_edge_25_lower_right",
+      "role": "contact",
+      "contactID": "sloper-edge-25-lower-right"
+    },
+    {
+      "object": "Contact_edge_20_right",
+      "nodeID": "contact_edge_20_right",
+      "role": "contact",
+      "contactID": "edge-20-right"
+    },
+    {
+      "object": "Contact_edge_incut_15_left",
+      "nodeID": "contact_edge_incut_15_left",
+      "role": "contact",
+      "contactID": "edge-incut-15-left"
+    },
+    {
+      "object": "Contact_edge_15_left",
+      "nodeID": "contact_edge_15_left",
+      "role": "contact",
+      "contactID": "edge-15-left"
+    },
+    {
+      "object": "Contact_edge_incut_30_left",
+      "nodeID": "contact_edge_incut_30_left",
+      "role": "contact",
+      "contactID": "edge-incut-30-left"
+    },
+    {
+      "object": "Contact_edge_incut_10_center",
+      "nodeID": "contact_edge_incut_10_center",
+      "role": "contact",
+      "contactID": "edge-incut-10-center"
+    },
+    {
+      "object": "Contact_edge_incut_30_right",
+      "nodeID": "contact_edge_incut_30_right",
+      "role": "contact",
+      "contactID": "edge-incut-30-right"
+    },
+    {
+      "object": "Contact_edge_15_right",
+      "nodeID": "contact_edge_15_right",
+      "role": "contact",
+      "contactID": "edge-15-right"
+    },
+    {
+      "object": "Contact_edge_incut_15_right",
+      "nodeID": "contact_edge_incut_15_right",
+      "role": "contact",
+      "contactID": "edge-incut-15-right"
+    },
+    {
+      "object": "Contact_top_jug_left",
+      "nodeID": "contact_top_jug_left",
+      "role": "contact",
+      "contactID": "top-jug-left"
+    },
+    {
+      "object": "Contact_top_sloper_32_left",
+      "nodeID": "contact_top_sloper_32_left",
+      "role": "contact",
+      "contactID": "top-sloper-32-left"
+    },
+    {
+      "object": "Contact_top_sloper_20_left",
+      "nodeID": "contact_top_sloper_20_left",
+      "role": "contact",
+      "contactID": "top-sloper-20-left"
+    },
+    {
+      "object": "Contact_top_sloper_jug_center",
+      "nodeID": "contact_top_sloper_jug_center",
+      "role": "contact",
+      "contactID": "top-sloper-jug-center"
+    },
+    {
+      "object": "Contact_top_sloper_20_right",
+      "nodeID": "contact_top_sloper_20_right",
+      "role": "contact",
+      "contactID": "top-sloper-20-right"
+    },
+    {
+      "object": "Contact_top_sloper_32_right",
+      "nodeID": "contact_top_sloper_32_right",
+      "role": "contact",
+      "contactID": "top-sloper-32-right"
+    },
+    {
+      "object": "Contact_top_jug_right",
+      "nodeID": "contact_top_jug_right",
+      "role": "contact",
+      "contactID": "top-jug-right"
+    },
+    {
+      "object": "TopLipRounds",
+      "nodeID": "body_board_001",
+      "role": "body",
+      "contactID": null
+    }
+  ],
+  "nativeBindingSource": "Actual FCStd XML NodeID/NodeRole/ContactID properties; no bindings copied from descriptor",
+  "pointsSource": "Reopened actual published USDZ point arrays through retained usdz_writer.read_usdz",
+  "contactIDsSource": "Actual embedded HangTenBoardManifest",
+  "thirdNativeExportPerformed": false,
+  "verificationMethod": "Two independent FreeCAD native exports (--check and publish), identical USDZ SHA/bytes and measurement reports; separately reconstruct complete descriptor bytes from final actual USD and native binding properties.",
+  "passed": true
+}

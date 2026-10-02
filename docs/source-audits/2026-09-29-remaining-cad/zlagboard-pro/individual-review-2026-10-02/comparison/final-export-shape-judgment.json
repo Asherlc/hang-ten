@@ -1,0 +1,41 @@
+{
+  "timestampUTC": "2026-10-02T13:51:03.186812+00:00",
+  "board": "zlagboard-pro",
+  "status": "final-actual-export-whole-view-shape-review-complete",
+  "humanAccepted": false,
+  "appWorkflowValidated": false,
+  "nativeSourceSHA256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+  "exportInputs": {
+    "Hangboards/zlagboard-pro/assets/primary.usdz": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+    ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/export-review/original-d0e4.usdz": "c8b740284160de55c5f846c9d11742b5a29a31c0a67c9bb5f43ce1d4873bbd30",
+    ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/before-export/primary.usdz": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7",
+    "Hangboards/zlagboard-pro/assets/primary.model.json": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f"
+  },
+  "inspectedWholeComparisons": {
+    "comparison-front.png": "8e917da162651e6fbd533f13c90a06d40698a13c2f25fd6a84f78a4c9976439a",
+    "comparison-side.png": "ee19e125612cf850608858e5d9743d5a32dd8870b590c529b8b4bc727d29a2d8",
+    "comparison-top.png": "703b95f69632b5117a8ca0ba79ab3540966509a6582a0ddae51340448ded2444"
+  },
+  "combinedWholeComparison": {
+    "path": "comparison-front-side-top.png",
+    "sha256": "816e158f1df4fb51d89335d306caf4d763e1c7794bb2b9a5e2393d8f28bca20c"
+  },
+  "findings": [
+    "Final actual exported front/side/top views preserve prior native outer silhouette, seven top regions and all three rows of seven pockets. No new slot displacement, missing opening or side-profile discontinuity is visible.",
+    "The final-versus-prior differences remain localized to the deliberately rounded top transitions. The side silhouette remains continuous; top-view strips correspond to the added blends.",
+    "Original d0e4 mesh is a prior display approximation. The native versions show smoother continuous rounded outer top profiles than its faceted end profile. Original pocket display proportions differ, while native published-depth/contact facts are controlled by retained manufacturer evidence and native checks.",
+    "The final view agrees qualitatively with the previously inspected whole manufacturer photograph and chart; no additional geometry correction is demonstrated."
+  ],
+  "evidenceLimits": [
+    "Neutral triangle shading is diagnostic and does not verify runtime wood appearance, native smooth-normal shading, picking or highlighting. Fresh app inspection remains required.",
+    "These whole views do not numerically measure pixels or certify manufacturing dimensions. Estimated radii2mm/1mm and other retained shape estimates remain estimates.",
+    "Native contact-skin membership/depth/orientation proofs and final compiler binding checks supply evidence beyond these views; geometry judgment does not assert overall app workflow success."
+  ],
+  "renderExecution": {
+    "exitCode": 0,
+    "rawLog": "render.log",
+    "externalResourcesCreated": [],
+    "sourceOrAssetMutations": false
+  },
+  "recommendedNextStep": "Root may retain these actual-export comparisons in #21 review packet and continue fresh app all28-contact, elevated jug and bottom-incut inspection."
+}

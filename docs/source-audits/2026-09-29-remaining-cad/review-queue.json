@@ -624,22 +624,30 @@
       "boardID": "zlagboard.pro",
       "name": "Zlagboard Zlagboard.Pro 2.0",
       "humanReview": "pending",
-      "sourceSHA256": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
-      "reviewPage": "zlagboard-pro/source-audit.md",
+      "sourceSHA256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "reviewPage": "zlagboard-pro/individual-review-2026-10-02/review.md",
       "sourceAudit": "zlagboard-pro/source-audit.md",
       "comparisons": [
         "zlagboard-pro/review/comparison-side.png",
         "zlagboard-pro/review/comparison-top.png",
-        "zlagboard-pro/review/comparison-front.png"
+        "zlagboard-pro/review/comparison-front.png",
+        "zlagboard-pro/individual-review-2026-10-02/comparison/comparison-front-side-top.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "5e3ea9a135173ec6730b0d5e145cc098a8b2e6a54f1cf50bc9df982248711b82",
-          "modelSHA256": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7"
+          "descriptorSHA256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+          "modelSHA256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684"
         }
       },
-      "appReview": "zlagboard-pro/app-review/validation.json",
-      "appReviewPage": "zlagboard-pro/app-review/index.html"
+      "appReview": "zlagboard-pro/individual-review-2026-10-02/ios/final-runtime-validation.json",
+      "appReviewPage": "zlagboard-pro/individual-review-2026-10-02/review.md",
+      "reviewPageHistory": [
+        "zlagboard-pro/source-audit.md"
+      ],
+      "appReviewHistory": [
+        "zlagboard-pro/app-review/validation.json"
+      ],
+      "individualReview": "zlagboard-pro/individual-review-2026-10-02/review.md"
     }
   ],
   "reviewScope": {

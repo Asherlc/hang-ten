@@ -1,0 +1,18 @@
+{
+  "sourceFiles": {
+    "HangTen/Views/BoardModelView.swift": {
+      "sha256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+      "matchesHEAD": true
+    },
+    "HangTen/Models/BoardModelRealityTypes.swift": {
+      "sha256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+      "matchesHEAD": true
+    },
+    "HangTen/Views/RootView.swift": {
+      "sha256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+      "matchesHEAD": true
+    }
+  },
+  "head": "0a4c2cfe24c97ce19d4e9b58dd7d73e7669c1054",
+  "purpose": "Production source identity before isolated board review; no source changes by runtime worker"
+}
