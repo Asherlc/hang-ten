@@ -1140,7 +1140,8 @@
       "comparisonHistory": [
         "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/source-audit.md"
       ],
-      "individualReview": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/review.md"
+      "individualReview": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/review.md",
+      "runtimeRecovery": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/runtime-recovery-2026-10-02/validation.json"
     },
     "zlagboard-pro": {
       "source": "Hangboards/zlagboard-pro/zlagboard-pro.FCStd",

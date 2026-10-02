@@ -1,0 +1,5 @@
+{
+  "source": "exec session 97361 completion observation",
+  "exitCode": 1,
+  "explanation": "Bounded boot subprocess returned -15 after SIGTERM at 480-second timeout; Python assertion ended lifecycle and its EXIT trap verified exact cleanup. This is not an app test assertion failure."
+}

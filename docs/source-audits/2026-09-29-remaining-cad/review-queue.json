@@ -608,7 +608,8 @@
       "appReviewHistory": [
         "zlagboard-evo/app-review/validation.json"
       ],
-      "individualReview": "zlagboard-evo/individual-review-2026-10-01/review.md"
+      "individualReview": "zlagboard-evo/individual-review-2026-10-01/review.md",
+      "runtimeRecovery": "zlagboard-evo/runtime-recovery-2026-10-02/validation.json"
     },
     {
       "number": 21,

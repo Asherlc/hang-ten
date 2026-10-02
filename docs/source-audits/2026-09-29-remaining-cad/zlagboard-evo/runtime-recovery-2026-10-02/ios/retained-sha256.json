@@ -1,0 +1,24 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "boot-screen-stderr.txt": "3ce601f1984c25e4708bdb9f8e1882873a2c33a786b92c34907bf30b44eae069",
+    "boot-screen-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "boot-timeout.json": "6f873a0c117ba96f0aba226e3da361d516260f968a9e36b0a0b65eced1698e54",
+    "bootstatus-command.json": "0a56442da6a403210a6341fdbf61f53573612cce6e337073828e709084b05baa",
+    "bootstatus-exit-status.txt": "0e55cbbc9d11449b186092d82905aa6974858df7a0b7d706ae51c4716c9461ef",
+    "bootstatus.log": "1e8573b31b222b1937ece38d2ae968bfbcb25395059d329025e89125c01c7a1d",
+    "cleanup-verification.json": "4ea9d85a6117688859e3ea3a8bd8e1723519daee5e759bbc1248e2f0be8ca2d0",
+    "cleanup.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-runtime-validation.json": "1964f553824e9b7046c6e4aecb15eeb64c110fb0f47177222d906d2cd41b63b2",
+    "independent-readiness.json": "aa402d4d23d6e71185df2b54db863688c057d3edac9f19d24a988f797f377c36",
+    "late-readiness-screen-command.json": "2dec755121b3a5bb2a166e8734ef02a89310902754550bdffc320b0d8fc55cc6",
+    "late-readiness-screen.png": "ca76916e6899deaecda695ea389afd7177d9a6f9c53afc6ad6479eda9a9cee29",
+    "launch-services-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "launch-services-stdout.txt": "6cdae0e2a92f0cbe428984fbbf0e52a0947d07b7768b95cd1599352e4b27c81a",
+    "launch-services.log": "956020ca3ff62ecae6293d87d7f63c7a13ff5c3b98a3f8163ac5c2e442b848fc",
+    "lifecycle-observed-exit.json": "a0d820f76f06eb81842d606781b127c987d147376c2fd59d5d80341436b01a2b",
+    "ownership.json": "3559ef0e702ab26263b437718e9a0b2dc4edbd5c1f36fac477af7b0f8bf39b33",
+    "readiness-screen.png": "9763068edcf73a7a442945007865a49568b6196405fb887a73b71d7bb9576188",
+    "simulator-uuid": "44165b9f47be160782afe93dc9f84186a65427377486e8affd08ea7e3f05780d"
+  }
+}

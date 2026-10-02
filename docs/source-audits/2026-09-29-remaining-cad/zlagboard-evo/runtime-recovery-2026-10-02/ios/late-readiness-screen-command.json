@@ -1,0 +1,15 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "io",
+    "71029F02-AF9E-46C2-920B-394C8837ECF2",
+    "screenshot",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-after-service-restart/late-readiness-screen.png"
+  ],
+  "exitStatus": 0,
+  "stdout": "",
+  "stderr": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: A453E7E7-AE7A-4FED-81AA-1249075B5EDF (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-after-service-restart/late-readiness-screen.png\n"
+}
