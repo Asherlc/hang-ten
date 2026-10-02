@@ -1,0 +1,96 @@
+{
+  "recordedUTC": "2026-10-02T18:56:01.334856+00:00",
+  "reviewer": "Astra primary agent",
+  "method": "Viewed whole screenshots and full-phone montage sheets; no pixel measurements or inferred dimensions.",
+  "proDirectSelectionReview": "All 28 contacts correctly located; finish, fit and visible highlight coverage satisfactory. Elevated jug and lower-edge views also inspected.",
+  "proWorkout": "FAIL: active red, rest incorrectly red, following active red.",
+  "evoWorkout": "FAIL: active red, rest blue, following active incorrectly blue.",
+  "humanAcceptance": false,
+  "nativeAcceptance": "Earlier native geometry acceptance remains unchanged; this record is agent runtime inspection only.",
+  "images": [
+    {
+      "path": "review-montages/selections-1.png",
+      "sha256": "3c321b8044e399725798775ea8a44070fbaf0b0d191c74078e981a403db00df3"
+    },
+    {
+      "path": "review-montages/selections-2.png",
+      "sha256": "8993eea628255c4d89fb250503e126652fdf7d81e3130dc4259868187a57aa68"
+    },
+    {
+      "path": "review-montages/selections-3.png",
+      "sha256": "b62ff897790006801d7006876fa1447eb7e179e0e5af5b28c3faeb4cbb4fcd62"
+    },
+    {
+      "path": "review-montages/selections-4.png",
+      "sha256": "9a1b7182e725d9cac3d09d2867412babec073e9e90ac6f2ecfc781905553bc12"
+    },
+    {
+      "path": "review-montages/selections-5.png",
+      "sha256": "d581246ecb1c6ab42823f71dda205320d90647dedd847a767ba21ca90513905a"
+    },
+    {
+      "path": "review-montages/selections-6.png",
+      "sha256": "43a57b102cc298c73be7d93580344b363729b78342ba0bdbf01498f42675b023"
+    },
+    {
+      "path": "review-montages/selections-7.png",
+      "sha256": "4dbad4119aafdcf8b0e7f28cca393e26e6b7a69a038c412ee6b92041c848e673"
+    },
+    {
+      "path": "review-montages/selections-8.png",
+      "sha256": "f07a9e5fefc4f0f52908b0d8a2692f58813d03bd49806ecfbdf1a404e905bbf3"
+    },
+    {
+      "path": "review-montages/selections-9.png",
+      "sha256": "10744d5b2d2c51e738eab5216fd3876680465a1e2d82ad3cec3b290998e6bc57"
+    },
+    {
+      "path": "review-montages/selections-10.png",
+      "sha256": "fdcaa3b53e1286fde0bbd699ba9e9c01d213b6b2abcffd16e948918301662306"
+    },
+    {
+      "path": "elevated-jugs-gentle/left-elevated.png",
+      "sha256": "1222f08ee84b2424c8f1ad94adbe54be237104766d60be15a1c6619ba74c3101"
+    },
+    {
+      "path": "elevated-jugs-gentle/right-elevated.png",
+      "sha256": "8a1e27bfc8c1a66f17bd85943da8c46be03e59ad06a95812fc28f23051ee182e"
+    },
+    {
+      "path": "lower-edge-obliques/edge-incut-10-center-elevated.png",
+      "sha256": "208269c4668fec65991952880720f8853931504fab953710dcb37e63b4674b38"
+    },
+    {
+      "path": "lower-edge-obliques/edge-15-left-elevated.png",
+      "sha256": "c0041b0df36069647f700affe7b31417df359bb85715e3f34f791e83d025f248"
+    },
+    {
+      "path": "lower-edge-obliques/edge-incut-15-left-elevated.png",
+      "sha256": "c3f2b911d3a815c60979ca2843ab415428684fbbb4f89e3f7aee5c0f17e77613"
+    },
+    {
+      "path": "baseline-pro-workout-portrait/active-settled.png",
+      "sha256": "d022bc1803c521d2521efeb63d79cf151d361ef8360998e58ede6a42c88f3b90"
+    },
+    {
+      "path": "baseline-pro-workout-portrait/following-rest-settled.png",
+      "sha256": "e0d4346ae7a463168d873cbcecea87a27e23df618be8b29d6755735de14a8f07"
+    },
+    {
+      "path": "baseline-pro-workout-portrait/next-active-timed-2.png",
+      "sha256": "1b8c9c0d17b2d846e81ecfff1be47f2328bc4319861641db8b0f07afbf125ca2"
+    },
+    {
+      "path": "baseline-evo-workout-landscape/active-settled.png",
+      "sha256": "12e918c6190d82bc332fb3a57eefd9ee3ac9fb0539e38dc03e39870a3951153f"
+    },
+    {
+      "path": "baseline-evo-workout-landscape/following-rest-settled.png",
+      "sha256": "e5ba0065f0f7aefa811bc497206e610a99e75c6d91c506a0fe07ab910446dc28"
+    },
+    {
+      "path": "baseline-evo-workout-landscape/next-active-timed-2.png",
+      "sha256": "6806ee0b4b98b43655ad0ad4d5fddbd3fc87b019b838331c64cde1331fee4602"
+    }
+  ]
+}

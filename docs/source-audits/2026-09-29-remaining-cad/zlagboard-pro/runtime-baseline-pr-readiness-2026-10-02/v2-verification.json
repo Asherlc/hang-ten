@@ -1,0 +1,9 @@
+{
+  "verifiedUTC": "2026-10-02T18:56:45.710897+00:00",
+  "manifest": "baseline-promotion-manifest-v2.json",
+  "manifestSHA256": "8a1edf4881c56343ab040c8f205906893dfd63b2d1a5b45bbf0d9df7397bd51d",
+  "filesChecked": 688,
+  "allHashesMatch": true,
+  "trackedMutation": false,
+  "resourceOperation": false
+}

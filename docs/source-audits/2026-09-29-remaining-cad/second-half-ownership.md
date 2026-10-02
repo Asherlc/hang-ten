@@ -92,3 +92,19 @@ production fix ships. All five reserved app/test paths remain unchanged and
 the renewed reservation was explicitly released. A working isolated Simulator
 environment is required before these runtime checks can continue.
 All six native geometry approvals and all prior proof bytes remain unchanged.
+
+### PR-readiness continuation — fresh baseline and reproduced runtime defect
+
+The [fresh Pro baseline appendix](zlagboard-pro/runtime-baseline-pr-readiness-2026-10-02/README.md)
+records all 28 selections, elevated views, physical picking and camera reset in a
+new isolated Simulator that reached Home naturally. The baseline executable is
+`7a6867151307170dd0993a6d6492500d3fd46467`; package bytes are unchanged. Both
+Pro portrait and Evo landscape workout transitions still fail. These new agent
+checks do not imply user acceptance or alter the historical failed packets.
+
+The parent renewed the five renderer/test-path reservation and published exact
+parent ref `8b1bbd0858ca3e81bc7c43ad842a80ff9ca2138b` for comparison. Temporary
+scene diagnostics are now running in this workspace; this documentation commit
+ships no production renderer fix. The registered temporary Simulator and build
+artifacts remain live under their cleanup controller while validation continues.
+No parent/main integration or out-of-scope package edit is included.

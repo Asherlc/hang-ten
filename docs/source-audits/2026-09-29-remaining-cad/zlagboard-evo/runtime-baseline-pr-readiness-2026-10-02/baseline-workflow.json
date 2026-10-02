@@ -1,0 +1,39 @@
+{
+  "boardID": "zlagboard.evo",
+  "baselineHead": "7a6867151307170dd0993a6d6492500d3fd46467",
+  "routine": "Existing research.max-hangs unchanged",
+  "orientation": "landscape",
+  "workflowPassed": false,
+  "observed": "Step1 Hang00:05 red, Step2 Rest02:45 blue, Step3 Hang00:06 incorrectly still blue. Colors refer to board pockets, not red hand illustrations.",
+  "sharedBaselinePacket": "../../zlagboard-pro/runtime-baseline-pr-readiness-2026-10-02",
+  "baselineManifestV3SHA256": "96cd13a14f9d0829adb2b5e4867f44d6852fea329bf654d435363ea04e2c60ba",
+  "rawEvidence": [
+    {
+      "path": "../../zlagboard-pro/runtime-baseline-pr-readiness-2026-10-02/ios/baseline-evo-workout-landscape/active-settled.png",
+      "sha256": "12e918c6190d82bc332fb3a57eefd9ee3ac9fb0539e38dc03e39870a3951153f",
+      "bytes": 335588
+    },
+    {
+      "path": "../../zlagboard-pro/runtime-baseline-pr-readiness-2026-10-02/ios/baseline-evo-workout-landscape/following-rest-settled.png",
+      "sha256": "e5ba0065f0f7aefa811bc497206e610a99e75c6d91c506a0fe07ab910446dc28",
+      "bytes": 303621
+    },
+    {
+      "path": "../../zlagboard-pro/runtime-baseline-pr-readiness-2026-10-02/ios/baseline-evo-workout-landscape/next-active-timed-2.png",
+      "sha256": "6806ee0b4b98b43655ad0ad4d5fddbd3fc87b019b838331c64cde1331fee4602",
+      "bytes": 337447
+    },
+    {
+      "path": "../../zlagboard-pro/runtime-baseline-pr-readiness-2026-10-02/ios/baseline-evo-workout-landscape/visual-review.json",
+      "sha256": "dece8c5cd837d4630e3b0fb644cd79803f97bb6836787ea7a53c88aff7e08728",
+      "bytes": 1135
+    },
+    {
+      "path": "../../zlagboard-pro/runtime-baseline-pr-readiness-2026-10-02/ios/baseline-evo-workout-landscape/validation.json",
+      "sha256": "cb21c82290da312bad259e6181ddcd418b0e5e50324a18593bc4bb7c5d43bc46",
+      "bytes": 9164
+    }
+  ],
+  "acceptance": "No new human acceptance and no change to prior native geometry acceptance. This is agent evidence of the unresolved baseline workout defect.",
+  "resources": "No resource operation during evidence promotion; cleanup remains pending under the live owner lifecycle."
+}
