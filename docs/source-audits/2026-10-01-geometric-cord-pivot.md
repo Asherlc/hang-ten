@@ -105,3 +105,15 @@ regression still passes.
 The pre-merge simulator `0E54FBFA-F87A-4A52-AAB8-3276B46CFCFD` was registered
 and guarded by EXIT/INT/TERM cleanup. Deletion and removal of workspace
 DerivedData are verified in `.context/geometric-cord-pivot/merge-review-cleanup.json`.
+
+A subsequent review strengthened that same mixed-instance test to check all
+four transform columns and both zero and 30-degree yaw. Its expected framing
+target is inferred from two observable camera positions at known zoom values,
+without exposing private scene state. It checks every cord descendant's world
+transform and fixed camera transform during pitch. The strengthened test passes
+(1.427 seconds); production code is unchanged. Receipts:
+`.context/geometric-cord-pivot/merge-yaw-test.log` and
+`.context/geometric-cord-pivot/merge-yaw-provenance.json`.
+The additionally owned simulator `07A371AE-37B9-4AE8-960A-1B18381097D3` and
+workspace DerivedData were cleaned up, with verification retained in
+`.context/geometric-cord-pivot/merge-yaw-cleanup.json`.

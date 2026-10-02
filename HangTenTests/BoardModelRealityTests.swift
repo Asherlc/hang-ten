@@ -127,19 +127,38 @@ final class BoardModelRealityTests: XCTestCase {
         scene.frame(in: CGSize(width: 800, height: 500))
         let before = scene.instanceEntities.map { $0.transform.matrix }
         let camera = scene.camera.transform.matrix
-        let cord = try XCTUnwrap(scene.transientCordEntity).children.map { $0.transform.matrix }
-        let right = SIMD3(camera.columns.0.x, camera.columns.0.y, camera.columns.0.z)
-        for pitch in [Float.pi/9, -Float.pi/9] {
-            scene.orbit(azimuth: 0, elevation: pitch)
-            XCTAssertNotEqual(scene.instanceEntities[0].transform.matrix, before[0])
-            let uncorded = scene.instanceEntities[1].transform.matrix
-            XCTAssertNotEqual(uncorded, before[1], "The uncorded instance must retain its pitch viewing behavior")
-            let expected = simd_float4x4(simd_quatf(angle: pitch, axis: right)) * before[1]
-            for column in 0..<3 {
-                XCTAssertLessThan(simd_distance(uncorded[column], expected[column]), 1e-6)
+        let cord = try XCTUnwrap(scene.transientCordEntity)
+        func cordTransforms(_ entity: Entity) -> [simd_float4x4] {
+            [entity.transformMatrix(relativeTo: scene.root)] + entity.children.flatMap(cordTransforms)
+        }
+        let originalCord = cordTransforms(cord)
+        // Infer the framing target from two observable camera positions at
+        // known zoom values, without exposing the scene's private framing.
+        scene.orbit(azimuth: 0, elevation: 0, zoomScale: 1.25)
+        let framingTarget = 5 * SIMD3(camera.columns.3.x, camera.columns.3.y, camera.columns.3.z)
+            - 4 * scene.camera.position
+        scene.resetCamera(animated: false)
+        for yaw in [Float.zero, Float.pi/6] {
+            scene.orbit(azimuth: yaw, elevation: 0)
+            let yawCamera = scene.camera.transform.matrix
+            let right = SIMD3(yawCamera.columns.0.x, yawCamera.columns.0.y, yawCamera.columns.0.z)
+            for pitch in [Float.pi/9, -Float.pi/9] {
+                scene.orbit(azimuth: yaw, elevation: pitch)
+                XCTAssertNotEqual(scene.instanceEntities[0].transform.matrix, before[0])
+                let uncorded = scene.instanceEntities[1].transform.matrix
+                XCTAssertNotEqual(uncorded, before[1], "The uncorded instance must retain its pitch viewing behavior")
+                let rotation = simd_quatf(angle: pitch, axis: right)
+                var expected = simd_float4x4(rotation) * before[1]
+                let position = before[1].columns.3
+                expected.columns.3 = SIMD4(framingTarget + rotation.act(
+                    SIMD3(position.x, position.y, position.z) - framingTarget), 1)
+                for column in 0..<4 {
+                    XCTAssertLessThan(simd_distance(uncorded[column], expected[column]), 1e-6,
+                                      "The uncorded pose must pitch about the shared framing target, including its translation")
+                }
+                XCTAssertEqual(scene.camera.transform.matrix, yawCamera)
+                XCTAssertEqual(cordTransforms(cord), originalCord)
             }
-            XCTAssertEqual(scene.camera.transform.matrix, camera)
-            XCTAssertEqual(scene.transientCordEntity?.children.map { $0.transform.matrix }, cord)
         }
         scene.resetCamera(animated: false)
         XCTAssertEqual(scene.instanceEntities.map { $0.transform.matrix }, before)
