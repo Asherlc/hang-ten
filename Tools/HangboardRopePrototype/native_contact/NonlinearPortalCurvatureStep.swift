@@ -5,6 +5,7 @@ extension RopeDynamicsSolver {
     private mutating func portalCurvatureCorrect(prediction:RopeSimulationState) throws {
         let initial=state,eps=NonlinearPrimalDual.epsilon
         let useDefect=ProcessInfo.processInfo.environment["HANGTEN_NONLINEAR_DEFECT"]=="1"
+        let useAdmission=ProcessInfo.processInfo.environment["HANGTEN_NONLINEAR_ADMISSION"]=="1"
         let weights=state.ropes.map {rope in rope.positions.indices.map {i -> Double in
             if rope.supports[i] != nil || rope.attachments[i] != nil {return 0}
             let length=(i>0 ? rope.restLengths[i-1]:0)+(i<rope.restLengths.count ? rope.restLengths[i]:0)
@@ -90,19 +91,34 @@ extension RopeDynamicsSolver {
         for iteration in 0...16 {
             try AugmentedTrace.budget()
             let discoveryStart=ProcessInfo.processInfo.systemUptime,oldCount=terms.count
+            let existingContacts=terms.indices.filter{initialS[$0]>0}
+            let priorMeanSV:Double? = useAdmission && iteration>0 && !existingContacts.isEmpty
+                ? existingContacts.reduce(0.0){$0-terms[$1].dual*slacks[$1]}/Double(existingContacts.count):nil
+            var initializations:[[String:Any]]=[]
             try augmentedDiscover(&terms,&keys,weights:weights)
             for k in oldCount..<terms.count {
                 let row=try augmentedRow(terms[k].feature)
                 if row.contact {
-                    let s=terms[k].scale*terms[k].startPenalty
-                    terms[k].dual = -s
-                    slacks.append(max(row.residual+eps*s,terms[k].scale));initialS.append(s)
+                    let coldS=terms[k].scale*terms[k].startPenalty
+                    if useAdmission {
+                        let values=try NonlinearContactAdmission.initialize(residual:row.residual,
+                            scale:terms[k].scale,coldS:coldS,priorMeanSV:priorMeanSV)
+                        terms[k].dual = -values.s
+                        slacks.append(values.v);initialS.append(values.normalizationS)
+                        initializations.append(["key":terms[k].key,"C":row.residual,"coldS":coldS,
+                            "s":values.s,"v":values.v,"normalizationS":values.normalizationS,
+                            "priorMeanSV":priorMeanSV as Any? ?? NSNull(),"continued":values.continued])
+                    } else {
+                        terms[k].dual = -coldS
+                        slacks.append(max(row.residual+eps*coldS,terms[k].scale));initialS.append(coldS)
+                    }
                 } else {slacks.append(0);initialS.append(0)}
             }
             let discoverySeconds=ProcessInfo.processInfo.systemUptime-discoveryStart
             let e=try evaluate(self,terms,slacks),c=e.certificate
             PrimalDualTrace.phases.append(["phase":"iteration","iteration":iteration,"state":AugmentedTrace.points(state),"terms":e.trace,
                 "a":e.a,"b":e.b,"h":e.h,"score":e.score,"certificate":c,"admitted":terms.count-oldCount,
+                "initializations":initializations,
                 "discoverySeconds":discoverySeconds,"movement":lastMovement.isFinite ? lastMovement:NSNull(),"strain":maximumStrain()])
             let certified=c["stationarity"]!<=1e-10 && c["equality"]!<=1e-8 && c["minC"]!>=(-1e-8) && c["minGap"]!>=(-1e-10)
                 && c["complementarity"]!<=1e-14 && c["internalComplementarity"]!<=1e-18

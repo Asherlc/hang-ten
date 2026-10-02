@@ -1,0 +1,206 @@
+{
+  "sourceSHA256": "d495c0290db2027e8f64da4f8eff3d63964448d6a5afff3937922bac875ca806",
+  "configurationClosed": "sixteen-update final numerical/convergence cap",
+  "fullStepPassed": false,
+  "originalControlAccepted": true,
+  "rollbackVerified": true,
+  "deterministicReplay": {
+    "byteIdenticalExperimentalReplay": true,
+    "byteIdenticalProposalTraceReplay": true,
+    "fullStepCompared": false
+  },
+  "candidateSeconds": [
+    0.2026180000000295,
+    0.20616270833329509
+  ],
+  "controlSeconds": 0.05812175000005482,
+  "finalCertificate": {
+    "complementarity": 7.544134168021706e-10,
+    "equality": 4.435337463239332e-06,
+    "internalComplementarity": 2.699333298894557e-10,
+    "minC": -9.206789293238005e-05,
+    "minGap": -9.206789285043906e-05,
+    "stationarity": 1.5915775869227883e-07
+  },
+  "lastMovement": 5.3346226910157284e-05,
+  "physicalProposalOnly": {
+    "clearance": 0.00350793210706762,
+    "geometryAccepted": true,
+    "lengthError": 3.125413055093951e-05,
+    "outsideCandidateTimer": true,
+    "strain": 0.002227278992084747,
+    "topology": true
+  },
+  "continuedContacts": 42,
+  "coldContacts": 204,
+  "initializerEquationsAndNormalizationVerified": true,
+  "correctionAttempts": 9,
+  "acceptedCorrections": 3,
+  "extraRHS": 9,
+  "extraRefinements": 0,
+  "correctedEvaluations": 3,
+  "worstC": [
+    [
+      -9.206789293238005e-05,
+      "link:0:163:5256"
+    ],
+    [
+      -8.52834565093984e-05,
+      "link:0:116:5260"
+    ],
+    [
+      -8.52834565093984e-05,
+      "link:0:116:5262"
+    ],
+    [
+      -7.649594852229191e-05,
+      "link:0:162:5256"
+    ],
+    [
+      -7.610745504600253e-05,
+      "link:0:112:5207"
+    ]
+  ],
+  "appChanged": false,
+  "limits": [
+    "Static proposal geometry is not accepted step or swept collision evidence.",
+    "Native host timings include diagnostics; no frame/device target demonstrated.",
+    "No rescue or full-step rerun after closure."
+  ],
+  "processGroupAbsenceChecks": [
+    {
+      "manifest": ".context/strong-owl-live-physics-contact-admission/green/resources.jsonl",
+      "group": 52974,
+      "absent": true
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-contact-admission/green/resources.jsonl",
+      "group": 53310,
+      "absent": true
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-contact-admission/coupled-step/resources.jsonl",
+      "group": 56360,
+      "absent": true
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-contact-admission/coupled-step/resources.jsonl",
+      "group": 56781,
+      "absent": true
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-contact-admission/product-underflow-green/resources.jsonl",
+      "group": 62421,
+      "absent": true
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-contact-admission/product-underflow-green/resources.jsonl",
+      "group": 62548,
+      "absent": true
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-contact-admission/red/resources.jsonl",
+      "group": 52217,
+      "absent": true
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-contact-admission/red/resources.jsonl",
+      "group": 52404,
+      "absent": true
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-contact-admission/product-underflow-red/resources.jsonl",
+      "group": 62002,
+      "absent": true
+    },
+    {
+      "manifest": ".context/strong-owl-live-physics-contact-admission/product-underflow-red/resources.jsonl",
+      "group": 62114,
+      "absent": true
+    }
+  ],
+  "driverAbsenceVerified": true,
+  "productUnderflowGuardSeparatelyVerifiedWithoutSolveRerun": true,
+  "boundSHA256": {
+    ".context/strong-owl-live-physics-contact-admission/CheckpointAdapter.swift": "92385d915f17d8b594b5944507e1967e6b7685bf7d40c526d5212417c977039b",
+    ".context/strong-owl-live-physics-contact-admission/PLAN.md": "2e42068315cacbd997b83ff1c7fa63022bedca57de0bd0970865d666d6b8f36c",
+    ".context/strong-owl-live-physics-contact-admission/Step.swift": "174b859a030bc93d6a47395535d7311a0f15aeaf7932684123267d81389b01fd",
+    ".context/strong-owl-live-physics-contact-admission/advisor.md": "e93f9c42c20378b8988dd48de73123fbc173c566a17066e3fe6f0fc5c32beb7e",
+    ".context/strong-owl-live-physics-contact-admission/analyze_step.py": "8b06af0b3d1d88f1aee531a14451df69eab0b919117ffa7cb1a5b4856b20cf06",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/after-0.json": "cad349812c3c0c33384378fe368abff97411f2a0c9aeb385d99edebef151c464",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/after-1.json": "cad349812c3c0c33384378fe368abff97411f2a0c9aeb385d99edebef151c464",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/after-2.json": "77ea90304d0a05dbd0f2545c96f459b3ce9ba72601c585dbe9edd03cbcd35091",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/comparison.json": "1aed097c69284dbbfe29db005df22a50a073513e36b1271cc0d5d563e3d2f28f",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/provenance.json": "82d20727c3d5c4498d0d3044ec052a9918a3142da52e0163ed30930dbfea8995",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/report.json": "d495c0290db2027e8f64da4f8eff3d63964448d6a5afff3937922bac875ca806",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/resources.jsonl": "31373ee19a26a851047d11c90e87176c578cf062d6e450df8b04083d3f2a70a4",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/restored-checkpoint.json": "cad349812c3c0c33384378fe368abff97411f2a0c9aeb385d99edebef151c464",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/run.log": "017f2e18c07f52f6717c54acef584c59d6147abe46dc6f91ba634979b7ec2dd1",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/ExactCheckpointJSON.swift": "fec607f09b6b06235f80359f91b40704fe08d9aa43a8deb90b50432a3eb4dd02",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/NonlinearAugmented.swift": "e480ff679f4cf413367783d35196ef58780b90a336d2b006106e81506ebd1d50",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/NonlinearContactAdmission.swift": "e64ed0afe34f36c8a14710c8aead62c7ccbda08ef957108666f42431436e9ee0",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/NonlinearContactCurvature.swift": "3e20393e3a143ef62ab0d8475351f75c1b6f7a37e92ec1d401e918209dd86309",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/NonlinearKKTDefect.swift": "82d557aaf89f8055bdb4c8574b6e3e15c631cf46a3fec9db2a4deacb85cc45d5",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/NonlinearPortalCurvature.swift": "199e722eb735439fec554139786c625f083e9ee51c49408d0ba8ee0deaa47bf3",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/NonlinearPrimalDual.swift": "ee641066bf30a97438cca938e853fcaa002f44c42a9ee7806ecfaf86583c1813",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/RopeBandedSystem.swift": "d72906a280256e3d760d4b99320b5f0531ca624ae615c4d435f9f2400c18d5aa",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/RopeCordContacts.swift": "827fc8c7f8d0816a1d36a9f10ee841d35dd557b516deced425a6e5a8224914e2",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/RopeDynamicsSolver.swift": "a2c34391c6674e2a84f919394045bd063f0dc0619e7066a7ac28d7d0fcf429a3",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/RopeSimulationMetrics.swift": "91abf3c099cc13a17854ae4af80313bb19518b8909bcfbf8f8431158962f2e59",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/RopeSimulationState.swift": "915a55c8422030a3efeb5c449fc9b085b3a24b612d7766a3ba8745e0670514c8",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/RopeThreadedSeed.swift": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/RopeTriangleCollider.swift": "3b406025ff0542d462d1d73bd129817fb386edcbc3ad2243d58149f5d58b95fe",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/SparseLDL.swift": "f92f9fea6991af057118b29760281fb94135c06578b5221ff1df958d6de8a70b",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/sources/main.swift": "174b859a030bc93d6a47395535d7311a0f15aeaf7932684123267d81389b01fd",
+    ".context/strong-owl-live-physics-contact-admission/coupled-step/strong-owl-live-physics-primal-dual-step": "f18721b558cb38d77efb3540ae56c068ebcd1c20ace3b10e69cf80bfc6f0d532",
+    ".context/strong-owl-live-physics-contact-admission/drivers.jsonl": "1208d1c799f0b49132f3b5c49b69e70d74462ec2108ff8215c1d67feaf524357",
+    ".context/strong-owl-live-physics-contact-admission/fixture_launch.py": "3c47f0655308bd59b687b8d0868fb69cf174d28746652ed3b7a9af4d2709047c",
+    ".context/strong-owl-live-physics-contact-admission/fixture_launch.sh": "3207fb0ae37e6aea92c9426dfe0f75b3ba86a0ab4996584b7f8d236d065a8e1b",
+    ".context/strong-owl-live-physics-contact-admission/green/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-contact-admission/green/provenance.json": "b10d9dbc433f5cf83a3db719c091cd01ff1bd45d44ede076c6fac8f01ba6f28c",
+    ".context/strong-owl-live-physics-contact-admission/green/resources.jsonl": "b551a43d3ba232a087dbde5921a573a1c9b9e6c349c2c40bd8e680c65e0d3113",
+    ".context/strong-owl-live-physics-contact-admission/green/run.log": "102054cb2d64329c5ef76c53b1aeb1383f909a23b3d66f65a82bbf2fc89fc07b",
+    ".context/strong-owl-live-physics-contact-admission/green/sources/NonlinearContactAdmission.swift": "e64ed0afe34f36c8a14710c8aead62c7ccbda08ef957108666f42431436e9ee0",
+    ".context/strong-owl-live-physics-contact-admission/green/sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-contact-admission/green/sources/main.swift": "f577312a5d309bd6ec276df3580c488b42563c7f295b0f72abb3859bebd46f3e",
+    ".context/strong-owl-live-physics-contact-admission/green/strong-owl-live-physics-contact-admission": "6f4e84c920abc250c793b3af2c0f656da86ba9f4789d15c513a84907e53bb5d7",
+    ".context/strong-owl-live-physics-contact-admission/preflight.json": "6c52e7433837784767a47b2fc1f54ebab332bc942e30001e848f743172c53922",
+    ".context/strong-owl-live-physics-contact-admission/preflight.py": "33340a147fdbc98d1dd53fadcfa5b1ba3aeebdf086041eeccce4d70dd62187f4",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-green/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-green/provenance.json": "011b200db141d74af3b80ad1ac6a96dc483f39cb4b2c3ca3a9a09b9d4bc91b91",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-green/resources.jsonl": "c5c8ac8fda524b0f5424afe84ca487b10fa8da86f6c69d97b36c519cc4bf84d5",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-green/run.log": "102054cb2d64329c5ef76c53b1aeb1383f909a23b3d66f65a82bbf2fc89fc07b",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-green/sources/NonlinearContactAdmission.swift": "8d184dafaaa35b4d8d7476502c80cacfb0adda7757d57e5986a0172f9e476e4a",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-green/sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-green/sources/main.swift": "48604b07ee984f3e52bf48cd51f2963e7e6ae0364cbb2c79f360b52912e70cbc",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-green/strong-owl-live-physics-contact-admission": "23aaaa38c858d250392d24df8ba4a9bd729a5c8114282d6970fc4062788f4860",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-red/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-red/provenance.json": "bc5b4ced7b4cf026b9176a270bb675e1a87d91d6b907f8f106218f88911b2753",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-red/resources.jsonl": "5bebf9add09a348a9f8e93fe2e9a63b901ba36cbd4cc94f4565503f3fc1404d4",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-red/run.log": "1f508a30a8523f4ed1e8e1538300cc110bd1ae8564847421116fa1f3688515ec",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-red/sources/NonlinearContactAdmission.swift": "e64ed0afe34f36c8a14710c8aead62c7ccbda08ef957108666f42431436e9ee0",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-red/sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-red/sources/main.swift": "48604b07ee984f3e52bf48cd51f2963e7e6ae0364cbb2c79f360b52912e70cbc",
+    ".context/strong-owl-live-physics-contact-admission/product-underflow-red/strong-owl-live-physics-contact-admission": "3e729c5505b154ef7116a14755da1a31574eab340f374751820c13d5cf11b04d",
+    ".context/strong-owl-live-physics-contact-admission/progress.md": "1cf15ac88310ddf46b7b607396e44a102bd9c90b36f0e46a9bbf17a4abbf52e3",
+    ".context/strong-owl-live-physics-contact-admission/red/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-contact-admission/red/provenance.json": "cce7f6803c93fdf1aa4b1ed4f717c05512bf0226d0bdbc1b9bc18e63c54330d8",
+    ".context/strong-owl-live-physics-contact-admission/red/resources.jsonl": "af3839739c4e6f73e32bda1d60c374e11675873704b8ed23670888ac34678cb6",
+    ".context/strong-owl-live-physics-contact-admission/red/run.log": "5834c7b33fad9bd758307524e5939f68594bff8215e6fe5d0f7317a7284290ac",
+    ".context/strong-owl-live-physics-contact-admission/red/sources/NonlinearContactAdmission.swift": "b09cf361965896b583e52874ac3782c45bea2295bf87e58618c353d582ee05f5",
+    ".context/strong-owl-live-physics-contact-admission/red/sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-contact-admission/red/sources/main.swift": "f577312a5d309bd6ec276df3580c488b42563c7f295b0f72abb3859bebd46f3e",
+    ".context/strong-owl-live-physics-contact-admission/red/strong-owl-live-physics-contact-admission": "b47ed1dbf76e70f3f7eff8225b843165631b63d7889b9436e25a38d2ffc5fb77",
+    ".context/strong-owl-live-physics-contact-admission/step-analysis.json": "a376951535f812e0c9bd6ad5256cc64df8e2ad45f4624719bbea218b89725d90",
+    ".context/strong-owl-live-physics-contact-admission/step_launch.py": "7db6d656f42488c4a5f7f0e3785392e04f4f2f4649941cbfb9faedffc8350223",
+    ".context/strong-owl-live-physics-contact-admission/step_launch.sh": "465e4fd5a8070467588cbd89b0a64540e894b0e8fa968a9fcfe85f87834aa8ba",
+    ".context/strong-owl-live-physics-contact-admission/trial-breakdown.json": "33b41fd1b78b8f28c532533f3a04bc89229f9e46bfafc381e837ed4367a699e1",
+    ".context/strong-owl-live-physics-contact-admission/verify.py": "9e32e4d113eaa52607bbaab8a25afa02a7917e4bb85c3a309fa7cac6ff4d9b9d",
+    "Tools/HangboardRopePrototype/native_contact/NonlinearContactAdmission.swift": "8d184dafaaa35b4d8d7476502c80cacfb0adda7757d57e5986a0172f9e476e4a",
+    "Tools/HangboardRopePrototype/native_contact/NonlinearContactAdmissionFixtures.swift": "48604b07ee984f3e52bf48cd51f2963e7e6ae0364cbb2c79f360b52912e70cbc",
+    "Tools/HangboardRopePrototype/native_contact/NonlinearPortalCurvatureStep.swift": "56875f8a25aabfae2f52b71d5cf72767f29ee5942f0b40a764afe06d4cf30e30"
+  }
+}
