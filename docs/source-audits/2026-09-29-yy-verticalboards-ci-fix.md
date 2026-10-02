@@ -1307,3 +1307,35 @@ body-failure screenshot were visually inspected. All temporary hooks, scripts
 and workflow wrappers are removed, restoring the five diagnostic files to
 the probe-free 3adc source. Required checks remain blocking; no rendering,
 framework, GPU or environment-only cause is claimed.
+
+
+## Resumed controlled presentation investigation
+
+After the request to resume controlled debugging, the user answered “Fix ci”.
+The retained probe-free main-through-PR538 run 36971446384 completed 26 cases
+with three failures: DoorMount body visibility, and Megalith/Natural rendered
+orbit. Both orbit failures have unchanged RGB, stable bounds and changed,
+settled camera state. Evo, Forge and Pro complete their full sequences. All
+other required job groups pass. Artifact 11213338682 and full logs, screenshots
+and diagnostics were retained before this diagnostic change.
+
+The earlier preflight failed before app attachment at its immediate
+process-group disappearance check after the compiler front end exited.
+A deterministic regression demonstrates that this check can reject a helper
+which exits shortly afterward; the retained CI receipt does not prove that
+this race caused its failure. The corrected controller retains exact ownership and
+waits at most one second for that group to disappear. A persistent group still
+fails closed and is cleaned by the existing exact-group finalizer. Native
+fixture validation passed compilation but debugger attachment timed out; all
+owned fixture files and child groups were deleted and verified. This does not
+establish debugger availability in CI.
+
+One CI diagnostic targets Megalith, which failed rendered orbit in the latest
+complete baseline. It retains the same bounded read-only layer inspection and
+debugger budgets documented above, with fixture attachment/getter preflight
+required before any app attempt. App code outside the temporary DEBUG hook,
+all 26 selected cases, rapid Train navigation, interactive preview, gestures,
+assertions, deadlines, analytics and toolchain remain unchanged. There is no
+renderer correction. Missing preflight or guards remains inconclusive. Retain
+the complete result before removing every temporary hook and helper, regardless
+of outcome. Never merge the diagnostic head, including a green result.

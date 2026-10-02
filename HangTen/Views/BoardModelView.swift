@@ -1,5 +1,8 @@
 import RealityKit
 import SwiftUI
+#if DEBUG
+import QuartzCore
+#endif
 
 struct BoardModelSurface: View {
     enum ResultState {
@@ -209,6 +212,9 @@ struct BoardModelRealityView: View {
         let _ = cameraRevision
         GeometryReader { proxy in
             let size = proxy.size
+            #if DEBUG
+            let attributionFrame = proxy.frame(in: .global)
+            #endif
             RealityView { content in
                 // Board maps use the authored camera, without device tracking
                 // or the AR session's implicit non-AR fallback.
@@ -216,6 +222,9 @@ struct BoardModelRealityView: View {
                 content.add(model.root)
                 content.add(model.camera)
                 applySync(size: size)
+                #if DEBUG
+                publishPresentationAttribution(frame: attributionFrame)
+                #endif
                 if model.hasLiveRopes, positionID != nil {
                     if !model.hasLiveUpdateSubscription {
                         model.installLiveUpdateSubscription(content.subscribe(to: SceneEvents.Update.self) { [weak model] event in
@@ -237,6 +246,9 @@ struct BoardModelRealityView: View {
                 let revision = cameraRevision
                 content.camera = .virtual
                 applySync(size: size)
+                #if DEBUG
+                publishPresentationAttribution(frame: attributionFrame)
+                #endif
                 if model.hasLiveRopes, positionID != nil {
                     if !model.hasLiveUpdateSubscription {
                         model.installLiveUpdateSubscription(content.subscribe(to: SceneEvents.Update.self) { [weak model] event in
@@ -311,6 +323,15 @@ struct BoardModelRealityView: View {
         let positionID: String?
         let contactIDs: Set<String>
     }
+
+    #if DEBUG
+    private func publishPresentationAttribution(frame: CGRect) {
+        guard ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PRESENTATION_ATTRIBUTION"] == "1" else { return }
+        Task { @MainActor in
+            BoardPresentationAttribution.publish(model: model, frame: frame)
+        }
+    }
+    #endif
 
     private func applySync(size: CGSize) {
         model.configureLiveMotion(reduceMotion:reduceMotion,displayOnly:isDisplayOnly)
@@ -421,6 +442,71 @@ struct BoardModelRealityView: View {
         }
     }
 }
+
+#if DEBUG
+/// Temporary read-only layer identity for the authorized one-run debugger trace.
+@MainActor
+private enum BoardPresentationAttribution {
+    private static var inspections = 0
+    private static var priorSignature: Data?
+
+    static func publish(model: BoardModelRealityScene, frame: CGRect) {
+        guard inspections < 64,
+              model.isCameraAtTarget,
+              model.orbitAzimuth != 0 || model.orbitElevation != 0,
+              let owner = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PRESENTATION_OWNER"],
+              !owner.isEmpty,
+              owner.range(of: "^[A-Za-z0-9_-]+$", options: .regularExpression) != nil else { return }
+        inspections += 1
+        var layers: [[String: Any]] = []
+        for scene in UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }) {
+            for window in scene.windows {
+                inspect(window.layer, window: window, map: frame, hidden: window.isHidden, records: &layers)
+            }
+        }
+        let value: [String: Any] = [
+            "owner": owner, "pid": ProcessInfo.processInfo.processIdentifier,
+            "boardID": ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_ID"] ?? "",
+            "scene": String(describing: ObjectIdentifier(model)),
+            "azimuth": model.orbitAzimuth, "elevation": model.orbitElevation,
+            "cameraSettled": model.isCameraAtTarget,
+            "rootActive": model.root.isActive, "cameraActive": model.camera.isActive,
+            "sameScene": model.root.scene != nil && model.root.scene === model.camera.scene,
+            "map": [frame.minX, frame.minY, frame.width, frame.height], "layers": layers
+        ]
+        guard let data = try? JSONSerialization.data(withJSONObject: value, options: [.sortedKeys]),
+              data != priorSignature,
+              let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        do {
+            try data.write(to: documents.appendingPathComponent("\(owner)-presentation-attribution.json"), options: .atomic)
+            priorSignature = data
+        } catch {
+            print("[BoardPresentationAttribution] marker write failed: \(error)")
+        }
+    }
+
+    private static func inspect(_ layer: CALayer, window: UIWindow, map: CGRect,
+                                hidden: Bool, records: inout [[String: Any]]) {
+        let hidden = hidden || layer.isHidden || layer.opacity == 0
+        if let metal = layer as? CAMetalLayer {
+            let rect = metal.convert(metal.bounds, to: window.layer)
+            let matches = !hidden && abs(rect.minX - map.minX) < 0.5
+                && abs(rect.minY - map.minY) < 0.5 && abs(rect.width - map.width) < 0.5
+                && abs(rect.height - map.height) < 0.5
+            records.append([
+                "pointer": String(describing: Unmanaged.passUnretained(metal).toOpaque()),
+                "frame": [rect.minX, rect.minY, rect.width, rect.height],
+                "drawableSize": [metal.drawableSize.width, metal.drawableSize.height],
+                "presentsWithTransaction": metal.presentsWithTransaction,
+                "hidden": hidden, "matchesMap": matches
+            ])
+        }
+        for child in layer.sublayers ?? [] {
+            inspect(child, window: window, map: map, hidden: hidden, records: &records)
+        }
+    }
+}
+#endif
 
 private struct BoardModelAccessibilityContainer: ViewModifier {
     let label: String?
