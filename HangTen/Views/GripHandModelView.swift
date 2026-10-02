@@ -908,10 +908,14 @@ struct GripHandModelInspector: View {
             .accessibilityLabel("Rotatable 3D \(side.accessibilityIdentifier) hand")
     }
 
+    var fingerSummary: String {
+        fingerConfiguration.map { "Highlighted: " + $0.orderedFingers.map(\.rawValue).joined(separator: ", ") }
+            ?? "4 fingers (assumed)"
+    }
+
     private var controls: some View {
         VStack(spacing: 16) {
-            Text(fingerConfiguration.map { "Highlighted: " + $0.orderedFingers.map(\.rawValue).joined(separator: ", ") }
-                 ?? "4 fingers (assumed)")
+            Text(fingerSummary)
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Color.hangInk)
             Text("Drag to rotate · Pinch to zoom")
