@@ -194,3 +194,14 @@ record remains qualified. Black-capsule artifacts and all root/raw reviews are
 retained. This isolated history does not reproduce or repair the real workout.
 Earlier evidence and acceptances are unchanged. Source reservation and owned
 resources remain active under coordination, with cleanup pending.
+
+### Continuous sibling-update isolation
+
+The [Evo continuous-siblings appendix](zlagboard-evo/runtime-continuous-siblings-2026-10-02/README.md)
+retains H0a/H1a/H1b/H0b: 80 visually correct captured board states and 20/20 CPU
+brackets per run at fixed placement. Timer/progress siblings in this isolated
+context did not reproduce the actual-workout defect. Raw artifacts, independent
+and root reviews, source/parity, committee responses and pending-next analysis
+remain exact. No production fix or acceptance is claimed. Previous evidence
+and canonical/global records are unchanged; owned resources and reservations
+remain coordinated and live, with cleanup pending.

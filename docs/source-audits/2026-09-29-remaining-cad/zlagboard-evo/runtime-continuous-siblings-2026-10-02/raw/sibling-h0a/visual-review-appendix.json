@@ -1,0 +1,15 @@
+{
+  "differentImage": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h0a/phase-0-clear-plus-0.25.png",
+    "targetEpoch": 1790977590.4880068,
+    "startEpoch": 1790977590.498067,
+    "endEpoch": 1790977591.040284,
+    "phase": "clear",
+    "phaseIndex": 0,
+    "offset": 0.25,
+    "sha256": "0af9ab776e0e9a8323589b48a37fd0c46d096821d3ed85b187f23eb7a01575c2"
+  },
+  "wholeImageViewedIndividually": true,
+  "observation": "Unhighlighted wood board,00:08 and empty progress correct; black capsule artifact at far left. No input inferred.",
+  "all20BoardStatesPass": true
+}

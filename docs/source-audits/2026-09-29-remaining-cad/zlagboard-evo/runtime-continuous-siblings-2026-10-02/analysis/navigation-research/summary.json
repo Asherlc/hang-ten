@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-02",
+  "sources": [
+    {
+      "url": "https://developer.apple.com/forums/thread/817384",
+      "author": "Forum user; no Apple response",
+      "finding": "Reports a Metal validation crash during navigation between RealityViews when attached to Xcode. This differs from our non-crashing stale colors without debugger and supplies no tested remedy."
+    },
+    {
+      "url": "https://developer.apple.com/forums/thread/841043",
+      "author": "Apple engineer Michael",
+      "finding": "Explains dependency-driven SwiftUI reevaluation, lightweight State initialization, and RealityView state synchronization. Recommends avoiding state mutation from the update closure and discusses onChange as an alternative. This is general API guidance, not a diagnosis of the observed stale frames."
+    }
+  ],
+  "decision": "No production fix or framework root-cause claim follows. Prior external-only sync attempt already failed; do not repeat solely because general guidance mentions it. Continue controlled runtime boundary."
+}

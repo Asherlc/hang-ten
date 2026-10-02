@@ -1,0 +1,332 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "data"
+    ],
+    "startEpoch": 1790977720.05229,
+    "endEpoch": 1790977720.236959,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1790977720.237377,
+    "endEpoch": 1790977720.5942001,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-0-clear-plus-0.25.png"
+    ],
+    "startEpoch": 1790977727.438151,
+    "endEpoch": 1790977727.94608,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-0-clear-plus-1.png"
+    ],
+    "startEpoch": 1790977728.184281,
+    "endEpoch": 1790977728.6769521,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-0-clear-plus-3.png"
+    ],
+    "startEpoch": 1790977730.189793,
+    "endEpoch": 1790977730.6765199,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-0-clear-plus-7.png"
+    ],
+    "startEpoch": 1790977734.1899168,
+    "endEpoch": 1790977734.690024,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-1-active-plus-0.25.png"
+    ],
+    "startEpoch": 1790977735.440042,
+    "endEpoch": 1790977735.9381561,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-1-active-plus-1.png"
+    ],
+    "startEpoch": 1790977736.183407,
+    "endEpoch": 1790977736.650995,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-1-active-plus-3.png"
+    ],
+    "startEpoch": 1790977738.189783,
+    "endEpoch": 1790977738.654825,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-1-active-plus-7.png"
+    ],
+    "startEpoch": 1790977742.1829278,
+    "endEpoch": 1790977742.642633,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-2-preview-plus-0.25.png"
+    ],
+    "startEpoch": 1790977743.43446,
+    "endEpoch": 1790977743.914669,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-2-preview-plus-1.png"
+    ],
+    "startEpoch": 1790977744.190058,
+    "endEpoch": 1790977744.6770072,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-2-preview-plus-3.png"
+    ],
+    "startEpoch": 1790977746.189698,
+    "endEpoch": 1790977746.6836128,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-2-preview-plus-7.png"
+    ],
+    "startEpoch": 1790977750.189742,
+    "endEpoch": 1790977750.6672142,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-3-active-plus-0.25.png"
+    ],
+    "startEpoch": 1790977751.439745,
+    "endEpoch": 1790977751.902493,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-3-active-plus-1.png"
+    ],
+    "startEpoch": 1790977752.1820369,
+    "endEpoch": 1790977752.6552079,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-3-active-plus-3.png"
+    ],
+    "startEpoch": 1790977754.19004,
+    "endEpoch": 1790977754.700452,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-3-active-plus-7.png"
+    ],
+    "startEpoch": 1790977758.184339,
+    "endEpoch": 1790977758.676089,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-4-preview-plus-0.25.png"
+    ],
+    "startEpoch": 1790977759.4397051,
+    "endEpoch": 1790977759.905869,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-4-preview-plus-1.png"
+    ],
+    "startEpoch": 1790977760.1896892,
+    "endEpoch": 1790977760.64346,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-4-preview-plus-3.png"
+    ],
+    "startEpoch": 1790977762.19085,
+    "endEpoch": 1790977762.675114,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-4-preview-plus-7.png"
+    ],
+    "startEpoch": 1790977766.182848,
+    "endEpoch": 1790977766.670285,
+    "exitStatus": 0
+  }
+]
