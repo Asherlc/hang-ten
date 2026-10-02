@@ -2,6 +2,11 @@ import XCTest
 import UIKit
 
 final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        continueAfterFailure = false
+    }
+
     override func tearDown() {
         // Landscape review launches leave the shared simulator in landscape;
         // reset so later cases/suites on the same device are not poisoned.
@@ -71,6 +76,77 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         expectation(for: front, evaluatedWith: diagnostic)
         waitForExpectations(timeout: 10)
         addScreenshot(named: "Beastmaker pocket returns to front")
+    }
+
+    func testPivotRotationPresetsPersistWhenSelectingHolds() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "trango.rock-prodigy-pivot",
+            "HANGTEN_REVIEW_BOARD_DETAIL": "1",
+            "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+        ]
+        app.launch()
+        let selector = app.segmentedControls["boardDetail.rotationSelector"]
+        XCTAssertTrue(selector.waitForExistence(timeout: 30))
+        guard selector.exists else { return }
+        let contact = app.buttons["boardModel.contact.two-finger-pocket-left"]
+        XCTAssertTrue(contact.waitForExistence(timeout: 120))
+        let map = app.descendants(matching: .any).matching(identifier: "boardDetail.map").firstMatch
+        XCTAssertTrue(map.waitForExistence(timeout: 10))
+        let diagnostic = app.otherElements["boardModel.renderDiagnostic"]
+        XCTAssertTrue(diagnostic.waitForExistence(timeout: 10))
+        addScreenshot(named: "Pivot position 1")
+        for (position, holdID) in [(2, "outer-sloped-crimp-right"),
+                                   (3, "outer-sloped-crimp-left"),
+                                   (5, "upper-sloped-crimp-right")] {
+            waitForStableProjection(of: contact, diagnostic: diagnostic)
+            let previousFrame = contact.frame
+            let preset = selector.buttons["Position \(position)"]
+            preset.tap()
+            XCTAssertTrue(preset.isSelected)
+            let changed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                contact.frame != previousFrame
+            }, object: nil)
+            XCTAssertEqual(XCTWaiter.wait(for: [changed], timeout: 10), .completed)
+            let target = app.buttons["boardModel.contact.\(holdID)"]
+            XCTAssertTrue(target.waitForExistence(timeout: 10))
+            waitForStableProjection(of: target, diagnostic: diagnostic)
+            let selected = app.otherElements["boardDetail.selectedHold.\(holdID)"]
+            XCTAssertFalse(selected.exists, "Native picking must change the selected hold")
+            // Tap the live projected contact through the map, exercising RealityKit picking.
+            let frame = target.frame
+            let viewport = map.frame
+            map.coordinate(withNormalizedOffset: CGVector(
+                dx: (frame.midX - viewport.minX) / viewport.width,
+                dy: (frame.midY - viewport.minY) / viewport.height
+            )).tap()
+            XCTAssertTrue(selected.waitForExistence(timeout: 10),
+                          "Native picking must select \(holdID) after rotation")
+            XCTAssertTrue(preset.isSelected, "Native picking must preserve the chosen rotation")
+            app.buttons["boardDetail.holdLegend.\(holdID)"].tap()
+            XCTAssertTrue(app.otherElements["boardDetail.selectedHold.\(holdID)"].waitForExistence(timeout: 10))
+            XCTAssertTrue(preset.isSelected, "Selecting a hold must preserve the chosen rotation")
+            addScreenshot(named: "Pivot position \(position) selected \(holdID)")
+        }
+    }
+
+    private func waitForStableProjection(of contact: XCUIElement, diagnostic: XCUIElement) {
+        var previousFrame = CGRect.zero
+        var stableSamples = 0
+        let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let value = diagnostic.value as? String,
+                  value.contains("cameraSettled=true") else {
+                stableSamples = 0
+                return false
+            }
+            let frame = contact.frame
+            stableSamples = frame == previousFrame ? stableSamples + 1 : 0
+            previousFrame = frame
+            return !frame.isEmpty && stableSamples >= 2
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 30), .completed,
+                       "The camera and contact projection must settle before measuring or picking")
     }
 
     private func diagnosticNumber(_ key: String, in value: String) -> Float? {
