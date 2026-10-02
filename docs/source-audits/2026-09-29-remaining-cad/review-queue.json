@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion acceptance pending; #11 geometry presented, app and human acceptance pending; #12 corrected geometry presented, current app and human acceptance pending",
+  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion acceptance pending; #11 geometry presented, app and human acceptance pending; #12 shown CAD shape accepted, current app appearance unverified; #13 next for review",
   "boards": [
     {
       "number": 1,
@@ -421,7 +421,7 @@
       "package": "owl-climb-poker",
       "boardID": "owl-climb.poker",
       "name": "Owl Climb Poker",
-      "humanReview": "Pending #12 human geometry review; current app wood, picking, highlighting and workout appearance unverified",
+      "humanReview": "Shown #12 CAD shape accepted; current app wood, picking, highlighting and workout appearance remain unverified",
       "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
       "reviewPage": "owl-climb-poker/review12-2026-10-02/index.html",
       "sourceAudit": "owl-climb-poker/README.md",
@@ -461,7 +461,8 @@
       },
       "humanReviewRecord": "owl-climb-poker/human-review.json",
       "latestRevision": "owl-climb-poker/review12-2026-10-02/review.md",
-      "runtimeRevision": "owl-climb-poker/review12-2026-10-02/runtime-validation.json"
+      "runtimeRevision": "owl-climb-poker/review12-2026-10-02/runtime-validation.json",
+      "acceptedGeometryDate": "2026-10-02"
     },
     {
       "number": 13,

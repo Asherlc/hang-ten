@@ -34,6 +34,10 @@
       "sha256": "2fa85ca40a1da75933871f55a143f490013e98272f9d29e0c52eb1e1eaca7382",
       "bytes": 105388
     },
+    "human-acceptance.json": {
+      "sha256": "82263ad1fa057fa7f9d141a3eebbe97d98e0561cbd4c80d5cef7e355d471bafd",
+      "bytes": 1399
+    },
     "independent-delivery-review.json": {
       "sha256": "c76cb97e50867b3df32b94990845e76a2fcfa851404458ab948a67aed9b514b2",
       "bytes": 20657
@@ -59,8 +63,8 @@
       "bytes": 1730
     },
     "index.html": {
-      "sha256": "fe616965f68ecb76d057e57e1e3e4dde5adc17a989339d1b77d730cbfada4529",
-      "bytes": 8632
+      "sha256": "9a782a99bd1929a9ffbc917e395e87ebf03ba6cad1b80fe0b1e3147aec00c880",
+      "bytes": 8708
     },
     "native/author.log": {
       "sha256": "496b8438de547546526cc01185b8c9abbc23a7c62f78d8d2c34bc27c2ceeac5e",
@@ -523,17 +527,22 @@
       "bytes": 1594
     },
     "review.md": {
-      "sha256": "4dc8b94c434adb152adf0e5a32773ea911ccd2b2179714426b34678b2feb5175",
-      "bytes": 4070
+      "sha256": "206346cde746002a2b6526e45722e54a33817e914801d6dd875a1652e7db174f",
+      "bytes": 4284
     },
     "runtime-validation.json": {
       "sha256": "d34bffbb3b9be38bbcc76a7184d794cceeaa56c4bd1bc15268a4ca2850b771e4",
       "bytes": 2182
     },
     "throwaway-script-provenance.json": {
-      "sha256": "df95853556d7df3f4a5742f7f31d1f5134206724d9f65a85b470f280b1db27cd",
-      "bytes": 5192
+      "sha256": "09ac3fdb765f4dbc880b187a4b4cffd288c8b3f350264c170fe1744d43d562bf",
+      "bytes": 5337
     }
   },
-  "scope": "Exact retained packet bytes; index excludes itself. Sources and canonical package identities are pinned in source register and promotion proof."
+  "scope": "Exact retained packet bytes; index excludes itself. Sources and canonical package identities are pinned in source register and promotion proof.",
+  "acceptanceUpdate": {
+    "date": "2026-10-02",
+    "record": "human-acceptance.json",
+    "scope": "Shown geometry accepted; raw historical technical/runtime reports unchanged"
+  }
 }

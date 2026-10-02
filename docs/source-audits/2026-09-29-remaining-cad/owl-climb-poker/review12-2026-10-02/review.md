@@ -10,7 +10,7 @@ Validation passes for one valid 660 × 100 × 100 mm solid, 187 fully constraine
 
 The retained host results contain 195 passing Python tests, validation of all 64 canonical packages, and exact Android staging parity. One generic iOS Simulator build-for-testing passed with the current manifest, descriptor and ODR model staged at their frozen hashes. **Zero iOS unit cases, guest operations or current app frames were produced.** Simulator startup failures are documented with #10; no new Poker Simulator boot was attempted. Historical Poker app images refer to the previous asset and lack build-binary provenance, so they do not establish this revision's wood, picking, highlights or workout appearance.
 
-The profile endpoints, curve sections, radii and cavity depths are authored display estimates, not pixel or manufacturer measurements. The Poker manifest contains no per-contact depth fact fields. Whole face-on sources cannot establish manufacturing sections or edge radii. Human geometry acceptance is **pending**; this technical pass does not accept the board on the user's behalf.
+The profile endpoints, curve sections, radii and cavity depths are authored display estimates, not pixel or manufacturer measurements. The Poker manifest contains no per-contact depth fact fields. Whole face-on sources cannot establish manufacturing sections or edge radii. The user accepted the shown CAD shape on October 2 with **“Y”** to “Does this shape look right?”; [the exact acceptance record](human-acceptance.json) binds the shown images and assets. Current app appearance and workflow remain unverified. The technical reports retain their pending-at-validation historical state.
 
 | Current file | SHA-256 |
 | --- | --- |

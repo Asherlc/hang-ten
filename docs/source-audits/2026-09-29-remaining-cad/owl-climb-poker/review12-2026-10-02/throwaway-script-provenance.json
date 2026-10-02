@@ -29,6 +29,7 @@
     ".context/placid-badger/poker-review12/root/post_push_verify.py": "6d454858306d699ea1ab6e4579c524d7511bd26cdf4409acbe0ebe03fd2cfba9",
     ".context/placid-badger/poker-review12/root/prepare_metadata.py": "be251e576fb2804a7a2ba14368a4dd303e35f92cbad8836760ae664c2d9d6287",
     ".context/placid-badger/poker-review12/root/promote.py": "cb5b758fead98f71be7b0c902f005271352e878d15519f87bbd7e0329073a6c2",
+    ".context/placid-badger/poker-review12/root/record_shape_acceptance.py": "b65d00a90a57eedf32ffc288f20b336a84a295c205403d53c585a9e2341057f7",
     ".context/placid-badger/poker-review12/root/retain_artifacts.py": "1d6ed3ff4ca4022c1805edca87a237c45cf582b003dfaecdd1f54e21fbb87e4d",
     ".context/placid-badger/poker-review12/root/run_owned_job.py": "49820958ef097fafaf2ffb745979ae7a9357a49a6230792d1ebefff9688b4e73",
     ".context/placid-badger/poker-review12/root/update_records.py": "8c2e0486fbcb332ce61d5b5e14dceef0b7002540ece335fd6598b867d1b90cce",

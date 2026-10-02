@@ -1,9 +1,9 @@
 {
   "reviewNumber": 12,
   "boardID": "owl-climb.poker",
-  "status": "Pending #12 human geometry review; current app wood, picking, highlighting and workout appearance unverified",
-  "answer": null,
-  "acceptedDate": null,
+  "status": "Shown #12 CAD shape accepted; current app wood, picking, highlighting and workout appearance remain unverified",
+  "answer": "Y",
+  "acceptedDate": "2026-10-02",
   "identity": {
     "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
     "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
@@ -11,9 +11,9 @@
     "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1"
   },
   "baselineCommit": "ad74a51e1c43991145721ab04ff8c0d3c6c51cca",
-  "acceptedScope": null,
+  "acceptedScope": "Shown four-face CAD shape, including the paired reliefs extending beside the mono/duo row and whole prior/current front, side and top comparisons.",
   "technicalGeometryReviewPresentedDate": "2026-10-02",
-  "completionHumanAcceptance": "pending",
+  "completionHumanAcceptance": "pending current app review",
   "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/index.html",
   "runtimeValidation": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/runtime-validation.json",
   "postIntegrationTests": {
@@ -30,5 +30,78 @@
     "iOSStagingByteParity": true
   },
   "sourceFacts": "660 x 100 x 100 mm four-face wood board; 34 logical contacts with 7/9/9/9 by face, repeated mono-then-duo order at both ends. No documented cord; mounting hardware omitted.",
-  "estimateLimits": "Broad profile endpoints, sections, radii and cavity depths are display estimates. No per-contact depth facts are present in the manifest. Neutral CAD and ownership-overlay images do not establish current app finish or selection behavior."
+  "estimateLimits": "Broad profile endpoints, sections, radii and cavity depths are display estimates. No per-contact depth facts are present in the manifest. Neutral CAD and ownership-overlay images do not establish current app finish or selection behavior.",
+  "question": "Does this shape look right?",
+  "geometryHumanAcceptance": "accepted",
+  "shownAssetCommit": "40c16ae850bf5de26c1ebc2e167de4ef2958941c",
+  "shownImages": {
+    "four-faces.png": "67338dede9f39d4da1652e42531edd8a1d0f072e5c44f7de9460ab0957a1862b",
+    "front-side-top-comparison.png": "2fa85ca40a1da75933871f55a143f490013e98272f9d29e0c52eb1e1eaca7382"
+  },
+  "history": [
+    {
+      "eventType": "technical-review-snapshot",
+      "record": {
+        "reviewNumber": 12,
+        "boardID": "owl-climb.poker",
+        "status": "Pending #12 human geometry review; current app wood, picking, highlighting and workout appearance unverified",
+        "answer": null,
+        "acceptedDate": null,
+        "identity": {
+          "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+          "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+          "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+          "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1"
+        },
+        "baselineCommit": "ad74a51e1c43991145721ab04ff8c0d3c6c51cca",
+        "acceptedScope": null,
+        "technicalGeometryReviewPresentedDate": "2026-10-02",
+        "completionHumanAcceptance": "pending",
+        "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/index.html",
+        "runtimeValidation": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/runtime-validation.json",
+        "postIntegrationTests": {
+          "pythonPassed": 195,
+          "pythonFailed": 0,
+          "pythonErrors": 0,
+          "pythonSkipped": 0,
+          "canonicalPackagesValidated": 64,
+          "iOSBuildPassed": true,
+          "iOSUnitCasesExecuted": 0,
+          "iOSCurrentAppFrames": 0,
+          "iOSRuntimeStatus": "not run; current app appearance unverified",
+          "androidStagingByteParity": true,
+          "iOSStagingByteParity": true
+        },
+        "sourceFacts": "660 x 100 x 100 mm four-face wood board; 34 logical contacts with 7/9/9/9 by face, repeated mono-then-duo order at both ends. No documented cord; mounting hardware omitted.",
+        "estimateLimits": "Broad profile endpoints, sections, radii and cavity depths are display estimates. No per-contact depth facts are present in the manifest. Neutral CAD and ownership-overlay images do not establish current app finish or selection behavior."
+      }
+    },
+    {
+      "eventType": "human-shape-acceptance",
+      "package": "owl-climb-poker",
+      "reviewNumber": 12,
+      "reviewer": "asherlc",
+      "date": "2026-10-02",
+      "recordedUTC": "2026-10-02T18:39:21.784156+00:00",
+      "question": "Does this shape look right?",
+      "answer": "Y",
+      "acceptedScope": "Shown four-face CAD shape, including the paired reliefs extending beside the mono/duo row and whole prior/current front, side and top comparisons.",
+      "identity": {
+        "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+        "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+        "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+        "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1"
+      },
+      "shownAssetCommit": "40c16ae850bf5de26c1ebc2e167de4ef2958941c",
+      "shownImages": {
+        "four-faces.png": "67338dede9f39d4da1652e42531edd8a1d0f072e5c44f7de9460ab0957a1862b",
+        "front-side-top-comparison.png": "2fa85ca40a1da75933871f55a143f490013e98272f9d29e0c52eb1e1eaca7382"
+      },
+      "currentAppAppearanceVerified": false,
+      "appWorkflowPassed": false,
+      "currentAppFrames": 0,
+      "iOSUnitCasesExecuted": 0,
+      "approvalLimit": "Shape approval does not establish current runtime wood appearance, picking, selection or workout behavior, manufacturing accuracy, or training claims."
+    }
+  ]
 }

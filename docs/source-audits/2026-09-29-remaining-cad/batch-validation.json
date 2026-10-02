@@ -42,7 +42,7 @@
   "metadataAudit": "metadata-audit.json",
   "historicalReportNotes": "validation-notes.md",
   "appCaptures": "All 21 current-source packages; representative DEBUG contact review routes, plus physical selector taps for all three Plateau depths. RealityKit tests cover all authored presentation positions and transient non-pickable cords.",
-  "geometryAcceptance": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion acceptance pending; #11 geometry presented, app and human acceptance pending; #12 corrected geometry presented, current app and human acceptance pending",
+  "geometryAcceptance": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion acceptance pending; #11 geometry presented, app and human acceptance pending; #12 shown CAD shape accepted, current app appearance unverified; #13 next for review",
   "testArtifactSHA256": {
     "test-results/ios-summary.json": "6d38d38ec0659f98565df7ec135a99648db9f4964945c9fb58bdbda699a3febe",
     "test-results/ios-tests.log": "47c5b2b6d584d6df47cbf8e84e5bf2391f4ff3b4c82aa2fe6f8ad883f877e681",
@@ -425,6 +425,34 @@
       "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/human-review.json",
       "priorDeliveryManifestSHA256": "eef283106fd1636a2bc036d9b64268fa41cbf2bf2286304607513662b86850e8",
       "limits": "All profile/radius/cavity-depth values are display estimates; no per-contact depth facts. No current app frames, guest operations or iOS unit cases. Historical captures and results remain separate."
+    },
+    {
+      "eventType": "human-shape-acceptance",
+      "package": "owl-climb-poker",
+      "reviewNumber": 12,
+      "reviewer": "asherlc",
+      "date": "2026-10-02",
+      "recordedUTC": "2026-10-02T18:39:21.784156+00:00",
+      "question": "Does this shape look right?",
+      "answer": "Y",
+      "acceptedScope": "Shown four-face CAD shape, including the paired reliefs extending beside the mono/duo row and whole prior/current front, side and top comparisons.",
+      "identity": {
+        "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+        "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+        "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+        "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1"
+      },
+      "shownAssetCommit": "40c16ae850bf5de26c1ebc2e167de4ef2958941c",
+      "shownImages": {
+        "four-faces.png": "67338dede9f39d4da1652e42531edd8a1d0f072e5c44f7de9460ab0957a1862b",
+        "front-side-top-comparison.png": "2fa85ca40a1da75933871f55a143f490013e98272f9d29e0c52eb1e1eaca7382"
+      },
+      "currentAppAppearanceVerified": false,
+      "appWorkflowPassed": false,
+      "currentAppFrames": 0,
+      "iOSUnitCasesExecuted": 0,
+      "approvalLimit": "Shape approval does not establish current runtime wood appearance, picking, selection or workout behavior, manufacturing accuracy, or training claims.",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/human-review.json"
     }
   ],
   "historicalBaselineScope": {
