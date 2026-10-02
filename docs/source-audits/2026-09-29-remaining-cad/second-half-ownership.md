@@ -239,3 +239,17 @@ The original helper KeyError, frozen validator and reviewed correction remain
 exact. Extending isolated preview to 180 seconds did not reproduce the actual
 workout defect in these runs, and no production fix or acceptance is claimed.
 Earlier packets remain unchanged; coordinated resources stay live, cleanup pending.
+
+### Strict hand-host suppression confirmation
+
+The [Evo strict-hands appendix](zlagboard-evo/runtime-strict-hands-2026-10-02/README.md)
+retains ON/OFF/OFF-B/ON-B as FAIL/PASS/PASS/FAIL on one binary, with all
+48 CPU brackets and matching observed frame/transform sets. Both OFF runs
+retain zero hand constructor/make counts; ON runs retain positive paired counts
+and stale early following-Hang colors. ON-B also has an incorrect early Rest
+frame; exact screenshot windows qualify recovery timing. Initial and reverse
+reports remain separate and immutable. The authorized sixth-file reservation
+and proposal correction are retained, without expanding our board allocation.
+This diagnostic contrast establishes no generic host rule or production fix.
+Previous acceptances remain unchanged; coordinated owned resources stay live
+and cleanup remains pending.

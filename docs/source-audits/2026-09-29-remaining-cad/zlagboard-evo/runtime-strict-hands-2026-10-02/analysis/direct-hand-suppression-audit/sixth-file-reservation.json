@@ -1,0 +1,10 @@
+{
+  "recordedUTC": "2026-10-02T22:47:32.530871+00:00",
+  "file": "HangTen/Views/GripHandModelView.swift",
+  "localSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+  "parentSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+  "matchesParent": true,
+  "parentHead": "eb283a5ff69f04a96b5589497950ab6e3568c83b",
+  "reservation": "Acknowledged by user technical coordination; no pending/planned parent overlap; five prior paths remain reserved.",
+  "scope": "Conditional temporary DEBUG strict hand suppression/lifecycle diagnostic only. Short/180-second timing gate has not yet passed. No production hand change, renderer rewrite, solver mutation or integration."
+}
