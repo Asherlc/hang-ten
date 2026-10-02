@@ -583,7 +583,7 @@
       "package": "zlagboard-evo",
       "boardID": "zlagboard.evo",
       "name": "Zlagboard Zlagboard.Evo",
-      "humanReview": "pending",
+      "humanReview": "reviewed; rounded native geometry, wood finish and all 21 static contact selections accepted; workout highlight refresh remains unresolved",
       "sourceSHA256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
       "reviewPage": "zlagboard-evo/app-review-2026-10-02/review.md",
       "sourceAudit": "zlagboard-evo/source-audit.md",
@@ -611,7 +611,12 @@
         "zlagboard-evo/individual-review-2026-10-01/ios/final-runtime-validation.json"
       ],
       "individualReview": "zlagboard-evo/app-review-2026-10-02/review.md",
-      "runtimeRecovery": "zlagboard-evo/runtime-recovery-2026-10-02/validation.json"
+      "runtimeRecovery": "zlagboard-evo/runtime-recovery-2026-10-02/validation.json",
+      "humanReviewRecord": "zlagboard-evo/human-review.json",
+      "reviewAnswer": "Y",
+      "acceptedDate": "2026-10-02",
+      "acceptedScope": "Displayed Zlagboard.Evo geometry at b60f41c59: native top rounds, full jug crest/corner selection coverage, wood finish and all 21 static selections. Display-estimate limits remain. This reply does not accept or resolve the documented workout red/blue refresh failure.",
+      "acceptedRevisionCommit": "b60f41c5933a53059814f3f375a82beddedca609"
     },
     {
       "number": 21,

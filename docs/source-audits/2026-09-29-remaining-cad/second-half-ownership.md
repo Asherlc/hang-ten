@@ -9,10 +9,10 @@ This workspace exclusively reviews #16 `yy-baguette`, #17 `yy-baguette-evo`,
 #16 was accepted by the user on 2026-10-01 (reply “y”, displayed commit
 `a77034f`). #17 was accepted on 2026-10-01 (reply “y”, displayed commit `112121501`).
 #18 and #19 were subsequently accepted by explicit replies; their acceptance
-records are committed in `c63554f9f` and `04979bde9`. #20 now has fresh app views for all 21 contacts and awaits human geometry
-review. Workout highlight transitions remain unresolved on iOS 26.4 and 26.5;
-full app-workflow validation is not passing.
-#20–21 remain pending until explicit replies accept their displayed revisions.
+records are committed in `c63554f9f` and `04979bde9`. #20 geometry was accepted on 2026-10-02 (reply “Y”, displayed commit
+`b60f41c59`). Workout highlight transitions remain unresolved on iOS 26.4 and
+26.5; full app-workflow validation is not passing. #21 is the remaining pending
+board and now enters individual preparation and review.
 
 The parent `placid-badger` owns #9–15; accepted #1–8 and all other packages
 are outside this workspace's scope. Shared compiler, schema, renderer, and
@@ -54,5 +54,6 @@ reserved `HangTen/Models/BoardModelRealityTypes.swift`, `BoardModelView.swift`,
 `RootView.swift` and focused tests for investigation. All tentative app and test
 edits were reverted exactly; no shared renderer fix ships with this review.
 Existing Mammut finish, NUG and migration changes remain intact. Temporary
-validation resources were deleted and independently checked. #21 preparation
-remains scratch-only until the user reviews #20.
+validation resources were deleted and independently checked. #20’s subsequent acceptance is recorded in `zlagboard-evo/human-review.json`;
+the immutable app packet retains its original pre-acceptance status. #21 proceeds
+from its existing scratch preparation and still requires its own user reply.

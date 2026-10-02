@@ -1132,7 +1132,7 @@
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/metadata-diff.json",
       "nativeValidation": "Native2mm trough/1mm lip fillets with21 distinct final-face contact bindings, added jug crests;78 constrained sketches, reopen/radius-edit-and-restore verified. Fourteen pocket features and published depths preserved. Final compiler and independent reproduction reports retained.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/app-review-2026-10-02/validation.json",
-      "geometryAcceptance": "pending one-by-one human review of rounded top transitions, complete jug highlights, wood finish and all21 contact selections",
+      "geometryAcceptance": "reviewed; rounded native geometry, wood finish and all 21 static contact selections accepted; workout highlight refresh remains unresolved",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
       "nativeAppHistory": [
         "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/app-review/validation.json",
@@ -1142,7 +1142,12 @@
         "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/source-audit.md"
       ],
       "individualReview": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/app-review-2026-10-02/review.md",
-      "runtimeRecovery": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/runtime-recovery-2026-10-02/validation.json"
+      "runtimeRecovery": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/runtime-recovery-2026-10-02/validation.json",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/human-review.json",
+      "reviewAnswer": "Y",
+      "acceptedDate": "2026-10-02",
+      "acceptedScope": "Displayed Zlagboard.Evo geometry at b60f41c59: native top rounds, full jug crest/corner selection coverage, wood finish and all 21 static selections. Display-estimate limits remain. This reply does not accept or resolve the documented workout red/blue refresh failure.",
+      "acceptedRevisionCommit": "b60f41c5933a53059814f3f375a82beddedca609"
     },
     "zlagboard-pro": {
       "source": "Hangboards/zlagboard-pro/zlagboard-pro.FCStd",
