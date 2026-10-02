@@ -585,7 +585,7 @@
       "name": "Zlagboard Zlagboard.Evo",
       "humanReview": "pending",
       "sourceSHA256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
-      "reviewPage": "zlagboard-evo/individual-review-2026-10-01/review.md",
+      "reviewPage": "zlagboard-evo/app-review-2026-10-02/review.md",
       "sourceAudit": "zlagboard-evo/source-audit.md",
       "comparisons": [
         "zlagboard-evo/review/comparison-side.png",
@@ -600,15 +600,17 @@
           "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee"
         }
       },
-      "appReview": "zlagboard-evo/individual-review-2026-10-01/ios/final-runtime-validation.json",
-      "appReviewPage": "zlagboard-evo/individual-review-2026-10-01/review.md",
+      "appReview": "zlagboard-evo/app-review-2026-10-02/validation.json",
+      "appReviewPage": "zlagboard-evo/app-review-2026-10-02/review.md",
       "reviewPageHistory": [
-        "zlagboard-evo/source-audit.md"
+        "zlagboard-evo/source-audit.md",
+        "zlagboard-evo/individual-review-2026-10-01/review.md"
       ],
       "appReviewHistory": [
-        "zlagboard-evo/app-review/validation.json"
+        "zlagboard-evo/app-review/validation.json",
+        "zlagboard-evo/individual-review-2026-10-01/ios/final-runtime-validation.json"
       ],
-      "individualReview": "zlagboard-evo/individual-review-2026-10-01/review.md",
+      "individualReview": "zlagboard-evo/app-review-2026-10-02/review.md",
       "runtimeRecovery": "zlagboard-evo/runtime-recovery-2026-10-02/validation.json"
     },
     {

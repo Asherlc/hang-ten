@@ -1,0 +1,12 @@
+{
+  "atUTC": "2026-10-02T05:55:18.363424+00:00",
+  "change": "Explicit retained-model selection synchronization for contact IDs, mode and position.",
+  "evidenceBasis": "Repeated actual first-rest red and following-active blue failures, including both orientations; hosted state/date/monotonic tests passed before fix and do not reproduce the intermittent runtime failure.",
+  "productionChangedFiles": [
+    "HangTen/Views/BoardModelView.swift"
+  ],
+  "productionPatchSHA256": "1f7b09f1dd957aaa8e9492ce558e1a82b589eb24eae98dbd5f8e8eca40d4905f",
+  "rootViewExactHEAD": true,
+  "rendererSceneExactHEAD": true,
+  "greenAndRuntime": "pending appworker execution; no pass claimed"
+}

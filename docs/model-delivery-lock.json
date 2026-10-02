@@ -1131,16 +1131,17 @@
       "comparison": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/comparison-final/comparison-front-side-top.png",
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/metadata-diff.json",
       "nativeValidation": "Native2mm trough/1mm lip fillets with21 distinct final-face contact bindings, added jug crests;78 constrained sketches, reopen/radius-edit-and-restore verified. Fourteen pocket features and published depths preserved. Final compiler and independent reproduction reports retained.",
-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/ios/final-runtime-validation.json",
+      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/app-review-2026-10-02/validation.json",
       "geometryAcceptance": "pending one-by-one human review of rounded top transitions, complete jug highlights, wood finish and all21 contact selections",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
       "nativeAppHistory": [
-        "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/app-review/validation.json"
+        "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/app-review/validation.json",
+        "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/ios/final-runtime-validation.json"
       ],
       "comparisonHistory": [
         "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/source-audit.md"
       ],
-      "individualReview": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/review.md",
+      "individualReview": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/app-review-2026-10-02/review.md",
       "runtimeRecovery": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/runtime-recovery-2026-10-02/validation.json"
     },
     "zlagboard-pro": {

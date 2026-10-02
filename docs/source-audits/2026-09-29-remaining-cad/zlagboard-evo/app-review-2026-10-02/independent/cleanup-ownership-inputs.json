@@ -1,0 +1,32 @@
+{
+  "status": "prepared-only-not-cleanup-verification",
+  "records": [
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/baseline-restored-build/ownership.json",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/candidate2/ownership.json",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/candidate3/ownership.json",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/candidate4/ownership.json",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/green/ownership.json",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/normal-monotonic/ownership.json",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/red/ownership.json",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/red-timeline/ownership.json",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/trace-build/ownership.json",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/trace2-build/ownership.json",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/trace3-build/ownership.json",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/ownership.json",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/test-retry-ownership.json",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/ownership.json"
+  ],
+  "keys": [
+    "cleanup",
+    "derivedData",
+    "exactResultBundle",
+    "lifetime",
+    "owner",
+    "preservedProducts",
+    "resultBundle",
+    "runtime",
+    "simulator",
+    "testResultBundle",
+    "traps"
+  ]
+}

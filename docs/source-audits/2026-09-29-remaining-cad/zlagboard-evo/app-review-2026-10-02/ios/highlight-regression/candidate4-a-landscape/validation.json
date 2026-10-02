@@ -1,0 +1,406 @@
+{
+  "results": {
+    "planID": "research.max-hangs",
+    "mode": "landscape",
+    "activeStateCaptured": true,
+    "followingRestCaptured": true,
+    "nextActiveTimedSeriesCaptured": true,
+    "routine": "Existing bundled routine unchanged; Rest skipped via visible UI only after settled preview capture",
+    "visualHighlightReview": "Timed next-active images require visible Hang timer and red bilateral surfaces; AX may describe a later state. Inspect all screenshots before claiming red/blue/red."
+  },
+  "events": [
+    {
+      "capture": "active-settled",
+      "epoch": 1790921836.90451
+    },
+    {
+      "capture": "following-rest",
+      "epoch": 1790921841.913298
+    },
+    {
+      "capture": "following-rest-settled",
+      "epoch": 1790921847.892063
+    },
+    {
+      "uiAction": "Skip step 2 after settled rest capture",
+      "epoch": 1790921849.322263
+    },
+    {
+      "capture": "next-active-timed-0",
+      "epoch": 1790921850.332402
+    },
+    {
+      "capture": "next-active-timed-1",
+      "epoch": 1790921852.8344262
+    },
+    {
+      "capture": "next-active-timed-2",
+      "epoch": 1790921855.337974
+    },
+    {
+      "capture": "after-next-active-series",
+      "epoch": 1790921860.514546
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "launch",
+        "--terminate-running-process",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6",
+        "com.hangten.training"
+      ],
+      "startEpoch": 1790921827.300103,
+      "endEpoch": 1790921827.5608902,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "openurl",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6",
+        "hangten://plan/research.max-hangs/workout"
+      ],
+      "startEpoch": 1790921827.561292,
+      "endEpoch": 1790921830.668231,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921830.668638,
+      "endEpoch": 1790921832.893989,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921833.148672,
+      "endEpoch": 1790921833.540193,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921833.799853,
+      "endEpoch": 1790921834.164765,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921834.416002,
+      "endEpoch": 1790921834.964075,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921835.217288,
+      "endEpoch": 1790921835.6222599,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921835.8736792,
+      "endEpoch": 1790921836.2491589,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921836.502382,
+      "endEpoch": 1790921836.903729,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/candidate4-a-landscape/active-settled.png"
+      ],
+      "startEpoch": 1790921836.9049442,
+      "endEpoch": 1790921837.365312,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921837.624213,
+      "endEpoch": 1790921838.0165482,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921838.268637,
+      "endEpoch": 1790921838.668834,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921838.921667,
+      "endEpoch": 1790921839.3081322,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921839.568575,
+      "endEpoch": 1790921839.9666119,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921840.228193,
+      "endEpoch": 1790921840.614429,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921840.86876,
+      "endEpoch": 1790921841.267175,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921841.522403,
+      "endEpoch": 1790921841.912577,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/candidate4-a-landscape/following-rest.png"
+      ],
+      "startEpoch": 1790921841.913713,
+      "endEpoch": 1790921842.372684,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921845.383518,
+      "endEpoch": 1790921847.891451,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/candidate4-a-landscape/following-rest-settled.png"
+      ],
+      "startEpoch": 1790921847.892457,
+      "endEpoch": 1790921848.35045,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "tap",
+        "--id",
+        "workout.skipStep",
+        "--tap-style",
+        "physical",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921848.351188,
+      "endEpoch": 1790921849.321506,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/candidate4-a-landscape/next-active-timed-0.png"
+      ],
+      "startEpoch": 1790921850.332751,
+      "endEpoch": 1790921850.8234491,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/candidate4-a-landscape/next-active-timed-1.png"
+      ],
+      "startEpoch": 1790921852.8347871,
+      "endEpoch": 1790921853.328125,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/candidate4-a-landscape/next-active-timed-2.png"
+      ],
+      "startEpoch": 1790921855.338304,
+      "endEpoch": 1790921855.8375418,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6"
+      ],
+      "startEpoch": 1790921855.838169,
+      "endEpoch": 1790921860.513702,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "1684856E-FC2D-4407-8063-9B343B99CAD6",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/candidate4-a-landscape/after-next-active-series.png"
+      ],
+      "startEpoch": 1790921860.514981,
+      "endEpoch": 1790921860.9643898,
+      "exitStatus": 0
+    }
+  ]
+}

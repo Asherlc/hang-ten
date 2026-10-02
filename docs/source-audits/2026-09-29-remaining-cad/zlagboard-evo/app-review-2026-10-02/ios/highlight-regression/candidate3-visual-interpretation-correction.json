@@ -1,0 +1,11 @@
+{
+  "candidate": "candidate3",
+  "image": "candidate3-a-landscape/next-active-timed-2.png",
+  "sha256": "6806ee0b4b98b43655ad0ad4d5fddbd3fc87b019b838331c64cde1331fee4602",
+  "correctedFinding": "FAIL: board20mm pockets remain BLUE during STEP3 Hang00:06. Red fingertips are separate content and do not establish board highlight correctness.",
+  "priorWorkerInterpretation": "Worker incorrectly reported next-active red/pass after batch viewing. Retracted after root and package_checks independent review and worker original-detail reinspection.",
+  "sequence": "Initial active boardpockets red; firstrest blue; nextactive blue (failure).",
+  "rawEvidenceUnchanged": true,
+  "finalSmokeStarted": false,
+  "commentOnlyBuildStarted": false
+}

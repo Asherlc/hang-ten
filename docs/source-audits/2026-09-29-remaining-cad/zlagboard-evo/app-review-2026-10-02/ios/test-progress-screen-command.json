@@ -1,0 +1,15 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "io",
+    "1684856E-FC2D-4407-8063-9B343B99CAD6",
+    "screenshot",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/test-progress-screen.png"
+  ],
+  "exitStatus": 0,
+  "stdout": "",
+  "stderr": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: FFC7FAB7-E8D6-4067-8FB5-DA4DE10A4273 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/test-progress-screen.png\n"
+}

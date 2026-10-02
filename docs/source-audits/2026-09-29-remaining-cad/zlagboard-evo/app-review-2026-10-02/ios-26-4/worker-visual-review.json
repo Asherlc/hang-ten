@@ -1,0 +1,12 @@
+{
+  "status": "FAIL firstrest highlight transition",
+  "images": {
+    "baseline-b-landscape/active-settled.png": "12e918c6190d82bc332fb3a57eefd9ee3ac9fb0539e38dc03e39870a3951153f",
+    "baseline-b-landscape/following-rest-settled.png": "1b8c132a0747c3d2957526c45e978c1ccb96da2aed37dea1d4d351171b9eaca5",
+    "baseline-b-landscape/next-active-timed-2.png": "19d14456897c57e3a2b22bee7f042ab8cd2d5bff59535beab0b88e5320088a8a"
+  },
+  "workerObserved": "Settled STEP2Rest02:55 board20mm pockets RED; STEP3Hang00:06 pockets red. Rest should previewblue.",
+  "humanAcceptance": "pending; worker does not accept board",
+  "source": "Original productionrenderer exactHEAD; no fixes retained",
+  "rootReview": "pending independent review"
+}

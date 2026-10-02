@@ -1,0 +1,222 @@
+[
+  {
+    "AXLabel": " ",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 0,
+      "x": 0,
+      "width": 402,
+      "height": 874
+    }
+  },
+  {
+    "AXLabel": null,
+    "AXUniqueId": "SBSwitcherWindow:Main",
+    "AXValue": null,
+    "frame": {
+      "y": 0,
+      "height": 874,
+      "x": 0,
+      "width": 402
+    }
+  },
+  {
+    "AXLabel": null,
+    "AXUniqueId": "AppSwitcherContentView",
+    "AXValue": null,
+    "frame": {
+      "height": 874,
+      "width": 402,
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "AXLabel": "Hang Ten",
+    "AXUniqueId": "card:com.hangten.training:sceneID:com.hangten.training-295779DE-3C7D-47E5-883A-600CFC465598",
+    "AXValue": null,
+    "frame": {
+      "height": 874,
+      "width": 402,
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "AXLabel": "10:28\u202fPM",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 20.33333333333333,
+      "width": 45.33333333333333,
+      "x": 51.33333333333333,
+      "y": 22.333333333333314
+    }
+  },
+  {
+    "AXLabel": "Cellular",
+    "AXUniqueId": null,
+    "AXValue": "No signal",
+    "frame": {
+      "height": 12.333333333333336,
+      "width": 19.333333333333314,
+      "x": 288.3333333333333,
+      "y": 26.333333333333314
+    }
+  },
+  {
+    "AXLabel": null,
+    "AXUniqueId": "3 of 3 Wi-Fi bars",
+    "AXValue": "SSID, 3 of 3 Wi-Fi bars",
+    "frame": {
+      "height": 12.333333333333336,
+      "width": 17,
+      "x": 315,
+      "y": 26.333333333333314
+    }
+  },
+  {
+    "AXLabel": "100% battery power",
+    "AXUniqueId": null,
+    "AXValue": "Not charging",
+    "frame": {
+      "height": 13,
+      "width": 27.333333333333314,
+      "x": 339.3333333333333,
+      "y": 26
+    }
+  },
+  {
+    "AXLabel": "Open in \u201cHang Ten\u201d?",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 320,
+      "y": 388,
+      "x": 41,
+      "height": 126
+    }
+  },
+  {
+    "AXLabel": "Open in \u201cHang Ten\u201d?",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 20.333333333333314,
+      "y": 409.6666666666667,
+      "width": 260,
+      "x": 71
+    }
+  },
+  {
+    "AXLabel": "Vertical scroll bar, 2 pages",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "width": 30,
+      "y": 388,
+      "height": 46,
+      "x": 328
+    }
+  },
+  {
+    "AXLabel": "Horizontal scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "width": 320,
+      "y": 408,
+      "x": 41,
+      "height": 23
+    }
+  },
+  {
+    "AXLabel": "Vertical scroll bar, 2 pages",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "width": 30,
+      "y": 388,
+      "height": 46,
+      "x": 328
+    }
+  },
+  {
+    "AXLabel": "Horizontal scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "width": 320,
+      "height": 23,
+      "x": 41,
+      "y": 408
+    }
+  },
+  {
+    "AXLabel": "Cancel",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 140,
+      "height": 48,
+      "y": 450,
+      "x": 57
+    }
+  },
+  {
+    "AXLabel": "Open",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 140,
+      "height": 48,
+      "x": 205,
+      "y": 450
+    }
+  },
+  {
+    "AXLabel": "Vertical scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "width": 30,
+      "height": 80,
+      "x": 328,
+      "y": 434
+    }
+  },
+  {
+    "AXLabel": "Horizontal scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "width": 320,
+      "y": 481,
+      "x": 41,
+      "height": 30
+    }
+  },
+  {
+    "AXLabel": "Vertical scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "width": 30,
+      "y": 434,
+      "x": 328,
+      "height": 80
+    }
+  },
+  {
+    "AXLabel": "Horizontal scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "width": 320,
+      "height": 30,
+      "y": 481,
+      "x": 41
+    }
+  }
+]

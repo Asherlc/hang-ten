@@ -1,0 +1,24 @@
+{
+  "atUTC": "2026-10-02T06:19:26.005168+00:00",
+  "action": "Reversed only retained scoped production diff; no blanket reset. All candidate/diagnostic patches and raw failures preserved.",
+  "head": "1f5a5865050c96bf89e67b1929099205dcbd6827",
+  "productionFiles": {
+    "HangTen/Views/BoardModelView.swift": {
+      "sha256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+      "exactHEAD": true
+    },
+    "HangTen/Models/BoardModelRealityTypes.swift": {
+      "sha256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+      "exactHEAD": true
+    },
+    "HangTen/Views/RootView.swift": {
+      "sha256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+      "exactHEAD": true
+    }
+  },
+  "remainingTrackedChanges": [
+    "HangTenTests/BoardModelRealityTests.swift"
+  ],
+  "conclusion": "No production fix demonstrated; four candidates failed actual workout transitions on current runtime despite focused tests passing. Cross-runtime baseline comparison pending parent coordination.",
+  "tests": "Two focused hosted tests remain; material-state/camera/picking coverage does not establish screen rendering correctness."
+}

@@ -1,0 +1,96 @@
+{
+  "timestampUTC": "2026-10-02T05:22:00.119944+00:00",
+  "deviceUUID": "1684856E-FC2D-4407-8063-9B343B99CAD6",
+  "scope": "Read-only exact-device unified log capture, launchctl list, and exact-device CrashReporter filenames; no host process listing or private host data.",
+  "findings": [
+    {
+      "observed": "22:17:21.685 migration wrapper56626 activated com.apple.locationd.synchronous. Initial snapshot had no completion while datamigrator status service remained responsive.",
+      "interpretation": "Synchronous migration endpoint localized; initial observation alone did not prove deadlock."
+    },
+    {
+      "observed": "22:21:06.401 same locationd56411 accepted migration wrapper peer;22:21:06.410 triggered migration;22:21:06.584 notified clients that CLClientManager completed migration steps.",
+      "interpretation": "Spontaneous progress supersedes earlier apparent stall; restarting locationd is not supported by these observations."
+    },
+    {
+      "observed": "SpringBoard56387, locationd56411, datamigrator56456 and wrapper56626 all present with launchctl status0; no files in exact-device CrashReporter tree.",
+      "interpretation": "No repeated crash demonstrated by retained evidence. No claim that SpringBoard rendered successfully."
+    },
+    {
+      "observed": "Locationd emitted cache permission errors and SpringBoard emitted stale-process assertion/scene errors.",
+      "interpretation": "Causality for delayed boot not established; do not modify permissions or migration records based on these messages."
+    }
+  ],
+  "supportedNarrowFix": null,
+  "mutationsOrSignals": false,
+  "runtimeValidation": "App worker owns current boot/UI checks. This report does not claim completed boot or usable app.",
+  "files": {
+    "locationd-selected.log": {
+      "sha256": "5cd2c42fa50298fa0b8a3e970db7849a9e2b1c05f224ce52b0a8f04e067352d1",
+      "bytes": 36959
+    },
+    "device-launchctl-list.log": {
+      "sha256": "c6424f8ea5d5693a1a82a1ab61f158a4fdafd1169d7fcce6bc97a7ce73da8015",
+      "bytes": 11648
+    },
+    "device-crash-inventory.json": {
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    "locationd-targeted-command.json": {
+      "sha256": "126e1cf0c794bd1d7ca898a95eaf58d7eab7c7ce35d9918a31ddafa3f95c543d",
+      "bytes": 569
+    },
+    "targeted.stderr.log": {
+      "sha256": "01562c2fa7aa7c8f4aa278ea839a127c3959b336c823fd752343aa15fa57ca36",
+      "bytes": 44
+    },
+    "device-launchctl-list.stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "targeted.log": {
+      "sha256": "1e58064155043cb2aae58d58eee0d24349dbaaf3aca76310c0d0fa691b33f3b1",
+      "bytes": 1810510
+    },
+    "migration-wrapper-command.json": {
+      "sha256": "397d1f2de3738ba434c5319d8c1dd955587d21528ba4743e07232ad8759569ff",
+      "bytes": 274
+    },
+    "device-launchctl-command.json": {
+      "sha256": "8387cf3a8004761c4ac0e1a608678422c2526aaab38be1c5c99ed440d3e0887b",
+      "bytes": 199
+    },
+    "migration-wrapper.log": {
+      "sha256": "4855cc28c4a5b6b48d9941d0cc363c3a16d8cee33fab0852fe46009a17813b8d",
+      "bytes": 64443
+    },
+    "migration-wrapper.stderr.log": {
+      "sha256": "01562c2fa7aa7c8f4aa278ea839a127c3959b336c823fd752343aa15fa57ca36",
+      "bytes": 44
+    },
+    "device-launchctl-selected.log": {
+      "sha256": "568426515cf225006485e083c1b34abd337dcb233e075ef4b6b973daa473c704",
+      "bytes": 261
+    },
+    "locationd-progress-evidence.log": {
+      "sha256": "59490d56e384777f1de8b3370126094823c7b57668b6e6816c800069c6229cd0",
+      "bytes": 642
+    },
+    "locationd-targeted.stderr.log": {
+      "sha256": "01562c2fa7aa7c8f4aa278ea839a127c3959b336c823fd752343aa15fa57ca36",
+      "bytes": 44
+    },
+    "targeted-command.json": {
+      "sha256": "e3169330478e83a61a280606f0a5c9a431040a12af0e9eb8c7f2c86e3195fbf3",
+      "bytes": 645
+    },
+    "locationd-targeted.log": {
+      "sha256": "2361f6d4022292a9938ec0c574cfd061a71ed2b455046ab2780a9c95ded9e533",
+      "bytes": 229120
+    },
+    "targeted-selected.log": {
+      "sha256": "6c56e7820c85478bf052d342ca9713377661e2f3de74de99ae80021e5fa5526e",
+      "bytes": 191996
+    }
+  }
+}
