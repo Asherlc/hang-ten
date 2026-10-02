@@ -1,0 +1,870 @@
+{
+  "scope": "Fresh recording attempts failed before app launch; independently verified prior public recording, not new correction integration.",
+  "verification": {
+    "owner": "strong-owl-live-physics",
+    "sourceCommit": "957ba2e9f549aea47916e869db9e867849e67389",
+    "freshCaptureSucceeded": false,
+    "newCorrectionIntegrated": false,
+    "createdSimulatorUUIDs": [
+      "8C945A39-320C-4231-9BD5-490D316CBC90",
+      "3ECA2174-730F-4F5A-97C4-BCB34E248552",
+      "772D9BAF-954F-4861-9385-CE8758F0CEE6"
+    ],
+    "createdSimulatorDeletionVerified": true,
+    "processGroupAbsenceChecks": [
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/resources.jsonl",
+        "group": 40781,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/resources.jsonl",
+        "group": 42974,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/resources.jsonl",
+        "group": 43047,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/resources.jsonl",
+        "group": 43063,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/resources.jsonl",
+        "group": 43092,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/resources.jsonl",
+        "group": 43150,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/resources.jsonl",
+        "group": 43194,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/video-raw/resources.jsonl",
+        "group": 58471,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/video-raw/resources.jsonl",
+        "group": 58569,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/resources.jsonl",
+        "group": 51591,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/boot-diagnostic/resources.jsonl",
+        "group": 56336,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/boot-diagnostic-2/resources.jsonl",
+        "group": 56904,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/boot-diagnostic-2/resources.jsonl",
+        "group": 56921,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/boot-diagnostic-2/resources.jsonl",
+        "group": 56936,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/resources.jsonl",
+        "group": 58237,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/boot-samples/resources.jsonl",
+        "group": 58947,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/boot-samples/resources.jsonl",
+        "group": 58968,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/boot-samples/resources.jsonl",
+        "group": 60359,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/video-previous/resources.jsonl",
+        "group": 63891,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/video-previous/resources.jsonl",
+        "group": 63900,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-public-recording/resources.jsonl",
+        "group": 63780,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/final-verification/resources.jsonl",
+        "group": 69056,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/final-verification/resources.jsonl",
+        "group": 69062,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/final-verification/resources.jsonl",
+        "group": 69068,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/final-verification2/resources.jsonl",
+        "group": 69158,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/final-verification2/resources.jsonl",
+        "group": 69177,
+        "absent": true
+      },
+      {
+        "manifest": ".context/strong-owl-live-physics-screen-recording/final-verification2/resources.jsonl",
+        "group": 69183,
+        "absent": true
+      }
+    ],
+    "recipeArtifactsAbsent": true,
+    "sourceComparison": {
+      "previousRecordedCommit": "0da36b44144ed8adfece6455e3949d50e87d1210",
+      "priorCapturedSourceFilesCompared": 16,
+      "priorFileHashesIdentical": true,
+      "currentCapturedFiles": 84,
+      "currentFilesMatchBuildManifest": true,
+      "trackedAppProjectAndClavPackageDiffEmpty": true
+    },
+    "previousPublicDownload": {
+      "url": "https://github.com/Asherlc/hang-ten/releases/download/strong-owl-live-physics-rotation-2026-10-01/strong-owl-live-physics-clavellium-rotation.mp4",
+      "SHA256": "9fe264145f5717365eed42c3f9c81f0102480bae74200b3d0ff325b6a22fa005",
+      "bytes": 3808620,
+      "previousRecording": true,
+      "freshCapture": false
+    },
+    "previousVideoDecoded": {
+      "duration": 46.2,
+      "frames": [
+        {
+          "file": "previous-00.png",
+          "time": 0.145
+        },
+        {
+          "file": "previous-01.png",
+          "time": 4.13
+        },
+        {
+          "file": "previous-02.png",
+          "time": 8.178333333333333
+        },
+        {
+          "file": "previous-03.png",
+          "time": 12.143333333333333
+        },
+        {
+          "file": "previous-04.png",
+          "time": 16.14666666666667
+        },
+        {
+          "file": "previous-05.png",
+          "time": 20.138333333333332
+        },
+        {
+          "file": "previous-06.png",
+          "time": 24.143333333333334
+        },
+        {
+          "file": "previous-07.png",
+          "time": 28.185
+        },
+        {
+          "file": "previous-08.png",
+          "time": 32.19
+        },
+        {
+          "file": "previous-09.png",
+          "time": 36.15833333333333
+        },
+        {
+          "file": "previous-10.png",
+          "time": 40.07333333333333
+        },
+        {
+          "file": "previous-11.png",
+          "time": 44.12833333333333
+        }
+      ],
+      "freshCapture": false,
+      "height": 2622,
+      "inputFile": "previous-public-recording.mp4",
+      "scope": "existing app solver; no new correction integration",
+      "width": 1206
+    },
+    "reviewedPreviousDecodedFrames": [
+      0,
+      3,
+      4,
+      5,
+      6,
+      7,
+      9,
+      11
+    ],
+    "processGroupScope": "Only the three fresh recording attempts and two fresh final verification stages; excludes retained historical manifests elsewhere in the parent directory.",
+    "initialSourceVerifierCorrection": "Initial comparison mistakenly treated the prior commit/files wrapper as the files map. That check was rejected; this verifier unwraps files, compares16retained hashes, checks all84current captured hashes, and checks the full tracked app/project/Clav package Git diff."
+  },
+  "evidenceFiles": [
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/ProcessVideo.swift",
+      "bytes": 2892,
+      "SHA256": "3809e46b999ea41297599592f1525843b11ed99c2686f7dd878092f377c75d1d"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/accessibility-settings.log",
+      "bytes": 59,
+      "SHA256": "3cda11b04b18ecf03f1ccbf486c22430fb4be35a95d4fc025bcbcca8da45dc96"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/app-identity.json",
+      "bytes": 268,
+      "SHA256": "247e2b054bd31248abc4de371a30d00596e8ced72f6c6473a0bf108351097ebb"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/build-command.json",
+      "bytes": 522,
+      "SHA256": "5b0c2d83e594be09dc44dfef910407a29fc704e4f6e8e6148e6758ea3fc56270"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/build.log",
+      "bytes": 513200,
+      "SHA256": "08fa11265038f6ea385c83de3d6ba964a234f0f81d08edcac90d983c7beba1aa"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/capture.py",
+      "bytes": 5245,
+      "SHA256": "a60e7ccb7dd742d47f0af713e25a20e98fcf9811af5acd459b6cbb52e4379b6f"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/capture.zsh",
+      "bytes": 5935,
+      "SHA256": "9e444010997a4396139688674bd0c2e41901bf04f5eac294283c619b5e9feec2"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/cleanup.log",
+      "bytes": 49,
+      "SHA256": "15f9376d2024d9d3368eb1af376fe22c92b25d06049198ec70c3f50cbd7ed27c"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/compiled-source-sha256.json",
+      "bytes": 9501,
+      "SHA256": "1ad723ef311480f4cad2016c2b32386139cdc567e6d9992091626b353e72fba9"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/container.log",
+      "bytes": 176,
+      "SHA256": "608f50faa3f957073c3534978f171997a01174e698a262f57d816ee038e6edd8"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/devices-after-cleanup.json",
+      "bytes": 54180,
+      "SHA256": "b2e366ff9e5ba552c249b68f80c564b0761084609ee96cdf40aefd57643a66e6"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/display-readiness-00.log",
+      "bytes": 327,
+      "SHA256": "43cf79bf281fec9a5e47ff4061b1d3f2548323ea2d9c599515a25b7fe4d4fdad"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/display-readiness.png",
+      "bytes": 72030,
+      "SHA256": "306f30a3720495db582344dc5592ed7fb64ff5f4cb8f1226a7781d826074fb10"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/install.log",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/launch.log",
+      "bytes": 44,
+      "SHA256": "a82316237db4951e98caab5acfc4b834575bb87f26a70d77fbd8cf3579c6228b"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-00.png",
+      "bytes": 63386,
+      "SHA256": "0d6754f0b05e40ae853c41ad4de7307e3a184101700f4e406d1f9cc37776fae6"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-01.png",
+      "bytes": 62028,
+      "SHA256": "83f2f1be78129c0556fd7955cadfcfd540908d9587301b4fa8fae4c8dfe955e8"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-02.png",
+      "bytes": 61411,
+      "SHA256": "3819501273c9ba50f66d50cf552e8aa6e8eb5179ee0296f123a1c948f2d2961b"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-03.png",
+      "bytes": 62008,
+      "SHA256": "8e9ca73cf2c149470ab8015ba95b10d43976b6768d67223ca5963ddb1d1be228"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-04.png",
+      "bytes": 61981,
+      "SHA256": "0a75f0d95e54142479b1b92661da7783d646c087b5c7aa0a5d598ac6291a7a2f"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-05.png",
+      "bytes": 61814,
+      "SHA256": "55cf9b6391bad0ebed93c8eb9a911c86b7aac2bb2eb52a82f391bc8ed4e84167"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-06.png",
+      "bytes": 61304,
+      "SHA256": "3440bf3bbc1fd879477e68cff4412122319e57761fc9ee9da1b3160e836e482c"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-07.png",
+      "bytes": 61815,
+      "SHA256": "65a688923e03238a5ea08d3c5b9966c5308f50bbb0dc82f237319c2d14c61012"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-08.png",
+      "bytes": 62048,
+      "SHA256": "44d514a7de2d18dabf0a26e656b40ffb9c95e8ef801fae648d030cd99f856163"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-09.png",
+      "bytes": 62172,
+      "SHA256": "e3dbffd9fbbdad38c4da3a2afb4a28ac4e98c1b264d72960ee4b5690ac48b977"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-10.png",
+      "bytes": 53574,
+      "SHA256": "268daeeb5e7f48bc6f27897771de271b5d904d623e658db8e20de22a7a638dc3"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-11.png",
+      "bytes": 53564,
+      "SHA256": "10e35e09887d5620aaaada9f5b5bbed893569dbf33fdcdaa1a0aed5f9879af30"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-12.png",
+      "bytes": 53568,
+      "SHA256": "45fccb2a9d0dab8d728a8975e5aea55486cfb7317921dcbf24b10903b796ef6f"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-13.png",
+      "bytes": 53564,
+      "SHA256": "15b5f3d23952e3224c986ab1af8b4bebf7190a979e0b774370a1fd00e682bfe7"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-14.png",
+      "bytes": 53574,
+      "SHA256": "64d6d9d32426b4a304e92e7daa5e650a2a4bedc1a336dcf4c1e66117f6603287"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-15.png",
+      "bytes": 53588,
+      "SHA256": "eaba618360192ada048e8b6d437c6c43b28435bdd4097643d9be19a503337671"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-16.png",
+      "bytes": 53565,
+      "SHA256": "cdad3a105aa1f9ec9d3b9e13f21b2dc710a5725fc2963025866218f892dccec1"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-17.png",
+      "bytes": 53581,
+      "SHA256": "04fe7165ea4ba28fe0387d8e52677b7d923be227ca69fbca6a931fcf4151653d"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-18.png",
+      "bytes": 53569,
+      "SHA256": "f74b9c0538ed48f9074c603dd365d8450874d63f927a8be24f0321536e3a3fa8"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-19.png",
+      "bytes": 53590,
+      "SHA256": "82b25c3603deff8ec0b0bba6cf1cfe42cd44c40d26d0446ed31f3a63eb052cc3"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-20.png",
+      "bytes": 53571,
+      "SHA256": "6e071ffbb8d0e82c0fc5736530d73a6ea10585c67ede4303c422fc73f472b863"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-21.png",
+      "bytes": 53558,
+      "SHA256": "fa05ec0a34ad7016436fad7e149d3e0381dae1645f37ae0928d4c89de75d878a"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-22.png",
+      "bytes": 53578,
+      "SHA256": "ef4da1b72c9b667d5b58fd935d15b14def893d1305ab26e34fcf475eede38242"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-23.png",
+      "bytes": 53602,
+      "SHA256": "541b026311945959bb9e44ede86ce612821ed0f1ae88a1c4f3d6e7a61dedb993"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-24.png",
+      "bytes": 53590,
+      "SHA256": "08fef4748b7df7bc97ce6cb9412dace59099742f39938abbeccb865e687fb0b2"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-25.png",
+      "bytes": 53569,
+      "SHA256": "4724c733d254c0835f2ba8734da01fdd71ab9e8acc90ee2e91dc6a5d93241389"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-26.png",
+      "bytes": 53571,
+      "SHA256": "c1848493bae67b782cc148a1a69cbbcf7bf371e0ff6c1052e0ba6ca0daaaad6b"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-27.png",
+      "bytes": 53554,
+      "SHA256": "83cbe831ca918920830b655eb7f352c51019f97eefc061f0cbb570239ff8c7ee"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-28.png",
+      "bytes": 53563,
+      "SHA256": "af55c587bcba0eb89caab0496abcd60b377bb26c060bc38f562549e7cafd6101"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-29.png",
+      "bytes": 53563,
+      "SHA256": "432c2d8b7ca31251a6d5f8c25862bbf3da54c4518d43d4478e4d809947c53dd0"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-30.png",
+      "bytes": 53381,
+      "SHA256": "ebf024328f1259efcc0cd801466decdd6dbe8750896f6b04a87b748996d9728a"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/raw-video-validation.json",
+      "bytes": 2502,
+      "SHA256": "ec158df929420bc305f84d53360a1fd0698156508caa9afc613d996f640985f9"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/recorder.log",
+      "bytes": 4424,
+      "SHA256": "a7304b5a70b2252a08a16525b8b076a38a0754e7185dbb2753c6ef993e858f87"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/resources.jsonl",
+      "bytes": 4160,
+      "SHA256": "36a42de2f1212f95591d8c4ecfa760534b64cffa8065e5d9aa4bd17f426ed9f5"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/resources.log",
+      "bytes": 135,
+      "SHA256": "8782f2136de49136278bf1af8862898f133c13ddbecc28fcb3ffc7c2da138fc7"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/scope.json",
+      "bytes": 729,
+      "SHA256": "aafc8720615083655ecb12c4287b5efd60825ab272807e5cf09e004ab4951439"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/strong-owl-live-physics-current-app-raw.mp4",
+      "bytes": 726081,
+      "SHA256": "1662666630512d9b888dcde61905f7d3856ae1f103291ac053ceaeb2b85bfb0f"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/video-raw/ProcessVideo.swift",
+      "bytes": 2892,
+      "SHA256": "3809e46b999ea41297599592f1525843b11ed99c2686f7dd878092f377c75d1d"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/video-raw/compile.log",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/video-raw/provenance.json",
+      "bytes": 443,
+      "SHA256": "78929487486ebc85c2d4bff691590f4c46f89f83f813e61437fefb0edb305475"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/video-raw/resources.jsonl",
+      "bytes": 1094,
+      "SHA256": "e3edf97a548a248c6d020a79ce7f8e98e8a91bb077f15d221e426917c55838ba"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/video-raw/run.log",
+      "bytes": 54,
+      "SHA256": "90236cbc339ae8e4aee7d1f0528b935b2e8f018e115797de6fd62529fd0f9ce2"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/video-raw/strong-owl-live-physics-process-video",
+      "bytes": 87160,
+      "SHA256": "2c6dc0270aa53c51f30c5643b8dbf915bcad96526245e98e1da632d59c143914"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T031418Z/video_launch.py",
+      "bytes": 1200,
+      "SHA256": "b0cd97be33d8d61843e82c93c64dc7801f1083294171d3ddd6b3610005ad5399"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/ProcessVideo.swift",
+      "bytes": 2892,
+      "SHA256": "3809e46b999ea41297599592f1525843b11ed99c2686f7dd878092f377c75d1d"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/boot-diagnostic/migration.log",
+      "bytes": 39863,
+      "SHA256": "d3b997ec3de440c1f0e98f3560adfbaae4af2b973a9d108574d4c147f8ab20a0"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/boot-diagnostic/resources.jsonl",
+      "bytes": 587,
+      "SHA256": "39cdd7598270fa23732174f1bbd1d12b2be6ee817367e388b066ccad405b23a7"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/boot-diagnostic-2/launch-services.log",
+      "bytes": 12337,
+      "SHA256": "b7edb575bb428d4f193a45e6dea576feac68ed1289a99bfef7cac18e56873df1"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/boot-diagnostic-2/migration.log",
+      "bytes": 2160238,
+      "SHA256": "127cfe5f5688cfc655e5eadfde7f5793774d2b599b9dab2db552ed0a53b4bc34"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/boot-diagnostic-2/resources.jsonl",
+      "bytes": 1349,
+      "SHA256": "16692eb67e0c4772c87421f4ac1c410bd9da49ab9b9b5c86d4ecc316ba4b246a"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/boot-diagnostic-2/runtimes.log",
+      "bytes": 84533,
+      "SHA256": "efe36e8d294356cb2e7f6b38e6010afead0c6438317015ef0c39f8f76bc4cfa5"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/boot-stop.json",
+      "bytes": 534,
+      "SHA256": "496502f7693db4df52d67f9bd3a79fcd325910283bd98ce86f84b4862c3628f9"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/bootstatus.log",
+      "bytes": 51559,
+      "SHA256": "a12f639193073ee31033a4660936385e5d36274b3dbce3bdda502da933c7e321"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/capture.py",
+      "bytes": 5384,
+      "SHA256": "45458212c8cfadddd493bbbc71cdb1631345dd95e92e9cedd0b7c1df70697ee5"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/capture.zsh",
+      "bytes": 5934,
+      "SHA256": "1d26c43848724543ed15158b734cda58b240e8a676daf9e4231e6d89c96dca53"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/cleanup.log",
+      "bytes": 49,
+      "SHA256": "15f9376d2024d9d3368eb1af376fe22c92b25d06049198ec70c3f50cbd7ed27c"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/devices-after-cleanup.json",
+      "bytes": 53516,
+      "SHA256": "18d46f7daef40456e345dff96a1eb06716898d7378b2276922702763e3b1f2c5"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/prior-recording-source-comparison.json",
+      "bytes": 309,
+      "SHA256": "59de4711cbd3bc28f53b88a2ba202213c7af648ae7e6fd0d97946e258448404b"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/resources.jsonl",
+      "bytes": 425,
+      "SHA256": "bc5a6749b721dcdaacd0e55a5f5ffa1a77bf3c82f8a24d5d4b24197bc471bcf1"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/resources.log",
+      "bytes": 134,
+      "SHA256": "91bd0d81c01e14273dbddb1dacc7b7837a7adcbbc96cf811798287154126d565"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/retry-reason.json",
+      "bytes": 403,
+      "SHA256": "93883f63147a4a02e7821e125c5b8e2f163b9ae5b8a2b79fe3167a45c2b00f76"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032105Z/video_launch.py",
+      "bytes": 1200,
+      "SHA256": "b0cd97be33d8d61843e82c93c64dc7801f1083294171d3ddd6b3610005ad5399"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/ProcessVideo.swift",
+      "bytes": 3004,
+      "SHA256": "0debb88a49e80163e89ffe043268e6f1228539e0cfda57ac200dcf343a3afe1e"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/boot-samples/contactsd.log",
+      "bytes": 44,
+      "SHA256": "a82316237db4951e98caab5acfc4b834575bb87f26a70d77fbd8cf3579c6228b"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/boot-samples/migrationpluginwrapper.log",
+      "bytes": 44,
+      "SHA256": "a82316237db4951e98caab5acfc4b834575bb87f26a70d77fbd8cf3579c6228b"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/boot-samples/resources.jsonl",
+      "bytes": 1551,
+      "SHA256": "1ab3569672f9dc34e0af287f031378935ec19b0262aa8e3831f9c20f49adb86c"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/boot-samples/sampled-owned-simulator-services.json",
+      "bytes": 265,
+      "SHA256": "f3a6cadbffc51fc34719954be1c75fafa2c7485d9ddbbd306aaf4f4d38d611d9"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/boot-samples/services.log",
+      "bytes": 12313,
+      "SHA256": "93d2c0615b4d73ffcfcfb46db9b63d91459f36cae92fb80c4fa06d67cdd7e158"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/bootstatus.log",
+      "bytes": 64840,
+      "SHA256": "ff6bb949f783e91eecc7a9a15bfdb5bfaa7e9f1ff315e57b2a0b1d94f5187181"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/capture.py",
+      "bytes": 5384,
+      "SHA256": "786acacc165c26a0f604f6165375cf62c06f7e14933167db59a95593fadf5987"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/capture.zsh",
+      "bytes": 5935,
+      "SHA256": "6246c1508dc352d6f757765b98153fa859d2a69898f51f5be6a1083a6d838611"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/cleanup.log",
+      "bytes": 49,
+      "SHA256": "15f9376d2024d9d3368eb1af376fe22c92b25d06049198ec70c3f50cbd7ed27c"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/devices-after-cleanup.json",
+      "bytes": 53516,
+      "SHA256": "18d46f7daef40456e345dff96a1eb06716898d7378b2276922702763e3b1f2c5"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-00.png",
+      "bytes": 520469,
+      "SHA256": "f217602366c2ef55a07935d81cca18c0861401d0206c7f879c3df6a00beb37ab"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-01.png",
+      "bytes": 549378,
+      "SHA256": "2838d3ca4caccbb52691810ef847e0137ade035fc9b85e1861851c963af6a9a0"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-02.png",
+      "bytes": 457853,
+      "SHA256": "8fa4e023ef3d11b5e8fb1c4a6e161bad8d150ec5fa7b77ac8b8a0065736ba8c0"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-03.png",
+      "bytes": 434801,
+      "SHA256": "7e7f7905fac2f263698a787d90b3483e6b92ac4e47999de0c76eeae1ed975188"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-04.png",
+      "bytes": 379933,
+      "SHA256": "7a6d5cc36799158005f48df8f9f4d3a793c017086bb6f6415f757ed270bcf21a"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-05.png",
+      "bytes": 437149,
+      "SHA256": "6a8f183e6f75200d8c362ec97066f884198fcfd5c60d86f2251f10be8f96aaf6"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-06.png",
+      "bytes": 439684,
+      "SHA256": "6983036090c43dc5fbee76663d2a456466dc806762a6125fe409ff12e518e8b5"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-07.png",
+      "bytes": 418758,
+      "SHA256": "d3daf7c8fce4738f94041bfa0b33176cc58b89ada098e4dc6dacf38ec20eba51"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-08.png",
+      "bytes": 452103,
+      "SHA256": "83a01186bb33502d027cc165d5aef4323e12b480e7b1fba568fdca0a0d4717ac"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-09.png",
+      "bytes": 389406,
+      "SHA256": "4da2e6e20cab566f91c3acee1024d3720178dc182a7507878fb55f970e1d82ec"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-10.png",
+      "bytes": 384260,
+      "SHA256": "4dbaf612dab5596159e0cd6bd8d1074d5fb9cb33443dc5a6e1d16ab68f9ab8af"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-11.png",
+      "bytes": 390856,
+      "SHA256": "ac5db445078b3a9c150dd3ceebaf0790b801ce444df645246f800e06ddaa4e6c"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-public-recording/download.log",
+      "bytes": 476,
+      "SHA256": "c5a0f52182fda69b4d8b9fad4c321e0c40614efbc44006f3b424dc5c05ad68a8"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-public-recording/resources.jsonl",
+      "bytes": 695,
+      "SHA256": "05523170a1ebb677a141a5d8c618989ce43949fa2694cd814baa340cbf5ec265"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-public-recording/verified.json",
+      "bytes": 314,
+      "SHA256": "3a7a57e87d02b08d13fecda9b22d9031f72f690240983934290f4dff10812212"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-public-recording.mp4",
+      "bytes": 3808620,
+      "SHA256": "9fe264145f5717365eed42c3f9c81f0102480bae74200b3d0ff325b6a22fa005"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/previous-video-validation.json",
+      "bytes": 1206,
+      "SHA256": "839e6603d90fc476ac6ea850df7ba43919233fd14fac926c05d3e6e4da038e38"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/resources.jsonl",
+      "bytes": 425,
+      "SHA256": "3d210491f74ac9a0d7211578a872e1551268fc2790b9a21d5d5f4d58c8fa0e25"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/resources.log",
+      "bytes": 135,
+      "SHA256": "f61a9fbb71ed1130dbf06e7e5cb31aec8e31b0822513f01fbc6e4745bac20085"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/retry-reason.json",
+      "bytes": 329,
+      "SHA256": "28d7a7e5446037ac9e2025532236f76f59bf770d8b08f48c370f0cc90acf140a"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/video-previous/ProcessVideo.swift",
+      "bytes": 3004,
+      "SHA256": "0debb88a49e80163e89ffe043268e6f1228539e0cfda57ac200dcf343a3afe1e"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/video-previous/compile.log",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/video-previous/provenance.json",
+      "bytes": 583,
+      "SHA256": "01d0891d65069c11d95c90c064cc40ffbe36617572133d64d063e05422190239"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/video-previous/resources.jsonl",
+      "bytes": 1374,
+      "SHA256": "d0204590591910f181a79778b98637ac9bd8e3d961d13e03c45a9b48b25a1ef2"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/video-previous/run.log",
+      "bytes": 45,
+      "SHA256": "4db9c2b3f285c45585724f6835e73afd7dfd2a839ad8326d81679fba9845fc93"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/video-previous/strong-owl-live-physics-process-video",
+      "bytes": 87160,
+      "SHA256": "c401e7db084056c823d6dd714047e9f914f527728414b920b61c7f9d23dcb125"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/20261002T032528Z/video_launch.py",
+      "bytes": 1200,
+      "SHA256": "b0cd97be33d8d61843e82c93c64dc7801f1083294171d3ddd6b3610005ad5399"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/final-verification/current-devices.log",
+      "bytes": 53516,
+      "SHA256": "18d46f7daef40456e345dff96a1eb06716898d7378b2276922702763e3b1f2c5"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/final-verification/resources.jsonl",
+      "bytes": 1247,
+      "SHA256": "9bc3ff16984e8ab50cb9d30c6f8b5082678ca8a23bdb0ea39f98a7d2e09dd662"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/final-verification/source-history.log",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/final-verification/source-worktree.log",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/final-verification2/current-devices.log",
+      "bytes": 53516,
+      "SHA256": "18d46f7daef40456e345dff96a1eb06716898d7378b2276922702763e3b1f2c5"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/final-verification2/resources.jsonl",
+      "bytes": 1247,
+      "SHA256": "3b92b4a14a2f14e847bfb77a6a48e7d43e79d93c156e3cfeac2e1d2c40c077b0"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/final-verification2/source-history.log",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/final-verification2/source-worktree.log",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/verification-first-pass.json",
+      "bytes": 17013,
+      "SHA256": "26e8d5541e3d3edd41f1f2fc0dff2a27fe0d57e3d8e9a8ba5e46009ebd8b2352"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/verification.json",
+      "bytes": 7475,
+      "SHA256": "85fc802bb213838f73ba3b2b3a7ebc8555005453c5aeb2af3f73f29625c2ea76"
+    },
+    {
+      "path": ".context/strong-owl-live-physics-screen-recording/verify_recording.py",
+      "bytes": 4263,
+      "SHA256": "f62597d69c9205e024423190232af018ea7138ccfd6a542bb0cbcd392680ce59"
+    }
+  ]
+}
