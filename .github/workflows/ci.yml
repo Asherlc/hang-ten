@@ -757,6 +757,7 @@ jobs:
               HangTenUITests/Batch05BoardModelInteractionUITests/testForge
               HangTenUITests/OwlClimbPokerBoardMapInteractionUITests
               HangTenUITests/GripCueDiagnosticScreenshotUITests
+              HangTenUITests/DefaultGripFingersUITests
               HangTenUITests/DualMaxHangsHighlightUITests
               HangTenUITests/InitialWeightSetupUITests
               HangTenUITests/OneHandedHandChoiceUITests

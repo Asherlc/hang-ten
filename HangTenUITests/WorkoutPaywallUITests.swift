@@ -153,34 +153,41 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         let start = app.buttons["plan.startRoutine"]
         XCTAssertTrue(start.waitForExistence(timeout: 2))
-        var remainingScrollAttempts = 4
-        while !start.isHittable, remainingScrollAttempts > 0 {
-            // A full-screen flick can pass Start while the decimal pad is open.
-            // Scroll toward its measured position in short drags above the keyboard.
-            let viewport = app.frame
-            let navigationBottom = app.navigationBars.firstMatch.frame.maxY
-            let visibleBottom = keyboard.exists ? keyboard.frame.minY : viewport.maxY
-            guard viewport.minX.isFinite, viewport.minY.isFinite,
-                  viewport.width.isFinite, viewport.width > 0,
-                  navigationBottom.isFinite, visibleBottom.isFinite,
-                  visibleBottom > navigationBottom,
-                  start.frame.midY.isFinite else {
-                XCTFail("Start navigation requires finite control and visible content bounds")
-                return
-            }
-            let dragY = (navigationBottom + visibleBottom) / 2
-            let direction: CGFloat = start.frame.midY < dragY ? 1 : -1
-            let dragDistance = min(80, (visibleBottom - navigationBottom) / 4)
-            let origin = app.coordinate(withNormalizedOffset: .zero)
-            origin.withOffset(CGVector(dx: viewport.width / 2, dy: dragY - viewport.minY))
-                .press(forDuration: 0.1, thenDragTo: origin.withOffset(
-                    CGVector(dx: viewport.width / 2, dy: dragY - viewport.minY + direction * dragDistance)
-                ))
+        // A full-screen swipe with the keyboard open can move Start behind
+        // the navigation bar while XCTest still reports it as hittable.
+        let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let navigationBar = app.navigationBars["Plan"]
+        func contentBottom() -> CGFloat {
+            let viewport = screen.frame
+            guard keyboard.exists else { return viewport.maxY }
+            let frame = keyboard.frame
+            guard frame.minY.isFinite, frame.width.isFinite, frame.height.isFinite,
+                  frame.width > 0, frame.height > 0,
+                  frame.minY > navigationBar.frame.maxY,
+                  frame.intersects(viewport) else { return viewport.maxY }
+            return min(frame.minY, viewport.maxY)
+        }
+        func isStartVisible() -> Bool {
+            let frame = start.frame
+            return start.isHittable
+                && frame.minY >= navigationBar.frame.maxY
+                && frame.maxY <= contentBottom()
+        }
+        var remainingScrollAttempts = 8
+        while !isStartVisible(), remainingScrollAttempts > 0 {
+            let viewport = screen.frame
+            let contentTop = navigationBar.frame.maxY
+            let visibleBottom = contentBottom()
+            let origin = screen.coordinate(withNormalizedOffset: .zero).withOffset(
+                CGVector(dx: viewport.width / 2, dy: (contentTop + visibleBottom) / 2 - viewport.minY)
+            )
+            let scrollDelta: CGFloat = start.frame.minY < contentTop ? 100 : -100
+            origin.press(forDuration: 0.05, thenDragTo: origin.withOffset(CGVector(dx: 0, dy: scrollDelta)))
             remainingScrollAttempts -= 1
         }
-        XCTAssertTrue(start.isHittable)
-        start.tap()
-        XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 2))
+        XCTAssertTrue(isStartVisible(), "Start must be below the navigation bar and above the keyboard")
+        tapVisibleControl(start)
+        XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 10))
 
         app.buttons["paywall.purchase"].tap()
 
