@@ -938,6 +938,7 @@ struct GripHandModelReviewView: View {
     @State private var posture: GripType = .halfCrimp
     @State private var fingers: Set<FingerSlot> = [.index, .middle, .ring, .pinky]
     @State private var resetToken = 0
+    @State private var layoutOrientation = "unknown"
 
     var body: some View {
         NavigationStack {
@@ -960,6 +961,8 @@ struct GripHandModelReviewView: View {
                                       resetToken: resetToken)
                 Text(fingers.isEmpty ? "4 fingers (assumed)" : "Highlighted: " + FingerSlot.allCases.filter(fingers.contains).map(\.rawValue).joined(separator: ", "))
                     .font(.caption)
+                    .accessibilityIdentifier("gripModel.review.fingerSummary")
+                    .accessibilityValue(layoutOrientation)
                 Button("Reset view") { resetToken += 1 }
                 Text("Drag to rotate · Pinch to zoom")
                     .font(.caption)
@@ -968,6 +971,14 @@ struct GripHandModelReviewView: View {
             .background(Color.hangCream)
             .navigationTitle("3D hand review")
         }
+        // XCTest's SpringBoard frame does not track the foreground app's rotation.
+        // Report the actual review layout so screenshots wait for SwiftUI to resize.
+        .onGeometryChange(for: String.self) { geometry in
+            let size = geometry.size
+            guard size.width.isFinite, size.height.isFinite,
+                  size.width > 0, size.height > 0 else { return "unknown" }
+            return size.width > size.height ? "landscape" : "portrait"
+        } action: { layoutOrientation = $0 }
         .onAppear {
             let environment = ProcessInfo.processInfo.environment
             if let requested = environment["HANGTEN_REVIEW_GRIP_POSE"].flatMap(GripType.init(rawValue:)) { posture = requested }

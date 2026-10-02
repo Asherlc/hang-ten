@@ -17,13 +17,12 @@ final class DefaultGripFingersUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["Fingers not specified"].exists)
         for orientation in [UIDeviceOrientation.portrait, .landscapeLeft] {
             XCUIDevice.shared.orientation = orientation
-            let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-            let rotated = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-                let frame = screen.frame
-                guard frame.width.isFinite, frame.height.isFinite,
-                      frame.width > 0, frame.height > 0 else { return false }
-                return orientation == .portrait ? frame.height > frame.width : frame.width > frame.height
-            }, object: screen)
+            let summary = app.staticTexts["gripModel.review.fingerSummary"]
+            let expectedLayout = orientation == .portrait ? "portrait" : "landscape"
+            let rotated = XCTNSPredicateExpectation(
+                predicate: NSPredicate(format: "value == %@ AND hittable == true", expectedLayout),
+                object: summary
+            )
             XCTAssertEqual(XCTWaiter.wait(for: [rotated], timeout: 10), .completed)
             XCTAssertTrue(app.staticTexts["4 fingers (assumed)"].isHittable)
             let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
