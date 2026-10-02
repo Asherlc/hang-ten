@@ -36,3 +36,8 @@ These orthographic CPU renders use the exact prior/current USDZ geometry and the
 ![Manufacturer evidence](sources/product-02.png)
 
 The CPU review renders shade triangle face normals; the runtime export retains native CAD surface normals. Native-app screenshots remain the final appearance check.
+
+
+## Individual review update — 2026-10-01
+
+The [individual review packet](individual-review-2026-10-01/review.md) retains the original evidence above and documents narrow native top-transition/lip rounds, restored jug crest selection coverage, and existing renderer wood finish with a gently downward camera. All 21 contact identities and published depths/angles are preserved; new 2 mm/1 mm rounding sizes are display estimates. The final source is `6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c`. The new unbound export has 22 nodes and 36,970 triangles; its hashes and current validation are in [verification-index.json](individual-review-2026-10-01/verification-index.json). Human acceptance remains pending until the one-by-one review reply. Historical compiler and app proofs above retain their original hashes and statuses.

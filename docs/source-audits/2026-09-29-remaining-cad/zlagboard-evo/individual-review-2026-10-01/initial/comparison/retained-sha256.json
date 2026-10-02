@@ -1,0 +1,18 @@
+{
+  "files": {
+    "comparison-front-side-top.png": "b44a63b8c60b7cb9073240c3a8226ac2de901a94e0508841b7f6ebc9c4234bb2",
+    "comparison-front.png": "364ac582110ab70b8dbaa4a5ccef189540044fb67ca44eadc4470f04136df917",
+    "comparison-side.png": "95a62915767ef4f9a2cb8de5c017fb224acef7333905dbb1994d6c3b9019f5d9",
+    "comparison-top.png": "49388a1435d9f6bac86bd7fde49c35d802cff1fbb65c38640792ea4903dece4f",
+    "native-front.png": "85e9735221d295f11576370145f1a36e3f1f172e65401442a2b78291d2fe6136",
+    "native-side.png": "3847e5cac9af152de6ff457d1b9b0978260a7284ccefd35fd546472fa3936792",
+    "native-top.png": "ae3be7949519d9dc2147a01bb009b44e6d48b116454e68cabaddf964a3e88caf",
+    "original-d0e4.usdz": "35cabe2a3aa0505b4cca5545b368cca02396a30f826e1186449f546ff2f40884",
+    "original-front.png": "76f6942c3a95d4074bebcd897a0cda68d6400dbe53ab77404b5b15a9b25ce3d6",
+    "original-lfs-pointer.txt": "cf64f293d3cbdcb34d8934cb42075a12199fcc0bb15c4a30c939644c84d50421",
+    "original-side.png": "c82d697b6b1800d4594c28f1e60c968c088e8e07ac87c35d49314f2babe598c9",
+    "original-top.png": "60110561675160bca19e2cb7837859ad06ab933219ba06b7cc5a62e502a090f7",
+    "render-provenance.json": "e2cfe2ccd056e93ca69012c9d79d38e5d5de2b95bfa742cf845a417228aa14dc",
+    "render.py": "8f5167337af9238b5ae6603b814f180699d9db8d8f465763d32402a6170d7ac0"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "boardID": "zlagboard.evo",
+  "owner": "placid-badger-cad-second-half",
+  "status": "blocked: Simulator first-boot migration prevented fresh app validation",
+  "humanAcceptance": "pending explicit user reply; runtime validation incomplete",
+  "packageSHA256": {
+    "Hangboards/zlagboard-evo/zlagboard-evo.FCStd": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+    "Hangboards/zlagboard-evo/assets/primary.usdz": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+    "Hangboards/zlagboard-evo/assets/primary.model.json": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe"
+  },
+  "freshBuild": {
+    "status": "passed",
+    "rawLog": "first-attempt/build.log",
+    "retainedProductHashes": "recovery-26-3/preserved-build-products-sha256.json"
+  },
+  "firstTestRun": {
+    "rawStatus": "Failed",
+    "rawPassedTests": 0,
+    "rawFailedTests": 1,
+    "rawTotalTestCount": 1,
+    "rawSummary": "first-attempt/test-results-summary.json",
+    "rawLog": "first-attempt/tests.log",
+    "exitStatus": "first-attempt/tests-exit-status.txt",
+    "interpretation": "Canceled startup failure, not a test assertion failure; raw Xcode counts and status preserved. No successful test retry ran."
+  },
+  "attempts": [
+    {
+      "path": "first-attempt",
+      "runtime": "26.5",
+      "ownership": "first-attempt/ownership.json",
+      "cleanup": "first-attempt/cleanup-verification.json",
+      "exactSimulatorUUID": "6969EFC0-48DE-459D-8186-057E71B7A95B"
+    },
+    {
+      "path": "recovery-26-5",
+      "runtime": "26.5",
+      "ownership": "recovery-26-5/ownership.json",
+      "cleanup": "recovery-26-5/cleanup-verification.json",
+      "exactSimulatorUUID": "61FEA8D3-E5C1-4886-B056-F84CA2D7170C"
+    },
+    {
+      "path": "recovery-26-4",
+      "runtime": "26.4",
+      "ownership": "recovery-26-4/ownership.json",
+      "cleanup": "recovery-26-4/cleanup-verification.json",
+      "exactSimulatorUUID": "4E0DA38B-E1C2-47A3-BEC7-B18750EF09C5"
+    },
+    {
+      "path": "recovery-26-3",
+      "runtime": "26.3",
+      "ownership": "recovery-26-3/ownership.json",
+      "cleanup": "recovery-26-3/cleanup-verification.json",
+      "exactSimulatorUUID": "F4AB4722-62E5-411D-82B6-11502495F8C2"
+    }
+  ],
+  "runtimeCoverage": {
+    "status": "not completed",
+    "contactSelections": 0,
+    "orbits": 0,
+    "physicalPicking": "not run",
+    "workout": "not run",
+    "installedPackageParity": "not run",
+    "reason": "Fresh devices stalled in AddressBookLegacy first-boot migration; initial direct install also stalled. No successful app launch, screenshot or runtime pass is claimed."
+  },
+  "recoveryLimits": [
+    "Only exact owned Simulator UUIDs and owned processes were acted on. No shared service restart, private migration manipulation or shared resource purge.",
+    "Exact shutdown of iOS26.4 ended its lifecycle before a reboot; no completed reboot is claimed.",
+    "Same freshly built product bytes were preserved between attempts, with no rebuild."
+  ],
+  "temporaryProductsCleanup": "temporary-products-cleanup-verification.json",
+  "cleanupStatus": "all exact owned Simulator/build resources verified deleted",
+  "timeoutInterpretation": "First-boot migration remained active when bounded waits were interrupted. Earlier windows were shorter; final iOS26.3 device was allowed eight minutes. This does not prove migration could never complete. Raw Xcode startup cancellation is preserved separately.",
+  "bootScreenDiagnostic": "recovery-26-3/boot-migration.png",
+  "nativeComparison": "Retained separately in comparison-final; original/prior/corrected actual USDZ comparisons do not substitute for app validation."
+}

@@ -1,0 +1,12 @@
+{
+  "sourceSHA256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+  "sourceBytes": 1000365,
+  "indexIsLFSPointer": true,
+  "pointerOIDMatches": true,
+  "pointerSizeMatches": true,
+  "realLFSObject": "/Users/asherlc/src/hang-ten/.git/lfs/objects/6f/44/6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+  "objectExists": true,
+  "objectBytesExact": true,
+  "nativeZIP": true,
+  "passed": true
+}

@@ -1,0 +1,29 @@
+{
+  "humanReview": "pending",
+  "finalAssets": {
+    "Hangboards/zlagboard-evo/assets/primary.model.json": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+    "Hangboards/zlagboard-evo/assets/primary.usdz": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+    "Hangboards/zlagboard-evo/zlagboard-evo.FCStd": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c"
+  },
+  "checks": {
+    "native": "shape-audit/candidate-verification.json",
+    "shapeJudgment": "shape-audit/review-summary.json",
+    "runtime": "ios/final-runtime-validation.json",
+    "delivery": "delivery-validation.json",
+    "compilerCheck": "compiler-final/check.json",
+    "compilerPublish": "compiler-final/publish.json",
+    "pocketSurfaces": "compiler-final/pocket-surfaces.json",
+    "package": "package-checks/final/published-package-verification.json",
+    "scope": "package-checks/final/finalscope.json",
+    "sourceLFS": "source-lfs-verification.json",
+    "reproducibility": "compiler-final/reproduction.json",
+    "compilerCleanup": "compiler-final/completion-and-cleanup.json",
+    "finalContract": "package-checks/final/final-contract.json",
+    "exportedJugCrests": "shape-audit/final-export-jug-crests-strict.json",
+    "nativeVisual": "native-visual-review.json",
+    "copyAndCleanup": "ios-copy-and-cleanup-verification.json",
+    "finalScope": "package-checks/final/final-scope-after-runtime.json",
+    "independentCompilerCleanup": "independent-compiler-cleanup.json"
+  },
+  "runtimeStatus": "blocked; no fresh app review completed"
+}

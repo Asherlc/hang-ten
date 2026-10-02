@@ -1,0 +1,15 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "io",
+    "F4AB4722-62E5-411D-82B6-11502495F8C2",
+    "screenshot",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-runtime-26-3/boot-migration.png"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: FE694279-E919-43C9-AC00-F9EDF9111A62 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-runtime-26-3/boot-migration.png\n"
+}

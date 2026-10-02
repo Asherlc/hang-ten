@@ -1,0 +1,12 @@
+{
+  "stage": "publish",
+  "childExitCode": 0,
+  "reportExists": true,
+  "sourceSHA256Before": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+  "sourceSHA256After": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+  "sourceUnchanged": true,
+  "elapsedSeconds": 235.7278552079806,
+  "innerStatusExists": true,
+  "innerExitCode": 0,
+  "passed": true
+}

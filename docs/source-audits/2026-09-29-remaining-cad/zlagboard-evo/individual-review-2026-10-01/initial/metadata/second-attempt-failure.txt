@@ -1,0 +1,9 @@
+Tool-reported exit code: 1
+Traceback (most recent call last):
+  File "<stdin>", line 10, in <module>
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/set_board_manifest.py", line 142, in embed
+    board = cad_source.manifest_to_board(manifest, board_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardPackages/src/hangboard_packages/cad_source.py", line 312, in manifest_to_board
+    raise ManifestError(f"{MANIFEST_PROPERTY} must not carry derived key {key!r}")
+hangboard_packages.cad_source.ManifestError: HangTenBoardManifest must not carry derived key 'id'
