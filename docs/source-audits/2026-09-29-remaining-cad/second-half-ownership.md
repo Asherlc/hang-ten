@@ -137,3 +137,14 @@ and bytes remain unchanged; explicit hash-bound corrections are appended.
 No production fix is established, and native acceptance/package/global records
 remain unchanged. The existing resource controller and path reservation remain
 active while diagnosis continues.
+
+### Standalone isolation diagnostics — workout defect still unresolved
+
+The [Evo standalone isolation appendix](zlagboard-evo/runtime-standalone-isolation-2026-10-02/README.md)
+retains the exact 210 x 36 point A/B/B/A experiment and all 80 successful
+isolated board-state/color captures. The actual workout still fails; no
+production repair is established. The A1 startup-scope validity failure and
+separate correction, B2 single-frame black-capsule artifact, root image reviews
+and raw committee responses remain explicit. Earlier packets and all geometry
+acceptance records are unchanged. Reserved source and owned resources remain
+under coordinated diagnosis, with exact cleanup still pending.

@@ -1,0 +1,18 @@
+{
+  "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/projection-off-a-landscape/active-settled-ax.json",
+  "sha256": "dc450eb78d7fdfd1bdf9ddf99b8fd42286af2d8aca8fb12746caa2b338364091",
+  "matches": [
+    {
+      "AXLabel": "Zlagboard.Evo hangboard",
+      "AXUniqueId": "boardModel.3d",
+      "AXValue": "",
+      "frame": {
+        "x": 332,
+        "height": 36,
+        "width": 210,
+        "y": 240
+      }
+    }
+  ],
+  "limitation": "AX frame not necessarily exact internal GeometryReader size; new logging needed for parity"
+}

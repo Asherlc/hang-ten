@@ -1,0 +1,130 @@
+Showing 1 of 101 activities (limited to 1)
+
+# Independent architecture review: stale workout board highlight
+
+## Bottom line
+
+- **The "multi-host" premise is gone.** I re-scored the evidence under the full Hang → Rest → Hang rule, independently of root's audit, and no run has ever passed. Hands ON, OFF (twice), plain box O and P, ARView board host, explicit `.virtual` and semantic remount all show a stale board while the CPU material is correct. A second host is not needed for the failure, and projection type doesn't matter.
+- **No host rewrite is justified yet.** That covers a combined board+hands scene, on-demand hand images, ARView and RealityRenderer. The board fails with no hand host present, so merging scenes or turning the hands into images would not be expected to fix it.
+- **I agree with root's next step**, a standalone single board host with a sparse census, with the refinements listed below. After that, the same harness should be run on a physical device.
+
+## What the re-scored evidence shows
+
+I opened each distinct frame needed for this table. Identical SHA-256 hashes (first 12 hex characters shown) group the same frame across runs.
+
+| Checkpoint (time since CPU change) | What is on screen |
+|---|---|
+| Step 1 Hang (~2.4 s) | Red and correct in every run, including OFF |
+| Rest, early (~0.5 s) | Red, stale. `14e7a4f0…` is the same frame in 6 runs, and matches visibility `window-15` |
+| Rest, settled (~4.4 s) | Two outcomes. Red and stale: `eac34b95…` (hand-on-a, host-arview-a, identity-control-a) and `4540ff67…` (both OFF runs). Blue and correct: `6899840c…` (hand-on-b, camera-virtual-a) and plain-box-a |
+| Get-Ready countdown (6.8–9 s, CPU blue) | Blue in the ON runs. Old OFF is still red at 6.8 s (CPU blue since +9.586 s in `events-368D7578…`) |
+| Step 3 Hang (~1.1 s) | Blue and stale: `6806ee0b…` in 7 runs, plus fresh OFF. Only identity-control-a showed red |
+
+Further observations:
+- **The semantic remount also catches up eventually.** identity-semantic-a's `next-active-timed-0` has the same hash as camera-virtual-a's (`dc0821a4…`). I opened the camera-virtual-a file: the board is present and blue during Get Ready. So "board absent after remount" is the same delay seen in all other runs, not a separate failure.
+- **The visibility probe was asymmetric.** Disabling the entities showed on screen within 1.2 s. Re-enabling them did not show within about 15 s.
+- **The pattern is consistent.** Every change after the first one (material, re-enable, re-attach) reaches the screen after a variable delay, from under 0.5 s to over 8 s. Byte-identical frames repeat across separate launches. That points to an event-driven mechanism, not random frame drops.
+- **The only always-correct change has a confound.** The first highlight happens at the same moment the 68-pt hand slot (or OFF's `Color.clear`) is inserted above the board, which resizes the board view (`RootView.swift:2367-2373` at HEAD).
+- **The hands were never tested on a transition.** This routine uses half crimp on every step, so the hand pose never changes.
+
+## Confounders
+
+**Ruled out as necessary for the failure**
+- A second host: OFF fails.
+- An orthographic second camera: P fails.
+- The board camera contract: explicit `.virtual` and ARView `.nonAR` both fail.
+- A wrong writer, scene or root: traces are complete and identities stay stable.
+- Hand mesh or custom shader: the plain box fails.
+
+**Still open**
+- **Hidden retained hosts.** The Home board host tears down through `.onDisappear` (`BoardModelView.swift:113-115` at HEAD). Its update closure still fired once afterwards (+0.202 s, after disappear at +0.199 s, in hand-on-a). RealityKit's internal teardown can't be observed. A standalone root removes this question by construction.
+- **Simulator/frontend.** All evidence is from the iOS Simulator, and so is the 2026-09-26 precedent: its plan only uses isolated simulators. App and window activation state were never recorded. Separately, the board leaves `content.camera` implicit; Apple documents an AR default on iOS, which falls back to non-AR in the Simulator. Explicit `.virtual` is justified on its own merits, but it is not a highlight fix (experiment 3).
+- **Harness side effects.** These are uncontrolled and line up with when catch-up happens:
+  - AX `describe-ui` polling runs just before each settled capture.
+  - The skip tap is a physical touch.
+  - The 1 Hz sampler writes to a file.
+  - The workout body is wrapped in `TimelineView` (0.25 s, `RootView.swift:1937`).
+- **Lifetime.** The production board host is stable across phases. The new-make-before-old-disappear overlap only happened in the semantic probe.
+
+## Root's proposed standalone harness: agree, with refinements
+
+1. **True standalone root.** A DEBUG environment flag replaces `RootView` at app level. One `BoardModelSurface` loads the Evo package through the same loader and scene, with a fixed frame equal to the landscape workout board and display-only settings. The census should assert exactly one RealityKit host made for the whole process lifetime.
+2. **Scripted phases on the production path.** Drive `@State` inputs through `BoardModelSurface`: none → red → blue → red → blue, about 8 s apart. No touches and no AX polling during measurement. Capture at +0.25, +1, +3 and +7 s after each change.
+   - Prediction: if the first change (which has no resize here) is also late, the resize is what makes the workout's first highlight correct.
+3. **Sparse in-memory counters,** emitted only at change and capture points:
+   - update-closure invocation count;
+   - `SceneEvents.Update` tick delta;
+   - `isActive` and scene IDs for root and selected entities;
+   - `applicationState`, `UIWindowScene.activationState`, and whether the window exists.
+
+   Run arm A without the `Update` subscription and arm B with it, because subscribing may itself keep the render loop running. Suspend or hold constant the 1 Hz file sampler.
+4. **One visible transform nudge,** in a separate arm. About 2 s into a stale window, rotate or translate the root visibly, with no material or SwiftUI state change, and capture at +0.25, +1 and +3 s.
+5. **Stopping rule.** Cold launches in the order A/B/B/A from one binary, then stop.
+
+**Criteria.** A transition passes if the correct colour is visible at +1 s and every later capture, with the CPU state correct and the app foreground-active. Record the earliest correct capture as the lag. Results that differ between launches are reported as intermittent; do not keep tuning.
+
+**How each outcome maps to a decision**
+
+| Outcome | Meaning | Next step |
+|---|---|---|
+| Standalone passes, workout fails | Something in the workout environment is involved | Add one variable at a time: `TimelineView` tick, navigation push, 68-pt resize/hand host, AX polling |
+| Fails; ticks ≈ 0 while stale; app active | The render loop sits idle after these changes | Device run. If the device also fails, design B below. If the device passes, it's a Simulator artifact (design C) |
+| Fails; ticks continue; nudge shows promptly but colours stay stale | New materials and re-enabled entities aren't being picked up | Design A below |
+| Fails; ticks continue; nudge not shown either | Presentation / compositor | Device run decides it. A resize nudge is an optional follow-up |
+| B passes, A fails | The counter changes the behaviour | Supports the idle-loop explanation; record it, don't ship it |
+| App not foreground-active | Environment invalid | Fix the environment before interpreting anything |
+
+## Architecture recommendation
+
+**Now:** keep the current RealityView board host and make no production change.
+
+**Deprioritize:**
+- **Combined board+hands scene.** Costs a single camera/projection, layout mapping, shared lights, gestures and AX, and evidence says it isn't necessary.
+- **ARView.** Already failed.
+- **On-demand hand images.** Reserve for a demonstrated hand-specific defect.
+
+**Conditional designs**, each to be validated with the full-sequence rule:
+
+- **A — no material swaps at transitions (if new state isn't being picked up).**
+  - At load time, create runtime "shells" that share each contact's `MeshResource`. Give them two reused static PBR materials, and switch between them only by changing transforms. This replaces the per-change `materials =` writes in `BoardModelRealityTypes.swift:717-730` and `:922-938` (HEAD).
+  - Keep picking on the original or proxy collision entities (`:842-843`, `:880-881`). Keep AX projection (`:741-764`) and framing unchanged. No USDZ or asset changes, iOS 18 compatible.
+  - Risks: shells may still stall the first time they become visible, and shell coverage needs checking.
+- **B — app-owned frame boundary (if the render loop is idle and the device also fails).**
+  - RealityRenderer + MTKView with explicit draws, only for display-only boards (`onContactTap == nil`: workout and picker cards). Those contexts don't pick, so the collision-picking gate doesn't apply. Interactive boards keep RealityView until they have their own evidence.
+  - Orbit/pinch camera math, the AX overlay and the fit logic carry over unchanged. The feasibility gates in `reality-renderer-feasibility/report.json` still apply.
+  - Caveat: it runs on the same RealityKit backend, so it may not fix a pick-up problem.
+- **C — Simulator-only.** No production change. Fix the verification environment and document the limitation.
+
+## Where I agree and disagree with the other reviewer
+
+- **Agree:** the O/P/OFF design was bounded, used one binary, checked the full sequence, and stopped correctly at three runs. Its result is useful: O, P and OFF all fail.
+- **Disagree:**
+  1. Its decision table rested on the historical OFF pass, which only scored the next-active frame. A zero-cost full-sequence re-score of existing images should come before any new arm. Fresh OFF has now reproduced the exact historical Rest frame (`4540ff67…`).
+  2. "OFF fails ⇒ inconclusive" is too weak. OFF failing is direct evidence that the second host is not necessary; it is only inconclusive about projection.
+  3. Hand-image fallback over replacing the board is the right preference in principle, but it currently addresses no observed defect.
+
+## Validating any eventual fix
+
+- Use the full sequence with time since the CPU change: at least +0.5, +2 and +5 s per transition, and at least two cold launches.
+- Cover Pro and Evo, in portrait and landscape.
+- Include a routine where the grip changes between steps, so hand transitions are actually tested.
+- Run on a physical device if one is available.
+
+## Source pointers
+
+Line numbers for the three dirty files are at HEAD f15623ea; the working copies are shifted by the probes.
+
+- `HangTen/Views/BoardModelView.swift:178-184` — make/update.
+- `BoardModelView.swift:202-230` — `applySync`. Rewrites the camera component on every update (`:205-210`) and schedules the `cameraRevision` task (`:217-220`).
+- `BoardModelView.swift:192` — `.id(ObjectIdentifier(model))`.
+- `BoardModelRealityTypes.swift:277-360` — baseline CustomMaterials.
+- `BoardModelRealityTypes.swift:940-966` — camera transform rewrite.
+- `RootView.swift:2344-2353` — `showsPairedHandCue`.
+- `RootView.swift:2390-2398` — landscape board.
+- `RootView.swift:2260-2266` — portrait board.
+- `HangTen/Models/WorkoutTimeline.swift:316-356` — hand cue appears at `countdown == 0`.
+- `HangTen/Views/TrainView.swift:92-96` — workout push.
+- `TrainView.swift:141` — Home board host.
+- `HangTen/Views/GripHandModelView.swift:774-782` and `:616-636` — paired hand host, and camera reset on pose change.
+
+I only ran read-only commands (git show/diff, hashing, reading traces, viewing PNGs) and changed nothing. Separately: the Dofek, PostHog and Sentry connectors need authorization before they can be used.
