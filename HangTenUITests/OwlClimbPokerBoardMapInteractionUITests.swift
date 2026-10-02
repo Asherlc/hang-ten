@@ -340,6 +340,11 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             "HANGTEN_REVIEW_MODEL_DIAGNOSTICS": "1",
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
         ]
+        if boardID == "zlagboard.evo" {
+            app.launchEnvironment["HANGTEN_REVIEW_PRESENTATION_ATTRIBUTION"] = "1"
+            app.launchEnvironment["HANGTEN_REVIEW_PRESENTATION_OWNER"] = URL(fileURLWithPath: #filePath)
+                .deletingLastPathComponent().deletingLastPathComponent().lastPathComponent
+        }
         app.launch()
         // Preserve the rapid Train-to-Hold-specs transition, including the
         // departing interactive Train preview, when validating the detail host.

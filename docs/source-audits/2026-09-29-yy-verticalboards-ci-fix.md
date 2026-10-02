@@ -1233,3 +1233,37 @@ the pre-export workflow exactly. The owned simulator and decrypted products
 were deleted and verified; the private key was deleted after the comparison.
 Required trace-free checks remain blocking. No unchanged retry is authorized
 by this comparison.
+
+### Authorized one-run presentation attribution
+
+The user explicitly authorized one further controlled simulator investigation.
+The completed probe-free 3adc baseline (run 36950078500) retains all logs,
+finalized screenshots and diagnostics before this experiment. Its 26 cases
+include five failures: Evo, Forge and Megalith have stale rendered orbit with
+zero changed RGB pixels, stable bounds and changed, settled native cameras;
+Natural and Pro stop at selection without the post-failure geometry guards.
+DoorMount completes its rendered sequence. The other checks pass. This remains
+unresolved and no rendering correction is claimed.
+
+The temporary DEBUG hook is enabled only for Evo. After its original orbit
+changes and settles, at most 64 read-only layer inspections publish public
+CAMetalLayer identities and their window coordinates. A unique visible layer
+matching the map bounds, active scene/camera guards and exact installed-app PID
+are prerequisites for one debugger attachment. The board job keeps the same
+analytics configuration and all selectors, gestures, assertions and deadlines.
+
+The worker first checks debugger attachment and the read-only drawable layer
+getter with an owned fixture. It does not change global debugger security.
+If viable, the app trace is bounded to eight seconds, eight drawable samples,
+64 records and a two-second debugger-pause upper-bound budget. Transaction
+breakpoints observe natural calls only on threads presenting the identified
+map layer; they do not invoke commits, flushes or redraws. Thread association
+alone does not identify transaction contents, and a getter evaluated by LLDB
+or breakpoint timing can perturb the process.
+
+Missing symbols, attachment/layer/scene guards, incomplete captures, excess
+pause time or absence of a comparable rendered failure makes attribution
+inconclusive. A diagnostic pass is not a production fix or required-CI
+replacement. Retain the complete outcome, remove every new hook, script and
+workflow wrapper, and restore the probe-free source before any delivery claim.
+Never merge this diagnostic, even if green; no unchanged retry follows it.
