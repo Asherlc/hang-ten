@@ -148,3 +148,14 @@ separate correction, B2 single-frame black-capsule artifact, root image reviews
 and raw committee responses remain explicit. Earlier packets and all geometry
 acceptance records are unchanged. Reserved source and owned resources remain
 under coordinated diagnosis, with exact cleanup still pending.
+
+### Isolated timeline delivery — normal workout remains unresolved
+
+The [Evo timeline-driver appendix](zlagboard-evo/runtime-timeline-driver-2026-10-02/README.md)
+retains all 60 successful isolated A/B/C board captures at the exact 210 x 36
+point viewport: task-driven state, task state under TimelineView, and monotonic
+phase derived inside TimelineView. This does not reproduce or repair the actual
+workout failure. Exact raw/root reviews, source snapshot, delivery analysis and
+context-boundary audit are retained; previous evidence and native acceptances
+remain unchanged. Source reservation and owned resources stay active for
+coordinated diagnosis, with cleanup pending.
