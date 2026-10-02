@@ -62,7 +62,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "2e59a40776c140376c707d72803fdad70868380e7c79ea47aecfe900fcdb51fb",
+  "sha256Manifest": "c147798fd57e30d093fcd2ca868690064d48f35aa2be16bfe2b5b36fed906232",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -817,27 +817,27 @@
     },
     "nature-stone-hanger": {
       "source": "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd",
-      "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+      "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
-      "assetSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
-      "descriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+      "assetSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+      "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
       "assets": {
         "assets/primary.usdz": {
-          "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+          "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
           "descriptorPath": "assets/primary.model.json",
-          "descriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24"
+          "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851"
         }
       },
       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
       "provenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/README.md",
-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review/index.html",
+      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/index.html",
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/metadata-diff.json",
-      "nativeValidation": "Added one longitudinal cord seat per side; preserved all six transverse adjustment notches, eight native contact surfaces and factual metadata. Fresh native, unbound export, all-pose cord seating/entry/clearance, independently checked material-facet reactions and regenerated cache proofs are retained with exact asset hashes in the review packet.",
-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review/runtime-validation.json",
+      "nativeValidation": "Fitted native wood seat and exposed granite-only contact. Native interpenetration and exported material overlap are zero. All eight contact depths checked; seven other native surfaces and factual metadata preserved. Existing routes re-certified against the updated native solid for all eight poses and 16 branches; no new route authoring. Fresh exact-asset export and app proofs retained in granite-seat-review.",
+      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/runtime-validation.json",
       "geometryAcceptance": "pending one-by-one user review",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-      "suspensionSHA256": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae",
-      "latestRevision": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review/review.md"
+      "suspensionSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
+      "latestRevision": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/review.md"
     },
     "nature-stone-hanger-mini": {
       "source": "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
@@ -1181,7 +1181,13 @@
     "c24ef14e8b83e68824313e7350f9aaf4420ba07f12477483196f7b16883cd3b1",
     "6de82baf4a49ed9a5b5f7a48d67d5f5c3e38a98eb488deeaece1df3908d42847",
     "ec620b346bf520d2f32f2069e02b07ad5d2f9fd6dc8c8ed6063b2d68f5ff38c7",
-    "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42"
+    "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42",
+    {
+      "sha256Manifest": "2e59a40776c140376c707d72803fdad70868380e7c79ea47aecfe900fcdb51fb",
+      "date": "2026-10-02",
+      "reason": "Nature Stone Hanger fitted granite seat; prior manifest preserved",
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/prior-delivery-checksums.txt"
+    }
   ],
   "individualReviewRevisions": [
     {
@@ -1419,6 +1425,47 @@
       "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/human-review.json",
       "limits": "One vertical seat each side and existing three transverse adjustment notches per side are separate source-supported features; preserve both. Groove radius, depth, numeric span/entry placement, cord dimensions, support and loaded poses remain deliberate display estimates. The concealed connection remains unspecified beyond visible side-hole entry. All four corrected package identities require fresh native/export/cord/runtime proof. Prior 1b/7c passes are preserved as history without carrying them to the new shape. Raw images remain whole; no crop, registration, tracing or pixel-derived dimensions. Generic runtime wood/granite shaders depict materials; USDZ stays unbound with no baked material/texture. Material-facet frictionless discrete balance and numerical near-contact policy do not certify continuum cable or global board equilibrium or real load safety. Maker video sheets include multiple variants. All 10 original sheets retained; this independent evidence review physically viewed sheets 4 and 5 and four exact-revision primary images. Fresh checks: 260 Python tests, 259 focused iOS tests, all 64 packages. Installed byte parity covers Nature Stone Hanger only; overlapping historical suites are not added. The prior 30 degree pitch and 50 mm forward support offset are superseded adaptations. Current poses use identity or exact axis half-turn rotations, with a centered support and 25 mm initial display offset; solved hanging translations remain estimates. Small polygonal shading bands remain at the tight cord bend beside the seat without changing the route. Whole still frames and recorded drags do not cover every continuous camera angle. The before model/descriptor are exact committed HEAD939916 geometry; the before native source contains later metadata corrections. Earlier app frames are retained historical captures, not a fresh prior-binary run.",
       "priorDeliveryManifestSHA256": "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42"
+    },
+    {
+      "package": "nature-stone-hanger",
+      "date": "2026-10-02",
+      "revision": "granite-insert-fitted-into-wood-seat",
+      "feedback": [
+        "The granite is overlapping with wood, look at photos"
+      ],
+      "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+      "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+      "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
+      "suspensionSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
+      "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/runtime-validation.json",
+      "postIntegrationTests": {
+        "pythonPassed": 260,
+        "pythonSkipped": 0,
+        "iOSPassed": 259,
+        "iOSSkipped": 0,
+        "failures": 0
+      },
+      "boardFactsAndContactIDsUnchanged": true,
+      "otherPackageFilesUnchanged": 202,
+      "nativeWoodStoneOverlapMM3": 0,
+      "exportedGraniteWoodPlanarOverlapMM2": 0,
+      "otherSevenNativeContactSurfacesUnchanged": true,
+      "graniteContactDepthMM": 20,
+      "surfaceFinish": "wood",
+      "graniteNodeIDs": [
+        "edge_front_20mm_granite_mesh_001"
+      ],
+      "positions": 8,
+      "recertifiedCordBranches": 16,
+      "cordRoutesAndTranslationsPreserved": true,
+      "onlySidecarChangedFields": [
+        "modelSHA256",
+        "ropeSolver/grooveGuides/sourceSHA256"
+      ],
+      "geometryAcceptance": "pending one-by-one user review",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/human-review.json",
+      "limits": "Primary photos establish a seated insert and lower opening shape. Precise insert dimensions, local rounds, pocket shape and runtime texture remain display estimates. The existing solver-generated routes were freshly re-certified against the corrected native solid; they were not regenerated. No hidden construction or real load safety claim. Twenty-five whole app frames and nine drags cover representative views, not every continuous camera angle. Prior revision proofs remain historical and are not carried forward or added to fresh test counts.",
+      "priorDeliveryManifestSHA256": "2e59a40776c140376c707d72803fdad70868380e7c79ea47aecfe900fcdb51fb"
     }
   ]
 }

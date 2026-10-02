@@ -1,0 +1,1291 @@
+{
+  "owner": "placid-badger",
+  "simulator": "3605A048-8145-4869-8035-D92E82F7A056",
+  "boardID": "nature.stone-hanger",
+  "phase": "granite-seat-current-source",
+  "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+  "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+  "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
+  "sidecarSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
+  "builtBinarySHA256": "53f4a4d6f3e75e6e6469ecac3e48d7e12ce7de8f59fd5be88f840b1ada3eacd6",
+  "installedProvenanceSHA256": "d7dd208ee23d6a33b0017c107864420da1ea2e93b7d4d60e8b29fd218463e96a",
+  "checks": [
+    {
+      "contactID": "edge-front-15mm-incut",
+      "positionID": "edge-front-15mm-incut",
+      "image": "01-edge-front-15mm-incut.png",
+      "selectionAXConfirmed": true,
+      "normalAppearance": "Other seven contacts unselected; whole-frame material inspection required."
+    },
+    {
+      "contactID": "edge-front-15mm-flat",
+      "positionID": "edge-front-15mm-flat",
+      "image": "02-edge-front-15mm-flat.png",
+      "selectionAXConfirmed": true,
+      "normalAppearance": "Other seven contacts unselected; whole-frame material inspection required."
+    },
+    {
+      "contactID": "edge-front-20mm-wood-flat",
+      "positionID": "edge-front-20mm-wood-flat",
+      "image": "03-edge-front-20mm-wood-flat.png",
+      "selectionAXConfirmed": true,
+      "normalAppearance": "Other seven contacts unselected; whole-frame material inspection required."
+    },
+    {
+      "contactID": "edge-front-20mm-granite",
+      "positionID": "edge-front-20mm-granite",
+      "image": "04-edge-front-20mm-granite.png",
+      "selectionAXConfirmed": true,
+      "normalAppearance": "Other seven contacts unselected; whole-frame material inspection required."
+    },
+    {
+      "contactID": "edge-reverse-10mm-incut",
+      "positionID": "edge-reverse-10mm-incut",
+      "image": "05-edge-reverse-10mm-incut.png",
+      "selectionAXConfirmed": true,
+      "normalAppearance": "Other seven contacts unselected; whole-frame material inspection required."
+    },
+    {
+      "contactID": "edge-reverse-10mm-flat",
+      "positionID": "edge-reverse-10mm-flat",
+      "image": "06-edge-reverse-10mm-flat.png",
+      "selectionAXConfirmed": true,
+      "normalAppearance": "Other seven contacts unselected; whole-frame material inspection required."
+    },
+    {
+      "contactID": "edge-reverse-06mm-flat",
+      "positionID": "edge-reverse-06mm-flat",
+      "image": "07-edge-reverse-06mm-flat.png",
+      "selectionAXConfirmed": true,
+      "normalAppearance": "Other seven contacts unselected; whole-frame material inspection required."
+    },
+    {
+      "contactID": "edge-reverse-06mm-incut",
+      "positionID": "edge-reverse-06mm-incut",
+      "image": "08-edge-reverse-06mm-incut.png",
+      "selectionAXConfirmed": true,
+      "normalAppearance": "Other seven contacts unselected; whole-frame material inspection required."
+    },
+    {
+      "contactID": "edge-front-20mm-granite",
+      "positionID": "edge-front-20mm-granite",
+      "image": "close-upright-granite-left-front.png",
+      "selectionAXConfirmed": true,
+      "lens": "existing DEBUG telephoto",
+      "view": "front"
+    },
+    {
+      "contactID": "edge-front-20mm-granite",
+      "positionID": "edge-front-20mm-granite",
+      "image": "close-upright-granite-left-oblique.png",
+      "selectionAXConfirmed": true,
+      "actualDragOrbit": true,
+      "view": "left oblique"
+    },
+    {
+      "contactID": "edge-front-20mm-granite",
+      "positionID": "edge-front-20mm-granite",
+      "image": "close-upright-granite-left-side.png",
+      "selectionAXConfirmed": true,
+      "actualDragOrbit": true,
+      "view": "left side oblique"
+    },
+    {
+      "contactID": "edge-front-20mm-granite",
+      "positionID": "edge-front-20mm-granite",
+      "image": "close-upright-granite-right-front.png",
+      "selectionAXConfirmed": true,
+      "lens": "existing DEBUG telephoto",
+      "view": "front"
+    },
+    {
+      "contactID": "edge-front-20mm-granite",
+      "positionID": "edge-front-20mm-granite",
+      "image": "close-upright-granite-right-oblique.png",
+      "selectionAXConfirmed": true,
+      "actualDragOrbit": true,
+      "view": "right oblique"
+    },
+    {
+      "contactID": "edge-front-20mm-granite",
+      "positionID": "edge-front-20mm-granite",
+      "image": "close-upright-granite-right-side.png",
+      "selectionAXConfirmed": true,
+      "actualDragOrbit": true,
+      "view": "right side oblique"
+    },
+    {
+      "contactID": "edge-front-20mm-wood-flat",
+      "positionID": "edge-front-20mm-wood-flat",
+      "image": "close-inverted-wood-flat-left-front.png",
+      "selectionAXConfirmed": true,
+      "lens": "existing DEBUG telephoto",
+      "view": "front"
+    },
+    {
+      "contactID": "edge-front-20mm-wood-flat",
+      "positionID": "edge-front-20mm-wood-flat",
+      "image": "close-inverted-wood-flat-left-oblique.png",
+      "selectionAXConfirmed": true,
+      "actualDragOrbit": true,
+      "view": "left oblique"
+    },
+    {
+      "contactID": "edge-front-20mm-wood-flat",
+      "positionID": "edge-front-20mm-wood-flat",
+      "image": "close-inverted-wood-flat-left-side.png",
+      "selectionAXConfirmed": true,
+      "actualDragOrbit": true,
+      "view": "left side oblique"
+    },
+    {
+      "contactID": "edge-front-20mm-wood-flat",
+      "positionID": "edge-front-20mm-wood-flat",
+      "image": "close-inverted-wood-flat-right-front.png",
+      "selectionAXConfirmed": true,
+      "lens": "existing DEBUG telephoto",
+      "view": "front"
+    },
+    {
+      "contactID": "edge-front-20mm-wood-flat",
+      "positionID": "edge-front-20mm-wood-flat",
+      "image": "close-inverted-wood-flat-right-oblique.png",
+      "selectionAXConfirmed": true,
+      "actualDragOrbit": true,
+      "view": "right oblique"
+    },
+    {
+      "contactID": "edge-front-20mm-wood-flat",
+      "positionID": "edge-front-20mm-wood-flat",
+      "image": "close-inverted-wood-flat-right-side.png",
+      "selectionAXConfirmed": true,
+      "actualDragOrbit": true,
+      "view": "right side oblique"
+    },
+    {
+      "contactID": "edge-front-20mm-wood-flat",
+      "previousContactID": "edge-front-20mm-granite",
+      "positionID": "edge-front-20mm-wood-flat",
+      "sameInstanceSelectionChange": true,
+      "image": "granite-deselected-same-instance.png",
+      "materialRestorationVerification": "Physical whole-frame image review required; no pixel inference."
+    },
+    {
+      "contactID": "edge-front-20mm-granite",
+      "image": "granite-reopened.png",
+      "relaunchReappearance": true,
+      "sameInstanceClear": false
+    }
+  ],
+  "actualDragChecks": [
+    {
+      "contactID": "edge-front-20mm-granite",
+      "index": 1,
+      "startFraction": [
+        0.23,
+        0.55
+      ],
+      "endFraction": [
+        0.83,
+        0.4
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 8,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "edge-front-20mm-granite",
+      "index": 2,
+      "startFraction": [
+        0.23,
+        0.5
+      ],
+      "endFraction": [
+        0.83,
+        0.5
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 8,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "edge-front-20mm-granite",
+      "index": 3,
+      "startFraction": [
+        0.83,
+        0.55
+      ],
+      "endFraction": [
+        0.23,
+        0.4
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 8,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "edge-front-20mm-granite",
+      "index": 4,
+      "startFraction": [
+        0.83,
+        0.5
+      ],
+      "endFraction": [
+        0.23,
+        0.5
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 8,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "edge-front-20mm-wood-flat",
+      "index": 5,
+      "startFraction": [
+        0.23,
+        0.55
+      ],
+      "endFraction": [
+        0.83,
+        0.4
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 8,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "edge-front-20mm-wood-flat",
+      "index": 6,
+      "startFraction": [
+        0.23,
+        0.5
+      ],
+      "endFraction": [
+        0.83,
+        0.5
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 8,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "edge-front-20mm-wood-flat",
+      "index": 7,
+      "startFraction": [
+        0.83,
+        0.55
+      ],
+      "endFraction": [
+        0.23,
+        0.4
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 8,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "edge-front-20mm-wood-flat",
+      "index": 8,
+      "startFraction": [
+        0.83,
+        0.5
+      ],
+      "endFraction": [
+        0.23,
+        0.5
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 8,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "edge-front-20mm-wood-flat",
+      "index": 9,
+      "startFraction": [
+        0.23,
+        0.55
+      ],
+      "endFraction": [
+        0.83,
+        0.4
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 8,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    }
+  ],
+  "commands": [
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/01-edge-front-15mm-incut.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/02-edge-front-15mm-flat.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/03-edge-front-20mm-wood-flat.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/04-edge-front-20mm-granite.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/05-edge-reverse-10mm-incut.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/06-edge-reverse-10mm-flat.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/07-edge-reverse-06mm-flat.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/08-edge-reverse-06mm-incut.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-left-front.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "110.82000000000004",
+      "--start-y",
+      "425.70000000000005",
+      "--end-x",
+      "311.22",
+      "--end-y",
+      "375.6",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-left-oblique.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "110.82000000000004",
+      "--start-y",
+      "409.0",
+      "--end-x",
+      "311.22",
+      "--end-y",
+      "409.0",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-left-side.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-right-front.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "311.22",
+      "--start-y",
+      "425.70000000000005",
+      "--end-x",
+      "110.82000000000004",
+      "--end-y",
+      "375.6",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-right-oblique.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "311.22",
+      "--start-y",
+      "409.0",
+      "--end-x",
+      "110.82000000000004",
+      "--end-y",
+      "409.0",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-right-side.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-left-front.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "110.82000000000004",
+      "--start-y",
+      "425.70000000000005",
+      "--end-x",
+      "311.22",
+      "--end-y",
+      "375.6",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-left-oblique.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "110.82000000000004",
+      "--start-y",
+      "409.0",
+      "--end-x",
+      "311.22",
+      "--end-y",
+      "409.0",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-left-side.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-right-front.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "311.22",
+      "--start-y",
+      "425.70000000000005",
+      "--end-x",
+      "110.82000000000004",
+      "--end-y",
+      "375.6",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-right-oblique.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "311.22",
+      "--start-y",
+      "409.0",
+      "--end-x",
+      "110.82000000000004",
+      "--end-y",
+      "409.0",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-right-side.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/granite-selected-before-change.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "385",
+      "--start-y",
+      "740",
+      "--end-x",
+      "385",
+      "--end-y",
+      "390",
+      "--duration",
+      "0.6",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "--id",
+      "boardDetail.holdLegend.edge-front-20mm-wood-flat",
+      "--tap-style",
+      "physical",
+      "--post-delay",
+      "1",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "385",
+      "--start-y",
+      "320",
+      "--end-x",
+      "385",
+      "--end-y",
+      "740",
+      "--duration",
+      "0.6",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/granite-deselected-same-instance.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "110.82000000000004",
+      "--start-y",
+      "427.36666666666673",
+      "--end-x",
+      "311.22",
+      "--end-y",
+      "377.2666666666667",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/granite-deselected-same-instance-orbit.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/unselected-train.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/granite-reopened.png"
+    ]
+  ],
+  "fileSHA256": {
+    "01-edge-front-15mm-incut-accessibility.json": "52a7d3b35abbe3db685053a22e7381bef6a3c591a9f1f9580c88fe18bcde97a1",
+    "01-edge-front-15mm-incut.png": "5f5fe4e22069958be048d5db26eab18de36d5b6f5e2cf22f33bdf2576780ef2b",
+    "02-edge-front-15mm-flat-accessibility.json": "b7d28be330e2a44a6ae611f6032139e19352c23361679358a1eab644babf4c0f",
+    "02-edge-front-15mm-flat.png": "d3a8b436b111e3ff2173d5e5456b3add3fe40048898bd6bf3b6195c542401c72",
+    "03-edge-front-20mm-wood-flat-accessibility.json": "ee909ab0da7fc8d9a5b068de21b4f694d5cff42087c1c3f2cfde22d3caab7561",
+    "03-edge-front-20mm-wood-flat.png": "053ea326b73ba01121212db9b1ef052ea05f928bdf4f93ac1e8dfdaaa3580ba0",
+    "04-edge-front-20mm-granite-accessibility.json": "743f16b1787a4c5e517b044810709a8ee596b6db49465e27c8527010f037ce16",
+    "04-edge-front-20mm-granite.png": "6d618e3c2e28c41c53e5c41f8e01f8396cb099b082b5045cf4d1112fd67ffa04",
+    "05-edge-reverse-10mm-incut-accessibility.json": "4333bd0dc59b7f9e0dd8fef097758c7e597eb327d8dc8fcf8e6eb7a38d2c41bf",
+    "05-edge-reverse-10mm-incut.png": "3bd6ba54fef2c6078ea06d4f07a59be1c32c34ca1e2086a82381a749b046292c",
+    "06-edge-reverse-10mm-flat-accessibility.json": "fd237089c085804609919b87c199252eed4a40b67b66bad7f0726361e6cadb3b",
+    "06-edge-reverse-10mm-flat.png": "67adda21c0672dc3764249747cb8949a87c771687e26dcd4486421aa26d567e1",
+    "07-edge-reverse-06mm-flat-accessibility.json": "57c6ee293e1b25f48c8db33b33efde333ed3b3b78e2245449ab5b17d1fdc3448",
+    "07-edge-reverse-06mm-flat.png": "816662369cd76c16c2b05570f3d94803b69be67738a28aa4ca36442a4dfa5c53",
+    "08-edge-reverse-06mm-incut-accessibility.json": "89dd7d00be2478d03d9586a3ac1c05f5a3bffa28a54e9f65f94b05a63ad40dad",
+    "08-edge-reverse-06mm-incut.png": "7b361d47a4bf33a79b849bbeb862dd4d1bf837f06cb99f24ac0dc54b4a8453dd",
+    "close-inverted-wood-flat-left-front-accessibility.json": "3ab88563d918916ff080a25b9a1b75c44b1cafca46e7189186a4bb18adfff121",
+    "close-inverted-wood-flat-left-front.png": "8ffd42f31937c3d9be3031048e568a3913ceb0c5cbd3dbf41e5f9d6c9b8c0f80",
+    "close-inverted-wood-flat-left-oblique-accessibility.json": "4507d077870c3a20f366255205a74f8092dc1bd7c2559c729bdd807fbf76e2ee",
+    "close-inverted-wood-flat-left-oblique.png": "86e6fd851218adedbb451034aceafd88413fd737329ed1bccc7391c2327bc33b",
+    "close-inverted-wood-flat-left-side-accessibility.json": "fb971d8d0a5b50184c02816a930660567d5b712c1447300b984708424221c2b2",
+    "close-inverted-wood-flat-left-side.png": "2cd9263205e7cc595cfcbfc9293887fe243156fcd43148f71164338f76c2eb58",
+    "close-inverted-wood-flat-right-front-accessibility.json": "5fd2f2acbf02bc9e4fafb0c1b42e39af4b58ff3c15dba647545200c2d4769548",
+    "close-inverted-wood-flat-right-front.png": "233f60ea7bb254f1d50acb9c7b0e203137153601e969f69456324912672e3c98",
+    "close-inverted-wood-flat-right-oblique-accessibility.json": "c402c1e7f23d1e59e4b6b14aae53d6657f586291dee2a658ef1b1f0c07a28990",
+    "close-inverted-wood-flat-right-oblique.png": "65e55cb7baabe30d2cb3db0933f0c84853c0e527fa36e9aadadcc84e3a66bb90",
+    "close-inverted-wood-flat-right-side-accessibility.json": "3e1f75b64e34b77debef434f940abed19eea73c423ea13eb31ea1c44a39bd227",
+    "close-inverted-wood-flat-right-side.png": "2913fe33b0b40db3ad64883dd9c3bdb8be0efcec1c4ee3ca21ae07180fbb96c6",
+    "close-upright-granite-left-front-accessibility.json": "2481530b18be0ccf4177636b5c55e9b6f5dd55d3fc3208b1a891913e9d6c85a3",
+    "close-upright-granite-left-front.png": "d4c8af8abb005a1ba04bb70f049594589df22636f53fee72a037510558c75aaf",
+    "close-upright-granite-left-oblique-accessibility.json": "f27d03585e47c357bbd22889f213109c30dfc648252b463462c829e33ae165de",
+    "close-upright-granite-left-oblique.png": "a6a08ef847b56d815c12e44d0fa2c7782864afca07c427f5589e6fdd0f41362a",
+    "close-upright-granite-left-side-accessibility.json": "c3a55e8c340fd69cfa5e76d4ca9825b9ab02225db3b8cf30b569f7e52d3c7e90",
+    "close-upright-granite-left-side.png": "af9e8f85860e55de49017edbb64b525abedd14f46771fb250678a598bec46635",
+    "close-upright-granite-right-front-accessibility.json": "fd4cd162a945a1e4d334a86782fcdca28e25f0bd8a091451ac7df05280109e71",
+    "close-upright-granite-right-front.png": "d4c8af8abb005a1ba04bb70f049594589df22636f53fee72a037510558c75aaf",
+    "close-upright-granite-right-oblique-accessibility.json": "3b85cd0fc444006e375244932dcf54a21744f2e500c7d57e90de602dcf56f0b6",
+    "close-upright-granite-right-oblique.png": "897a3dbac4ec55979692d28bc8fe56aa6cc4cd14c92ef22354ff52746ac41136",
+    "close-upright-granite-right-side-accessibility.json": "016251163b1f7e55a4ee7c976bbe183e01dd1de4550256dd52d12d897dc87820",
+    "close-upright-granite-right-side.png": "89788a9b093e6319386d3cf9da39c701ac15d8f37f9a5fbd494297874f716fc4",
+    "command-records.json": "579773e085ce5b238a544358b91ee6b1d913ec0bf7602236584e5e4c89fbe24e",
+    "granite-deselected-same-instance-accessibility.json": "e3098a924bb6a685aceb3132b2997645caad99a0190862ad0be06b594252780f",
+    "granite-deselected-same-instance-orbit-accessibility.json": "26ef3304ffbb1d6eea6a7b39878d1610908d9026a091b9271ae58270ada50777",
+    "granite-deselected-same-instance-orbit.png": "104c7590d50dd71ae12536e8c3d3719282489b1a923160fd39867d4f72c0e796",
+    "granite-deselected-same-instance.png": "503b0ffff3faccf2c7d126ae57f5a11d95217122849fc8b5bd495845311729d2",
+    "granite-reopened-accessibility.json": "b3ef7adf2a32e8d78769a41abb86b77283a4ade80769237aca3741a5bdf83caa",
+    "granite-reopened.png": "05bb8c187de49f62a167d882e7b25d1d1a58b5f672c28c01f6e624ab7729a761",
+    "granite-selected-before-change-accessibility.json": "5e0cad24d88cc9a392d9b8066c8a8a3fbd0f5d0499a813dc6cbb6c0f5a66787d",
+    "granite-selected-before-change.png": "05bb8c187de49f62a167d882e7b25d1d1a58b5f672c28c01f6e624ab7729a761",
+    "grasp-drag-1-accessibility.json": "1fcb0893fbcd8204cfcc55f2716c27c3fb022279c28a9675360c7a0ecab39c18",
+    "grasp-drag-2-accessibility.json": "dadb6d67d92479224d3fc95ca2a17d8a153fc6c1371ae11a9a9251b5702f329f",
+    "grasp-drag-3-accessibility.json": "b10cf589bd5fd72f3f87b1e52d8dd6e7ecaf20fc1be682c65451981d274918b1",
+    "grasp-drag-4-accessibility.json": "a771f3c2183d42c3d84f4184ab19af145964fcf924bbd9cb1ebd087c4bc5c6ec",
+    "grasp-drag-5-accessibility.json": "9fc3be418f39280256a10ab108abc08ec140ef7416dbc4d7e30a01717627526e",
+    "grasp-drag-6-accessibility.json": "8c35d1ccff6918317afa5cd6a6ee9c4ddd145d0e8fe12e45cff471fb3a52e3ab",
+    "grasp-drag-7-accessibility.json": "588dca081f922b7fe53386dd9f4c4be709e87e9891bb0bfa408b0e34c14f0e84",
+    "grasp-drag-8-accessibility.json": "2d68ed8abd8928c8229a82de200b875f8ee77099dabbb81fb126224624e04aee",
+    "grasp-drag-9-accessibility.json": "a052d00531b6db64d84920064927c28a2bdd7cfbe893d11cde411849516e38c7",
+    "unselected-train-accessibility.json": "5132815ca8303d73263ceab256d2e84221a2cd69079bb24b10d8f97fa3912f09",
+    "unselected-train.png": "d1b788ab3b5b235715819d926b39a21a7893755f8bffe02dbc0def3786b2d075"
+  },
+  "humanAcceptance": "pending review #9 granite-seat revision",
+  "visualInspection": "Pending physical inspection; automation confirms AX state and captures full frames.",
+  "limits": [
+    "No image crop, alignment, pixel measurement or geometry inference. Inspect the granite-to-wood seam in upright granite and inverted wood-flat states from both directions. The existing telephoto hook changes the lens; whole app framing is retained.",
+    "The detail view always selects a contact. Normal material observations apply to unselected contacts in each full frame and the unselected Train card, not a nonexistent per-contact clear state.",
+    "No UI clear/reset control exists; focused runtime tests separately cover transient-cord removal/nonpickability and camera reset.",
+    "Relaunch reappearance is not same-instance clear/reset. Workout validation, if performed, is reported separately.",
+    "Canonical pose is resolved from final contact membership; not independently inferred from screenshot."
+  ]
+}

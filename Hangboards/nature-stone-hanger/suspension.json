@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "presentationID": "primary",
-  "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+  "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
   "suspension": {
     "type": "cadRoutedCord",
     "bodyNodeID": "body_oak_mesh_001",
@@ -416,7 +416,7 @@
     "sectionPlane": "anchor",
     "pathSearch": "aStar",
     "grooveGuides": {
-      "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+      "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
       "byPoseID": {
         "edge-front-15mm-incut": {
           "left-lead": {

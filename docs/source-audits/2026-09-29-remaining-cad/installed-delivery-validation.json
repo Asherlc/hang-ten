@@ -841,5 +841,35 @@
     "cleanupVerified": true,
     "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review/runtime-validation.json",
     "humanAcceptance": "pending"
+  },
+  "stoneHangerGraniteSeatReview9": {
+    "date": "2026-10-02",
+    "scope": "Fresh installed Nature Stone Hanger granite-seat revision only; prior catalog and Stone Hanger records remain historical.",
+    "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+    "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+    "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
+    "suspensionSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
+    "installedParity": {
+      "report": "raw/ios/installed-app-provenance.json",
+      "builtInstalledBinarySHA256": "53f4a4d6f3e75e6e6469ecac3e48d7e12ce7de8f59fd5be88f840b1ada3eacd6",
+      "generatedManifestSHA256": "946b91c96e6141f10035e01d6720d5a694d66084da41bae9af86726df58b59af",
+      "binaryBytesMatch": true,
+      "generatedManifestBytesMatchSource": true,
+      "descriptorAndEmbeddedODRModelBytesMatch": true
+    },
+    "exactContactSelections": 8,
+    "wholeFramesReviewed": 25,
+    "actualDrags": 9,
+    "sameInstanceGraniteRestoration": true,
+    "postIntegrationTests": {
+      "pythonPassed": 260,
+      "pythonSkipped": 0,
+      "iOSPassed": 259,
+      "iOSSkipped": 0,
+      "failures": 0
+    },
+    "cleanupVerified": true,
+    "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/runtime-validation.json",
+    "humanAcceptance": "pending"
   }
 }

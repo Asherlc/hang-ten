@@ -249,6 +249,47 @@
       "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/human-review.json",
       "limits": "One vertical seat each side and existing three transverse adjustment notches per side are separate source-supported features; preserve both. Groove radius, depth, numeric span/entry placement, cord dimensions, support and loaded poses remain deliberate display estimates. The concealed connection remains unspecified beyond visible side-hole entry. All four corrected package identities require fresh native/export/cord/runtime proof. Prior 1b/7c passes are preserved as history without carrying them to the new shape. Raw images remain whole; no crop, registration, tracing or pixel-derived dimensions. Generic runtime wood/granite shaders depict materials; USDZ stays unbound with no baked material/texture. Material-facet frictionless discrete balance and numerical near-contact policy do not certify continuum cable or global board equilibrium or real load safety. Maker video sheets include multiple variants. All 10 original sheets retained; this independent evidence review physically viewed sheets 4 and 5 and four exact-revision primary images. Fresh checks: 260 Python tests, 259 focused iOS tests, all 64 packages. Installed byte parity covers Nature Stone Hanger only; overlapping historical suites are not added. The prior 30 degree pitch and 50 mm forward support offset are superseded adaptations. Current poses use identity or exact axis half-turn rotations, with a centered support and 25 mm initial display offset; solved hanging translations remain estimates. Small polygonal shading bands remain at the tight cord bend beside the seat without changing the route. Whole still frames and recorded drags do not cover every continuous camera angle. The before model/descriptor are exact committed HEAD939916 geometry; the before native source contains later metadata corrections. Earlier app frames are retained historical captures, not a fresh prior-binary run.",
       "priorDeliveryManifestSHA256": "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42"
+    },
+    {
+      "package": "nature-stone-hanger",
+      "date": "2026-10-02",
+      "revision": "granite-insert-fitted-into-wood-seat",
+      "feedback": [
+        "The granite is overlapping with wood, look at photos"
+      ],
+      "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+      "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+      "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
+      "suspensionSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
+      "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/runtime-validation.json",
+      "postIntegrationTests": {
+        "pythonPassed": 260,
+        "pythonSkipped": 0,
+        "iOSPassed": 259,
+        "iOSSkipped": 0,
+        "failures": 0
+      },
+      "boardFactsAndContactIDsUnchanged": true,
+      "otherPackageFilesUnchanged": 202,
+      "nativeWoodStoneOverlapMM3": 0,
+      "exportedGraniteWoodPlanarOverlapMM2": 0,
+      "otherSevenNativeContactSurfacesUnchanged": true,
+      "graniteContactDepthMM": 20,
+      "surfaceFinish": "wood",
+      "graniteNodeIDs": [
+        "edge_front_20mm_granite_mesh_001"
+      ],
+      "positions": 8,
+      "recertifiedCordBranches": 16,
+      "cordRoutesAndTranslationsPreserved": true,
+      "onlySidecarChangedFields": [
+        "modelSHA256",
+        "ropeSolver/grooveGuides/sourceSHA256"
+      ],
+      "geometryAcceptance": "pending one-by-one user review",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/human-review.json",
+      "limits": "Primary photos establish a seated insert and lower opening shape. Precise insert dimensions, local rounds, pocket shape and runtime texture remain display estimates. The existing solver-generated routes were freshly re-certified against the corrected native solid; they were not regenerated. No hidden construction or real load safety claim. Twenty-five whole app frames and nine drags cover representative views, not every continuous camera angle. Prior revision proofs remain historical and are not carried forward or added to fresh test counts.",
+      "priorDeliveryManifestSHA256": "2e59a40776c140376c707d72803fdad70868380e7c79ea47aecfe900fcdb51fb"
     }
   ]
 }

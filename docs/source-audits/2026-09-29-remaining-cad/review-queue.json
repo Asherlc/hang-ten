@@ -265,28 +265,25 @@
       "boardID": "nature.stone-hanger",
       "name": "Nature Climbing Stone Hanger",
       "humanReview": "pending",
-      "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
-      "reviewPage": "nature-stone-hanger/display-and-pose-review/index.html",
+      "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+      "reviewPage": "nature-stone-hanger/granite-seat-review/index.html",
       "sourceAudit": "nature-stone-hanger/README.md",
       "comparisons": [
-        "nature-stone-hanger/display-and-pose-review/incut-reorientation.png",
-        "nature-stone-hanger/display-and-pose-review/wood-and-granite.png",
-        "nature-stone-hanger/display-and-pose-review/granite-restoration.png",
-        "nature-stone-hanger/display-and-pose-review/side-groove-entry.png",
-        "nature-stone-hanger/display-and-pose-review/native-front.png",
-        "nature-stone-hanger/display-and-pose-review/native-oblique.png",
-        "nature-stone-hanger/display-and-pose-review/native-side.png",
-        "nature-stone-hanger/display-and-pose-review/native-top.png"
+        "nature-stone-hanger/granite-seat-review/native-front-side-top.png",
+        "nature-stone-hanger/granite-seat-review/export-front.png",
+        "nature-stone-hanger/granite-seat-review/export-side.png",
+        "nature-stone-hanger/granite-seat-review/export-top.png",
+        "nature-stone-hanger/granite-seat-review/export-oblique.png"
       ],
       "presentations": {
         "primary": {
-          "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
-          "descriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24"
+          "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+          "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851"
         }
       },
-      "appReview": "nature-stone-hanger/display-and-pose-review/runtime-validation.json",
-      "appReviewPage": "nature-stone-hanger/display-and-pose-review/index.html",
-      "suspensionSHA256": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae",
+      "appReview": "nature-stone-hanger/granite-seat-review/runtime-validation.json",
+      "appReviewPage": "nature-stone-hanger/granite-seat-review/index.html",
+      "suspensionSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
       "humanReviewRecord": "nature-stone-hanger/human-review.json",
       "reviewFeedback": [
         "the stone hanger needs granite texture where appropriate",
@@ -294,7 +291,8 @@
         "and its missing the notches",
         "and the highlighted hold is in an impossible to weight position",
         "the cord goes inside the side notches",
-        "there is 1 vertical groove on either side that the cord nestles into"
+        "there is 1 vertical groove on either side that the cord nestles into",
+        "The granite is overlapping with wood, look at photos"
       ],
       "routingClarification": {
         "question": "Enters center side holes with notch guides, or wraps around block in notch groove?",
@@ -303,8 +301,8 @@
         "source": "Exact user answer retained in human-feedback.json",
         "hiddenConnection": "Visible side-hole entry and exterior notch guidance are established; the concealed connection remains unspecified."
       },
-      "latestRevision": "nature-stone-hanger/display-and-pose-review/review.md",
-      "runtimeRevision": "nature-stone-hanger/display-and-pose-review/runtime-validation.json"
+      "latestRevision": "nature-stone-hanger/granite-seat-review/review.md",
+      "runtimeRevision": "nature-stone-hanger/granite-seat-review/runtime-validation.json"
     },
     {
       "number": 10,
