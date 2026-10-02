@@ -1234,7 +1234,7 @@ were deleted and verified; the private key was deleted after the comparison.
 Required trace-free checks remain blocking. No unchanged retry is authorized
 by this comparison.
 
-### Authorized one-run presentation attribution
+## Authorized one-run presentation attribution
 
 The user explicitly authorized one further controlled simulator investigation.
 The completed probe-free 3adc baseline (run 36950078500) retains all logs,
@@ -1267,3 +1267,15 @@ inconclusive. A diagnostic pass is not a production fix or required-CI
 replacement. Retain the complete outcome, remove every new hook, script and
 workflow wrapper, and restore the probe-free source before any delivery claim.
 Never merge this diagnostic, even if green; no unchanged retry follows it.
+
+Review identified startup-stop and debugger-state handling gaps before the
+simulator job started. Run 36959906101 was cancelled while all simulator jobs
+were queued; no app trace or board test ran. Available Python/lint logs and
+the cancelled job inventory are retained. Cancellation is not a test pass or
+rendering verdict. Corrections allow stopping the exact command-verified
+controller before its receipt exists, preserve cleanup exit failures, and
+classify crash/resume failure as an incomplete trace. Kernel executable-path
+lookup replaces process-display-name assumptions. The single workflow owner
+is passed through Xcode's documented TEST_RUNNER_ environment propagation,
+validated before enabling the Evo hook. These are diagnostic safety/viability
+corrections; the authorized app-attempt budget remains one, with zero used.

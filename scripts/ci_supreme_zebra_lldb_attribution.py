@@ -27,7 +27,7 @@ def trace(debugger, pid, output_path, expected_layer, expected_executable, secon
             raise RuntimeError("attach: " + error.GetCString())
         actual_executable = target.GetExecutable().fullpath
         result["actualExecutable"] = actual_executable
-        if actual_executable != expected_executable:
+        if not actual_executable or Path(actual_executable).resolve() != Path(expected_executable).resolve():
             raise RuntimeError("Attached executable differs from the guarded installed app")
         present = target.BreakpointCreateByName("-[CAMetalDrawable present]")
         transaction_pattern = r"CA::Transaction::(push|commit|release_thread)"
@@ -40,15 +40,17 @@ def trace(debugger, pid, output_path, expected_layer, expected_executable, secon
             raise RuntimeError("Required presentation/transaction symbols did not resolve")
         result["debuggerPausesSeconds"] += time.monotonic() - attached_at
         deadline = time.monotonic() + seconds
-        process.Continue()
+        resume_error = process.Continue()
+        if resume_error.Fail():
+            raise RuntimeError("Initial resume failed: " + resume_error.GetCString())
         last_running_at = time.monotonic()
         handled_stop_id = None
         drawable_samples = 0
         while time.monotonic() < deadline:
             state = process.GetState()
-            if state in (lldb.eStateExited, lldb.eStateDetached, lldb.eStateInvalid):
+            if state in (lldb.eStateExited, lldb.eStateCrashed, lldb.eStateDetached, lldb.eStateInvalid):
                 result["earlyProcessState"] = state
-                raise RuntimeError("Target exited or detached before capture completed")
+                raise RuntimeError("Target exited, crashed or detached before capture completed")
             if state != lldb.eStateStopped:
                 last_running_at = time.monotonic()
                 time.sleep(0.005)
@@ -105,7 +107,9 @@ def trace(debugger, pid, output_path, expected_layer, expected_executable, secon
             result["debuggerPausesSeconds"] += time.monotonic() - last_running_at
             if result["debuggerPausesSeconds"] > 2:
                 raise RuntimeError("Debugger pause budget exceeded; trace is inconclusive")
-            process.Continue()
+            resume_error = process.Continue()
+            if resume_error.Fail():
+                raise RuntimeError("Breakpoint resume failed: " + resume_error.GetCString())
             last_running_at = time.monotonic()
         result["captureCompleted"] = True
     except BaseException as error:

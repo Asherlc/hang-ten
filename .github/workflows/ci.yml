@@ -874,6 +874,10 @@ jobs:
                 --output "$attribution_output" --stop-pid "$attribution_pid"
               cleanup_status=$?
               wait "$attribution_pid"
+              wait_status=$?
+              if [[ "$cleanup_status" -eq 0 && "$wait_status" -ne 0 ]]; then
+                cleanup_status=$wait_status
+              fi
               if [[ "$original_status" -eq 0 && "$cleanup_status" -ne 0 ]]; then
                 original_status=$cleanup_status
               fi
@@ -892,7 +896,8 @@ jobs:
             --device "$attribution_device" --owner "$attribution_owner" \
             --output "$attribution_output" &
           attribution_pid=$!
-          XCTEST_XCCONFIG="$telemetry_xcconfig" scripts/ci-run-xctest.sh
+          TEST_RUNNER_HANGTEN_REVIEW_PRESENTATION_OWNER="$attribution_owner" \
+            XCTEST_XCCONFIG="$telemetry_xcconfig" scripts/ci-run-xctest.sh
 
       # Retain passing and failing evidence for the runtime comparison.
       # actions/upload-artifact v4.6.2

@@ -1,5 +1,6 @@
 """Temporary one-attempt watcher; never substitutes for XCTest acceptance."""
 import argparse
+import ctypes
 import json
 import math
 import os
@@ -26,7 +27,18 @@ def eligible_marker(value, owner):
 
 
 def matches_app(command, installed_app):
-    return command.strip() == str(Path(installed_app) / "HangTen")
+    return Path(command.strip()).resolve() == (Path(installed_app) / "HangTen").resolve()
+
+
+def executable_path(pid):
+    library = ctypes.CDLL("/usr/lib/libproc.dylib")
+    lookup = library.proc_pidpath
+    lookup.argtypes = [ctypes.c_int, ctypes.c_void_p, ctypes.c_uint32]
+    lookup.restype = ctypes.c_int
+    buffer = ctypes.create_string_buffer(4096)
+    if lookup(pid, buffer, len(buffer)) <= 0:
+        raise RuntimeError("Kernel executable-path query failed")
+    return os.fsdecode(buffer.value)
 
 
 def main():
@@ -38,15 +50,20 @@ def main():
     args = parser.parse_args()
     assert re.fullmatch(r"[A-Za-z0-9_-]+", args.owner)
     if args.stop_pid:
-        receipt = json.loads((args.output / "receipt.json").read_text())
-        assert receipt["owner"] == args.owner and receipt["controllerPID"] == args.stop_pid
+        receipt_path = args.output / "receipt.json"
+        if receipt_path.exists():
+            receipt = json.loads(receipt_path.read_text())
+            assert receipt["owner"] == args.owner and receipt["controllerPID"] == args.stop_pid
         command = subprocess.run(["ps", "-p", str(args.stop_pid), "-o", "command="],
                                  capture_output=True, text=True, check=False)
         if command.returncode == 0:
             argv = shlex.split(command.stdout)
             assert len(argv) >= 7 and Path(argv[-7]).resolve() == Path(__file__).resolve()
             assert argv[-6:] == ["--device", args.device, "--owner", args.owner, "--output", str(args.output)]
-            os.kill(args.stop_pid, signal.SIGTERM)
+            try:
+                os.kill(args.stop_pid, signal.SIGTERM)
+            except ProcessLookupError:
+                pass
         return
     args.output.mkdir(parents=True, exist_ok=False)
     receipt = args.output / "receipt.json"
@@ -158,7 +175,7 @@ int main(void) { @autoreleasepool {
                         and time.time() - marker.stat().st_mtime > 1):
                     app_query = subprocess.run(["xcrun", "simctl", "get_app_container", args.device,
                                                 "com.hangten.training", "app"], capture_output=True, text=True, timeout=5)
-                    command = subprocess.check_output(["ps", "-p", str(value["pid"]), "-o", "comm="], text=True)
+                    command = executable_path(value["pid"])
                     assert app_query.returncode == 0 and matches_app(command, app_query.stdout.strip()), "App PID provenance failed"
                     state["appAttempts"] = 1
                     state["nativeMarker"] = value
@@ -168,7 +185,7 @@ int main(void) { @autoreleasepool {
                     expected_layer = next(layer["pointer"] for layer in value["layers"] if layer.get("matchesMap"))
                     debugger = start(["xcrun", "lldb", "--batch", "-o",
                                       "command script import " + shlex.quote(str(module)), "-o",
-                                      f"script ci_supreme_zebra_lldb_attribution.trace(lldb.debugger, {value['pid']}, {str(trace_output)!r}, {expected_layer!r}, {str(Path(app_query.stdout.strip()) / 'HangTen')!r}, 8)"],
+                                      f"script ci_supreme_zebra_lldb_attribution.trace(lldb.debugger, {value['pid']}, {str(trace_output)!r}, {expected_layer!r}, {str(Path(command).resolve())!r}, 8)"],
                                      args.output / "debugger.log")
                     state["debuggerExit"] = finish(debugger, 25)
                     if trace_output.exists():
