@@ -6,6 +6,165 @@ import simd
 
 final class BoardModelRealityTests: XCTestCase {
     @MainActor
+    func testClavelliumPitchMovesBoardAroundCordPivotWhileSupportAndCameraStayFixed() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "clavellium-training-block"))
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
+        XCTAssertFalse(scene.hasLiveRopes)
+        XCTAssertTrue(scene.select(positionID: try XCTUnwrap(board.positions.first?.id)))
+        scene.frame(in: CGSize(width: 800, height: 500))
+        let body = try XCTUnwrap(scene.instanceEntities.first)
+        let originalBody = body.transformMatrix(relativeTo: scene.root)
+        let pivot = SIMD4<Float>(0, 0.0025, 0, 1)
+        let originalPivot = originalBody * pivot
+        let originalTop = originalBody * SIMD4<Float>(0, 0.05, 0, 1)
+        let originalCamera = scene.camera.transform.matrix
+        let support = SIMD3<Float>(0, 0.07, 0)
+        let originalCord = try XCTUnwrap(scene.transientCordEntity).children.map { $0.transform.matrix }
+        for pitch in [Float.pi / 9, -Float.pi / 9] {
+            scene.orbit(azimuth: 0, elevation: pitch)
+            let placed = body.transformMatrix(relativeTo: scene.root)
+            XCTAssertNotEqual(placed, originalBody, "The board must actually rotate, rather than moving only the camera")
+            XCTAssertLessThan(simd_distance(placed * pivot, originalPivot), 1e-6)
+            XCTAssertGreaterThan(simd_distance(placed * SIMD4<Float>(0, 0.05, 0, 1), originalTop), 0.01)
+            XCTAssertEqual(scene.camera.transform.matrix, originalCamera, "Pitch must not move or zoom the camera and make the fixed cord appear to move")
+            for column in 0..<3 {
+                XCTAssertLessThan(simd_distance(scene.camera.transform.matrix[column], originalCamera[column]), 1e-6,
+                                  "The camera orientation must stay fixed during board pitch")
+            }
+            let cord = try XCTUnwrap(scene.transientCordEntity)
+            XCTAssertEqual(cord.children.map { $0.transform.matrix }, originalCord,
+                           "The entire cord must stay fixed while the board turns")
+            for mouth in [SIMD4<Float>(0, 0.0025, 0.045, 1), SIMD4<Float>(0, 0.0025, -0.045, 1)] {
+                XCTAssertLessThan(simd_distance(placed * mouth, originalBody * mouth), 1e-6,
+                                  "The board must rotate around the line through its cord points")
+            }
+            let endpoints = cord.children.flatMap { child -> [SIMD3<Float>] in
+                guard let mesh = (child as? ModelEntity)?.model?.mesh else { return [] }
+                let halfLength = mesh.bounds.extents.y / 2
+                return [-halfLength, halfLength].map { y in
+                    let p = child.transformMatrix(relativeTo: scene.root) * SIMD4<Float>(0, y, 0, 1)
+                    return SIMD3(p.x, p.y, p.z)
+                }
+            }
+            XCTAssertEqual(endpoints.count, cord.children.count * 2,
+                           "Expected two endpoints for every rendered cord cylinder; inspect the cord hierarchy if it changes")
+            XCTAssertLessThan(try XCTUnwrap(endpoints.map { simd_distance($0, support) }.min(),
+                              "No rendered cord cylinder endpoints were found for the fixed-support check"), 1e-5,
+                              "Overhead cord support must not rotate with the board")
+        }
+        scene.resetCamera(animated: false)
+        XCTAssertEqual(body.transformMatrix(relativeTo: scene.root), originalBody)
+        XCTAssertEqual(scene.camera.transform.matrix, originalCamera)
+    }
+
+    @MainActor
+    func testCordedTopSelectionTiltsBoardAndClearingRestoresCanonicalPose() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "clavellium-training-block"))
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
+        XCTAssertTrue(scene.select(positionID: try XCTUnwrap(board.positions.first?.id)))
+        scene.frame(in: CGSize(width: 800, height: 500))
+        let body = try XCTUnwrap(scene.instanceEntities.first)
+        let original = body.transform.matrix
+        scene.highlight(["cd-pinch-100mm-top"], mode: .active)
+        XCTAssertGreaterThan(scene.orbitElevation, 0.15)
+        XCTAssertNotEqual(body.transform.matrix, original)
+        let selected = body.transform.matrix
+        scene.frame(in: CGSize(width: 800, height: 500))
+        scene.highlight(["cd-pinch-100mm-top"], mode: .active)
+        XCTAssertEqual(body.transform.matrix, selected, "Repeated updates must not compound the board tilt")
+        scene.highlight([], mode: .active)
+        XCTAssertEqual(body.transform.matrix, original)
+        XCTAssertFalse(scene.hasLiveRopes)
+    }
+
+    @MainActor
+    func testBoardPitchUsesPairedAttachmentsBoreMouthsAndIndependentInstancePivots() async throws {
+        let cases: [(String, SIMD3<Float>)] = [
+            ("nature.stone-hanger", [0, -0.0024, 0]),
+            ("tension.flash-board", [0.25, 0.047999999, 0.038669699]),
+            ("metolius.rock-rings-3d", [0, 0.091, 0])
+        ]
+        for (id, localPivot) in cases {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: id))
+            let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
+            XCTAssertFalse(scene.hasLiveRopes, id)
+            XCTAssertTrue(scene.select(positionID: try XCTUnwrap(board.positions.first?.id)), id)
+            scene.frame(in: CGSize(width: 800, height: 500))
+            let before = scene.instanceEntities.map { $0.transformMatrix(relativeTo: scene.root) }
+            for pitch in [Float.pi / 9, -Float.pi / 9] {
+                scene.orbit(azimuth: 0, elevation: pitch)
+                for (index, body) in scene.instanceEntities.enumerated() {
+                    let after = body.transformMatrix(relativeTo: scene.root)
+                    XCTAssertNotEqual(after, before[index], id)
+                    XCTAssertLessThan(simd_distance(after * SIMD4(localPivot, 1), before[index] * SIMD4(localPivot, 1)), 1e-6, id)
+                }
+            }
+        }
+    }
+
+    @MainActor
+    func testMixedInstancesPitchBothBoardsWhileCordAndCameraStayFixed() async throws {
+        let store = BoardCatalog.packageStore
+        let board = try XCTUnwrap(store.board(id: "clavellium-training-block"))
+        guard case .model(let media) = board.defaultPresentation.media else { return XCTFail("Model required") }
+        let position = try XCTUnwrap(board.positions.first?.id)
+        let instances = [true, false].enumerated().map { index, corded in
+            BoardModelInstance(equipmentObjectID: "instance-\(index)",
+                baseTransform: BoardModelTransform(translation: [Double(index)*0.2, 0, 0],
+                    rotation: SIMD4(0, 0, 0, 1), reflection: nil),
+                contactIDsBySlotID: Dictionary(uniqueKeysWithValues: media.descriptor.contacts.keys.map { ($0, $0) }),
+                suspension: corded ? media.suspension : nil,
+                positionTransforms: corded ? nil : [position: BoardModelTransform(
+                    translation: [0, 0, 0], rotation: SIMD4(0, 0, 0, 1), reflection: nil)])
+        }
+        let url = try XCTUnwrap(store.presentationAssetURL(for: board) ??
+            store.modelResource(for: board)?.debugSimulatorPackagedURL(in: store.resourceBundle))
+        let scene = BoardModelRealityScene(descriptor: media.descriptor, display: media.display,
+            suspension: nil, orientation: nil, allowedPositionIDs: [position], instances: instances,
+            resourceLease: BoardModelRealityResourceLease(url: url))
+        try await scene.load(usdzURL: url)
+        XCTAssertTrue(scene.select(positionID: position))
+        scene.frame(in: CGSize(width: 800, height: 500))
+        let before = scene.instanceEntities.map { $0.transform.matrix }
+        let camera = scene.camera.transform.matrix
+        let cord = try XCTUnwrap(scene.transientCordEntity)
+        func cordTransforms(_ entity: Entity) -> [simd_float4x4] {
+            [entity.transformMatrix(relativeTo: scene.root)] + entity.children.flatMap(cordTransforms)
+        }
+        let originalCord = cordTransforms(cord)
+        // Infer the framing target from two observable camera positions at
+        // known zoom values, without exposing the scene's private framing.
+        scene.orbit(azimuth: 0, elevation: 0, zoomScale: 1.25)
+        let framingTarget = 5 * SIMD3(camera.columns.3.x, camera.columns.3.y, camera.columns.3.z)
+            - 4 * scene.camera.position
+        scene.resetCamera(animated: false)
+        for yaw in [Float.zero, Float.pi/6] {
+            scene.orbit(azimuth: yaw, elevation: 0)
+            let yawCamera = scene.camera.transform.matrix
+            let right = SIMD3(yawCamera.columns.0.x, yawCamera.columns.0.y, yawCamera.columns.0.z)
+            for pitch in [Float.pi/9, -Float.pi/9] {
+                scene.orbit(azimuth: yaw, elevation: pitch)
+                XCTAssertNotEqual(scene.instanceEntities[0].transform.matrix, before[0])
+                let uncorded = scene.instanceEntities[1].transform.matrix
+                XCTAssertNotEqual(uncorded, before[1], "The uncorded instance must retain its pitch viewing behavior")
+                let rotation = simd_quatf(angle: pitch, axis: right)
+                var expected = simd_float4x4(rotation) * before[1]
+                let position = before[1].columns.3
+                expected.columns.3 = SIMD4(framingTarget + rotation.act(
+                    SIMD3(position.x, position.y, position.z) - framingTarget), 1)
+                for column in 0..<4 {
+                    XCTAssertLessThan(simd_distance(uncorded[column], expected[column]), 1e-6,
+                                      "The uncorded pose must pitch about the shared framing target, including its translation")
+                }
+                XCTAssertEqual(scene.camera.transform.matrix, yawCamera)
+                XCTAssertEqual(cordTransforms(cord), originalCord)
+            }
+        }
+        scene.resetCamera(animated: false)
+        XCTAssertEqual(scene.instanceEntities.map { $0.transform.matrix }, before)
+    }
+
+    @MainActor
     private func selectionScene() async throws -> BoardModelRealityScene {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-1000"))
         let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
@@ -315,7 +474,7 @@ final class BoardModelRealityTests: XCTestCase {
     @MainActor
     func testLiveClavelliumHasMatchedRadiusAndNonPickableCord() async throws {
         let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:"clavellium-training-block"))
-        let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation)
+        let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation,useLivePhysics:true)
         XCTAssertTrue(scene.hasLiveRopes)
         XCTAssertTrue(scene.select(positionID:try XCTUnwrap(board.positions.first?.id)))
         let frame=try XCTUnwrap(scene.liveFramesForTesting.first)
@@ -396,7 +555,7 @@ final class BoardModelRealityTests: XCTestCase {
     @MainActor
     func testLiveScenePausesThenPublishesAcceptedSettledFrame() async throws {
         let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:"clavellium-training-block"))
-        let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation)
+        let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation,useLivePhysics:true)
         XCTAssertTrue(scene.select(positionID:try XCTUnwrap(board.positions.first?.id)))
         let initial=try XCTUnwrap(scene.liveFramesForTesting.first)
         var frameNotifications=0
@@ -1346,8 +1505,8 @@ final class BoardModelRealityTests: XCTestCase {
         scene.frame(in:viewport)
         for position in board.positions {
             XCTAssertTrue(scene.select(positionID:position.id))
-            for azimuth in [Float(0),.pi/2,.pi] {
-                scene.orbit(azimuth:azimuth,elevation:0)
+            for angles in [SIMD2<Float>(0,0), [Float.pi/2,0], [Float.pi,0], [0,Float.pi/9], [0,-Float.pi/9], [0.35,0.35]] {
+                scene.orbit(azimuth:angles.x,elevation:angles.y)
                 let view=scene.camera.transform.matrix.inverse
                 let tangent=tan(scene.camera.camera.fieldOfViewInDegrees*Float.pi/360)
                 for entity in scene.instanceEntities+[try XCTUnwrap(scene.transientCordEntity)] {

@@ -23,7 +23,7 @@ choose the smallest readable adjustment or the best meaningful improvement in
 that neighborhood. This is a bounded geometric heuristic, not a global
 visibility optimum or an authored opening annotation.
 
-- Every new selection sets the camera to the computed angles and default zoom,
+- Every new selection sets the display to the computed angles and default zoom,
   including a zero adjustment that returns to the front angle. It animates over
   0.28 seconds when Reduce Motion is disabled.
 - Unchanged contact selection and board position, physical same-hold retaps,
@@ -31,8 +31,23 @@ visibility optimum or an authored opening annotation.
 - Clearing an existing selection restores default camera framing.
 - Position changes still apply the package's board pose and cord setup. The
   camera uses that position's framing and recomputes hold visibility.
-- Automatic adjustment keeps the framing target fixed and refits the complete
-  board and cord bounds. Manual gestures remain available afterward.
+- Automatic adjustment refits the complete board and cord bounds. For corded
+  boards, pitch rotates the actual board about its own authored cord-point
+  axis, keeping the entire cord fixed. Separate instances use separate axes.
+  A single attachment uses the canonical view's horizontal axis through that
+  point, since one authored point does not define a cord axis.
+  The camera fits the local board rotation envelope at rest and does not move
+  during pitch.
+  Yaw retains the camera orbit; all-uncorded scenes retain camera pitch.
+  Mixed scenes apply the equivalent pitch to their uncorded instances about
+  the framing target, while the cord and camera remain fixed.
+- Visibility is evaluated in the canonical pose before each new selection.
+  Clearing restores the exact canonical board and cord transforms. Projected
+  contact controls refresh during the board's 0.28-second animation; manual
+  gestures, position changes and disposal cancel superseded animation.
+- The normal viewer requires no live rope controller. This is a kinematic
+  display hinge with unchanged cord geometry, rather than physical
+  equilibrium. Live rope physics remains an explicit loader opt-in for tests.
 
 Unit validation covers returning to front, front-opening recesses versus
 exposed surfaces, edge-on top/side/underside surfaces, mirrored geometry,
