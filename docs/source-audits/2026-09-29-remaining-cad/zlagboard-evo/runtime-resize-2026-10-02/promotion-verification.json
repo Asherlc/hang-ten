@@ -1,0 +1,10 @@
+{
+  "createdUTC": "2026-10-02T21:44:50.866669+00:00",
+  "copiedRawFiles": 367,
+  "allRawHashesMatch": true,
+  "previousPacketFilesCheckedUnchanged": 2341,
+  "linkedAnalysisHashesMatch": true,
+  "manifestSHA256": "03b7bc3731526c29566758b53d61f28548250c8df63b4f46021109140465e911",
+  "frozenPatchSHA256": "bb535775aab3a1355a065d53e82f3d632c87fd762c60062f075977fc5e901503",
+  "sourceIndexCommitDeviceMutation": false
+}

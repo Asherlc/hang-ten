@@ -1,0 +1,73 @@
+{
+  "scope": "G2 animated initial resize; individual whole final images",
+  "finalImages": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-g2/phase-0-clear-plus-7.png",
+      "targetEpoch": 1790977005.6180596,
+      "startEpoch": 1790977005.628129,
+      "endEpoch": 1790977006.107486,
+      "phase": "clear",
+      "phaseIndex": 0,
+      "offset": 7,
+      "sha256": "4bf522219bee5bca8bb491208a3a7c02094abc0910a9f72988a671434812aa8f",
+      "wholeImageViewedIndividually": true,
+      "observation": "wood without colored contacts at larger initial size",
+      "expectedMatched": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-g2/phase-1-active-plus-7.png",
+      "targetEpoch": 1790977013.6180596,
+      "startEpoch": 1790977013.6209059,
+      "endEpoch": 1790977014.092653,
+      "phase": "active",
+      "phaseIndex": 1,
+      "offset": 7,
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "wholeImageViewedIndividually": true,
+      "observation": "red selected pockets at final size",
+      "expectedMatched": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-g2/phase-2-preview-plus-7.png",
+      "targetEpoch": 1790977021.6180596,
+      "startEpoch": 1790977021.628096,
+      "endEpoch": 1790977022.100977,
+      "phase": "preview",
+      "phaseIndex": 2,
+      "offset": 7,
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "wholeImageViewedIndividually": true,
+      "observation": "blue selected pockets",
+      "expectedMatched": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-g2/phase-3-active-plus-7.png",
+      "targetEpoch": 1790977029.6180596,
+      "startEpoch": 1790977029.621079,
+      "endEpoch": 1790977030.1235929,
+      "phase": "active",
+      "phaseIndex": 3,
+      "offset": 7,
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "wholeImageViewedIndividually": true,
+      "observation": "red selected pockets",
+      "expectedMatched": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-g2/phase-4-preview-plus-7.png",
+      "targetEpoch": 1790977037.6180596,
+      "startEpoch": 1790977037.634945,
+      "endEpoch": 1790977038.644129,
+      "phase": "preview",
+      "phaseIndex": 4,
+      "offset": 7,
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "wholeImageViewedIndividually": true,
+      "observation": "blue selected pockets",
+      "expectedMatched": true
+    }
+  ],
+  "all20EqualTheirIndividuallyReviewedFinalPhase": true,
+  "differentImages": [],
+  "humanAcceptance": false
+}

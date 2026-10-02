@@ -183,3 +183,14 @@ remain explicit; no middle-rest persistence or SDK root cause is claimed.
 Source links, parity and analysis are retained without changing old packets or
 acceptances. The workflow remains unresolved; owned resources and reservations
 continue under coordinated diagnosis, with cleanup pending.
+
+### Initial-resize isolation — qualified evidence, no workout repair
+
+The [Evo resize appendix](zlagboard-evo/runtime-resize-2026-10-02/README.md)
+retains both diagnostic builds, the invalid first F integer-arithmetic setup
+with zero captures, its explicit correction, and 60 visually correct E2/F2/G2
+captures. G2 has only 19/20 complete CPU brackets; the missing final after-end
+record remains qualified. Black-capsule artifacts and all root/raw reviews are
+retained. This isolated history does not reproduce or repair the real workout.
+Earlier evidence and acceptances are unchanged. Source reservation and owned
+resources remain active under coordination, with cleanup pending.
