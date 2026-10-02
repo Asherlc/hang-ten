@@ -1,0 +1,384 @@
+{
+  "owner": "strong-owl-live-physics",
+  "groups": [
+    {
+      "group": 29129,
+      "absent": true
+    },
+    {
+      "group": 29245,
+      "absent": true
+    },
+    {
+      "group": 29251,
+      "absent": true
+    },
+    {
+      "group": 32796,
+      "absent": true
+    },
+    {
+      "group": 33042,
+      "absent": true
+    },
+    {
+      "group": 33850,
+      "absent": true
+    },
+    {
+      "group": 33953,
+      "absent": true
+    },
+    {
+      "group": 34775,
+      "absent": true
+    },
+    {
+      "group": 35140,
+      "absent": true
+    },
+    {
+      "group": 35339,
+      "absent": true
+    },
+    {
+      "group": 35442,
+      "absent": true
+    },
+    {
+      "group": 35490,
+      "absent": true
+    },
+    {
+      "group": 35601,
+      "absent": true
+    },
+    {
+      "group": 35704,
+      "absent": true
+    },
+    {
+      "group": 36112,
+      "absent": true
+    },
+    {
+      "group": 36120,
+      "absent": true
+    },
+    {
+      "group": 38867,
+      "absent": true
+    },
+    {
+      "group": 40603,
+      "absent": true
+    },
+    {
+      "group": 40609,
+      "absent": true
+    },
+    {
+      "group": 40729,
+      "absent": true
+    },
+    {
+      "group": 40735,
+      "absent": true
+    },
+    {
+      "group": 40741,
+      "absent": true
+    },
+    {
+      "group": 40978,
+      "absent": true
+    },
+    {
+      "group": 44336,
+      "absent": true
+    },
+    {
+      "group": 44342,
+      "absent": true
+    },
+    {
+      "group": 44365,
+      "absent": true
+    },
+    {
+      "group": 48814,
+      "absent": true
+    },
+    {
+      "group": 48820,
+      "absent": true
+    },
+    {
+      "group": 48932,
+      "absent": true
+    },
+    {
+      "group": 48938,
+      "absent": true
+    },
+    {
+      "group": 48944,
+      "absent": true
+    },
+    {
+      "group": 49181,
+      "absent": true
+    },
+    {
+      "group": 49831,
+      "absent": true
+    },
+    {
+      "group": 49845,
+      "absent": true
+    },
+    {
+      "group": 50096,
+      "absent": true
+    },
+    {
+      "group": 50206,
+      "absent": true
+    },
+    {
+      "group": 50900,
+      "absent": true
+    },
+    {
+      "group": 50906,
+      "absent": true
+    },
+    {
+      "group": 51018,
+      "absent": true
+    },
+    {
+      "group": 51024,
+      "absent": true
+    },
+    {
+      "group": 51030,
+      "absent": true
+    },
+    {
+      "group": 51273,
+      "absent": true
+    },
+    {
+      "group": 54599,
+      "absent": true
+    },
+    {
+      "group": 54606,
+      "absent": true
+    },
+    {
+      "group": 54612,
+      "absent": true
+    },
+    {
+      "group": 54688,
+      "absent": true
+    },
+    {
+      "group": 55675,
+      "absent": true
+    },
+    {
+      "group": 55799,
+      "absent": true
+    },
+    {
+      "group": 64007,
+      "absent": true
+    },
+    {
+      "group": 64128,
+      "absent": true
+    }
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-jolt-chain/CMakeLists.txt": "b645508807a09d2135f98e6c6fd64c2859420fa80aecaeb06e95e3332c4537b2",
+    ".context/strong-owl-live-physics-jolt-chain/DIRECT_PLAN.md": "03db29f7da1739e3eef54bc23b9b1a1a5d5891c3ded0323c3074e2a7cfb876b9",
+    ".context/strong-owl-live-physics-jolt-chain/PLAN.md": "28800f353e4d0282873ba656b14d12ec96dd7a15652d4fe16502d9cd4a86f570",
+    ".context/strong-owl-live-physics-jolt-chain/UNIT_PLAN.md": "f2a2a7045d778e71f3d239971d72e0cf44bbe21f83616c84b31182c80a3ae1e0",
+    ".context/strong-owl-live-physics-jolt-chain/build/jolt/libJolt.a": "ec3f6c8686db126650069b8674e0dfb99ff7f12ad4d40d40d106b2851a197341",
+    ".context/strong-owl-live-physics-jolt-chain/build/strong-owl-live-physics-jolt-chain": "53d7000c8bb17ca6cad8ee7d8d875fbca588ee5abfde94e5b38764bc6f024199",
+    ".context/strong-owl-live-physics-jolt-chain/build.log": "b2173d18b3a436f3edac7467369a1f1f5d338f2aafcdfdc1ac806fb74d58900f",
+    ".context/strong-owl-live-physics-jolt-chain/build.py": "633826203f99050bc8e12a9bf85d886d003f86030dc2b7587a67c3c0e8d257de",
+    ".context/strong-owl-live-physics-jolt-chain/capsules-0.json": "60bacede91d64c1a54f43a5e06a381be6b31482e4d7c3a20372472f643e2a1ee",
+    ".context/strong-owl-live-physics-jolt-chain/capsules-1.json": "60bacede91d64c1a54f43a5e06a381be6b31482e4d7c3a20372472f643e2a1ee",
+    ".context/strong-owl-live-physics-jolt-chain/checkpoint-0.json": "365c0675f1191bfa5aac7746720943d2af8ec19d783d9e63c7af1418523ba662",
+    ".context/strong-owl-live-physics-jolt-chain/checkpoint-1.json": "365c0675f1191bfa5aac7746720943d2af8ec19d783d9e63c7af1418523ba662",
+    ".context/strong-owl-live-physics-jolt-chain/clone.log": "38d63fe0d9d661f7f36de9a7fa04351d5936cb1f73e17e34acb4b035d24b9a52",
+    ".context/strong-owl-live-physics-jolt-chain/cold-step.log": "79859e77f7e9de8d150f2a6fc8ed523cea6083d79610701d07a3ab1affb12f12",
+    ".context/strong-owl-live-physics-jolt-chain/configure.log": "28c5e808b4f190af8910eb40efc4db158a02f0de89e84999a13130df1aaf29c5",
+    ".context/strong-owl-live-physics-jolt-chain/engine.json": "1ccd3fb6525dea53cd7d97a2c5565ec8e41cc332d5d6b220819a1de3e38662c9",
+    ".context/strong-owl-live-physics-jolt-chain/json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63",
+    ".context/strong-owl-live-physics-jolt-chain/json.log": "b0b8d9a9234fae034b529fbf4ae4a960a1bf3ae6d5f14efff86df46428d649cd",
+    ".context/strong-owl-live-physics-jolt-chain/main.cpp": "8ebf4ae7e3d9a96fd122e66ae3206d60d2899bb88061bc4a1a02284e300cfdfd",
+    ".context/strong-owl-live-physics-jolt-chain/physical-checks.json": "3ea73f4c70cd2dfcc630f5469ecb1cde33fe2709dee4c68d39d3bdd0387496a0",
+    ".context/strong-owl-live-physics-jolt-chain/prepare.py": "423abbd51d23ebeb8c5b3fde3aa102c608281480b3e5a3fadc8df81813a75634",
+    ".context/strong-owl-live-physics-jolt-chain/resources.jsonl": "282a50ce6af505ab495366e05d5f21abe819fe6147c5e08f60b9b907122ddfd7",
+    ".context/strong-owl-live-physics-jolt-chain/revision.log": "6974004125c105d26bb4dffad9f36f9b138e4bd0c55921d66bda1033b117e910",
+    ".context/strong-owl-live-physics-jolt-chain/run.py": "e7501b8a050a6a9837825ed6d42d9fdd59bd28a6ba46915ba10f45207697e043",
+    ".context/strong-owl-live-physics-jolt-chain/setup-abort.log": "88aa8336b315a385398b369b46e5fcd9f5cced97bde59680a25e78128cf9fb2a",
+    ".context/strong-owl-live-physics-jolt-chain/setup-allocation-failure.log": "10204314c548cc0c9ffa55710c22a311daa5a052e3f1df77cdf811dc05d49d03",
+    ".context/strong-owl-live-physics-jolt-chain/setup-api-failure.log": "10cc3a97a48275a3957f351b50eb996a99ace955ba63be31f2b477618e0ddc46",
+    ".context/strong-owl-live-physics-jolt-chain/setup-backtrace.log": "4e6475bb01e61cc92d630b1a0f62d6c3d38c527f9b672b122bf466a17dd2f713",
+    ".context/strong-owl-live-physics-jolt-chain/strong-owl-live-physics-jolt-verifier": "b1babc109f8e6880968545f3c1ef48da0cfa0db4bca8fe4f1f62a70d4e0d1336",
+    ".context/strong-owl-live-physics-jolt-chain/summary.json": "7f53ed8732fcc11d2376db4e517f7c4965b8ace3138776460d0714f405078ec1",
+    ".context/strong-owl-live-physics-jolt-chain/swift-sources/ExactCheckpointJSON.swift": "fec607f09b6b06235f80359f91b40704fe08d9aa43a8deb90b50432a3eb4dd02",
+    ".context/strong-owl-live-physics-jolt-chain/swift-sources/RopeBandedSystem.swift": "d72906a280256e3d760d4b99320b5f0531ca624ae615c4d435f9f2400c18d5aa",
+    ".context/strong-owl-live-physics-jolt-chain/swift-sources/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-jolt-chain/swift-sources/RopeCordContacts.swift": "6c05954e1f2d953f0feeeaf05b4a0176aae8fa14ddfb21e67a4686c01bb601bd",
+    ".context/strong-owl-live-physics-jolt-chain/swift-sources/RopeDynamicsSolver.swift": "21995c7805ac862afd0acd68d6334a8935576dee1888f5d12ab6ab2baec94d3a",
+    ".context/strong-owl-live-physics-jolt-chain/swift-sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-jolt-chain/swift-sources/RopeSimulationMetrics.swift": "91abf3c099cc13a17854ae4af80313bb19518b8909bcfbf8f8431158962f2e59",
+    ".context/strong-owl-live-physics-jolt-chain/swift-sources/RopeSimulationState.swift": "915a55c8422030a3efeb5c449fc9b085b3a24b612d7766a3ba8745e0670514c8",
+    ".context/strong-owl-live-physics-jolt-chain/swift-sources/RopeThreadedSeed.swift": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a",
+    ".context/strong-owl-live-physics-jolt-chain/swift-sources/RopeTriangleCollider.swift": "e7f16b650115842ae0eeac5d209c692992ff0c29fda7cb557184337654033b1d",
+    ".context/strong-owl-live-physics-jolt-chain/swift-sources/main.swift": "c9827c2d7aa255730919b80a4e0ff4123d41f19713b753e258099a03004829ad",
+    ".context/strong-owl-live-physics-jolt-chain/verify-compile.log": "cde745bc8580670073f26eb2e8c15503279977792a9a2b280a524a34288392ab",
+    ".context/strong-owl-live-physics-jolt-chain/verify.log": "a80b2b533a7ca376900daa72da5709af0c3494fbb1e2fb423d3451156a508169",
+    ".context/strong-owl-live-physics-jolt-chain/verify.swift": "c9827c2d7aa255730919b80a4e0ff4123d41f19713b753e258099a03004829ad",
+    ".context/strong-owl-live-physics-solver-foundation/clav-contact-step/checkpoint.json": "cad349812c3c0c33384378fe368abff97411f2a0c9aeb385d99edebef151c464",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/CMakeLists.txt": "7114d65f70b5d6682c1bd1f92214066a6c99ba8d41a7a82b04d01d362278fb2b",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/CheckpointAdapter.swift": "92385d915f17d8b594b5944507e1967e6b7685bf7d40c526d5212417c977039b",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/JoltChain.cpp": "b1dc8f837fdcc13978502a6891410204ed2ac14e69715ffacba5ed278a7a1b0f",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/Verify.swift": "9d178d6c60399a155f0d4567190e0789d3d3598f6487aab45c8d16bb5cb0a4f9",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/before-counters.cpp": "f52e7591329cda9feab5a80361b283234965208a2445b8a32252080b04300482",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/build/jolt/libJolt.a": "fae61bb870ddf38cd73aef2be0d7fc5223dd27b75102b8214e4301452fa2d15e",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/build/strong-owl-live-physics-jolt-chain": "28c363f9ec4db320c7b7433a96eb67698f056bde6d61da2bac87736f7f51812c",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/build.log": "9b7bb95fdd2130ad07b104b16add1de60410c624cb1a75b2b851766cfb0d1897",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/capsules-0.json": "e38838e60deb939334df0d8042ea67586474bdc8bb0b7cd25203572d396518d5",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/capsules-1.json": "e38838e60deb939334df0d8042ea67586474bdc8bb0b7cd25203572d396518d5",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/check-hoist.py": "7dd5166a8b9927079e5803956794776e8609d77651518d8ed8e8ec830338f505",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/checkpoint-0.json": "19d58933282fda518c61c2771d82df4ab7d4bd7ba0dec7865110371c8bcd3c44",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/checkpoint-1.json": "19d58933282fda518c61c2771d82df4ab7d4bd7ba0dec7865110371c8bcd3c44",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/cold-step.log": "cdedf274e83bc02ba1343010af7fd17cb6550013048c90b3ce18708ff25a3f9e",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/configure.log": "3c5df69789e7b4aa1e7cb0ec2c84c2d3d0330ec4d25964bf23984b18ab4644d2",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/counter-build.log": "c8d1c5208f61761e4ddb5dc79621ef28bb9137394bba05ae8120357d67c3b894",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/counter-check.json": "80ce8f9e0c862df2ad709ba877da98b7922f0c20ae3957c11d458dcef9594679",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/counter-continuation.py": "64ec7dc2d4b76fa68c899cc58283ca6b3d7516fee4c0309e85b5ed9c0c006e65",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/counter-engine.json": "240f78370169129f90afd6772e2bf84697298113eab477e2918a9993962b9e68",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/counter-run.log": "4aefe90abf9334233c38f46f714e378ab22c82bdfc63544ef5b1d061aa983450",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/driver-source.py": "a0e65d1a2bfff9adc753a0341c934b6e93740bf61dd25e1daeb3fb64e0d689fd",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/engine.json": "049ce9d38f521f9c8b4499a7178e12bb608c8fb91fe6b23591226d4d4e38f2d2",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/final-validate.py": "d80328b9e1d4331dc8819a5099f032065571bc88fcf203e9bb475b7e5b1de481",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/git-checkout.log": "21b4f2338a6575c0589a816ad925c87d9734aa06727422b280c974386d86b441",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/git-fetch.log": "64747e2bab96c8d8747e6ab624f1ae23d34164d54ad6b5c5a9623753881cabf5",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/git-init.log": "29463d82840632bc77af171b97aa93e31852a5c78b829d07f02b85990b188308",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/hoist-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/hoist-check.log": "a80b2b533a7ca376900daa72da5709af0c3494fbb1e2fb423d3451156a508169",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/hoisted-verifier/sources/ExactCheckpointJSON.swift": "fec607f09b6b06235f80359f91b40704fe08d9aa43a8deb90b50432a3eb4dd02",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/hoisted-verifier/sources/RopeBandedSystem.swift": "d72906a280256e3d760d4b99320b5f0531ca624ae615c4d435f9f2400c18d5aa",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/hoisted-verifier/sources/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/hoisted-verifier/sources/RopeCordContacts.swift": "6c05954e1f2d953f0feeeaf05b4a0176aae8fa14ddfb21e67a4686c01bb601bd",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/hoisted-verifier/sources/RopeDynamicsSolver.swift": "21995c7805ac862afd0acd68d6334a8935576dee1888f5d12ab6ab2baec94d3a",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/hoisted-verifier/sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/hoisted-verifier/sources/RopeSimulationMetrics.swift": "91abf3c099cc13a17854ae4af80313bb19518b8909bcfbf8f8431158962f2e59",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/hoisted-verifier/sources/RopeSimulationState.swift": "915a55c8422030a3efeb5c449fc9b085b3a24b612d7766a3ba8745e0670514c8",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/hoisted-verifier/sources/RopeThreadedSeed.swift": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/hoisted-verifier/sources/RopeTriangleCollider.swift": "e7f16b650115842ae0eeac5d209c692992ff0c29fda7cb557184337654033b1d",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/hoisted-verifier/sources/main.swift": "3c2ace9ff4733cfda18f4e0a1f8fb79ca6685177fcdb84c9c9541a01b75728fc",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/hoisted-verifier/strong-owl-live-physics-hoisted-verifier": "2cc2ef950394e6968b3c7f27dca8a6174d142a10914dfe908d729403d816e7aa",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/inertia-red.log": "95ce85c09775eb1b3d67fcb82c8a9a5e4e48eaa3e0d1face926d4c75e6109d51",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/json.log": "e6a191a95901b346a7b42326304105de3c58b17f18aeb38e59e7d11852c87af8",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/lifecycle-source.py": "b6940301d49a7db8e5dfc6d4db9c8e031db62e78993ac3012f7596655a2a897e",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/physical-checks-hoisted.json": "f564a4128b22b3be30f43c71beffdda40ae78ff7d1dd3f67b870864b66bfe0cc",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/physical-checks.json": "d63f6da67f6fb0e6aecb0244ea753936db4c2db619e47be37eb6a0ca624f29d6",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/provenance.json": "8cfd480b5cce89410846a2c488c86786f21fa2421e58a4b5f51f70be2acd400f",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/resources.jsonl": "bd3b275328c1d74a67d0f7b308d757039409be46d79f9422dfff8daaf53b40a7",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/strong-owl-live-physics-jolt-verifier": "67881f131c4b60b4d30aef2e4bd347c4974f922eb79c1244e4ee0f0c595c6a78",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/summary.json": "3fc0def6f07fc7d555819f68bc064c177309cce7a8f9d23bc0e872010f41906e",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/swift-sources/ExactCheckpointJSON.swift": "fec607f09b6b06235f80359f91b40704fe08d9aa43a8deb90b50432a3eb4dd02",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/swift-sources/RopeBandedSystem.swift": "d72906a280256e3d760d4b99320b5f0531ca624ae615c4d435f9f2400c18d5aa",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/swift-sources/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/swift-sources/RopeCordContacts.swift": "6c05954e1f2d953f0feeeaf05b4a0176aae8fa14ddfb21e67a4686c01bb601bd",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/swift-sources/RopeDynamicsSolver.swift": "21995c7805ac862afd0acd68d6334a8935576dee1888f5d12ab6ab2baec94d3a",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/swift-sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/swift-sources/RopeSimulationMetrics.swift": "91abf3c099cc13a17854ae4af80313bb19518b8909bcfbf8f8431158962f2e59",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/swift-sources/RopeSimulationState.swift": "915a55c8422030a3efeb5c449fc9b085b3a24b612d7766a3ba8745e0670514c8",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/swift-sources/RopeThreadedSeed.swift": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/swift-sources/RopeTriangleCollider.swift": "e7f16b650115842ae0eeac5d209c692992ff0c29fda7cb557184337654033b1d",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/swift-sources/main.swift": "9d178d6c60399a155f0d4567190e0789d3d3598f6487aab45c8d16bb5cb0a4f9",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/verify-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-stock-chain-exact-inertia/verify.log": "a80b2b533a7ca376900daa72da5709af0c3494fbb1e2fb423d3451156a508169",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/CMakeLists.txt": "7114d65f70b5d6682c1bd1f92214066a6c99ba8d41a7a82b04d01d362278fb2b",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/CheckpointAdapter.swift": "92385d915f17d8b594b5944507e1967e6b7685bf7d40c526d5212417c977039b",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/JoltChain.cpp": "b4533a723a6715380a651a4601203992ffc9fb487de05ae93bed48215eb36477",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/Verify.swift": "9d178d6c60399a155f0d4567190e0789d3d3598f6487aab45c8d16bb5cb0a4f9",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/build/jolt/libJolt.a": "6da72dea9508dc0084f6f614c9beed4022c567a2e6ae9d096f5845d032957813",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/build/strong-owl-live-physics-jolt-chain": "fefe74fc73be0bf5e32c55b3db1e7c42ff22a4cfc83032babd845f0040ab8d32",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/build.log": "71fef067174f6ecb9f26ebed48fe7f0da36636c29745380474d837246dcddb28",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/cold-step.log": "fec4ccf74d11068ffb5c7e2e8cdb162d5c007480c97b20cabde107f36b761a4d",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/configure.log": "5684702f51dcaf1a765f6d7e8527b960030e19893fe2687d2168ed57ff85fc39",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/driver-source.py": "e053b39ea1bee062166dbeff51f3135c5d2e3c355fa5e8b38754db669d869542",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/git-checkout.log": "21b4f2338a6575c0589a816ad925c87d9734aa06727422b280c974386d86b441",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/git-fetch.log": "64747e2bab96c8d8747e6ab624f1ae23d34164d54ad6b5c5a9623753881cabf5",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/git-init.log": "e267dc711ec2dc5efaf86144c27b83d43d29da460c105f0c83899108600af71e",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/inertia-diagnostic-build.log": "c8d1c5208f61761e4ddb5dc79621ef28bb9137394bba05ae8120357d67c3b894",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/inertia-diagnostic.log": "684ceb702c3607041ccdf6cfce2715d0120504d884ac0635000185ff955186e5",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/inertia-red.log": "fec4ccf74d11068ffb5c7e2e8cdb162d5c007480c97b20cabde107f36b761a4d",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/json.log": "8db54badf70574aec8134ac823a92fe3d19bb081685ba0246fc1d9a5c1c56703",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/lifecycle-source.py": "b6940301d49a7db8e5dfc6d4db9c8e031db62e78993ac3012f7596655a2a897e",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/pre-diagnostic-source.cpp": "e224fa3b7d16f2d403f3fc3109a6c11e574ee7b23746260f6e6a325ead8312c6",
+    ".context/strong-owl-live-physics-stock-chain-matched-mm/resources.jsonl": "bcbcca5daf7bbbc2e24cad7b1fccc75bef85c23ebbaa066d2f610db28cbaeaa1",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/CMakeLists.txt": "7114d65f70b5d6682c1bd1f92214066a6c99ba8d41a7a82b04d01d362278fb2b",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/CheckpointAdapter.swift": "92385d915f17d8b594b5944507e1967e6b7685bf7d40c526d5212417c977039b",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/JoltChain.cpp": "8ebf4ae7e3d9a96fd122e66ae3206d60d2899bb88061bc4a1a02284e300cfdfd",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/Verify.swift": "9d178d6c60399a155f0d4567190e0789d3d3598f6487aab45c8d16bb5cb0a4f9",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/build/jolt/libJolt.a": "49e27a089dcb6ca1c7d475300901a45b86a32d65c526f4ff86304e86ba863ec5",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/build/strong-owl-live-physics-jolt-chain": "53d7000c8bb17ca6cad8ee7d8d875fbca588ee5abfde94e5b38764bc6f024199",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/build.log": "f0382a8486a9d3db880e55d15ff7c845be4dca1843e240233bf0d22d90e9c178",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/capsules-0.json": "60bacede91d64c1a54f43a5e06a381be6b31482e4d7c3a20372472f643e2a1ee",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/capsules-1.json": "60bacede91d64c1a54f43a5e06a381be6b31482e4d7c3a20372472f643e2a1ee",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/checkpoint-0.json": "365c0675f1191bfa5aac7746720943d2af8ec19d783d9e63c7af1418523ba662",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/checkpoint-1.json": "365c0675f1191bfa5aac7746720943d2af8ec19d783d9e63c7af1418523ba662",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/cold-step.log": "5dae8638b899e43c7091376f48707713c398c19c9b55f7a1b6bc8bb37e9e917c",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/configure.log": "103b62119bac9898f0e95fb3a8940c44e0392bd8ffb1e92fe0cd5a52cf3b2d4e",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/driver-source.py": "b023e73bf6e1c0c6743cb83663885b6520b6989bd20162370f45fdb5f3dc5cbf",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/engine.json": "461580d408feb12b1fdd0a348052847e02406f9dd2fe05bedf0bc4f8699fb9f2",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/git-checkout.log": "21b4f2338a6575c0589a816ad925c87d9734aa06727422b280c974386d86b441",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/git-fetch.log": "64747e2bab96c8d8747e6ab624f1ae23d34164d54ad6b5c5a9623753881cabf5",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/git-init.log": "974e3b15e6f8c701bba1c13f990dd43a02b83233bc38b0995b7264e5ed8dd9f6",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/json.log": "17a48355cbf19b26e2c2f6b96a5b404187c5d62a8fcb653dff556ea0440da873",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/lifecycle-source.py": "b6940301d49a7db8e5dfc6d4db9c8e031db62e78993ac3012f7596655a2a897e",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/physical-checks.json": "00d4d35b09c725626294bae7ef057de633d2f3e6769b8a84588c4454951bdc64",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/provenance.json": "6645678083a69782dca743ba46c13db96db07eca16c216c9e7fd0eef6eb839c0",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/resources.jsonl": "d594d980589be2e1075b6d2f9de4bacfbc5c0fad809f056044b83d11abef4d03",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/strong-owl-live-physics-jolt-verifier": "67881f131c4b60b4d30aef2e4bd347c4974f922eb79c1244e4ee0f0c595c6a78",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/summary.json": "a3b54b0f77172d8575d19aacd762b014cd918777001bb8e73d51baf06fbbb885",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/swift-sources/ExactCheckpointJSON.swift": "fec607f09b6b06235f80359f91b40704fe08d9aa43a8deb90b50432a3eb4dd02",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/swift-sources/RopeBandedSystem.swift": "d72906a280256e3d760d4b99320b5f0531ca624ae615c4d435f9f2400c18d5aa",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/swift-sources/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/swift-sources/RopeCordContacts.swift": "6c05954e1f2d953f0feeeaf05b4a0176aae8fa14ddfb21e67a4686c01bb601bd",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/swift-sources/RopeDynamicsSolver.swift": "21995c7805ac862afd0acd68d6334a8935576dee1888f5d12ab6ab2baec94d3a",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/swift-sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/swift-sources/RopeSimulationMetrics.swift": "91abf3c099cc13a17854ae4af80313bb19518b8909bcfbf8f8431158962f2e59",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/swift-sources/RopeSimulationState.swift": "915a55c8422030a3efeb5c449fc9b085b3a24b612d7766a3ba8745e0670514c8",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/swift-sources/RopeThreadedSeed.swift": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/swift-sources/RopeTriangleCollider.swift": "e7f16b650115842ae0eeac5d209c692992ff0c29fda7cb557184337654033b1d",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/swift-sources/main.swift": "9d178d6c60399a155f0d4567190e0789d3d3598f6487aab45c8d16bb5cb0a4f9",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/verify-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-stock-chain-reproduction/verify.log": "a80b2b533a7ca376900daa72da5709af0c3494fbb1e2fb423d3451156a508169",
+    "Hangboards/clavellium-training-block/assets/primary.physics.json": "c60fbd6dfaf59bfd5fb7e6aa8d806f78af7e828a7f64074d326865e08f13e853",
+    "Tools/HangboardRopePrototype/run_stock_chain_screen.py": "ce24218b5e287a3e33f160675ff427074404a7b3095bb49db9788a532e67c28f",
+    "Tools/HangboardRopePrototype/run_stock_chain_screen.sh": "01b742b5328b8cd33c4bf43999d38c9d7831ad9785a0d358613f2a9258d9f3e6",
+    "Tools/HangboardRopePrototype/stock_chain/CMakeLists.txt": "7114d65f70b5d6682c1bd1f92214066a6c99ba8d41a7a82b04d01d362278fb2b",
+    "Tools/HangboardRopePrototype/stock_chain/CheckpointAdapter.swift": "92385d915f17d8b594b5944507e1967e6b7685bf7d40c526d5212417c977039b",
+    "Tools/HangboardRopePrototype/stock_chain/JoltChain.cpp": "b1dc8f837fdcc13978502a6891410204ed2ac14e69715ffacba5ed278a7a1b0f",
+    "Tools/HangboardRopePrototype/stock_chain/Verify.swift": "3c2ace9ff4733cfda18f4e0a1f8fb79ca6685177fcdb84c9c9541a01b75728fc",
+    "docs/source-audits/2026-10-02-live-stock-jolt-chain/summary.json": "ad38fce7503394edaae8b6edd5525c47525882b15cd5e6ae339edac41c32aa92",
+    "docs/source-audits/2026-10-02-live-stock-jolt-chain.md": "0d6a5e58fdeee25a870e891998d9b61dc371582b700bd28e0da322233f3e4cb3"
+  }
+}

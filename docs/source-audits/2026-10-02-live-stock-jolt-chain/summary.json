@@ -1,0 +1,125 @@
+{
+  "owner": "strong-owl-live-physics",
+  "engineRevision": "5830c342b90fa087f118aa0f086d541a4950b1d9",
+  "runtimeAdoption": false,
+  "deterministicState": true,
+  "unitsPerMetre": 1,
+  "inertiaSubstitutionRedFixture": true,
+  "scope": "one cold loaded Clavellium step, host only",
+  "reports": [
+    {
+      "actualCapsuleClearance": 0.0035646919930573655,
+      "boardDelta": -0.00016890028200577945,
+      "boardHeight": -0.16625857659741997,
+      "boardVerticalVelocity": -0.0405360646545887,
+      "clearance": 0.0035646854534329762,
+      "geometryAccepted": false,
+      "interSweepValid": true,
+      "lengthError": 0.00030760637669102753,
+      "metricsSeconds": 0.0016964583337539807,
+      "refreshFailure": null,
+      "run": 0,
+      "selfSweepValid": true,
+      "strain": 0.013404265198238008,
+      "sweepSeconds": 0.013004791664570803,
+      "topology": true,
+      "topologyFailure": null,
+      "woodSweepFailures": [],
+      "updateSeconds": 0.000508125,
+      "setupSeconds": 0.001579791,
+      "jointEndpointGap": 3.872963266802339e-05,
+      "initialEndpointError": 4.137587313787809e-09,
+      "installedMassInertiaRelativeError": 2.2186822669014072e-08,
+      "screenPassed": false
+    },
+    {
+      "actualCapsuleClearance": 0.0035646919930573655,
+      "boardDelta": -0.00016890028200577945,
+      "boardHeight": -0.16625857659741997,
+      "boardVerticalVelocity": -0.0405360646545887,
+      "clearance": 0.0035646854534329762,
+      "geometryAccepted": false,
+      "interSweepValid": true,
+      "lengthError": 0.00030760637669102753,
+      "metricsSeconds": 0.0016192916700674687,
+      "refreshFailure": null,
+      "run": 1,
+      "selfSweepValid": true,
+      "strain": 0.013404265198238008,
+      "sweepSeconds": 0.012934374997712439,
+      "topology": true,
+      "topologyFailure": null,
+      "woodSweepFailures": [],
+      "updateSeconds": 0.000379042,
+      "setupSeconds": 0.001307875,
+      "jointEndpointGap": 3.872963266802339e-05,
+      "initialEndpointError": 4.137587313787809e-09,
+      "installedMassInertiaRelativeError": 2.2186822669014072e-08,
+      "screenPassed": false
+    }
+  ],
+  "contactCounters": {
+    "wholeStockStateIdentity": true,
+    "reports": [
+      {
+        "woodContactManifolds": 55,
+        "ropeContactManifolds": 0,
+        "updateSeconds": 0.001010625
+      },
+      {
+        "woodContactManifolds": 55,
+        "ropeContactManifolds": 0,
+        "updateSeconds": 0.000687125
+      }
+    ]
+  },
+  "hoistedVerifierChecks": {
+    "checks": [
+      {
+        "actualCapsuleClearance": 0.0035646919930573655,
+        "boardDelta": -0.00016890028200577945,
+        "boardHeight": -0.16625857659741997,
+        "boardVerticalVelocity": -0.0405360646545887,
+        "clearance": 0.0035646854534329762,
+        "geometryAccepted": false,
+        "interSweepValid": true,
+        "lengthError": 0.00030760637669102753,
+        "metricsSeconds": 0.0016593333348282613,
+        "refreshFailure": null,
+        "run": 0,
+        "selfSweepValid": true,
+        "strain": 0.013404265198238008,
+        "sweepSeconds": 0.0035684166687133256,
+        "topology": true,
+        "topologyFailure": null,
+        "woodSweepFailures": []
+      },
+      {
+        "actualCapsuleClearance": 0.0035646919930573655,
+        "boardDelta": -0.00016890028200577945,
+        "boardHeight": -0.16625857659741997,
+        "boardVerticalVelocity": -0.0405360646545887,
+        "clearance": 0.0035646854534329762,
+        "geometryAccepted": false,
+        "interSweepValid": true,
+        "lengthError": 0.00030760637669102753,
+        "metricsSeconds": 0.0016142083331942558,
+        "refreshFailure": null,
+        "run": 1,
+        "selfSweepValid": true,
+        "strain": 0.013404265198238008,
+        "sweepSeconds": 0.0035367500022402965,
+        "topology": true,
+        "topologyFailure": null,
+        "woodSweepFailures": []
+      }
+    ]
+  },
+  "limits": [
+    "Original inertia/KKT/merit/convergence equivalence unproven",
+    "One loop, no inter-cord coverage",
+    "Added manifolds do not prove nonzero bearing impulses",
+    "Reconstructed sweeps do not certify actual disconnected rotating capsules",
+    "Host only, no device p95"
+  ]
+}
