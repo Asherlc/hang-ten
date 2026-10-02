@@ -1168,7 +1168,7 @@
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/metadata-diff.json",
       "nativeValidation": "113 constrained sketches; native 2 mm trough and 1 mm lip fillets are display estimates. All 28 final-skin contact bindings include the jug crests/corners. All 21 pocket geometries/depths and 26 main bearing normals are preserved. Reopen, radius edit/restore, and metadata-only geometry bridge verified.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/final-runtime-validation.json",
-      "geometryAcceptance": "pending one-by-one human review of rounded native top transitions, complete jug highlights, wood finish and all 28 contacts",
+      "geometryAcceptance": "native geometry accepted; fresh app review remains blocked and pending (0/28 contacts)",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
       "nativeAppHistory": [
         "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/app-review/validation.json"
@@ -1176,7 +1176,12 @@
       "comparisonHistory": [
         "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/source-audit.md"
       ],
-      "individualReview": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/review.md"
+      "individualReview": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/review.md",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/human-review.json",
+      "reviewAnswer": "Y",
+      "acceptedDate": "2026-10-02",
+      "acceptedScope": "Displayed Zlagboard.Pro 2.0 native geometry at e28886489, shown in original/prior/corrected front-side-top comparisons. Estimated top rounding and native contact-region corrections are included. Fresh app appearance, highlighting, picking and workout behavior are not accepted or verified by this reply; app contact coverage remains 0/28.",
+      "acceptedRevisionCommit": "e28886489b212b83ac776f5bd0b4430bf733a873"
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",

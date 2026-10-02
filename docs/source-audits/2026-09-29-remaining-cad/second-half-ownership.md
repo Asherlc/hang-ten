@@ -11,8 +11,10 @@ This workspace exclusively reviews #16 `yy-baguette`, #17 `yy-baguette-evo`,
 #18 and #19 were subsequently accepted by explicit replies; their acceptance
 records are committed in `c63554f9f` and `04979bde9`. #20 geometry was accepted on 2026-10-02 (reply “Y”, displayed commit
 `b60f41c59`). Workout highlight transitions remain unresolved on iOS 26.4 and
-26.5; full app-workflow validation is not passing. #21 is the remaining pending
-board and now enters individual preparation and review.
+26.5; full app-workflow validation is not passing. #21’s displayed native
+geometry was accepted on 2026-10-02 (reply “Y”, displayed commit `e28886489`).
+All six allocated boards now have geometry approval; #21 fresh app review
+remains blocked and pending with 0/28 contacts checked.
 
 The parent `placid-badger` owns #9–15; accepted #1–8 and all other packages
 are outside this workspace's scope. Shared compiler, schema, renderer, and
@@ -55,10 +57,10 @@ reserved `HangTen/Models/BoardModelRealityTypes.swift`, `BoardModelView.swift`,
 edits were reverted exactly; no shared renderer fix ships with this review.
 Existing Mammut finish, NUG and migration changes remain intact. Temporary
 validation resources were deleted and independently checked. #20’s subsequent acceptance is recorded in `zlagboard-evo/human-review.json`;
-the immutable app packet retains its original pre-acceptance status. #21 proceeds
-from its existing scratch preparation and still requires its own user reply.
+the immutable app packet retains its original pre-acceptance status. #21’s
+subsequent native-only acceptance is recorded in `zlagboard-pro/human-review.json`.
 
-### #21 native review preparation
+### #21 native geometry accepted; fresh app review pending
 
 The existing Pro 2.0 source retains its native history and all 28 contacts. Narrow
 top rounds and restored jug crest/corner selection coverage were independently
@@ -68,6 +70,7 @@ camera adaptation are embedded in the source. The
 [individual packet](zlagboard-pro/individual-review-2026-10-02/review.md) retains
 the original/prior/current comparison and all startup failures. Fresh app validation is blocked by startup failures on isolated iOS 26.4 and
 26.5 devices; both builds passed but contact coverage is 0/28. Exact temporary
-resources were deleted. App validation and the separate #21 human reply remain
-pending.
+resources were deleted. The user subsequently accepted the displayed native
+geometry with “Y”; app validation remains pending. The immutable review packet
+retains its original pre-acceptance status and failed runtime evidence.
 No shared app, compiler, schema or solver files were changed for #21.
