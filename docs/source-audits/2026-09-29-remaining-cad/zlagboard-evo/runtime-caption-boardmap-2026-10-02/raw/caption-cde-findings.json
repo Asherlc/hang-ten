@@ -1,0 +1,1706 @@
+{
+  "status": "bounded diagnostic complete; evidence frozen; no production fix",
+  "runs": [
+    {
+      "run": "caption-c",
+      "driver": "C",
+      "traceRecords": 70,
+      "completeContiguous": true,
+      "structuralChecks": {
+        "oneMakeWholeRun": true,
+        "oneScene": true,
+        "oneView": true,
+        "stableViewportDuringMeasurement": true,
+        "appActiveDuringMeasurement": true,
+        "windowActiveDuringMeasurement": true,
+        "rootAndCameraActive": true,
+        "noPeriodicSampler": true,
+        "noSecondHost": true,
+        "counterPresenceCorrect": true,
+        "scriptComplete": true,
+        "all20Brackets": true
+      },
+      "surfacePlacementChecks": {
+        "35SparseSnapshots": true,
+        "exactlyOneMatchedHost": true,
+        "stableLeafPlacement": true,
+        "exactLeaf210x36": true,
+        "resolvedInputsPresent": true,
+        "resolvedInputsMatchCPU": true,
+        "resolvedBoardPresentationAndInteraction": true,
+        "oneResolvedPositionAllPhases": true
+      },
+      "leafRect": [
+        332,
+        166,
+        210,
+        36
+      ],
+      "resolvedPositions": [
+        "primary"
+      ],
+      "timing": [
+        {
+          "phaseIndex": 0,
+          "intendedBoundaryEpoch": 1790975020.8785098,
+          "intendedEventEpoch": 1790975020.971935,
+          "semanticEvents": []
+        },
+        {
+          "phaseIndex": 1,
+          "intendedBoundaryEpoch": 1790975028.8785098,
+          "intendedEventEpoch": 1790975028.9318361,
+          "semanticEvents": [
+            {
+              "event": "highlight-before",
+              "sequence": 17,
+              "epoch": 1790975028.9146051,
+              "delayFromBoundarySeconds": 0.036095380783081055
+            },
+            {
+              "event": "highlight-after",
+              "sequence": 18,
+              "epoch": 1790975028.928505,
+              "delayFromBoundarySeconds": 0.04999518394470215
+            },
+            {
+              "event": "standalone-observed-selection",
+              "sequence": 20,
+              "epoch": 1790975028.929913,
+              "delayFromBoundarySeconds": 0.05140328407287598
+            },
+            {
+              "event": "surface-inputs",
+              "sequence": 21,
+              "epoch": 1790975028.929963,
+              "delayFromBoundarySeconds": 0.051453351974487305
+            }
+          ]
+        },
+        {
+          "phaseIndex": 2,
+          "intendedBoundaryEpoch": 1790975036.8785098,
+          "intendedEventEpoch": 1790975036.9149399,
+          "semanticEvents": [
+            {
+              "event": "highlight-before",
+              "sequence": 30,
+              "epoch": 1790975036.8962688,
+              "delayFromBoundarySeconds": 0.017759084701538086
+            },
+            {
+              "event": "highlight-after",
+              "sequence": 31,
+              "epoch": 1790975036.9091458,
+              "delayFromBoundarySeconds": 0.030636072158813477
+            },
+            {
+              "event": "standalone-observed-selection",
+              "sequence": 33,
+              "epoch": 1790975036.9113522,
+              "delayFromBoundarySeconds": 0.032842397689819336
+            },
+            {
+              "event": "surface-inputs",
+              "sequence": 34,
+              "epoch": 1790975036.9114308,
+              "delayFromBoundarySeconds": 0.03292107582092285
+            }
+          ]
+        },
+        {
+          "phaseIndex": 3,
+          "intendedBoundaryEpoch": 1790975044.8785098,
+          "intendedEventEpoch": 1790975044.9124,
+          "semanticEvents": [
+            {
+              "event": "highlight-before",
+              "sequence": 43,
+              "epoch": 1790975044.894623,
+              "delayFromBoundarySeconds": 0.01611328125
+            },
+            {
+              "event": "highlight-after",
+              "sequence": 44,
+              "epoch": 1790975044.9079561,
+              "delayFromBoundarySeconds": 0.02944636344909668
+            },
+            {
+              "event": "standalone-observed-selection",
+              "sequence": 46,
+              "epoch": 1790975044.909841,
+              "delayFromBoundarySeconds": 0.03133130073547363
+            },
+            {
+              "event": "surface-inputs",
+              "sequence": 47,
+              "epoch": 1790975044.909916,
+              "delayFromBoundarySeconds": 0.03140616416931152
+            }
+          ]
+        },
+        {
+          "phaseIndex": 4,
+          "intendedBoundaryEpoch": 1790975052.8785098,
+          "intendedEventEpoch": 1790975052.915297,
+          "semanticEvents": [
+            {
+              "event": "highlight-before",
+              "sequence": 56,
+              "epoch": 1790975052.896933,
+              "delayFromBoundarySeconds": 0.01842331886291504
+            },
+            {
+              "event": "highlight-after",
+              "sequence": 57,
+              "epoch": 1790975052.910039,
+              "delayFromBoundarySeconds": 0.03152918815612793
+            },
+            {
+              "event": "standalone-observed-selection",
+              "sequence": 59,
+              "epoch": 1790975052.912094,
+              "delayFromBoundarySeconds": 0.0335843563079834
+            },
+            {
+              "event": "surface-inputs",
+              "sequence": 60,
+              "epoch": 1790975052.91217,
+              "delayFromBoundarySeconds": 0.033660173416137695
+            }
+          ]
+        }
+      ],
+      "visualFinalStates": [
+        "clear",
+        "red",
+        "blue",
+        "red",
+        "blue"
+      ],
+      "visualWholeFrames": [
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-0-clear-plus-7.png",
+          "targetEpoch": 1790975027.8785098,
+          "startEpoch": 1790975027.884109,
+          "endEpoch": 1790975028.361402,
+          "phase": "clear",
+          "phaseIndex": 0,
+          "offset": 7,
+          "sha256": "14aeda2ac4f9a003facb5bfa676cd0e162ca616437db516ccc55feb68a0acd4b",
+          "wholeImageViewedIndividually": true,
+          "observation": "wood without colored contacts",
+          "expectedMatched": true
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-1-active-plus-7.png",
+          "targetEpoch": 1790975035.8785098,
+          "startEpoch": 1790975035.889319,
+          "endEpoch": 1790975036.387135,
+          "phase": "active",
+          "phaseIndex": 1,
+          "offset": 7,
+          "sha256": "8b06bca0761133660326e5ef8bfa170710b73948ce24bb35ef0412eafe1730c9",
+          "wholeImageViewedIndividually": true,
+          "observation": "red selected pockets",
+          "expectedMatched": true
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-2-preview-plus-7.png",
+          "targetEpoch": 1790975043.8785098,
+          "startEpoch": 1790975043.888741,
+          "endEpoch": 1790975044.3979788,
+          "phase": "preview",
+          "phaseIndex": 2,
+          "offset": 7,
+          "sha256": "be5fef7db4c12dd303d83623e502a0ad488bf59c82524649ad11c48a4ad4f530",
+          "wholeImageViewedIndividually": true,
+          "observation": "blue selected pockets",
+          "expectedMatched": true
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-3-active-plus-7.png",
+          "targetEpoch": 1790975051.8785098,
+          "startEpoch": 1790975051.888612,
+          "endEpoch": 1790975052.373963,
+          "phase": "active",
+          "phaseIndex": 3,
+          "offset": 7,
+          "sha256": "8b06bca0761133660326e5ef8bfa170710b73948ce24bb35ef0412eafe1730c9",
+          "wholeImageViewedIndividually": true,
+          "observation": "red selected pockets",
+          "expectedMatched": true
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-4-preview-plus-7.png",
+          "targetEpoch": 1790975059.8785098,
+          "startEpoch": 1790975059.888567,
+          "endEpoch": 1790975060.369878,
+          "phase": "preview",
+          "phaseIndex": 4,
+          "offset": 7,
+          "sha256": "be5fef7db4c12dd303d83623e502a0ad488bf59c82524649ad11c48a4ad4f530",
+          "wholeImageViewedIndividually": true,
+          "observation": "blue selected pockets",
+          "expectedMatched": true
+        }
+      ],
+      "all20ByteEqualOwnViewedPhaseFinal": true,
+      "artifacts": [
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/000-stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/000-stdout.txt",
+          "sha256": "b5165d689de054a59b28ace69f831205f5a1a0f8285e6cae0e3f8d46e3377848"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/001-stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/001-stdout.txt",
+          "sha256": "928cd2040d9e4c5395f2b75c47fc5ffd5b7ff513cbf1ee756af018509e013a3a"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/002-stderr.txt",
+          "sha256": "f6f15a65c90803bc201a69e7c99ba16e418cfbdb998342740dff33ff53f59c53"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/002-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/003-stderr.txt",
+          "sha256": "67140cb5e9b99d8eeadb38cf5c47d783c85199166d17e2eb9b68b3acf3e70419"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/003-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/004-stderr.txt",
+          "sha256": "2ab9c6f4a1da2c07fa7d16317227ce673f75fa0e92b3707cacfb1f6db459c4c8"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/004-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/005-stderr.txt",
+          "sha256": "42a1a4573e5af16082582c74a44ded729b82346aefa8cfbf38d994b65fe0d842"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/005-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/006-stderr.txt",
+          "sha256": "d7ea6ba2e027f4cd44ed46c2398d3a7d2d4f00892998f5751981fc7755e6e033"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/006-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/007-stderr.txt",
+          "sha256": "319f14ca887abb526cdb3edade40270fa4ce0c4b47e3cec9a7441e70ef230ef8"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/007-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/008-stderr.txt",
+          "sha256": "efb3764db14d57caa5d0c1f3eb7f2e252b82be0d36e3c33b3e620449a87cea01"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/008-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/009-stderr.txt",
+          "sha256": "0d80093f2ea77233320d49517ee961e549e502c64dc7e9c624c0613d9ac89dea"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/009-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/010-stderr.txt",
+          "sha256": "91995bf903add14fae5fe8a31187cefe080ab78353a323f9a2f2faa33ec5bd33"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/010-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/011-stderr.txt",
+          "sha256": "5f6264c703644cd448ec868e2ba8b2f90df8cb082596b9bc48b7b1f1ce34f211"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/011-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/012-stderr.txt",
+          "sha256": "5e74eb878efce3d988638cdce7974d2ddcba08acb30e1bd683512653472ae4dd"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/012-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/013-stderr.txt",
+          "sha256": "bee8602999823dbc5dfd9e4cbeb0a8513503075f2a3e94800551b81606279bf5"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/013-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/014-stderr.txt",
+          "sha256": "7b47c1cda06c3f8a0b796adfc6305032a1f021a8688c4664a6df51fd83d966b5"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/014-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/015-stderr.txt",
+          "sha256": "22b28833123b6e8773af049ba41cbee144fe059a7d4cbf9794aec67956366360"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/015-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/016-stderr.txt",
+          "sha256": "791533e3e492a5ab69c77a9b0cd9dbe5549083fa6c409d8b9a4f42a0b421970b"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/016-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/017-stderr.txt",
+          "sha256": "cad0e1ceda63365e6d4bc5d8c7be6e722cf635bd4fd0f4dd48eeec97c5eb2889"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/017-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/018-stderr.txt",
+          "sha256": "df8d1580d5ca5f6b042a38587a58aefdc69ac9955d9ffd383caa76b6ea5d9fbf"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/018-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/019-stderr.txt",
+          "sha256": "0fa4ff6a73e3fc6676656ee20095702df8d2250fb930c8b0b49d983e7774c277"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/019-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/020-stderr.txt",
+          "sha256": "6b30637fcc71f4fe0bf68d8bea6e6ea07cc0a49fbc27cb81f2058c1fe135a983"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/020-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/021-stderr.txt",
+          "sha256": "9bb848d0a37d49f94aa349cabfa91570fff15997342dc7dd4b92587fedc53ed1"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/021-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/captures.json",
+          "sha256": "7025ca2bed9e707f7bdab91d611bafb7f50d5aa211ad7a6e14069d756d5046ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/commands.json",
+          "sha256": "9f87efbaafa141d7544c175fc2982511c5b13823e234d61b4437d5e64d4e615f"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/events-E4C9DBB5-B86B-46AB-8898-382601B1ECD3.jsonl",
+          "sha256": "0c1ed8e755ae79161f82423b2f163696169c472bfdbf1aa13945542ee26d8ca8"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/launch-review-environment.json",
+          "sha256": "c7974662007174194f24e9195c074fd63a79446b768ada76a5f176148463e583"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-0-clear-plus-0.25.png",
+          "sha256": "14aeda2ac4f9a003facb5bfa676cd0e162ca616437db516ccc55feb68a0acd4b"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-0-clear-plus-1.png",
+          "sha256": "14aeda2ac4f9a003facb5bfa676cd0e162ca616437db516ccc55feb68a0acd4b"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-0-clear-plus-3.png",
+          "sha256": "14aeda2ac4f9a003facb5bfa676cd0e162ca616437db516ccc55feb68a0acd4b"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-0-clear-plus-7.png",
+          "sha256": "14aeda2ac4f9a003facb5bfa676cd0e162ca616437db516ccc55feb68a0acd4b"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-1-active-plus-0.25.png",
+          "sha256": "8b06bca0761133660326e5ef8bfa170710b73948ce24bb35ef0412eafe1730c9"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-1-active-plus-1.png",
+          "sha256": "8b06bca0761133660326e5ef8bfa170710b73948ce24bb35ef0412eafe1730c9"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-1-active-plus-3.png",
+          "sha256": "8b06bca0761133660326e5ef8bfa170710b73948ce24bb35ef0412eafe1730c9"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-1-active-plus-7.png",
+          "sha256": "8b06bca0761133660326e5ef8bfa170710b73948ce24bb35ef0412eafe1730c9"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-2-preview-plus-0.25.png",
+          "sha256": "be5fef7db4c12dd303d83623e502a0ad488bf59c82524649ad11c48a4ad4f530"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-2-preview-plus-1.png",
+          "sha256": "be5fef7db4c12dd303d83623e502a0ad488bf59c82524649ad11c48a4ad4f530"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-2-preview-plus-3.png",
+          "sha256": "be5fef7db4c12dd303d83623e502a0ad488bf59c82524649ad11c48a4ad4f530"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-2-preview-plus-7.png",
+          "sha256": "be5fef7db4c12dd303d83623e502a0ad488bf59c82524649ad11c48a4ad4f530"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-3-active-plus-0.25.png",
+          "sha256": "8b06bca0761133660326e5ef8bfa170710b73948ce24bb35ef0412eafe1730c9"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-3-active-plus-1.png",
+          "sha256": "8b06bca0761133660326e5ef8bfa170710b73948ce24bb35ef0412eafe1730c9"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-3-active-plus-3.png",
+          "sha256": "8b06bca0761133660326e5ef8bfa170710b73948ce24bb35ef0412eafe1730c9"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-3-active-plus-7.png",
+          "sha256": "8b06bca0761133660326e5ef8bfa170710b73948ce24bb35ef0412eafe1730c9"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-4-preview-plus-0.25.png",
+          "sha256": "be5fef7db4c12dd303d83623e502a0ad488bf59c82524649ad11c48a4ad4f530"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-4-preview-plus-1.png",
+          "sha256": "be5fef7db4c12dd303d83623e502a0ad488bf59c82524649ad11c48a4ad4f530"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-4-preview-plus-3.png",
+          "sha256": "be5fef7db4c12dd303d83623e502a0ad488bf59c82524649ad11c48a4ad4f530"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/phase-4-preview-plus-7.png",
+          "sha256": "be5fef7db4c12dd303d83623e502a0ad488bf59c82524649ad11c48a4ad4f530"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/schedule.json",
+          "sha256": "5cb58b040b8ece506b8f1c145af51c7391b36c2a89b722ef5429bbb11e9a3623"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/structural-validation.json",
+          "sha256": "0738908f5619105ce8badd9427cd440289b24f14090e4745b6d10c0bc740477b"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/surface-placement-validation.json",
+          "sha256": "f0588e9d8d78dbdc48f0761c653b3c9a0b17da874090e9e5b5e11be081d27775"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/trace-copy.json",
+          "sha256": "3bdac4ea796dad109b0077b06b1de5aeb6ebb11ca324b1b7304f67584067f8b6"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-c/visual-review.json",
+          "sha256": "d328de97f356a47615af1412f97597b0655eb9df5c0ca34a5450f9877b48abd7"
+        }
+      ]
+    },
+    {
+      "run": "caption-d",
+      "driver": "D",
+      "traceRecords": 70,
+      "completeContiguous": true,
+      "structuralChecks": {
+        "oneMakeWholeRun": true,
+        "oneScene": true,
+        "oneView": true,
+        "stableViewportDuringMeasurement": true,
+        "appActiveDuringMeasurement": true,
+        "windowActiveDuringMeasurement": true,
+        "rootAndCameraActive": true,
+        "noPeriodicSampler": true,
+        "noSecondHost": true,
+        "counterPresenceCorrect": true,
+        "scriptComplete": true,
+        "all20Brackets": true
+      },
+      "surfacePlacementChecks": {
+        "35SparseSnapshots": true,
+        "exactlyOneMatchedHost": true,
+        "stableLeafPlacement": true,
+        "exactLeaf210x36": true,
+        "resolvedInputsPresent": true,
+        "resolvedInputsMatchCPU": true,
+        "resolvedBoardPresentationAndInteraction": true,
+        "oneResolvedPositionAllPhases": true
+      },
+      "leafRect": [
+        332,
+        166,
+        210,
+        36
+      ],
+      "resolvedPositions": [
+        "primary"
+      ],
+      "timing": [
+        {
+          "phaseIndex": 0,
+          "intendedBoundaryEpoch": 1790975161.6351686,
+          "intendedEventEpoch": 1790975161.749524,
+          "semanticEvents": []
+        },
+        {
+          "phaseIndex": 1,
+          "intendedBoundaryEpoch": 1790975169.6351686,
+          "intendedEventEpoch": 1790975169.6789908,
+          "semanticEvents": [
+            {
+              "event": "highlight-before",
+              "sequence": 17,
+              "epoch": 1790975169.661627,
+              "delayFromBoundarySeconds": 0.0264585018157959
+            },
+            {
+              "event": "highlight-after",
+              "sequence": 18,
+              "epoch": 1790975169.6758928,
+              "delayFromBoundarySeconds": 0.04072427749633789
+            },
+            {
+              "event": "standalone-observed-selection",
+              "sequence": 20,
+              "epoch": 1790975169.677291,
+              "delayFromBoundarySeconds": 0.04212236404418945
+            },
+            {
+              "event": "surface-inputs",
+              "sequence": 21,
+              "epoch": 1790975169.67734,
+              "delayFromBoundarySeconds": 0.042171478271484375
+            }
+          ]
+        },
+        {
+          "phaseIndex": 2,
+          "intendedBoundaryEpoch": 1790975177.6351686,
+          "intendedEventEpoch": 1790975177.664165,
+          "semanticEvents": [
+            {
+              "event": "highlight-before",
+              "sequence": 30,
+              "epoch": 1790975177.645091,
+              "delayFromBoundarySeconds": 0.009922504425048828
+            },
+            {
+              "event": "highlight-after",
+              "sequence": 31,
+              "epoch": 1790975177.6591969,
+              "delayFromBoundarySeconds": 0.024028301239013672
+            },
+            {
+              "event": "standalone-observed-selection",
+              "sequence": 33,
+              "epoch": 1790975177.661162,
+              "delayFromBoundarySeconds": 0.02599334716796875
+            },
+            {
+              "event": "surface-inputs",
+              "sequence": 34,
+              "epoch": 1790975177.66123,
+              "delayFromBoundarySeconds": 0.026061534881591797
+            }
+          ]
+        },
+        {
+          "phaseIndex": 3,
+          "intendedBoundaryEpoch": 1790975185.6351686,
+          "intendedEventEpoch": 1790975185.636755,
+          "semanticEvents": [
+            {
+              "event": "highlight-before",
+              "sequence": 44,
+              "epoch": 1790975185.661814,
+              "delayFromBoundarySeconds": 0.026645421981811523
+            },
+            {
+              "event": "highlight-after",
+              "sequence": 45,
+              "epoch": 1790975185.675143,
+              "delayFromBoundarySeconds": 0.03997445106506348
+            },
+            {
+              "event": "standalone-observed-selection",
+              "sequence": 47,
+              "epoch": 1790975185.677213,
+              "delayFromBoundarySeconds": 0.04204440116882324
+            },
+            {
+              "event": "surface-inputs",
+              "sequence": 48,
+              "epoch": 1790975185.677287,
+              "delayFromBoundarySeconds": 0.04211854934692383
+            }
+          ]
+        },
+        {
+          "phaseIndex": 4,
+          "intendedBoundaryEpoch": 1790975193.6351686,
+          "intendedEventEpoch": 1790975193.6645641,
+          "semanticEvents": [
+            {
+              "event": "highlight-before",
+              "sequence": 56,
+              "epoch": 1790975193.645461,
+              "delayFromBoundarySeconds": 0.010292530059814453
+            },
+            {
+              "event": "highlight-after",
+              "sequence": 57,
+              "epoch": 1790975193.659881,
+              "delayFromBoundarySeconds": 0.024712562561035156
+            },
+            {
+              "event": "standalone-observed-selection",
+              "sequence": 59,
+              "epoch": 1790975193.661989,
+              "delayFromBoundarySeconds": 0.02682042121887207
+            },
+            {
+              "event": "surface-inputs",
+              "sequence": 60,
+              "epoch": 1790975193.662066,
+              "delayFromBoundarySeconds": 0.026897430419921875
+            }
+          ]
+        }
+      ],
+      "visualFinalStates": [
+        "clear",
+        "red",
+        "blue",
+        "red",
+        "blue"
+      ],
+      "visualWholeFrames": [
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-0-clear-plus-7.png",
+          "targetEpoch": 1790975168.6351686,
+          "startEpoch": 1790975168.6399832,
+          "endEpoch": 1790975169.1178439,
+          "phase": "clear",
+          "phaseIndex": 0,
+          "offset": 7,
+          "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c",
+          "wholeImageViewedIndividually": true,
+          "observation": "wood without colored contacts",
+          "expectedMatched": true
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-1-active-plus-7.png",
+          "targetEpoch": 1790975176.6351686,
+          "startEpoch": 1790975176.6456351,
+          "endEpoch": 1790975177.149833,
+          "phase": "active",
+          "phaseIndex": 1,
+          "offset": 7,
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+          "wholeImageViewedIndividually": true,
+          "observation": "red selected pockets",
+          "expectedMatched": true
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-2-preview-plus-7.png",
+          "targetEpoch": 1790975184.6351686,
+          "startEpoch": 1790975184.635189,
+          "endEpoch": 1790975185.106762,
+          "phase": "preview",
+          "phaseIndex": 2,
+          "offset": 7,
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+          "wholeImageViewedIndividually": true,
+          "observation": "blue selected pockets",
+          "expectedMatched": true
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-3-active-plus-7.png",
+          "targetEpoch": 1790975192.6351686,
+          "startEpoch": 1790975192.64521,
+          "endEpoch": 1790975193.128256,
+          "phase": "active",
+          "phaseIndex": 3,
+          "offset": 7,
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+          "wholeImageViewedIndividually": true,
+          "observation": "red selected pockets",
+          "expectedMatched": true
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-4-preview-plus-7.png",
+          "targetEpoch": 1790975200.6351686,
+          "startEpoch": 1790975200.645283,
+          "endEpoch": 1790975201.1707451,
+          "phase": "preview",
+          "phaseIndex": 4,
+          "offset": 7,
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+          "wholeImageViewedIndividually": true,
+          "observation": "blue selected pockets",
+          "expectedMatched": true
+        }
+      ],
+      "all20ByteEqualOwnViewedPhaseFinal": true,
+      "artifacts": [
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/000-stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/000-stdout.txt",
+          "sha256": "b5165d689de054a59b28ace69f831205f5a1a0f8285e6cae0e3f8d46e3377848"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/001-stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/001-stdout.txt",
+          "sha256": "567da204b0df78a2dd4939d6e379128e3f5c336dcc80fc0873f4dbf00323d596"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/002-stderr.txt",
+          "sha256": "4831ef304c46d6edd9cff612dbfbae10306cd4530106f78a5c76ca55eb1e7fc4"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/002-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/003-stderr.txt",
+          "sha256": "978401e2d1b26325e25954c8ffd65a9fdcc0fddb7081d41ee52d57d6511248c9"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/003-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/004-stderr.txt",
+          "sha256": "aff7f57e4ac0c4ba14095eb646fa073467fbd8a2b1a0f130616dee60a590baf3"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/004-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/005-stderr.txt",
+          "sha256": "fc4bd2f1d5fe75ba7660f720b86312d17507ae29c22f635870122a3d571c8248"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/005-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/006-stderr.txt",
+          "sha256": "a6b530015dd2541f0b42ce3e9f8a2d768b6c51abb288ce3cacef2f3c2e2bedc5"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/006-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/007-stderr.txt",
+          "sha256": "0a4ee075a0ecb8fa3115c7bda70d35e47794bf9bba8a8a02e3c4c75446400f7d"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/007-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/008-stderr.txt",
+          "sha256": "bbd5977854b3d3043bf57f8088b978485dbadf1df375913e5f853e0e875da617"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/008-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/009-stderr.txt",
+          "sha256": "0c33deb5498fd79bcc652a7bfe7f18c1275f0cef428cfade20c7926cfbc9b46c"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/009-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/010-stderr.txt",
+          "sha256": "248099ccdbd7746ae698fd43fc2a07857d72de03789a63a91d41b0d6a5298ab9"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/010-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/011-stderr.txt",
+          "sha256": "759aecf67354f32065e9ac59a1d7c3f532deffdf3abab5754844e11c323e6bcb"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/011-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/012-stderr.txt",
+          "sha256": "b41ed59f76b0b1d19eef90540bc1ba40afcbddb5525af4cfba4d15f46a8e0379"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/012-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/013-stderr.txt",
+          "sha256": "fa902a64a546fe2a310898fdd591eabb1fab2183aafd340a195ffe9e73056a28"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/013-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/014-stderr.txt",
+          "sha256": "f2135a2245c57d3e3847c9992d4557f517f1d708baf6ea830ab9a896fe3c2205"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/014-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/015-stderr.txt",
+          "sha256": "4e54d7fec2629dfbeb234dae969f8b514fa03f7b12e85ff2e4fe5269cb41358c"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/015-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/016-stderr.txt",
+          "sha256": "faf5f85dcadcf98ee5b563cc1ad20f730b48307bde6ad6e094da88bc780f1a88"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/016-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/017-stderr.txt",
+          "sha256": "f7e40f4283c8be5d41f26106db584592b43d3bdffb623fe964b1e06603748300"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/017-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/018-stderr.txt",
+          "sha256": "2cf685c2d51b40880e4e262bc7a1239c1ee2ec025779a0c06753bcd4ec2016ce"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/018-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/019-stderr.txt",
+          "sha256": "db77a92e0b928850d4cf73ab4b50f0204b774612c9c262e34f93d36d724f3576"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/019-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/020-stderr.txt",
+          "sha256": "5ad94d6412ec588854e106e9361de346f66d963ee51ee820f6c19890b3e6d524"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/020-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/021-stderr.txt",
+          "sha256": "3de165b445b117c2c395bada7635aa9d651f5650699732719f6c9f4bbf7a1cf5"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/021-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/captures.json",
+          "sha256": "9935b73c7357a189f8fc8107d7cc9cc60a5cd765d3b86fcff85db471d397ead1"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/commands.json",
+          "sha256": "e7d4b8c65439ceec106c6ecb00b7e8d4d6bf0a88ef06bf8b05a3c88582d58f42"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/events-F4DAFF94-A7F3-4052-85AB-C8C1E183019C.jsonl",
+          "sha256": "3a6aa070b326a48a4c29eb931e03a3a6f7587b57bb3dd4612bd36465462d18ec"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/launch-review-environment.json",
+          "sha256": "aafa61e5893951e80655c72a6ea8862624f5ea6262bfd92a12959aaad4254a92"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-0-clear-plus-0.25.png",
+          "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-0-clear-plus-1.png",
+          "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-0-clear-plus-3.png",
+          "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-0-clear-plus-7.png",
+          "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-1-active-plus-0.25.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-1-active-plus-1.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-1-active-plus-3.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-1-active-plus-7.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-2-preview-plus-0.25.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-2-preview-plus-1.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-2-preview-plus-3.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-2-preview-plus-7.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-3-active-plus-0.25.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-3-active-plus-1.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-3-active-plus-3.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-3-active-plus-7.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-4-preview-plus-0.25.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-4-preview-plus-1.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-4-preview-plus-3.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/phase-4-preview-plus-7.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/schedule.json",
+          "sha256": "41387d3f1681855a6af4caeddd43993526165cc6802506a709a0b115d5942be9"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/structural-validation.json",
+          "sha256": "298a6c3aa7217dcdf7cff517996f505eefc15fef8942b86660cef2aae9387d68"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/surface-placement-validation.json",
+          "sha256": "c17188e640bd912b71037da73cb4ce3b0ebce766b8f7c60436f5ab2493d47f8e"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/trace-copy.json",
+          "sha256": "2ad35e55e50ad68bf9a13776330e7e4fd309a5d8568e6375a01dc6e37a201ce4"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-d/visual-review.json",
+          "sha256": "b3b5fea48c1d18ba209604f2b3c246981b22ea6fc0a0e9f6652b5a4b50d962bf"
+        }
+      ]
+    },
+    {
+      "run": "caption-e",
+      "driver": "E",
+      "traceRecords": 70,
+      "completeContiguous": true,
+      "structuralChecks": {
+        "oneMakeWholeRun": true,
+        "oneScene": true,
+        "oneView": true,
+        "stableViewportDuringMeasurement": true,
+        "appActiveDuringMeasurement": true,
+        "windowActiveDuringMeasurement": true,
+        "rootAndCameraActive": true,
+        "noPeriodicSampler": true,
+        "noSecondHost": true,
+        "counterPresenceCorrect": true,
+        "scriptComplete": true,
+        "all20Brackets": true
+      },
+      "surfacePlacementChecks": {
+        "35SparseSnapshots": true,
+        "exactlyOneMatchedHost": true,
+        "stableLeafPlacement": true,
+        "exactLeaf210x36": true,
+        "resolvedInputsPresent": true,
+        "resolvedInputsMatchCPU": true,
+        "resolvedBoardPresentationAndInteraction": true,
+        "oneResolvedPositionAllPhases": true
+      },
+      "leafRect": [
+        332,
+        166,
+        210,
+        36
+      ],
+      "resolvedPositions": [
+        "primary"
+      ],
+      "timing": [
+        {
+          "phaseIndex": 0,
+          "intendedBoundaryEpoch": 1790975278.7078812,
+          "intendedEventEpoch": 1790975278.840351,
+          "semanticEvents": []
+        },
+        {
+          "phaseIndex": 1,
+          "intendedBoundaryEpoch": 1790975286.7078812,
+          "intendedEventEpoch": 1790975286.760785,
+          "semanticEvents": [
+            {
+              "event": "highlight-before",
+              "sequence": 17,
+              "epoch": 1790975286.7433228,
+              "delayFromBoundarySeconds": 0.03544163703918457
+            },
+            {
+              "event": "highlight-after",
+              "sequence": 18,
+              "epoch": 1790975286.757195,
+              "delayFromBoundarySeconds": 0.04931378364562988
+            },
+            {
+              "event": "surface-inputs",
+              "sequence": 20,
+              "epoch": 1790975286.758822,
+              "delayFromBoundarySeconds": 0.050940752029418945
+            },
+            {
+              "event": "standalone-observed-selection",
+              "sequence": 21,
+              "epoch": 1790975286.758925,
+              "delayFromBoundarySeconds": 0.05104374885559082
+            }
+          ]
+        },
+        {
+          "phaseIndex": 2,
+          "intendedBoundaryEpoch": 1790975294.7078812,
+          "intendedEventEpoch": 1790975294.721364,
+          "semanticEvents": [
+            {
+              "event": "highlight-before",
+              "sequence": 31,
+              "epoch": 1790975294.723353,
+              "delayFromBoundarySeconds": 0.015471696853637695
+            },
+            {
+              "event": "highlight-after",
+              "sequence": 32,
+              "epoch": 1790975294.7286758,
+              "delayFromBoundarySeconds": 0.02079463005065918
+            },
+            {
+              "event": "surface-inputs",
+              "sequence": 34,
+              "epoch": 1790975294.7296162,
+              "delayFromBoundarySeconds": 0.021734952926635742
+            },
+            {
+              "event": "standalone-observed-selection",
+              "sequence": 35,
+              "epoch": 1790975294.729653,
+              "delayFromBoundarySeconds": 0.021771669387817383
+            }
+          ]
+        },
+        {
+          "phaseIndex": 3,
+          "intendedBoundaryEpoch": 1790975302.7078812,
+          "intendedEventEpoch": 1790975302.7216182,
+          "semanticEvents": [
+            {
+              "event": "highlight-before",
+              "sequence": 44,
+              "epoch": 1790975302.728415,
+              "delayFromBoundarySeconds": 0.02053380012512207
+            },
+            {
+              "event": "highlight-after",
+              "sequence": 45,
+              "epoch": 1790975302.741615,
+              "delayFromBoundarySeconds": 0.03373384475708008
+            },
+            {
+              "event": "surface-inputs",
+              "sequence": 47,
+              "epoch": 1790975302.743719,
+              "delayFromBoundarySeconds": 0.03583788871765137
+            },
+            {
+              "event": "standalone-observed-selection",
+              "sequence": 48,
+              "epoch": 1790975302.7437968,
+              "delayFromBoundarySeconds": 0.03591561317443848
+            }
+          ]
+        },
+        {
+          "phaseIndex": 4,
+          "intendedBoundaryEpoch": 1790975310.7078812,
+          "intendedEventEpoch": 1790975310.746307,
+          "semanticEvents": [
+            {
+              "event": "highlight-before",
+              "sequence": 56,
+              "epoch": 1790975310.727676,
+              "delayFromBoundarySeconds": 0.019794702529907227
+            },
+            {
+              "event": "highlight-after",
+              "sequence": 57,
+              "epoch": 1790975310.741654,
+              "delayFromBoundarySeconds": 0.03377270698547363
+            },
+            {
+              "event": "surface-inputs",
+              "sequence": 59,
+              "epoch": 1790975310.743792,
+              "delayFromBoundarySeconds": 0.035910844802856445
+            },
+            {
+              "event": "standalone-observed-selection",
+              "sequence": 60,
+              "epoch": 1790975310.743864,
+              "delayFromBoundarySeconds": 0.03598284721374512
+            }
+          ]
+        }
+      ],
+      "visualFinalStates": [
+        "clear",
+        "red",
+        "blue",
+        "red",
+        "blue"
+      ],
+      "visualWholeFrames": [
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-0-clear-plus-7.png",
+          "targetEpoch": 1790975285.7078812,
+          "startEpoch": 1790975285.718014,
+          "endEpoch": 1790975286.228718,
+          "phase": "clear",
+          "phaseIndex": 0,
+          "offset": 7,
+          "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c",
+          "wholeImageViewedIndividually": true,
+          "observation": "wood without colored contacts",
+          "expectedMatched": true
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-1-active-plus-7.png",
+          "targetEpoch": 1790975293.7078812,
+          "startEpoch": 1790975293.7146728,
+          "endEpoch": 1790975294.217243,
+          "phase": "active",
+          "phaseIndex": 1,
+          "offset": 7,
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+          "wholeImageViewedIndividually": true,
+          "observation": "red selected pockets",
+          "expectedMatched": true
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-2-preview-plus-7.png",
+          "targetEpoch": 1790975301.7078812,
+          "startEpoch": 1790975301.718011,
+          "endEpoch": 1790975302.238059,
+          "phase": "preview",
+          "phaseIndex": 2,
+          "offset": 7,
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+          "wholeImageViewedIndividually": true,
+          "observation": "blue selected pockets",
+          "expectedMatched": true
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-3-active-plus-7.png",
+          "targetEpoch": 1790975309.7078812,
+          "startEpoch": 1790975309.7180579,
+          "endEpoch": 1790975310.2205691,
+          "phase": "active",
+          "phaseIndex": 3,
+          "offset": 7,
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+          "wholeImageViewedIndividually": true,
+          "observation": "red selected pockets",
+          "expectedMatched": true
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-4-preview-plus-7.png",
+          "targetEpoch": 1790975317.7078812,
+          "startEpoch": 1790975317.717994,
+          "endEpoch": 1790975318.221604,
+          "phase": "preview",
+          "phaseIndex": 4,
+          "offset": 7,
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+          "wholeImageViewedIndividually": true,
+          "observation": "blue selected pockets",
+          "expectedMatched": true
+        }
+      ],
+      "all20ByteEqualOwnViewedPhaseFinal": true,
+      "artifacts": [
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/000-stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/000-stdout.txt",
+          "sha256": "b5165d689de054a59b28ace69f831205f5a1a0f8285e6cae0e3f8d46e3377848"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/001-stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/001-stdout.txt",
+          "sha256": "46631f06b2c9d828548949c8daf0c54115d8516b3c7657da35af8d41bcb751f5"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/002-stderr.txt",
+          "sha256": "734ced17990fee31a6ecd23236152e0eab3bb1c0a2258498822af784b9d4d7d2"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/002-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/003-stderr.txt",
+          "sha256": "51afbfcfed8edfde4a3f560de574b1cd4bce3a524ade8fa6b6b6d0aabc04b9d2"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/003-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/004-stderr.txt",
+          "sha256": "72e8bad1fecf2ee4429fbd3d191cee15f2b471fe42b916f1dfb30c3939b47af8"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/004-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/005-stderr.txt",
+          "sha256": "802a2c0daf3f9a8abf326bb37d96a2bdd62e2e0e95a18762ab4fc71db369af7b"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/005-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/006-stderr.txt",
+          "sha256": "8622aca62156a93d72dc90d6235ec56b6f9fdc80a9e8cd0f3e205b2a1cb49617"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/006-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/007-stderr.txt",
+          "sha256": "e5129337826a162c4a1bfb407227a1979b2bf7b73423874df8aa24e028d71e48"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/007-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/008-stderr.txt",
+          "sha256": "b7aacee9e65b92fb2e5befd4b99898363822218d93f47d7b4036fe760a027c03"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/008-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/009-stderr.txt",
+          "sha256": "0869c2f7ffa4136fc03959cc50898441f328db53c8e896a01f7453eb2e8c4953"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/009-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/010-stderr.txt",
+          "sha256": "fb88be2defd83047b28d36a8e477f7c1519bb5f96f98ebe55dc114c5e90df689"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/010-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/011-stderr.txt",
+          "sha256": "7ea65df580c4e104bcff7a47526d9b13ff7c9e092fac0e5365fcb79126476b6f"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/011-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/012-stderr.txt",
+          "sha256": "6da615c70c7e5f525dd0a338d90f78c6c12baef0c37425da840dd65fddc00382"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/012-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/013-stderr.txt",
+          "sha256": "8afebdcf2ce018b3eaf7d2a7709f11c73a2a9b5eb23c5af0aeef1bd770e16f15"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/013-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/014-stderr.txt",
+          "sha256": "e3d4cff9d84c9622afad3670c3c6698bb55556a40be960ab6f5115e4adabef32"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/014-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/015-stderr.txt",
+          "sha256": "04dc85bf1c21764de47e7519837ee6310dfab53c675d5ae87ada3a878f9a09ba"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/015-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/016-stderr.txt",
+          "sha256": "3450cf7403ec9ac0905fd162bac339a636fd21a6a8ee85f8a4d1f92018f27fa8"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/016-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/017-stderr.txt",
+          "sha256": "c79d7ba155199c932e6c4c1a6087ddb16bae4936eac8be5b8e7081e2df42ad60"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/017-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/018-stderr.txt",
+          "sha256": "daacff15484ad152f9b6472601f28acee10fa8ffdfccb3546f52a27690ebe394"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/018-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/019-stderr.txt",
+          "sha256": "ff6618fce148ac542e25c95278e984ee5c84ff7e2ce586364904f3dc93955da0"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/019-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/020-stderr.txt",
+          "sha256": "7e0c716c574890eb6d29c69e5ca229005290c2630b7a7df8daf4e375debb59f3"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/020-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/021-stderr.txt",
+          "sha256": "b6f241d8fac0dff398716dff994e2ff4aaf4a892f49208ecb5989b44c3b9ef51"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/021-stdout.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/captures.json",
+          "sha256": "da8ce5bac8162a7ac5637ca1204cea867ee9d4104875f8b1f97adbb25faffe78"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/commands.json",
+          "sha256": "4ece693f70b7692192d1eff1ba09e31ad757382df093b3f9eec6f1ec5591934e"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/events-B083F0B5-170B-412A-8BBF-15D07A073C32.jsonl",
+          "sha256": "ba673ca453cb3f495c0a71c70c15b082e6a68ff3d5a1af0a46240cd6847fc5e9"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/launch-review-environment.json",
+          "sha256": "f795586afc8c11fccc951c9fb15609fa4f765dbe716bcf03dbfda2441f529e09"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-0-clear-plus-0.25.png",
+          "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-0-clear-plus-1.png",
+          "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-0-clear-plus-3.png",
+          "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-0-clear-plus-7.png",
+          "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-1-active-plus-0.25.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-1-active-plus-1.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-1-active-plus-3.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-1-active-plus-7.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-2-preview-plus-0.25.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-2-preview-plus-1.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-2-preview-plus-3.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-2-preview-plus-7.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-3-active-plus-0.25.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-3-active-plus-1.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-3-active-plus-3.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-3-active-plus-7.png",
+          "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-4-preview-plus-0.25.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-4-preview-plus-1.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-4-preview-plus-3.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-4-preview-plus-7.png",
+          "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/schedule.json",
+          "sha256": "62d732d2b12101592c77543f4d6940f47c1dfc1627a8a473931a0ac758f500f3"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/structural-validation.json",
+          "sha256": "7dc190cb8339914c2dc4157bea1771870587d3b4caf88ce6c87c0ea6d11bec94"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/surface-placement-validation.json",
+          "sha256": "a7c26c8d988c9d44e19cfdf992c902704d8be1185fceb65ef7e9dc2e2a09c8f7"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/trace-copy.json",
+          "sha256": "c036ce67217dae3afe5042f6c742fb588f9cc1ae6b15f857d24539e51a09e001"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/visual-review.json",
+          "sha256": "19a330e03082365ba5007298e319690b0ade09374d8017998f244ae0f7449885"
+        }
+      ]
+    }
+  ],
+  "allThreeScopedRunsPassed": true,
+  "dAndEAll20WholeFilesIdentical": true,
+  "source": {
+    "files": [
+      {
+        "path": "HangTen/Views/RootView.swift",
+        "beforeSHA256": "4fdc38991e7904f37ed106bc74ed7320e1b6ca96f334938e09f669b2712b8554",
+        "afterSHA256": "ce690c12d0182a57c659f3e4f01bf4b25c37c2dc6d98fbe9dafaa57686f4152f",
+        "finalSHA256": "ce690c12d0182a57c659f3e4f01bf4b25c37c2dc6d98fbe9dafaa57686f4152f"
+      },
+      {
+        "path": "HangTen/Views/BoardModelView.swift",
+        "beforeSHA256": "9e5bf2e01d9686069201179e45f7e95266752efe37605c8ba841a36f1ae56312",
+        "afterSHA256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c",
+        "finalSHA256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+      },
+      {
+        "path": "HangTen/Models/BoardModelRealityTypes.swift",
+        "beforeSHA256": "edc62a3db0a40b2c08ec6b13f05b78d5962768a5fb7fca83f84a07d592140cc4",
+        "afterSHA256": "f80b55405f331e3555404d545a75889043051f405dbfa94202b194fff93a44f1",
+        "finalSHA256": "48c2b5cc6a5d2c1b1b7912576b71f9ba1fca1e281b9655bdb5a46fa1cc684186"
+      }
+    ],
+    "patchSHA256": "7f143799e36ba403cb1ee7be9893046e8d752cf9e7838ea989b83330ad9f6536",
+    "scope": "Reviewed diagnostic plus retained two-field compile correction; no production adoption"
+  },
+  "installedMachOAfterRuns": [
+    {
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/4EB4D31F-E381-4DFA-A37E-54A147523821/HangTen.app/__preview.dylib",
+      "sha256": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1",
+      "expectedSHA256": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1"
+    },
+    {
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/4EB4D31F-E381-4DFA-A37E-54A147523821/HangTen.app/HangTen",
+      "sha256": "2a6f26aa6b91ff5aff75a4fb312c8eca79c0c2b33aa28db14b9df0ae6be20ffc",
+      "expectedSHA256": "2a6f26aa6b91ff5aff75a4fb312c8eca79c0c2b33aa28db14b9df0ae6be20ffc"
+    },
+    {
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/4EB4D31F-E381-4DFA-A37E-54A147523821/HangTen.app/HangTen.debug.dylib",
+      "sha256": "57b71dd01b35fb95de9519f85dde8c5232655788baeffe32deb982bd68640267",
+      "expectedSHA256": "57b71dd01b35fb95de9519f85dde8c5232655788baeffe32deb982bd68640267"
+    },
+    {
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/4EB4D31F-E381-4DFA-A37E-54A147523821/HangTen.app/Frameworks/Sentry.framework/Sentry",
+      "sha256": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7",
+      "expectedSHA256": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7"
+    },
+    {
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/4EB4D31F-E381-4DFA-A37E-54A147523821/HangTen.app/Frameworks/AmplitudeCore.framework/AmplitudeCore",
+      "sha256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503",
+      "expectedSHA256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503"
+    }
+  ],
+  "packageParity": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-package-parity.json",
+    "sha256": "a156655959e11238ec3fdd576bc1d3bbd7803c74b4018f67d45e6a5ecd837bc5"
+  },
+  "retainedBuildFailure": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-build-command.json",
+    "reason": "Actor isolation of nested read-only UIKit census visitor identity helper calls; corrected using identical direct ObjectIdentifier string conversion; first raw logs unchanged"
+  },
+  "successfulBuild": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-build-2-command.json",
+    "sha256": "3fdcfe14c566b4e72d866ce5bb32214d1627461f268769bf4cd2a27e530ffd7a"
+  },
+  "conclusion": "Removing changing caption text and using the existing BoardMapView wrapper both preserve correct highlight transitions in the isolated root screen. Neither is sufficient to reproduce the previously observed real-workout failure in these runs. This does not certify the normal workout or justify a production fix.",
+  "limitations": [
+    "Single bounded run per arm; no general claim about all ancestor contexts.",
+    "Sparse Surface observer and UIKit census present identically in all arms; observer timing is recorded independently from material mutation.",
+    "Initial clear is already established before readiness; no new clear material mutation is expected at phase zero.",
+    "Whole-image visual judgments apply to recorded Simulator frames, not physical-device rendering."
+  ],
+  "resources": {
+    "uuid": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+    "newExternalResourcesCreated": false,
+    "controllerRetained": 90373,
+    "cleanupPerformed": false,
+    "ownershipHandback": "root; no active capture/build subprocess; final scripted run complete; no further app or source mutation authorized by this report"
+  },
+  "normalWorkoutValidatedByThisExperiment": false,
+  "humanAcceptance": false
+}

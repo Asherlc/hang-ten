@@ -1,0 +1,1442 @@
+{
+  "checks": {
+    "35SparseSnapshots": true,
+    "exactlyOneMatchedHost": true,
+    "stableLeafPlacement": true,
+    "exactLeaf210x36": true,
+    "resolvedInputsPresent": true,
+    "resolvedInputsMatchCPU": true,
+    "resolvedBoardPresentationAndInteraction": true,
+    "oneResolvedPositionAllPhases": true
+  },
+  "leafRect": [
+    332,
+    166,
+    210,
+    36
+  ],
+  "resolvedPositions": [
+    "primary"
+  ],
+  "placements": [
+    {
+      "sequence": 10,
+      "epoch": 1790975278.8595939,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 11,
+      "epoch": 1790975279.5988212,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 12,
+      "epoch": 1790975280.501687,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 13,
+      "epoch": 1790975281.625565,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 14,
+      "epoch": 1790975282.507266,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 15,
+      "epoch": 1790975285.656962,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 16,
+      "epoch": 1790975286.508801,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 23,
+      "epoch": 1790975286.8649921,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 24,
+      "epoch": 1790975287.6066399,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 25,
+      "epoch": 1790975288.515373,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 26,
+      "epoch": 1790975289.5663872,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 27,
+      "epoch": 1790975290.5178828,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 28,
+      "epoch": 1790975293.650403,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 29,
+      "epoch": 1790975294.51075,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 36,
+      "epoch": 1790975294.867379,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 37,
+      "epoch": 1790975295.604337,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 38,
+      "epoch": 1790975296.489904,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 39,
+      "epoch": 1790975297.627681,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 40,
+      "epoch": 1790975298.509608,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 41,
+      "epoch": 1790975301.5800738,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 42,
+      "epoch": 1790975302.515812,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 49,
+      "epoch": 1790975302.860341,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 50,
+      "epoch": 1790975303.606169,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 51,
+      "epoch": 1790975304.514852,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 52,
+      "epoch": 1790975305.622971,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 53,
+      "epoch": 1790975306.507173,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 54,
+      "epoch": 1790975309.64572,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 55,
+      "epoch": 1790975310.5077782,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 62,
+      "epoch": 1790975310.866403,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 63,
+      "epoch": 1790975311.59232,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 64,
+      "epoch": 1790975312.50159,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 65,
+      "epoch": 1790975313.624179,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 66,
+      "epoch": 1790975314.5082788,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 67,
+      "epoch": 1790975317.650725,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    },
+    {
+      "sequence": 68,
+      "epoch": 1790975318.5080528,
+      "hosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            166,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000147c11d00)",
+          "viewID": "ObjectIdentifier(0x0000000103f2c000)"
+        }
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "sequence": 10,
+      "epoch": 1790975278.8595939,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": []
+    },
+    {
+      "sequence": 11,
+      "epoch": 1790975279.5988212,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": []
+    },
+    {
+      "sequence": 12,
+      "epoch": 1790975280.501687,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": []
+    },
+    {
+      "sequence": 13,
+      "epoch": 1790975281.625565,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": []
+    },
+    {
+      "sequence": 14,
+      "epoch": 1790975282.507266,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": []
+    },
+    {
+      "sequence": 15,
+      "epoch": 1790975285.656962,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": []
+    },
+    {
+      "sequence": 16,
+      "epoch": 1790975286.508801,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": []
+    },
+    {
+      "sequence": 23,
+      "epoch": 1790975286.8649921,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 24,
+      "epoch": 1790975287.6066399,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 25,
+      "epoch": 1790975288.515373,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 26,
+      "epoch": 1790975289.5663872,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 27,
+      "epoch": 1790975290.5178828,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 28,
+      "epoch": 1790975293.650403,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 29,
+      "epoch": 1790975294.51075,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 36,
+      "epoch": 1790975294.867379,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 37,
+      "epoch": 1790975295.604337,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 38,
+      "epoch": 1790975296.489904,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 39,
+      "epoch": 1790975297.627681,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 40,
+      "epoch": 1790975298.509608,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 41,
+      "epoch": 1790975301.5800738,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 42,
+      "epoch": 1790975302.515812,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 49,
+      "epoch": 1790975302.860341,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 50,
+      "epoch": 1790975303.606169,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 51,
+      "epoch": 1790975304.514852,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 52,
+      "epoch": 1790975305.622971,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 53,
+      "epoch": 1790975306.507173,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 54,
+      "epoch": 1790975309.64572,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 55,
+      "epoch": 1790975310.5077782,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 62,
+      "epoch": 1790975310.866403,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 63,
+      "epoch": 1790975311.59232,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 64,
+      "epoch": 1790975312.50159,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 65,
+      "epoch": 1790975313.624179,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 66,
+      "epoch": 1790975314.5082788,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 67,
+      "epoch": 1790975317.650725,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    },
+    {
+      "sequence": 68,
+      "epoch": 1790975318.5080528,
+      "inputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ]
+    }
+  ],
+  "surfaceInputEvents": [
+    {
+      "complete": true,
+      "epoch": 1790975275.5993361,
+      "event": "surface-inputs",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "sceneLifecycleToken": "74EF9D56-10E4-4E45-88F3-BA1ABEF79609",
+      "sequence": 4,
+      "uptime": 58350.062885125
+    },
+    {
+      "complete": true,
+      "epoch": 1790975286.758822,
+      "event": "surface-inputs",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "sceneLifecycleToken": "74EF9D56-10E4-4E45-88F3-BA1ABEF79609",
+      "sequence": 20,
+      "uptime": 58361.222416875
+    },
+    {
+      "complete": true,
+      "epoch": 1790975294.7296162,
+      "event": "surface-inputs",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "sceneLifecycleToken": "74EF9D56-10E4-4E45-88F3-BA1ABEF79609",
+      "sequence": 34,
+      "uptime": 58369.193243500005
+    },
+    {
+      "complete": true,
+      "epoch": 1790975302.743719,
+      "event": "surface-inputs",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "sceneLifecycleToken": "74EF9D56-10E4-4E45-88F3-BA1ABEF79609",
+      "sequence": 47,
+      "uptime": 58377.20738154167
+    },
+    {
+      "complete": true,
+      "epoch": 1790975310.743792,
+      "event": "surface-inputs",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "sceneLifecycleToken": "74EF9D56-10E4-4E45-88F3-BA1ABEF79609",
+      "sequence": 59,
+      "uptime": 58385.207487875006
+    }
+  ]
+}

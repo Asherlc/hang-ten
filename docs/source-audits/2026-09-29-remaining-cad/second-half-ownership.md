@@ -159,3 +159,15 @@ workout failure. Exact raw/root reviews, source snapshot, delivery analysis and
 context-boundary audit are retained; previous evidence and native acceptances
 remain unchanged. Source reservation and owned resources stay active for
 coordinated diagnosis, with cleanup pending.
+
+### Caption/BoardMap isolation and same-binary workout contrast
+
+The [Evo caption/BoardMap appendix](zlagboard-evo/runtime-caption-boardmap-2026-10-02/README.md)
+retains 60 successful isolated C/D/E captures, exact D/E screenshot equivalence,
+and the failed normal workout on the same binary. Settled rest was correctly
+blue; the next active Hang remained blue despite red CPU material brackets.
+The first diagnostic compile failure, narrow correction, initial and complete
+normal traces, root reviews and source provenance remain exact. No production
+fix or new acceptance is claimed. Prior packets and canonical/global records
+remain unchanged; owned resources and source reservation stay active, with
+cleanup pending.
