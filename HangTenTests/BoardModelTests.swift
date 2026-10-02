@@ -4,6 +4,27 @@ import simd
 
 final class BoardModelTests: XCTestCase {
 
+    func testPivotChosenRotationSurvivesActiveAndHighlightedHoldChanges() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        for positionID in ["p2", "p3", "p5"] {
+            XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(
+                board: board, presentationID: "primary", activeHoldID: "two-finger-pocket-left",
+                preferredPositionID: positionID), positionID)
+            XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(
+                board: board, presentationID: "primary", activeHoldID: nil,
+                highlightedHoldIDs: ["variable-edge-right"], preferredPositionID: positionID), positionID)
+        }
+        XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(
+            board: board, presentationID: "primary", activeHoldID: nil,
+            preferredPositionID: "missing"), "p1")
+        XCTAssertNil(BoardMapPresentationSelection.resolvePositionID(
+            board: board, presentationID: "primary", activeHoldID: "missing-hold",
+            preferredPositionID: "p3"))
+        XCTAssertNil(BoardMapPresentationSelection.resolvePositionID(
+            board: board, presentationID: "missing-presentation", activeHoldID: nil,
+            preferredPositionID: "p3"))
+    }
+
     @MainActor
     func testOrientationContainerAspectRatioTracksSelectedPositionProjection() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.baguette-evo"))

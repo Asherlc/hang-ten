@@ -73,6 +73,38 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         addScreenshot(named: "Beastmaker pocket returns to front")
     }
 
+    func testPivotRotationPresetsPersistWhenSelectingHolds() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "trango.rock-prodigy-pivot",
+            "HANGTEN_REVIEW_BOARD_DETAIL": "1",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+        ]
+        app.launch()
+        let selector = app.segmentedControls["boardDetail.rotationSelector"]
+        XCTAssertTrue(selector.waitForExistence(timeout: 30))
+        guard selector.exists else { return }
+        let contact = app.buttons["boardModel.contact.two-finger-pocket-left"]
+        XCTAssertTrue(contact.waitForExistence(timeout: 120))
+        addScreenshot(named: "Pivot position 1")
+        for (position, holdID) in [(2, "two-finger-pocket-left"),
+                                   (3, "variable-edge-right"),
+                                   (5, "medium-crimp-left")] {
+            let previousFrame = contact.frame
+            let preset = selector.buttons["Position \(position)"]
+            preset.tap()
+            XCTAssertTrue(preset.isSelected)
+            let changed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                contact.frame != previousFrame
+            }, object: nil)
+            XCTAssertEqual(XCTWaiter.wait(for: [changed], timeout: 10), .completed)
+            app.buttons["boardDetail.holdLegend.\(holdID)"].tap()
+            XCTAssertTrue(app.otherElements["boardDetail.selectedHold.\(holdID)"].waitForExistence(timeout: 10))
+            XCTAssertTrue(preset.isSelected, "Selecting a hold must preserve the chosen rotation")
+            addScreenshot(named: "Pivot position \(position) selected \(holdID)")
+        }
+    }
+
     private func diagnosticNumber(_ key: String, in value: String) -> Float? {
         value.split(separator: ";").first { $0.hasPrefix(key + "=") }
             .flatMap { Float($0.dropFirst(key.count + 1)) }

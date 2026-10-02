@@ -136,9 +136,19 @@ struct BoardMapPresentationSelection: Equatable {
         board: BoardRevision,
         presentationID: String?,
         activeHoldID: String?,
-        highlightedHoldIDs: Set<String> = []
+        highlightedHoldIDs: Set<String> = [],
+        preferredPositionID: String? = nil
     ) -> String? {
         let resolvedPresentationID = presentationID ?? board.defaultPresentation.id
+        // A user-selected pose survives selection changes only while it can
+        // represent the current presentation and all requested contacts.
+        if let preferred = board.position(id: preferredPositionID),
+           preferred.presentationID == resolvedPresentationID {
+            let requiredIDs = activeHoldID.map { Set([$0]) } ?? highlightedHoldIDs
+            if requiredIDs.isSubset(of: Set(board.contactIDs(inPosition: preferred.id))) {
+                return preferred.id
+            }
+        }
         if let activeHoldID,
            let activePosition = board.position(
                presentationID: resolvedPresentationID,
@@ -279,6 +289,37 @@ struct BoardMapPresentationSelection: Equatable {
     }
 }
 
+private struct BoardRotationSelector: View {
+    let board: BoardRevision
+    let presentationID: String
+    @Binding var positionID: String?
+    let accessibilityID: String
+
+    var body: some View {
+        // The Pivot package authors these paired poses. Other boards continue
+        // to choose their positions through the existing hold-selection flow.
+        if board.id == "trango.rock-prodigy-pivot" {
+            let positions = board.positions.filter { $0.presentationID == presentationID }
+            if positions.count > 1 {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Rotation")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Picker("Rotation", selection: $positionID) {
+                        ForEach(positions) { position in
+                            Text("Position \(position.id.dropFirst())")
+                                .tag(Optional(position.id))
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .accessibilityLabel("Board rotation")
+                    .accessibilityIdentifier(accessibilityID)
+                }
+            }
+        }
+    }
+}
+
 struct BoardDetailMapView: View {
     let board: BoardRevision
     @Binding var selectedHoldID: String?
@@ -286,6 +327,7 @@ struct BoardDetailMapView: View {
     private let selectedHoldContent: AnyView?
 
     @State private var presentationSelection: BoardMapPresentationSelection
+    @State private var preferredPositionID: String?
 
     init(
         board: BoardRevision,
@@ -327,6 +369,7 @@ struct BoardDetailMapView: View {
             }
         }
         .animation(.easeInOut(duration: 0.18), value: selectedHoldID)
+        .onChange(of: board.id) { _, _ in preferredPositionID = nil }
     }
 
     @ViewBuilder
@@ -349,6 +392,20 @@ struct BoardDetailMapView: View {
                 .pickerStyle(.segmented)
                 .accessibilityIdentifier("boardDetail.presentationSelector")
             }
+
+            BoardRotationSelector(
+                board: board,
+                presentationID: map.presentation.id,
+                positionID: Binding(
+                    get: { BoardMapPresentationSelection.resolvePositionID(
+                        board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID,
+                        preferredPositionID: preferredPositionID
+                    ) },
+                    set: { preferredPositionID = $0 }
+                ),
+                accessibilityID: "boardDetail.rotationSelector"
+            )
+            .padding(.bottom, board.id == "trango.rock-prodigy-pivot" ? 8 : 0)
 
             Group {
                 switch map.presentation.media {
@@ -384,7 +441,8 @@ struct BoardDetailMapView: View {
                         board: board,
                         presentation: map.presentation,
                         positionID: BoardMapPresentationSelection.resolvePositionID(
-                            board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID
+                            board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID,
+                            preferredPositionID: preferredPositionID
                         ),
                         highlightedContactIDs: Set([selectedHoldID].compactMap { $0 }),
                         highlightMode: .active,
@@ -538,7 +596,7 @@ struct BoardMapView: View {
     private let isDisplayOnly: Bool
 
     @State private var presentationSelection: BoardMapPresentationSelection
-    @State private var selectedPositionID: String?
+    @State private var preferredPositionID: String?
 
     init(
         board: BoardRevision,
@@ -563,18 +621,19 @@ struct BoardMapView: View {
             highlightedHoldIDs: highlightedHoldIDs
         )
         _presentationSelection = State(initialValue: resolvedSelection)
-        _selectedPositionID = State(initialValue: BoardMapPresentationSelection.resolvePositionID(
-            board: board,
-            presentationID: resolvedSelection.presentationID,
-            activeHoldID: activeHoldID,
-            highlightedHoldIDs: highlightedHoldIDs
-        ))
     }
 
     var body: some View {
         let content = BoardMapPresentationContent(
             board: board,
             selectedPresentationID: presentationSelection.presentationID
+        )
+        let selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
+            board: board,
+            presentationID: content.presentation.id,
+            activeHoldID: activeHoldID,
+            highlightedHoldIDs: highlightedHoldIDs,
+            preferredPositionID: preferredPositionID
         )
         let displayedHolds = content.holds
         VStack(spacing: 8) {
@@ -593,6 +652,18 @@ struct BoardMapView: View {
                 .pickerStyle(.segmented)
                 .accessibilityLabel("Board surface")
                 .accessibilityIdentifier("boardMap.presentationSelector")
+            }
+
+            if !isDisplayOnly {
+                BoardRotationSelector(
+                    board: board,
+                    presentationID: content.presentation.id,
+                    positionID: Binding(
+                        get: { selectedPositionID },
+                        set: { preferredPositionID = $0 }
+                    ),
+                    accessibilityID: "boardMap.rotationSelector"
+                )
             }
 
             Group {
@@ -642,21 +713,9 @@ struct BoardMapView: View {
                 activeHoldID: activeHoldID,
                 on: board
             )
-            selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
-                board: board,
-                presentationID: presentationSelection.presentationID,
-                activeHoldID: activeHoldID,
-                highlightedHoldIDs: holdIDs
-            )
         }
         .onChange(of: activeHoldID) { _, holdID in
             presentationSelection.activateHold(id: holdID, on: board)
-            selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
-                board: board,
-                presentationID: presentationSelection.presentationID,
-                activeHoldID: holdID,
-                highlightedHoldIDs: highlightedHoldIDs
-            )
         }
         .onChange(of: requestedPresentationID) { _, presentationID in
             presentationSelection.updateRequestedPresentation(
@@ -665,23 +724,12 @@ struct BoardMapView: View {
                 highlightedHoldIDs: highlightedHoldIDs,
                 on: board
             )
-            selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
-                board: board,
-                presentationID: presentationSelection.presentationID,
-                activeHoldID: activeHoldID,
-                highlightedHoldIDs: highlightedHoldIDs
-            )
         }
         .onChange(of: board.id) { _, _ in
+            preferredPositionID = nil
             presentationSelection.reset(
                 board: board,
                 requestedPresentationID: requestedPresentationID,
-                activeHoldID: activeHoldID,
-                highlightedHoldIDs: highlightedHoldIDs
-            )
-            selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
-                board: board,
-                presentationID: presentationSelection.presentationID,
                 activeHoldID: activeHoldID,
                 highlightedHoldIDs: highlightedHoldIDs
             )
@@ -690,12 +738,6 @@ struct BoardMapView: View {
 
     private func selectPresentation(id: String) {
         presentationSelection.selectPresentation(id: id, on: board)
-        selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
-            board: board,
-            presentationID: presentationSelection.presentationID,
-            activeHoldID: activeHoldID,
-            highlightedHoldIDs: highlightedHoldIDs
-        )
     }
 }
 
