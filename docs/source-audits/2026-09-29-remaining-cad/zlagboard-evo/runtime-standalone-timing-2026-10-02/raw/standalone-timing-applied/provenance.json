@@ -1,0 +1,17 @@
+{
+  "files": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "beforeSHA256": "24a647a6157cec20c15b986cfaafacfd660e190c42880d5facddea4bbc6d23e8",
+      "afterSHA256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "beforeSHA256": "89898763d913d908b35abfce0baf4da365efb37aed84c6823d76f0307c5b8ddd",
+      "afterSHA256": "008de5d3854b809fb452b9455d3d1d018da8649d48ece7d1d8a7b14120372eb5"
+    }
+  ],
+  "patchSHA256": "4a822157f01763d2ca6975776f02eef55df884afbf9ab998580bbd5403a298cc",
+  "head": "0f409d4f2c92f2668b3a6469cbaa69ba00016d18",
+  "scope": "DEBUG isolated E timing profiles; legacy timing behavior preserved; no production renderer/workout/plan changes"
+}

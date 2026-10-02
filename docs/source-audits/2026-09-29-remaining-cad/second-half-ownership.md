@@ -228,3 +228,14 @@ cause or production fix is established. Original reports, source snapshots,
 raw frames, parity and separately attributed reviews remain exact. Earlier
 evidence and acceptance records are unchanged; coordinated resources remain
 live with cleanup pending.
+
+### Standalone short/long timing isolation
+
+The [Evo timing appendix](zlagboard-evo/runtime-standalone-timing-2026-10-02/README.md)
+retains both isolated timing arms: 20 captured states and 20 CPU brackets each.
+Five whole representative images per arm plus exact whole-file equality support
+the worker's visual result; root's separate reviews retain their narrower scope.
+The original helper KeyError, frozen validator and reviewed correction remain
+exact. Extending isolated preview to 180 seconds did not reproduce the actual
+workout defect in these runs, and no production fix or acceptance is claimed.
+Earlier packets remain unchanged; coordinated resources stay live, cleanup pending.

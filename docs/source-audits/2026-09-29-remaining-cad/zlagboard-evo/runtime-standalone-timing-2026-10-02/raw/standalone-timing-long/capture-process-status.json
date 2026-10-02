@@ -1,0 +1,15 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "python3",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-capture.py",
+    "standalone-timing-long",
+    "long"
+  ],
+  "execSessionID": 64643,
+  "observedExitStatus": 0,
+  "captures": 20,
+  "records": 76,
+  "noRepeat": true
+}

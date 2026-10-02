@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "scope": "Read-only validator correction and existing short-run structural evidence; no visual or runtime execution by reviewer",
+  "fullSceneMeasuredRecords": 54,
+  "fullSnapshotCoverage": 40,
+  "actualBracketCount": 20,
+  "allFullSceneRecordsHaveFixedViewport": true,
+  "allExisting23ChecksPass": true,
+  "recordFilterReason": "surface-inputs records carry a scene token but are sparse input metadata, not scene render snapshots; boardRenderMembership selects full render observations.",
+  "preservedGates": [
+    "20 before/end-after CPU brackets",
+    "40 snapshots",
+    "one actual public ARView per snapshot",
+    "fixed actual frame",
+    "single scene/root/camera",
+    "four transitions",
+    "complete tail after final capture"
+  ],
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-standalone-timing.py",
+      "sha256": "d99e1960a0035d7713be13b7a2701ccd1f73c91e36302720242ef5346de781e9"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-applied/validator-record-type-correction.patch",
+      "sha256": "73451235d5bbe4c12a73f6bd6cc6089b81518476b2cc890405218e0c363ee005"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/validator-first.stderr",
+      "sha256": "4cf0422707dfe4cb6baa74e78b3d03d83518d1f8075db552d57faac4d0269653"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/timing-validation.json",
+      "sha256": "e951ff5c28be3387b77b183de5355fac285d9b2995b89af121a11ba74b45c937"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/events-7D684EE8-EA09-4681-8177-6FD5AD3CED41.jsonl",
+      "sha256": "9a1f88fd65ffe483c0449a42511852133e7b01e6ed785e72d477e738817cad2d"
+    }
+  ]
+}
