@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion acceptance pending; #11 geometry presented, app and human acceptance pending; #12 shown CAD shape accepted, current app appearance unverified; #13 next for review",
+  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 corrected cord/finish geometry shown, current app and human acceptance pending",
   "boards": [
     {
       "number": 1,
@@ -469,38 +469,72 @@
       "package": "plateau-lifting-edge",
       "boardID": "plateau.lifting-edge",
       "name": "Plateau Climbing Lifting Edge",
-      "humanReview": "pending",
-      "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
-      "reviewPage": "plateau-lifting-edge/review/index.html",
+      "humanReview": "Pending #13 human shape review; current app wood, neutral components, cord, picking, highlights and workout appearance unverified",
+      "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "reviewPage": "plateau-lifting-edge/review13-2026-10-02/index.html",
       "sourceAudit": "plateau-lifting-edge/native-authoring.md",
       "comparisons": [
-        "plateau-lifting-edge/review/prior-primary.png",
-        "plateau-lifting-edge/review/depth-15mm-front.png",
-        "plateau-lifting-edge/review/depth-10mm-front.png",
-        "plateau-lifting-edge/review/primary-front.png",
-        "plateau-lifting-edge/review/depth-10mm-side.png",
-        "plateau-lifting-edge/review/depth-15mm-side.png",
-        "plateau-lifting-edge/review/primary-side.png",
-        "plateau-lifting-edge/review/depth-15mm-top.png",
-        "plateau-lifting-edge/review/depth-10mm-top.png",
-        "plateau-lifting-edge/review/primary-top.png"
+        "plateau-lifting-edge/review13-2026-10-02/three-configurations.png",
+        "plateau-lifting-edge/review13-2026-10-02/front-side-top-comparison.png",
+        "plateau-lifting-edge/review13-2026-10-02/three-configurations-with-cord.png"
       ],
       "presentations": {
         "depth-18mm": {
-          "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
-          "modelSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854"
+          "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+          "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55"
         },
         "depth-15mm": {
-          "descriptorSHA256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477",
-          "modelSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53"
+          "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+          "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b"
         },
         "depth-10mm": {
-          "descriptorSHA256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e",
-          "modelSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41"
+          "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+          "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e"
         }
       },
-      "appReview": "plateau-lifting-edge/app-review/validation.json",
-      "appReviewPage": "plateau-lifting-edge/app-review/index.html"
+      "appReview": "plateau-lifting-edge/review13-2026-10-02/runtime-validation.json",
+      "appReviewPage": "plateau-lifting-edge/review13-2026-10-02/index.html",
+      "historicalMigrationReview": {
+        "number": 13,
+        "package": "plateau-lifting-edge",
+        "boardID": "plateau.lifting-edge",
+        "name": "Plateau Climbing Lifting Edge",
+        "humanReview": "pending",
+        "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+        "reviewPage": "plateau-lifting-edge/review/index.html",
+        "sourceAudit": "plateau-lifting-edge/native-authoring.md",
+        "comparisons": [
+          "plateau-lifting-edge/review/prior-primary.png",
+          "plateau-lifting-edge/review/depth-15mm-front.png",
+          "plateau-lifting-edge/review/depth-10mm-front.png",
+          "plateau-lifting-edge/review/primary-front.png",
+          "plateau-lifting-edge/review/depth-10mm-side.png",
+          "plateau-lifting-edge/review/depth-15mm-side.png",
+          "plateau-lifting-edge/review/primary-side.png",
+          "plateau-lifting-edge/review/depth-15mm-top.png",
+          "plateau-lifting-edge/review/depth-10mm-top.png",
+          "plateau-lifting-edge/review/primary-top.png"
+        ],
+        "presentations": {
+          "depth-18mm": {
+            "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
+            "modelSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854"
+          },
+          "depth-15mm": {
+            "descriptorSHA256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477",
+            "modelSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53"
+          },
+          "depth-10mm": {
+            "descriptorSHA256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e",
+            "modelSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41"
+          }
+        },
+        "appReview": "plateau-lifting-edge/app-review/validation.json",
+        "appReviewPage": "plateau-lifting-edge/app-review/index.html"
+      },
+      "humanReviewRecord": "plateau-lifting-edge/human-review.json",
+      "latestRevision": "plateau-lifting-edge/review13-2026-10-02/review.md",
+      "runtimeRevision": "plateau-lifting-edge/review13-2026-10-02/runtime-validation.json"
     },
     {
       "number": 14,

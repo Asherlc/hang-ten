@@ -1,0 +1,248 @@
+[
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/product-page-current.html",
+    "sha256": "8638b5d9ede3bc42bc06e693e2586674253c39a766f5a2213cde71f4b483a3a7",
+    "expected": "8638b5d9ede3bc42bc06e693e2586674253c39a766f5a2213cde71f4b483a3a7",
+    "hashMatches": true,
+    "ref": "PL-1",
+    "url": "https://www.plateauclimbing.com/products/plateau-lifting-edge",
+    "viewedWholeFrame": false,
+    "sourceApproval": {
+      "approved": false,
+      "researchAuthorized": true,
+      "authorizationDate": "2026-09-29",
+      "notes": "Exact September20 HTML bytes were unavailable; this current primary HTML snapshot differs from the approved historical SHA. User expressly authorized additional primary research on September29. Approval of the exact unchanged visual sources is separate."
+    },
+    "treatment": "Read retained authorized current HTML as research; not original exact approved historical HTML"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/front.png",
+    "sha256": "7a854f73c876dffdff07251e4ab4cd5128014c3f51a3d31e14ecf00ac36fe7a7",
+    "expected": "7a854f73c876dffdff07251e4ab4cd5128014c3f51a3d31e14ecf00ac36fe7a7",
+    "hashMatches": true,
+    "ref": "PL-2",
+    "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1171.png?v=1773212075&width=3840",
+    "viewedWholeFrame": true,
+    "sourceApproval": {
+      "approved": true,
+      "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+      "reviewedAt": "2026-09-20",
+      "notes": "Exact SHA matches approved Appendix A visual source."
+    },
+    "treatment": "Original whole frame via view_image, no crop/trace/alignment/measurement"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/oblique.png",
+    "sha256": "bb12d65453f77a917e048eb7ed09582c0ee4d96d6cf265973748f99cfc39191d",
+    "expected": "bb12d65453f77a917e048eb7ed09582c0ee4d96d6cf265973748f99cfc39191d",
+    "hashMatches": true,
+    "ref": "PL-3",
+    "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1166.png?v=1773212075&width=3840",
+    "viewedWholeFrame": true,
+    "sourceApproval": {
+      "approved": true,
+      "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+      "reviewedAt": "2026-09-20",
+      "notes": "Exact SHA matches approved Appendix A visual source."
+    },
+    "treatment": "Original whole frame via view_image, no crop/trace/alignment/measurement"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/blocker-15.png",
+    "sha256": "4e666f921ffebdb287f383eb1330d5eb8aafab591cea5cfc488667368ee312b0",
+    "expected": "4e666f921ffebdb287f383eb1330d5eb8aafab591cea5cfc488667368ee312b0",
+    "hashMatches": true,
+    "ref": "PL-4",
+    "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1168.png?v=1773212075&width=3840",
+    "viewedWholeFrame": true,
+    "sourceApproval": {
+      "approved": true,
+      "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+      "reviewedAt": "2026-09-20",
+      "notes": "Exact SHA matches approved Appendix A visual source."
+    },
+    "treatment": "Original whole frame via view_image, no crop/trace/alignment/measurement"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/blocker-10.png",
+    "sha256": "b2a474441847de209fa85307383d0822f462801650f1f188bd0b1d8d8d49e243",
+    "expected": "b2a474441847de209fa85307383d0822f462801650f1f188bd0b1d8d8d49e243",
+    "hashMatches": true,
+    "ref": "PL-5",
+    "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1161.png?v=1773212075&width=3840",
+    "viewedWholeFrame": true,
+    "sourceApproval": {
+      "approved": true,
+      "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+      "reviewedAt": "2026-09-20",
+      "notes": "Exact SHA matches approved Appendix A visual source."
+    },
+    "treatment": "Original whole frame via view_image, no crop/trace/alignment/measurement"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/oak-blocker-in-use.jpg",
+    "sha256": "a4a037eccdd1de212333f3f4482fab309ff385720768bb60c61606a9fb209e75",
+    "expected": "a4a037eccdd1de212333f3f4482fab309ff385720768bb60c61606a9fb209e75",
+    "hashMatches": true,
+    "ref": "PL-6",
+    "url": "https://www.plateauclimbing.com/cdn/shop/files/45_edited.jpg?v=1773212075&width=3840",
+    "viewedWholeFrame": true,
+    "sourceApproval": {
+      "approved": true,
+      "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+      "reviewedAt": "2026-09-20",
+      "notes": "Exact SHA matches approved Appendix A visual source."
+    },
+    "treatment": "Original whole frame via view_image, no crop/trace/alignment/measurement"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/cord-depth-10mm-depth-10mm-front.png",
+    "sha256": "9a5765d4a48b6db474ecfd4630860bb768065d593c36dc4741672864b9f5aeb8",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/cord-depth-10mm-depth-10mm-side.png",
+    "sha256": "925598eea2e5ff0fbc159f478ae1528e91eab33a828ccabc28b3e98127ae5b86",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/cord-depth-10mm-depth-10mm-top.png",
+    "sha256": "60846fb306157f3a9cd70eafa04c8c3cd34f14abfadb059a0735ac70520463a1",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/cord-depth-15mm-depth-15mm-front.png",
+    "sha256": "9a5765d4a48b6db474ecfd4630860bb768065d593c36dc4741672864b9f5aeb8",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/cord-depth-15mm-depth-15mm-side.png",
+    "sha256": "0c4a715026521a666129a6721c770c95d6f5d446d3f4b1465a0d551b7209115c",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/cord-depth-15mm-depth-15mm-top.png",
+    "sha256": "60846fb306157f3a9cd70eafa04c8c3cd34f14abfadb059a0735ac70520463a1",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/cord-depth-18mm-depth-18mm-front.png",
+    "sha256": "261d8b8acaa36497530d50fcd41c2f0f5b74bdbfa33b9567f11806876f475ea0",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/cord-depth-18mm-depth-18mm-side.png",
+    "sha256": "ba57cb73a8668e502af69fc6943d19087c66f464c6513e9065b895c44fde187d",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/cord-depth-18mm-depth-18mm-top.png",
+    "sha256": "60846fb306157f3a9cd70eafa04c8c3cd34f14abfadb059a0735ac70520463a1",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/depth-10mm-front.png",
+    "sha256": "136c94c666aaf1ee6c81530be3137d031804bcfab234176d14d07ca8f0a7a115",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/depth-10mm-oblique.png",
+    "sha256": "ccdb0cf6860cae708cc7662fb897a10a581771e1467242cebe5a86a55cf2f275",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/depth-10mm-rear.png",
+    "sha256": "24b5f5898a06c0db6441b252aaaee8a3951544741ed724bc888efa0d01da8bb0",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/depth-10mm-side.png",
+    "sha256": "88c11aee7eabd6e90e2ef212a6894659e79902f1d7ab722ff664c57561348833",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/depth-10mm-top.png",
+    "sha256": "1beff276a9cef2e23e03711e0ef62d6ccc9366981ddbe0e5bdfeb874c28aa27f",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/depth-15mm-front.png",
+    "sha256": "78b89171b2992fae2d7375610e12f36eec94dc11c583d90d3838cd6ef5bbdbb4",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/depth-15mm-oblique.png",
+    "sha256": "f4c6d3ca1b4a887a2cc3048e4e9999329e4ae69c63a14e45e0c8d3e0bc9bf986",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/depth-15mm-rear.png",
+    "sha256": "24b5f5898a06c0db6441b252aaaee8a3951544741ed724bc888efa0d01da8bb0",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/depth-15mm-side.png",
+    "sha256": "974c4967f1e70ad00ef549dfa52f19d5b188033c32c0752f74880054384b586a",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/depth-15mm-top.png",
+    "sha256": "1beff276a9cef2e23e03711e0ef62d6ccc9366981ddbe0e5bdfeb874c28aa27f",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/primary-front.png",
+    "sha256": "8868a8a98d3fab78cd13f6e1f68c5d78d79239446bcf6633dbe2cb6a804825c5",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/primary-oblique.png",
+    "sha256": "0a6ba36c562d1ac4c384eacd2af2903ffbb3e9b215f8a6bfe4b5bfd43cf6b54a",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/primary-rear.png",
+    "sha256": "24b5f5898a06c0db6441b252aaaee8a3951544741ed724bc888efa0d01da8bb0",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/primary-side.png",
+    "sha256": "1d5ad2811c296a3f5e8ccd36c41fc3b7c8beb1b30ff5dfb77a7be676eaecdadc",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/primary-top.png",
+    "sha256": "1beff276a9cef2e23e03711e0ef62d6ccc9366981ddbe0e5bdfeb874c28aa27f",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/prior-primary.png",
+    "sha256": "945b95399e7f6613478d4d6257a03e7a4c93f8e430d661974a23e987b55086f8",
+    "viewedWholeFrame": true,
+    "treatment": "Retained whole frame; technical historical render, not current app provenance"
+  }
+]

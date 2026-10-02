@@ -62,7 +62,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "fa6fcdde53a95fef8561af7baf12d363372c2a7d9571230ddc3ea600e908fa23",
+  "sha256Manifest": "44758ac3a2b242182833edb770b0b715c0be703b958f513061830c0e606127d7",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -953,36 +953,69 @@
     },
     "plateau-lifting-edge": {
       "source": "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
-      "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+      "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
-      "assetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
-      "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
+      "assetSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
       "assets": {
-        "assets/depth-10mm.usdz": {
-          "modelSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
-          "descriptorPath": "assets/depth-10mm.model.json",
-          "descriptorSHA256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e"
+        "assets/primary.usdz": {
+          "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+          "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+          "descriptorPath": "assets/primary.model.json"
         },
         "assets/depth-15mm.usdz": {
-          "modelSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
-          "descriptorPath": "assets/depth-15mm.model.json",
-          "descriptorSHA256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477"
+          "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+          "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+          "descriptorPath": "assets/depth-15mm.model.json"
         },
-        "assets/primary.usdz": {
-          "modelSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
-          "descriptorPath": "assets/primary.model.json",
-          "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee"
+        "assets/depth-10mm.usdz": {
+          "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+          "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+          "descriptorPath": "assets/depth-10mm.model.json"
         }
       },
       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
       "provenance": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/native-authoring.md",
-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/index.html",
-      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/metadata-diff.json",
-      "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/app-review/validation.json",
-      "geometryAcceptance": "pending requested one-by-one user review",
+      "comparison": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review13-2026-10-02/index.html",
+      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review13-2026-10-02/independent-export-validation.json",
+      "nativeValidation": "All 47 original native feature BReps/XML definitions and 75 non-Document payloads preserved; fresh native dimension edit/restore, exact three-export physical/contact triangle preservation, full-radius native seated-cord caches and independent Astra physical-shape gate pass. Current reports in review13-2026-10-02.",
+      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review13-2026-10-02/runtime-validation.json",
+      "geometryAcceptance": "Pending #13 human shape review; current app wood, neutral components, cord, picking, highlights and workout appearance unverified",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-      "suspensionSHA256": "accd4b12ac09f4de1213c06b783de736117fd44e94b12918b38c86467dd2aa9f"
+      "suspensionSHA256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80",
+      "historicalMigrationReview": {
+        "source": "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+        "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+        "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
+        "assetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+        "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
+        "assets": {
+          "assets/depth-10mm.usdz": {
+            "modelSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+            "descriptorPath": "assets/depth-10mm.model.json",
+            "descriptorSHA256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e"
+          },
+          "assets/depth-15mm.usdz": {
+            "modelSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+            "descriptorPath": "assets/depth-15mm.model.json",
+            "descriptorSHA256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477"
+          },
+          "assets/primary.usdz": {
+            "modelSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+            "descriptorPath": "assets/primary.model.json",
+            "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee"
+          }
+        },
+        "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
+        "provenance": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/native-authoring.md",
+        "comparison": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/index.html",
+        "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/metadata-diff.json",
+        "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
+        "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/app-review/validation.json",
+        "geometryAcceptance": "pending requested one-by-one user review",
+        "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+        "suspensionSHA256": "accd4b12ac09f4de1213c06b783de736117fd44e94b12918b38c86467dd2aa9f"
+      }
     },
     "tension-flash-board": {
       "source": "Hangboards/tension-flash-board/tension-flash-board.FCStd",
@@ -1249,6 +1282,12 @@
       "date": "2026-10-02",
       "reason": "Poker paired broad-relief entry correction and manufacturer-supported wood finish; prior manifest preserved",
       "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/prior-delivery-checksums.txt"
+    },
+    {
+      "sha256Manifest": "fa6fcdde53a95fef8561af7baf12d363372c2a7d9571230ddc3ea600e908fa23",
+      "date": "2026-10-02",
+      "reason": "Plateau native loop seating, sourced 6 mm cord diameter and oak-only finish partitions; prior manifest retained",
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review13-2026-10-02/prior-delivery-checksums.txt"
     }
   ],
   "individualReviewRevisions": [
@@ -1691,6 +1730,60 @@
       "iOSUnitCasesExecuted": 0,
       "approvalLimit": "Shape approval does not establish current runtime wood appearance, picking, selection or workout behavior, manufacturing accuracy, or training claims.",
       "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/human-review.json"
+    },
+    {
+      "package": "plateau-lifting-edge",
+      "date": "2026-10-02",
+      "revision": "native-curl-seating-and-oak-only-finish",
+      "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+      "suspensionSHA256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80",
+      "generatedManifestSHA256": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4",
+      "presentations": {
+        "depth-18mm": {
+          "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+          "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55"
+        },
+        "depth-15mm": {
+          "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+          "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b"
+        },
+        "depth-10mm": {
+          "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+          "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e"
+        }
+      },
+      "report": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review13-2026-10-02/runtime-validation.json",
+      "postIntegrationTests": {
+        "pythonPassed": 191,
+        "pythonFailed": 0,
+        "pythonErrors": 0,
+        "pythonSkipped": 0,
+        "canonicalPackagesValidated": 64,
+        "iOSBuildPassed": true,
+        "iOSUnitCasesExecuted": 0,
+        "iOSCurrentAppFrames": 0,
+        "iOSRuntimeStatus": "not run; current app appearance unverified",
+        "androidStagingByteParity": true,
+        "iOSStagingByteParity": true
+      },
+      "physicalBoardShapeAndAllContactTrianglesUnchanged": true,
+      "allFactualContactAndPositionFieldsUnchanged": true,
+      "otherPackageFilesUnchanged": 198,
+      "cordDiameterMM": 6,
+      "cordDiameterStatus": "Maker-stated primary fact; authorized refreshed PL-1 HTML",
+      "loopRestLengthMM": 420,
+      "loopRestLengthStatus": "display estimate",
+      "woodOnlyNodeIDs": [
+        "plateau_body",
+        "plateau_edge_18"
+      ],
+      "metalAndBlockerNonPickableNeutral": true,
+      "geometryAcceptance": "Pending #13 human shape review; current app wood, neutral components, cord, picking, highlights and workout appearance unverified",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/human-review.json",
+      "priorDeliveryManifestSHA256": "fa6fcdde53a95fef8561af7baf12d363372c2a7d9571230ddc3ea600e908fa23",
+      "limits": "Current app/guest operations and iOS unit cases remain unverified; diagnostic previews are not runtime screenshots. Geometry/support/seating estimates are not manufacturing dimensions. Historical results remain separate."
     }
   ]
 }

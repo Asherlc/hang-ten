@@ -42,7 +42,7 @@
   "metadataAudit": "metadata-audit.json",
   "historicalReportNotes": "validation-notes.md",
   "appCaptures": "All 21 current-source packages; representative DEBUG contact review routes, plus physical selector taps for all three Plateau depths. RealityKit tests cover all authored presentation positions and transient non-pickable cords.",
-  "geometryAcceptance": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion acceptance pending; #11 geometry presented, app and human acceptance pending; #12 shown CAD shape accepted, current app appearance unverified; #13 next for review",
+  "geometryAcceptance": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 corrected cord/finish geometry shown, current app and human acceptance pending",
   "testArtifactSHA256": {
     "test-results/ios-summary.json": "6d38d38ec0659f98565df7ec135a99648db9f4964945c9fb58bdbda699a3febe",
     "test-results/ios-tests.log": "47c5b2b6d584d6df47cbf8e84e5bf2391f4ff3b4c82aa2fe6f8ad883f877e681",
@@ -453,6 +453,60 @@
       "iOSUnitCasesExecuted": 0,
       "approvalLimit": "Shape approval does not establish current runtime wood appearance, picking, selection or workout behavior, manufacturing accuracy, or training claims.",
       "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/human-review.json"
+    },
+    {
+      "package": "plateau-lifting-edge",
+      "date": "2026-10-02",
+      "revision": "native-curl-seating-and-oak-only-finish",
+      "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+      "suspensionSHA256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80",
+      "generatedManifestSHA256": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4",
+      "presentations": {
+        "depth-18mm": {
+          "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+          "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55"
+        },
+        "depth-15mm": {
+          "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+          "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b"
+        },
+        "depth-10mm": {
+          "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+          "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e"
+        }
+      },
+      "report": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review13-2026-10-02/runtime-validation.json",
+      "postIntegrationTests": {
+        "pythonPassed": 191,
+        "pythonFailed": 0,
+        "pythonErrors": 0,
+        "pythonSkipped": 0,
+        "canonicalPackagesValidated": 64,
+        "iOSBuildPassed": true,
+        "iOSUnitCasesExecuted": 0,
+        "iOSCurrentAppFrames": 0,
+        "iOSRuntimeStatus": "not run; current app appearance unverified",
+        "androidStagingByteParity": true,
+        "iOSStagingByteParity": true
+      },
+      "physicalBoardShapeAndAllContactTrianglesUnchanged": true,
+      "allFactualContactAndPositionFieldsUnchanged": true,
+      "otherPackageFilesUnchanged": 198,
+      "cordDiameterMM": 6,
+      "cordDiameterStatus": "Maker-stated primary fact; authorized refreshed PL-1 HTML",
+      "loopRestLengthMM": 420,
+      "loopRestLengthStatus": "display estimate",
+      "woodOnlyNodeIDs": [
+        "plateau_body",
+        "plateau_edge_18"
+      ],
+      "metalAndBlockerNonPickableNeutral": true,
+      "geometryAcceptance": "Pending #13 human shape review; current app wood, neutral components, cord, picking, highlights and workout appearance unverified",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/human-review.json",
+      "priorDeliveryManifestSHA256": "fa6fcdde53a95fef8561af7baf12d363372c2a7d9571230ddc3ea600e908fa23",
+      "limits": "Current app/guest operations and iOS unit cases remain unverified; diagnostic previews are not runtime screenshots. Geometry/support/seating estimates are not manufacturing dimensions. Historical results remain separate."
     }
   ],
   "historicalBaselineScope": {

@@ -1,0 +1,23 @@
+[
+  {
+    "presentation": "depth-18mm",
+    "nativeBearingPlaneRuntimeZM": 0.012,
+    "descriptorCenterZM": 0.008998601,
+    "supportDepthOffsetM": 0.003001399,
+    "decision": "Keep exact free legs coplanar with native bearing section; display pose estimate only."
+  },
+  {
+    "presentation": "depth-15mm",
+    "nativeBearingPlaneRuntimeZM": 0.012,
+    "descriptorCenterZM": 0.008998601,
+    "supportDepthOffsetM": 0.003001399,
+    "decision": "Keep exact free legs coplanar with native bearing section; display pose estimate only."
+  },
+  {
+    "presentation": "depth-10mm",
+    "nativeBearingPlaneRuntimeZM": 0.012,
+    "descriptorCenterZM": 0.008998601,
+    "supportDepthOffsetM": 0.003001399,
+    "decision": "Keep exact free legs coplanar with native bearing section; display pose estimate only."
+  }
+]

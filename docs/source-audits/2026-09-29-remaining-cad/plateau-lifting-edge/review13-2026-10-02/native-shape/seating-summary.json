@@ -1,0 +1,42 @@
+{
+  "before": {
+    "depth-18mm": {
+      "minimumExactNativeCenterlineDistanceMM": 2.189406603600933,
+      "pathLengthMM": 419.9999938274051,
+      "maximumSurfaceGapAtMeaningfulBendMM": 4.5,
+      "maximumNumericalStationBendDegrees": 0
+    },
+    "depth-15mm": {
+      "minimumExactNativeCenterlineDistanceMM": 2.189406603600933,
+      "pathLengthMM": 419.9999938274051,
+      "maximumSurfaceGapAtMeaningfulBendMM": 4.5,
+      "maximumNumericalStationBendDegrees": 0
+    },
+    "depth-10mm": {
+      "minimumExactNativeCenterlineDistanceMM": 2.189406603600933,
+      "pathLengthMM": 419.9999938274051,
+      "maximumSurfaceGapAtMeaningfulBendMM": 4.5,
+      "maximumNumericalStationBendDegrees": 0
+    }
+  },
+  "seated": {
+    "depth-18mm": {
+      "minimumExactNativeCenterlineDistanceMM": 3.184591174966126,
+      "pathLengthMM": 419.99999985181194,
+      "maximumSurfaceGapAtMeaningfulBendMM": 0.2000004644990283,
+      "maximumNumericalStationBendDegrees": 1.7908907090463362e-05
+    },
+    "depth-15mm": {
+      "minimumExactNativeCenterlineDistanceMM": 3.184591174966126,
+      "pathLengthMM": 419.99999985181194,
+      "maximumSurfaceGapAtMeaningfulBendMM": 0.2000004644990283,
+      "maximumNumericalStationBendDegrees": 1.7908907090463362e-05
+    },
+    "depth-10mm": {
+      "minimumExactNativeCenterlineDistanceMM": 3.184591174966126,
+      "pathLengthMM": 419.99999985181194,
+      "maximumSurfaceGapAtMeaningfulBendMM": 0.2000004644990283,
+      "maximumNumericalStationBendDegrees": 1.7908907090463362e-05
+    }
+  }
+}

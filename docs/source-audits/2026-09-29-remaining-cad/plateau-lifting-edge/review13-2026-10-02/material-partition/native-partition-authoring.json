@@ -1,0 +1,2088 @@
+{
+  "owner": "placid-badger",
+  "authoring": "Native final-face semantic material partition; physical features unchanged",
+  "canonicalSourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+  "rawSavedCandidateSHA256": "bae36c7ef1000afad5470ffbc9f9f46bc71ebd41d1c2e2f2cf58c4aa2c60bad9",
+  "originalNativeFeatures": {
+    "Depth18BackPlate": {
+      "type": "Part::Box",
+      "brepSHA256": "888318cc8c58a4d5be85218b78e5260bb882746fa7d1c4abdb6fd606f2fe49f9",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 18600.0,
+      "areaMM2": 13371.999999999998,
+      "boundsMM": [
+        -50.0,
+        0.0,
+        -22.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth18CurlBridge": {
+      "type": "Part::Box",
+      "brepSHA256": "f082df99258382d636c03b6f0981925e70d22a2dc5bd827622a465ac5b15f79b",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 4500.0,
+      "areaMM2": 3690.0,
+      "boundsMM": [
+        -50.0,
+        -12.0,
+        -25.0,
+        50.0,
+        3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth18CurlOuter": {
+      "type": "Part::Cylinder",
+      "brepSHA256": "d6ed05b5ab77bed45b09b0525e7aa42ee9ab35f6197fa0ba6bab2ebd3d52c245",
+      "faces": 3,
+      "edges": 3,
+      "vertices": 2,
+      "volumeMM3": 25446.900494077323,
+      "areaMM2": 6163.804786343174,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth18CurlInnerVoid": {
+      "type": "Part::Cylinder",
+      "brepSHA256": "7b21668837a6310c57d28e074fa17f532f836cecff9b9c66beb71accaac8f47d",
+      "faces": 3,
+      "edges": 3,
+      "vertices": 2,
+      "volumeMM3": 11535.92822398172,
+      "areaMM2": 4071.504079052372,
+      "boundsMM": [
+        -51.0,
+        -18.0,
+        -37.0,
+        51.0,
+        -6.0,
+        -25.0
+      ],
+      "valid": true
+    },
+    "Depth18CurlTube": {
+      "type": "Part::Cut",
+      "brepSHA256": "4f7ed557a833d8c70de76521abe43ef63c1c47de84f39cbd4f944a0c00136416",
+      "faces": 4,
+      "edges": 6,
+      "vertices": 4,
+      "volumeMM3": 14137.166941154075,
+      "areaMM2": 9707.52129959246,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth18CurlOpening": {
+      "type": "Part::Box",
+      "brepSHA256": "67ea9cd43e654878a40e1511a0cc72f39324a5bcee07149e9b47e5bbb6acf969",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 40800.0,
+      "areaMM2": 8960.0,
+      "boundsMM": [
+        -51.0,
+        -12.0,
+        -31.0,
+        51.0,
+        8.0,
+        -11.0
+      ],
+      "valid": true
+    },
+    "Depth18OpenCurl": {
+      "type": "Part::Cut",
+      "brepSHA256": "dcf81b757b66a0149e599d87aedc02c8b3694fb99c7c44ce8390bd30fbfe4e55",
+      "faces": 8,
+      "edges": 18,
+      "vertices": 12,
+      "volumeMM3": 10602.87520586555,
+      "areaMM2": 7880.640974694345,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -21.99999999999998
+      ],
+      "valid": true
+    },
+    "Depth18MetalBacking": {
+      "type": "Part::Fuse",
+      "brepSHA256": "e9dc7f4462bab2a5f5857ccfa05d35ebf28085375cf76fd1cdad8d2077f4b140",
+      "faces": 11,
+      "edges": 23,
+      "vertices": 14,
+      "volumeMM3": 23100.0,
+      "areaMM2": 16462.0,
+      "boundsMM": [
+        -50.0,
+        -12.0,
+        -25.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth18MetalCurl": {
+      "type": "Part::Fuse",
+      "brepSHA256": "88db8a909a3ed767d0bc6c54e3c49bf885f09721581daf9d4e89ab8e34fca33a",
+      "faces": 17,
+      "edges": 37,
+      "vertices": 22,
+      "volumeMM3": 33702.87520586555,
+      "areaMM2": 23742.640974694343,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth18OakRail": {
+      "type": "Part::Box",
+      "brepSHA256": "cdaf568b718f41751b89ed29f5e3e2382189d9bd81974986287e1f7d212073d6",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 36000.0,
+      "areaMM2": 8320.0,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        0.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth18OakRound": {
+      "type": "Part::Fillet",
+      "brepSHA256": "b82c9a9cef78c523c8717382a20ed6d0bb042827587653444bde3bf3123a6230",
+      "faces": 7,
+      "edges": 15,
+      "vertices": 10,
+      "volumeMM3": 35806.8583470577,
+      "areaMM2": 8187.376064979623,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        0.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth18WoodAndBacking": {
+      "type": "Part::Fuse",
+      "brepSHA256": "0981a353fec50397d9420ebe96a2d375b6ebff6be9050c5ef21fc7389a59d34a",
+      "faces": 23,
+      "edges": 51,
+      "vertices": 30,
+      "volumeMM3": 69509.73355292325,
+      "areaMM2": 27930.017039673967,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth18OakContact": {
+      "type": "PartDesign::SubShapeBinder",
+      "brepSHA256": "2336d0a5be2c03e8c341e850385c344bc33517ba90f7c089e7eb1ca0b5d2e7be",
+      "faces": 2,
+      "edges": 8,
+      "vertices": 8,
+      "volumeMM3": 921.2388980384692,
+      "areaMM2": 1971.238898038469,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        0.0,
+        23.0
+      ],
+      "valid": true
+    },
+    "Depth15BackPlate": {
+      "type": "Part::Box",
+      "brepSHA256": "888318cc8c58a4d5be85218b78e5260bb882746fa7d1c4abdb6fd606f2fe49f9",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 18600.0,
+      "areaMM2": 13371.999999999998,
+      "boundsMM": [
+        -50.0,
+        0.0,
+        -22.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15CurlBridge": {
+      "type": "Part::Box",
+      "brepSHA256": "f082df99258382d636c03b6f0981925e70d22a2dc5bd827622a465ac5b15f79b",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 4500.0,
+      "areaMM2": 3690.0,
+      "boundsMM": [
+        -50.0,
+        -12.0,
+        -25.0,
+        50.0,
+        3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth15CurlOuter": {
+      "type": "Part::Cylinder",
+      "brepSHA256": "d6ed05b5ab77bed45b09b0525e7aa42ee9ab35f6197fa0ba6bab2ebd3d52c245",
+      "faces": 3,
+      "edges": 3,
+      "vertices": 2,
+      "volumeMM3": 25446.900494077323,
+      "areaMM2": 6163.804786343174,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth15CurlInnerVoid": {
+      "type": "Part::Cylinder",
+      "brepSHA256": "7b21668837a6310c57d28e074fa17f532f836cecff9b9c66beb71accaac8f47d",
+      "faces": 3,
+      "edges": 3,
+      "vertices": 2,
+      "volumeMM3": 11535.92822398172,
+      "areaMM2": 4071.504079052372,
+      "boundsMM": [
+        -51.0,
+        -18.0,
+        -37.0,
+        51.0,
+        -6.0,
+        -25.0
+      ],
+      "valid": true
+    },
+    "Depth15CurlTube": {
+      "type": "Part::Cut",
+      "brepSHA256": "4f7ed557a833d8c70de76521abe43ef63c1c47de84f39cbd4f944a0c00136416",
+      "faces": 4,
+      "edges": 6,
+      "vertices": 4,
+      "volumeMM3": 14137.166941154075,
+      "areaMM2": 9707.52129959246,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth15CurlOpening": {
+      "type": "Part::Box",
+      "brepSHA256": "67ea9cd43e654878a40e1511a0cc72f39324a5bcee07149e9b47e5bbb6acf969",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 40800.0,
+      "areaMM2": 8960.0,
+      "boundsMM": [
+        -51.0,
+        -12.0,
+        -31.0,
+        51.0,
+        8.0,
+        -11.0
+      ],
+      "valid": true
+    },
+    "Depth15OpenCurl": {
+      "type": "Part::Cut",
+      "brepSHA256": "dcf81b757b66a0149e599d87aedc02c8b3694fb99c7c44ce8390bd30fbfe4e55",
+      "faces": 8,
+      "edges": 18,
+      "vertices": 12,
+      "volumeMM3": 10602.87520586555,
+      "areaMM2": 7880.640974694345,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -21.99999999999998
+      ],
+      "valid": true
+    },
+    "Depth15MetalBacking": {
+      "type": "Part::Fuse",
+      "brepSHA256": "e9dc7f4462bab2a5f5857ccfa05d35ebf28085375cf76fd1cdad8d2077f4b140",
+      "faces": 11,
+      "edges": 23,
+      "vertices": 14,
+      "volumeMM3": 23100.0,
+      "areaMM2": 16462.0,
+      "boundsMM": [
+        -50.0,
+        -12.0,
+        -25.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15MetalCurl": {
+      "type": "Part::Fuse",
+      "brepSHA256": "88db8a909a3ed767d0bc6c54e3c49bf885f09721581daf9d4e89ab8e34fca33a",
+      "faces": 17,
+      "edges": 37,
+      "vertices": 22,
+      "volumeMM3": 33702.87520586555,
+      "areaMM2": 23742.640974694343,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15OakRail": {
+      "type": "Part::Box",
+      "brepSHA256": "cdaf568b718f41751b89ed29f5e3e2382189d9bd81974986287e1f7d212073d6",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 36000.0,
+      "areaMM2": 8320.0,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        0.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15OakRound": {
+      "type": "Part::Fillet",
+      "brepSHA256": "b82c9a9cef78c523c8717382a20ed6d0bb042827587653444bde3bf3123a6230",
+      "faces": 7,
+      "edges": 15,
+      "vertices": 10,
+      "volumeMM3": 35806.8583470577,
+      "areaMM2": 8187.376064979623,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        0.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15WoodAndBacking": {
+      "type": "Part::Fuse",
+      "brepSHA256": "0981a353fec50397d9420ebe96a2d375b6ebff6be9050c5ef21fc7389a59d34a",
+      "faces": 23,
+      "edges": 51,
+      "vertices": 30,
+      "volumeMM3": 69509.73355292325,
+      "areaMM2": 27930.017039673967,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15ReversibleBlockerUpper": {
+      "type": "Part::Box",
+      "brepSHA256": "0cddfc3dfe9c93a09980d1a04f9d06c65403c7b07cb797baac57b594c6fa819f",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 4500.0,
+      "areaMM2": 3690.0,
+      "boundsMM": [
+        -50.0,
+        -3.0,
+        5.0,
+        50.0,
+        0.0,
+        20.0
+      ],
+      "valid": true
+    },
+    "Depth15ReversibleBlockerLower": {
+      "type": "Part::Box",
+      "brepSHA256": "42256b88d65d84a32a3480e30b2c4f73d1b823b42db91d9a9e1da58ab34f0a8b",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 12000.0,
+      "areaMM2": 4840.0,
+      "boundsMM": [
+        -50.0,
+        -8.0,
+        -10.0,
+        50.0,
+        0.0,
+        5.0
+      ],
+      "valid": true
+    },
+    "Depth15BlockerUpperAttached": {
+      "type": "Part::Fuse",
+      "brepSHA256": "085ed3e56992fc15b8c391899246b87ef195bfdc3566e1357ab638e64c2ad50f",
+      "faces": 27,
+      "edges": 61,
+      "vertices": 36,
+      "volumeMM3": 74009.73355292324,
+      "areaMM2": 28020.017039673967,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15BlockerAttached": {
+      "type": "Part::Fuse",
+      "brepSHA256": "07f02c32f1278142b69e8a8e0cab52cfdb263da25273705512e3c7fc5d3bbf6b",
+      "faces": 31,
+      "edges": 71,
+      "vertices": 42,
+      "volumeMM3": 86009.73355292324,
+      "areaMM2": 29260.017039673967,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15OakContact": {
+      "type": "PartDesign::SubShapeBinder",
+      "brepSHA256": "6999e124abdd251bb4cde345feb7920f7d7214a136ca19eb36e0be229122c700",
+      "faces": 2,
+      "edges": 8,
+      "vertices": 8,
+      "volumeMM3": 771.2388980384692,
+      "areaMM2": 1671.238898038469,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        -3.0,
+        23.0
+      ],
+      "valid": true
+    },
+    "Depth10BackPlate": {
+      "type": "Part::Box",
+      "brepSHA256": "888318cc8c58a4d5be85218b78e5260bb882746fa7d1c4abdb6fd606f2fe49f9",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 18600.0,
+      "areaMM2": 13371.999999999998,
+      "boundsMM": [
+        -50.0,
+        0.0,
+        -22.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10CurlBridge": {
+      "type": "Part::Box",
+      "brepSHA256": "f082df99258382d636c03b6f0981925e70d22a2dc5bd827622a465ac5b15f79b",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 4500.0,
+      "areaMM2": 3690.0,
+      "boundsMM": [
+        -50.0,
+        -12.0,
+        -25.0,
+        50.0,
+        3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth10CurlOuter": {
+      "type": "Part::Cylinder",
+      "brepSHA256": "d6ed05b5ab77bed45b09b0525e7aa42ee9ab35f6197fa0ba6bab2ebd3d52c245",
+      "faces": 3,
+      "edges": 3,
+      "vertices": 2,
+      "volumeMM3": 25446.900494077323,
+      "areaMM2": 6163.804786343174,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth10CurlInnerVoid": {
+      "type": "Part::Cylinder",
+      "brepSHA256": "7b21668837a6310c57d28e074fa17f532f836cecff9b9c66beb71accaac8f47d",
+      "faces": 3,
+      "edges": 3,
+      "vertices": 2,
+      "volumeMM3": 11535.92822398172,
+      "areaMM2": 4071.504079052372,
+      "boundsMM": [
+        -51.0,
+        -18.0,
+        -37.0,
+        51.0,
+        -6.0,
+        -25.0
+      ],
+      "valid": true
+    },
+    "Depth10CurlTube": {
+      "type": "Part::Cut",
+      "brepSHA256": "4f7ed557a833d8c70de76521abe43ef63c1c47de84f39cbd4f944a0c00136416",
+      "faces": 4,
+      "edges": 6,
+      "vertices": 4,
+      "volumeMM3": 14137.166941154075,
+      "areaMM2": 9707.52129959246,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth10CurlOpening": {
+      "type": "Part::Box",
+      "brepSHA256": "67ea9cd43e654878a40e1511a0cc72f39324a5bcee07149e9b47e5bbb6acf969",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 40800.0,
+      "areaMM2": 8960.0,
+      "boundsMM": [
+        -51.0,
+        -12.0,
+        -31.0,
+        51.0,
+        8.0,
+        -11.0
+      ],
+      "valid": true
+    },
+    "Depth10OpenCurl": {
+      "type": "Part::Cut",
+      "brepSHA256": "dcf81b757b66a0149e599d87aedc02c8b3694fb99c7c44ce8390bd30fbfe4e55",
+      "faces": 8,
+      "edges": 18,
+      "vertices": 12,
+      "volumeMM3": 10602.87520586555,
+      "areaMM2": 7880.640974694345,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -21.99999999999998
+      ],
+      "valid": true
+    },
+    "Depth10MetalBacking": {
+      "type": "Part::Fuse",
+      "brepSHA256": "e9dc7f4462bab2a5f5857ccfa05d35ebf28085375cf76fd1cdad8d2077f4b140",
+      "faces": 11,
+      "edges": 23,
+      "vertices": 14,
+      "volumeMM3": 23100.0,
+      "areaMM2": 16462.0,
+      "boundsMM": [
+        -50.0,
+        -12.0,
+        -25.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10MetalCurl": {
+      "type": "Part::Fuse",
+      "brepSHA256": "88db8a909a3ed767d0bc6c54e3c49bf885f09721581daf9d4e89ab8e34fca33a",
+      "faces": 17,
+      "edges": 37,
+      "vertices": 22,
+      "volumeMM3": 33702.87520586555,
+      "areaMM2": 23742.640974694343,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10OakRail": {
+      "type": "Part::Box",
+      "brepSHA256": "cdaf568b718f41751b89ed29f5e3e2382189d9bd81974986287e1f7d212073d6",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 36000.0,
+      "areaMM2": 8320.0,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        0.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10OakRound": {
+      "type": "Part::Fillet",
+      "brepSHA256": "b82c9a9cef78c523c8717382a20ed6d0bb042827587653444bde3bf3123a6230",
+      "faces": 7,
+      "edges": 15,
+      "vertices": 10,
+      "volumeMM3": 35806.8583470577,
+      "areaMM2": 8187.376064979623,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        0.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10WoodAndBacking": {
+      "type": "Part::Fuse",
+      "brepSHA256": "0981a353fec50397d9420ebe96a2d375b6ebff6be9050c5ef21fc7389a59d34a",
+      "faces": 23,
+      "edges": 51,
+      "vertices": 30,
+      "volumeMM3": 69509.73355292325,
+      "areaMM2": 27930.017039673967,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10ReversibleBlockerUpper": {
+      "type": "Part::Box",
+      "brepSHA256": "f040ffce7e81ed3c04593dc0ead365b9fe3454ae074fc8beb4b0e404e8546d61",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 12000.0,
+      "areaMM2": 4840.0,
+      "boundsMM": [
+        -50.0,
+        -8.0,
+        5.0,
+        50.0,
+        0.0,
+        20.0
+      ],
+      "valid": true
+    },
+    "Depth10ReversibleBlockerLower": {
+      "type": "Part::Box",
+      "brepSHA256": "e675b27f6c2690b9d8ba23909ac4ba938b38e31132c3a7d25670cccb3b760d0d",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 4500.0,
+      "areaMM2": 3690.0,
+      "boundsMM": [
+        -50.0,
+        -3.0,
+        -10.0,
+        50.0,
+        0.0,
+        5.0
+      ],
+      "valid": true
+    },
+    "Depth10BlockerUpperAttached": {
+      "type": "Part::Fuse",
+      "brepSHA256": "60dcb0ef83df1419e90174571990b0283a9fe4b39a84ac9eaa8460391c9cffd6",
+      "faces": 27,
+      "edges": 61,
+      "vertices": 36,
+      "volumeMM3": 81509.73355292322,
+      "areaMM2": 28170.017039673967,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10BlockerAttached": {
+      "type": "Part::Fuse",
+      "brepSHA256": "0b973aca998ff60689f79ddeccc8cee674b83d8aa5a9d7a78fbb16285c4b81e2",
+      "faces": 31,
+      "edges": 71,
+      "vertices": 42,
+      "volumeMM3": 86009.73355292324,
+      "areaMM2": 28260.017039673967,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10OakContact": {
+      "type": "PartDesign::SubShapeBinder",
+      "brepSHA256": "7688f61258a6b0173faa0ec32dd4ae023e4864a55c317d865ee931139066a375",
+      "faces": 2,
+      "edges": 8,
+      "vertices": 8,
+      "volumeMM3": 521.2388980384692,
+      "areaMM2": 1171.238898038469,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        -8.0,
+        23.0
+      ],
+      "valid": true
+    }
+  },
+  "originalNativeFeaturesAfterPartition": {
+    "Depth18BackPlate": {
+      "type": "Part::Box",
+      "brepSHA256": "888318cc8c58a4d5be85218b78e5260bb882746fa7d1c4abdb6fd606f2fe49f9",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 18600.0,
+      "areaMM2": 13371.999999999998,
+      "boundsMM": [
+        -50.0,
+        0.0,
+        -22.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth18CurlBridge": {
+      "type": "Part::Box",
+      "brepSHA256": "f082df99258382d636c03b6f0981925e70d22a2dc5bd827622a465ac5b15f79b",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 4500.0,
+      "areaMM2": 3690.0,
+      "boundsMM": [
+        -50.0,
+        -12.0,
+        -25.0,
+        50.0,
+        3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth18CurlOuter": {
+      "type": "Part::Cylinder",
+      "brepSHA256": "d6ed05b5ab77bed45b09b0525e7aa42ee9ab35f6197fa0ba6bab2ebd3d52c245",
+      "faces": 3,
+      "edges": 3,
+      "vertices": 2,
+      "volumeMM3": 25446.900494077323,
+      "areaMM2": 6163.804786343174,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth18CurlInnerVoid": {
+      "type": "Part::Cylinder",
+      "brepSHA256": "7b21668837a6310c57d28e074fa17f532f836cecff9b9c66beb71accaac8f47d",
+      "faces": 3,
+      "edges": 3,
+      "vertices": 2,
+      "volumeMM3": 11535.92822398172,
+      "areaMM2": 4071.504079052372,
+      "boundsMM": [
+        -51.0,
+        -18.0,
+        -37.0,
+        51.0,
+        -6.0,
+        -25.0
+      ],
+      "valid": true
+    },
+    "Depth18CurlTube": {
+      "type": "Part::Cut",
+      "brepSHA256": "4f7ed557a833d8c70de76521abe43ef63c1c47de84f39cbd4f944a0c00136416",
+      "faces": 4,
+      "edges": 6,
+      "vertices": 4,
+      "volumeMM3": 14137.166941154075,
+      "areaMM2": 9707.52129959246,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth18CurlOpening": {
+      "type": "Part::Box",
+      "brepSHA256": "67ea9cd43e654878a40e1511a0cc72f39324a5bcee07149e9b47e5bbb6acf969",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 40800.0,
+      "areaMM2": 8960.0,
+      "boundsMM": [
+        -51.0,
+        -12.0,
+        -31.0,
+        51.0,
+        8.0,
+        -11.0
+      ],
+      "valid": true
+    },
+    "Depth18OpenCurl": {
+      "type": "Part::Cut",
+      "brepSHA256": "dcf81b757b66a0149e599d87aedc02c8b3694fb99c7c44ce8390bd30fbfe4e55",
+      "faces": 8,
+      "edges": 18,
+      "vertices": 12,
+      "volumeMM3": 10602.87520586555,
+      "areaMM2": 7880.640974694345,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -21.99999999999998
+      ],
+      "valid": true
+    },
+    "Depth18MetalBacking": {
+      "type": "Part::Fuse",
+      "brepSHA256": "e9dc7f4462bab2a5f5857ccfa05d35ebf28085375cf76fd1cdad8d2077f4b140",
+      "faces": 11,
+      "edges": 23,
+      "vertices": 14,
+      "volumeMM3": 23100.0,
+      "areaMM2": 16462.0,
+      "boundsMM": [
+        -50.0,
+        -12.0,
+        -25.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth18MetalCurl": {
+      "type": "Part::Fuse",
+      "brepSHA256": "88db8a909a3ed767d0bc6c54e3c49bf885f09721581daf9d4e89ab8e34fca33a",
+      "faces": 17,
+      "edges": 37,
+      "vertices": 22,
+      "volumeMM3": 33702.87520586555,
+      "areaMM2": 23742.640974694343,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth18OakRail": {
+      "type": "Part::Box",
+      "brepSHA256": "cdaf568b718f41751b89ed29f5e3e2382189d9bd81974986287e1f7d212073d6",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 36000.0,
+      "areaMM2": 8320.0,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        0.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth18OakRound": {
+      "type": "Part::Fillet",
+      "brepSHA256": "b82c9a9cef78c523c8717382a20ed6d0bb042827587653444bde3bf3123a6230",
+      "faces": 7,
+      "edges": 15,
+      "vertices": 10,
+      "volumeMM3": 35806.8583470577,
+      "areaMM2": 8187.376064979623,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        0.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth18WoodAndBacking": {
+      "type": "Part::Fuse",
+      "brepSHA256": "0981a353fec50397d9420ebe96a2d375b6ebff6be9050c5ef21fc7389a59d34a",
+      "faces": 23,
+      "edges": 51,
+      "vertices": 30,
+      "volumeMM3": 69509.73355292325,
+      "areaMM2": 27930.017039673967,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth18OakContact": {
+      "type": "PartDesign::SubShapeBinder",
+      "brepSHA256": "2336d0a5be2c03e8c341e850385c344bc33517ba90f7c089e7eb1ca0b5d2e7be",
+      "faces": 2,
+      "edges": 8,
+      "vertices": 8,
+      "volumeMM3": 921.2388980384692,
+      "areaMM2": 1971.238898038469,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        0.0,
+        23.0
+      ],
+      "valid": true
+    },
+    "Depth15BackPlate": {
+      "type": "Part::Box",
+      "brepSHA256": "888318cc8c58a4d5be85218b78e5260bb882746fa7d1c4abdb6fd606f2fe49f9",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 18600.0,
+      "areaMM2": 13371.999999999998,
+      "boundsMM": [
+        -50.0,
+        0.0,
+        -22.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15CurlBridge": {
+      "type": "Part::Box",
+      "brepSHA256": "f082df99258382d636c03b6f0981925e70d22a2dc5bd827622a465ac5b15f79b",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 4500.0,
+      "areaMM2": 3690.0,
+      "boundsMM": [
+        -50.0,
+        -12.0,
+        -25.0,
+        50.0,
+        3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth15CurlOuter": {
+      "type": "Part::Cylinder",
+      "brepSHA256": "d6ed05b5ab77bed45b09b0525e7aa42ee9ab35f6197fa0ba6bab2ebd3d52c245",
+      "faces": 3,
+      "edges": 3,
+      "vertices": 2,
+      "volumeMM3": 25446.900494077323,
+      "areaMM2": 6163.804786343174,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth15CurlInnerVoid": {
+      "type": "Part::Cylinder",
+      "brepSHA256": "7b21668837a6310c57d28e074fa17f532f836cecff9b9c66beb71accaac8f47d",
+      "faces": 3,
+      "edges": 3,
+      "vertices": 2,
+      "volumeMM3": 11535.92822398172,
+      "areaMM2": 4071.504079052372,
+      "boundsMM": [
+        -51.0,
+        -18.0,
+        -37.0,
+        51.0,
+        -6.0,
+        -25.0
+      ],
+      "valid": true
+    },
+    "Depth15CurlTube": {
+      "type": "Part::Cut",
+      "brepSHA256": "4f7ed557a833d8c70de76521abe43ef63c1c47de84f39cbd4f944a0c00136416",
+      "faces": 4,
+      "edges": 6,
+      "vertices": 4,
+      "volumeMM3": 14137.166941154075,
+      "areaMM2": 9707.52129959246,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth15CurlOpening": {
+      "type": "Part::Box",
+      "brepSHA256": "67ea9cd43e654878a40e1511a0cc72f39324a5bcee07149e9b47e5bbb6acf969",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 40800.0,
+      "areaMM2": 8960.0,
+      "boundsMM": [
+        -51.0,
+        -12.0,
+        -31.0,
+        51.0,
+        8.0,
+        -11.0
+      ],
+      "valid": true
+    },
+    "Depth15OpenCurl": {
+      "type": "Part::Cut",
+      "brepSHA256": "dcf81b757b66a0149e599d87aedc02c8b3694fb99c7c44ce8390bd30fbfe4e55",
+      "faces": 8,
+      "edges": 18,
+      "vertices": 12,
+      "volumeMM3": 10602.87520586555,
+      "areaMM2": 7880.640974694345,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -21.99999999999998
+      ],
+      "valid": true
+    },
+    "Depth15MetalBacking": {
+      "type": "Part::Fuse",
+      "brepSHA256": "e9dc7f4462bab2a5f5857ccfa05d35ebf28085375cf76fd1cdad8d2077f4b140",
+      "faces": 11,
+      "edges": 23,
+      "vertices": 14,
+      "volumeMM3": 23100.0,
+      "areaMM2": 16462.0,
+      "boundsMM": [
+        -50.0,
+        -12.0,
+        -25.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15MetalCurl": {
+      "type": "Part::Fuse",
+      "brepSHA256": "88db8a909a3ed767d0bc6c54e3c49bf885f09721581daf9d4e89ab8e34fca33a",
+      "faces": 17,
+      "edges": 37,
+      "vertices": 22,
+      "volumeMM3": 33702.87520586555,
+      "areaMM2": 23742.640974694343,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15OakRail": {
+      "type": "Part::Box",
+      "brepSHA256": "cdaf568b718f41751b89ed29f5e3e2382189d9bd81974986287e1f7d212073d6",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 36000.0,
+      "areaMM2": 8320.0,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        0.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15OakRound": {
+      "type": "Part::Fillet",
+      "brepSHA256": "b82c9a9cef78c523c8717382a20ed6d0bb042827587653444bde3bf3123a6230",
+      "faces": 7,
+      "edges": 15,
+      "vertices": 10,
+      "volumeMM3": 35806.8583470577,
+      "areaMM2": 8187.376064979623,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        0.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15WoodAndBacking": {
+      "type": "Part::Fuse",
+      "brepSHA256": "0981a353fec50397d9420ebe96a2d375b6ebff6be9050c5ef21fc7389a59d34a",
+      "faces": 23,
+      "edges": 51,
+      "vertices": 30,
+      "volumeMM3": 69509.73355292325,
+      "areaMM2": 27930.017039673967,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15ReversibleBlockerUpper": {
+      "type": "Part::Box",
+      "brepSHA256": "0cddfc3dfe9c93a09980d1a04f9d06c65403c7b07cb797baac57b594c6fa819f",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 4500.0,
+      "areaMM2": 3690.0,
+      "boundsMM": [
+        -50.0,
+        -3.0,
+        5.0,
+        50.0,
+        0.0,
+        20.0
+      ],
+      "valid": true
+    },
+    "Depth15ReversibleBlockerLower": {
+      "type": "Part::Box",
+      "brepSHA256": "42256b88d65d84a32a3480e30b2c4f73d1b823b42db91d9a9e1da58ab34f0a8b",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 12000.0,
+      "areaMM2": 4840.0,
+      "boundsMM": [
+        -50.0,
+        -8.0,
+        -10.0,
+        50.0,
+        0.0,
+        5.0
+      ],
+      "valid": true
+    },
+    "Depth15BlockerUpperAttached": {
+      "type": "Part::Fuse",
+      "brepSHA256": "085ed3e56992fc15b8c391899246b87ef195bfdc3566e1357ab638e64c2ad50f",
+      "faces": 27,
+      "edges": 61,
+      "vertices": 36,
+      "volumeMM3": 74009.73355292324,
+      "areaMM2": 28020.017039673967,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15BlockerAttached": {
+      "type": "Part::Fuse",
+      "brepSHA256": "07f02c32f1278142b69e8a8e0cab52cfdb263da25273705512e3c7fc5d3bbf6b",
+      "faces": 31,
+      "edges": 71,
+      "vertices": 42,
+      "volumeMM3": 86009.73355292324,
+      "areaMM2": 29260.017039673967,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth15OakContact": {
+      "type": "PartDesign::SubShapeBinder",
+      "brepSHA256": "6999e124abdd251bb4cde345feb7920f7d7214a136ca19eb36e0be229122c700",
+      "faces": 2,
+      "edges": 8,
+      "vertices": 8,
+      "volumeMM3": 771.2388980384692,
+      "areaMM2": 1671.238898038469,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        -3.0,
+        23.0
+      ],
+      "valid": true
+    },
+    "Depth10BackPlate": {
+      "type": "Part::Box",
+      "brepSHA256": "888318cc8c58a4d5be85218b78e5260bb882746fa7d1c4abdb6fd606f2fe49f9",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 18600.0,
+      "areaMM2": 13371.999999999998,
+      "boundsMM": [
+        -50.0,
+        0.0,
+        -22.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10CurlBridge": {
+      "type": "Part::Box",
+      "brepSHA256": "f082df99258382d636c03b6f0981925e70d22a2dc5bd827622a465ac5b15f79b",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 4500.0,
+      "areaMM2": 3690.0,
+      "boundsMM": [
+        -50.0,
+        -12.0,
+        -25.0,
+        50.0,
+        3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth10CurlOuter": {
+      "type": "Part::Cylinder",
+      "brepSHA256": "d6ed05b5ab77bed45b09b0525e7aa42ee9ab35f6197fa0ba6bab2ebd3d52c245",
+      "faces": 3,
+      "edges": 3,
+      "vertices": 2,
+      "volumeMM3": 25446.900494077323,
+      "areaMM2": 6163.804786343174,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth10CurlInnerVoid": {
+      "type": "Part::Cylinder",
+      "brepSHA256": "7b21668837a6310c57d28e074fa17f532f836cecff9b9c66beb71accaac8f47d",
+      "faces": 3,
+      "edges": 3,
+      "vertices": 2,
+      "volumeMM3": 11535.92822398172,
+      "areaMM2": 4071.504079052372,
+      "boundsMM": [
+        -51.0,
+        -18.0,
+        -37.0,
+        51.0,
+        -6.0,
+        -25.0
+      ],
+      "valid": true
+    },
+    "Depth10CurlTube": {
+      "type": "Part::Cut",
+      "brepSHA256": "4f7ed557a833d8c70de76521abe43ef63c1c47de84f39cbd4f944a0c00136416",
+      "faces": 4,
+      "edges": 6,
+      "vertices": 4,
+      "volumeMM3": 14137.166941154075,
+      "areaMM2": 9707.52129959246,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -22.0
+      ],
+      "valid": true
+    },
+    "Depth10CurlOpening": {
+      "type": "Part::Box",
+      "brepSHA256": "67ea9cd43e654878a40e1511a0cc72f39324a5bcee07149e9b47e5bbb6acf969",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 40800.0,
+      "areaMM2": 8960.0,
+      "boundsMM": [
+        -51.0,
+        -12.0,
+        -31.0,
+        51.0,
+        8.0,
+        -11.0
+      ],
+      "valid": true
+    },
+    "Depth10OpenCurl": {
+      "type": "Part::Cut",
+      "brepSHA256": "dcf81b757b66a0149e599d87aedc02c8b3694fb99c7c44ce8390bd30fbfe4e55",
+      "faces": 8,
+      "edges": 18,
+      "vertices": 12,
+      "volumeMM3": 10602.87520586555,
+      "areaMM2": 7880.640974694345,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        -3.0,
+        -21.99999999999998
+      ],
+      "valid": true
+    },
+    "Depth10MetalBacking": {
+      "type": "Part::Fuse",
+      "brepSHA256": "e9dc7f4462bab2a5f5857ccfa05d35ebf28085375cf76fd1cdad8d2077f4b140",
+      "faces": 11,
+      "edges": 23,
+      "vertices": 14,
+      "volumeMM3": 23100.0,
+      "areaMM2": 16462.0,
+      "boundsMM": [
+        -50.0,
+        -12.0,
+        -25.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10MetalCurl": {
+      "type": "Part::Fuse",
+      "brepSHA256": "88db8a909a3ed767d0bc6c54e3c49bf885f09721581daf9d4e89ab8e34fca33a",
+      "faces": 17,
+      "edges": 37,
+      "vertices": 22,
+      "volumeMM3": 33702.87520586555,
+      "areaMM2": 23742.640974694343,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10OakRail": {
+      "type": "Part::Box",
+      "brepSHA256": "cdaf568b718f41751b89ed29f5e3e2382189d9bd81974986287e1f7d212073d6",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 36000.0,
+      "areaMM2": 8320.0,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        0.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10OakRound": {
+      "type": "Part::Fillet",
+      "brepSHA256": "b82c9a9cef78c523c8717382a20ed6d0bb042827587653444bde3bf3123a6230",
+      "faces": 7,
+      "edges": 15,
+      "vertices": 10,
+      "volumeMM3": 35806.8583470577,
+      "areaMM2": 8187.376064979623,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        0.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10WoodAndBacking": {
+      "type": "Part::Fuse",
+      "brepSHA256": "0981a353fec50397d9420ebe96a2d375b6ebff6be9050c5ef21fc7389a59d34a",
+      "faces": 23,
+      "edges": 51,
+      "vertices": 30,
+      "volumeMM3": 69509.73355292325,
+      "areaMM2": 27930.017039673967,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10ReversibleBlockerUpper": {
+      "type": "Part::Box",
+      "brepSHA256": "f040ffce7e81ed3c04593dc0ead365b9fe3454ae074fc8beb4b0e404e8546d61",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 12000.0,
+      "areaMM2": 4840.0,
+      "boundsMM": [
+        -50.0,
+        -8.0,
+        5.0,
+        50.0,
+        0.0,
+        20.0
+      ],
+      "valid": true
+    },
+    "Depth10ReversibleBlockerLower": {
+      "type": "Part::Box",
+      "brepSHA256": "e675b27f6c2690b9d8ba23909ac4ba938b38e31132c3a7d25670cccb3b760d0d",
+      "faces": 6,
+      "edges": 12,
+      "vertices": 8,
+      "volumeMM3": 4500.0,
+      "areaMM2": 3690.0,
+      "boundsMM": [
+        -50.0,
+        -3.0,
+        -10.0,
+        50.0,
+        0.0,
+        5.0
+      ],
+      "valid": true
+    },
+    "Depth10BlockerUpperAttached": {
+      "type": "Part::Fuse",
+      "brepSHA256": "60dcb0ef83df1419e90174571990b0283a9fe4b39a84ac9eaa8460391c9cffd6",
+      "faces": 27,
+      "edges": 61,
+      "vertices": 36,
+      "volumeMM3": 81509.73355292322,
+      "areaMM2": 28170.017039673967,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10BlockerAttached": {
+      "type": "Part::Fuse",
+      "brepSHA256": "0b973aca998ff60689f79ddeccc8cee674b83d8aa5a9d7a78fbb16285c4b81e2",
+      "faces": 31,
+      "edges": 71,
+      "vertices": 42,
+      "volumeMM3": 86009.73355292324,
+      "areaMM2": 28260.017039673967,
+      "boundsMM": [
+        -50.0,
+        -21.0,
+        -40.0,
+        50.0,
+        3.0,
+        40.0
+      ],
+      "valid": true
+    },
+    "Depth10OakContact": {
+      "type": "PartDesign::SubShapeBinder",
+      "brepSHA256": "7688f61258a6b0173faa0ec32dd4ae023e4864a55c317d865ee931139066a375",
+      "faces": 2,
+      "edges": 8,
+      "vertices": 8,
+      "volumeMM3": 521.2388980384692,
+      "areaMM2": 1171.238898038469,
+      "boundsMM": [
+        -50.0,
+        -18.0,
+        20.0,
+        50.0,
+        -8.0,
+        23.0
+      ],
+      "valid": true
+    }
+  },
+  "all47OriginalNativeFeatureBREPsExactlyUnchangedInMemory": true,
+  "originalNativeFeatureEquality": {
+    "Depth18BackPlate": true,
+    "Depth18CurlBridge": true,
+    "Depth18CurlOuter": true,
+    "Depth18CurlInnerVoid": true,
+    "Depth18CurlTube": true,
+    "Depth18CurlOpening": true,
+    "Depth18OpenCurl": true,
+    "Depth18MetalBacking": true,
+    "Depth18MetalCurl": true,
+    "Depth18OakRail": true,
+    "Depth18OakRound": true,
+    "Depth18WoodAndBacking": true,
+    "Depth18OakContact": true,
+    "Depth15BackPlate": true,
+    "Depth15CurlBridge": true,
+    "Depth15CurlOuter": true,
+    "Depth15CurlInnerVoid": true,
+    "Depth15CurlTube": true,
+    "Depth15CurlOpening": true,
+    "Depth15OpenCurl": true,
+    "Depth15MetalBacking": true,
+    "Depth15MetalCurl": true,
+    "Depth15OakRail": true,
+    "Depth15OakRound": true,
+    "Depth15WoodAndBacking": true,
+    "Depth15ReversibleBlockerUpper": true,
+    "Depth15ReversibleBlockerLower": true,
+    "Depth15BlockerUpperAttached": true,
+    "Depth15BlockerAttached": true,
+    "Depth15OakContact": true,
+    "Depth10BackPlate": true,
+    "Depth10CurlBridge": true,
+    "Depth10CurlOuter": true,
+    "Depth10CurlInnerVoid": true,
+    "Depth10CurlTube": true,
+    "Depth10CurlOpening": true,
+    "Depth10OpenCurl": true,
+    "Depth10MetalBacking": true,
+    "Depth10MetalCurl": true,
+    "Depth10OakRail": true,
+    "Depth10OakRound": true,
+    "Depth10WoodAndBacking": true,
+    "Depth10ReversibleBlockerUpper": true,
+    "Depth10ReversibleBlockerLower": true,
+    "Depth10BlockerUpperAttached": true,
+    "Depth10BlockerAttached": true,
+    "Depth10OakContact": true
+  },
+  "createdBinders": [
+    {
+      "name": "Depth18MetalExterior",
+      "nodeID": "plateau_metal_exterior",
+      "role": "attachment",
+      "presentationID": "depth-18mm",
+      "sourceBody": "Depth18WoodAndBacking",
+      "faces": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        13,
+        14,
+        15,
+        16,
+        17,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "HangTenUseBodyTriangles": true,
+      "shape": {
+        "type": "PartDesign::SubShapeBinder",
+        "brepSHA256": "f9779e63b1aecdf6939b92b6a3701d464b52ac4eefad0fc02b6209ee1005ab14",
+        "faces": 17,
+        "edges": 76,
+        "vertices": 76,
+        "volumeMM3": 36597.61204797081,
+        "areaMM2": 21742.640974694343,
+        "boundsMM": [
+          -50.0,
+          -21.0,
+          -40.0,
+          50.0,
+          3.0,
+          40.0
+        ],
+        "valid": true
+      }
+    },
+    {
+      "name": "Depth15MetalExterior",
+      "nodeID": "plateau_metal_exterior",
+      "role": "attachment",
+      "presentationID": "depth-15mm",
+      "sourceBody": "Depth15BlockerAttached",
+      "faces": [
+        5,
+        10,
+        11,
+        12,
+        13,
+        15,
+        20,
+        21,
+        22,
+        23,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "HangTenUseBodyTriangles": true,
+      "shape": {
+        "type": "PartDesign::SubShapeBinder",
+        "brepSHA256": "0de9fe8acac4c7401969fef351e5650317bdadd1572658f7961cd379176cd856",
+        "faces": 17,
+        "edges": 80,
+        "vertices": 80,
+        "volumeMM3": 40577.87520586555,
+        "areaMM2": 18742.640974694346,
+        "boundsMM": [
+          -50.0,
+          -21.0,
+          -40.0,
+          50.0,
+          3.0,
+          40.0
+        ],
+        "valid": true
+      }
+    },
+    {
+      "name": "Depth15BlockerExterior",
+      "nodeID": "plateau_blocker_exterior",
+      "role": "attachment",
+      "presentationID": "depth-15mm",
+      "sourceBody": "Depth15BlockerAttached",
+      "faces": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        14
+      ],
+      "HangTenUseBodyTriangles": true,
+      "shape": {
+        "type": "PartDesign::SubShapeBinder",
+        "brepSHA256": "805f84be7170b7d98984d687b0f869df3bdbeca5c874c85fe0135b76a8bcc700",
+        "faces": 8,
+        "edges": 34,
+        "vertices": 34,
+        "volumeMM3": 10941.176470588232,
+        "areaMM2": 4630.0,
+        "boundsMM": [
+          -50.0,
+          -8.0,
+          -10.0,
+          50.0,
+          0.0,
+          20.0
+        ],
+        "valid": true
+      }
+    },
+    {
+      "name": "Depth10MetalExterior",
+      "nodeID": "plateau_metal_exterior",
+      "role": "attachment",
+      "presentationID": "depth-10mm",
+      "sourceBody": "Depth10BlockerAttached",
+      "faces": [
+        4,
+        10,
+        11,
+        12,
+        13,
+        15,
+        20,
+        21,
+        22,
+        23,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "HangTenUseBodyTriangles": true,
+      "shape": {
+        "type": "PartDesign::SubShapeBinder",
+        "brepSHA256": "1cf71e0c7febf35c104a80df043e725c1db28291354dd15d7967891758d43233",
+        "faces": 17,
+        "edges": 80,
+        "vertices": 80,
+        "volumeMM3": 40577.87520586555,
+        "areaMM2": 18742.640974694346,
+        "boundsMM": [
+          -50.0,
+          -21.0,
+          -40.0,
+          50.0,
+          3.0,
+          40.0
+        ],
+        "valid": true
+      }
+    },
+    {
+      "name": "Depth10BlockerExterior",
+      "nodeID": "plateau_blocker_exterior",
+      "role": "attachment",
+      "presentationID": "depth-10mm",
+      "sourceBody": "Depth10BlockerAttached",
+      "faces": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        14
+      ],
+      "HangTenUseBodyTriangles": true,
+      "shape": {
+        "type": "PartDesign::SubShapeBinder",
+        "brepSHA256": "828d65d6ba7e29e57de07233025025aadc1914ae2f7ffcc2989cf77de3949752",
+        "faces": 8,
+        "edges": 34,
+        "vertices": 34,
+        "volumeMM3": 8441.176470588236,
+        "areaMM2": 4130.0,
+        "boundsMM": [
+          -50.0,
+          -8.0,
+          -10.0,
+          50.0,
+          0.0,
+          20.0
+        ],
+        "valid": true
+      }
+    }
+  ],
+  "exactFaceMapsFromAstra": {
+    "depth-18mm": {
+      "prefix": "Depth18",
+      "body": "Depth18WoodAndBacking",
+      "metal": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        13,
+        14,
+        15,
+        16,
+        17,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "blocker": [],
+      "oakExterior": [
+        3,
+        10,
+        12,
+        18
+      ],
+      "contact": [
+        9,
+        11
+      ]
+    },
+    "depth-15mm": {
+      "prefix": "Depth15",
+      "body": "Depth15BlockerAttached",
+      "metal": [
+        5,
+        10,
+        11,
+        12,
+        13,
+        15,
+        20,
+        21,
+        22,
+        23,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "blocker": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        14
+      ],
+      "oakExterior": [
+        9,
+        17,
+        19,
+        24
+      ],
+      "contact": [
+        16,
+        18
+      ]
+    },
+    "depth-10mm": {
+      "prefix": "Depth10",
+      "body": "Depth10BlockerAttached",
+      "metal": [
+        4,
+        10,
+        11,
+        12,
+        13,
+        15,
+        20,
+        21,
+        22,
+        23,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "blocker": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        14
+      ],
+      "oakExterior": [
+        9,
+        17,
+        19,
+        24
+      ],
+      "contact": [
+        16,
+        18
+      ]
+    }
+  },
+  "allOriginalFullFusedColliderFeaturesRetained": true,
+  "noContactIDOrRegionChanges": true,
+  "sourceBytesUnchangedBeforeSaveAs": true,
+  "currentAppFrames": 0,
+  "humanAcceptance": "pending"
+}

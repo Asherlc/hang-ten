@@ -1,0 +1,49 @@
+{
+  "reviewNumber": 13,
+  "boardID": "plateau.lifting-edge",
+  "status": "Pending #13 human shape review; current app wood, neutral components, cord, picking, highlights and workout appearance unverified",
+  "answer": null,
+  "acceptedDate": null,
+  "acceptedScope": null,
+  "identity": {
+    "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+    "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+    "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+    "suspensionSHA256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80",
+    "generatedManifestSHA256": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4",
+    "presentations": {
+      "depth-18mm": {
+        "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+        "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55"
+      },
+      "depth-15mm": {
+        "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+        "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b"
+      },
+      "depth-10mm": {
+        "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+        "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e"
+      }
+    }
+  },
+  "baselineCommit": "8b1bbd0858ca3e81bc7c43ad842a80ff9ca2138b",
+  "technicalGeometryReviewPresentedDate": "2026-10-02",
+  "completionHumanAcceptance": "pending",
+  "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review13-2026-10-02/index.html",
+  "runtimeValidation": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review13-2026-10-02/runtime-validation.json",
+  "postIntegrationTests": {
+    "pythonPassed": 191,
+    "pythonFailed": 0,
+    "pythonErrors": 0,
+    "pythonSkipped": 0,
+    "canonicalPackagesValidated": 64,
+    "iOSBuildPassed": true,
+    "iOSUnitCasesExecuted": 0,
+    "iOSCurrentAppFrames": 0,
+    "iOSRuntimeStatus": "not run; current app appearance unverified",
+    "androidStagingByteParity": true,
+    "iOSStagingByteParity": true
+  },
+  "sourceFacts": "One oak edge, reversible 3D-printed blocker giving 18/15/10 mm effective depth, aluminium plate/open lower curl, and maker-stated 6 mm Edelrid PES cord. Same edge-18 contact throughout.",
+  "estimateLimits": "Envelope, curl/rail/blocker shape beyond grip depths, edge rounds, support placement, seating clearance and total 420 mm loop length remain display estimates. Diagnostic preview colors do not establish current runtime material or selection appearance."
+}

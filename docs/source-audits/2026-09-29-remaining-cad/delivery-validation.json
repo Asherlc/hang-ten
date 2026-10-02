@@ -61,7 +61,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "fa6fcdde53a95fef8561af7baf12d363372c2a7d9571230ddc3ea600e908fa23",
+  "sha256Manifest": "44758ac3a2b242182833edb770b0b715c0be703b958f513061830c0e606127d7",
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
   "scope": "exact-file identity for committed files; a source-backed board pins its compiled asset through descriptor modelSHA256 and its build-time board.json through the locked FCStd and optional suspension sidecar",
   "stoneHangerMiniReview10": {
@@ -89,5 +89,16 @@
       "Hangboards/owl-climb-poker/owl-climb-poker.FCStd"
     ],
     "unchangedLockedFiles": 133
+  },
+  "plateauLiftingEdgeReview13": {
+    "report": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review13-2026-10-02/delivery-check.json",
+    "changedLockedFiles": [
+      "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json",
+      "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json",
+      "Hangboards/plateau-lifting-edge/assets/primary.model.json",
+      "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+      "Hangboards/plateau-lifting-edge/suspension.json"
+    ],
+    "unchangedLockedFiles": 130
   }
 }

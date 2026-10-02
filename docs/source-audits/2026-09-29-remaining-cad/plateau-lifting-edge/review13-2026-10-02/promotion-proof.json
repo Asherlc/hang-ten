@@ -1,0 +1,46 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "package": "plateau-lifting-edge",
+  "baselineCommit": "8b1bbd0858ca3e81bc7c43ad842a80ff9ca2138b",
+  "prior": {
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e",
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+    "Hangboards/plateau-lifting-edge/assets/primary.model.json": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
+    "Hangboards/plateau-lifting-edge/assets/primary.usdz": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+    "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+    "Hangboards/plateau-lifting-edge/suspension.json": "accd4b12ac09f4de1213c06b783de736117fd44e94b12918b38c86467dd2aa9f"
+  },
+  "current": {
+    "assets/depth-10mm.model.json": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+    "assets/depth-10mm.usdz": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+    "assets/depth-15mm.model.json": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+    "assets/depth-15mm.usdz": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+    "assets/primary.model.json": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+    "assets/primary.usdz": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+    "plateau-lifting-edge.FCStd": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+    "suspension.json": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80"
+  },
+  "canonicalSHA256": {
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+    "Hangboards/plateau-lifting-edge/assets/primary.model.json": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+    "Hangboards/plateau-lifting-edge/assets/primary.usdz": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+    "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+    "Hangboards/plateau-lifting-edge/suspension.json": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80"
+  },
+  "generatedManifestSHA256": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4",
+  "onlyEightCanonicalPackageFilesChanged": true,
+  "physicalSourceAndContactTrianglesUnchanged": true,
+  "otherPackageFilesVerifiedUnchanged": 198,
+  "sharedRendererFilesReservedAndUnchanged": true,
+  "sharedSolverChanged": false,
+  "parallelWorkspaceInspectedOrMerged": false,
+  "independentPhysicalShapeGatePassed": true,
+  "humanAcceptance": "pending",
+  "runtimeAppearanceVerified": false
+}
