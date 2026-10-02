@@ -124,3 +124,16 @@ The five-path reservation remains active. Parent exact published ref is now
 being refreshed for its Plateau package and lock changes. Canonical packages,
 review queue, delivery lock and human acceptance records remain unchanged here.
 Owned validation resources remain live under the existing cleanup controller.
+
+### Projection diagnostics and correction to hand-OFF interpretation
+
+The [new Evo projection/correction appendix](zlagboard-evo/runtime-projection-correction-2026-10-02/README.md)
+retains three completed failed sequences: orthographic second host, perspective
+second host, and visible second host OFF. Work stopped after three runs. The
+earlier claim that the historical OFF full workflow passed is withdrawn: its
+settled-rest pockets were red when blue was expected. Its correctly red
+next-active frame was insufficient to establish a full pass. Original reports
+and bytes remain unchanged; explicit hash-bound corrections are appended.
+No production fix is established, and native acceptance/package/global records
+remain unchanged. The existing resource controller and path reservation remain
+active while diagnosis continues.
