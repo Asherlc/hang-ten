@@ -15,6 +15,7 @@
 # Optional:
 #   SWIFT_PACKAGE_CACHE_PATH     -clonedSourcePackagesDirPath
 #   XCTEST_DESTINATION           xcodebuild -destination (default: iPhone 17 Pro)
+#   XCTEST_TOOLCHAIN             explicit xcodebuild -toolchain identifier
 set -euo pipefail
 
 : "${XCTEST_LABEL:?XCTEST_LABEL is required}"
@@ -157,6 +158,9 @@ run_xcodebuild_with_watchdog() {
     -parallel-testing-enabled "$parallel_enabled"
     -maximum-parallel-testing-workers "$XCTEST_PARALLEL_WORKERS"
   )
+  if [[ -n "${XCTEST_TOOLCHAIN:-}" ]]; then
+    cmd+=(-toolchain "$XCTEST_TOOLCHAIN")
+  fi
   for target in "${only_testing_targets[@]}"; do
     cmd+=("-only-testing:${target}")
   done

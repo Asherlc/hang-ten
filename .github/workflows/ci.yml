@@ -827,7 +827,9 @@ jobs:
           xcrun --kill-cache
           xcrun metal -v
           xcrun swift --version
-          printf 'TOOLCHAINS=%s\n' "$TOOLCHAINS" >> "$GITHUB_ENV"
+          # xcodebuild does not honor xcrun's TOOLCHAINS environment selection;
+          # the test runner must also pass the explicit -toolchain argument.
+          printf 'XCTEST_TOOLCHAIN=%s\n' "$metal_identifier" >> "$GITHUB_ENV"
 
       - name: Select latest available iOS Pro simulator for the board comparison
         run: |

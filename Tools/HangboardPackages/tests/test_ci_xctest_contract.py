@@ -216,8 +216,9 @@ def test_build_required_gate_rejects_missing_required_validation(
         ("test-without-building", ["build-for-testing", "test-without-building"]),
     ],
 )
+@pytest.mark.parametrize("toolchain", ["", "com.apple.dt.toolchain.Metal.123"])
 def test_xctest_runner_stops_after_first_failed_phase(
-    tmp_path: Path, failed_phase: str, expected_calls: list[str]
+    tmp_path: Path, failed_phase: str, expected_calls: list[str], toolchain: str
 ) -> None:
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
@@ -264,6 +265,7 @@ def test_xctest_runner_stops_after_first_failed_phase(
         MOCK_XCODEBUILD_CALLS=str(calls),
         MOCK_TOOL_EVENTS=str(events),
         MOCK_FAIL_PHASE=failed_phase,
+        XCTEST_TOOLCHAIN=toolchain,
         XCTEST_LABEL="mock-xctest",
         XCTEST_DERIVED_DATA=str(tmp_path / "derived-data"),
         XCTEST_LOG_ROOT=str(tmp_path / "logs"),
@@ -296,6 +298,11 @@ def test_xctest_runner_stops_after_first_failed_phase(
         event.startswith("xcrun:simctl spawn 22452A91-4697-4369-8812-53ADB77EB73B launchctl print system")
         for event in event_lines[:build_for_testing]
     )
+    for event in event_lines:
+        if event.startswith("xcodebuild:"):
+            assert ("-toolchain " in event) == bool(toolchain)
+            if toolchain:
+                assert f"-toolchain {toolchain} " in event
     assert sum(event.startswith("xcrun:simctl boot ") for event in event_lines) == 1
     assert "-destination platform=iOS Simulator,id=22452A91-4697-4369-8812-53ADB77EB73B" in event_lines[build_for_testing]
 
@@ -407,6 +414,6 @@ def test_metal_setup_selects_installed_component_and_verifies_compiler(tmp_path:
     if mode == "needs-selection":
         assert history.count("xcrun metal -v") == 2
         assert "xcrun swift --version" in history
-        assert github_env.read_text() == "TOOLCHAINS=com.apple.dt.toolchain.Metal.123,com.apple.dt.toolchain.XcodeDefault\n"
+        assert github_env.read_text() == "XCTEST_TOOLCHAIN=com.apple.dt.toolchain.Metal.123\n"
     else:
         assert not github_env.exists()
