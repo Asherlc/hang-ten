@@ -159,11 +159,6 @@ struct TrainView: View {
                 Text(store.selectedBoard.name)
                     .font(.system(.title3, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
-                if let dimensions = store.selectedBoard.dimensions {
-                    Text(dimensions)
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
-                }
             }
 
             ViewThatFits(in: .horizontal) {
@@ -301,11 +296,6 @@ struct BoardDetailView: View {
                     Text(board.name)
                         .font(.system(size: isCompactHeight ? 22 : 28, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
-                    if let dimensions = board.dimensions {
-                        Text(dimensions)
-                            .font(.system(size: 14, weight: .medium, design: .rounded))
-                            .foregroundStyle(Color.hangMuted)
-                    }
                 }
                 .overlay {
                     GeometryReader { summary in
