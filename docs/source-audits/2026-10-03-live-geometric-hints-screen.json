@@ -1,0 +1,113 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "status": "CLOSED: complete cold-step cost failure",
+  "candidateQPs": 2,
+  "originalQPs": 2,
+  "currentDifference": 0,
+  "strictDifference": 1.7280166712871417e-06,
+  "metrics": {
+    "clearanceMargin": 9.994055532242755e-05,
+    "geometryAccepted": true,
+    "lengthError": 9.326733274583887e-08,
+    "speed": 0.00029439116791770906,
+    "strain": 1.516625981801134e-05
+  },
+  "medianPairedRatio": 1.3466583397432867,
+  "counts": {
+    "visits": 14934,
+    "pruned": 9630,
+    "misses": 4978,
+    "rayBlocks": 0
+  },
+  "profile": {
+    "originalBatchSeconds": 0.002439375006360933,
+    "candidateBatchSeconds": 0.003293708330602385,
+    "originalFinalMetricSeconds": 0.0001838750031311065,
+    "candidateFinalMetricSeconds": 0.0016479166661156341
+  },
+  "profilePreservedTraceCacheAndMetrics": true,
+  "profilePairs": [
+    {
+      "candidateBatchSeconds": 0.015686958329752088,
+      "candidateFinalMetricSeconds": 0.003438916668528691,
+      "candidateSeconds": 0.028649708328885026,
+      "originalBatchSeconds": 0.01243837499350775,
+      "originalFinalMetricSeconds": 0.00019120833894703537,
+      "originalSeconds": 0.015688124985899776,
+      "ratio": 1.8262034726670588
+    },
+    {
+      "candidateBatchSeconds": 0.004929166680085473,
+      "candidateFinalMetricSeconds": 0.0016094583261292428,
+      "candidateSeconds": 0.00988187501206994,
+      "originalBatchSeconds": 0.0060502083360916,
+      "originalFinalMetricSeconds": 0.00018599999020807445,
+      "originalSeconds": 0.009212041666614823,
+      "ratio": 1.072712800234355
+    },
+    {
+      "candidateBatchSeconds": 0.0031989166600396857,
+      "candidateFinalMetricSeconds": 0.0015302916581276804,
+      "candidateSeconds": 0.007152541671530344,
+      "originalBatchSeconds": 0.002693958333111368,
+      "originalFinalMetricSeconds": 0.00019558332860469818,
+      "originalSeconds": 0.005449833333841525,
+      "ratio": 1.3124331026997846
+    },
+    {
+      "candidateBatchSeconds": 0.002896166653954424,
+      "candidateFinalMetricSeconds": 0.0016750833310652524,
+      "candidateSeconds": 0.007074708337313496,
+      "originalBatchSeconds": 0.0029255416739033535,
+      "originalFinalMetricSeconds": 0.00018741667736321688,
+      "originalSeconds": 0.005804166663438082,
+      "ratio": 1.2189016524764662
+    },
+    {
+      "candidateBatchSeconds": 0.004069541682838462,
+      "candidateFinalMetricSeconds": 0.0016888749960344285,
+      "candidateSeconds": 0.008302999995066784,
+      "originalBatchSeconds": 0.003200541657861322,
+      "originalFinalMetricSeconds": 0.00018724999972619116,
+      "originalSeconds": 0.0058293750043958426,
+      "ratio": 1.424337941684249
+    },
+    {
+      "candidateBatchSeconds": 0.005223124986514449,
+      "candidateFinalMetricSeconds": 0.0016249166656052694,
+      "candidateSeconds": 0.009475500002736226,
+      "originalBatchSeconds": 0.004202791678835638,
+      "originalFinalMetricSeconds": 0.00018600000475998968,
+      "originalSeconds": 0.007448000003932975,
+      "ratio": 1.272220730092993
+    },
+    {
+      "candidateBatchSeconds": 0.004195333342067897,
+      "candidateFinalMetricSeconds": 0.0016375833220081404,
+      "candidateSeconds": 0.00929474999429658,
+      "originalBatchSeconds": 0.003305749996798113,
+      "originalFinalMetricSeconds": 0.00018850000924430788,
+      "originalSeconds": 0.006213916654814966,
+      "ratio": 1.4957957292675264
+    }
+  ],
+  "independentlyAbsentGroups": [
+    54116,
+    57976,
+    58204,
+    58953,
+    59365,
+    64838,
+    65264
+  ],
+  "limits": "Changed intermediate floating contact contract, no generic triangleClosest bit proof. Original final clearance queried after any prune. No optimized IR certificate/trajectory/simulator/adoption stage reached. Reference-type solver cache copies share state; cannot claim independent warm rollback without copying.",
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-cd96a9980-geometry-hints-checkpoint/native/result.json": "41f24547b9b284da235eff57bc686219a4d5e710839211093ae325f8ad5fa4e5",
+    ".context/strong-owl-live-physics-armijo-cd96a9980-geometry-hints-checkpoint/native/provenance.json": "4eb3866944e152423fd8a4792cf726c0329e157d544c6ab9b447597c8234bf7f",
+    ".context/strong-owl-live-physics-armijo-cd96a9980-geometry-hints-checkpoint/native/resources.jsonl": "e8dfb2b636ed2313cd719e341d6b64dcc2362dcce343bae4eb91d22c29cf5778",
+    ".context/strong-owl-live-physics-armijo-cd96a9980-geometry-hints-cost-split-v2/native/result.json": "bbbee9d40c3ee85f80ee9a59ce4049a57b4b3b13b3d806394608825ad6469981",
+    ".context/strong-owl-live-physics-armijo-cd96a9980-geometry-hints-cost-split-v2/native/provenance.json": "8161864ce2ba94c695849a4c25236322c1307ec8f002cc8e3950a682ac72da19",
+    ".context/strong-owl-live-physics-armijo-cd96a9980-geometry-hints-cost-split-v2/native/resources.jsonl": "118880b122f8ba9ccfc0b71c7c51b36296499c8ba0e0b6d3734058e5575e1a48"
+  }
+}
