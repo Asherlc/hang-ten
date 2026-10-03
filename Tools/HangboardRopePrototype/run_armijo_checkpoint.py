@@ -17,6 +17,7 @@ parser.add_argument('--mass-only',action='store_true')
 parser.add_argument('--arrival-stop',action='store_true')
 parser.add_argument('--quiet-strain',action='store_true')
 parser.add_argument('--fullstep-feasible',action='store_true')
+parser.add_argument('--retained-initializer',action='store_true')
 parser.add_argument('--arrival-checkpoint',type=int,choices=[109,140],default=109)
 parser.add_argument('--lagged-reaction',action='store_true')
 parser.add_argument('--planar-regions',action='store_true')
@@ -37,6 +38,7 @@ parser.add_argument('--geometry-profile',action='store_true')
 parser.add_argument('--spectral-trajectory',action='store_true')
 parser.add_argument('--spectral-checkpoint',type=int,choices=[109,140],default=109)
 parser.add_argument('--preflight',action='store_true');args=parser.parse_args()
+if args.retained_initializer and (args.quiet_strain or args.fullstep_feasible or args.arrival_stop or args.full_merit or args.trajectory or args.step_rate or args.composed_step or args.mass_only or args.planar_regions or args.spectral_step or args.clearance_bounds or args.scaled_merit or args.geometry_hints or args.lagged_reaction):parser.error('--retained-initializer is isolated fixed140')
 if args.fullstep_feasible and (args.quiet_strain or args.arrival_stop or args.full_merit or args.trajectory or args.step_rate==120 or args.composed_step or args.mass_only or args.planar_regions or args.spectral_step or args.clearance_bounds or args.scaled_merit or args.geometry_hints or args.lagged_reaction):parser.error('--fullstep-feasible is isolated')
 if args.quiet_strain and (args.arrival_stop or args.full_merit or args.trajectory or args.step_rate==120 or args.composed_step or args.mass_only or args.planar_regions or args.spectral_step or args.clearance_bounds or args.scaled_merit or args.geometry_hints or args.lagged_reaction):parser.error('--quiet-strain is isolated')
 if args.arrival_stop and (args.full_merit or args.trajectory or args.step_rate==120 or args.composed_step or args.mass_only or args.planar_regions or args.spectral_step or args.clearance_bounds or args.scaled_merit or args.geometry_hints or args.lagged_reaction):parser.error('--arrival-stop is isolated')
@@ -99,9 +101,15 @@ for name in NAMES:
         if args.plane_reuse and name=='RopeTriangleCollider.swift':
             from plane_reuse.snapshot import collider_source as plane_collider
             text=plane_collider(text)
+    if args.retained_initializer and name=='RopeContactSystem.swift':
+        from retained_initializer.snapshot import contact_source as retained_contact
+        text=retained_contact(text)
     if name=='RopeDynamicsSolver.swift':
         text=solver_source(text).replace('private extension SIMD4','extension SIMD4')
         text+='\n'+(tool/'stock_chain/CheckpointAdapter.swift').read_text()+'\n'+(tool/'contact_bundle/CheckpointExtras.swift').read_text()
+        if args.retained_initializer:
+            from retained_initializer.snapshot import solver_source as retained_solver
+            text=retained_solver(text)
         if args.fullstep_feasible:
             from fullstep_feasible.snapshot import solver_source as feasible_solver
             text=feasible_solver(text)
@@ -159,6 +167,9 @@ for name in ['Math.swift','Trace.swift','main.swift']:
     text=(tool/'armijo'/('StepRateMain.swift' if (args.step_rate or args.spectral_trajectory) and name=='main.swift' else 'TrajectoryMain.swift' if args.trajectory and name=='main.swift' else name)).read_text()
     if name=='main.swift' and not args.full_merit:
         text=text.replace('    ArmijoTrace.collectOracleBranches=x.verifyArmijoDerivative\n','')
+    if name=='main.swift' and args.retained_initializer:
+        from retained_initializer.snapshot import driver_source as retained_driver
+        text=retained_driver(text)
     if name=='main.swift' and args.fullstep_feasible:
         from fullstep_feasible.snapshot import driver_source as feasible_driver,trajectory_source as feasible_trajectory
         text=feasible_trajectory(text) if args.step_rate else feasible_driver(text,args.arrival_checkpoint)
@@ -260,6 +271,9 @@ if args.planar_regions:
         (sources/'PlanarProfile.swift').write_text(profile_source())
     (sources/'PlanarMath.swift').write_text(region_math)
     (stage/'region-topology.json').write_text(json.dumps(metadata,indent=2)+'\n')
+if args.retained_initializer:
+    (sources/'RetainedFixtures.swift').write_bytes((tool/'retained_initializer/Fixtures.swift').read_bytes())
+    (sources/'RetainedTrace.swift').write_bytes((tool/'retained_initializer/Trace.swift').read_bytes())
 if args.mass_only:(sources/'MassOnlyMath.swift').write_bytes((tool/'mass_only/Math.swift').read_bytes())
 if args.lagged_reaction:(sources/'LaggedReactionMath.swift').write_bytes((tool/'lagged_reaction/Math.swift').read_bytes())
 if args.composed_step:
@@ -281,6 +295,7 @@ if args.spectral_step:inputs += list((tool/'spectral_step').glob('*.*'))
 if args.scaled_merit:inputs += list((tool/'scaled_merit').glob('*.*'))
 if args.region_queries or args.planar_rows:inputs += [REPO/'.context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/result.json']
 if args.planar_regions:inputs += [*list((tool/'planar_regions').glob('*.*')),tool/'census_planar_regions.py',stage/'region-topology.json']
+if args.retained_initializer:inputs += list((tool/'retained_initializer').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))
 if args.fullstep_feasible:inputs += list((tool/'fullstep_feasible').glob('*.*'))+list((tool/'quiet_strain').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))
 if args.quiet_strain:inputs += list((tool/'quiet_strain').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))
 if args.arrival_stop:inputs += list((tool/'arrival_stop').glob('*.*'))

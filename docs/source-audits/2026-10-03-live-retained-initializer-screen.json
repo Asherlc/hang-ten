@@ -1,0 +1,248 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "closed": true,
+  "result": {
+    "adopted": false,
+    "candidateCaps": 0,
+    "candidateMetrics": {
+      "clearanceMargin": 9.999989760625921e-05,
+      "geometryAccepted": true,
+      "lengthError": 2.9197211315334926e-10,
+      "speed": 0.00021756606176812022,
+      "strain": 3.1531226074577035e-08
+    },
+    "candidateQPs": 3,
+    "candidateRetries": 0,
+    "candidateSeconds": 0.022203666652785614,
+    "candidateSettled": false,
+    "candidateTrace": [
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "initializerApplied": true,
+        "initializerSeconds": 0.00024616665905341506,
+        "movement": 4.313842114966921e-05,
+        "operatorCaptures": 1,
+        "originalRejected": 1,
+        "rows": 445,
+        "slope": null,
+        "strain": 0.00019235858581545529
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "initializerApplied": true,
+        "initializerSeconds": 0.00024616665905341506,
+        "movement": 2.1807252344294803e-05,
+        "operatorCaptures": 2,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 5.9940960692062006e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "initializerApplied": true,
+        "initializerSeconds": 0.00024616665905341506,
+        "movement": 2.331488939889135e-07,
+        "operatorCaptures": 3,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 3.1531226074577035e-08
+      }
+    ],
+    "controlSeconds": 0.013236083352239802,
+    "currentDifferenceMeters": 1.7416126803440339e-06,
+    "failure": "invalid(\"fixed <=1 fresh QP initializer work gate\")",
+    "fixturesPass": true,
+    "originalQPs": 2,
+    "originalTrace": [
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "initializerApplied": false,
+        "initializerSeconds": 0,
+        "movement": 0.00015958302990769517,
+        "operatorCaptures": 0,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 0.00021355221966246063
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "initializerApplied": false,
+        "initializerSeconds": 0,
+        "movement": 3.4480377384391393e-06,
+        "operatorCaptures": 0,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.516625981801134e-05
+      }
+    ],
+    "owner": "strong-owl-live-physics",
+    "pairs": [],
+    "prefixIdentitySteps": 138,
+    "primeCheckpointIdentity": true,
+    "primeStep": 139,
+    "retainedInitializer": true,
+    "step": 140,
+    "strictConverged": true,
+    "strictDifferenceMeters": 7.552091785474637e-08,
+    "strictRetries": 0,
+    "strictTrace": [
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "initializerApplied": false,
+        "initializerSeconds": 0,
+        "movement": 0.00015958302990775008,
+        "operatorCaptures": 0,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 0.0002135522196657913
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "initializerApplied": false,
+        "initializerSeconds": 0,
+        "movement": 3.448037738241142e-06,
+        "operatorCaptures": 0,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.5166259817567251e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "initializerApplied": false,
+        "initializerSeconds": 0,
+        "movement": 3.466445713636594e-06,
+        "operatorCaptures": 0,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.4996362600161461e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "initializerApplied": false,
+        "initializerSeconds": 0,
+        "movement": 3.5217012527756437e-06,
+        "operatorCaptures": 0,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.473593636491799e-05
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "initializerApplied": false,
+        "initializerSeconds": 0,
+        "movement": 3.5859014644920644e-06,
+        "operatorCaptures": 0,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.0991293032169835e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "initializerApplied": false,
+        "initializerSeconds": 0,
+        "movement": 1.497525329787497e-07,
+        "operatorCaptures": 0,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.3411536103902222e-08
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "initializerApplied": false,
+        "initializerSeconds": 0,
+        "movement": 1.1064717749923536e-07,
+        "operatorCaptures": 0,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.182311293312921e-08
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "initializerApplied": false,
+        "initializerSeconds": 0,
+        "movement": 2.180336056319867e-08,
+        "operatorCaptures": 0,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.065580956804979e-09
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "initializerApplied": false,
+        "initializerSeconds": 0,
+        "movement": 1.6062026799372495e-08,
+        "operatorCaptures": 0,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.0359288982186854e-09
+      }
+    ]
+  },
+  "ownedGroupsAbsent": [
+    {
+      "group": 45976,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-ac6e214c8-retained-initializer-red/native/resources.jsonl"
+    },
+    {
+      "group": 48428,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-ac6e214c8-retained-initializer-red/native/resources.jsonl"
+    },
+    {
+      "group": 55307,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-ac6e214c8-retained-initializer-140/native/resources.jsonl"
+    },
+    {
+      "group": 57196,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-ac6e214c8-retained-initializer-140/native/resources.jsonl"
+    }
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-ac6e214c8-retained-initializer-red/native/result.json": "03d1b691c28b1e97585ae5b6c307d91f3d9117005e5885745812bf66d6c1d112",
+    ".context/strong-owl-live-physics-armijo-ac6e214c8-retained-initializer-red/native/provenance.json": "91df02fc99bab1c9a92c06802675493a6e3b095927146589677737adff2838a6",
+    ".context/strong-owl-live-physics-armijo-ac6e214c8-retained-initializer-140/native/result.json": "e1b88abdf01230390fe91d7009df48b2be9389aa427d316077fe551cf31dfe58",
+    ".context/strong-owl-live-physics-armijo-ac6e214c8-retained-initializer-140/native/provenance.json": "6bdec06ab6c1228237e2fa3e5a6f1584b40407eb8d21e931d36c6629cc128ed8",
+    ".context/strong-owl-live-physics-retained-initializer-proposal/PLAN.md": "9f339db93780c2f4172d03f875e8ff3234662ebf850a9bdacb71dd2a529d419f",
+    "Tools/HangboardRopePrototype/run_armijo_checkpoint.py": "7f90638188adf111a16e472218352a5cbaa7bd313b6a76a9916caa3e03f617e3",
+    "Tools/HangboardRopePrototype/retained_initializer/snapshot.py": "1c9ddaea3b08721d8108dfbad51734f703948134288b99abb1ad9819fa5f88b4",
+    "Tools/HangboardRopePrototype/retained_initializer/Trace.swift": "253cf591faee1901f4d806babadda48f5e211f9663382c455629c33c708bbb04",
+    "Tools/HangboardRopePrototype/retained_initializer/Fixtures.swift": "cd140d353ba2f131538cbef03d8499b267f8a2dc9947c0cd0d799660bb26695b"
+  },
+  "limits": [
+    "One unchanged-orientation fixed checkpoint, not a general moving-frame initializer.",
+    "Captures entire actual previous preupdate KKT; no refreshed Jacobian with old factor claimed exact.",
+    "Prefix trace identity and complete prime139 persisted physical identity do not retain full state each earlier prefix step.",
+    "Necessary one-fresh-QP gate failed; no seven-pair timing or full trajectory expansion."
+  ]
+}
