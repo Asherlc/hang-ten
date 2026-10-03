@@ -361,38 +361,29 @@ def test_optimized_unit_lane_preserves_swift_debug_assertions() -> None:
         assert "OTHER_SWIFT_FLAGS = $(inherited) -assert-config Debug" in run
 
 
-@pytest.mark.parametrize("mode", ["installed", "needs-import", "import-fails", "unavailable"])
-def test_metal_setup_installs_exported_component_and_verifies_compiler(tmp_path: Path, mode: str) -> None:
+@pytest.mark.parametrize("mode", ["installed", "needs-selection", "download-fails", "unavailable", "missing-identifier"])
+def test_metal_setup_selects_installed_component_and_verifies_compiler(tmp_path: Path, mode: str) -> None:
     workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
     step = next(step for step in workflow["jobs"]["test-ui-map"]["steps"]
                 if step["name"] == "Ensure Metal compiler is available")
     bin_path = tmp_path / "bin"
     bin_path.mkdir()
-    state = tmp_path / "installed"
-    if mode == "installed":
-        state.touch()
     commands = {
         "xcrun": '\n'.join([
             '#!/usr/bin/env bash',
             'printf "xcrun %s\\n" "$*" >> "$METAL_TEST_LOG"',
-            'if [[ "$*" == "--kill-cache" ]]; then exit 0; fi',
-            'test -f "$METAL_TEST_STATE"',
+            'if [[ "$*" == "--kill-cache" || "$*" == "swift --version" ]]; then exit 0; fi',
+            'if [[ "$METAL_TEST_MODE" == "installed" ]]; then exit 0; fi',
+            '[[ "$METAL_TEST_MODE" != "unavailable" && "${TOOLCHAINS:-}" == "com.apple.dt.toolchain.Metal.123,com.apple.dt.toolchain.XcodeDefault" ]]',
         ]),
         "xcodebuild": '\n'.join([
             '#!/usr/bin/env bash',
             'printf "xcodebuild %s\\n" "$*" >> "$METAL_TEST_LOG"',
             'case "$1" in',
-            '  -downloadComponent)',
-            '    while [[ $# -gt 0 ]]; do',
-            '      if [[ "$1" == "-exportPath" ]]; then',
-            '        mkdir -p "$2/MetalToolchain-27A266a.exportedBundle"; exit 0',
-            '      fi',
-            '      shift',
-            '    done ;;',
-            '  -importComponent)',
-            '    [[ "$METAL_TEST_MODE" != "import-fails" ]] || exit 7',
-            '    [[ "$3" == "-importPath" && -d "$4" ]] || exit 8',
-            '    if [[ "$METAL_TEST_MODE" != "unavailable" ]]; then touch "$METAL_TEST_STATE"; fi ;;',
+            '  -downloadComponent) [[ "$METAL_TEST_MODE" != "download-fails" ]] || exit 7 ;;',
+            '  -showComponent)',
+            '    if [[ "$METAL_TEST_MODE" == "missing-identifier" ]]; then echo \'{}\';',
+            '    else echo \'{"status":"installed","toolchainIdentifier":"com.apple.dt.toolchain.Metal.123"}\'; fi ;;',
             'esac',
         ]),
     }
@@ -401,17 +392,21 @@ def test_metal_setup_installs_exported_component_and_verifies_compiler(tmp_path:
         tool.write_text(source + "\n")
         tool.chmod(0o755)
     log = tmp_path / "commands.log"
+    github_env = tmp_path / "github-env"
     result = subprocess.run(
         ["bash", "-c", step["run"]], cwd=tmp_path,
         env={**os.environ, "PATH": f"{bin_path}:{os.environ['PATH']}",
-             "METAL_TEST_LOG": str(log), "METAL_TEST_STATE": str(state),
-             "METAL_TEST_MODE": mode, "PASEO_WORKTREE_PATH": str(tmp_path)},
+             "METAL_TEST_LOG": str(log), "TOOLCHAINS": "",
+             "METAL_TEST_MODE": mode, "GITHUB_ENV": str(github_env)},
         capture_output=True, text=True, check=False,
     )
-    assert (result.returncode == 0) == (mode in {"installed", "needs-import"}), result.stdout + result.stderr
+    assert (result.returncode == 0) == (mode in {"installed", "needs-selection"}), result.stdout + result.stderr
     history = log.read_text()
     if mode == "installed":
         assert "xcodebuild" not in history
+    if mode == "needs-selection":
+        assert history.count("xcrun metal -v") == 2
+        assert "xcrun swift --version" in history
+        assert github_env.read_text() == "TOOLCHAINS=com.apple.dt.toolchain.Metal.123,com.apple.dt.toolchain.XcodeDefault\n"
     else:
-        assert "-importComponent MetalToolchain -importPath" in history
-    assert not list((tmp_path / ".context").glob("*/MetalToolchain-*.exportedBundle"))
+        assert not github_env.exists()

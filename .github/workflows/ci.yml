@@ -810,23 +810,24 @@ jobs:
             exit 0
           fi
 
-          # A successful asset download can leave Metal unavailable on a fresh
-          # runner. Export and explicitly import it before resolving the compiler.
-          workspace_path="${PASEO_WORKTREE_PATH:-$PWD}"
-          workspace_name="${workspace_path##*/}"
-          mkdir -p "$workspace_path/.context"
-          metal_export="$(mktemp -d "$workspace_path/.context/$workspace_name-metal.XXXXXX")"
-          trap 'rm -rf "$metal_export"' EXIT
-          xcodebuild -downloadComponent MetalToolchain -exportPath "$metal_export"
-          shopt -s nullglob
-          metal_bundles=("$metal_export"/*.exportedBundle "$metal_export"/*.dmg)
-          if [[ ${#metal_bundles[@]} -ne 1 ]]; then
-            echo "Expected one exported Metal toolchain; found ${#metal_bundles[@]}." >&2
-            exit 1
-          fi
-          xcodebuild -importComponent MetalToolchain -importPath "${metal_bundles[0]}"
+          # Downloading installs the asset, but xcrun can still select Xcode's
+          # placeholder compiler. Resolve and select the installed component.
+          xcodebuild -downloadComponent MetalToolchain
+          metal_identifier="$(xcodebuild -showComponent MetalToolchain -json | python3 -c '
+          import json, sys
+          component = json.load(sys.stdin)
+          identifier = component.get("toolchainIdentifier", "")
+          if component.get("status") != "installed" or not identifier.startswith("com.apple.dt.toolchain.Metal."):
+              raise SystemExit("Xcode did not report an installed Metal toolchain identifier")
+          if any(character.isspace() for character in identifier):
+              raise SystemExit("Invalid Metal toolchain identifier")
+          print(identifier)
+          ')"
+          export TOOLCHAINS="$metal_identifier,com.apple.dt.toolchain.XcodeDefault"
           xcrun --kill-cache
           xcrun metal -v
+          xcrun swift --version
+          printf 'TOOLCHAINS=%s\n' "$TOOLCHAINS" >> "$GITHUB_ENV"
 
       - name: Select latest available iOS Pro simulator for the board comparison
         run: |
