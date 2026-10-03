@@ -1,0 +1,59 @@
+{
+  "adopted": false,
+  "agreementByFeature": [
+    558,
+    726,
+    864,
+    2766,
+    3033,
+    5613,
+    636
+  ],
+  "candidateFaces": 14934,
+  "candidateImplemented": false,
+  "coveragePassed": false,
+  "eligibleFaces": 14934,
+  "featureOrder": [
+    "vertexA",
+    "vertexB",
+    "vertexC",
+    "edgeAB",
+    "edgeAC",
+    "edgeBC",
+    "face"
+  ],
+  "minimumCoverageFraction": 0.6,
+  "optimisticallyRemovableEdges": 26880,
+  "optimisticallyRemovableEdgesWithoutWinnerConflicts": 26880,
+  "originalWinnerConflictFaces": 0,
+  "owner": "strong-owl-live-physics",
+  "physicalCheckpointAndCorrectionScheduleBitIdentity": true,
+  "prefixSteps": 139,
+  "remainingEdgeCallFraction": 0.5999732154814518,
+  "scope": "floating feature agreement counts only; original endpoint/ray/allthreeedges evaluated unchanged; no region or dominance certificate, query shortcut or walltimebound",
+  "closed": true,
+  "productSourceChanged": false,
+  "cleanupGroups": [
+    69152,
+    78737,
+    79994
+  ],
+  "cleanupVerifiedByCurrentProcessListing": true,
+  "sha256": {
+    ".context/strong-owl-live-physics-feature-region-current-434f07a37/native/provenance.json": "de505f1b2c8165967f277288aaffb6f9c772751142796cf8926dfe1b9de9dcec",
+    ".context/strong-owl-live-physics-feature-region-current-434f07a37/native/resources.jsonl": "f4bea261d641b2c0870542378e042de22e9c7a245d30cc43fe320bc2d89259f2",
+    ".context/strong-owl-live-physics-feature-region-current-434f07a37/native/compile.log": "97a91358d2a19d373be5b03b0cfd7b757d4448e42e7510445669e5f4473d2255",
+    ".context/strong-owl-live-physics-feature-region-current-434f07a37-buildfix/native/provenance.json": "a3979fc00dce1a110726a98a83162dd2acab9d9178bcd0b1d479fc296a0780d5",
+    ".context/strong-owl-live-physics-feature-region-current-434f07a37-buildfix/native/resources.jsonl": "be4112bf40512640bce1e146d81bf23d0a8a6c51a7d5a446ff29126a46225a58",
+    ".context/strong-owl-live-physics-feature-region-current-434f07a37-buildfix/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-feature-region-current-434f07a37-buildfix/native/result.json": "50e003e16a6f7e61adee24c745cadb87299f826ff60061e7a381d9d9a0cd002e",
+    ".context/strong-owl-live-physics-feature-region-current-434f07a37-buildfix/native/run.log": "79785b95a3700b9150e89ca553e117d92eb34585e58910c44e0cc11af5dc201c",
+    ".context/strong-owl-live-physics-feature-region-plan/PLAN.md": "fa255bea4a74a2bb5bcd5c3553c7b2a70a3eae66770cfe480bd74b1f70004423",
+    "Tools/HangboardRopePrototype/feature_region/snapshot.py": "c9c9d40ed976c8b42ac902307e7b69b8ea48a33d040e0242bd99d01ff606fde9",
+    "Tools/HangboardRopePrototype/run_feature_region_screen.py": "3108982178c3c01010a30f71ce69046ec4de647d1e5c1add295030a2e1a41b8c"
+  },
+  "primaryResearchURLs": [
+    "https://raw.githubusercontent.com/davideberly/GeometricTools/master/GTE/Mathematics/DistSegment3Triangle3.h",
+    "https://raw.githubusercontent.com/davideberly/GeometricTools/master/GTE/Mathematics/DistLine3Triangle3.h"
+  ]
+}
