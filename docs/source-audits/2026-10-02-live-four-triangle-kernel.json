@@ -1,0 +1,82 @@
+{
+  "accuracyPassed": true,
+  "adopted": false,
+  "fixedMaximumRatio": 0.8,
+  "medianRatio": 0.9656226379955937,
+  "owner": "strong-owl-live-physics",
+  "pairedRuns": [
+    {
+      "candidateSeconds": 0.004362125007901341,
+      "controlSeconds": 0.004810833328519948,
+      "corrections": 2,
+      "ratio": 0.9067296058754436,
+      "run": 0,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.004350416667875834,
+      "controlSeconds": 0.004575833328999579,
+      "corrections": 2,
+      "ratio": 0.9507375717347143,
+      "run": 1,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.004288958327379078,
+      "controlSeconds": 0.004644208325771615,
+      "corrections": 2,
+      "ratio": 0.9235068770663913,
+      "run": 2,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.004435541675775312,
+      "controlSeconds": 0.004445166661753319,
+      "corrections": 2,
+      "ratio": 0.9978347300089282,
+      "run": 3,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.0043490833340911195,
+      "controlSeconds": 0.004347041656728834,
+      "corrections": 2,
+      "ratio": 1.0004696705307907,
+      "run": 4,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.004475499998079613,
+      "controlSeconds": 0.004634833341697231,
+      "corrections": 2,
+      "ratio": 0.9656226379955937,
+      "run": 5,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.004406333333463408,
+      "controlSeconds": 0.004532333332463168,
+      "corrections": 2,
+      "ratio": 0.9721997501601933,
+      "run": 6,
+      "wholePhysicalCheckpointBitIdentity": true
+    }
+  ],
+  "performancePassed": false,
+  "prefixSteps": 139,
+  "scope": "complete native step 140 of fixed actual upright-to-30-degree trajectory, DEBUG convergence experiment, host-only",
+  "evidenceHashes": {
+    ".context/strong-owl-live-physics-four-triangle-plan/PLAN.md": "7054d19bbe40f2b88f469ba39e044a75f03aad179a830284f5c83569205a8007",
+    ".context/strong-owl-live-physics-four-triangle-complete-step/native/provenance.json": "7841fc715a1d7b5bcb3946aa8da0fa2a05478884629ec824fecacbdc7ee35827",
+    ".context/strong-owl-live-physics-four-triangle-complete-step/native/run.log": "6acd5ce673e11a577635055b636c8afc93101a1915daa389a2914bb779c263c7",
+    ".context/strong-owl-live-physics-four-triangle-complete-step/native/resources.jsonl": "e548a49559996f1f25874b72bee32d5f8720725bfbf86f98e8b93466f90b7ddb",
+    ".context/strong-owl-live-physics-current-four-triangle-queries/native/provenance.json": "685c5316d7b5c35ca1309604da846e2a78cadb58cad2ac1d53d287820081776b",
+    ".context/strong-owl-live-physics-current-four-triangle-queries/native/run.log": "8f3d6b29c79aea39ceb6c1d456b500cc9d244930b9f2da49402a2c3d635acbb2",
+    ".context/strong-owl-live-physics-current-four-triangle-queries/native/resources.jsonl": "683dacc8ec2b0f5f1638686e9bebfa8351cc50195f97d60a5023d982172b6ff2",
+    ".context/strong-owl-live-physics-current-four-triangle-strict/native/provenance.json": "f9f0d865412bc628afbf8d2b28694c81e711ff59141aa4ee96466b5d7803301b",
+    ".context/strong-owl-live-physics-current-four-triangle-strict/native/run.log": "3f2e22653e92cbf964b2c128d064da7e8ec8f0d851e9112ca73d069f7eafed63",
+    ".context/strong-owl-live-physics-current-four-triangle-strict/native/resources.jsonl": "9f95b9f0a45f944c573ae622804c53b14b9c8afa2138a6f1e3160a19d21c4461",
+    ".context/strong-owl-live-physics-four-triangle-complete-step/native/result.json": "e764f6924d9454200af3740a398bcc0c90bafe410eeecabcb259f0ba3ae10772"
+  },
+  "closed": true
+}

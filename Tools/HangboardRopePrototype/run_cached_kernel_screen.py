@@ -6,12 +6,18 @@ sys.dont_write_bytecode=True
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from run_native_contact_screen import REPO,OwnedCommands
 from run_live_speed_screen import NAMES
-from triangle_kernel_cache.snapshot import collider_source
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--label',required=True)
+parser.add_argument('--kind',choices=['cached','four'],default='cached')
 args=parser.parse_args()
 assert args.label and all(c in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in args.label)
-root=REPO/'.context'/(REPO.name+'-cached-kernel-'+args.label);root.mkdir()
+if args.kind=='four':
+    from four_triangle_kernel.snapshot import collider_source
+    folder='four_triangle_kernel';stem='four-triangle'
+else:
+    from triangle_kernel_cache.snapshot import collider_source
+    folder='triangle_kernel_cache';stem='cached-kernel'
+root=REPO/'.context'/(REPO.name+'-'+stem+'-'+args.label);root.mkdir()
 stage=root/'native';stage.mkdir();sources=stage/'sources';sources.mkdir()
 tool=Path(__file__).resolve().parent
 inputs=[REPO/'HangTen/Models'/name for name in NAMES]
@@ -30,10 +36,10 @@ for path in inputs:
 for name in ['ExactCheckpointJSON.swift','AcceptedSolverProfile.swift']:
     (sources/name).write_bytes((tool/'native_contact'/name).read_bytes())
 (sources/'main.swift').write_bytes((tool/'triangle_kernel_cache/main.swift').read_bytes())
-files=sorted(sources.glob('*.swift'));binary=stage/(REPO.name+'-cached-kernel-step')
+files=sorted(sources.glob('*.swift'));binary=stage/(REPO.name+'-'+stem+'-step')
 command=['xcrun','swiftc','-O','-D','DEBUG','-whole-module-optimization','-Xcc','-DACCELERATE_NEW_LAPACK','-module-cache-path',str(stage/'module-cache'),*map(str,files),'-o',str(binary)]
-inputs += [*files,Path(__file__),*list((tool/'triangle_kernel_cache').glob('*.*')),REPO/'Hangboards/clavellium-training-block/assets/primary.physics.json']
-(stage/'provenance.json').write_text(json.dumps({'owner':REPO.name,'command':command,'hashes':{str(p.relative_to(REPO)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}},indent=2))
+inputs += [*files,Path(__file__),*list((tool/folder).glob('*.*')),REPO/'Hangboards/clavellium-training-block/assets/primary.physics.json']
+(stage/'provenance.json').write_text(json.dumps({'owner':REPO.name,'kind':args.kind,'command':command,'hashes':{str(p.relative_to(REPO)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}},indent=2))
 c=OwnedCommands(REPO.name,stage)
 for sig in [signal.SIGINT,signal.SIGTERM]:signal.signal(sig,c.interrupted)
 env=dict(os.environ,HANGTEN_REVIEW_PHYSICAL_CONVERGENCE='1')
