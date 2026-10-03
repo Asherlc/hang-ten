@@ -21,6 +21,7 @@ parser.add_argument('--bounds-profile',action='store_true')
 parser.add_argument('--axis-bounds',action='store_true')
 parser.add_argument('--free-balls',action='store_true')
 parser.add_argument('--plane-reuse',action='store_true')
+parser.add_argument('--neighborhoods',action='store_true')
 parser.add_argument('--geometry-profile',action='store_true')
 parser.add_argument('--spectral-trajectory',action='store_true')
 parser.add_argument('--spectral-checkpoint',type=int,choices=[109,140],default=109)
@@ -28,6 +29,7 @@ parser.add_argument('--preflight',action='store_true');args=parser.parse_args()
 if args.bounds_profile and not args.clearance_bounds:parser.error('--bounds-profile requires --clearance-bounds')
 if args.axis_bounds and not args.clearance_bounds:parser.error('--axis-bounds requires --clearance-bounds')
 if args.free_balls and (not args.clearance_bounds or args.axis_bounds or args.bounds_profile):parser.error('--free-balls requires isolated --clearance-bounds')
+if args.neighborhoods and (not args.free_balls or args.plane_reuse):parser.error('--neighborhoods requires free-balls and excludes plane-reuse')
 if args.plane_reuse and not args.free_balls:parser.error('--plane-reuse requires --free-balls')
 if args.clearance_bounds and (args.geometry_hints or args.geometry_profile or args.spectral_step or args.scaled_merit or args.full_merit or args.trajectory or args.step_rate or args.composed_step):parser.error('--clearance-bounds is an isolated checkpoint')
 if args.geometry_profile and not args.geometry_hints:parser.error('--geometry-profile requires --geometry-hints')
@@ -61,6 +63,9 @@ for name in NAMES:
         if args.free_balls and name=='RopeTriangleCollider.swift':
             from free_balls.snapshot import collider_source as free_collider
             text=free_collider(text)
+        if args.neighborhoods and name=='RopeTriangleCollider.swift':
+            from neighborhoods.snapshot import collider_source as neighborhood_collider
+            text=neighborhood_collider(text)
         if args.plane_reuse and name=='RopeTriangleCollider.swift':
             from plane_reuse.snapshot import collider_source as plane_collider
             text=plane_collider(text)
@@ -76,6 +81,9 @@ for name in NAMES:
             if args.free_balls:
                 from free_balls.snapshot import solver_source as free_solver
                 text=free_solver(text)
+            if args.neighborhoods:
+                from neighborhoods.snapshot import solver_source as neighborhood_solver
+                text=neighborhood_solver(text)
             if args.plane_reuse:
                 from plane_reuse.snapshot import solver_source as plane_solver
                 text=plane_solver(text)
@@ -115,6 +123,9 @@ for name in ['Math.swift','Trace.swift','main.swift']:
         else:
             from clearance_bounds.snapshot import driver_source as bound_driver
         text=bound_driver(text)
+        if args.neighborhoods:
+            from neighborhoods.snapshot import driver_source as neighborhood_driver
+            text=neighborhood_driver(text)
         if args.plane_reuse:
             from plane_reuse.snapshot import driver_source as plane_driver
             text=plane_driver(text)
@@ -150,6 +161,7 @@ if args.geometry_hints:(sources/'GeometryHintMath.swift').write_bytes((tool/'geo
 if args.clearance_bounds:(sources/'ClearanceBoundMath.swift').write_bytes((tool/'clearance_bounds/Math.swift').read_bytes())
 if args.axis_bounds:(sources/'AxisBoundMath.swift').write_bytes((tool/'clearance_bounds/Axis.swift').read_bytes())
 if args.free_balls:(sources/'FreeBallMath.swift').write_bytes((tool/'free_balls/Math.swift').read_bytes())
+if args.neighborhoods:(sources/'NeighborhoodMath.swift').write_bytes((tool/'neighborhoods/Math.swift').read_bytes())
 if args.plane_reuse:
     from plane_reuse.atlas import generate
     atlas,metadata=generate(REPO/'Hangboards/clavellium-training-block/assets/primary.physics.json')
@@ -172,6 +184,7 @@ inputs=[*files,*(REPO/'HangTen/Models'/n for n in NAMES),Path(__file__),*list((t
 if args.geometry_hints:inputs += list((tool/'geometry_hints').glob('*.*'))
 if args.clearance_bounds:inputs += list((tool/'clearance_bounds').glob('*.*'))
 if args.free_balls:inputs += list((tool/'free_balls').glob('*.*'))
+if args.neighborhoods:inputs += list((tool/'neighborhoods').glob('*.*'))
 if args.plane_reuse:inputs += [*list((tool/'plane_reuse').glob('*.*')),stage/'atlas.json']
 if args.spectral_step:inputs += list((tool/'spectral_step').glob('*.*'))
 if args.scaled_merit:inputs += list((tool/'scaled_merit').glob('*.*'))

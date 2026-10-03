@@ -6,7 +6,7 @@ from pathlib import Path
 sys.dont_write_bytecode=True
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from run_native_contact_screen import OwnedCommands,REPO
-p=argparse.ArgumentParser();p.add_argument('--label',required=True);p.add_argument('--free-balls',action='store_true');p.add_argument('--union',action='store_true');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--label',required=True);p.add_argument('--free-balls',action='store_true');p.add_argument('--union',action='store_true');p.add_argument('--neighborhoods',action='store_true');a=p.parse_args()
 assert a.label and all(c in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in a.label)
 root=REPO/'.context'/f'{REPO.name}-clearance-bounds-proof-{a.label}';root.mkdir()
 for name in ['Math.swift','Axis.swift','Proof.swift']:
@@ -35,6 +35,19 @@ if a.union:
 }
 try JSONSerialization.data(withJSONObject:records''')
     main.write_text(text)
+if a.neighborhoods:
+    (root/'Neighborhood.swift').write_bytes(Path(__file__).resolve().parents[1].joinpath('neighborhoods/Math.swift').read_bytes())
+    main=root/'main.swift';text=main.read_text()
+    text=text.replace('try clearanceBoundFixtures();','try neighborhoodFixtures();try clearanceBoundFixtures();')
+    text=text.replace('try JSONSerialization.data(withJSONObject:records', '''for _ in 0..<10000 {
+    let p=point()*0.98,q=point()*0.98,oldLow=simd_min(p,q),oldHigh=simd_max(p,q)
+    let a=p+point()*0.01,b=q+point()*0.01,low=simd_min(a,b),high=simd_max(a,b)
+    let identity=UUID(),cache=RopeQueryNeighborhood(identity:identity,low:oldLow,high:oldHigh,rowRadius:0.00365,leaves:[])
+    records.append(["kind":"neighborhood","start":bits(low),"end":bits(high),"oldLow":bits(oldLow),"oldHigh":bits(oldHigh),
+        "upper":bits(cache.motionUpper(low:low,high:high)!),"covers":cache.covers(low:low,high:high,radius:0.00365,identity:identity)])
+}
+try JSONSerialization.data(withJSONObject:records''')
+    main.write_text(text)
 sources=sorted(root.glob('*.swift'));binary=root/f'{REPO.name}-proof'
 common=['xcrun','swiftc','-O','-whole-module-optimization','-module-cache-path',str(root/'module-cache'),*map(str,sources)]
 c=OwnedCommands(REPO.name,root)
@@ -49,7 +62,7 @@ try:
     execute('proof-compile',[*common,'-o',str(binary)])
     execute('proof-export',[str(binary),str(root/'cases.json')])
     execute('proof-ir',[*common,'-emit-ir','-o',str(root/'bounds.ll')])
-    rows=json.loads((root/'cases.json').read_text());counts={'support':0,'axis':0,'bvh':0,'ball':0,'union':0};positive=0;pruned=0
+    rows=json.loads((root/'cases.json').read_text());counts={'support':0,'axis':0,'bvh':0,'ball':0,'union':0,'neighborhood':0};positive=0;pruned=0
     for row in rows:
         k=row['kind'];counts[k]+=1;start=vector(row['start']);end=vector(row['end'])
         if k in ('support','union'):
@@ -67,6 +80,12 @@ try:
             upper=number(row['upper']);square=dot(delta,delta)
             assert upper>=0 and upper**2>=square,row
             if row['insideBall']:assert square<number(row['radius'])**2,row
+        elif k=='neighborhood':
+            lo=vector(row['oldLow']);hi=vector(row['oldHigh'])
+            delta=[max(abs(start[i]-lo[i]),abs(end[i]-hi[i])) for i in range(3)]
+            upper=number(row['upper']);square=dot(delta,delta)
+            assert upper>=0 and upper**2>=square,row
+            if row['covers']:assert square<F.from_float(0.001-2e-9)**2,row
         elif row['pruned']:
             low=vector(row['low']);high=vector(row['high']);gaps=[max(F(0),low[i]-max(start[i],end[i]),min(start[i],end[i])-high[i]) for i in range(3)]
             assert dot(gaps,gaps)>=number(row['floor'])**2,row
