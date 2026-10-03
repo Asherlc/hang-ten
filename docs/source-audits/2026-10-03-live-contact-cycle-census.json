@@ -1,0 +1,45 @@
+{
+  "owner": "strong-owl-live-physics",
+  "instrumentationOnly": true,
+  "adopted": false,
+  "sameBinaryFullCheckpointIdentitySteps": 540,
+  "retainedTrajectoryCorrectionIdentitySteps": 540,
+  "summary": {
+    "unknownWoodRows": 0,
+    "duplicateFeatureKeys": 0,
+    "transitionsWithDiscoveryDrop": 754,
+    "droppedActiveRows": 2457,
+    "transitionsWithActiveChange": 826,
+    "transitionsWithPenaltyDecrease": 0,
+    "transitionsWithPortalSegmentChange": 179,
+    "transitionsWithSharedActiveGradientChange": 1114,
+    "transitionsWithDroppedActiveReturn": 346,
+    "missingActiveAtRadiusCutoff": 7,
+    "missingActiveAtEndpointFilter": 5,
+    "missingActiveWithMergedSubstitute": 2445,
+    "missingActiveUnclassified": 0,
+    "longSmallCorrectionMissingAtCutoff": 0,
+    "longSmallCorrectionMissingAtEndpoint": 2,
+    "longSmallCorrectionMissingWithSubstitute": 406,
+    "transitions": 1117
+  },
+  "penaltyMinimum": 1,
+  "penaltyMaximum": 1,
+  "uniquePenalties": [
+    1
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-contact-cycle-35c66c009-discriminator/native/result.json": "9537b940aa6969eea50b2af136a5dd43d579069293ebbfe3882cbebd464939dc",
+    ".context/strong-owl-live-physics-current-diagnostic-trajectory/native/result.json": "f53af4dd14b4fa181f62e34113000b26e4b2bb9d810b256c2a7ee38e8cd3ba74",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/Tools/HangboardRopePrototype/contact_cycle/analyze.py": "67741f4139c796ed9cc1dea9862225c736d1e0f92934f40436be578ffa9d9164",
+    ".context/strong-owl-live-physics-contact-cycle-35c66c009-discriminator/native/analysis.json": "489c2ea46667d54a085c6ca163082f1424d540f968e47ddfbcf0b4f343641a13",
+    ".context/strong-owl-live-physics-contact-cycle-35c66c009-discriminator/native/provenance.json": "710e7855de674b32e23964620a5cb107fe4d1f1972b3a264c72c9a9648c3848e",
+    ".context/strong-owl-live-physics-contact-cycle-35c66c009-discriminator/native/resources.jsonl": "e177ee1bed6573f2122a2e197b975749017b4f3157f1ebf87dad3bfd9f6bb104",
+    ".context/strong-owl-live-physics-contact-cycle-plan/cleanup-verification.json": "ebccf3cc24dc537e042359c37e29198951f647c2a8c66afbe64572a4401c2164",
+    ".context/strong-owl-live-physics-contact-bundle-proposal/OPUS-NEXT-METHOD-RESPONSE.json": "7297b7e6fdfe9967ab282c80f46472fc0b82ec3ba27fa58ef4db894e29105a33"
+  },
+  "independentlyAbsentGroups": [
+    71365,
+    72054
+  ]
+}
