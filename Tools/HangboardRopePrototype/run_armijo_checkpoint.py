@@ -14,7 +14,12 @@ parser.add_argument('--trajectory',action='store_true')
 parser.add_argument('--step-rate',type=int,choices=[240,120])
 parser.add_argument('--composed-step',action='store_true')
 parser.add_argument('--scaled-merit',action='store_true')
+parser.add_argument('--spectral-step',action='store_true')
+parser.add_argument('--spectral-trajectory',action='store_true')
+parser.add_argument('--spectral-checkpoint',type=int,choices=[109,140],default=109)
 parser.add_argument('--preflight',action='store_true');args=parser.parse_args()
+if args.spectral_trajectory and not args.spectral_step:parser.error('--spectral-trajectory requires --spectral-step')
+if args.spectral_step and (args.scaled_merit or args.full_merit or args.trajectory or args.step_rate or args.composed_step):parser.error('--spectral-step is an isolated original-rate checkpoint')
 if args.scaled_merit and (args.full_merit or args.trajectory or args.step_rate or args.composed_step):parser.error('--scaled-merit is an isolated original-rate checkpoint')
 if args.trajectory and args.fixtures_only:parser.error('--trajectory and --fixtures-only conflict')
 if args.step_rate and (args.full_merit or args.trajectory or args.fixtures_only):parser.error('--step-rate uses the original solver only')
@@ -33,6 +38,9 @@ for name in NAMES:
     if name=='RopeDynamicsSolver.swift':
         text=solver_source(text).replace('private extension SIMD4','extension SIMD4')
         text+='\n'+(tool/'stock_chain/CheckpointAdapter.swift').read_text()+'\n'+(tool/'contact_bundle/CheckpointExtras.swift').read_text()
+        if args.spectral_step:
+            from spectral_step.snapshot import solver_source as spectral_solver
+            text=spectral_solver(text)
         if args.scaled_merit:
             from scaled_merit.snapshot import solver_source as scaled_solver
             text=scaled_solver(text)
@@ -42,9 +50,12 @@ for name in NAMES:
     if name=='RopeBandedSystem.swift':text=text.replace('        try RopeBandedFactorization(size:size','        return try RopeBandedFactorization(size:size')
     (sources/name).write_text(text)
 for name in ['Math.swift','Trace.swift','main.swift']:
-    text=(tool/'armijo'/('StepRateMain.swift' if args.step_rate and name=='main.swift' else 'TrajectoryMain.swift' if args.trajectory and name=='main.swift' else name)).read_text()
+    text=(tool/'armijo'/('StepRateMain.swift' if (args.step_rate or args.spectral_trajectory) and name=='main.swift' else 'TrajectoryMain.swift' if args.trajectory and name=='main.swift' else name)).read_text()
     if name=='main.swift' and not args.full_merit:
         text=text.replace('    ArmijoTrace.collectOracleBranches=x.verifyArmijoDerivative\n','')
+    if name=='main.swift' and args.spectral_step:
+        from spectral_step.snapshot import driver_source as spectral_driver, trajectory_source
+        text=trajectory_source(text) if args.spectral_trajectory else spectral_driver(text,args.spectral_checkpoint)
     if name=='main.swift' and args.scaled_merit:
         from scaled_merit.snapshot import driver_source as scaled_driver
         text=scaled_driver(text)
@@ -64,6 +75,7 @@ for name in ['Math.swift','Trace.swift','main.swift']:
     // One-sided abs derivative''')
         text=text.replace('    try fixtures();result["fixturesPass"]=true','    try ambiguityFixtures();try fixtures();result["fixturesPass"]=true')
     (sources/name).write_text(text)
+if args.spectral_step:(sources/'SpectralStepMath.swift').write_bytes((tool/'spectral_step/Math.swift').read_bytes())
 if args.scaled_merit:(sources/'ScaledMeritMath.swift').write_bytes((tool/'scaled_merit/Math.swift').read_bytes())
 if args.full_merit:(sources/'AmbiguityFixtures.swift').write_bytes((tool/'armijo/AmbiguityFixtures.swift').read_bytes())
 if args.composed_step:
@@ -76,6 +88,7 @@ prior=REPO/'.context/strong-owl-live-physics-current-diagnostic-trajectory/nativ
 inputs=[*files,*(REPO/'HangTen/Models'/n for n in NAMES),Path(__file__),*list((tool/'armijo').glob('*.*')),
     tool/'stock_chain/CheckpointAdapter.swift',tool/'contact_bundle/CheckpointExtras.swift',prior,
     REPO/'Hangboards/clavellium-training-block/assets/primary.physics.json']
+if args.spectral_step:inputs += list((tool/'spectral_step').glob('*.*'))
 if args.scaled_merit:inputs += list((tool/'scaled_merit').glob('*.*'))
 if args.composed_step:inputs += list((tool/'composed_step').glob('*.*'))
 (stage/'provenance.json').write_text(json.dumps({'owner':REPO.name,'command':command,
@@ -85,7 +98,7 @@ for sig in [signal.SIGINT,signal.SIGTERM]:signal.signal(sig,owner.interrupted)
 env=dict(os.environ);env['HANGTEN_REVIEW_PHYSICAL_CONVERGENCE']='1'
 try:
     status=owner.run('compile',['perl','-e','alarm 150;exec @ARGV',*command],stage/'compile.log',env)
-    if not status:status=owner.run('run',['perl','-e','alarm 300;exec @ARGV' if not args.trajectory else 'alarm 600;exec @ARGV',str(binary),str(stage),str(prior),*(['--fixtures-only'] if args.fixtures_only else []),*(['--candidate-hz',str(args.step_rate)] if args.step_rate else []),*(['--preflight'] if args.preflight else [])],stage/'run.log',env)
+    if not status:status=owner.run('run',['perl','-e','alarm 300;exec @ARGV' if not args.trajectory else 'alarm 600;exec @ARGV',str(binary),str(stage),str(prior),*(['--fixtures-only'] if args.fixtures_only else []),*(['--candidate-hz',str(args.step_rate or 240)] if args.step_rate or args.spectral_trajectory else []),*(['--preflight'] if args.preflight else [])],stage/'run.log',env)
     print((stage/('run.log' if (stage/'run.log').exists() else 'compile.log')).read_text())
 finally:owner.cleanup()
 raise SystemExit(status)

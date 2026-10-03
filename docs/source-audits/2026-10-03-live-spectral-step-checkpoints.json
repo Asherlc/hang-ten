@@ -1,0 +1,159 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "scope": "native fixed checkpoints only",
+  "checks": {
+    "red": {
+      "adopted": false,
+      "failure": "invalid(\"spectral overshooting mode\")",
+      "owner": "strong-owl-live-physics",
+      "pairs": [],
+      "sigma": 0.1,
+      "step": 109
+    },
+    "checkpoint": {
+      "adopted": false,
+      "candidateMetrics": {
+        "clearanceMargin": 9.999856397792948e-05,
+        "geometryAccepted": true,
+        "lengthError": 2.175068569698624e-09,
+        "speed": 0.0003190390319422563,
+        "strain": 4.1955382190650425e-07
+      },
+      "candidateQPs": 4,
+      "checkpointPass": true,
+      "currentDifferenceMeters": 3.191768574234225e-07,
+      "fixturesPass": true,
+      "medianRatio": 0.3832700555313602,
+      "originalQPs": 11,
+      "owner": "strong-owl-live-physics",
+      "pairs": [
+        {
+          "candidateSeconds": 0.008912583347409964,
+          "originalSeconds": 0.02531525000813417,
+          "ratio": 0.35206380914848623
+        },
+        {
+          "candidateSeconds": 0.009459791661356576,
+          "originalSeconds": 0.02468179166316986,
+          "ratio": 0.3832700555313602
+        },
+        {
+          "candidateSeconds": 0.00990450000972487,
+          "originalSeconds": 0.02462429166189395,
+          "ratio": 0.40222476835961407
+        },
+        {
+          "candidateSeconds": 0.009311833331594244,
+          "originalSeconds": 0.02301058333250694,
+          "ratio": 0.40467610912060026
+        },
+        {
+          "candidateSeconds": 0.009198916668538004,
+          "originalSeconds": 0.023468166662496515,
+          "ratio": 0.3919742347508723
+        },
+        {
+          "candidateSeconds": 0.009216166668920778,
+          "originalSeconds": 0.025187874998664483,
+          "ratio": 0.36589695118819826
+        },
+        {
+          "candidateSeconds": 0.009042958336067386,
+          "originalSeconds": 0.02467308333143592,
+          "ratio": 0.366511076649499
+        }
+      ],
+      "prefixIdentitySteps": 108,
+      "sigma": 0.1,
+      "spectralStep": true,
+      "step": 109,
+      "strictConverged": true,
+      "strictDifferenceMeters": 2.432738333500828e-07,
+      "strictRetries": 0,
+      "workAndAccuracyPass": true
+    },
+    "ordinary": {
+      "adopted": false,
+      "candidateMetrics": {
+        "clearanceMargin": 9.994055532242755e-05,
+        "geometryAccepted": true,
+        "lengthError": 9.326733274583887e-08,
+        "speed": 0.00029439116791770906,
+        "strain": 1.516625981801134e-05
+      },
+      "candidateQPs": 2,
+      "checkpointPass": true,
+      "currentDifferenceMeters": 0,
+      "fixturesPass": true,
+      "medianRatio": 0.8514327039255997,
+      "originalQPs": 2,
+      "owner": "strong-owl-live-physics",
+      "pairs": [
+        {
+          "candidateSeconds": 0.006489208331913687,
+          "originalSeconds": 0.010236708330921829,
+          "ratio": 0.6339155246136944
+        },
+        {
+          "candidateSeconds": 0.006406916669220664,
+          "originalSeconds": 0.007371041661826894,
+          "ratio": 0.8692009844959587
+        },
+        {
+          "candidateSeconds": 0.01651554166164715,
+          "originalSeconds": 0.011297958335489966,
+          "ratio": 1.4618164779177254
+        },
+        {
+          "candidateSeconds": 0.007221708336146548,
+          "originalSeconds": 0.00979070834000595,
+          "ratio": 0.7376083614540764
+        },
+        {
+          "candidateSeconds": 0.0068248750030761585,
+          "originalSeconds": 0.00798991667397786,
+          "ratio": 0.8541860048808653
+        },
+        {
+          "candidateSeconds": 0.00745454165735282,
+          "originalSeconds": 0.008755291666602716,
+          "ratio": 0.8514327039255997
+        },
+        {
+          "candidateSeconds": 0.0073776249919319525,
+          "originalSeconds": 0.010651666671037674,
+          "ratio": 0.6926263485123904
+        }
+      ],
+      "prefixIdentitySteps": 139,
+      "sigma": 0.1,
+      "spectralStep": true,
+      "step": 140,
+      "strictConverged": true,
+      "strictDifferenceMeters": 1.7280166712871417e-06,
+      "strictRetries": 0,
+      "workAndAccuracyPass": true
+    }
+  },
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-77a8fab55-spectral-red/native/result.json": "0e59cf446ac0c0caab9b57dad67da6f206664e75540dc45338145206d58f8024",
+    ".context/strong-owl-live-physics-armijo-77a8fab55-spectral-red/native/provenance.json": "dcf52884792d090e1177024d476e2b35b8ab9aa052c7f69a6ef12bd9375342f7",
+    ".context/strong-owl-live-physics-armijo-77a8fab55-spectral-red/native/resources.jsonl": "43ca8a01d29322e80f35c5a89b625fcd480421aaf2246fd9f348d48a4accf37c",
+    ".context/strong-owl-live-physics-armijo-77a8fab55-spectral-checkpoint/native/result.json": "b030ef3da7844913c90bd3c0001417990eb5839d521894b1162677817b532664",
+    ".context/strong-owl-live-physics-armijo-77a8fab55-spectral-checkpoint/native/provenance.json": "7f8e920859886cb14d5f9424469e0de941e92507d8e007899b14386f7b53e561",
+    ".context/strong-owl-live-physics-armijo-77a8fab55-spectral-checkpoint/native/resources.jsonl": "d95e9b078b96970e88011dc3439112d5d7b6cfcb9302c59ee979cc1a23cde0ef",
+    ".context/strong-owl-live-physics-armijo-77a8fab55-spectral-ordinary/native/result.json": "6c5ac3b7d0d023482cf10dbe5a9b602809507a36e496b2db9d27a99c08f8026c",
+    ".context/strong-owl-live-physics-armijo-77a8fab55-spectral-ordinary/native/provenance.json": "7352fc8c00223f87b705552a209fd0519d00d28c14334528d2a9e879cfd5c061",
+    ".context/strong-owl-live-physics-armijo-77a8fab55-spectral-ordinary/native/resources.jsonl": "8a86d79ac5a5e937d8f511eef492dd8d365e03a0e12da447492aceba98bcdd40"
+  },
+  "independentlyAbsentGroups": [
+    17198,
+    18010,
+    22194,
+    22886,
+    24978,
+    28168
+  ],
+  "qualifications": "Prefix checks correction count/alpha/movement/strain, not complete checkpoint identity. Seven paired repeats compare complete serialized checkpoints. Ordinary140 ratio .8514 is timing noise; algorithm inactive before correction3 and state identical."
+}
