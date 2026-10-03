@@ -24,6 +24,18 @@ struct LiveRopeSchedule {
         remainder = max(0, remainder - Double(count)/240)
         return count
     }
+    /// Record display time while the worker is occupied, with at most eight
+    /// pending fixed steps. This is separate from consuming a batch.
+    mutating func accrue(elapsed: Double) {
+        guard !paused, !stopped, !sleeping, elapsed.isFinite, elapsed > 0 else { return }
+        remainder = min(1.0/30, remainder + min(elapsed, 1.0/30))
+    }
+    mutating func takeSteps() -> Int {
+        guard !paused, !stopped, !sleeping else { return 0 }
+        let count = min(8, Int((remainder + 1e-12) * 240))
+        remainder = max(0, remainder - Double(count)/240)
+        return count
+    }
     mutating func setTarget(_ value: simd_quatd) {
         if abs(simd_dot(target.vector, value.vector)) < 1-1e-12 { sleeping = false }
         target = value
@@ -61,10 +73,11 @@ struct LiveRopeDeliveryIdentity {
 actor LiveRopeWorker {
     private var solver: RopeDynamicsSolver?
     init(solver: RopeDynamicsSolver) { self.solver = solver }
-    func advance(steps: Int, target: simd_quatd, settleImmediately: Bool) throws -> RopeFrameSnapshot? {
+    func advance(steps: Int, target: simd_quatd, settleImmediately: Bool, batchID: UInt64 = 0) throws -> RopeFrameSnapshot? {
         try Task.checkCancellation()
         guard var candidate = solver else { return nil }
         #if DEBUG
+        let reviewWorkerStart = DispatchTime.now().uptimeNanoseconds
         LiveRopeReviewTrace.log("worker begin steps=\(steps) immediate=\(settleImmediately) target=\(target.vector)")
         #endif
         var frame: RopeFrameSnapshot?
@@ -73,6 +86,7 @@ actor LiveRopeWorker {
         var reviewMaximumStrain = 0.0
         var reviewMinimumClearanceMargin = Double.infinity
         var reviewCorrections = 0, reviewCaps = 0, reviewRetries = 0
+        var reviewStepMilliseconds: [Double] = []
         #endif
         if settleImmediately {
             frame = try candidate.settled(targetOrientation: target, maxDuration: 5)
@@ -80,8 +94,12 @@ actor LiveRopeWorker {
             guard (0...8).contains(steps) else { throw RopePhysicsError.invalid("Unbounded display step") }
             for _ in 0..<steps {
                 try Task.checkCancellation()
+                #if DEBUG
+                let reviewStepStart = DispatchTime.now().uptimeNanoseconds
+                #endif
                 frame = try candidate.step(dt: 1.0/240, targetOrientation: target)
                 #if DEBUG
+                reviewStepMilliseconds.append(Double(DispatchTime.now().uptimeNanoseconds-reviewStepStart)/1e6)
                 reviewAcceptedSteps += 1
                 reviewCorrections += candidate.reviewStepCorrections
                 reviewCaps += candidate.reviewStepCaps
@@ -97,6 +115,7 @@ actor LiveRopeWorker {
         try Task.checkCancellation()
         solver = candidate
         #if DEBUG
+        LiveRopeReviewTrace.log("engine batch=\(batchID) startNanos=\(reviewWorkerStart) endNanos=\(DispatchTime.now().uptimeNanoseconds) stepMs=\(reviewStepMilliseconds)")
         LiveRopeReviewTrace.log("worker end orientation=\(String(describing: frame?.orientation.vector)) settled=\(String(describing: frame?.settled))")
         LiveRopeReviewTrace.log("worker metrics acceptedSteps=\(reviewAcceptedSteps) corrections=\(reviewCorrections) caps=\(reviewCaps) retries=\(reviewRetries) maximumStrain=\(reviewMaximumStrain) minimumClearanceMargin=\(reviewMinimumClearanceMargin) speed=\(frame?.metrics.maximumSpeed ?? .infinity) displacement=\(frame?.metrics.boardDisplacement ?? .infinity)")
         #endif
@@ -124,6 +143,8 @@ final class LiveRopeController {
     private var busy = false
     private var task: Task<Void, Never>?
     private var stopped = false
+    private let continuousScheduling: Bool
+    private var batchID: UInt64 = 0
     #if DEBUG
     private var reviewAdvanceCount = 0
     #endif
@@ -134,10 +155,16 @@ final class LiveRopeController {
     private let failure: @MainActor (Error) -> Void
 
     init(solver: RopeDynamicsSolver, sceneID: UUID, delivery: @escaping Delivery,
-         failure: @escaping @MainActor (Error) -> Void) {
+         failure: @escaping @MainActor (Error) -> Void, continuousScheduling: Bool? = nil) {
         worker = LiveRopeWorker(solver: solver)
         identity = LiveRopeDeliveryIdentity(sceneID: sceneID)
         target = solver.state.orientation
+        #if DEBUG
+        self.continuousScheduling = continuousScheduling ??
+            (ProcessInfo.processInfo.environment["HANGTEN_REVIEW_CONTINUOUS_ROPE_SCHEDULE"] == "1")
+        #else
+        self.continuousScheduling = false
+        #endif
         schedule.setTarget(target)
         self.delivery = delivery; self.failure = failure
     }
@@ -156,28 +183,47 @@ final class LiveRopeController {
             LiveRopeReviewTrace.log("controller tick count=\(reviewAdvanceCount) busy=\(busy) stopped=\(stopped) elapsed=\(elapsed)")
         }
         #endif
+        if continuousScheduling {
+            guard !stopped else { return }
+            schedule.accrue(elapsed: elapsed)
+            dispatchPending()
+            return
+        }
         guard !busy, !stopped else { return }
         let steps = schedule.steps(elapsed: elapsed)
+        dispatch(steps: steps)
+    }
+    private func dispatchPending() {
+        guard !busy, !stopped else { return }
+        dispatch(steps: schedule.takeSteps())
+    }
+    private func dispatch(steps: Int) {
         guard steps > 0 else { return }
         busy = true
+        batchID &+= 1
+        let batchID = batchID
         let worker = worker, sceneID = identity.sceneID, token = identity.token
         let target = target, generation = generation, immediate = settleImmediately
         #if DEBUG
         let reviewStart = DispatchTime.now().uptimeNanoseconds
-        LiveRopeReviewTrace.log("controller batch start steps=\(steps) token=\(token) generation=\(generation)")
+        LiveRopeReviewTrace.log("controller batch start steps=\(steps) token=\(token) generation=\(generation) batch=\(batchID) startNanos=\(reviewStart) continuous=\(continuousScheduling)")
         #endif
         task = Task { [weak self] in
             do {
-                let frame = try await worker.advance(steps: steps, target: target, settleImmediately: immediate)
+                let frame = try await worker.advance(steps: steps, target: target, settleImmediately: immediate, batchID: batchID)
                 guard let self else { return }
                 self.busy = false; self.task = nil
                 #if DEBUG
-                LiveRopeReviewTrace.log("controller batch returned ms=\(Double(DispatchTime.now().uptimeNanoseconds-reviewStart)/1e6) deliverable=\(self.identity.accepts(sceneID:sceneID,token:token))")
+                LiveRopeReviewTrace.log("controller batch returned ms=\(Double(DispatchTime.now().uptimeNanoseconds-reviewStart)/1e6) deliverable=\(self.identity.accepts(sceneID:sceneID,token:token)) batch=\(batchID) endNanos=\(DispatchTime.now().uptimeNanoseconds)")
                 #endif
-                guard !Task.isCancelled, self.identity.accepts(sceneID: sceneID, token: token), let frame else { return }
+                guard !Task.isCancelled, self.identity.accepts(sceneID: sceneID, token: token), let frame else {
+                    if self.continuousScheduling { self.dispatchPending() }
+                    return
+                }
                 guard frame.metrics.geometryAccepted else { throw RopePhysicsError.invalid("Rejected display geometry") }
                 self.schedule.accept(settled: frame.settled)
                 self.delivery(sceneID, generation, frame)
+                if self.continuousScheduling { self.dispatchPending() }
             } catch is CancellationError {
                 self?.busy = false
                 self?.task = nil

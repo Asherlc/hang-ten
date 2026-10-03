@@ -5,6 +5,18 @@ import simd
 #endif
 
 final class LiveRopeControllerTests: XCTestCase {
+    func testBusyClockAccruesBoundedWorkAndDrainsOnce() {
+        var clock=LiveRopeSchedule()
+        XCTAssertEqual(clock.steps(elapsed:1.0/60),4)
+        clock.accrue(elapsed:1.0/60);clock.accrue(elapsed:1.0/60)
+        XCTAssertEqual(clock.takeSteps(),8)
+        XCTAssertEqual(clock.takeSteps(),0)
+        clock.accrue(elapsed:100);clock.accrue(elapsed:100)
+        XCTAssertEqual(clock.takeSteps(),8)
+        XCTAssertEqual(clock.takeSteps(),0)
+        clock.accrue(elapsed:1.0/60);clock.pause();clock.resume()
+        XCTAssertEqual(clock.takeSteps(),0)
+    }
     func testFixedClockCapsCatchupAndDiscardsPausedTime() {
         var clock = LiveRopeSchedule()
         XCTAssertEqual(clock.steps(elapsed: 100), 8)
@@ -68,6 +80,51 @@ final class LiveRopeControllerTests: XCTestCase {
         let orientation = simd_quatd(angle: 0, axis: SIMD3<Double>(0, 0, 1))
         let state = try RopeThreadedSeed.make(input: input, profileID: "front", orientation: orientation, collider: collider)
         return try RopeDynamicsSolver(input: input, state: state, collider: collider)
+    }
+    @MainActor
+    func testBusyElapsedDrainsWithoutAnotherTickAndKeepsExactWorkerState() async throws {
+        let solver=try Self.solverFixture.get(),q=solver.state.orientation
+        let expected=try await LiveRopeWorker(solver:solver).advanceExactly(steps:2,target:q)
+        let ready=expectation(description:"Both elapsed steps delivered without another tick")
+        var frames:[RopeFrameSnapshot]=[]
+        let controller=LiveRopeController(solver:solver,sceneID:UUID(),delivery:{ _,_,frame in
+            frames.append(frame)
+            if frames.count==2 {ready.fulfill()}
+        },failure:{error in XCTFail(String(describing:error));ready.fulfill()},continuousScheduling:true)
+        controller.advance(elapsed:1.0/240)
+        controller.advance(elapsed:1.0/240)
+        await fulfillment(of:[ready],timeout:30)
+        controller.stop()
+        XCTAssertEqual(frames.count,2)
+        guard frames.count==2 else{return}
+        for i in frames.indices {
+            XCTAssertEqual(frames[i].boardHeight,expected[i].boardHeight)
+            XCTAssertEqual(frames[i].orientation.vector,expected[i].orientation.vector)
+            XCTAssertEqual(frames[i].ropes[0].positions,expected[i].ropes[0].positions)
+            XCTAssertTrue(frames[i].metrics.geometryAccepted)
+        }
+    }
+
+    @MainActor
+    func testStaleBusyResultDrainsCurrentGenerationWithoutSleepingIt() async throws {
+        let solver=try Self.solverFixture.get(),old=solver.state.orientation
+        let target=simd_quatd(angle:0.1,axis:SIMD3<Double>(0,0,1))
+        let worker=LiveRopeWorker(solver:solver)
+        _ = try await worker.advanceExactly(steps:1,target:old)
+        let expected=try await worker.advanceExactly(steps:1,target:target)[0]
+        let ready=expectation(description:"Current generation delivered after stale result")
+        var delivered:RopeFrameSnapshot?
+        let controller=LiveRopeController(solver:solver,sceneID:UUID(),delivery:{ _,generation,frame in
+            XCTAssertEqual(generation,2);delivered=frame;ready.fulfill()
+        },failure:{error in XCTFail(String(describing:error));ready.fulfill()},continuousScheduling:true)
+        controller.advance(elapsed:1.0/240)
+        controller.setTarget(orientation:target,generation:2)
+        controller.advance(elapsed:1.0/240)
+        await fulfillment(of:[ready],timeout:30)
+        controller.stop()
+        XCTAssertEqual(delivered?.boardHeight,expected.boardHeight)
+        XCTAssertEqual(delivered?.orientation.vector,expected.orientation.vector)
+        XCTAssertEqual(delivered?.ropes[0].positions,expected.ropes[0].positions)
     }
     func testWorkersKeepIndependentStateAndStopIsTerminal() async throws {
         let solver = try Self.solverFixture.get()

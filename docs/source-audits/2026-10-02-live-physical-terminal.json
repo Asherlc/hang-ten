@@ -1,0 +1,42 @@
+{
+  "adopted": false,
+  "failure": "invalid(\"fixed two-fresh-QP terminal discriminator changed\")",
+  "fixedMaximumRatio": 0.8,
+  "owner": "strong-owl-live-physics",
+  "pairedRuns": [],
+  "poseGateMeters": 5e-05,
+  "scope": "complete actual-seed step140 after independently propagated current-source prefix; isolated changed convergence semantics; host-only",
+  "closed": true,
+  "productSourceChanged": false,
+  "performanceGateReached": false,
+  "timedPairsCompleted": 0,
+  "prefixSteps": 139,
+  "prefixMaximumDifferenceMeters": 3.7980776260631884e-05,
+  "prefixTerminalStops": 95,
+  "prefixCandidateCorrections": 487,
+  "prefixControlCorrections": 469,
+  "independentRawGeometryPostchecksPassed": true,
+  "exactFinalMetricFieldOracle": "not reached",
+  "cleanupGroups": [
+    26663,
+    36675,
+    37619
+  ],
+  "cleanupVerifiedByCurrentProcessListing": true,
+  "initialBuildFailure": "Swift fixture literal .0035 rejected; corrected to 0.0035 in fresh root; no initial timing.",
+  "sha256": {
+    ".context/strong-owl-live-physics-physical-terminal-current-7848ca056-buildfix/native/result.json": "32770c51dfe591972123135643a73612b05aee73e1e3b498a5a10cd8b344f6ee",
+    ".context/strong-owl-live-physics-physical-terminal-current-7848ca056-buildfix/native/provenance.json": "4005d1624f33183a687f8743d0c202b55473bf89a870abac3328e306471f044a",
+    ".context/strong-owl-live-physics-physical-terminal-current-7848ca056-buildfix/native/run.log": "98f0121e1b97f6d7e7dc06f056133ea58b830347d6d05b962521c213f72a7c30",
+    ".context/strong-owl-live-physics-physical-terminal-current-7848ca056-buildfix/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-physical-terminal-current-7848ca056-buildfix/native/resources.jsonl": "1dfea1dc85b016b75227d01e1f6fcb0c04506b5085125848ec4786e58606d450",
+    ".context/strong-owl-live-physics-physical-terminal-current-7848ca056/native/compile.log": "2985efd2539189e8df776c0bad852fbe54e3ae76052e9c54cc3b6cb4bd77e5ec",
+    ".context/strong-owl-live-physics-physical-terminal-current-7848ca056/native/resources.jsonl": "3fe8b4e071fd5e5ce5866bd59f2f94d0e0272664cc57ee98c20528b24abacdc6",
+    ".context/strong-owl-live-physics-physical-terminal-current-7848ca056/native/provenance.json": "575eef8f37f45071355a52307bb9d45f7f6f23cea5ce4adc36a94631ac9fdc64",
+    "Tools/HangboardRopePrototype/run_physical_terminal_screen.py": "7ffaffb5ac881fbe7c7bf40ee7ce62721b53015b558db70a9bbaccb3136e13be",
+    "Tools/HangboardRopePrototype/physical_terminal/snapshot.py": "47c98f44115d67025e1f0c990cd106ab5cb8c95897f432df79cd5d478fab548f",
+    "Tools/HangboardRopePrototype/physical_terminal/Eligibility.swift": "ab3d948004d8b27d9e539371bfb76c2a5fa2405715de29e296d720598df13d59",
+    "Tools/HangboardRopePrototype/physical_terminal/Fixtures.swift": "3f9c650512fc46227534087b8c44fe8f1f3d5c93e75f6fa9f6a9005db155b471",
+    ".context/strong-owl-live-physics-physical-terminal-plan/PLAN.md": "2befe794c8971ec033d97722fc17198ee58730d09024ecdcad6456e5174069ec"
+  }
+}

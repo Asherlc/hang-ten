@@ -1,0 +1,121 @@
+{
+  "owner": "strong-owl-live-physics",
+  "baseline": {
+    "phaseWork": [
+      {
+        "generation": 2,
+        "target": [
+          0.0,
+          0.0,
+          0.25881904510252074,
+          0.9659258262890683
+        ],
+        "acceptedSteps": 173,
+        "corrections": 609.0
+      },
+      {
+        "generation": 3,
+        "target": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "acceptedSteps": 177,
+        "corrections": 499.0
+      }
+    ],
+    "acceptedSteps": 350,
+    "simulatedMilliseconds": 1458.3333333333333,
+    "endToEndMilliseconds": 3660.310791,
+    "solverMilliseconds": 2838.536995,
+    "engineSpanMilliseconds": 2868.983543,
+    "beforeWorkerMilliseconds": 20.029966,
+    "afterWorkerIncludingDiagnosticWritesMilliseconds": 47.097247,
+    "betweenBatchesIncludingDeliveryAndTargetTransitionMilliseconds": 724.200035,
+    "individualStepP95Milliseconds": 15.110208,
+    "corrections": 1108.0,
+    "settledDeliveries": 2,
+    "deliveryIntervalP95Milliseconds": 67.065708,
+    "maximumStrain": 0.00019731786947385643,
+    "minimumClearanceMargin": 9.925664235135032e-05,
+    "actualStepSpeedPassed": false,
+    "scope": "normal-speed simulator only; no physical iPhone evidence"
+  },
+  "candidate": {
+    "phaseWork": [
+      {
+        "generation": 2,
+        "target": [
+          0.0,
+          0.0,
+          0.25881904510252074,
+          0.9659258262890683
+        ],
+        "acceptedSteps": 173,
+        "corrections": 609.0
+      },
+      {
+        "generation": 3,
+        "target": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "acceptedSteps": 177,
+        "corrections": 499.0
+      }
+    ],
+    "acceptedSteps": 350,
+    "simulatedMilliseconds": 1458.3333333333333,
+    "endToEndMilliseconds": 2971.183291,
+    "solverMilliseconds": 2901.968711,
+    "engineSpanMilliseconds": 2919.546378,
+    "beforeWorkerMilliseconds": 10.791124,
+    "afterWorkerIncludingDiagnosticWritesMilliseconds": 27.992914,
+    "betweenBatchesIncludingDeliveryAndTargetTransitionMilliseconds": 12.852875,
+    "individualStepP95Milliseconds": 14.6,
+    "corrections": 1108.0,
+    "settledDeliveries": 2,
+    "deliveryIntervalP95Milliseconds": 89.453791,
+    "maximumStrain": 0.00019731786947385643,
+    "minimumClearanceMargin": 9.925664235135032e-05,
+    "actualStepSpeedPassed": false,
+    "scope": "normal-speed simulator only; no physical iPhone evidence"
+  },
+  "endToEndRatio": 0.8117297848875478,
+  "fixedMaximumRatio": 0.8,
+  "schedulingGatePassed": false,
+  "adopted": false,
+  "samePhysicsSource": true,
+  "normalSpeed": true,
+  "realTimeAccepted": false,
+  "closed": true,
+  "selectedTests": 98,
+  "testFailures": 0,
+  "releaseSchedulingChanged": false,
+  "geometryChanged": false,
+  "physicsSource": "597333b47",
+  "visualReview": "Frames at 0,2,3,4,6 seconds inspected; board turns and returns with cord present; no visible clipping in sampled frames. This is not a full visual clearance certificate.",
+  "sha256": {
+    ".context/strong-owl-live-physics-ios-schedule-debt-lifecycle-fix/recording-analysis.json": "f851edb7430ba3481eaf7bf43772bdef5d6f8c3ade924e5432b68e7bdf85baf9",
+    ".context/strong-owl-live-physics-ios-schedule-debt-lifecycle-fix/binary-provenance.json": "163ec8cf2e7a8176161041a0d7b817c2c0d13978bb3d9e70bb813a55a1ec30a4",
+    ".context/strong-owl-live-physics-ios-schedule-debt-lifecycle-fix/tests.log": "03833a011a92eed9c0ee51958c3ac1010bb8d74973fdfcafb130ab49fd5c037e",
+    ".context/strong-owl-live-physics-ios-schedule-debt-lifecycle-fix/ownership.json": "e1b9bac8fd97c35f49dae4ea8fed050ea850090557d176662c7ebd03d90f7d1c",
+    ".context/strong-owl-live-physics-ios-schedule-debt-lifecycle-fix/cleanup.json": "83e837930548d03223a6a3b4c0060db5542a27578a8a51f726920b4e00ca02e7",
+    ".context/strong-owl-live-physics-ios-schedule-debt-lifecycle-fix/independent-cleanup-verification.json": "13ef30df8f7f5aa7fb5b14c335ff9dbd36f0ed74e08d2baeaa3fc6c45be9ae69",
+    ".context/strong-owl-live-physics-ios-schedule-debt-lifecycle-fix/baseline-capture/timestamp-verification.json": "c60f7907e9999817b77d10006e0d127ebe29e9c8f7395bc098b6291e4a219d89",
+    ".context/strong-owl-live-physics-ios-schedule-debt-lifecycle-fix/baseline-capture/demonstration-metadata.json": "61394935f306bbdcda60e41eadbbde5117c1b91866d62baca851f8d552a6d488",
+    ".context/strong-owl-live-physics-ios-schedule-debt-lifecycle-fix/baseline-capture/strong-owl-live-physics-clavellium-schedule-baseline.mp4": "085b931e63fa17dd75fd6c911a614143c433837b6a1850f631ec95ecd1b8d64b",
+    ".context/strong-owl-live-physics-ios-schedule-debt-lifecycle-fix/candidate-capture/timestamp-verification.json": "efaaa3baae87a16d654c6b5c74e0338b5097b6ac9a53be44f1bda77a94255dab",
+    ".context/strong-owl-live-physics-ios-schedule-debt-lifecycle-fix/candidate-capture/demonstration-metadata.json": "26e06a0a0c4c78f1e465ea70c431e548d166e09a882754a04c4d50804e7a35f9",
+    ".context/strong-owl-live-physics-ios-schedule-debt-lifecycle-fix/candidate-capture/strong-owl-live-physics-clavellium-schedule-candidate.mp4": "656a326d00c3f87b65ee28e3761cef9ce5fc370d34675fbb9c8c71f3d0d2351c",
+    "HangTen/Models/LiveRopeController.swift": "c94a52260e42d5fd2ae349349f33496e04f685898e33f6f91f3fb134698638f3",
+    "HangTenTests/LiveRopeControllerTests.swift": "3e020b49fa67a81e5fe43ea758ff75e56029fd86e6ed2219c3bc79ee1aea6fa7",
+    "Tools/HangboardRopePrototype/analyze_schedule_recording.py": "a115cf6e0610601d166aa8acbeb3d6e905fc73d1d108f40a8292a8f379fc643a",
+    "Tools/HangboardRopePrototype/run_schedule_debt_fixtures.py": "eeb3e97f62e4653c2d9d901d7e44164bf8f602c6831d867a44b26ddca471f22a",
+    "Tools/HangboardRopePrototype/schedule_debt/Fixtures.swift": "eeeede50efab5a389dc667f33b0ac85e41da45996b605196645f6077c64b31ac",
+    ".context/strong-owl-live-physics-schedule-debt-plan/PLAN.md": "58f47563974691b1be514f2f695a8af12e1eb00a7c27e2f899f95ac3dbb17cdd"
+  }
+}
