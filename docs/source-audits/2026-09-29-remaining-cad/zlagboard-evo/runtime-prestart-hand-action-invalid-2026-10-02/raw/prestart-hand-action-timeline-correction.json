@@ -1,0 +1,559 @@
+{
+  "status": "ADDITIVE_CORRECTION_NO_RUNTIME_OR_SOURCE_ACTION",
+  "originalFindingsPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-findings.json",
+  "originalFindingsSHA256": "beee2dd3d01ad9c5527ad868c4f3037ce9e98d7eacafe68b305541c37e1a1bec",
+  "original44FreezeSHA256": "2b7052ebde5e5bca2b6950675d749aafa6ae8f080805e33051c1314740567ab1",
+  "original44FilesVerifiedExact": true,
+  "traceSHA256": "2635675c7b101b5ff2ecb80422ecd00c0b6f4d8f91efadc89292d9b161f30a44",
+  "correction": [
+    "No recorded countdown remains accurate; no workout start or progression cannot be concluded from that absence.",
+    "The actual pair constructor atseq15 occurs20.138678s after workout appearance, not immediately after its sparse prestart=true marker. Its constructor-time predicate is not directly recorded.",
+    "The same workout scene first receives selectedpreview atseq22, then selectedactive at146 and selectedpreview at150. Thus recorded CPU highlight/input state advances; absence of phase screenshots results from the capture eligibility rule, not absence of all later semantic transitions.",
+    "Original zero-capture/hard-bound failure remains invalid for visual comparison, suppression lifetime gate or production conclusion."
+  ],
+  "timeline": [
+    {
+      "sequence": 12,
+      "event": "workout-prestart-hand-state",
+      "epoch": 1790998919.908019,
+      "uptime": 81994.45231479168,
+      "secondsAfterWorkoutAppearEpoch": -0.0021898746490478516,
+      "secondsAfterWorkoutAppearUptime": -0.0021910833311267197,
+      "sceneLifecycleToken": null,
+      "cachedMode": null,
+      "cachedIDs": null,
+      "requestedMode": null,
+      "resolvedSurfaceInputs": null,
+      "state": "flag=true;routineStartedIsNil=true;suppressed=true;countdown=0",
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    },
+    {
+      "sequence": 13,
+      "event": "workout-probe-appear-before-autostart",
+      "epoch": 1790998919.910209,
+      "uptime": 81994.45450587501,
+      "secondsAfterWorkoutAppearEpoch": 0.0,
+      "secondsAfterWorkoutAppearUptime": 0.0,
+      "sceneLifecycleToken": null,
+      "cachedMode": null,
+      "cachedIDs": null,
+      "requestedMode": null,
+      "resolvedSurfaceInputs": null,
+      "state": "plan=research.max-hangs;board=zlagboard.evo;pausedElapsed=0.0;activeStartIsNil=true;routineStartedIsNil=true;prestartHandFlag=true;prestartHandsSuppressed=true",
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    },
+    {
+      "sequence": 14,
+      "event": "hand-view-lifecycle",
+      "epoch": 1790998939.279011,
+      "uptime": 82013.8233725,
+      "secondsAfterWorkoutAppearEpoch": 19.368802070617676,
+      "secondsAfterWorkoutAppearUptime": 19.368866624994553,
+      "sceneLifecycleToken": null,
+      "cachedMode": null,
+      "cachedIDs": null,
+      "requestedMode": null,
+      "resolvedSurfaceInputs": null,
+      "state": null,
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    },
+    {
+      "sequence": 15,
+      "event": "hand-lifecycle",
+      "epoch": 1790998940.048887,
+      "uptime": 82014.59325170834,
+      "secondsAfterWorkoutAppearEpoch": 20.138678073883057,
+      "secondsAfterWorkoutAppearUptime": 20.138745833333815,
+      "sceneLifecycleToken": null,
+      "cachedMode": null,
+      "cachedIDs": null,
+      "requestedMode": null,
+      "resolvedSurfaceInputs": null,
+      "state": null,
+      "handLifetimeToken": "1571E7FB-B7D4-49C7-AA35-8DA866709DE5",
+      "lifecycleEvent": "constructor-entry"
+    },
+    {
+      "sequence": 17,
+      "event": "hand-lifecycle",
+      "epoch": 1790998940.077683,
+      "uptime": 82014.62204829167,
+      "secondsAfterWorkoutAppearEpoch": 20.167474031448364,
+      "secondsAfterWorkoutAppearUptime": 20.16754241666058,
+      "sceneLifecycleToken": null,
+      "cachedMode": null,
+      "cachedIDs": null,
+      "requestedMode": null,
+      "resolvedSurfaceInputs": null,
+      "state": null,
+      "handLifetimeToken": "1571E7FB-B7D4-49C7-AA35-8DA866709DE5",
+      "lifecycleEvent": "make-entry"
+    },
+    {
+      "sequence": 19,
+      "event": "board-scene-constructed",
+      "epoch": 1790998940.1760712,
+      "uptime": 82014.72043504167,
+      "secondsAfterWorkoutAppearEpoch": 20.265862226486206,
+      "secondsAfterWorkoutAppearUptime": 20.265929166664137,
+      "sceneLifecycleToken": "341945A8-F9DE-490D-9A3B-7A0AB02D6A4E",
+      "cachedMode": null,
+      "cachedIDs": null,
+      "requestedMode": null,
+      "resolvedSurfaceInputs": null,
+      "state": null,
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    },
+    {
+      "sequence": 20,
+      "event": "surface-inputs",
+      "epoch": 1790998940.3527942,
+      "uptime": 82014.897161,
+      "secondsAfterWorkoutAppearEpoch": 20.442585229873657,
+      "secondsAfterWorkoutAppearUptime": 20.442655124992598,
+      "sceneLifecycleToken": "341945A8-F9DE-490D-9A3B-7A0AB02D6A4E",
+      "cachedMode": null,
+      "cachedIDs": null,
+      "requestedMode": null,
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "state": null,
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    },
+    {
+      "sequence": 21,
+      "event": "highlight-before",
+      "epoch": 1790998940.365203,
+      "uptime": 82014.90957,
+      "secondsAfterWorkoutAppearEpoch": 20.454993963241577,
+      "secondsAfterWorkoutAppearUptime": 20.45506412499526,
+      "sceneLifecycleToken": "341945A8-F9DE-490D-9A3B-7A0AB02D6A4E",
+      "cachedMode": "unset",
+      "cachedIDs": [],
+      "requestedMode": "preview",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "state": null,
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    },
+    {
+      "sequence": 22,
+      "event": "highlight-after",
+      "epoch": 1790998940.378695,
+      "uptime": 82014.92306112501,
+      "secondsAfterWorkoutAppearEpoch": 20.468486070632935,
+      "secondsAfterWorkoutAppearUptime": 20.468555250001373,
+      "sceneLifecycleToken": "341945A8-F9DE-490D-9A3B-7A0AB02D6A4E",
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "requestedMode": "preview",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "state": null,
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    },
+    {
+      "sequence": 23,
+      "event": "view-make",
+      "epoch": 1790998940.380455,
+      "uptime": 82014.92481904167,
+      "secondsAfterWorkoutAppearEpoch": 20.470246076583862,
+      "secondsAfterWorkoutAppearUptime": 20.47031316666107,
+      "sceneLifecycleToken": "341945A8-F9DE-490D-9A3B-7A0AB02D6A4E",
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "requestedMode": "preview",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "state": null,
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    },
+    {
+      "sequence": 144,
+      "event": "sample-end",
+      "epoch": 1790999094.125431,
+      "uptime": 82168.67030895833,
+      "secondsAfterWorkoutAppearEpoch": 174.21522212028503,
+      "secondsAfterWorkoutAppearUptime": 174.2158030833234,
+      "sceneLifecycleToken": "341945A8-F9DE-490D-9A3B-7A0AB02D6A4E",
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "requestedMode": "preview",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "state": null,
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    },
+    {
+      "sequence": 145,
+      "event": "highlight-before",
+      "epoch": 1790999110.19747,
+      "uptime": 82184.742402,
+      "secondsAfterWorkoutAppearEpoch": 190.2872610092163,
+      "secondsAfterWorkoutAppearUptime": 190.2878961249953,
+      "sceneLifecycleToken": "341945A8-F9DE-490D-9A3B-7A0AB02D6A4E",
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "requestedMode": "active",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "state": null,
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    },
+    {
+      "sequence": 146,
+      "event": "highlight-after",
+      "epoch": 1790999110.2061682,
+      "uptime": 82184.75109995833,
+      "secondsAfterWorkoutAppearEpoch": 190.29595923423767,
+      "secondsAfterWorkoutAppearUptime": 190.29659408332373,
+      "sceneLifecycleToken": "341945A8-F9DE-490D-9A3B-7A0AB02D6A4E",
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "requestedMode": "active",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "state": null,
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    },
+    {
+      "sequence": 148,
+      "event": "surface-inputs",
+      "epoch": 1790999110.2093558,
+      "uptime": 82184.75428995833,
+      "secondsAfterWorkoutAppearEpoch": 190.29914689064026,
+      "secondsAfterWorkoutAppearUptime": 190.2997840833268,
+      "sceneLifecycleToken": "341945A8-F9DE-490D-9A3B-7A0AB02D6A4E",
+      "cachedMode": null,
+      "cachedIDs": null,
+      "requestedMode": null,
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "state": null,
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    },
+    {
+      "sequence": 149,
+      "event": "highlight-before",
+      "epoch": 1790999117.23155,
+      "uptime": 82191.77650570835,
+      "secondsAfterWorkoutAppearEpoch": 197.32134103775024,
+      "secondsAfterWorkoutAppearUptime": 197.32199983333703,
+      "sceneLifecycleToken": "341945A8-F9DE-490D-9A3B-7A0AB02D6A4E",
+      "cachedMode": "active",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "requestedMode": "preview",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "state": null,
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    },
+    {
+      "sequence": 150,
+      "event": "highlight-after",
+      "epoch": 1790999117.239166,
+      "uptime": 82191.78412187501,
+      "secondsAfterWorkoutAppearEpoch": 197.32895708084106,
+      "secondsAfterWorkoutAppearUptime": 197.32961600000272,
+      "sceneLifecycleToken": "341945A8-F9DE-490D-9A3B-7A0AB02D6A4E",
+      "cachedMode": "preview",
+      "cachedIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "requestedMode": "preview",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "state": null,
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    },
+    {
+      "sequence": 152,
+      "event": "surface-inputs",
+      "epoch": 1790999117.241596,
+      "uptime": 82191.78655279167,
+      "secondsAfterWorkoutAppearEpoch": 197.33138704299927,
+      "secondsAfterWorkoutAppearUptime": 197.3320469166647,
+      "sceneLifecycleToken": "341945A8-F9DE-490D-9A3B-7A0AB02D6A4E",
+      "cachedMode": null,
+      "cachedIDs": null,
+      "requestedMode": null,
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "isDisplayOnly": false,
+        "mode": "preview",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "state": null,
+      "handLifetimeToken": null,
+      "lifecycleEvent": null
+    }
+  ],
+  "actualProgression": {
+    "workoutSceneToken": "341945A8-F9DE-490D-9A3B-7A0AB02D6A4E",
+    "selectedIDs": [
+      "edge-20-left",
+      "edge-20-right"
+    ],
+    "firstPreviewSequence": 22,
+    "laterActiveSequence": 146,
+    "followingPreviewSequence": 150,
+    "firstPreviewSecondsAfterAppear": 20.468486070632935,
+    "laterActiveSecondsAfterAppear": 190.29595923423767,
+    "followingPreviewSecondsAfterAppear": 197.32895708084106,
+    "laterActiveDurationSeconds": 7.0329978466033936,
+    "surfaceInputFollowups": [
+      148,
+      152
+    ],
+    "inputOrderingQualification": "At nestedhighlight146 resolvedSurfaceInputs still sayspreview; separate surface-inputs148 follows withactive. At150 it stillsaysactive;152 followswithpreview. Cached/requestedmode is actualhighlight evidence, not inferred from older resolvedinput."
+  },
+  "sourceScheduleInference": {
+    "confidence": "Strong consistency inference, not directly logged session start epoch.",
+    "sourceInitialCountdownSeconds": 3,
+    "sourceHangSeconds": 7,
+    "sourceRestSeconds": 180,
+    "expectedSecondHangOffsetIgnoringAudioArmAndScheduling": 190,
+    "observedSecondHangOffsetFromAppear": 190.29595923423767,
+    "residualSeconds": 0.2959592342376709,
+    "expectedFollowingRestOffsetIgnoringAudioArmAndScheduling": 197,
+    "observedFollowingRestOffsetFromAppear": 197.32895708084106,
+    "explanation": "Source schedules initial activeStartUptime at armUptime+3 and derives elapsed/step from monotonic uptime; active/rest transitions therefore can advance even if earlier countdown or firstHang display callbacks are unobserved. Later190.296/197.329 offsets and7.033s activeinterval fit the unchanged natural3+7+180+7 schedule, with small arm/scheduling offset. Exact state mutation/start and display interval are unrecorded."
+  },
+  "captureRule": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-supplemental-helpers/capture-action.py",
+    "sha256": "54e3e6a5f06e5ce8f61108d56e3997e0f6f1c88ef1adcf471fc3603c384bcfca",
+    "lines": [
+      114,
+      119
+    ],
+    "requiresEarlierClearOnSameWorkoutScene": true,
+    "actualWorkoutSceneHadEarlierClear": false,
+    "excludedSelectedSequences": [
+      22,
+      146,
+      150
+    ],
+    "exclusionReason": "All3selectedevents excluded because no prior empty highlight-after for sameworkoutscene. Emptyseq6 belongs predecessorTrain scene. No fallback/relabel was used."
+  },
+  "sourceEvidence": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926",
+      "sections": [
+        {
+          "firstLine": 1617,
+          "lastLine": 1623,
+          "text": "enum WorkoutSessionPolicy {\n    static let initialCountdownDuration: TimeInterval = 3\n    static let skipCountdownDuration: TimeInterval = 3\n\n    static func countdownDuration(for kind: WorkoutCountdownKind) -> TimeInterval {\n        kind == .initial ? initialCountdownDuration : skipCountdownDuration\n    }"
+        },
+        {
+          "firstLine": 1760,
+          "lastLine": 1779,
+          "text": "    func currentElapsed(planDuration: TimeInterval, at uptime: TimeInterval) -> TimeInterval {\n        let activeElapsed = activeStartUptime.map { max(0, uptime - $0) } ?? 0\n        return min(planDuration, pausedElapsed + max(0, activeElapsed))\n    }\n\n    func countdownRemaining(at uptime: TimeInterval) -> Int {\n        pendingCountdownRemaining(at: uptime)\n    }\n\n    private func pendingCountdownRemaining(at uptime: TimeInterval) -> Int {\n        guard countdownKind != nil else { return 0 }\n        return WorkoutSessionPolicy.countdownRemaining(\n            startUptime: activeStartUptime,\n            nowUptime: uptime\n        )\n    }\n\n    mutating func transitionExpiredCountdown(at uptime: TimeInterval) {\n        guard countdownKind != nil, pendingCountdownRemaining(at: uptime) == 0 else { return }\n        countdownKind = nil"
+        },
+        {
+          "firstLine": 1798,
+          "lastLine": 1807,
+          "text": "            let isFirstStart = WorkoutSessionPolicy.isFirstStart(routineStartedAt: routineStartedAt)\n            if isFirstStart {\n                guard let now else { return }\n                routineStartedAt = WorkoutSessionPolicy.startDate(for: .initial, now: now)\n                activeStartUptime = WorkoutSessionPolicy.startUptime(for: .initial, at: uptime)\n                countdownKind = .initial\n            } else {\n                activeStartUptime = uptime\n                countdownKind = nil\n            }"
+        },
+        {
+          "firstLine": 1992,
+          "lastLine": 2018,
+          "text": "    var body: some View {\n\t\tGeometryReader { geometry in\n\t\t\tTimelineView(.periodic(from: .now, by: 0.25)) { context in\n\t\t\t\tlet monotonicTime = WorkoutClock.monotonicTime\n\t\t\t\tlet elapsed = currentElapsed(at: monotonicTime)\n\t\t\t\tlet step = step(at: elapsed)\n\t\t\t\t// Session steps are already preference-materialized / alternate-expanded.\n\t\t\t\tlet presentedStep = step\n\t\t\t\tlet stepElapsed = elapsedInStep(at: elapsed)\n\t\t\t\tlet countdown = countdownRemaining(at: monotonicTime)\n\t\t\t\tlet canNavigate = canNavigate(at: monotonicTime)\n\t\t\t\tlet isComplete = elapsed >= sessionDuration\n\t\t\t\tlet isTimedResting = isRestInterval(step: step, stepElapsed: stepElapsed)\n\t\t\t\tlet boardCue = timeline.boardCue(\n\t\t\t\t\tcurrentStep: step,\n\t\t\t\t\tstepElapsed: stepElapsed,\n\t\t\t\t\tcountdown: countdown,\n\t\t\t\t\tisComplete: isComplete,\n\t\t\t\t\tisSkipCountdown: sessionState.countdownKind == .skip\n\t\t\t\t)\n\t\t\t\tlet isResting = boardCue.isResting\n\t\t\t\tlet highlightedStep = boardCue.step\n\t\t\t\tlet resolvedHighlightedStep = highlightedStep\n\t\t\t\tlet previewHoldIDs = resolvedHighlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []\n\t\t\t\tlet highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)\n\t\t\t\tlet highlightMode = boardCue.mode\n\t\t\t\tlet showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty"
+        },
+        {
+          "firstLine": 2106,
+          "lastLine": 2118,
+          "text": "\t\t\t\t.onChange(of: countdown, initial: true) { _, countdown in\n                    #if DEBUG\n                    if BoardHighlightDiagnostic.recordsHandLifetimes {\n                        BoardHighlightDiagnostic.shared.harnessEvent(\n                            \"workout-prestart-hand-state\",\n                            state: \"flag=\\(WorkoutPrestartHandDiagnostic.isEnabled);routineStartedIsNil=\\(sessionState.routineStartedAt == nil);suppressed=\\(WorkoutPrestartHandDiagnostic.isEnabled && sessionState.routineStartedAt == nil);countdown=\\(countdown)\",\n                            viewport: .zero // State evidence, not a layout measurement.\n                        )\n                    }\n                    #endif\n\t\t\t\t\tguard countdown == 0 else { return }\n\t\t\t\t\tsessionState.transitionExpiredCountdown(at: monotonicTime)\n\t\t\t\t}"
+        },
+        {
+          "firstLine": 2247,
+          "lastLine": 2261,
+          "text": "\t\t\t\tif ProcessInfo.processInfo.environment[\"HANGTEN_REVIEW_AUTOSTART\"] == \"1\",\n\t\t\t\t   sessionState.activeStartUptime == nil {\n\t\t\t\t\tdidCompleteWorkoutPreparation = true\n\t\t\t\t\ttoggleRunning()\n\t\t\t\t}\n\t\t\t#endif\n\t\t\tif !planNeedsHandChoice,\n\t\t\t   WorkoutSessionPolicy.shouldAutoStart(\n\t\t\t\tdidAutoStart: didAutoStart,\n\t\t\t\tisRunning: sessionState.activeStartUptime != nil,\n\t\t\t\troutineStartedAt: sessionState.routineStartedAt\n\t\t\t) {\n\t\t\t\tdidAutoStart = true\n\t\t\t\ttoggleRunning()\n\t\t\t}"
+        },
+        {
+          "firstLine": 3191,
+          "lastLine": 3237,
+          "text": "\t\tlet now = WorkoutClock.monotonicTime\n\t\tguard audioCuesEnabled, audioCoach.countdownPreparationState == .ready else {\n\t\t\tbeginVisibleCountdown(countdown, at: now)\n\t\t\treturn\n\t\t}\n\n\t\tlet armUptime = now + WorkoutSessionPolicy.countdownAudioArmLead(\n\t\t\tenvironment: ProcessInfo.processInfo.environment\n\t\t)\n\t\tlet targetElapsed: TimeInterval\n\t\tswitch countdown {\n\t\tcase .initial:\n\t\t\ttargetElapsed = 0\n\t\tcase .skip(let elapsed):\n\t\t\ttargetElapsed = elapsed\n\t\t}\n\t\tlet schedule = CountdownAudioSchedule(remainingFrom: \"3\")\n\t\t\t.appendingShortIntervals(\n\t\t\t\tWorkoutCountdownIntervalPolicy.shortDurations(\n\t\t\t\t\tin: activeSteps,\n\t\t\t\t\tstartingAt: targetElapsed\n\t\t\t\t),\n\t\t\t\tstartingAt: 3\n\t\t\t)\n\t\t_ = audioCoach.startCountdown(schedule, startUptime: armUptime)\n\t\tcountdownArmTask?.cancel()\n\t\tcountdownArmTask = Task { @MainActor in\n\t\t\tdo {\n\t\t\t\ttry await Task.sleep(for: .seconds(max(0, armUptime - WorkoutClock.monotonicTime)))\n\t\t\t} catch {\n\t\t\t\treturn\n\t\t\t}\n\t\t\tguard !Task.isCancelled else { return }\n\t\t\tcountdownArmTask = nil\n\t\t\tbeginVisibleCountdown(countdown, at: armUptime)\n\t\t}\n\t}\n\n\tprivate func beginVisibleCountdown(\n\t\t_ countdown: PendingCountdownStart,\n\t\tat armUptime: TimeInterval\n\t) {\n\t\tswitch countdown {\n\t\tcase .initial:\n\t\t\tsessionState.toggleRunning(uptime: armUptime, now: Date())\n\t\tcase .skip(let targetElapsed):\n\t\t\tsessionState.startSkipCountdown(to: targetElapsed, at: armUptime)"
+        }
+      ]
+    },
+    {
+      "path": "HangTen/Models/WorkoutTimeline.swift",
+      "sha256": "f6133f787e0639cf6071eb1236f9b39fa8d85eca0cc02bc295f8cd164a882248",
+      "sections": [
+        {
+          "firstLine": 229,
+          "lastLine": 233,
+          "text": "struct WorkoutClock {\n    static var monotonicTime: TimeInterval {\n        ProcessInfo.processInfo.systemUptime\n    }\n"
+        },
+        {
+          "firstLine": 606,
+          "lastLine": 646,
+          "text": "    func boardCue(\n        currentStep: WorkoutStep?,\n        stepElapsed: TimeInterval,\n        countdown: Int,\n        isComplete: Bool,\n        isSkipCountdown: Bool = false\n    ) -> WorkoutBoardCue {\n        guard !isComplete,\n              (countdown == 0 || (countdown > 0 && isSkipCountdown)),\n              let currentStep else {\n            return WorkoutBoardCue(\n                step: nil,\n                mode: .active,\n                isResting: false,\n                isSuppressed: true\n            )\n        }\n\n        let resolvedStep = holdPreviewStep(\n            currentStep: currentStep,\n            stepElapsed: stepElapsed\n        )\n\n        if countdown > 0 {\n            return WorkoutBoardCue(\n                step: resolvedStep,\n                mode: .preview,\n                isResting: resolvedStep?.phase == .rest,\n                isSuppressed: false\n            )\n        }\n\n        let isResting = currentStep.phase == .rest\n            || (currentStep.hasRestInterval && stepElapsed >= currentStep.activeDuration)\n\n        return WorkoutBoardCue(\n            step: resolvedStep,\n            mode: isResting ? .preview : .active,\n            isResting: isResting,\n            isSuppressed: false\n        )"
+        }
+      ]
+    },
+    {
+      "path": "HangTen/Models/TrainingModels.swift",
+      "sha256": "2e680154c8f9389324440dcf853f2f3ca106c17d3905dac9fb6f51c05676646d",
+      "sections": [
+        {
+          "firstLine": 3055,
+          "lastLine": 3087,
+          "text": "    static let maxHangs = TrainingPlan(\n        id: \"research.max-hangs\",\n        title: \"Max Hangs\",\n        subtitle: \"Five near-maximal 7-second half-crimp hangs on a 20 mm edge.\",\n        level: \"Advanced\",\n        sourceLabel: \"Lattice max hang protocol\",\n        sourceURL: URL(string: \"https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/\")!,\n        provenance: .adapted,\n        boardID: nil,\n        steps: numbered([\n            hangStep(\n                id: \"max-hangs-1\",\n                title: \"Max hang \u00b7 set 1\",\n                instruction: \"Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.\",\n                accessory: \"7s hang \u00b7 3m recovery \u00b7 half crimp\",\n                active: 7,\n                rest: 180,\n                targets: [lattice20mmEdgePairTarget],\n                gripType: .halfCrimp,\n                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),\n                handUse: .double\n            ),\n            hangStep(\n                id: \"max-hangs-2\",\n                title: \"Max hang \u00b7 set 2\",\n                instruction: \"Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.\",\n                accessory: \"7s hang \u00b7 3m recovery \u00b7 half crimp\",\n                active: 7,\n                rest: 180,\n                targets: [lattice20mmEdgePairTarget],\n                gripType: .halfCrimp,\n                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),\n                handUse: .double"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Trace gap is not proof of main-thread blockage, GPU behavior, rendering suspension or specific scheduling mechanism.",
+    "No screenshots exist at these later CPU phases; actual displayed colors, timer values and hand visibility remain unobserved.",
+    "Sparse initialroutineStartedIsNil=true is not evidence it remainedtrue at ctor20s later.",
+    "No source/runtime edits, extra captures, launch or retry; original44freeze and failure remain unchanged.",
+    "Initial action screenshot command took11.09s versusabout.48scontrol; command duration and trace gap do not identify blocked thread or rendering mechanism."
+  ],
+  "initialScreenshotCommands": [
+    {
+      "arm": "control",
+      "startEpoch": 1790998256.048346,
+      "endEpoch": 1790998256.5252402,
+      "sha256": "f83ac2a57f55e6807fae659af9f086dc41ec8e10959e48d4dbd34be634af3b2f",
+      "durationSeconds": 0.4768941402435303
+    },
+    {
+      "arm": "action",
+      "startEpoch": 1790998919.8844721,
+      "endEpoch": 1790998930.977588,
+      "sha256": "4ac226f2dec13e680c20f0687ac394424c3b165a5ea43d424bb854c7133ed859",
+      "durationSeconds": 11.09311580657959
+    }
+  ]
+}

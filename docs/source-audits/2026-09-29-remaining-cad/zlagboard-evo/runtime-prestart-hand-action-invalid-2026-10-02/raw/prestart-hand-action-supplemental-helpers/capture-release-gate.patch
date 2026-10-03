@@ -1,0 +1,15 @@
+--- original-action-capture
++++ supplemental-action-capture
+@@ -25,7 +25,11 @@
+ controlGatePath=Path(release['completedControlAuditPath']);controlGateRaw=controlGatePath.read_bytes()
+ assert hashlib.sha256(controlGateRaw).hexdigest()==release['completedControlAuditSHA256']
+ controlGate=json.loads(controlGateRaw)
+-assert controlGate['allEvidencePassed'] is True and controlGate['visualResult']=='FAIL'
++assert controlGate['originalProspectiveCheckPassed'] is False
++assert controlGate['supplementalTimingCheckPassed'] is True
++assert controlGate['incompleteFirstOwnershipBracket'] is True
++assert controlGate['remainingEvidencePassed'] is True
++assert controlGate['visualResult']=='FAIL'
+ assert controlGate['startupFirstHandHistoryReproduced'] is True
+ assert controlGate['binarySHA256']==release['binarySHA256'] and controlGate['actionAuthorized'] is True
+ out=base/('prestart-hand-action-landscape');out.mkdir(exist_ok=False)
