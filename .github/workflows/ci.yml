@@ -806,9 +806,26 @@ jobs:
       - name: Ensure Metal compiler is available
         run: |
           set -euo pipefail
-          if ! xcrun metal -v; then
-            xcodebuild -downloadComponent MetalToolchain
+          if xcrun metal -v; then
+            exit 0
           fi
+
+          # A successful asset download can leave Metal unavailable on a fresh
+          # runner. Export and explicitly import it before resolving the compiler.
+          workspace_path="${PASEO_WORKTREE_PATH:-$PWD}"
+          workspace_name="${workspace_path##*/}"
+          mkdir -p "$workspace_path/.context"
+          metal_export="$(mktemp -d "$workspace_path/.context/$workspace_name-metal.XXXXXX")"
+          trap 'rm -rf "$metal_export"' EXIT
+          xcodebuild -downloadComponent MetalToolchain -exportPath "$metal_export"
+          shopt -s nullglob
+          metal_bundles=("$metal_export"/*.exportedBundle "$metal_export"/*.dmg)
+          if [[ ${#metal_bundles[@]} -ne 1 ]]; then
+            echo "Expected one exported Metal toolchain; found ${#metal_bundles[@]}." >&2
+            exit 1
+          fi
+          xcodebuild -importComponent MetalToolchain -importPath "${metal_bundles[0]}"
+          xcrun --kill-cache
           xcrun metal -v
 
       - name: Select latest available iOS Pro simulator for the board comparison

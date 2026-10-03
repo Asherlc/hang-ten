@@ -359,3 +359,59 @@ def test_optimized_unit_lane_preserves_swift_debug_assertions() -> None:
     assert optimized_steps
     for run in optimized_steps:
         assert "OTHER_SWIFT_FLAGS = $(inherited) -assert-config Debug" in run
+
+
+@pytest.mark.parametrize("mode", ["installed", "needs-import", "import-fails", "unavailable"])
+def test_metal_setup_installs_exported_component_and_verifies_compiler(tmp_path: Path, mode: str) -> None:
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
+    step = next(step for step in workflow["jobs"]["test-ui-map"]["steps"]
+                if step["name"] == "Ensure Metal compiler is available")
+    bin_path = tmp_path / "bin"
+    bin_path.mkdir()
+    state = tmp_path / "installed"
+    if mode == "installed":
+        state.touch()
+    commands = {
+        "xcrun": '\n'.join([
+            '#!/usr/bin/env bash',
+            'printf "xcrun %s\\n" "$*" >> "$METAL_TEST_LOG"',
+            'if [[ "$*" == "--kill-cache" ]]; then exit 0; fi',
+            'test -f "$METAL_TEST_STATE"',
+        ]),
+        "xcodebuild": '\n'.join([
+            '#!/usr/bin/env bash',
+            'printf "xcodebuild %s\\n" "$*" >> "$METAL_TEST_LOG"',
+            'case "$1" in',
+            '  -downloadComponent)',
+            '    while [[ $# -gt 0 ]]; do',
+            '      if [[ "$1" == "-exportPath" ]]; then',
+            '        mkdir -p "$2/MetalToolchain-27A266a.exportedBundle"; exit 0',
+            '      fi',
+            '      shift',
+            '    done ;;',
+            '  -importComponent)',
+            '    [[ "$METAL_TEST_MODE" != "import-fails" ]] || exit 7',
+            '    [[ "$3" == "-importPath" && -d "$4" ]] || exit 8',
+            '    if [[ "$METAL_TEST_MODE" != "unavailable" ]]; then touch "$METAL_TEST_STATE"; fi ;;',
+            'esac',
+        ]),
+    }
+    for name, source in commands.items():
+        tool = bin_path / name
+        tool.write_text(source + "\n")
+        tool.chmod(0o755)
+    log = tmp_path / "commands.log"
+    result = subprocess.run(
+        ["bash", "-c", step["run"]], cwd=tmp_path,
+        env={**os.environ, "PATH": f"{bin_path}:{os.environ['PATH']}",
+             "METAL_TEST_LOG": str(log), "METAL_TEST_STATE": str(state),
+             "METAL_TEST_MODE": mode, "PASEO_WORKTREE_PATH": str(tmp_path)},
+        capture_output=True, text=True, check=False,
+    )
+    assert (result.returncode == 0) == (mode in {"installed", "needs-import"}), result.stdout + result.stderr
+    history = log.read_text()
+    if mode == "installed":
+        assert "xcodebuild" not in history
+    else:
+        assert "-importComponent MetalToolchain -importPath" in history
+    assert not list((tmp_path / ".context").glob("*/MetalToolchain-*.exportedBundle"))
