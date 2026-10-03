@@ -8,7 +8,10 @@ from run_native_contact_screen import OwnedCommands,REPO
 from run_live_speed_screen import NAMES
 from armijo.snapshot import solver_source
 parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--label',required=True)
-parser.add_argument('--full-merit',action='store_true');args=parser.parse_args()
+parser.add_argument('--full-merit',action='store_true')
+parser.add_argument('--fixtures-only',action='store_true')
+parser.add_argument('--trajectory',action='store_true');args=parser.parse_args()
+if args.trajectory and not args.full_merit:parser.error('--trajectory requires --full-merit')
 if args.full_merit:
     from armijo.full_snapshot import solver_source,collider_source
 assert args.label and all(c in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in args.label)
@@ -24,8 +27,10 @@ for name in NAMES:
     if name=='RopeBandedSystem.swift':text=text.replace('        try RopeBandedFactorization(size:size','        return try RopeBandedFactorization(size:size')
     (sources/name).write_text(text)
 for name in ['Math.swift','Trace.swift','main.swift']:
-    text=(tool/'armijo'/name).read_text()
-    if args.full_merit and name=='main.swift':
+    text=(tool/'armijo'/('TrajectoryMain.swift' if args.trajectory and name=='main.swift' else name)).read_text()
+    if name=='main.swift' and not args.full_merit:
+        text=text.replace('    ArmijoTrace.collectOracleBranches=x.verifyArmijoDerivative\n','')
+    if args.full_merit and name=='main.swift' and not args.trajectory:
         text=text.replace('candidate.armijoExperiment=true','candidate.armijoExperiment=true;candidate.verifyArmijoDerivative=true')
         text=text.replace('"step":109]','"step":109,"fullMeritDerivative":true]')
         text=text.replace('    // One-sided abs derivative', '''    guard RopeArmijo.hingeSlope(argument:0,rate:2)==2,RopeArmijo.hingeSlope(argument:0,rate:-2)==0,
@@ -54,7 +59,7 @@ for sig in [signal.SIGINT,signal.SIGTERM]:signal.signal(sig,owner.interrupted)
 env=dict(os.environ);env['HANGTEN_REVIEW_PHYSICAL_CONVERGENCE']='1'
 try:
     status=owner.run('compile',['perl','-e','alarm 150;exec @ARGV',*command],stage/'compile.log',env)
-    if not status:status=owner.run('run',['perl','-e','alarm 300;exec @ARGV',str(binary),str(stage),str(prior)],stage/'run.log',env)
+    if not status:status=owner.run('run',['perl','-e','alarm 300;exec @ARGV' if not args.trajectory else 'alarm 600;exec @ARGV',str(binary),str(stage),str(prior),*(['--fixtures-only'] if args.fixtures_only else [])],stage/'run.log',env)
     print((stage/('run.log' if (stage/'run.log').exists() else 'compile.log')).read_text())
 finally:owner.cleanup()
 raise SystemExit(status)

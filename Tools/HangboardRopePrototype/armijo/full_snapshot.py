@@ -1,18 +1,24 @@
 """Differentiate the existing outside-wood and sliding-portal merit terms."""
 from .snapshot import solver_source as guarded_source, once
+from pathlib import Path
 
 def collider_source(source):
     source=once(source,'    var timeOfImpact: Double? = nil',
-        '    var timeOfImpact: Double? = nil\n    var armijoWitnessUnique:Bool=false\n    var armijoDerivativeWitnesses:[RopeArmijoDerivativeWitness]=[]')
-    source+='\nstruct RopeArmijoDerivativeWitness:Sendable {let fraction:Double;let normal:SIMD3<Double>}\n'
+        '    var timeOfImpact: Double? = nil\n    var armijoWitnessUnique:Bool=false\n    var armijoDerivativeWitnesses:[RopeArmijoDerivativeWitness]=[]\n    var armijoOracleBranches:[RopeArmijoOracleBranch]=[]')
+    source+='\nstruct RopeArmijoDerivativeWitness:Sendable {let fraction:Double;let normal:SIMD3<Double>}\nstruct RopeArmijoOracleBranch:Sendable {let fraction:Double;let normal:SIMD3<Double>;let penetrationDepth:Double}\n'
     assert source.count('FusedWitness(best:rowSquare,radius:rowRadius,faceNormal:normal)')==3
     source=source.replace('FusedWitness(best:rowSquare,radius:rowRadius,faceNormal:normal)',
         'FusedWitness(best:rowSquare,radius:rowRadius,faceNormal:normal,armijoTrackDerivative:false)')
     source=once(source,'FusedWitness(best:meritSquare,radius:meritRadius,faceNormal:normal)',
         'FusedWitness(best:meritSquare,radius:meritRadius,faceNormal:normal,armijoTrackDerivative:ArmijoTrace.collectDerivatives)')
     beginning,tail=source.split('    private struct FusedWitness {',1)
-    tail=once(tail,'        let faceNormal:SIMD3<Double>','        let faceNormal:SIMD3<Double>\n        let armijoTrackDerivative:Bool')
-    tail=once(tail,'            guard distanceSquared<best else{return}', '''            if armijoTrackDerivative,distanceSquared==best,let previous=hit {
+    tail=once(tail,'        let faceNormal:SIMD3<Double>','        let faceNormal:SIMD3<Double>\n        let armijoTrackDerivative:Bool\n        var oracleBranches:[RopeArmijoOracleBranch]=[]')
+    tail=once(tail,'            guard distanceSquared<best else{return}', '''            if armijoTrackDerivative,ArmijoTrace.collectOracleBranches {
+                let distance=sqrt(distanceSquared)
+                oracleBranches.append(RopeArmijoOracleBranch(fraction:fraction,
+                    normal:distance>1e-10 ? (p-q)/distance:faceNormal,penetrationDepth:radius-distance))
+            }
+            if armijoTrackDerivative,distanceSquared==best,let previous=hit {
                 if previous.fraction != fraction || previous.centerlinePoint != p || previous.surfacePoint != q {
                     hit?.armijoWitnessUnique=false
                 }
@@ -41,6 +47,10 @@ def collider_source(source):
                     result[duplicate].armijoDerivativeWitnesses.append(witness)
                 }
             }''')
+    tail=once(tail,'            if hit.penetrationDepth>result[duplicate].penetrationDepth {result[duplicate]=hit}',
+        '            let oracleBranches=result[duplicate].armijoOracleBranches+hit.armijoOracleBranches\n            defer {result[duplicate].armijoOracleBranches=oracleBranches}\n            if hit.penetrationDepth>result[duplicate].penetrationDepth {result[duplicate]=hit}')
+    beginning=once(beginning,'            Self.mergeFused(merit.hit,into:&meritHits);Self.mergeFused(last.hit,into:&lastHits)',
+        '            if ArmijoTrace.collectOracleBranches {merit.hit?.armijoOracleBranches=merit.oracleBranches}\n            Self.mergeFused(merit.hit,into:&meritHits);Self.mergeFused(last.hit,into:&lastHits)')
     return beginning+'    private struct FusedWitness {'+tail
 
 def solver_source(source):
@@ -57,6 +67,7 @@ def solver_source(source):
     end=source.index('        var objective=',start)
     source=source[:start]+'''        guard evaluation.clearances.allSatisfy({$0.allSatisfy{$0 != nil}}) else {return nil}
         var contactDerivative=0.0
+        if verifyArmijoDerivative {ArmijoTrace.slopeDetails=[]}
         for (r,rope) in state.ropes.enumerated() {
             for i in rope.restLengths.indices {
                 let hits=evaluation.merits[r][i]
@@ -73,7 +84,9 @@ def solver_source(source):
                         rates.append(-simd_dot(state.orientation.act(witness.normal),displacement))
                     }
                 }
-                contactDerivative += RopeArmijo.hingeSlope(argument:argument,rate:rates.max()!)
+                let rate=RopeArmijo.hingeSlope(argument:argument,rate:rates.max()!)
+                contactDerivative += rate
+                if verifyArmijoDerivative {ArmijoTrace.slopeDetails.append(["kind":"wood","rope":r,"link":i,"argument":argument,"slope":rate])}
             }
             for (id,crossing) in rope.portalCrossings {
                 guard let portal=portalMap[id],crossing.fraction>1e-8,crossing.fraction<1-1e-8 else {return nil}
@@ -93,32 +106,12 @@ def solver_source(source):
                 let rates=margins.indices.filter{margins[$0]==minimum}.map {j in
                     -simd_dot(boundaries[j].firstGradient,da)-simd_dot(boundaries[j].secondGradient,db)
                 }
-                contactDerivative += RopeArmijo.hingeSlope(argument:argument,rate:rates.max()!)
+                let rate=RopeArmijo.hingeSlope(argument:argument,rate:rates.max()!)
+                contactDerivative += rate
+                if verifyArmijoDerivative {ArmijoTrace.slopeDetails.append(["kind":"portal","rope":r,"id":id,"argument":argument,"slope":rate])}
             }
         }
 '''+source[end:]
     source=once(source,'let slope=objective+penalty*violation','let slope=objective+penalty*(violation+contactDerivative)')
-    source+='''
-extension RopeDynamicsSolver {
-    private mutating func verifyArmijoSlope(before:RopeSimulationState,prediction:RopeSimulationState,weights:[[Double]],
-        corrections:[[SIMD3<Double>]],height:Double,penalty:Double,score:Double,slope:Double) throws -> [[String:Double]] {
-        let saved=cachedEvaluation
-        defer {cachedEvaluation=saved}
-        var checks:[[String:Double]]=[]
-        for h in [1e-3,1e-4,1e-5] {
-            var trial=before;trial.boardHeight += height*h
-            for r in trial.ropes.indices {
-                for i in trial.ropes[r].positions.indices {trial.ropes[r].positions[i] += corrections[r][i]*h}
-                for (i,local) in trial.ropes[r].attachments {trial.ropes[r].positions[i]=trial.worldPoint(local)}
-            }
-            try RopePassageTopology.refresh(state:&trial,input:input)
-            let value=try merit(trial,prediction:prediction,weights:weights,penalty:penalty)
-            let numerical=(value-score)/h
-            checks.append(["alpha":h,"analytic":slope,"numerical":numerical,"error":abs(numerical-slope)])
-        }
-        guard checks.last!["error"]!<=1e-8 else {throw RopePhysicsError.invalid("full merit derivative oracle")}
-        return checks
-    }
-}
-'''
+    source+='\n'+(Path(__file__).parent/'EnvelopeOracle.swift.inc').read_text()
     return source

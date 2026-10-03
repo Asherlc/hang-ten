@@ -29,6 +29,7 @@ func difference(_ a:RopeDynamicsSolver,_ b:RopeDynamicsSolver)->Double {
 }
 func run(_ x:inout RopeDynamicsSolver)throws->(Double,[[String:Any]]) {
     ArmijoTrace.collectDerivatives=x.armijoExperiment
+    ArmijoTrace.collectOracleBranches=x.verifyArmijoDerivative
     ArmijoTrace.corrections=[];alarm(10)
     let start=ProcessInfo.processInfo.systemUptime
     _ = try x.step(dt:1.0/240,targetOrientation:target)
@@ -71,6 +72,7 @@ func fixtures()throws {
 }
 do {
     try fixtures();result["fixturesPass"]=true
+    if CommandLine.arguments.contains("--fixtures-only") {print("PASS Armijo fixtures");exit(0)}
     for step in 1...108 {
         let record=try run(&initial).1
         let old=(priorSteps[step-1]["trace"] as! [String:Any])["corrections"] as! [[String:Double]]

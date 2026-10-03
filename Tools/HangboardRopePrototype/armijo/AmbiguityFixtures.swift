@@ -12,7 +12,7 @@ func ambiguityFixtures()throws {
     let p=SIMD3<Double>(-0.004,0.00355,0.005),q=SIMD3<Double>(-0.002,0.00355,0.005)
     let parallel=collider.fusedContactEvaluation(from:p,to:q,rowRadius:0.00365,meritRadius:0.0036,
         startInside:false,endInside:false).hits[2]
-    guard !parallel.isEmpty,parallel.filter{$0.penetrationDepth==parallel.map{$0.penetrationDepth}.max()!}.allSatisfy({!$0.armijoWitnessUnique}) else {
+    guard !parallel.isEmpty,parallel.filter({$0.penetrationDepth==parallel.map{$0.penetrationDepth}.max()!}).allSatisfy({!$0.armijoWitnessUnique}) else {
         throw RopePhysicsError.invalid("parallel face tied minimizers not marked ambiguous")
     }
     let maximum=parallel.map{$0.penetrationDepth}.max()!
@@ -29,7 +29,22 @@ func ambiguityFixtures()throws {
     }
     let point=collider.fusedContactEvaluation(from:p,to:p,rowRadius:0.00365,meritRadius:0.0036,
         startInside:false,endInside:false).hits[2]
-    guard !point.isEmpty,point.filter{$0.penetrationDepth==point.map{$0.penetrationDepth}.max()!}.allSatisfy({$0.armijoWitnessUnique}) else {
+    guard !point.isEmpty,point.filter({$0.penetrationDepth==point.map{$0.penetrationDepth}.max()!}).allSatisfy({$0.armijoWitnessUnique}) else {
         throw RopePhysicsError.invalid("unique point witness marked ambiguous")
+    }
+    // The derivative at zero and a finite secant differ across a near winner switch.
+    let gap=3.39658856596e-15,alpha=1e-7
+    let nearEnd=q+SIMD3<Double>(0,gap,0)
+    let rates=[-0.005984974183246629,-0.005980017867010995]
+    let arguments=[0.0036-p.y-1e-8,0.0036-nearEnd.y-1e-8]
+    let moved=collider.fusedContactEvaluation(from:p+SIMD3(0,-rates[0]*alpha,0),
+        to:nearEnd+SIMD3(0,-rates[1]*alpha,0),rowRadius:0.00365,meritRadius:0.0036,
+        startInside:false,endInside:false).hits[2].map{$0.penetrationDepth}.max()!-1e-8
+    let envelope=RopeArmijo.envelopeModel(arguments:arguments,rates:rates,alpha:alpha)
+    guard abs((moved-envelope)/alpha)<1e-8 else {
+        throw RopePhysicsError.invalid("near-tied branch-envelope oracle")
+    }
+    guard abs((moved-arguments.max()!)/alpha-rates[0])>1e-8 else {
+        throw RopePhysicsError.invalid("near-tied fixture did not cross branch")
     }
 }
