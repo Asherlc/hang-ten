@@ -405,9 +405,9 @@
       "package": "nature-stone-hanger-mini-karma8a",
       "boardID": "nature.stone-hanger-mini-karma8a",
       "name": "Nature Climbing Stone Hanger Mini x KARMA8A",
-      "humanReview": "Pending #11 geometry review; current app finishes, contacts and workout appearance unverified",
+      "humanReview": "Ready for #11 human CAD review with all three selections; current app finishes and interaction unverified.",
       "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
-      "reviewPage": "nature-stone-hanger-mini-karma8a/completion-review/index.html",
+      "reviewPage": "nature-stone-hanger-mini-karma8a/review11-2026-10-03/index.html",
       "sourceAudit": "nature-stone-hanger-mini-karma8a/native-authoring.md",
       "comparisons": [
         "nature-stone-hanger-mini-karma8a/completion-review/comparison-front.png",
@@ -425,7 +425,7 @@
       "appReviewPage": "nature-stone-hanger-mini-karma8a/completion-review/index.html",
       "suspensionSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf",
       "humanReviewRecord": "nature-stone-hanger-mini-karma8a/human-review.json",
-      "latestRevision": "nature-stone-hanger-mini-karma8a/completion-review/review.md",
+      "latestRevision": "nature-stone-hanger-mini-karma8a/review11-2026-10-03/review.md",
       "runtimeRevision": "nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
       "historicalMigrationReview": {
         "number": 11,
@@ -450,7 +450,17 @@
         },
         "appReview": "nature-stone-hanger-mini-karma8a/app-review/validation.json",
         "appReviewPage": "nature-stone-hanger-mini-karma8a/app-review/index.html"
-      }
+      },
+      "cadReviewViews": [
+        "nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-granite-edge-15-granite-front-canonical.png",
+        "nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-granite-edge-15-granite-front-oblique.png",
+        "nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-wood-edge-15-wood-inverted-canonical.png",
+        "nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-wood-edge-15-wood-inverted-oblique.png",
+        "nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-pinch-60-pinch-side-canonical.png",
+        "nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-pinch-60-pinch-side-oblique.png"
+      ],
+      "finalCADReviewQuestion": "Does #11 look right?",
+      "completionHumanAcceptance": "pending"
     },
     {
       "number": 12,

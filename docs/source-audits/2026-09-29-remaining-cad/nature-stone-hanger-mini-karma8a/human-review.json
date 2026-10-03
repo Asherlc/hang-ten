@@ -1,7 +1,7 @@
 {
   "reviewNumber": 11,
   "boardID": "nature.stone-hanger-mini-karma8a",
-  "status": "Pending #11 geometry review; current app finishes, contacts and workout appearance unverified",
+  "status": "Ready for #11 human CAD review with all three selections; current app finishes and interaction unverified.",
   "answer": null,
   "acceptedDate": null,
   "identity": {
@@ -14,7 +14,7 @@
   "technicalGeometryReviewPresentedDate": "2026-10-02",
   "acceptedScope": null,
   "completionHumanAcceptance": "pending",
-  "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/index.html",
+  "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/index.html",
   "runtimeValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
   "postIntegrationTests": {
     "pythonPassed": 284,
@@ -27,5 +27,128 @@
     "iOSRuntimeStatus": "unverified; no usable owned guest"
   },
   "sourceFacts": "105 x 60 x 30 mm; 15 mm wood, 15 mm granite, 60 mm pinch. Three factual contacts and all three positions preserved; no separate jug.",
-  "estimateLimits": "Insert fit, radii, groove details, 110 mm cord leads, support offset and settled heights are display estimates. Neutral CAD images do not establish app finish or selection acceptance."
+  "estimateLimits": "Insert fit, radii, groove details, 110 mm cord leads, support offset and settled heights are display estimates. Neutral CAD images do not establish app finish or selection acceptance.",
+  "history": [
+    {
+      "eventType": "CAD-review-preparation",
+      "recordedUTC": "2026-10-03T13:38:10.509786+00:00",
+      "identity": {
+        "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+        "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+        "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+        "sidecarSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf"
+      },
+      "preparedFromCommit": "4771b9897ff2ecbac39759b52d68003af80efc11",
+      "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/index.html",
+      "humanAnswer": null,
+      "runtimeVerified": false,
+      "canonicalAssetsChanged": false
+    }
+  ],
+  "latestCADShapeReview": {
+    "owner": "placid-badger",
+    "reviewNumber": 11,
+    "boardID": "nature.stone-hanger-mini-karma8a",
+    "preparedUTC": "2026-10-03T13:38:10.509786+00:00",
+    "preparedFromCommit": "4771b9897ff2ecbac39759b52d68003af80efc11",
+    "identity": {
+      "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+      "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+      "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+      "sidecarSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf"
+    },
+    "status": "ready-pending-human-review",
+    "question": "Does #11 look right?",
+    "humanAnswer": null,
+    "views": [
+      {
+        "sha256": "c52405e7239f0f8c7915dba71b2a0b8ffb86b8483c075bacddfc1e4a1d9e6920",
+        "contactID": "granite-edge-15",
+        "selectedNodeIDs": [
+          "nature_stone"
+        ],
+        "poseID": "granite-front",
+        "viewID": "canonical",
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-granite-edge-15-granite-front-canonical.png"
+      },
+      {
+        "sha256": "fa3a53633c99e65972058d969a9a88dfba304717ba3d58dfcd6743c595cb0262",
+        "contactID": "granite-edge-15",
+        "selectedNodeIDs": [
+          "nature_stone"
+        ],
+        "poseID": "granite-front",
+        "viewID": "oblique",
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-granite-edge-15-granite-front-oblique.png"
+      },
+      {
+        "sha256": "580380086c329f73c3ff2c3776c961c23b5a64b905168478ee7341d23259674a",
+        "contactID": "wood-edge-15",
+        "selectedNodeIDs": [
+          "nature_wood"
+        ],
+        "poseID": "wood-inverted",
+        "viewID": "canonical",
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-wood-edge-15-wood-inverted-canonical.png"
+      },
+      {
+        "sha256": "7cc8f25289a6292a7ba91f65ecd652d8a2c8dafb683f045d71edcad2f5d191c0",
+        "contactID": "wood-edge-15",
+        "selectedNodeIDs": [
+          "nature_wood"
+        ],
+        "poseID": "wood-inverted",
+        "viewID": "oblique",
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-wood-edge-15-wood-inverted-oblique.png"
+      },
+      {
+        "sha256": "39dad1a11b8b09a0fad0cd1d445f7e04786ce09b3508f87d76c7c73fb9c583f6",
+        "contactID": "pinch-60",
+        "selectedNodeIDs": [
+          "nature_pinch"
+        ],
+        "poseID": "pinch-side",
+        "viewID": "canonical",
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-pinch-60-pinch-side-canonical.png"
+      },
+      {
+        "sha256": "2f6022da0bab7f85338e79264906a9eaf3905bf419b23daba337714947d37bbb",
+        "contactID": "pinch-60",
+        "selectedNodeIDs": [
+          "nature_pinch"
+        ],
+        "poseID": "pinch-side",
+        "viewID": "oblique",
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-pinch-60-pinch-side-oblique.png"
+      }
+    ],
+    "contactObliqueSheet": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-three-contacts-whole-oblique-selection.png",
+      "sha256": "f451504dcd8366af1be7dc075c6a387d5dea40c34b5ce7f93300536c0bb18aed"
+    },
+    "wholePriorCurrentComparisons": [
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/comparison-front-side-top.png",
+        "sha256": "ae28af4c07af1d83b74f47caf5a1fbe6c7477d3ddd5bd8708b26fec0a8c55468"
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/comparison-oblique.png",
+        "sha256": "7aa8a95bf4465419c85772fa6c605acffe8eabaaafa396f8584f7a872c81ce58"
+      }
+    ],
+    "canonicalGeometryAndRoutesUnchanged": true,
+    "runtimeVerified": false,
+    "usableAppFrames": 0,
+    "geometryHumanAcceptance": "pending",
+    "rootVisualReview": "Viewed both entire selection sheets, existing whole front/side/top and oblique comparisons and retained whole maker oblique photo. No cropping or pixel measurement.",
+    "limits": [
+      "These are orthographic CPU diagnostics, not screenshots from the app",
+      "Current runtime finishes, contact interactions, workout selection and orbit behavior remain unverified",
+      "Pinch-side and granite-front intentionally share the exact current rigid pose",
+      "Cord leads, radii, support offset, settled height and unknown fit details remain display estimates",
+      "No separate jug contact is sourced or present"
+    ]
+  },
+  "latestReviewPreparedDate": "2026-10-03",
+  "latestDiagnosticValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/final-verification.json"
 }
