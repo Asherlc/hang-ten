@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger",
+  "classification": "completed checker assertion failure before attempted owned-stop identity guard",
+  "noSignalSent": true,
+  "guardObservedOwnedNativePIDAlreadyAbsent": 13362,
+  "nativeReport": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/native-check.json",
+    "sha256": "b7b8ef4c4b8315156aed10faae0a381c9deb5c24f001397bbc6d8b469ad89791"
+  },
+  "cleanup": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/cleanup-receipt.json",
+    "sha256": "a696750a6a417f2362d630213c21944f1a9f39963e277d697c933c54b93b3612"
+  },
+  "oldRawRecordsPreserved": true,
+  "nextDiagnosticMethod": "exact finite per-face common-area coverage against actual valid separated native solid boundary faces; AABB pruning only; whole-contact missing/excess area each <1e-4 mm2"
+}

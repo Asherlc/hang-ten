@@ -1,0 +1,10 @@
+{
+  "owner": "placid-badger",
+  "exitCode": 1,
+  "phase": "pre-resource output-directory startup",
+  "cause": "Forge jobs parent was absent; mkdir lacked parents=True. No validation subprocess, temporary resource or external resource was started.",
+  "failedScriptPath": ".context/placid-badger/forge-review15/root/run-final-verification-v1-startup.py",
+  "failedScriptSHA256": "343d1146271f6cc89f0551099cb122b75ddc14e9e65b12658231c1664e65e232",
+  "canonicalMutation": false,
+  "externalResourcesCreated": []
+}

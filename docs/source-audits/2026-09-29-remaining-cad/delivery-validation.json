@@ -61,7 +61,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "b3b0b9bc93b07f3bed5df3888a3b106f30fededbad25d37743bcb37f97814bb9",
+  "sha256Manifest": "c2963fa7e5e8a39c7f1011c24ed5bac2b887d11ad48ab2f9f822ba66a0b593c8",
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
   "scope": "exact-file identity for committed files; a source-backed board pins its compiled asset through descriptor modelSHA256 and its build-time board.json through the locked FCStd and optional suspension sidecar",
   "stoneHangerMiniReview10": {
@@ -117,5 +117,13 @@
       "unchangedLockedFiles": 134,
       "threadingStatus": "Conditional inferred display adaptation; hidden passage, continuity and contact order unobserved"
     }
+  },
+  "trangoForgeReview15": {
+    "report": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review15-2026-10-02/delivery-check.json",
+    "changedLockedFiles": [
+      "Hangboards/trango-rock-prodigy-forge/assets/primary.model.json",
+      "Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd"
+    ],
+    "unchangedLockedFiles": 133
   }
 }

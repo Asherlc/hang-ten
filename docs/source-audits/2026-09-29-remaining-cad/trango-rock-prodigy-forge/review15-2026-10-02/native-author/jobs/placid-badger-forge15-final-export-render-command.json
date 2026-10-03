@@ -1,0 +1,25 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    ".context/placid-badger/venv/bin/python",
+    ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-depth-render.py",
+    "--current-model",
+    ".context/placid-badger/forge-review15/native-author/stable-bindings/export-bound-package/Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
+    "--out",
+    ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views"
+  ],
+  "startedUTC": "2026-10-03T02:00:19.622867+00:00",
+  "timeoutSeconds": 300,
+  "ownedTemporaryDirectory": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-final-export-render-tmp",
+  "ownedExtraDirectories": [],
+  "status": "pass",
+  "ownedProcessGroup": 46241,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "ownedExtraDirectoriesAbsent": [],
+  "exitCode": 0,
+  "elapsedSeconds": 7.554048707999755,
+  "logSHA256": "38b2972db5b766f9e87dfd90edfcdf65ab00c59272293ef1ea76a15b289002d1"
+}

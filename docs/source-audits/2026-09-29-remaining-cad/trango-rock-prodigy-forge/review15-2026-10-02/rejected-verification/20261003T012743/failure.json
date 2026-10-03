@@ -1,0 +1,43 @@
+{
+  "phase": "native-gate",
+  "source": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/placid-badger-final-package/Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd",
+    "sha256": "3befc7e58894d76f7f7f70bdab82c33f3bf9901bf61512b4aa555b495bf862a4"
+  },
+  "exitCode": 3,
+  "command": {
+    "phase": "native-gate",
+    "argv": [
+      "rtk",
+      "proxy",
+      "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+      "--user-cfg",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/placid-badger-config/placid-badger-native-gate-user.cfg",
+      "--system-cfg",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/placid-badger-config/placid-badger-native-gate-system.cfg",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/placid-badger-tmp/placid-badger-native-gate-bootstrap.py"
+    ],
+    "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+    "startedAt": "2026-10-03T01:27:43.304830+00:00",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/placid-badger-config",
+      "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/placid-badger-cache",
+      "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/placid-badger-tmp",
+      "FREECAD_USER_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/placid-badger-config",
+      "QT_QPA_PLATFORM": "offscreen",
+      "HANGTEN_CAD_PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311"
+    },
+    "exitCode": 3,
+    "completedAt": "2026-10-03T01:35:18.376413+00:00",
+    "stdout": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/native-gate.stdout.log",
+      "sha256": "cab20cc9263f859dc34fccad1a03fc986e3154188846e5653d471781798cbe59"
+    },
+    "stderr": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/native-gate.stderr.log",
+      "sha256": "13ca913e22b5e53212473d55768ba6e84beeca9362078994f92ef906765d32de"
+    }
+  },
+  "furtherChangesOrRetries": false
+}

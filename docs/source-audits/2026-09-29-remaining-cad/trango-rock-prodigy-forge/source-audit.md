@@ -1,3 +1,5 @@
+> Current review revision: [#15 outer-wing recess and set-back lower lip](review15-2026-10-02/index.html). Source/export hashes, current checks and pending human acceptance are recorded there. The original migration construction/export reports and app captures below describe the prior revision.
+
 # trango-rock-prodigy-forge source audit
 
 Current Forge split unit revision. Manufacturer photo angles show tapered long wing, broad upper sloper with elevated block, distinct drafted pockets and narrow crimp ledges. Official depth guide and grip chart establish numeric depths and names; overall per-side dimensions are 5.25 x 12.75 in. Both left/right contact sets remain as currently modeled.
@@ -39,3 +41,7 @@ Native checking passed validity for 2 solid(s), all 20 stable contact IDs, body-
 | Top | [Comparison](review/comparison-top.png) |
 
 All three final comparisons were visually inspected alongside the retained manufacturer imagery. The exact prior asset comes from commit `d0e4e95191e4a76822815bb4eeef3a32caa6fea0`. Renders use the shared `preview.py` renderer, including its corrected positive-X side and positive-Z top painter order. The CPU previews shade triangle face normals while runtime exports retain native CAD surface normals. Native-app appearance, selection and performance acceptance remain root integration work.
+
+## 2026-10-02 individual correction
+
+The source-supported open outer-wing recess and set-back lower projection were restored with a constrained native section. The twenty original contact surfaces, identities, factual fields and published planes/depths remain unchanged. Unspecified cut dimensions and rolls are labeled display estimates. The sole embedded manifest edit is the generic plastic appearance selector, inferred from whole maker photos; no chemistry or exact-color claim is made. [Current evidence and whole comparisons](review15-2026-10-02/review.md) bind the final source and actual unbound export. Current app appearance is unverified; human shape acceptance is pending.

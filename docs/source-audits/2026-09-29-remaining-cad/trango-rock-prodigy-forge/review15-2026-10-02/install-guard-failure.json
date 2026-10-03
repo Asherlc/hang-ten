@@ -1,0 +1,10 @@
+{
+  "owner": "placid-badger",
+  "exitCode": 1,
+  "phase": "pre-mutation identity guard",
+  "cause": "Preflight package baseline keys are package-relative; root guard expected repository-relative keys. Canonical source/model/descriptor and all global records remain original. Normalize keys before comparing; no hash values or tolerance changes.",
+  "failedScriptPath": ".context/placid-badger/forge-review15/root/install-frozen-package-v1-guard.py",
+  "failedScriptSHA256": "bca2effcf514d2547363f1d92af33ebe20aab89802f008fa0d0159709d508422",
+  "canonicalMutation": false,
+  "externalResourcesCreated": []
+}

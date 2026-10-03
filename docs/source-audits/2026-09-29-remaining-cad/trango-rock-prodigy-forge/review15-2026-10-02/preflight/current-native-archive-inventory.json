@@ -1,0 +1,2114 @@
+{
+  "sourceSHA256": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+  "documentProperties": {
+    "HangTenBoardID": {
+      "String": {
+        "value": "trango.rock-prodigy-forge"
+      }
+    },
+    "HangTenCoordinateFrame": {
+      "String": {
+        "value": "freecad-mm-z-up-front-negative-y"
+      }
+    },
+    "HangTenCurvedRegionPartition": {
+      "Bool": {
+        "value": "true"
+      }
+    },
+    "HangTenPresentationID": {
+      "String": {
+        "value": "primary"
+      }
+    },
+    "HangTenSchemaVersion": {
+      "Integer": {
+        "value": "1"
+      }
+    },
+    "HangTenSourceKind": {
+      "String": {
+        "value": "native-parametric-measured-profile"
+      }
+    },
+    "HangTenSurfaceNormals": {
+      "Bool": {
+        "value": "true"
+      }
+    },
+    "HangTenTessellationDeflection": {
+      "Float": {
+        "value": "0.2800000000000000"
+      }
+    }
+  },
+  "objects": [
+    {
+      "name": "Parameters",
+      "type": "PartDesign::Feature",
+      "properties": {
+        "Depth_closed_crimp_right": {
+          "Float": {
+            "value": "7.5000000000000000"
+          }
+        },
+        "Depth_im_cavity_right": {
+          "Float": {
+            "value": "25.0000000000000000"
+          }
+        },
+        "Depth_mr_deep_right": {
+          "Float": {
+            "value": "25.0000000000000000"
+          }
+        },
+        "Depth_mr_shallow_right": {
+          "Float": {
+            "value": "15.0000000000000000"
+          }
+        },
+        "Depth_variable_edge_rail_right": {
+          "Float": {
+            "value": "13.5000000000000000"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Parameters"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "WingSection0",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "WingSection0"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "WingBand0",
+      "type": "Part::Extrusion",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "WingSection0"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "WingBand0"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "WingSection1",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "WingSection1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "WingBand1",
+      "type": "Part::Extrusion",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "WingSection1"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "WingBand1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "WingSection2",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "WingSection2"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "WingBand2",
+      "type": "Part::Extrusion",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "WingSection2"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "WingBand2"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "RightFrontSilhouette",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "RightFrontSilhouette"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "RightSilhouettePrism",
+      "type": "Part::Extrusion",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "RightFrontSilhouette"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "RightSilhouettePrism"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "WingBands",
+      "type": "Part::MultiFuse",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "WingBands"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "RightBlank",
+      "type": "Part::Common",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "WingBands"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "RightBlank"
+          }
+        },
+        "Tool": {
+          "Link": {
+            "value": "RightSilhouettePrism"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "SlopeyCrimperProfile",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "SlopeyCrimperProfile"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "SlopeyCrimperRidge",
+      "type": "Part::Extrusion",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "SlopeyCrimperProfile"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "SlopeyCrimperRidge"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "RightBlankWithCrimper",
+      "type": "Part::MultiFuse",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "RightBlankWithCrimper"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_variable_edge_rail_right_S0",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_variable_edge_rail_right_S0"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_variable_edge_rail_right_S1",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_variable_edge_rail_right_S1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_variable_edge_rail_right_S2",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_variable_edge_rail_right_S2"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_variable_edge_rail_right_S3",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_variable_edge_rail_right_S3"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_variable_edge_rail_right_S4",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_variable_edge_rail_right_S4"
+          }
+        }
+      },
+      "expressions": [
+        {
+          "path": ".Placement.Base.y",
+          "expression": "-43 + Parameters.Depth_variable_edge_rail_right"
+        }
+      ]
+    },
+    {
+      "name": "Cutter_variable_edge_rail_right",
+      "type": "Part::Loft",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Cutter_variable_edge_rail_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Drawn_closed_crimp_right_S0",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Drawn_closed_crimp_right_S0"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Drawn_closed_crimp_right_S1",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Drawn_closed_crimp_right_S1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Drawn_closed_crimp_right_S2",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Drawn_closed_crimp_right_S2"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Drawn_closed_crimp_right_S3",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Drawn_closed_crimp_right_S3"
+          }
+        }
+      },
+      "expressions": [
+        {
+          "path": ".Placement.Base.y",
+          "expression": "-43 + Parameters.Depth_closed_crimp_right"
+        }
+      ]
+    },
+    {
+      "name": "Cutter_closed_crimp_right",
+      "type": "Part::Loft",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Cutter_closed_crimp_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_mr_deep_right_S0",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_mr_deep_right_S0"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_mr_deep_right_S1",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_mr_deep_right_S1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_mr_deep_right_S2",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_mr_deep_right_S2"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_mr_deep_right_S3",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_mr_deep_right_S3"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_mr_deep_right_S4",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_mr_deep_right_S4"
+          }
+        }
+      },
+      "expressions": [
+        {
+          "path": ".Placement.Base.y",
+          "expression": "-43 + Parameters.Depth_mr_deep_right"
+        }
+      ]
+    },
+    {
+      "name": "Cutter_mr_deep_right",
+      "type": "Part::Loft",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Cutter_mr_deep_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_mr_shallow_right_S0",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_mr_shallow_right_S0"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_mr_shallow_right_S1",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_mr_shallow_right_S1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_mr_shallow_right_S2",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_mr_shallow_right_S2"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_mr_shallow_right_S3",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_mr_shallow_right_S3"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_mr_shallow_right_S4",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_mr_shallow_right_S4"
+          }
+        }
+      },
+      "expressions": [
+        {
+          "path": ".Placement.Base.y",
+          "expression": "-43 + Parameters.Depth_mr_shallow_right"
+        }
+      ]
+    },
+    {
+      "name": "Cutter_mr_shallow_right",
+      "type": "Part::Loft",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Cutter_mr_shallow_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_im_cavity_right_S0",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_im_cavity_right_S0"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_im_cavity_right_S1",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_im_cavity_right_S1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_im_cavity_right_S2",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_im_cavity_right_S2"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_im_cavity_right_S3",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_im_cavity_right_S3"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Pocket_im_cavity_right_S4",
+      "type": "Sketcher::SketchObject",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Pocket_im_cavity_right_S4"
+          }
+        }
+      },
+      "expressions": [
+        {
+          "path": ".Placement.Base.y",
+          "expression": "-43 + Parameters.Depth_im_cavity_right"
+        }
+      ]
+    },
+    {
+      "name": "Cutter_im_cavity_right",
+      "type": "Part::Loft",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Cutter_im_cavity_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "RightCutters",
+      "type": "Part::Compound",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "RightCutters"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "RightPocketedWing",
+      "type": "Part::Cut",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "RightBlankWithCrimper"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "RightPocketedWing"
+          }
+        },
+        "Tool": {
+          "Link": {
+            "value": "RightCutters"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "FlatEdgeRearRoofBounds",
+      "type": "Part::Box",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "FlatEdgeRearRoofBounds"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "FlatEdgeRearRoof",
+      "type": "Part::Common",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "RightPocketedWing"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "FlatEdgeRearRoof"
+          }
+        },
+        "Tool": {
+          "Link": {
+            "value": "FlatEdgeRearRoofBounds"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "WingWithoutRearRoof",
+      "type": "Part::Cut",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "RightPocketedWing"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "WingWithoutRearRoof"
+          }
+        },
+        "Tool": {
+          "Link": {
+            "value": "FlatEdgeRearRoofBounds"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "WingWithFlatEdgeSeam",
+      "type": "Part::MultiFuse",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "WingWithFlatEdgeSeam"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "IMRInnerHalfBounds",
+      "type": "Part::Box",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "IMRInnerHalfBounds"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "IMROuterHalfBounds",
+      "type": "Part::Box",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "IMROuterHalfBounds"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "RightInnerHalf",
+      "type": "Part::Common",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "WingWithFlatEdgeSeam"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "RightInnerHalf"
+          }
+        },
+        "Tool": {
+          "Link": {
+            "value": "IMRInnerHalfBounds"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "RightOuterHalf",
+      "type": "Part::Common",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "WingWithFlatEdgeSeam"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "RightOuterHalf"
+          }
+        },
+        "Tool": {
+          "Link": {
+            "value": "IMROuterHalfBounds"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "RightWingWithIMRSeam",
+      "type": "Part::MultiFuse",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "RightWingWithIMRSeam"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "LeftPocketedWing",
+      "type": "Part::Mirroring",
+      "properties": {
+        "Base": {
+          "PropertyVector": {
+            "valueX": "0.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "LeftPocketedWing"
+          }
+        },
+        "MirrorPlane": {
+          "LinkSub": {
+            "value": "",
+            "count": "0"
+          }
+        },
+        "Normal": {
+          "PropertyVector": {
+            "valueX": "1.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "Source": {
+          "Link": {
+            "value": "RightWingWithIMRSeam"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "BodySolid",
+      "type": "Part::MultiFuse",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "BodySolid"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "body_board_001"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "body"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_variable_edge_rail_right",
+      "type": "PartDesign::SubShapeBinder",
+      "properties": {
+        "ContactID": {
+          "String": {
+            "value": "variable-edge-rail-right"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_variable_edge_rail_right"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_variable_edge_rail_right"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Support": {
+          "XLinkSubList": {
+            "count": "1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_closed_crimp_right",
+      "type": "PartDesign::SubShapeBinder",
+      "properties": {
+        "ContactID": {
+          "String": {
+            "value": "closed-crimp-right"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_closed_crimp_right"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_closed_crimp_right"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Support": {
+          "XLinkSubList": {
+            "count": "1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_mr_deep_right",
+      "type": "PartDesign::SubShapeBinder",
+      "properties": {
+        "ContactID": {
+          "String": {
+            "value": "mr-deep-right"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_mr_deep_right"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_mr_deep_right"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Support": {
+          "XLinkSubList": {
+            "count": "1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_mr_shallow_right",
+      "type": "PartDesign::SubShapeBinder",
+      "properties": {
+        "ContactID": {
+          "String": {
+            "value": "mr-shallow-right"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_mr_shallow_right"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_mr_shallow_right"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Support": {
+          "XLinkSubList": {
+            "count": "1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "IMRCavitySurface",
+      "type": "PartDesign::SubShapeBinder",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "IMRCavitySurface"
+          }
+        },
+        "Support": {
+          "XLinkSubList": {
+            "count": "1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "IMRBounds_im_shallow_right",
+      "type": "Part::Box",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "IMRBounds_im_shallow_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_im_shallow_right",
+      "type": "Part::Common",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "IMRCavitySurface"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "im-shallow-right"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_im_shallow_right"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_im_shallow_right"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Tool": {
+          "Link": {
+            "value": "IMRBounds_im_shallow_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "IMRBounds_im_deep_right",
+      "type": "Part::Box",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "IMRBounds_im_deep_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_im_deep_right",
+      "type": "Part::Common",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "IMRCavitySurface"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "im-deep-right"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_im_deep_right"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_im_deep_right"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Tool": {
+          "Link": {
+            "value": "IMRBounds_im_deep_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Surface_sloper_30_right",
+      "type": "PartDesign::SubShapeBinder",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Surface_sloper_30_right"
+          }
+        },
+        "Support": {
+          "XLinkSubList": {
+            "count": "1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "RegionBounds_sloper_30_right",
+      "type": "Part::Box",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "RegionBounds_sloper_30_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_sloper_30_right",
+      "type": "Part::Common",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "Surface_sloper_30_right"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "sloper-30-right"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_sloper_30_right"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_sloper_30_right"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Tool": {
+          "Link": {
+            "value": "RegionBounds_sloper_30_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Surface_sloper_40_right",
+      "type": "PartDesign::SubShapeBinder",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Surface_sloper_40_right"
+          }
+        },
+        "Support": {
+          "XLinkSubList": {
+            "count": "1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "RegionBounds_sloper_40_right",
+      "type": "Part::Box",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "RegionBounds_sloper_40_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_sloper_40_right",
+      "type": "Part::Common",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "Surface_sloper_40_right"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "sloper-40-right"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_sloper_40_right"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_sloper_40_right"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Tool": {
+          "Link": {
+            "value": "RegionBounds_sloper_40_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Surface_large_flat_edge_right",
+      "type": "PartDesign::SubShapeBinder",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Surface_large_flat_edge_right"
+          }
+        },
+        "Support": {
+          "XLinkSubList": {
+            "count": "1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "RegionBounds_large_flat_edge_right",
+      "type": "Part::Box",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "RegionBounds_large_flat_edge_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_large_flat_edge_right",
+      "type": "Part::Common",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "Surface_large_flat_edge_right"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "large-flat-edge-right"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_large_flat_edge_right"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_large_flat_edge_right"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Tool": {
+          "Link": {
+            "value": "RegionBounds_large_flat_edge_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Surface_slopey_crimper_right",
+      "type": "PartDesign::SubShapeBinder",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "Surface_slopey_crimper_right"
+          }
+        },
+        "Support": {
+          "XLinkSubList": {
+            "count": "1"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "RegionBounds_slopey_crimper_right",
+      "type": "Part::Box",
+      "properties": {
+        "Label": {
+          "String": {
+            "value": "RegionBounds_slopey_crimper_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_slopey_crimper_right",
+      "type": "Part::Common",
+      "properties": {
+        "Base": {
+          "Link": {
+            "value": "Surface_slopey_crimper_right"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "slopey-crimper-right"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_slopey_crimper_right"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_slopey_crimper_right"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Tool": {
+          "Link": {
+            "value": "RegionBounds_slopey_crimper_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_variable_edge_rail_left",
+      "type": "Part::Mirroring",
+      "properties": {
+        "Base": {
+          "PropertyVector": {
+            "valueX": "0.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "variable-edge-rail-left"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_variable_edge_rail_left"
+          }
+        },
+        "MirrorPlane": {
+          "LinkSub": {
+            "value": "",
+            "count": "0"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_variable_edge_rail_left"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Normal": {
+          "PropertyVector": {
+            "valueX": "1.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "Source": {
+          "Link": {
+            "value": "Contact_variable_edge_rail_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_closed_crimp_left",
+      "type": "Part::Mirroring",
+      "properties": {
+        "Base": {
+          "PropertyVector": {
+            "valueX": "0.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "closed-crimp-left"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_closed_crimp_left"
+          }
+        },
+        "MirrorPlane": {
+          "LinkSub": {
+            "value": "",
+            "count": "0"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_closed_crimp_left"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Normal": {
+          "PropertyVector": {
+            "valueX": "1.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "Source": {
+          "Link": {
+            "value": "Contact_closed_crimp_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_mr_deep_left",
+      "type": "Part::Mirroring",
+      "properties": {
+        "Base": {
+          "PropertyVector": {
+            "valueX": "0.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "mr-deep-left"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_mr_deep_left"
+          }
+        },
+        "MirrorPlane": {
+          "LinkSub": {
+            "value": "",
+            "count": "0"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_mr_deep_left"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Normal": {
+          "PropertyVector": {
+            "valueX": "1.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "Source": {
+          "Link": {
+            "value": "Contact_mr_deep_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_mr_shallow_left",
+      "type": "Part::Mirroring",
+      "properties": {
+        "Base": {
+          "PropertyVector": {
+            "valueX": "0.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "mr-shallow-left"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_mr_shallow_left"
+          }
+        },
+        "MirrorPlane": {
+          "LinkSub": {
+            "value": "",
+            "count": "0"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_mr_shallow_left"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Normal": {
+          "PropertyVector": {
+            "valueX": "1.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "Source": {
+          "Link": {
+            "value": "Contact_mr_shallow_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_im_shallow_left",
+      "type": "Part::Mirroring",
+      "properties": {
+        "Base": {
+          "PropertyVector": {
+            "valueX": "0.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "im-shallow-left"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_im_shallow_left"
+          }
+        },
+        "MirrorPlane": {
+          "LinkSub": {
+            "value": "",
+            "count": "0"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_im_shallow_left"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Normal": {
+          "PropertyVector": {
+            "valueX": "1.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "Source": {
+          "Link": {
+            "value": "Contact_im_shallow_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_im_deep_left",
+      "type": "Part::Mirroring",
+      "properties": {
+        "Base": {
+          "PropertyVector": {
+            "valueX": "0.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "im-deep-left"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_im_deep_left"
+          }
+        },
+        "MirrorPlane": {
+          "LinkSub": {
+            "value": "",
+            "count": "0"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_im_deep_left"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Normal": {
+          "PropertyVector": {
+            "valueX": "1.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "Source": {
+          "Link": {
+            "value": "Contact_im_deep_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_sloper_30_left",
+      "type": "Part::Mirroring",
+      "properties": {
+        "Base": {
+          "PropertyVector": {
+            "valueX": "0.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "sloper-30-left"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_sloper_30_left"
+          }
+        },
+        "MirrorPlane": {
+          "LinkSub": {
+            "value": "",
+            "count": "0"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_sloper_30_left"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Normal": {
+          "PropertyVector": {
+            "valueX": "1.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "Source": {
+          "Link": {
+            "value": "Contact_sloper_30_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_sloper_40_left",
+      "type": "Part::Mirroring",
+      "properties": {
+        "Base": {
+          "PropertyVector": {
+            "valueX": "0.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "sloper-40-left"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_sloper_40_left"
+          }
+        },
+        "MirrorPlane": {
+          "LinkSub": {
+            "value": "",
+            "count": "0"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_sloper_40_left"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Normal": {
+          "PropertyVector": {
+            "valueX": "1.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "Source": {
+          "Link": {
+            "value": "Contact_sloper_40_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_large_flat_edge_left",
+      "type": "Part::Mirroring",
+      "properties": {
+        "Base": {
+          "PropertyVector": {
+            "valueX": "0.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "large-flat-edge-left"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_large_flat_edge_left"
+          }
+        },
+        "MirrorPlane": {
+          "LinkSub": {
+            "value": "",
+            "count": "0"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_large_flat_edge_left"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Normal": {
+          "PropertyVector": {
+            "valueX": "1.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "Source": {
+          "Link": {
+            "value": "Contact_large_flat_edge_right"
+          }
+        }
+      },
+      "expressions": []
+    },
+    {
+      "name": "Contact_slopey_crimper_left",
+      "type": "Part::Mirroring",
+      "properties": {
+        "Base": {
+          "PropertyVector": {
+            "valueX": "0.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "ContactID": {
+          "String": {
+            "value": "slopey-crimper-left"
+          }
+        },
+        "Label": {
+          "String": {
+            "value": "Contact_slopey_crimper_left"
+          }
+        },
+        "MirrorPlane": {
+          "LinkSub": {
+            "value": "",
+            "count": "0"
+          }
+        },
+        "NodeID": {
+          "String": {
+            "value": "contact_slopey_crimper_left"
+          }
+        },
+        "NodeRole": {
+          "String": {
+            "value": "contact"
+          }
+        },
+        "Normal": {
+          "PropertyVector": {
+            "valueX": "1.0000000000000000",
+            "valueY": "0.0000000000000000",
+            "valueZ": "0.0000000000000000"
+          }
+        },
+        "Source": {
+          "Link": {
+            "value": "Contact_slopey_crimper_right"
+          }
+        }
+      },
+      "expressions": []
+    }
+  ],
+  "archiveMembers": {
+    "Document.xml": "445d9fe61a3f3796d268d28fa636b1207b8d6ee44c831c13378911aa9542c002",
+    "StringHasher.Table.txt": "33242d7dedba3da215ab002ff40fb79f578bfe7ab62539be31aced40827fbf40",
+    "Parameters.Shape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Parameters.SuppressedShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "WingSection0.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "WingSection0.Shape.brp": "4d7af47a597d0b0f2649221cccf992ae189435dc5282217c720b6f5dcbb9843f",
+    "WingSection0.Shape.Map.txt": "0410bbcc02eebe2d4862f817e9b4642e3f7354cf212ccace289adcec443bed7c",
+    "WingBand0.Shape.brp": "aac213b3adb5eac77cf8596e1ed4a953c9ed3d4b6cc127b9def937f92f65ba5f",
+    "WingBand0.Shape.Map.txt": "65ae772115efb6866a7470d11dbaafe7b7ee80b74f07a4a4b4511f9ac083c396",
+    "WingSection1.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "WingSection1.Shape.brp": "a3cdd97a786022a03013c2083ecf6792e717312f6bc945feff06cca785408dbb",
+    "WingSection1.Shape.Map.txt": "af5e50caded9def82a94e4dc722a62e06c76571f5bc49a908e3ce90e660031c6",
+    "WingBand1.Shape.brp": "0ebd45906b27ac91a0da63c2d1c4f0fcbf3156ece805603ea266fe9c4e9ba26e",
+    "WingBand1.Shape.Map.txt": "31f3d6a184a90ba0ea76ff0e7be7c3492c1d19213c6a9db2b541a08084d5e9dc",
+    "WingSection2.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "WingSection2.Shape.brp": "bf817000cc534ee555de280bf736f69d6e9af214e6a04b2b4344029187ded01f",
+    "WingSection2.Shape.Map.txt": "3ad55b95d750f02875b22025dfdeb84f66f619f2a37ae1035a3a1737350a4d2c",
+    "WingBand2.Shape.brp": "6c3faf51e814877236fb7c915be0055103e5761eca2ba13d787bb27278db96d8",
+    "WingBand2.Shape.Map.txt": "ebbdadf1d65811ef0834e5dc041c65c0eff58621a7a9f18bfc15a4bbf1e0665d",
+    "RightFrontSilhouette.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "RightFrontSilhouette.Shape.brp": "b2b675959ca61c477f10091d2ebe7686a0567910065adb3364c58e89bbc36585",
+    "RightFrontSilhouette.Shape.Map.txt": "3d3e532f43c09fb71163f532689752b48353b87948dd330e941d7b4c82c8e82a",
+    "RightSilhouettePrism.Shape.brp": "db24ce110472b6e61f98eff68af023e8c04a8f3682066b22207c1e21de54e682",
+    "RightSilhouettePrism.Shape.Map.txt": "79363f46a81a6a7fdd9dad282ed15e8eb1f2ba44b8ba05f3a279358f28837468",
+    "WingBands.Shape.brp": "b823b74304332df52e28e872eaa07c9754a33c0ffd9cca238f3b34dff2c0ce58",
+    "WingBands.Shape.Map.txt": "281eca16836c8db7b529d237eba90fd0e26b7b4f11778a3c1978bbd42172ca86",
+    "RightBlank.Shape.brp": "faa8be2d184b4aca0931d96d39dfdc27e264521fbe8d744d0c2a5cd85707341e",
+    "RightBlank.Shape.Map.txt": "146ecf83f416c0266212237d7e4af9b1c883eed617e0b9d90447a209f1b5a2ca",
+    "SlopeyCrimperProfile.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "SlopeyCrimperProfile.Shape.brp": "14de5f911229e0aae7473a35fc59418e8d22b77ac8479113ba7cdff9168d442d",
+    "SlopeyCrimperProfile.Shape.Map.txt": "10829aa47881e3f8635cc9dc00a91918253fc91a0f8e9997c653e660dab591d1",
+    "SlopeyCrimperRidge.Shape.brp": "014978168c6a9e19086bde9212cd9dfab8ee963261bb7b183b554294cdf863eb",
+    "SlopeyCrimperRidge.Shape.Map.txt": "015d5bbbb1c4eeb33bb1781bd020c1f9954d9e7303dbc566353572d0beae2272",
+    "RightBlankWithCrimper.Shape.brp": "12566c89e0ec48c26a27517578d2f51610b3fb7fdae3374a7bd2e339d02cec23",
+    "RightBlankWithCrimper.Shape.Map.txt": "be1e820605172935086c97e624ced33c6c49b87a8114cc07e4ef9179bd41b6dc",
+    "Pocket_variable_edge_rail_right_S0.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_variable_edge_rail_right_S0.Shape.brp": "4a3c1b715c2abe5c745d308bf7168c417773058f2ef525a1241cb3a175475ca2",
+    "Pocket_variable_edge_rail_right_S0.Shape.Map.txt": "63cda36fff386fa324a6054996fcf0c1672b9aeb09f51ff5d06c247c6015de99",
+    "Pocket_variable_edge_rail_right_S1.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_variable_edge_rail_right_S1.Shape.brp": "cf117cbdaf24c79bc2c1a185860aed69d1f2aaab26ae506a47b977d5db211a9d",
+    "Pocket_variable_edge_rail_right_S1.Shape.Map.txt": "66000f3c0cc1b9e9d1a6ce8044d0ded3d19900449303a0297e5dab6f7f5c169f",
+    "Pocket_variable_edge_rail_right_S2.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_variable_edge_rail_right_S2.Shape.brp": "b5bc044f4a6ded848f9c54904d43f564b344d27134a462823fdc4359c2c815b2",
+    "Pocket_variable_edge_rail_right_S2.Shape.Map.txt": "3efee16e9499c3e167592ab07106fbc74d7557565f9b43a3b0deae3e0b3a5da5",
+    "Pocket_variable_edge_rail_right_S3.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_variable_edge_rail_right_S3.Shape.brp": "d67a0bc0303c1b52106661e86f6eeaa679847b562a39e917a23af86e1a020a57",
+    "Pocket_variable_edge_rail_right_S3.Shape.Map.txt": "cc4a888e57ceda3ec653b1af0db66bd34e940b64276deae5bdd70f9d672ea27a",
+    "Pocket_variable_edge_rail_right_S4.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_variable_edge_rail_right_S4.Shape.brp": "23af26b57e0093442f9d6e11ad38560399ae8e6e10ab681bd4cdf1947730aa20",
+    "Pocket_variable_edge_rail_right_S4.Shape.Map.txt": "60d1394f606c36dc101336c907e967e8f926cfdd01e4cc7c73c5250d8f07428d",
+    "Cutter_variable_edge_rail_right.Shape.brp": "def036b9a51a9e44f22bfb6a4509f5212fedb471d87821c035e7947385724be2",
+    "Cutter_variable_edge_rail_right.Shape.Map.txt": "85d439c91beb21f493c2668e63151237aa152d9da1d12fbce3cc4b18164a2406",
+    "Drawn_closed_crimp_right_S0.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Drawn_closed_crimp_right_S0.Shape.brp": "87124945619f2f65e7993833cd96a06cbd183e1b7a85c2722248a78c9b493714",
+    "Drawn_closed_crimp_right_S0.Shape.Map.txt": "1732fa19dd04e3a0754147e7537e92f063f890f5ee5624ecdb508ddb699179ee",
+    "Drawn_closed_crimp_right_S1.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Drawn_closed_crimp_right_S1.Shape.brp": "e1f8bae9b8209b6363e0079db2c5c3397b3f4bbf7073576b8b74031b141654ef",
+    "Drawn_closed_crimp_right_S1.Shape.Map.txt": "eeb7ac89b1d05e3f58a0d258a2f8ce1015298844d61069478b456ad3de74ece1",
+    "Drawn_closed_crimp_right_S2.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Drawn_closed_crimp_right_S2.Shape.brp": "ee8da71a85d820059fd4fefda1c97ae72024e963a0b28832df396bfaa1446adf",
+    "Drawn_closed_crimp_right_S2.Shape.Map.txt": "a0f8b311b29014282f22ce9e592ebd96ffa6ac8a1d3549a4ca81dca8aa359f82",
+    "Drawn_closed_crimp_right_S3.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Drawn_closed_crimp_right_S3.Shape.brp": "c86a1e3c56ae2cc7dbaa63e47ff61ca423c55f0ab3f8645d8906c814c5369860",
+    "Drawn_closed_crimp_right_S3.Shape.Map.txt": "e7163499c7277c26a38beb685f88c4925d12e674e616112e0732359c67812616",
+    "Cutter_closed_crimp_right.Shape.brp": "aeb13ed683b98ae149aff5db060ac95588d632b76618d0c82088c49140014983",
+    "Cutter_closed_crimp_right.Shape.Map.txt": "9d304d8dafbe16aa79d30ec4fa6fea13b3bd9c7d79ba631a5af83d2390b2aed2",
+    "Pocket_mr_deep_right_S0.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_mr_deep_right_S0.Shape.brp": "07338526b870c3dca7aaa8eccc5be5e39e8748d6bceaf572869ce9bead5561a4",
+    "Pocket_mr_deep_right_S0.Shape.Map.txt": "bc82701dd2bd78def5cd43bd41178d54e2dc035b16b20a91b84fe0965a7a6496",
+    "Pocket_mr_deep_right_S1.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_mr_deep_right_S1.Shape.brp": "dcdebb9c99f9550cf33777d4cc5664973ed8d4b49a3f6edcd156382f776018dc",
+    "Pocket_mr_deep_right_S1.Shape.Map.txt": "01f527c00d902782635d91085643d045922537099b110233988ff5c0886a7a7e",
+    "Pocket_mr_deep_right_S2.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_mr_deep_right_S2.Shape.brp": "5a33354a08c45b2af938fd849ae8bf6bc3c25e48f0df64c2ae20ca8c03cbd358",
+    "Pocket_mr_deep_right_S2.Shape.Map.txt": "f366c5efb9d40813f69cf0ff23539c3fea740e64a9a963993047e67ebb609fec",
+    "Pocket_mr_deep_right_S3.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_mr_deep_right_S3.Shape.brp": "9671eb7cae8bb8a98212c154e210bda131c46730cff6b44a15fad18298306f38",
+    "Pocket_mr_deep_right_S3.Shape.Map.txt": "941c7015415176ce5efdc76fa20660cf25a478f30bce92ae88cfb20ff61944e3",
+    "Pocket_mr_deep_right_S4.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_mr_deep_right_S4.Shape.brp": "672fdda45768633c549940fa9d9adfbe24607ba3f4dedbc3aede5ca5847cde05",
+    "Pocket_mr_deep_right_S4.Shape.Map.txt": "4600d45210be6f7ea45244f425743a9816359b9faf69edf98557ef1744b52dad",
+    "Cutter_mr_deep_right.Shape.brp": "433ba52b5d9461eb169c3be975d115058edbfe825ee872cf0e5907de8b8ab646",
+    "Cutter_mr_deep_right.Shape.Map.txt": "38700c775a0654dba6cbfaedcb692a4703bc7b984ac325ddfdce385728a2041b",
+    "Pocket_mr_shallow_right_S0.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_mr_shallow_right_S0.Shape.brp": "0984fd07620efe5d82996249649353de36737b0403fba2776c230d08b1c2733f",
+    "Pocket_mr_shallow_right_S0.Shape.Map.txt": "cb369cd167b5c5513c520189b62568bf7a5b3eedfee67116c3ec7edb42d73ea2",
+    "Pocket_mr_shallow_right_S1.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_mr_shallow_right_S1.Shape.brp": "22f343140f1d73eebe4bdaf57258ef7b29dd2f6494afadf8b429f68be67eb6e1",
+    "Pocket_mr_shallow_right_S1.Shape.Map.txt": "b2a3d6964544ee8a6b845eeeceebbb2c3dde136edf54c41894114f388de53504",
+    "Pocket_mr_shallow_right_S2.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_mr_shallow_right_S2.Shape.brp": "e2aa2fded156814599413f3c65f91477f91b85fb4e972e6b4352a59fda2b7049",
+    "Pocket_mr_shallow_right_S2.Shape.Map.txt": "9953521ad8cddd46bc94af753ac935282a5611da2e97d88aebd0e957e84976dc",
+    "Pocket_mr_shallow_right_S3.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_mr_shallow_right_S3.Shape.brp": "29b5856cb08e7863c3ad11a4a1d7e861e07b3b134bcecf3357cb5dfc21bc31ac",
+    "Pocket_mr_shallow_right_S3.Shape.Map.txt": "c6b6cd6ab7211edd9fee9469f0cae4360113470800f23eac58afa8eca4d7c300",
+    "Pocket_mr_shallow_right_S4.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_mr_shallow_right_S4.Shape.brp": "7b999ac7b75fcf8e2134123b7ce6a791e1ae9bb5decdb5e2ba1a6858a8658d63",
+    "Pocket_mr_shallow_right_S4.Shape.Map.txt": "ce08f2c463ddab87aa1c9e5dda913d89722d4d7fdad9f432ae9104a9dc0e6f03",
+    "Cutter_mr_shallow_right.Shape.brp": "9c3cdafd5e77d1630203fb029d5dd947426b2081ce84eb08064b1e472b129c7b",
+    "Cutter_mr_shallow_right.Shape.Map.txt": "27a5ef48654963a2bf1e29f9702916b9a7eed833224e2258b62d675e8d1c65cf",
+    "Pocket_im_cavity_right_S0.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_im_cavity_right_S0.Shape.brp": "e5bdb84ab2b0bf557b4762658efa1b4f82147980a8afb9ef146f3335c530607f",
+    "Pocket_im_cavity_right_S0.Shape.Map.txt": "955552d0d2ed9c5b360baa29a28478510963f452c507fbcc3d98d84b00bdd6c1",
+    "Pocket_im_cavity_right_S1.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_im_cavity_right_S1.Shape.brp": "67108cbfd0a02f0e53eb29eb73377ea719f6cb8f53da94ba9b7c48870bef7a30",
+    "Pocket_im_cavity_right_S1.Shape.Map.txt": "369cda9ff449a3ff3271159f89d7968b767efa8f9e4a25ebbdd5fcd01df8db4a",
+    "Pocket_im_cavity_right_S2.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_im_cavity_right_S2.Shape.brp": "9aca959778dbfa99866be8de94bbfd97f444a225dc3435875a6a2300af692833",
+    "Pocket_im_cavity_right_S2.Shape.Map.txt": "127367978708245666316a79ba256680a05fc1b4c48ab1a2203403d567182b88",
+    "Pocket_im_cavity_right_S3.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_im_cavity_right_S3.Shape.brp": "5e45f798c112a036583fd9f9640ff506b49c1ed77ad2ef4440413c156147afef",
+    "Pocket_im_cavity_right_S3.Shape.Map.txt": "3671f78428cc7836d91f3917b2fb6dc9f86df183bf1918dd2922962cd6f8a3ba",
+    "Pocket_im_cavity_right_S4.InternalShape.brp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Pocket_im_cavity_right_S4.Shape.brp": "021e7831dda7801dc3b0fb24aad154e2f7052c4cf2f5283e3715091a5589e167",
+    "Pocket_im_cavity_right_S4.Shape.Map.txt": "d603a35f132ea69ea9c3cf0c49802a20c76623785f7d43fe27fbe87adf48072a",
+    "Cutter_im_cavity_right.Shape.brp": "866f9db48d74861c510fbc116e4ee5971d284fcd559b3f4fb60cb99253787598",
+    "Cutter_im_cavity_right.Shape.Map.txt": "48919ac3f58ea00b551579af73783933ee70aabf3121d228d9ef665e2249a51c",
+    "RightCutters.Shape.brp": "e75730f8bcbe21e2ef62289bf2d855c21efb2f6729998a9996adafc426be1618",
+    "RightCutters.Shape.Map.txt": "15124ef0ea038eb48fd2d7e8ef2c64bdedb14af978f7f89c92b28f883c3ee9df",
+    "RightPocketedWing.Shape.brp": "97ec4eca5b1c6d38cb1ceed0f31fb792b32033ec0bab7862348154d76937951a",
+    "RightPocketedWing.Shape.Map.txt": "4e0a0b9091a39fbe7334e1107c58d000c5c6cf6af0ed2185ddb036219d3f16b9",
+    "FlatEdgeRearRoofBounds.Shape.brp": "18a43f1f707dc3843349f1f554f5fa878b0ac4176592de2aafa28f731d2bd2fa",
+    "FlatEdgeRearRoof.Shape.brp": "8598128f74f405ee09fe6c897e0720cd4c65146359baa95b11315560ddf0e727",
+    "FlatEdgeRearRoof.Shape.Map.txt": "760f680c2d31116545a30d043f49e7453ed1bf40c9346e93d88e9a2960372f9b",
+    "WingWithoutRearRoof.Shape.brp": "18db98eef0d586a521769a57df71e130920b3db51ee3e4edeb736515abac5817",
+    "WingWithoutRearRoof.Shape.Map.txt": "0984c362a662cca4635b5e8b1e7bbf46413d82fa60354e948d7af71923e4ed21",
+    "WingWithFlatEdgeSeam.Shape.brp": "bbbffa06dd2079fa1997a6212ad83a5228fa462e5396b0e45301f9ccb2a9ec6c",
+    "WingWithFlatEdgeSeam.Shape.Map.txt": "2fa92f517b48448961e04e7e560978bf62cafc4e99687f4a28fa78a459771f8a",
+    "IMRInnerHalfBounds.Shape.brp": "679fa70cffa7b8b3f5f059d0c772f766dc0420b1af8c9fe63c50adf072be80be",
+    "IMROuterHalfBounds.Shape.brp": "7d105b48de25847091941350f9433a9b9c6f7be7c8949b60887e8c7d5a854e25",
+    "RightInnerHalf.Shape.brp": "c537f47934d97e5b749503e96d2dd551a87d7692e0d4e9f573ee5552e60a5575",
+    "RightInnerHalf.Shape.Map.txt": "e0779d88144d92ff49dde0fe1ec8a2061b9dcb112498a2f95882972c11891e26",
+    "RightOuterHalf.Shape.brp": "994e21eb8e283d4c9e92541c0b7b41bd3474fb7794860c9c0cc8264fa1319ef5",
+    "RightOuterHalf.Shape.Map.txt": "2841a88601fc9278f84b7322720b0e41b6a75291e7076794b3284ffa86c1dfd9",
+    "RightWingWithIMRSeam.Shape.brp": "7cecec577c16293f883364bf81a8377c36e90eebbe8a7815392e8b956d7fb0c1",
+    "RightWingWithIMRSeam.Shape.Map.txt": "433347649706122dcb1ad467ac9c33fb161a142552a2d44a8e414de4ee668f07",
+    "LeftPocketedWing.Shape.brp": "b3b32af933c70d640f050afcf62f024010bc9497a917d39d4706206b45de1c6e",
+    "LeftPocketedWing.Shape.Map.txt": "6fe91f9d6b965bee587a36c41789950fc23ef97f6fb9adde62874cdd02e8be77",
+    "BodySolid.Shape.brp": "c6bd6f5480b27c8899e8160e677e57af22a3bd215607397c27a497c864ee0543",
+    "BodySolid.Shape.Map.txt": "ab5fa6ef1a7a6ec8d93d10faff8f0d28c14b5f78c8aa7d1e6fa89cd3207f6261",
+    "Contact_variable_edge_rail_right.Shape.brp": "b0f4e2464e28524ecd82d4b5329392329c674c8d93a4200453dbb5a085cd6cb7",
+    "Contact_variable_edge_rail_right.Shape.Map.txt": "5e9c5aa0b24d718afad69ad97771c15e5881a0e8b54cdd2a5116e66f19516460",
+    "Contact_closed_crimp_right.Shape.brp": "acab48071b5c24601f05faddaef53aff0e5ad9f0f2fefa8dfb6ab4416e83d294",
+    "Contact_closed_crimp_right.Shape.Map.txt": "ba162fdd3c9c6f352a8baead8dae0e442960e2419a304e8579988dfe0a152abf",
+    "Contact_mr_deep_right.Shape.brp": "0fc4142ade87cdc134fe147ccf6c77993da3b68a8a16e44c16eb8b4b64b699bb",
+    "Contact_mr_deep_right.Shape.Map.txt": "3404d1a76eb2853a7214f619787d07198872ac3fdf0259ba685b3677867586bc",
+    "Contact_mr_shallow_right.Shape.brp": "a1263ad0737cc2ed43a86758e1f8b823b05aecd40b317468cdb36a6b3d195fdd",
+    "Contact_mr_shallow_right.Shape.Map.txt": "0edf8de1fb9dbe662ff8744a491561c050b7896773bdb8db90b201ba9dd8fe1e",
+    "IMRCavitySurface.Shape.brp": "14706228f3af4396fa962395ad6d4b753a3be319d0fa55214c5f50b636cf5741",
+    "IMRCavitySurface.Shape.Map.txt": "42eaf6c0facce023d6ae4f1802190bdf7f88c1295be44679729ed6107b0bcc3e",
+    "IMRBounds_im_shallow_right.Shape.brp": "8be18c7e88f013e7b21b8fb2c89742c6837bebc7a80846690f2c4e9b975188f1",
+    "Contact_im_shallow_right.Shape.brp": "ea219d7b26a51a2500bed6d17db84e260660f29ab6f281838ed70cb249f04d8d",
+    "Contact_im_shallow_right.Shape.Map.txt": "46ece7f48fcd4c842f4b1e74010e2518d62aebbfa8ccd2d8db0f32f30a3b46b5",
+    "IMRBounds_im_deep_right.Shape.brp": "9906b5ad14c32258ad37eb77b4fa1c54cb42ea3ae9357d305e8da2257885e86b",
+    "Contact_im_deep_right.Shape.brp": "ae4dfd0960665818358cea6b41e3c975d9e7029a50e3ae7cac9acc791aa089d1",
+    "Contact_im_deep_right.Shape.Map.txt": "722fe7a23dd97736a33905caae9177de1733d9b9aa7f4e6fb53a5d689b883980",
+    "Surface_sloper_30_right.Shape.brp": "83ace8803d2fdfa9c74c0e50c300d3328e8d828aa26ee2c48060e69f32ee3fbf",
+    "Surface_sloper_30_right.Shape.Map.txt": "3b3e6d9937c4ba42fa1c871cd05228cef3bf9fc2e07e6a7364c3178ae2bb3cac",
+    "RegionBounds_sloper_30_right.Shape.brp": "75fc11d821be2f56b4d8ce5fb1a62a5e72e17041fcb96bbde1406da536964f0b",
+    "Contact_sloper_30_right.Shape.brp": "8e6410ee83336c3f8fc47a931f53eace34e29af52c38c1be829e8157fdd9e330",
+    "Contact_sloper_30_right.Shape.Map.txt": "a5d3dc868c34d4fed1eb0fbb5df10c06858548aa1d41d54df59f2fbbe72fa204",
+    "Surface_sloper_40_right.Shape.brp": "83ace8803d2fdfa9c74c0e50c300d3328e8d828aa26ee2c48060e69f32ee3fbf",
+    "Surface_sloper_40_right.Shape.Map.txt": "5e9b48ed751158c5ef4211f7175c500cb2425a676e3f04f2bfd75175b65ebe5e",
+    "RegionBounds_sloper_40_right.Shape.brp": "3c4aa2229477903b306db9473f710b297fa0e8d4f6ebff983e7977df078bf435",
+    "Contact_sloper_40_right.Shape.brp": "502baaa282654df797ab0a21d215af38736c32abc7c162609f7c970826c65b73",
+    "Contact_sloper_40_right.Shape.Map.txt": "6c703ac5d3046297cab47dfc3b72c06ce1cab291bb615fcd5485817f3ff691b4",
+    "Surface_large_flat_edge_right.Shape.brp": "83ace8803d2fdfa9c74c0e50c300d3328e8d828aa26ee2c48060e69f32ee3fbf",
+    "Surface_large_flat_edge_right.Shape.Map.txt": "7f99c8fb16eb8857d986a00e2752ec874679e91e1e65a9899a0518942e5fb844",
+    "RegionBounds_large_flat_edge_right.Shape.brp": "679c6159da82032ead4f06f9903a167041e113e9ea2f2c33086439e9485833ed",
+    "Contact_large_flat_edge_right.Shape.brp": "1a8db47abda55cf23cf3c7dddf6286d3069ba691e601b4adff582b94ce8bd130",
+    "Contact_large_flat_edge_right.Shape.Map.txt": "4f74186380da1125b4dfc1e8c48af498c9da425984c69b618b02d64b44187f2a",
+    "Surface_slopey_crimper_right.Shape.brp": "83ace8803d2fdfa9c74c0e50c300d3328e8d828aa26ee2c48060e69f32ee3fbf",
+    "Surface_slopey_crimper_right.Shape.Map.txt": "b2a524ecdfe7d52fe619e8e2261e03608f54eafb5cb6487f3ada0e76be850912",
+    "RegionBounds_slopey_crimper_right.Shape.brp": "7e130f17c860dab85e0e00051cc1b2c4a9338074ae565c9d1bdc9d1abcede633",
+    "Contact_slopey_crimper_right.Shape.brp": "cc15e6f035f344580f4f013dbbaae138703d8cfa1e76cf1dae4f6ead4eeff88c",
+    "Contact_slopey_crimper_right.Shape.Map.txt": "459ddee51f9e78044c87ebe70274f60e785834e965f05b1837285082de37b092",
+    "Contact_variable_edge_rail_left.Shape.brp": "0df117a78b9aa52b7077082de86707556564d534eb0295a3a3eeac5ed2628474",
+    "Contact_variable_edge_rail_left.Shape.Map.txt": "5401c0803ed23f8714604fd487c86242b58bb3a785646fb0aa4089274e87c1a9",
+    "Contact_closed_crimp_left.Shape.brp": "64609ad02acc6ea5bc8fe129dbf152c4f86c198f7b5b8e7870290d41198d5797",
+    "Contact_closed_crimp_left.Shape.Map.txt": "889a524dd5be973419689c53651a551bd5f1ce2e693360ba67d8e337d542be7f",
+    "Contact_mr_deep_left.Shape.brp": "362e6858c957505fe12051a81ca33263feda18dc59ab971cadc91341946ef60b",
+    "Contact_mr_deep_left.Shape.Map.txt": "31a95b4f368e4f4f0f66893e392d995a7b63fcdfba059aacab7c3efdb1626280",
+    "Contact_mr_shallow_left.Shape.brp": "600d23beebd652c50a7a5694bd2914f2fd69e343d735fcfb0172db2772773b17",
+    "Contact_mr_shallow_left.Shape.Map.txt": "49b31c4ddfaa5b4586647f61e5578fd69d3fe2d3dbd73c90266632daf6af2c1f",
+    "Contact_im_shallow_left.Shape.brp": "bdc99a1d3d426eab0a9bbbb4f94947626f847510f2bd7022c393230aa502f4e8",
+    "Contact_im_shallow_left.Shape.Map.txt": "9c3a93637aac2f42ae9d648026206edfc01f3be7add966936ccaa81ae6147af2",
+    "Contact_im_deep_left.Shape.brp": "2adb5f80e28eb5345db6d5d889cbf88fe67255b1087e4a613c073a5b341b037c",
+    "Contact_im_deep_left.Shape.Map.txt": "88603c8dcc2130d29d966bba262cc697c681bd068dd8f9200b70e5e74d87c7b8",
+    "Contact_sloper_30_left.Shape.brp": "a57e4ea5ed0020c970659d833d5254da7d9660514afd020e75f75f49a2f1303b",
+    "Contact_sloper_30_left.Shape.Map.txt": "b97bbbcae623689097236a31dc69f2a7ca7630962f53f9a50d72cc57bedb3b61",
+    "Contact_sloper_40_left.Shape.brp": "71132877b970f25225b74b397414ee097e45b68aca4de7b314ffe23eaa8e232b",
+    "Contact_sloper_40_left.Shape.Map.txt": "73a0aca5be07efc9984e9815d6fb5454c61502b755b3357811c4b9ce90023207",
+    "Contact_large_flat_edge_left.Shape.brp": "35b433de78c8473bb6584c57fa2c1e4a4479fe04d832ca8c34f025dfbf71de24",
+    "Contact_large_flat_edge_left.Shape.Map.txt": "7494754e7689c955b6c4f2859df714286adc6adec0e1e5c8b839c442d0e5fbd0",
+    "Contact_slopey_crimper_left.Shape.brp": "e5aba6cb97cc499431492fdd31eb74e70308e167476187020bcffe78536b916f",
+    "Contact_slopey_crimper_left.Shape.Map.txt": "67a1bdb6074eac3048314e063f6f677482bd72fabf1110bf91560fb41201134a"
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "owner": "placid-badger",
+  "sourceAndExportIdentity": {
+    "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+    "modelSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+    "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+    "generatedManifestSHA256": "2a8d9e959dbc7f09544049d8523d2cf1ee1a37f1da8fdaea157a51b40c714d6a"
+  },
+  "scripts": [
+    {
+      "path": ".context/placid-badger/forge-review15/root/install-frozen-package-v1-guard.py",
+      "sha256": "bca2effcf514d2547363f1d92af33ebe20aab89802f008fa0d0159709d508422",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/root/install-frozen-package.py",
+      "sha256": "0d19f925b6359063040e3f28e54cb104d3fa191398d0742862d167b5c17c565f",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/root/retain-and-close-review.py",
+      "sha256": "6ae9153b1deb331796c7f9e5383c1583dda2d240941263b2e648e03504717916",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/root/run-final-verification-v1-startup.py",
+      "sha256": "343d1146271f6cc89f0551099cb122b75ddc14e9e65b12658231c1664e65e232",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/root/run-final-verification.py",
+      "sha256": "510c51425b96c4df7c2d8e99d05de859e405e8b3a9786cdea007f5ad3a79d57b",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/root/verify-final-scope.py",
+      "sha256": "f8edb323592909e0eec4ae65ec3499b1c0844df5d142aec7df6131305a7599a4",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/author-wing-recess-v1-rejected-fillet.py",
+      "sha256": "89b761a47a33622f046c7904955084014ae702a711374089f9ad64732a6dbe33",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/author-wing-recess.py",
+      "sha256": "714d35aa045625a616325dbbf1dd9e5593af497ad143be69fa0b32f42f47546d",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/run_owned_job.py",
+      "sha256": "65919c541ca7f090aa62a8ae58e7f2e45516ce2be9fc5e791d0b574328682100",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/whole-depth-render.py",
+      "sha256": "8e2a1c491ebac5f59bb121270002937ef02a35d4aa0c6d83dd5b6c164f4f7a55",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/check-forge-native.py",
+      "sha256": "9f9e5446318f95bff1cc0688ad71a2a066aeec35e18886b23151e96a2c5bd0ed",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/check-forge-normals.py",
+      "sha256": "8159911d5be485808796fa7f401616f0ccd0be1db00064467681ab819b37cbe4",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/check-forge-reimport.py",
+      "sha256": "a1fc055da8f84638347ecc0f47d35300e914ec2ab1a758cbc6d5a77d0a950116",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/native-gate-bootstrap.py",
+      "sha256": "91b363b4451abff7f42818a90719fa2e3b4cd56adddcce299c57116611986c60",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/run-forge-verification.py",
+      "sha256": "690bc5a31e9fa8881658749e24e328a6a1001678c9daad9270a10b5d0b4b8563",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/check-forge-native.py",
+      "sha256": "dfb3754443729a6be4ec2ed5d56d722a0798fe3697ab545854ff7dc0cb049eb8",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/check-forge-normals.py",
+      "sha256": "8159911d5be485808796fa7f401616f0ccd0be1db00064467681ab819b37cbe4",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/check-forge-reimport.py",
+      "sha256": "a1fc055da8f84638347ecc0f47d35300e914ec2ab1a758cbc6d5a77d0a950116",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/native-gate-bootstrap.py",
+      "sha256": "67d3c9c5cbe48d0ca50ed30c15598c8cb30d89b2fd40fb1b3c86a8e211340c83",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/run-forge-verification.py",
+      "sha256": "924d6a1e2d55083f764202687ca33cd5572a59394763f2fb36c01dd88de2eb2a",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/check-forge-native.py",
+      "sha256": "dfb3754443729a6be4ec2ed5d56d722a0798fe3697ab545854ff7dc0cb049eb8",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/check-forge-normals.py",
+      "sha256": "8159911d5be485808796fa7f401616f0ccd0be1db00064467681ab819b37cbe4",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/check-forge-reimport.py",
+      "sha256": "a1fc055da8f84638347ecc0f47d35300e914ec2ab1a758cbc6d5a77d0a950116",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/compile-1-bootstrap.py",
+      "sha256": "e2ed420b96e82dcda1fef6f3d11105f7250a2526b2b130b7209dfdc1f7e47231",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/compile-2-bootstrap.py",
+      "sha256": "d59a10f7a509af34d4fc348c4ceb889582fe5dd9ca6c02a1a197892df7e0d816",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/native-gate-bootstrap.py",
+      "sha256": "d78e81ba5e4304520d1c7ee2db0ca18d7594c5e5208c879dccdcbd23875bb60b",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/native-normals-bootstrap.py",
+      "sha256": "6667366a2bcf24998c73f357f37223459007a8aa7eaae5f1bad28a48d2168141",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/run-forge-verification.py",
+      "sha256": "924d6a1e2d55083f764202687ca33cd5572a59394763f2fb36c01dd88de2eb2a",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/diagnose-forge-native-normals.py",
+      "sha256": "b73514d8403d05c2353206df440db7be3f9ec663aa67fd37f5dfeeeffa86b40e",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/placid-badger-diagnostic-bootstrap.py",
+      "sha256": "8e2b831c00e2d14d1af7e9a0040b91017737a76deec3f1378b139c1f2f17e415",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/run-forge-normal-diagnostic.py",
+      "sha256": "7ec56600c59bacf0a1166bdcf3a1c0f451801921d28bb9a2a8865e9ea257f646",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/setback-correction/author-wing-recess.py",
+      "sha256": "887b9e808294094fb4c47f220008b431e3289720ecf42db24cf376b57ec0da9b",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/setback-correction/final-whole-depth-render.py",
+      "sha256": "dc81300ccfb5d70b33faf59d81db250b76cccd1bd3e7a912266560be29ac12ca",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/setback-correction/whole-depth-render.py",
+      "sha256": "8e2a1c491ebac5f59bb121270002937ef02a35d4aa0c6d83dd5b6c164f4f7a55",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/author-wing-recess.py",
+      "sha256": "d895199847e49d9e35b1b8d6e03459d3dad7026b8de2ae2caaed31715d08dda0",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/check-fresh-native.py",
+      "sha256": "4a15ebc395eb3798932bced049ffa072a4d4edb0fd2b171645612a823682b165",
+      "committed": false
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-depth-render.py",
+      "sha256": "8010160c9f686524f45fafe23c4f9a8b7719cc627fe831027f86bc46c20909ab",
+      "committed": false
+    }
+  ],
+  "note": "Scripts stay in workspace-owned scratch. Saved native CAD recomputes without them. No image-driven authoring, cropping, tracing or automatic path inference."
+}

@@ -1,0 +1,24 @@
+{
+  "executionAuthorized": true,
+  "owner": "placid-badger",
+  "task": "forge-review15/integration",
+  "genericIOSBuildAuthorized": true,
+  "canonicalPackageSHA256": {
+    "Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+    "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+    "Hangboards/trango-rock-prodigy-forge/assets/primary.model.json": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6"
+  },
+  "deliveryLockPath": "docs/model-delivery-lock.json",
+  "deliveryLockFileSHA256": "a0e2703cc295cf82809363c64e91b2ecce00d614a1ee041349c80a4da8a18f73",
+  "deliveryLockManifestSHA256": "c2963fa7e5e8a39c7f1011c24ed5bac2b887d11ad48ab2f9f822ba66a0b593c8",
+  "generatedBoardSHA256": "2a8d9e959dbc7f09544049d8523d2cf1ee1a37f1da8fdaea157a51b40c714d6a",
+  "reservedPathSHA256": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "HangTen/Views/BoardModelView.swift": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+    "HangTen/Views/RootView.swift": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+    "HangTenTests/BoardModelRealityTests.swift": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+    "HangTenTests/BoardModelTests.swift": "89d5778a9b85181315bf281921f493ec771c6c8ddd92ef1106ec643fd6ec1fd7",
+    "HangTen/Views/GripHandModelView.swift": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+    "HangTen/Views/TrainView.swift": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99"
+  }
+}

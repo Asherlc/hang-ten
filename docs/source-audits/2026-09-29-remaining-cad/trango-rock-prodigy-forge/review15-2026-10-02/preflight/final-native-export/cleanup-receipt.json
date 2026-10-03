@@ -1,0 +1,47 @@
+{
+  "owner": "placid-badger",
+  "processGroups": [
+    {
+      "pid": 41436,
+      "pgid": 41436,
+      "absent": true
+    },
+    {
+      "pid": 41549,
+      "pgid": 41549,
+      "absent": true
+    },
+    {
+      "pid": 45552,
+      "pgid": 45552,
+      "absent": true
+    },
+    {
+      "pid": 47316,
+      "pgid": 47316,
+      "absent": true
+    },
+    {
+      "pid": 47320,
+      "pgid": 47320,
+      "absent": true
+    }
+  ],
+  "temporaryPaths": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-tmp",
+      "absent": true
+    }
+  ],
+  "exitCode": 1,
+  "completedAt": "2026-10-03T02:01:08.876983+00:00",
+  "unknownOrSharedResourcesModified": false
+}
