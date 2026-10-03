@@ -16,10 +16,14 @@ parser.add_argument('--composed-step',action='store_true')
 parser.add_argument('--scaled-merit',action='store_true')
 parser.add_argument('--spectral-step',action='store_true')
 parser.add_argument('--geometry-hints',action='store_true')
+parser.add_argument('--clearance-bounds',action='store_true')
+parser.add_argument('--bounds-profile',action='store_true')
 parser.add_argument('--geometry-profile',action='store_true')
 parser.add_argument('--spectral-trajectory',action='store_true')
 parser.add_argument('--spectral-checkpoint',type=int,choices=[109,140],default=109)
 parser.add_argument('--preflight',action='store_true');args=parser.parse_args()
+if args.bounds_profile and not args.clearance_bounds:parser.error('--bounds-profile requires --clearance-bounds')
+if args.clearance_bounds and (args.geometry_hints or args.geometry_profile or args.spectral_step or args.scaled_merit or args.full_merit or args.trajectory or args.step_rate or args.composed_step):parser.error('--clearance-bounds is an isolated checkpoint')
 if args.geometry_profile and not args.geometry_hints:parser.error('--geometry-profile requires --geometry-hints')
 if args.geometry_hints and (args.spectral_step or args.scaled_merit or args.full_merit or args.trajectory or args.step_rate or args.composed_step):parser.error('--geometry-hints is an isolated checkpoint')
 if args.spectral_trajectory and not args.spectral_step:parser.error('--spectral-trajectory requires --spectral-step')
@@ -42,9 +46,18 @@ for name in NAMES:
     if args.geometry_hints and name=='RopeTriangleCollider.swift':
         from geometry_hints.snapshot import collider_source as hint_collider
         text=hint_collider(text)
+    if args.clearance_bounds and name in ['RopeTriangleCollider.swift','RopeSimulationMetrics.swift']:
+        from clearance_bounds.snapshot import collider_source as bound_collider,metrics_source as bound_metrics
+        text=bound_collider(text) if name=='RopeTriangleCollider.swift' else bound_metrics(text)
     if name=='RopeDynamicsSolver.swift':
         text=solver_source(text).replace('private extension SIMD4','extension SIMD4')
         text+='\n'+(tool/'stock_chain/CheckpointAdapter.swift').read_text()+'\n'+(tool/'contact_bundle/CheckpointExtras.swift').read_text()
+        if args.clearance_bounds:
+            from clearance_bounds.snapshot import solver_source as bound_solver
+            text=bound_solver(text)
+            if args.bounds_profile:
+                from clearance_bounds.snapshot import profile_solver
+                text=profile_solver(text)
         if args.geometry_hints:
             from geometry_hints.snapshot import solver_source as hint_solver
             text=hint_solver(text)
@@ -72,6 +85,12 @@ for name in ['Math.swift','Trace.swift','main.swift']:
         if args.geometry_profile:
             from geometry_hints.snapshot import profile_driver
             text=profile_driver(text)
+    if name=='main.swift' and args.clearance_bounds:
+        from clearance_bounds.snapshot import driver_source as bound_driver
+        text=bound_driver(text)
+        if args.bounds_profile:
+            from clearance_bounds.snapshot import profile_driver
+            text=profile_driver(text)
     if name=='main.swift' and args.spectral_step:
         from spectral_step.snapshot import driver_source as spectral_driver, trajectory_source
         text=trajectory_source(text) if args.spectral_trajectory else spectral_driver(text,args.spectral_checkpoint)
@@ -95,6 +114,7 @@ for name in ['Math.swift','Trace.swift','main.swift']:
         text=text.replace('    try fixtures();result["fixturesPass"]=true','    try ambiguityFixtures();try fixtures();result["fixturesPass"]=true')
     (sources/name).write_text(text)
 if args.geometry_hints:(sources/'GeometryHintMath.swift').write_bytes((tool/'geometry_hints/Math.swift').read_bytes())
+if args.clearance_bounds:(sources/'ClearanceBoundMath.swift').write_bytes((tool/'clearance_bounds/Math.swift').read_bytes())
 if args.spectral_step:(sources/'SpectralStepMath.swift').write_bytes((tool/'spectral_step/Math.swift').read_bytes())
 if args.scaled_merit:(sources/'ScaledMeritMath.swift').write_bytes((tool/'scaled_merit/Math.swift').read_bytes())
 if args.full_merit:(sources/'AmbiguityFixtures.swift').write_bytes((tool/'armijo/AmbiguityFixtures.swift').read_bytes())
@@ -109,6 +129,7 @@ inputs=[*files,*(REPO/'HangTen/Models'/n for n in NAMES),Path(__file__),*list((t
     tool/'stock_chain/CheckpointAdapter.swift',tool/'contact_bundle/CheckpointExtras.swift',prior,
     REPO/'Hangboards/clavellium-training-block/assets/primary.physics.json']
 if args.geometry_hints:inputs += list((tool/'geometry_hints').glob('*.*'))
+if args.clearance_bounds:inputs += list((tool/'clearance_bounds').glob('*.*'))
 if args.spectral_step:inputs += list((tool/'spectral_step').glob('*.*'))
 if args.scaled_merit:inputs += list((tool/'scaled_merit').glob('*.*'))
 if args.composed_step:inputs += list((tool/'composed_step').glob('*.*'))

@@ -1,0 +1,446 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "closed": true,
+  "speedGatePassed": false,
+  "proofAndIRComplete": false,
+  "scope": "single native step140; no subsequent receipt CCD or simulator claim",
+  "checkpoint": {
+    "adopted": false,
+    "candidateMetrics": {
+      "clearanceMargin": 9.994055532242755e-05,
+      "geometryAccepted": true,
+      "lengthError": 9.326733274583887e-08,
+      "speed": 0.00029439116791770906,
+      "strain": 1.516625981801134e-05
+    },
+    "candidateQPs": 2,
+    "candidateTrace": [
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 0.00015958302990769517,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 0.00021355221966246063
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.4480377384391393e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.516625981801134e-05
+      }
+    ],
+    "clearanceBounds": true,
+    "currentDifferenceMeters": 0,
+    "failure": "invalid(\"fixed median <=0.80 complete-step speed gate\")",
+    "fallbackClearanceBounds": 0,
+    "fixturesPass": true,
+    "medianRatio": 0.8866067303873957,
+    "minimumBoundOracleSlack": 1.6479873021779667e-17,
+    "originalQPs": 2,
+    "originalTrace": [
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 0.00015958302990769517,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 0.00021355221966246063
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.4480377384391393e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.516625981801134e-05
+      }
+    ],
+    "owner": "strong-owl-live-physics",
+    "pairs": [
+      {
+        "candidateSeconds": 0.004789416663697921,
+        "originalSeconds": 0.005098249996080995,
+        "ratio": 0.9394236585847158
+      },
+      {
+        "candidateSeconds": 0.004743749988847412,
+        "originalSeconds": 0.005308708336087875,
+        "ratio": 0.8935789439777746
+      },
+      {
+        "candidateSeconds": 0.004662999999709427,
+        "originalSeconds": 0.005423000009614043,
+        "ratio": 0.8598561665946401
+      },
+      {
+        "candidateSeconds": 0.004830999998375773,
+        "originalSeconds": 0.005388958335970528,
+        "ratio": 0.8964626737099705
+      },
+      {
+        "candidateSeconds": 0.004559208333375864,
+        "originalSeconds": 0.0055070416565285996,
+        "ratio": 0.8278870249639243
+      },
+      {
+        "candidateSeconds": 0.00468699999328237,
+        "originalSeconds": 0.005464250003569759,
+        "ratio": 0.8577572384536548
+      },
+      {
+        "candidateSeconds": 0.0046763333230046555,
+        "originalSeconds": 0.0052744166750926524,
+        "ratio": 0.8866067303873957
+      }
+    ],
+    "prefixIdentitySteps": 139,
+    "sigma": 0.1,
+    "step": 140,
+    "strictConverged": true,
+    "strictDifferenceMeters": 1.7280166712871417e-06,
+    "strictRetries": 0,
+    "strictTrace": [
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 0.00015958302990775008,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 0.0002135522196657913
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.448037738241142e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.5166259817567251e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.466445713636594e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.4996362600161461e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.5217012527756437e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.473593636491799e-05
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 3.5859014644920644e-06,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.0991293032169835e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 1.497525329787497e-07,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.3411536103902222e-08
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 1.1064717749923536e-07,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.182311293312921e-08
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 2.180336056319867e-08,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.065580956804979e-09
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 1.6062026799372495e-08,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.0359288982186854e-09
+      }
+    ],
+    "validClearanceBounds": 279,
+    "workAndAccuracyPass": true
+  },
+  "costSplit": {
+    "adopted": false,
+    "candidateBatchSeconds": 0.0024839583347784355,
+    "candidateMetrics": {
+      "clearanceMargin": 9.994055532242755e-05,
+      "geometryAccepted": true,
+      "lengthError": 9.326733274583887e-08,
+      "speed": 0.00029439116791770906,
+      "strain": 1.516625981801134e-05
+    },
+    "candidateMetricSeconds": 0.00018691665900405496,
+    "candidateQPs": 2,
+    "candidateTrace": [
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 0.00015958302990769517,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 0.00021355221966246063
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.4480377384391393e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.516625981801134e-05
+      }
+    ],
+    "clearanceBounds": true,
+    "currentDifferenceMeters": 0,
+    "failure": "invalid(\"fixed median <=0.80 complete-step speed gate\")",
+    "fallbackClearanceBounds": 0,
+    "fixturesPass": true,
+    "medianRatio": 1.0195766311478536,
+    "minimumBoundOracleSlack": 1.6479873021779667e-17,
+    "originalBatchSeconds": 0.002696458308491856,
+    "originalMetricSeconds": 0.00018870833446271718,
+    "originalQPs": 2,
+    "originalTrace": [
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 0.00015958302990769517,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 0.00021355221966246063
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.4480377384391393e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.516625981801134e-05
+      }
+    ],
+    "owner": "strong-owl-live-physics",
+    "pairs": [
+      {
+        "candidateBatchSeconds": 0.0027110416849609464,
+        "candidateMetricSeconds": 0.0001788333320291713,
+        "candidateSeconds": 0.005400083333370276,
+        "originalBatchSeconds": 0.0023351666750386357,
+        "originalMetricSeconds": 0.0001729166688164696,
+        "originalSeconds": 0.005049916668212973,
+        "ratio": 1.069341077915493
+      },
+      {
+        "candidateBatchSeconds": 0.002441458316752687,
+        "candidateMetricSeconds": 0.00017395832401234657,
+        "candidateSeconds": 0.0051532083307392895,
+        "originalBatchSeconds": 0.0027610416582319885,
+        "originalMetricSeconds": 0.000194916661712341,
+        "originalSeconds": 0.0052114583377260715,
+        "ratio": 0.9888227050449379
+      },
+      {
+        "candidateBatchSeconds": 0.002674708332051523,
+        "candidateMetricSeconds": 0.0005243333289399743,
+        "candidateSeconds": 0.005737458326620981,
+        "originalBatchSeconds": 0.002863874993636273,
+        "originalMetricSeconds": 0.0001979583321372047,
+        "originalSeconds": 0.005572916677920148,
+        "ratio": 1.0295252303614633
+      },
+      {
+        "candidateBatchSeconds": 0.0024927500053308904,
+        "candidateMetricSeconds": 0.00017087499145418406,
+        "candidateSeconds": 0.005060750001575798,
+        "originalBatchSeconds": 0.002641708342707716,
+        "originalMetricSeconds": 0.00018783332780003548,
+        "originalSeconds": 0.005253041672403924,
+        "ratio": 0.9633942232291242
+      },
+      {
+        "candidateBatchSeconds": 0.002638791673234664,
+        "candidateMetricSeconds": 0.0001806250074878335,
+        "candidateSeconds": 0.005444666661787778,
+        "originalBatchSeconds": 0.0027488333435030654,
+        "originalMetricSeconds": 0.00017858333012554795,
+        "originalSeconds": 0.00534012500429526,
+        "ratio": 1.0195766311478536
+      },
+      {
+        "candidateBatchSeconds": 0.0026882083184318617,
+        "candidateMetricSeconds": 0.0001806250074878335,
+        "candidateSeconds": 0.005402916664024815,
+        "originalBatchSeconds": 0.002460083313053474,
+        "originalMetricSeconds": 0.000184416669071652,
+        "originalSeconds": 0.005095499989693053,
+        "ratio": 1.0603310126491199
+      },
+      {
+        "candidateBatchSeconds": 0.0025646249996498227,
+        "candidateMetricSeconds": 0.00022354167595040053,
+        "candidateSeconds": 0.005142875001183711,
+        "originalBatchSeconds": 0.0028563333326019347,
+        "originalMetricSeconds": 0.00017645832849666476,
+        "originalSeconds": 0.005525250002392568,
+        "ratio": 0.9307949864633674
+      }
+    ],
+    "prefixIdentitySteps": 139,
+    "sigma": 0.1,
+    "step": 140,
+    "strictConverged": true,
+    "strictDifferenceMeters": 1.7280166712871417e-06,
+    "strictRetries": 0,
+    "strictTrace": [
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 0.00015958302990775008,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 0.0002135522196657913
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.448037738241142e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.5166259817567251e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.466445713636594e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.4996362600161461e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.5217012527756437e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.473593636491799e-05
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 3.5859014644920644e-06,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.0991293032169835e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 1.497525329787497e-07,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.3411536103902222e-08
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 1.1064717749923536e-07,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.182311293312921e-08
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 2.180336056319867e-08,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.065580956804979e-09
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 1.6062026799372495e-08,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.0359288982186854e-09
+      }
+    ],
+    "validClearanceBounds": 279,
+    "workAndAccuracyPass": true
+  },
+  "absentGroups": [
+    6677,
+    6807,
+    8284,
+    8407,
+    8719,
+    9105,
+    13614,
+    13986
+  ],
+  "axisAlignedFaceVisits": 9375,
+  "allFaceVisits": 14934,
+  "hashes": {
+    ".context/strong-owl-live-physics-clearance-bounds-red/resources.jsonl": "364b0a049032702ff51f55169f842daeb6cea39f1c2064bdb3691cbb300ee912",
+    ".context/strong-owl-live-physics-clearance-bounds-red/run.log": "b979339096e5bc6b18e6918ec90a5f735c0f7e5a0d558a829e324d8961d84909",
+    ".context/strong-owl-live-physics-clearance-bounds-green/resources.jsonl": "4848dd555b2570dd76a79404f4cb335105fd33482548e05fbb17041bf3dee6e7",
+    ".context/strong-owl-live-physics-clearance-bounds-green/run.log": "1e0a42043315387f56c3121e88a095d5724afcc31dc60ae5fac2be051984c67b",
+    ".context/strong-owl-live-physics-armijo-265dd303f-clearance-bounds-checkpoint/native/resources.jsonl": "50da77aec153fb4807b8ffa66d71aa0682858ae3b50bb24aabb443b827866e4e",
+    ".context/strong-owl-live-physics-armijo-265dd303f-clearance-bounds-checkpoint/native/result.json": "eecda722f3415cbe2094c73c807d6882e491455bf0cc2537599962211d19b58b",
+    ".context/strong-owl-live-physics-armijo-265dd303f-clearance-bounds-checkpoint/native/provenance.json": "65f74d97bedee1da0012c988bc1b437019912518925ed57f6ae5b3c44fadb544",
+    ".context/strong-owl-live-physics-armijo-265dd303f-clearance-bounds-checkpoint/native/run.log": "b449a0e60254af4cbcd6bdddc2347105dcc600d03d5103fd91110507315a854e",
+    ".context/strong-owl-live-physics-armijo-265dd303f-clearance-bounds-cost-split/native/resources.jsonl": "c6bedbdd4a95cac83aac13baa2bc193db32d20dc7a500cfd069229bf760ac51c",
+    ".context/strong-owl-live-physics-armijo-265dd303f-clearance-bounds-cost-split/native/result.json": "d5958c404111a6eb9d7ea66f01a7d6583f6bc4913768e42c3fc109b853d290d0",
+    ".context/strong-owl-live-physics-armijo-265dd303f-clearance-bounds-cost-split/native/provenance.json": "28a09e250b127d053e4d4362fb5c21b5671a3d6568bf6d5aceba8b431ec1fc72",
+    ".context/strong-owl-live-physics-armijo-265dd303f-clearance-bounds-cost-split/native/run.log": "b449a0e60254af4cbcd6bdddc2347105dcc600d03d5103fd91110507315a854e",
+    "Tools/HangboardRopePrototype/clearance_bounds/Math.swift": "e1a990ed7f94b4c6c07311f11e397febefc87d93daf8bdba92ce6f82aea67acd",
+    "Tools/HangboardRopePrototype/clearance_bounds/run_fixtures.py": "c42a56838dae193d0dc4b53cf5e57ecfa8d7d7f144851e9c924788cb2b6bfcb1",
+    "Tools/HangboardRopePrototype/clearance_bounds/snapshot.py": "10abdafa8f5f07a3973f479cdd255746f8ccaab50840996a42c211dd67d1bebb",
+    ".context/strong-owl-live-physics-clearance-bounds-proposal/PLAN.md": "584d7d74ede26116e6466430eb843ef0b7417a416f19f2049301222194b54035"
+  }
+}
