@@ -1,0 +1,32 @@
+{
+  "owner": "strong-owl-live-physics",
+  "status": "CLOSED: no correction reduction",
+  "evidence": {
+    ".context/strong-owl-live-physics-armijo-5d209528d-scaled-merit-checkpoint/native/result.json": "2de8328f23f1695b2f6d4a5637df77233741346475a4e9bed46403e2596bc591",
+    ".context/strong-owl-live-physics-armijo-5d209528d-scaled-merit-checkpoint/native/provenance.json": "06db4e90f719a7778037803e2a2dbaaa278ab34083b447066304e6692125f685",
+    ".context/strong-owl-live-physics-armijo-5d209528d-scaled-merit-checkpoint/native/resources.jsonl": "0fb773541db4ffcaad79b10821be1d6d72c77ab857583c3f11d9f4222ff38779"
+  },
+  "originalQPs": 11,
+  "candidateQPs": 11,
+  "poseDifference": 0,
+  "strictDifference": 1.471486476843305e-07,
+  "metrics": {
+    "clearanceMargin": 9.999973769497621e-05,
+    "geometryAccepted": true,
+    "lengthError": 3.610424181843541e-10,
+    "speed": 0.00038237396907011786,
+    "strain": 6.805767549522557e-08
+  },
+  "penaltyRange": [
+    0.0007005506917668866,
+    0.0007033528207389863
+  ],
+  "controlCandidateDecisionsIdentical": true,
+  "groupsIndependentlyAbsent": [
+    8184,
+    8752,
+    9083,
+    9782
+  ],
+  "limits": "No paired timing or trajectory stage reached; no p95, simulator or video/adoption."
+}
