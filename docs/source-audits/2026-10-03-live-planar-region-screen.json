@@ -1,0 +1,127 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "closed": true,
+  "result": {
+    "accuracyPass": true,
+    "adopted": false,
+    "boundaryPairs": 269200,
+    "failure": "invalid(\"planar full-output corpus ratio<=2/3\")",
+    "insideQueries": 0,
+    "maximumDepthDifferenceMeters": 0,
+    "medianRatio": 0.835031349189674,
+    "owner": "strong-owl-live-physics",
+    "pairs": [
+      {
+        "candidateSeconds": 0.04028470833145548,
+        "originalSeconds": 0.04779041666188277,
+        "ratio": 0.8429453255549081
+      },
+      {
+        "candidateSeconds": 0.039385999989463016,
+        "originalSeconds": 0.04792016667488497,
+        "ratio": 0.8219086602239487
+      },
+      {
+        "candidateSeconds": 0.038591083328356035,
+        "originalSeconds": 0.0477016666700365,
+        "ratio": 0.8090091190167319
+      },
+      {
+        "candidateSeconds": 0.045082833341439255,
+        "originalSeconds": 0.05131545833137352,
+        "ratio": 0.8785429343788258
+      },
+      {
+        "candidateSeconds": 0.0399337916605873,
+        "originalSeconds": 0.050454333337256685,
+        "ratio": 0.791483882933386
+      },
+      {
+        "candidateSeconds": 0.04039995832135901,
+        "originalSeconds": 0.048248416671413,
+        "ratio": 0.8373323128196211
+      },
+      {
+        "candidateSeconds": 0.04166375000204425,
+        "originalSeconds": 0.049894833340658806,
+        "ratio": 0.835031349189674
+      }
+    ],
+    "queries": 3236,
+    "regionCalls": 18149,
+    "scope": "fixed nonempty full-output narrowphase corpus, parity packing excluded, no step or device claim",
+    "wholePatchFallbacks": 0
+  },
+  "resources": [
+    {
+      "group": 77353,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-39fbeb431-planar-regions-red/native/resources.jsonl"
+    },
+    {
+      "group": 77591,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-39fbeb431-planar-regions-red/native/resources.jsonl"
+    },
+    {
+      "group": 78293,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-39fbeb431-planar-regions-red-v2/native/resources.jsonl"
+    },
+    {
+      "group": 78472,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-39fbeb431-planar-regions-red-v2/native/resources.jsonl"
+    },
+    {
+      "group": 81056,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-39fbeb431-planar-regions-green/native/resources.jsonl"
+    },
+    {
+      "group": 81249,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-39fbeb431-planar-regions-green/native/resources.jsonl"
+    },
+    {
+      "group": 82022,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-39fbeb431-planar-region-queries/native/resources.jsonl"
+    },
+    {
+      "group": 82219,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-39fbeb431-planar-region-queries/native/resources.jsonl"
+    }
+  ],
+  "negativeTopologyFixtures": [
+    {
+      "case": "reversed",
+      "rejected": true
+    },
+    {
+      "case": "overlapping",
+      "rejected": true
+    }
+  ],
+  "limits": [
+    "No full solver, merit-bit-equivalence, force/affine-row certificate, trajectory, simulator or adoption.",
+    "Scalar geometric maxima match this fixed corpus; contact fractions/normals/rows change and dynamics are untested.",
+    "First fixture run crashed before fixtures: atlas was incorrectly applied to small channel colliders; now exact selected vertex/triangle binding plus count mismatch fallback.",
+    "No generic rounded geometry theorem or unsafe-IR check reached.",
+    "Topology negative fixtures ran after cost rejection; they do not constitute a timing retry."
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-39fbeb431-planar-region-queries/native/result.json": "80a55f4e22d973ecb4bdbbcc0ea3450628c6470d4a99202056d909180726428d",
+    ".context/strong-owl-live-physics-armijo-39fbeb431-planar-region-queries/native/provenance.json": "c849183e21ffb494c98849477b1fdded482dcf1e78e3390b1efa77cd5cb63752",
+    ".context/strong-owl-live-physics-armijo-39fbeb431-planar-region-queries/native/region-topology.json": "b18d95418fe5d7f13c34d10397ba91d3a76bf9eeba589191305e6da7e3c16bf5",
+    ".context/strong-owl-live-physics-planar-region-proposal/PLAN.md": "d8d53057b6e1a22972724794ba8e86eb27e471ca2f5438c879ac999a7be705e9",
+    ".context/strong-owl-live-physics-planar-region-proposal/negative-topology-fixtures.json": "608b89634e90011ee41bf8809e5b099301b6f813fe3e3a55c5fe4f3bdafc5c09",
+    "Tools/HangboardRopePrototype/planar_regions/Math.swift": "c5f5de136aaf1ba7c968a166ef47d8fc564b44125a16104492f1c33657b2ccc2",
+    "Tools/HangboardRopePrototype/planar_regions/Queries.swift": "86747c2f026de16135327b55d57fd1638b21372e2e796dded42c2a6798e5df2f",
+    "Tools/HangboardRopePrototype/planar_regions/Hits.swift": "a57f9a3404ce8e5ec2d8ac46e5caef39d5ffb4ce42fce75c4d36e46ab394cd86",
+    "Tools/HangboardRopePrototype/planar_regions/snapshot.py": "b95348e212607ecbecc50bc3791d2592172cff577e42de99fd3b3e1ec133b5a4",
+    "Tools/HangboardRopePrototype/census_planar_regions.py": "23804aa27858cf81003277a969f587e07b3ac0e46e621432cf1f265ed6f610c7"
+  }
+}

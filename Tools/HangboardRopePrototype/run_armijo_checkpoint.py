@@ -14,6 +14,8 @@ parser.add_argument('--trajectory',action='store_true')
 parser.add_argument('--step-rate',type=int,choices=[240,120])
 parser.add_argument('--composed-step',action='store_true')
 parser.add_argument('--mass-only',action='store_true')
+parser.add_argument('--planar-regions',action='store_true')
+parser.add_argument('--region-queries',action='store_true')
 parser.add_argument('--scaled-merit',action='store_true')
 parser.add_argument('--spectral-step',action='store_true')
 parser.add_argument('--geometry-hints',action='store_true')
@@ -27,6 +29,8 @@ parser.add_argument('--geometry-profile',action='store_true')
 parser.add_argument('--spectral-trajectory',action='store_true')
 parser.add_argument('--spectral-checkpoint',type=int,choices=[109,140],default=109)
 parser.add_argument('--preflight',action='store_true');args=parser.parse_args()
+if args.planar_regions and (args.clearance_bounds or args.full_merit or args.trajectory or args.step_rate or args.spectral_step or args.scaled_merit or args.geometry_hints):parser.error('--planar-regions is isolated')
+if args.region_queries and not args.planar_regions:parser.error('--region-queries requires --planar-regions')
 if args.mass_only and (args.step_rate!=240 or not args.preflight or args.composed_step or args.clearance_bounds or args.spectral_step or args.scaled_merit):parser.error('--mass-only requires isolated --step-rate 240 --preflight')
 if args.bounds_profile and not args.clearance_bounds:parser.error('--bounds-profile requires --clearance-bounds')
 if args.axis_bounds and not args.clearance_bounds:parser.error('--axis-bounds requires --clearance-bounds')
@@ -53,6 +57,9 @@ root=REPO/'.context'/f'{REPO.name}-armijo-{args.label}';root.mkdir();stage=root/
 for name in NAMES:
     text=(REPO/'HangTen/Models'/name).read_text()
     if args.full_merit and name=='RopeTriangleCollider.swift':text=collider_source(text)
+    if args.planar_regions and name=='RopeTriangleCollider.swift':
+        from planar_regions.snapshot import collider_source as region_collider
+        text=region_collider(text)
     if args.geometry_hints and name=='RopeTriangleCollider.swift':
         from geometry_hints.snapshot import collider_source as hint_collider
         text=hint_collider(text)
@@ -116,6 +123,12 @@ for name in ['Math.swift','Trace.swift','main.swift']:
     text=(tool/'armijo'/('StepRateMain.swift' if (args.step_rate or args.spectral_trajectory) and name=='main.swift' else 'TrajectoryMain.swift' if args.trajectory and name=='main.swift' else name)).read_text()
     if name=='main.swift' and not args.full_merit:
         text=text.replace('    ArmijoTrace.collectOracleBranches=x.verifyArmijoDerivative\n','')
+    if name=='main.swift' and args.planar_regions:
+        from planar_regions.snapshot import driver_source as region_driver
+        text=region_driver(text)
+        if args.region_queries:
+            from planar_regions.snapshot import query_driver
+            text=query_driver(text)
     if name=='main.swift' and args.geometry_hints:
         from geometry_hints.snapshot import driver_source as hint_driver
         text=hint_driver(text)
@@ -179,6 +192,12 @@ if args.plane_reuse:
 if args.spectral_step:(sources/'SpectralStepMath.swift').write_bytes((tool/'spectral_step/Math.swift').read_bytes())
 if args.scaled_merit:(sources/'ScaledMeritMath.swift').write_bytes((tool/'scaled_merit/Math.swift').read_bytes())
 if args.full_merit:(sources/'AmbiguityFixtures.swift').write_bytes((tool/'armijo/AmbiguityFixtures.swift').read_bytes())
+if args.planar_regions:
+    from census_planar_regions import generate_regions
+    atlas,metadata=generate_regions(REPO/'Hangboards/clavellium-training-block/assets/primary.physics.json')
+    (sources/'PlanarAtlas.swift').write_text(atlas)
+    (sources/'PlanarMath.swift').write_bytes((tool/'planar_regions/Math.swift').read_bytes())
+    (stage/'region-topology.json').write_text(json.dumps(metadata,indent=2)+'\n')
 if args.mass_only:(sources/'MassOnlyMath.swift').write_bytes((tool/'mass_only/Math.swift').read_bytes())
 if args.composed_step:
     for name in ['Math.swift','Fixtures.swift']:(sources/('Composed'+name)).write_bytes((tool/'composed_step'/name).read_bytes())
@@ -197,6 +216,8 @@ if args.neighborhoods:inputs += list((tool/'neighborhoods').glob('*.*'))
 if args.plane_reuse:inputs += [*list((tool/'plane_reuse').glob('*.*')),stage/'atlas.json']
 if args.spectral_step:inputs += list((tool/'spectral_step').glob('*.*'))
 if args.scaled_merit:inputs += list((tool/'scaled_merit').glob('*.*'))
+if args.region_queries:inputs += [REPO/'.context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/result.json']
+if args.planar_regions:inputs += [*list((tool/'planar_regions').glob('*.*')),tool/'census_planar_regions.py',stage/'region-topology.json']
 if args.mass_only:inputs += list((tool/'mass_only').glob('*.*'))
 if args.composed_step:inputs += list((tool/'composed_step').glob('*.*'))
 (stage/'provenance.json').write_text(json.dumps({'owner':REPO.name,'command':command,
