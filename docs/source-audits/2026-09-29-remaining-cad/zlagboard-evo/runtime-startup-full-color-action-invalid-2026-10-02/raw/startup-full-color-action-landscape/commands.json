@@ -1,0 +1,121 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "app"
+    ],
+    "startEpoch": 1791003459.598347,
+    "startMonotonic": 86313.833561208,
+    "owner": "placid-badger-cad-second-half-startup-observation",
+    "commandLimitSeconds": 20,
+    "requestedEpoch": 1791003459.598162,
+    "pid": 67253,
+    "parentPID": 67250,
+    "endEpoch": 1791003459.776841,
+    "endMonotonic": 86314.01205575,
+    "exitStatus": 0,
+    "timeout": false,
+    "endedAfterOverallDeadline": false
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "data"
+    ],
+    "startEpoch": 1791003459.8071759,
+    "startMonotonic": 86314.042389875,
+    "owner": "placid-badger-cad-second-half-startup-observation",
+    "commandLimitSeconds": 20,
+    "requestedEpoch": 1791003459.807016,
+    "pid": 67265,
+    "parentPID": 67250,
+    "endEpoch": 1791003459.9750981,
+    "endMonotonic": 86314.2103125,
+    "exitStatus": 0,
+    "timeout": false,
+    "endedAfterOverallDeadline": false
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1791003459.976404,
+    "startMonotonic": 86314.21161875,
+    "owner": "placid-badger-cad-second-half-startup-observation",
+    "commandLimitSeconds": 20,
+    "requestedEpoch": 1791003459.976104,
+    "pid": 67275,
+    "parentPID": 67250,
+    "endEpoch": 1791003460.252237,
+    "endMonotonic": 86314.487452916,
+    "exitStatus": 0,
+    "timeout": false,
+    "endedAfterOverallDeadline": false
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "openurl",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "hangten://plan/research.max-hangs/workout"
+    ],
+    "startEpoch": 1791003464.198459,
+    "startMonotonic": 86318.433686291,
+    "owner": "placid-badger-cad-second-half-startup-observation",
+    "commandLimitSeconds": 20,
+    "requestedEpoch": 1791003464.197312,
+    "pid": 67327,
+    "parentPID": 67250,
+    "endEpoch": 1791003464.383734,
+    "endMonotonic": 86318.618961,
+    "exitStatus": 0,
+    "timeout": false,
+    "endedAfterOverallDeadline": false
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-action-landscape/launch-initial.png"
+    ],
+    "startEpoch": 1791003464.386326,
+    "startMonotonic": 86318.621553666,
+    "owner": "placid-badger-cad-second-half-startup-observation",
+    "commandLimitSeconds": 20,
+    "requestedEpoch": 1791003464.3853471,
+    "pid": 67337,
+    "parentPID": 67250,
+    "endEpoch": 1791003464.8560572,
+    "endMonotonic": 86319.0912855,
+    "exitStatus": 0,
+    "timeout": false,
+    "endedAfterOverallDeadline": false
+  }
+]
