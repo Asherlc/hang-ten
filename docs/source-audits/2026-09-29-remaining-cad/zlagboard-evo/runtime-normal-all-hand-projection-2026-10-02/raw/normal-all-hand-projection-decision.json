@@ -1,0 +1,22 @@
+{
+  "decisionEpoch": 1790985387.874142,
+  "binarySHA256": "eef5a676aac05b09fbff374204347109caabd9842a1da7e8c6a64e7953914d15",
+  "sequence": [
+    "o1",
+    "p1 conditional on valid O1 visual failure",
+    "o2 conditional on valid P1 visual pass"
+  ],
+  "stop": [
+    "O1 valid visual pass",
+    "Any evidence gate failure",
+    "P1 visual failure",
+    "After O2 regardless"
+  ],
+  "normalRoute": "Fresh process then existing workout openurl; no direct-root flag; production autostart only, no explicit AUTOSTART",
+  "observations": "12 whole screenshots at actual mutations +0.25/+1/+3/+5; complete trace and post-next-Hang tail; no AX/tap/Skip",
+  "geometry": "Retain complete pre-workout Train scene history; identify workout scene with established same-scene clear/countdown gate. Record actual normal endpoints/path and compare normal arms only, no direct-root endpoint assumption or layout compensation.",
+  "sourceBuildInstallChanges": false,
+  "newResources": false,
+  "helperSHA256": "a37f900acf3c4da76953a3ca51be61a4ea074bf8c4c5cf4a6ca62c6e5e3bb5c8",
+  "limits": "No normal-route causality claim from P pass alone; require bounded reversal, and retain any variance. No inference from unobserved times."
+}

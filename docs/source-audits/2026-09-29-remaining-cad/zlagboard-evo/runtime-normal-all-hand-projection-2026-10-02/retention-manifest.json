@@ -1,0 +1,834 @@
+{
+  "createdUTC": "2026-10-03T00:09:12.703658+00:00",
+  "rawFiles": 137,
+  "rawBytes": 11410588,
+  "originalWorkerFreezeFiles": 136,
+  "entries": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-normal-all-hand-workout.py",
+      "retained": "raw/check-normal-all-hand-workout.py",
+      "bytes": 3958,
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-normal-projection-comparison.py",
+      "retained": "raw/check-normal-projection-comparison.py",
+      "bytes": 1991,
+      "sha256": "e345d618548bae8b163c9fde4a61c0e731c6075049276f77da192f2ef482077d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-normal-projection-hosts.py",
+      "retained": "raw/check-normal-projection-hosts.py",
+      "bytes": 3729,
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-before-parity.json",
+      "retained": "raw/normal-all-hand-projection-before-parity.json",
+      "bytes": 12577,
+      "sha256": "2cdce7495c095ea0ccc85fefa3a6dc6530d856f1d26ea06c87f45464dec59fe2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-decision.json",
+      "retained": "raw/normal-all-hand-projection-decision.json",
+      "bytes": 1215,
+      "sha256": "9b5e947fc604d032293b5916391cf7fb1d4bf3a6f00f25435a9ef33dd220b5c0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-final-parity.json",
+      "retained": "raw/normal-all-hand-projection-final-parity.json",
+      "bytes": 12577,
+      "sha256": "2cdce7495c095ea0ccc85fefa3a6dc6530d856f1d26ea06c87f45464dec59fe2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-findings.json",
+      "retained": "raw/normal-all-hand-projection-findings.json",
+      "bytes": 13389,
+      "sha256": "eb11463e888ab7e46369ddc1e8836b0c7f1531bdb2e9306514373a2d8a7eefcd"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-helper.patch",
+      "retained": "raw/normal-all-hand-projection-helper.patch",
+      "bytes": 4232,
+      "sha256": "74946cc70d38ce3ade637962c3a1b8c2975f204fe06ef9947206c912909a7a44"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/000-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/000-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/000-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/000-stdout.txt",
+      "bytes": 162,
+      "sha256": "9361b2a0bef5ebd1f9c6a9a6a95679dfbb9788f0f39dd3494cb84b2ba3ddebf0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/001-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/001-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/001-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/001-stdout.txt",
+      "bytes": 28,
+      "sha256": "6a98b67edc1fdbfa601e2d9a1905e7b18cbbb942c6f04ea6e5002cb69dc682d8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/002-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/002-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/002-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/002-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/003-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/003-stderr.txt",
+      "bytes": 377,
+      "sha256": "80308a420a418a02a7f7c7f86e1fae4ba08188d48a1cf8d06cef48cc7df0545d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/003-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/003-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/004-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/004-stderr.txt",
+      "bytes": 387,
+      "sha256": "fc96d21fd938b1394d5bf8c1395703c88e068d30750388fd5f41bdca573271e3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/004-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/004-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/005-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/005-stderr.txt",
+      "bytes": 384,
+      "sha256": "c6299c4dcf85744f048c6ddb39495ea362bb955d9914c443078e02556fe54036"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/005-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/005-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/006-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/006-stderr.txt",
+      "bytes": 384,
+      "sha256": "3e156e87ed5e54fc731d7e097e7a30f2905067c618bbaf9f2dc73632d09844bd"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/006-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/006-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/007-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/007-stderr.txt",
+      "bytes": 384,
+      "sha256": "409055462d1086a041564c744c6d37170a7d583da60dc0f400d08943e1318f2f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/007-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/007-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/008-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/008-stderr.txt",
+      "bytes": 388,
+      "sha256": "ab5a5c3909169a8aae51dccbc4eedd3caec47c8e702551e4a466b16ef8a3bdee"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/008-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/008-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/009-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/009-stderr.txt",
+      "bytes": 385,
+      "sha256": "ae89582fbe17008243b3dcfe90659ddf0f1320da983b82d17e4f583138eb517b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/009-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/009-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/010-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/010-stderr.txt",
+      "bytes": 385,
+      "sha256": "8f2dc220716f4fbb3b8fb0d0554a3d5129075357013ad11f7b727a27c6fde594"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/010-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/010-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/011-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/011-stderr.txt",
+      "bytes": 385,
+      "sha256": "98937dfec4e755b12250bfb01e74d8a9bbac3213779f0cb9baf655ba43364512"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/011-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/011-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/012-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/012-stderr.txt",
+      "bytes": 387,
+      "sha256": "433b5409e3b586e2808df30ca3a65a1b4e72959aedccaed5471309312eabaa42"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/012-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/012-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/013-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/013-stderr.txt",
+      "bytes": 384,
+      "sha256": "e930f6e99764c9582e49782f8f99ec4c0f7f747b6e1aa093ef328cfed3c38d55"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/013-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/013-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/014-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/014-stderr.txt",
+      "bytes": 384,
+      "sha256": "9d18a2de39dcde3f93aeeeb743495561d2268f58e4aa806377e42833c075932e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/014-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/014-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/015-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/015-stderr.txt",
+      "bytes": 384,
+      "sha256": "ec7137771103546ac3b357d434d4f1cffce961bb508d57c5a9fee103304e6636"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/015-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/015-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/capture-process-status.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/capture-process-status.json",
+      "bytes": 96,
+      "sha256": "1a9d83740d176a53c61cc118f9be2fc2aa450c1d03480615ba29154f88afa654"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/captures.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/captures.json",
+      "bytes": 7989,
+      "sha256": "ce3946f2205fa2ce3d86dc5cd34146d1b78f9f28824fb284ff408e1fdfc5edb0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/commands.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/commands.json",
+      "bytes": 6261,
+      "sha256": "369e9c260a207e47d6a56ee380862f5d07a3f93efd3875bef1e53ff4a676480d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/events-4C000B34-D722-4678-8FC6-F4233D3CAF8F.jsonl",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/events-4C000B34-D722-4678-8FC6-F4233D3CAF8F.jsonl",
+      "bytes": 661854,
+      "sha256": "bcbd4e963b6fdd2b2f2d8fa95becbc07152f3028e75904cd3cb8d3cc0b0b98d3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/first-eight-visual-review.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/first-eight-visual-review.json",
+      "bytes": 3874,
+      "sha256": "3889c37decbf7cfc3c2c8c34eecb82cae38d47033b679c3a9afa2c74d2ad1a38"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/following-preview-tail.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/following-preview-tail.json",
+      "bytes": 8437,
+      "sha256": "5c455fda53584a441a95ebd67f628186e6ab0ad759936ac74cde25f6507bd0a6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/hand-camera-validation.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/hand-camera-validation.json",
+      "bytes": 6443,
+      "sha256": "ccd59d7508090adc8db609e6d378aba52fc5b6d0ec739527e296fe20ad50aa23"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/hand-lifetime-validation.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/hand-lifetime-validation.json",
+      "bytes": 152365,
+      "sha256": "e62b49e68525cc5baeff0daf6f57885685ecfd17239542e559deb7919001063b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/launch-initial-capture.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/launch-initial-capture.json",
+      "bytes": 151,
+      "sha256": "1047b3758d85e3cc880a1a1806c6e677c71b015399db9e452a94e4b541111641"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/launch-initial.png",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/launch-initial.png",
+      "bytes": 426234,
+      "sha256": "30359ce3777349affc4189d62b520f950a15b0189925a77e3bb4de6aceec47a3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/launch-review-environment.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/launch-review-environment.json",
+      "bytes": 327,
+      "sha256": "e9a89215820b509fbfbeb5c532a14884be0b87872fd06fb0de7b3e624a1ecb5e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/normal-host-frame-validation.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/normal-host-frame-validation.json",
+      "bytes": 359766,
+      "sha256": "1d5bde033c0fabea26ac3a8735c0834618ed7db3d82f76037e1855c8e2534ccf"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-0-active-plus-0.25.png",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/phase-0-active-plus-0.25.png",
+      "bytes": 276285,
+      "sha256": "3ec86e78e7a1229ec0551f006e7c97740b4d8b1481dc35fd98b6dfd08541bfd7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-0-active-plus-1.png",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/phase-0-active-plus-1.png",
+      "bytes": 277681,
+      "sha256": "632393338ecc1fb605f05792e2ed4869711c93238306f153af51bd6c1af319e9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-0-active-plus-3.png",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/phase-0-active-plus-3.png",
+      "bytes": 334652,
+      "sha256": "3cf6319961f2d3a47ff3c85b408ea6b350113ead48fbbf7190a6092b4bfbf584"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-0-active-plus-5.png",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/phase-0-active-plus-5.png",
+      "bytes": 335111,
+      "sha256": "4ca1142e638464f3ad051ff6f3a51f651d72f5ba4db8a1eef21c968d0097319b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-1-preview-plus-0.25.png",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/phase-1-preview-plus-0.25.png",
+      "bytes": 300960,
+      "sha256": "14e7a4f09ecc7870155e58747f5784d8d99fac8e84d40fcd911c255532b6a523"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-1-preview-plus-1.png",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/phase-1-preview-plus-1.png",
+      "bytes": 305282,
+      "sha256": "2bd6044efa35979b49ce1013cd2bdc2c33ee858d8202336e67b95b469ee16e26"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-1-preview-plus-3.png",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/phase-1-preview-plus-3.png",
+      "bytes": 303574,
+      "sha256": "f6e35cd1991fb0f167ccb0f2b1b3d6688d4ccb33b823995d715921862ddbc9e2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-1-preview-plus-5.png",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/phase-1-preview-plus-5.png",
+      "bytes": 301910,
+      "sha256": "6899840cfbf4ba92984fe46c9b5a7ab5b474863d2ae704ee225d7e4301f711d1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-2-active-plus-0.25.png",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/phase-2-active-plus-0.25.png",
+      "bytes": 335614,
+      "sha256": "8d25b23b97c30cfd01fd945431b4a5cea999fb36f58c7c4bc9031620207eee17"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-2-active-plus-1.png",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/phase-2-active-plus-1.png",
+      "bytes": 337447,
+      "sha256": "6806ee0b4b98b43655ad0ad4d5fddbd3fc87b019b838331c64cde1331fee4602"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-2-active-plus-3.png",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/phase-2-active-plus-3.png",
+      "bytes": 335858,
+      "sha256": "12503cd51b4196dc9d8b8b15bbc477c1ff784b12660964c8aa9d0daa0a5afdaa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-2-active-plus-5.png",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/phase-2-active-plus-5.png",
+      "bytes": 336352,
+      "sha256": "67ae3730d936cd8e150128749f9bcc743988bba99f75f7ad8b32f948bf18823b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/protocol.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/protocol.json",
+      "bytes": 936,
+      "sha256": "cbc6dde7a5150f4876f0d633b667fc4244c11d18a9c33f25e002b1ba55095b23"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/structural-correspondence.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/structural-correspondence.json",
+      "bytes": 227261,
+      "sha256": "aa8b6b401e28411ee1032e0209d90c4d8f8820b573a7eee92ab7867631284988"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/trace-copy.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/trace-copy.json",
+      "bytes": 733,
+      "sha256": "79bafc00bb4b2d9859e8316bb32e122a16c746076045938613c2f6d54aa15e21"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/transition-observations.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/transition-observations.json",
+      "bytes": 25663,
+      "sha256": "5f5395fdc73e2dd694fae67db646d9b1b7e17c641bbd412300492c00b8537776"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/visual-review.json",
+      "retained": "raw/normal-all-hand-projection-o1-landscape/visual-review.json",
+      "bytes": 5813,
+      "sha256": "4f0471717d7f34df6380094fb0a6a8307a3f3b57d81eb53d81a1a94f3e216e3a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-to-p1-decision.json",
+      "retained": "raw/normal-all-hand-projection-o1-to-p1-decision.json",
+      "bytes": 3078,
+      "sha256": "b1c99ad5dab6aa36b8a3f5a3b977c550187cec1ec8b20ff955015e967321faa5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-order-difference.json",
+      "retained": "raw/normal-all-hand-projection-order-difference.json",
+      "bytes": 3426,
+      "sha256": "de415f9672102edc608774eea173f3995b18d6b6cd7e7173283c5c4181ffaddf"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/000-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/000-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/000-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/000-stdout.txt",
+      "bytes": 162,
+      "sha256": "9361b2a0bef5ebd1f9c6a9a6a95679dfbb9788f0f39dd3494cb84b2ba3ddebf0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/001-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/001-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/001-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/001-stdout.txt",
+      "bytes": 28,
+      "sha256": "d41072a377690dabc5bd3bd485829a36e93b85cd98d61edb449c636ac5c4a07a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/002-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/002-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/002-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/002-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/003-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/003-stderr.txt",
+      "bytes": 377,
+      "sha256": "a95a8bea25b2ff1977e076305254afa84044b3a790c1965e9534601e4b2bc4e5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/003-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/003-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/004-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/004-stderr.txt",
+      "bytes": 387,
+      "sha256": "da75979e903dce26389e506b02a00a787ea965f2259e3634e0363289e3468ef1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/004-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/004-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/005-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/005-stderr.txt",
+      "bytes": 384,
+      "sha256": "1d7082941196a2ea4eb2b41ce5981d975a277b4932769b78850f30d9dd6bf0a1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/005-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/005-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/006-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/006-stderr.txt",
+      "bytes": 384,
+      "sha256": "94f68ec3720e374d1932d0e010a297b0fb15159aa95d60cf05dc91145a1d348c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/006-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/006-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/007-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/007-stderr.txt",
+      "bytes": 384,
+      "sha256": "1632b86cef73161c8965ec3e385d17517da31ab4d066281905c77fb938f6e33d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/007-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/007-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/008-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/008-stderr.txt",
+      "bytes": 388,
+      "sha256": "3724fd23416d6f90820958ae846b7ccdd0d5ff81dd662f621c7ee39ca9ceef47"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/008-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/008-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/009-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/009-stderr.txt",
+      "bytes": 385,
+      "sha256": "292dbfddadb63a0bdfc76fe89855ed9296cd9e5876f2811c172c957dfdaa7f67"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/009-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/009-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/010-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/010-stderr.txt",
+      "bytes": 385,
+      "sha256": "47610f57a6eb6967f07edcfa4d2a78f22612839db46ec72eb31addb709114c9d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/010-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/010-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/011-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/011-stderr.txt",
+      "bytes": 385,
+      "sha256": "c3df1a52a18bb8d6738a9fd3e35d48e8d266dbaaa01ab2991a7309a6fd0ffc29"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/011-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/011-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/012-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/012-stderr.txt",
+      "bytes": 387,
+      "sha256": "6214bc5fcbf9646cb20218c99f5147b8692636e6f155e88808a1070aa1ccea18"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/012-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/012-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/013-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/013-stderr.txt",
+      "bytes": 384,
+      "sha256": "00a8f833c8ebb8685dbbf147cbb779ae40a76844da54c1d77fc35f71e97d636c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/013-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/013-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/014-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/014-stderr.txt",
+      "bytes": 384,
+      "sha256": "890a429d6e0d56d4c70cafc5e59461965926f9656a8e14280c157b7c8b5aa321"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/014-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/014-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/015-stderr.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/015-stderr.txt",
+      "bytes": 384,
+      "sha256": "749bed816198405069b7e3431efd17ea01bf99bfc45a90c9e918d23f42336259"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/015-stdout.txt",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/015-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/capture-process-status.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/capture-process-status.json",
+      "bytes": 95,
+      "sha256": "ff6233069bbdbe5113793e913ce7b164f47435650f4f7180f5f87ef0dc57af71"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/captures.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/captures.json",
+      "bytes": 7979,
+      "sha256": "9b861a69e38bb3807aa4a64bffd69733594a639dfc81dd5135f77e4a1194428c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/commands.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/commands.json",
+      "bytes": 6248,
+      "sha256": "d78b6580c14b9ff96108feef0d267856f79769b934c1ed02bf50b687fbcfc3df"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/events-4A57D30B-E5EF-4BCC-9376-2B07720332D4.jsonl",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/events-4A57D30B-E5EF-4BCC-9376-2B07720332D4.jsonl",
+      "bytes": 652204,
+      "sha256": "40c1814c80d17363e3de88d80c412c10cd44cda1d4304765f3dea9e609d3219b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/first-eight-visual-review.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/first-eight-visual-review.json",
+      "bytes": 3915,
+      "sha256": "4c90a9bf51d6bb9c17c44724233a1061e2da9434b251f248057b53baa1230869"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/following-preview-tail.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/following-preview-tail.json",
+      "bytes": 8435,
+      "sha256": "140deec6a68785e85ea8efffb1d9faf6e5178d78e4ddf6249f5b116a7824721c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/hand-camera-validation.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/hand-camera-validation.json",
+      "bytes": 6458,
+      "sha256": "45cfe503add22cd4094466c1533878a0d696c6e6fb4fe682bfb7de08e9bc7f7b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/hand-lifetime-validation.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/hand-lifetime-validation.json",
+      "bytes": 150341,
+      "sha256": "23f70dc523205e76251d7d43df019951a02f0c1f5e84f96e6f2af99b1c925439"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/launch-initial-capture.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/launch-initial-capture.json",
+      "bytes": 149,
+      "sha256": "8ff11a426116020bdd12565cc96298196da0d48ec3bdd6ca4b2b2f4c74acea50"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/launch-initial.png",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/launch-initial.png",
+      "bytes": 427752,
+      "sha256": "eb28e981dd2b43b040115fed0f9fc1f2802af8e7ebe865faf9a7d28aa555955f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/launch-review-environment.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/launch-review-environment.json",
+      "bytes": 373,
+      "sha256": "045fb8668d388982602248bbdd2c40145a52539f53a16c3d7447b45738c0997b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/normal-comparison-command-status.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/normal-comparison-command-status.json",
+      "bytes": 405,
+      "sha256": "f453c1f821472ab814028729f0d84a5dd28835e7b2e6813913111d46c9cc3ccc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/normal-control-correspondence.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/normal-control-correspondence.json",
+      "bytes": 731,
+      "sha256": "02f047abbaf52d1955edd0988cced083f4d28d353027580e3d8088fffc5fb3ce"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/normal-host-frame-validation.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/normal-host-frame-validation.json",
+      "bytes": 338594,
+      "sha256": "7909e7a3ca0069c4eb47d2c7b949165d6a80164fe86bae609b2f088d891f5bfa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/phase-0-active-plus-0.25.png",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/phase-0-active-plus-0.25.png",
+      "bytes": 276285,
+      "sha256": "3ec86e78e7a1229ec0551f006e7c97740b4d8b1481dc35fd98b6dfd08541bfd7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/phase-0-active-plus-1.png",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/phase-0-active-plus-1.png",
+      "bytes": 277681,
+      "sha256": "632393338ecc1fb605f05792e2ed4869711c93238306f153af51bd6c1af319e9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/phase-0-active-plus-3.png",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/phase-0-active-plus-3.png",
+      "bytes": 332173,
+      "sha256": "3ab442cf6b7d04dd6a4d067dc64ffef25ecb605be3b8815b053db57c68b59fd7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/phase-0-active-plus-5.png",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/phase-0-active-plus-5.png",
+      "bytes": 332497,
+      "sha256": "2a097682eedf16d2ee361b8cfb133f79f3d9597480aac8d67325c531fa506e35"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/phase-1-preview-plus-0.25.png",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/phase-1-preview-plus-0.25.png",
+      "bytes": 298033,
+      "sha256": "0f842098fc1f611393217a0fc90f7015bbfb02e40312503bf08af00cbeff72c1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/phase-1-preview-plus-1.png",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/phase-1-preview-plus-1.png",
+      "bytes": 302310,
+      "sha256": "012e58de9bf1a3d9023efc8ff2c29a391599b9f52081ab4ca58fbd8fe9da6ac8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/phase-1-preview-plus-3.png",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/phase-1-preview-plus-3.png",
+      "bytes": 300487,
+      "sha256": "3c261c66024f5129084c8cb84e3e2325550a68a753c2b39cb0dea83829e9c8ed"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/phase-1-preview-plus-5.png",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/phase-1-preview-plus-5.png",
+      "bytes": 299128,
+      "sha256": "21852d9f24c1bc4ec66838d9f6e45d7f9f7660acda129c0c0bfd5190f9a6db7e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/phase-2-active-plus-0.25.png",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/phase-2-active-plus-0.25.png",
+      "bytes": 332897,
+      "sha256": "04fa46327dbf82e1f267569cc9dc33d71609f694bf6f18545e2bf45eeadbdd8d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/phase-2-active-plus-1.png",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/phase-2-active-plus-1.png",
+      "bytes": 334545,
+      "sha256": "3e12ae25c8e18e70916a4a814ffcb586a53821a1d5613009795b2af124c95c6e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/phase-2-active-plus-3.png",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/phase-2-active-plus-3.png",
+      "bytes": 333160,
+      "sha256": "8ae1b080a3a679f1b721e88b75ba340bd7d09b16003d9f7cc4ca7d60ffca3137"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/phase-2-active-plus-5.png",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/phase-2-active-plus-5.png",
+      "bytes": 333488,
+      "sha256": "70057ad71fc0677088b8b144a7c4e432e755e919485d2ab54b18d226f11b4a6c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/protocol.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/protocol.json",
+      "bytes": 936,
+      "sha256": "098e21270a3c494f31d6e4e9390bc640f88919b4907fc98f8e855999796bcbe2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/structural-correspondence.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/structural-correspondence.json",
+      "bytes": 231681,
+      "sha256": "98ffbad1242dc66fe3218dd3c162b532b10b0bb2865df1eef5db61116ce68312"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/trace-copy.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/trace-copy.json",
+      "bytes": 733,
+      "sha256": "1afa91198ee13da245ade503292c3caa522eda39ae9856efdccdeb5351ec026e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/transition-observations.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/transition-observations.json",
+      "bytes": 25654,
+      "sha256": "2af7f017e934554920f6cdda7a9097668f76d040230537cdb56af284b6bed36b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/visual-review.json",
+      "retained": "raw/normal-all-hand-projection-p1-landscape/visual-review.json",
+      "bytes": 5814,
+      "sha256": "18c4085a4eaffc09f1cf7fb57430f504b791bbc76d324d9078661e2966359d63"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-prior-freeze-check.json",
+      "retained": "raw/normal-all-hand-projection-prior-freeze-check.json",
+      "bytes": 156,
+      "sha256": "55ed85a6a5972caa2131b42d30d64a7d87a62bde51ddac03f67c3124f9b46ef1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/workout-normal-all-hand-projection.py",
+      "retained": "raw/workout-normal-all-hand-projection.py",
+      "bytes": 7519,
+      "sha256": "a37f900acf3c4da76953a3ca51be61a4ea074bf8c4c5cf4a6ca62c6e5e3bb5c8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-frozen-manifest.json",
+      "retained": "raw/normal-all-hand-projection-frozen-manifest.json",
+      "bytes": 36255,
+      "sha256": "f363b42163092ff56b6fb7d57dbb3a20fac30fc6684a930e36c9a90a4bbcd3e2"
+    }
+  ],
+  "mappingNote": "Raw producer paths unchanged; mappings retain completed normal O1/P1 only. No raw environment device-list or active frontend evidence included.",
+  "resourceStatus": "Existing exact owned Simulator/DD/controller live under parent; cleanup pending.",
+  "productionFix": false,
+  "humanAcceptanceChanged": false
+}
