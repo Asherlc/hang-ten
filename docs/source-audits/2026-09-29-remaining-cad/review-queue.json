@@ -312,24 +312,24 @@
       "package": "nature-stone-hanger-mini",
       "boardID": "nature.stone-hanger-mini",
       "name": "Nature Climbing Stone Hanger Mini",
-      "humanReview": "Jug wraps around existing front/top/back crown and rounded ends; ready for human CAD review; current app appearance and interaction unverified.",
-      "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
-      "reviewPage": "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/index.html",
+      "humanReview": "Jug covers upper front/back finger-pressure faces and rounded crown; ready for human CAD review; current app appearance and interaction unverified.",
+      "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+      "reviewPage": "nature-stone-hanger-mini/finger-contact-review-2026-10-02/index.html",
       "sourceAudit": "nature-stone-hanger-mini/native-authoring.md",
       "comparisons": [
-        "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/prior-current-jug-front-side-top.png"
+        "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/prior-current-jug-front-side-top.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
-          "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83"
+          "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+          "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360"
         }
       },
       "appReview": "nature-stone-hanger-mini/completion-review/runtime-validation.json",
       "appReviewPage": "nature-stone-hanger-mini/completion-review/index.html",
-      "suspensionSHA256": "b7dbc671085b07eb071403df86dec17fcc52e7c1652437923f0786b2afcf15f6",
+      "suspensionSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f",
       "humanReviewRecord": "nature-stone-hanger-mini/human-review.json",
-      "latestRevision": "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/review.md",
+      "latestRevision": "nature-stone-hanger-mini/finger-contact-review-2026-10-02/review.md",
       "runtimeRevision": "nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
       "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views.",
       "reviewAnswer": "Lgtm",
@@ -360,33 +360,33 @@
         "appReviewPage": "nature-stone-hanger-mini/app-review/index.html"
       },
       "latestRuntimeAttempt": "nature-stone-hanger-mini/runtime-retry-2026-10-02/review.md",
-      "finalCADReviewQuestion": "Does the Mini’s wrapped jug highlight look right now?",
+      "finalCADReviewQuestion": "Does this cover the Mini’s jug finger-contact area now?",
       "completionHumanAcceptance": "pending",
       "cadReviewViews": [
-        "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-jug-loaded-front.png",
-        "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-jug-loaded-back.png",
-        "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-granite-loaded.png",
-        "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-wood-loaded.png",
-        "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-pinch-loaded.png"
+        "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-front.png",
+        "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-back.png",
+        "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-granite-loaded.png",
+        "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-wood-loaded.png",
+        "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-pinch-loaded.png"
       ],
       "completionValidationPage": "nature-stone-hanger-mini/completion-review/index.html",
       "latestHumanFeedback": {
         "owner": "placid-badger",
         "reviewNumber": 10,
         "boardID": "nature.stone-hanger-mini",
-        "recordedUTC": "2026-10-03T05:39:07.158951+00:00",
-        "rawFeedback": "Jokes should wrap all the way around like other ones do.",
+        "recordedUTC": "2026-10-03T06:25:10.113937+00:00",
+        "rawFeedback": "That's not covering the actual area where the fingers are pinching. That's what needs to be highlighted.",
         "clarification": {
           "question": "By “Jokes should wrap all the way around,” do you mean the jug highlight should wrap around the top rail onto its front and back?",
           "answer": "Yes, the jug highlight"
         },
-        "interpretation": "Extend existing upper-rail jug contact continuously over the front and back rolls and rounded ends.",
-        "priorShownCommit": "1acbb5ba98a2246d5ba31efe8ff5dea7a754f242",
+        "interpretation": "Include the broad upper front/back finger-pressure surfaces and continuous upper side band, down to the existing rail opening boundary.",
+        "priorShownCommit": "d3811417c4c2d7efd87e7b856399fd860124fbbc",
         "priorShownIdentity": {
-          "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
-          "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
-          "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
-          "sidecarSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1"
+          "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
+          "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
+          "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
+          "sidecarSHA256": "b7dbc671085b07eb071403df86dec17fcc52e7c1652437923f0786b2afcf15f6"
         },
         "currentHumanAcceptance": "pending",
         "earlierOverallBodyApprovalPreserved": true

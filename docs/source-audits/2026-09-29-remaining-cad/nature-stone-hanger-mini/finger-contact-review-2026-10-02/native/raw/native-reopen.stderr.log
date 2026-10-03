@@ -1,0 +1,12 @@
+<PropertyLinks> PropertyLinks.cpp(516): nature_stone_hanger_mini1#CompleteExteriorSurface.Support missing element reference nature_stone_hanger_mini1#FinalSolid ;#99a:1;:H1207,F.Face46
+<PropertyLinks> PropertyLinks.cpp(516): nature_stone_hanger_mini1#CompleteExteriorSurface.Support missing element reference nature_stone_hanger_mini1#FinalSolid ;#9aa:1;:H1207,F.Face64
+ExteriorWithoutPressureBand: Boolean operation failed
+CompleteExteriorSurface is not a solid
+UpperRailPressureBand is not a solid
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen-bootstrap.py", line 7, in <module>
+    exec(compile(open(path).read(),path,'exec'),{'__name__':'__main__','__file__':path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/verify-native.py", line 25, in <module>
+    assert not clean(b);s=r['grooveRadiusEdit']['state'];assert abs(s['bodyVolume']-r['initial']['bodyVolume'])>1;assert s['pressureOffBodyArea']<1e-7;assert abs(s['exportArea']-s['bodyArea'])<1e-6
+           ^^^^^^^^^^^^
+AssertionError

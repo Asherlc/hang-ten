@@ -1,0 +1,58 @@
+{
+  "owner": "placid-badger",
+  "currentSourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
+  "feedback": "User clarified jug highlight must cover the actual finger-contact area; crown-only coverage was rejected.",
+  "judgment": "The narrow corrected contact is the full existing outside upper rail: crown plus actual front and rear pad-bearing faces, continuing around the outer ends. The crown-only version stopped at the tangent to the flat pad-bearing faces.",
+  "nativeCoordinates": "millimeters; front y=-12.5, rear y=+12.5, top z=30",
+  "boundary": {
+    "cutoffNativeZMm": 19.82417332780598,
+    "source": "FinalSolid Face21 BoundBox.ZMax, the existing straight central mouth-lip edge shared with front Face18",
+    "expression": "UpperRailMouthLipReference.Shape.BoundBox.ZMax",
+    "frontAndRearFlatBand": "Exterior parts of Faces18 and70 above the cutoff, up to z27.5, where the existing crown rounds begin.",
+    "outerSideWrapFaces": [
+      26,
+      27,
+      34,
+      40,
+      60,
+      63,
+      66,
+      68,
+      71,
+      74
+    ],
+    "sideExtent": "Only the portions above the same cutoff; all recessed groove walls excluded.",
+    "existingCrownFaces": [
+      28,
+      29,
+      30,
+      41,
+      42,
+      43,
+      59,
+      65,
+      69
+    ]
+  },
+  "semantics": {
+    "newBand": "jug-only; no new pinch-60 membership",
+    "existingSharedCrownFaces": [
+      30,
+      43,
+      69
+    ],
+    "pinch60": "The source-backed60 mm is upper/lower opposition along native Z. The new front/rear pad band is on the25 mm-thick upper rail and does not redefine or expand that separate contact.",
+    "excluded": "Cavity back wall6, wood-hold underside/lip contacts, cord-groove walls, lower frame, lower back panel."
+  },
+  "evidence": {
+    "wholeViewsRead": [
+      "front-original.jpg",
+      "reverse-original.jpg",
+      "oblique-original.jpg",
+      "MiniHanger-86.jpg"
+    ],
+    "register": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/sources.json",
+    "scope": "Manufacturer views establish physical upper-rail form and separate contact inventory. The user identifies the required jug pad coverage. The matched rear display band is an operator interpretation of that request and the native rail mouth boundary, not a measured hand pressure footprint or new manufacturer depth."
+  },
+  "authoring": "Retain closed FinalSolid unchanged. Native exterior binder, selected-face Common with expression-driven upper mask, surface Cut and remainder+band Compound create real exterior tessellation seams without internal cap faces. ExportBodySurface is the export surface; FinalSolid remains the closed collision authority."
+}

@@ -1,0 +1,173 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "candidate": {
+    "source": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/candidate/nature-stone-hanger-mini.FCStd",
+      "sha256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51"
+    },
+    "model": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3/assets/primary.usdz",
+      "sha256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360"
+    },
+    "descriptor": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3/assets/primary.model.json",
+      "sha256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95"
+    },
+    "collider": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/candidate-native-collider.json",
+      "sha256": "8f08899d0260cd10b7145473eeb89b929eddaf7103a7170f3b4d67112e87c6d4"
+    }
+  },
+  "actualUSDZTriangleCount": 29122,
+  "priorActualUSDZTriangleCount": 28842,
+  "triangleMultisetUnchanged": false,
+  "duplicateGeometricTriangles": 0,
+  "unboundMeshes": 7,
+  "originalClosedCollisionSolidBRepBytesExact": false,
+  "nativeClosedSolidAndFullExteriorEqualityPassed": true,
+  "sourceBoundColliderGeometryAndFeaturesExactPrior": true,
+  "embeddedManifestExactPrior": true,
+  "pinchWoodAndGraniteActualTriangleMultisetsExact": true,
+  "oldCrownTriangleCoverageRetained": true,
+  "newJugNodeIDs": [
+    "nature_jug",
+    "nature_jug_ends",
+    "nature_jug_pressure"
+  ],
+  "fingerPadActualExportCoveragePass": true,
+  "ordinaryWoodDefaultAppliesToNewBandNode": true,
+  "twoExportsByteIdentical": true,
+  "changedExistingArchiveEntries": [
+    "Document.xml",
+    "StringHasher.Table.txt",
+    "FinalSolid.Shape.brp",
+    "FinalSolid.Shape.Map.txt"
+  ],
+  "newArchiveEntries": [
+    "CompleteExteriorSurface.Shape.Map.txt",
+    "CompleteExteriorSurface.Shape.brp",
+    "ExportBodySurface.Shape.Map.txt",
+    "ExportBodySurface.Shape.brp",
+    "ExteriorWithoutPressureBand.Shape.Map.txt",
+    "ExteriorWithoutPressureBand.Shape.brp",
+    "UpperRailMouthLipReference.Shape.Map.txt",
+    "UpperRailMouthLipReference.Shape.brp",
+    "UpperRailPressureBand.Shape.Map.txt",
+    "UpperRailPressureBand.Shape.brp",
+    "UpperRailPressureExteriorFaces.Shape.Map.txt",
+    "UpperRailPressureExteriorFaces.Shape.brp",
+    "UpperRailPressureMask.Shape.brp",
+    "nature_jug_pressure.Shape.Map.txt",
+    "nature_jug_pressure.Shape.brp"
+  ],
+  "independentAuthorCleanupChecks": [
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author2-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author3-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author4-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider2-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile1-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile2-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile4-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/fresh-groove-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/inspect-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/mesh-counts-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen2-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/orientation-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters2-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/previews-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/reimport-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/shell-diagnosis-cleanup.json",
+      "allExactOwnedResourcesAbsent": true,
+      "laterIdentifierReuse": []
+    }
+  ],
+  "runtimeVerified": false,
+  "interpretation": "Native face subdivision may change tessellation without changing the body. Actual solid and full exterior equality are separately proved by the native author."
+}

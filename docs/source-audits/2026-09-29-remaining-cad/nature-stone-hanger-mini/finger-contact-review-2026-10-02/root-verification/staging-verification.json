@@ -1,0 +1,43 @@
+{
+  "owner": "placid-badger",
+  "targets": {
+    "xcode": {
+      "passed": true,
+      "cli": [
+        "scripts/stage-board-packages.py",
+        "--repository-root",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+        "--destination",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-mini10-fingercontact-xcode-stage/build/placid-badger-mini10.app/Hangboards",
+        "--target",
+        "xcode"
+      ],
+      "stagedPackageCount": 64,
+      "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
+      "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+      "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+      "cadAndSuspensionAuthoringExcluded": true,
+      "modelPlacement": "ODR only",
+      "runtimeAppVerified": false
+    },
+    "android": {
+      "passed": true,
+      "cli": [
+        "scripts/stage-board-packages.py",
+        "--repository-root",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+        "--destination",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-mini10-fingercontact-android-stage/Hangboards",
+        "--target",
+        "android"
+      ],
+      "stagedPackageCount": 64,
+      "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
+      "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+      "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+      "cadAndSuspensionAuthoringExcluded": true,
+      "modelPlacement": "inline",
+      "runtimeAppVerified": false
+    }
+  }
+}

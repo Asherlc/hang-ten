@@ -62,7 +62,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "0fbef266b074158c46cca88817965c972406e3835414505b669c465fc1d18f8b",
+  "sha256Manifest": "4267990f05613cd2baf67f1d4604bf107ea081960c45c45a7c1faf0f81567fd1",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -845,26 +845,26 @@
     },
     "nature-stone-hanger-mini": {
       "source": "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
-      "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
+      "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
-      "assetSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
-      "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
+      "assetSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+      "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
       "assets": {
         "assets/primary.usdz": {
-          "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
+          "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
           "descriptorPath": "assets/primary.model.json",
-          "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6"
+          "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95"
         }
       },
       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
       "provenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/native-authoring.md",
-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/index.html",
-      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/independent-candidate-verification.json",
-      "nativeValidation": "Existing crown faces wrap the jug around front/top/back and rounded ends. Exact native body and pinch union, 28,842 exact triangle positions, deterministic exports; source-bound cord cache check in new packet.",
+      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/index.html",
+      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/independent-candidate-verification.json",
+      "nativeValidation": "Upper exterior finger-contact band and rounded crown; exact native collision body and exterior surface partition, preserved pinch/wood/granite surfaces, deterministic exports; source-bound cord cache check in new packet.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/runtime-validation.json",
-      "geometryAcceptance": "Jug wrap ready for human CAD review; overall body approval preserved; current app appearance and interaction unverified.",
+      "geometryAcceptance": "Jug finger-contact band ready for human CAD review; overall body approval preserved; current app appearance and interaction unverified.",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-      "suspensionSHA256": "b7dbc671085b07eb071403df86dec17fcc52e7c1652437923f0786b2afcf15f6",
+      "suspensionSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f",
       "historicalMigrationReview": {
         "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review/index.html",
         "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/metadata-diff.json",
@@ -874,8 +874,8 @@
         "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
         "suspensionSHA256": "3ededde32246c2b90cbf89dbb28ec26f362f387ae60f5f3f22dff2c76f115325"
       },
-      "cadReview": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/index.html",
-      "currentValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/validation.json",
+      "cadReview": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/index.html",
+      "currentValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/validation.json",
       "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d"
     },
     "nature-stone-hanger-mini-karma8a": {
@@ -1370,6 +1370,13 @@
       "recordedUTC": "2026-10-03T05:34:13.299788+00:00",
       "reason": "Mini jug highlight wraps around existing upper crown and rounded ends",
       "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/prior-delivery-checksums.txt"
+    },
+    {
+      "sha256Manifest": "0fbef266b074158c46cca88817965c972406e3835414505b669c465fc1d18f8b",
+      "date": "2026-10-02",
+      "recordedUTC": "2026-10-03T06:19:16.786706+00:00",
+      "reason": "Mini jug highlight includes broad exterior finger-contact surfaces of the upper rail",
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/prior-delivery-checksums.txt"
     }
   ],
   "individualReviewRevisions": [
@@ -2203,6 +2210,29 @@
       "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
       "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/index.html",
       "validation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/validation.json",
+      "humanAcceptance": "pending",
+      "runtimeVerified": false,
+      "bodyAndCordGeometryChanged": false,
+      "factualContactsChanged": false,
+      "pinchCoverageChanged": false,
+      "pythonPassed": 67
+    },
+    {
+      "owner": "placid-badger",
+      "date": "2026-10-02",
+      "recordedUTC": "2026-10-03T06:25:10.113937+00:00",
+      "package": "nature-stone-hanger-mini",
+      "reviewNumber": 10,
+      "kind": "Upper rail finger-contact band correction",
+      "identity": {
+        "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+        "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+        "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+        "sidecarSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f"
+      },
+      "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
+      "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/index.html",
+      "validation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/validation.json",
       "humanAcceptance": "pending",
       "runtimeVerified": false,
       "bodyAndCordGeometryChanged": false,

@@ -1,7 +1,7 @@
 {
   "reviewNumber": 10,
   "boardID": "nature.stone-hanger-mini",
-  "status": "Jug wraps around existing front/top/back crown and rounded ends; ready for human CAD review; current app appearance and interaction unverified.",
+  "status": "Jug covers upper front/back finger-pressure faces and rounded crown; ready for human CAD review; current app appearance and interaction unverified.",
   "answer": "Lgtm",
   "acceptedDate": "2026-10-01",
   "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views.",
@@ -12,10 +12,10 @@
     "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35"
   },
   "identity": {
-    "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
-    "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
-    "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
-    "sidecarSHA256": "b7dbc671085b07eb071403df86dec17fcc52e7c1652437923f0786b2afcf15f6"
+    "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+    "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+    "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+    "sidecarSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f"
   },
   "history": [
     {
@@ -117,13 +117,39 @@
       },
       "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/index.html",
       "runtimeVerified": false
+    },
+    {
+      "owner": "placid-badger",
+      "reviewNumber": 10,
+      "recordedUTC": "2026-10-03T06:25:10.113937+00:00",
+      "status": "Finger-contact coverage correction requested; updated CAD review prepared, approval pending.",
+      "priorShownCommit": "d3811417c4c2d7efd87e7b856399fd860124fbbc",
+      "priorShownIdentity": {
+        "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
+        "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
+        "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
+        "sidecarSHA256": "b7dbc671085b07eb071403df86dec17fcc52e7c1652437923f0786b2afcf15f6"
+      },
+      "rawFeedback": "That's not covering the actual area where the fingers are pinching. That's what needs to be highlighted.",
+      "clarification": {
+        "question": "By “Jokes should wrap all the way around,” do you mean the jug highlight should wrap around the top rail onto its front and back?",
+        "answer": "Yes, the jug highlight"
+      },
+      "identity": {
+        "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+        "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+        "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+        "sidecarSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f"
+      },
+      "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/index.html",
+      "runtimeVerified": false
     }
   ],
-  "completedTechnicalScope": "Continuous jug crown and end-face membership; exact accepted body, original pinch union and compact cord caches preserved. Runtime verification pending.",
+  "completedTechnicalScope": "Jug crown plus upper exterior front/back pressure band with native boundaries; exact accepted closed solid/exterior, pinch union and compact cord caches preserved. Runtime verification pending.",
   "runtimeGate": "blocked-environment",
   "completionHumanAcceptance": "pending",
-  "completionQuestion": "Does the Mini’s wrapped jug highlight look right now?",
-  "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/index.html",
+  "completionQuestion": "Does this cover the Mini’s jug finger-contact area now?",
+  "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/index.html",
   "runtimeValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
   "postIntegrationTests": {
     "pythonPassed": 284,
@@ -167,75 +193,77 @@
     "owner": "placid-badger",
     "reviewNumber": 10,
     "boardID": "nature.stone-hanger-mini",
-    "preparedUTC": "2026-10-03T05:39:07.158951+00:00",
+    "preparedUTC": "2026-10-03T06:25:10.113937+00:00",
     "status": "ready-pending-human-review",
-    "question": "Does the Mini’s wrapped jug highlight look right now?",
-    "baselineCommit": "1acbb5ba98a2246d5ba31efe8ff5dea7a754f242",
+    "question": "Does this cover the Mini’s jug finger-contact area now?",
+    "baselineCommit": "d3811417c4c2d7efd87e7b856399fd860124fbbc",
     "identity": {
-      "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
-      "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
-      "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
-      "sidecarSHA256": "b7dbc671085b07eb071403df86dec17fcc52e7c1652437923f0786b2afcf15f6"
+      "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+      "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+      "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+      "sidecarSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f"
     },
     "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
-    "packet": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/index.html",
+    "packet": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/index.html",
     "views": [
       {
-        "sha256": "edf3ebb8bf062da3fbf693485fa79ef3bfb573a243290e6526a607432dc86171",
+        "sha256": "73be0efb5953455b6ddfd0ba9236b3afc4471f031c2846d4d833e403b854fc51",
         "poseID": "front-upright",
         "selectedContactID": "pull-up-jug",
         "selectedNodeIDs": [
           "nature_jug",
-          "nature_jug_ends"
+          "nature_jug_ends",
+          "nature_jug_pressure"
         ],
-        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-jug-loaded-front.png"
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-front.png"
       },
       {
-        "sha256": "1e74cbd990dc83ec8a814d0ce01a5639d59ba0adc8385fdb93072869ad3a865d",
+        "sha256": "dff6650db90723201e7ad883ec61277c1a38b17f8868d062aa8962896947e4c1",
         "poseID": "front-upright",
         "selectedContactID": "pull-up-jug",
         "selectedNodeIDs": [
           "nature_jug",
-          "nature_jug_ends"
+          "nature_jug_ends",
+          "nature_jug_pressure"
         ],
-        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-jug-loaded-back.png"
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-back.png"
       },
       {
-        "sha256": "5046017a43e0f8ea70da75442f7fb1127f611ffaf5f1261bbf286d54c61de9ce",
+        "sha256": "251cfc66215c7de7d5c95a0416f4128cdcd409c85071639b93e1b6a95b3e49df",
         "poseID": "front-upright",
         "selectedContactID": "granite-edge-15",
         "selectedNodeIDs": [
           "nature_stone"
         ],
-        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-granite-loaded.png"
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-granite-loaded.png"
       },
       {
-        "sha256": "a58fe98e504e9479f63ce16feae25aae2345276f5b9eeb31c04c0b66d5170321",
+        "sha256": "a81cce6c395030c1e231ddea1758110d0670d74a64219488bb65313e1a077fc9",
         "poseID": "wood-inverted",
         "selectedContactID": "wood-edge-15-incut",
         "selectedNodeIDs": [
           "nature_wood"
         ],
-        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-wood-loaded.png"
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-wood-loaded.png"
       },
       {
-        "sha256": "f604a0ab139228435133bf11b5e57e0163acd7f75db49a3bac12f69fa24bfdd6",
+        "sha256": "819635957620d826e7da6227cb8a8c2e4c9a3e8c1a0f26f9563812e2f042d9d5",
         "poseID": "pinch-side",
         "selectedContactID": "pinch-60",
         "selectedNodeIDs": [
           "nature_jug",
           "nature_pinch"
         ],
-        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-pinch-loaded.png"
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-pinch-loaded.png"
       }
     ],
     "wholePriorCurrentComparisons": [
       {
-        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/prior-current-jug-front-side-top.png",
-        "sha256": "0ece7b9e03c007e4c2cb0f3dfd266ba662f0d30d663c48871cefc2fbc838a1d6"
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/prior-current-jug-front-side-top.png",
+        "sha256": "a1cd9c5844d2ed5fdb23e3cb8a83e1c0fe11f876f24e83bb3294efad7a70cdfa"
       }
     ],
-    "scope": "Existing jug crown and end-face membership only; no body, factual grip, cord route or runtime change.",
+    "scope": "Jug crown plus upper exterior pressure band via native exterior face partition; physical closed body/exterior, factual grips, cord routes and runtime unchanged.",
     "humanAnswer": null,
     "priorOverallBodyApprovalPreserved": true,
     "runtimeVerified": false,
@@ -249,27 +277,27 @@
         "prior/current front-side-top",
         "pinch reverse-oblique"
       ],
-      "finding": "Red selection continuously wraps the upper crown and rounded shoulders. Groove walls and main upright panels remain body; prior pinch selection is visually identical."
+      "finding": "Red selection includes the flat upper front/back finger-pressure faces, joined continuously with the rounded crown and upper sides. Lower panels and groove walls remain ordinary body; pinch selection is preserved."
     },
-    "previewProvenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/preview-provenance.json"
+    "previewProvenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/preview-provenance.json"
   },
   "latestHumanFeedback": {
     "owner": "placid-badger",
     "reviewNumber": 10,
     "boardID": "nature.stone-hanger-mini",
-    "recordedUTC": "2026-10-03T05:39:07.158951+00:00",
-    "rawFeedback": "Jokes should wrap all the way around like other ones do.",
+    "recordedUTC": "2026-10-03T06:25:10.113937+00:00",
+    "rawFeedback": "That's not covering the actual area where the fingers are pinching. That's what needs to be highlighted.",
     "clarification": {
       "question": "By “Jokes should wrap all the way around,” do you mean the jug highlight should wrap around the top rail onto its front and back?",
       "answer": "Yes, the jug highlight"
     },
-    "interpretation": "Extend existing upper-rail jug contact continuously over the front and back rolls and rounded ends.",
-    "priorShownCommit": "1acbb5ba98a2246d5ba31efe8ff5dea7a754f242",
+    "interpretation": "Include the broad upper front/back finger-pressure surfaces and continuous upper side band, down to the existing rail opening boundary.",
+    "priorShownCommit": "d3811417c4c2d7efd87e7b856399fd860124fbbc",
     "priorShownIdentity": {
-      "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
-      "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
-      "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
-      "sidecarSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1"
+      "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
+      "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
+      "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
+      "sidecarSHA256": "b7dbc671085b07eb071403df86dec17fcc52e7c1652437923f0786b2afcf15f6"
     },
     "currentHumanAcceptance": "pending",
     "earlierOverallBodyApprovalPreserved": true
@@ -333,8 +361,8 @@
     },
     "questionDisposition": "Answered with corrections; no approval of these final details."
   },
-  "currentShownAssetCommitNote": "Exact identities pinned here; prepared from 1acbb5ba98a2246d5ba31efe8ff5dea7a754f242",
-  "latestValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/validation.json",
+  "currentShownAssetCommitNote": "Exact identities pinned here; prepared from d3811417c4c2d7efd87e7b856399fd860124fbbc",
+  "latestValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/validation.json",
   "historicalCompletedTechnicalScope": "Fitted granite seat, metadata for existing runtime wood/granite rendering, four freshly solved compact cord poses, and opening-up display jug pose. App appearance remains unverified.",
   "latestPackageTests": {
     "passed": 67,
@@ -461,6 +489,117 @@
         "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
         "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
         "sidecarSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1"
+      },
+      "currentHumanAcceptance": "pending",
+      "earlierOverallBodyApprovalPreserved": true
+    }
+  },
+  "priorFingerCoverageReview": {
+    "owner": "placid-badger",
+    "reviewNumber": 10,
+    "boardID": "nature.stone-hanger-mini",
+    "preparedUTC": "2026-10-03T05:39:07.158951+00:00",
+    "status": "superseded-by-human-finger-area-feedback",
+    "question": "Does the Mini’s wrapped jug highlight look right now?",
+    "baselineCommit": "1acbb5ba98a2246d5ba31efe8ff5dea7a754f242",
+    "identity": {
+      "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
+      "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
+      "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
+      "sidecarSHA256": "b7dbc671085b07eb071403df86dec17fcc52e7c1652437923f0786b2afcf15f6"
+    },
+    "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
+    "packet": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/index.html",
+    "views": [
+      {
+        "sha256": "edf3ebb8bf062da3fbf693485fa79ef3bfb573a243290e6526a607432dc86171",
+        "poseID": "front-upright",
+        "selectedContactID": "pull-up-jug",
+        "selectedNodeIDs": [
+          "nature_jug",
+          "nature_jug_ends"
+        ],
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-jug-loaded-front.png"
+      },
+      {
+        "sha256": "1e74cbd990dc83ec8a814d0ce01a5639d59ba0adc8385fdb93072869ad3a865d",
+        "poseID": "front-upright",
+        "selectedContactID": "pull-up-jug",
+        "selectedNodeIDs": [
+          "nature_jug",
+          "nature_jug_ends"
+        ],
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-jug-loaded-back.png"
+      },
+      {
+        "sha256": "5046017a43e0f8ea70da75442f7fb1127f611ffaf5f1261bbf286d54c61de9ce",
+        "poseID": "front-upright",
+        "selectedContactID": "granite-edge-15",
+        "selectedNodeIDs": [
+          "nature_stone"
+        ],
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-granite-loaded.png"
+      },
+      {
+        "sha256": "a58fe98e504e9479f63ce16feae25aae2345276f5b9eeb31c04c0b66d5170321",
+        "poseID": "wood-inverted",
+        "selectedContactID": "wood-edge-15-incut",
+        "selectedNodeIDs": [
+          "nature_wood"
+        ],
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-wood-loaded.png"
+      },
+      {
+        "sha256": "f604a0ab139228435133bf11b5e57e0163acd7f75db49a3bac12f69fa24bfdd6",
+        "poseID": "pinch-side",
+        "selectedContactID": "pinch-60",
+        "selectedNodeIDs": [
+          "nature_jug",
+          "nature_pinch"
+        ],
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-pinch-loaded.png"
+      }
+    ],
+    "wholePriorCurrentComparisons": [
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/prior-current-jug-front-side-top.png",
+        "sha256": "0ece7b9e03c007e4c2cb0f3dfd266ba662f0d30d663c48871cefc2fbc838a1d6"
+      }
+    ],
+    "scope": "Existing jug crown and end-face membership only; no body, factual grip, cord route or runtime change.",
+    "humanAnswer": null,
+    "priorOverallBodyApprovalPreserved": true,
+    "runtimeVerified": false,
+    "usableAppFrames": 0,
+    "neutralCADPreviews": true,
+    "rootVisualReview": {
+      "croppedOrMeasuredPixels": false,
+      "wholeViewsInspected": [
+        "jug front",
+        "jug back",
+        "prior/current front-side-top",
+        "pinch reverse-oblique"
+      ],
+      "finding": "Red selection continuously wraps the upper crown and rounded shoulders. Groove walls and main upright panels remain body; prior pinch selection is visually identical."
+    },
+    "previewProvenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/preview-provenance.json",
+    "humanFeedback": {
+      "owner": "placid-badger",
+      "reviewNumber": 10,
+      "boardID": "nature.stone-hanger-mini",
+      "recordedUTC": "2026-10-03T06:25:10.113937+00:00",
+      "rawFeedback": "That's not covering the actual area where the fingers are pinching. That's what needs to be highlighted.",
+      "clarification": {
+        "question": "By “Jokes should wrap all the way around,” do you mean the jug highlight should wrap around the top rail onto its front and back?",
+        "answer": "Yes, the jug highlight"
+      },
+      "interpretation": "Include the broad upper front/back finger-pressure surfaces and continuous upper side band, down to the existing rail opening boundary.",
+      "priorShownCommit": "d3811417c4c2d7efd87e7b856399fd860124fbbc",
+      "priorShownIdentity": {
+        "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
+        "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
+        "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
+        "sidecarSHA256": "b7dbc671085b07eb071403df86dec17fcc52e7c1652437923f0786b2afcf15f6"
       },
       "currentHumanAcceptance": "pending",
       "earlierOverallBodyApprovalPreserved": true
