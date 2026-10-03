@@ -662,15 +662,13 @@ struct WorkoutTimeline {
     func boardCue(
         at elapsed: TimeInterval,
         countdown: Int,
-        isComplete: Bool,
-        isSkipCountdown: Bool = false
+        isComplete: Bool
     ) -> WorkoutBoardCue {
         boardCue(
             currentStep: step(at: elapsed),
             stepElapsed: elapsedInStep(at: elapsed),
             countdown: countdown,
-            isComplete: isComplete,
-            isSkipCountdown: isSkipCountdown
+            isComplete: isComplete
         )
     }
 
@@ -678,11 +676,9 @@ struct WorkoutTimeline {
         currentStep: WorkoutStep?,
         stepElapsed: TimeInterval,
         countdown: Int,
-        isComplete: Bool,
-        isSkipCountdown: Bool = false
+        isComplete: Bool
     ) -> WorkoutBoardCue {
         guard !isComplete,
-              (countdown == 0 || (countdown > 0 && isSkipCountdown)),
               let currentStep else {
             return WorkoutBoardCue(
                 step: nil,
