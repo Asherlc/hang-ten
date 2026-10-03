@@ -1,0 +1,103 @@
+{
+  "owner": "strong-owl-live-physics",
+  "acceptedBaseline": "886067b15",
+  "appChanged": false,
+  "devicePerformanceMeasured": false,
+  "cases": {
+    "cache": {
+      "path": ".context/strong-owl-live-physics-segment-sweep-cache/native/result.json",
+      "sha256": "0a887225b86c63462ea386fb6521ce58a72b3ca3918a9aa1970ca860717d0785",
+      "completed": true,
+      "failure": null,
+      "steps": 20
+    },
+    "receipts": {
+      "path": ".context/strong-owl-live-physics-clearance-receipts/native/result.json",
+      "sha256": "4d9be8bc8ed9a814b4fa88983b1a6cde20d8ea1efdb115dc8bf96ca65671647c",
+      "completed": true,
+      "failure": null,
+      "steps": 20
+    },
+    "hints": {
+      "path": ".context/strong-owl-live-physics-working-hint-build/native/result.json",
+      "sha256": "f82cb6e54f4e27d62373a8b134f35225737d0a231751d4d2d5ff9be17e1b09fe",
+      "completed": true,
+      "failure": null,
+      "steps": 20,
+      "maxDifferenceMeters": 1.9911494447267332e-07
+    },
+    "parallel-sweep": {
+      "path": ".context/strong-owl-live-physics-parallel-sweep/native/result.json",
+      "sha256": "d0dfc70850d46727942e188059a190b8a2130fc4fc118c35fe63dbd07ed3d9e9",
+      "completed": true,
+      "failure": null,
+      "steps": 20
+    },
+    "scaled-stop": {
+      "path": ".context/strong-owl-live-physics-physical-convergence/native/result.json",
+      "sha256": "f2a26f77b1352b04263fac37927e6583c97bb9e8bb975ff141b3e9c81871fccd",
+      "completed": false,
+      "failure": "invalid(\"converged reference difference 0.00013215777518697306 at 20\")",
+      "steps": 20,
+      "medianMs": 15.921666665235534,
+      "p95Ms": 27.283666669973172,
+      "totalSeconds": 0.3402274583495455,
+      "capSteps": 0,
+      "retries": 0,
+      "maxConvergedReferenceDifferenceMeters": 0.00013215777518697306
+    },
+    "undamped-stop": {
+      "path": ".context/strong-owl-live-physics-undamped-convergence/native/result.json",
+      "sha256": "49326743dd433c1f295792796464f9f9561a778c112b2a6d33410e303f190aec",
+      "completed": true,
+      "failure": null,
+      "steps": 540,
+      "medianMs": 12.959958337887656,
+      "p95Ms": 24.875375005649403,
+      "totalSeconds": 9.374367833006545,
+      "capSteps": 2,
+      "retries": 0,
+      "maxConvergedReferenceDifferenceMeters": 1.3711719976267645e-05
+    },
+    "full-speed-stack": {
+      "path": ".context/strong-owl-live-physics-full-speed-convergence/native/result.json",
+      "sha256": "a85c3a111c57c550bbcc40cd5d723b5159f3392527edcbcd8a504d64df78b85a",
+      "completed": true,
+      "failure": null,
+      "steps": 540,
+      "medianMs": 7.791437499690801,
+      "p95Ms": 14.345166680868715,
+      "totalSeconds": 5.462638041572063,
+      "capSteps": 1,
+      "retries": 0,
+      "maxConvergedReferenceDifferenceMeters": 1.230760383852801e-05
+    },
+    "feasible-stop": {
+      "path": ".context/strong-owl-live-physics-feasible-convergence/native/result.json",
+      "sha256": "9801dfc557209d2fb995a58bc89a5a262237fb4d8689b173c7a8f9ed8267223a",
+      "completed": false,
+      "failure": "invalid(\"converged reference difference 0.0011606059751088965 at 20\")",
+      "steps": 20,
+      "medianMs": 6.4892916634562425,
+      "p95Ms": 11.333874994306825,
+      "totalSeconds": 0.1474261249677511,
+      "capSteps": 0,
+      "retries": 0,
+      "maxConvergedReferenceDifferenceMeters": 0.0011606059751088965
+    },
+    "fused": {
+      "path": ".context/strong-owl-live-physics-fused-evaluation/repeat-fixed-native/repeat.json",
+      "sha256": "0d65253ebb809d660ec257167dba964e9db7ed8bb70906e0f767d4905d2236d5",
+      "passed": true,
+      "bitIdentity": true,
+      "medianPairedRatio": 0.6332709641096229
+    },
+    "parallel": {
+      "path": ".context/strong-owl-live-physics-parallel-queries/native/repeat.json",
+      "sha256": "b2ebcdff6d386326cf710f4a7b2304503713d723b8673b48d1f04d2d87830105",
+      "passed": true,
+      "bitIdentity": true,
+      "medianPairedRatio": 0.5663518213136355
+    }
+  }
+}
