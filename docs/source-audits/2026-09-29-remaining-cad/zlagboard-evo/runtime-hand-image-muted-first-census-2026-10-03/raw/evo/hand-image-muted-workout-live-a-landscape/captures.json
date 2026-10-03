@@ -1,0 +1,23 @@
+[
+  {
+    "phaseIndex": 0,
+    "mode": "active",
+    "offset": 0.25,
+    "targetEpoch": 1791010243.387085,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-a-landscape/phase-0-active-plus-0.25.png",
+    "sha256": "d9765eca14b7c473c19e588c57d7e0786bc2179292a6dc75ed9c90ec3cbb4246",
+    "startEpoch": 1791010243.42006,
+    "endEpoch": 1791010243.90463,
+    "startDelayFromTarget": 0.032974958419799805,
+    "traceReadBefore": {
+      "observedEpoch": 1791010243.413716,
+      "lastSequence": 49
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1791010243.9082172,
+      "lastSequence": 49
+    },
+    "branchBefore": null,
+    "branchBeforeError": "Traceback (most recent call last):\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/capture.py\", line 212, in <module>\n    try:branchBefore=schema.capture_evidence(beforeRows,role)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/branch_schema.py\", line 99, in capture_evidence\n    require(len(attached)==1,'No unique LIVE attached pair in latest sparse census')\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/branch_schema.py\", line 5, in require\n    if not ok: raise AssertionError(message)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: No unique LIVE attached pair in latest sparse census\n"
+  }
+]

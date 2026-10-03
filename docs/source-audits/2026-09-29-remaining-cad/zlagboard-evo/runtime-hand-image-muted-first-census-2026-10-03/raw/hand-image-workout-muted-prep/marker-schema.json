@@ -1,0 +1,348 @@
+{
+  "sourceVersion": "v3",
+  "reviewed": true,
+  "events": {
+    "startup-audio-preparation-change": {
+      "contextID": "string",
+      "attemptID": "nullableUUID",
+      "parentAttemptID": "nullableUUID",
+      "associationValid": "bool",
+      "planID": "string",
+      "countdown": "string",
+      "audioEnabled": "bool",
+      "audioPreparation": "string",
+      "pendingRequestPresent": "bool",
+      "armTaskPresent": "bool",
+      "routineStartedIsNil": "bool",
+      "activeStartUptime": "nullableFinite",
+      "armUptime": "nullableFinite",
+      "countdownKind": "string",
+      "pausedElapsed": "finite",
+      "taskCancelled": "bool"
+    },
+    "startup-deferred-dispatch": {
+      "contextID": "string",
+      "attemptID": "nullableUUID",
+      "parentAttemptID": "nullableUUID",
+      "associationValid": "bool",
+      "planID": "string",
+      "countdown": "string",
+      "audioEnabled": "bool",
+      "audioPreparation": "string",
+      "pendingRequestPresent": "bool",
+      "armTaskPresent": "bool",
+      "routineStartedIsNil": "bool",
+      "activeStartUptime": "nullableFinite",
+      "armUptime": "nullableFinite",
+      "countdownKind": "string",
+      "pausedElapsed": "finite",
+      "taskCancelled": "bool"
+    },
+    "startup-request-entry": {
+      "contextID": "string",
+      "attemptID": "nullableUUID",
+      "parentAttemptID": "nullableUUID",
+      "associationValid": "bool",
+      "planID": "string",
+      "countdown": "string",
+      "audioEnabled": "bool",
+      "audioPreparation": "string",
+      "pendingRequestPresent": "bool",
+      "armTaskPresent": "bool",
+      "routineStartedIsNil": "bool",
+      "activeStartUptime": "nullableFinite",
+      "armUptime": "nullableFinite",
+      "countdownKind": "string",
+      "pausedElapsed": "finite",
+      "taskCancelled": "bool"
+    },
+    "startup-request-deferred": {
+      "contextID": "string",
+      "attemptID": "nullableUUID",
+      "parentAttemptID": "nullableUUID",
+      "associationValid": "bool",
+      "planID": "string",
+      "countdown": "string",
+      "audioEnabled": "bool",
+      "audioPreparation": "string",
+      "pendingRequestPresent": "bool",
+      "armTaskPresent": "bool",
+      "routineStartedIsNil": "bool",
+      "activeStartUptime": "nullableFinite",
+      "armUptime": "nullableFinite",
+      "countdownKind": "string",
+      "pausedElapsed": "finite",
+      "taskCancelled": "bool"
+    },
+    "startup-audio-arm-before": {
+      "contextID": "string",
+      "attemptID": "nullableUUID",
+      "parentAttemptID": "nullableUUID",
+      "associationValid": "bool",
+      "planID": "string",
+      "countdown": "string",
+      "audioEnabled": "bool",
+      "audioPreparation": "string",
+      "pendingRequestPresent": "bool",
+      "armTaskPresent": "bool",
+      "routineStartedIsNil": "bool",
+      "activeStartUptime": "nullableFinite",
+      "armUptime": "nullableFinite",
+      "countdownKind": "string",
+      "pausedElapsed": "finite",
+      "taskCancelled": "bool"
+    },
+    "startup-audio-arm-after": {
+      "contextID": "string",
+      "attemptID": "nullableUUID",
+      "parentAttemptID": "nullableUUID",
+      "associationValid": "bool",
+      "planID": "string",
+      "countdown": "string",
+      "audioEnabled": "bool",
+      "audioPreparation": "string",
+      "pendingRequestPresent": "bool",
+      "armTaskPresent": "bool",
+      "routineStartedIsNil": "bool",
+      "activeStartUptime": "nullableFinite",
+      "armUptime": "nullableFinite",
+      "countdownKind": "string",
+      "pausedElapsed": "finite",
+      "taskCancelled": "bool"
+    },
+    "startup-arm-task-enter": {
+      "contextID": "string",
+      "attemptID": "nullableUUID",
+      "parentAttemptID": "nullableUUID",
+      "associationValid": "bool",
+      "planID": "string",
+      "countdown": "string",
+      "audioEnabled": "bool",
+      "audioPreparation": "string",
+      "pendingRequestPresent": "bool",
+      "armTaskPresent": "bool",
+      "routineStartedIsNil": "bool",
+      "activeStartUptime": "nullableFinite",
+      "armUptime": "nullableFinite",
+      "countdownKind": "string",
+      "pausedElapsed": "finite",
+      "taskCancelled": "bool"
+    },
+    "startup-arm-task-cancelled": {
+      "contextID": "string",
+      "attemptID": "nullableUUID",
+      "parentAttemptID": "nullableUUID",
+      "associationValid": "bool",
+      "planID": "string",
+      "countdown": "string",
+      "audioEnabled": "bool",
+      "audioPreparation": "string",
+      "pendingRequestPresent": "bool",
+      "armTaskPresent": "bool",
+      "routineStartedIsNil": "bool",
+      "activeStartUptime": "nullableFinite",
+      "armUptime": "nullableFinite",
+      "countdownKind": "string",
+      "pausedElapsed": "finite",
+      "taskCancelled": "bool"
+    },
+    "startup-arm-task-resumed": {
+      "contextID": "string",
+      "attemptID": "nullableUUID",
+      "parentAttemptID": "nullableUUID",
+      "associationValid": "bool",
+      "planID": "string",
+      "countdown": "string",
+      "audioEnabled": "bool",
+      "audioPreparation": "string",
+      "pendingRequestPresent": "bool",
+      "armTaskPresent": "bool",
+      "routineStartedIsNil": "bool",
+      "activeStartUptime": "nullableFinite",
+      "armUptime": "nullableFinite",
+      "countdownKind": "string",
+      "pausedElapsed": "finite",
+      "taskCancelled": "bool"
+    },
+    "startup-visible-countdown-before": {
+      "contextID": "string",
+      "attemptID": "nullableUUID",
+      "parentAttemptID": "nullableUUID",
+      "associationValid": "bool",
+      "planID": "string",
+      "countdown": "string",
+      "audioEnabled": "bool",
+      "audioPreparation": "string",
+      "pendingRequestPresent": "bool",
+      "armTaskPresent": "bool",
+      "routineStartedIsNil": "bool",
+      "activeStartUptime": "nullableFinite",
+      "armUptime": "nullableFinite",
+      "countdownKind": "string",
+      "pausedElapsed": "finite",
+      "taskCancelled": "bool"
+    },
+    "startup-visible-countdown-after": {
+      "contextID": "string",
+      "attemptID": "nullableUUID",
+      "parentAttemptID": "nullableUUID",
+      "associationValid": "bool",
+      "planID": "string",
+      "countdown": "string",
+      "audioEnabled": "bool",
+      "audioPreparation": "string",
+      "pendingRequestPresent": "bool",
+      "armTaskPresent": "bool",
+      "routineStartedIsNil": "bool",
+      "activeStartUptime": "nullableFinite",
+      "armUptime": "nullableFinite",
+      "countdownKind": "string",
+      "pausedElapsed": "finite",
+      "taskCancelled": "bool"
+    },
+    "startup-context-appear": {
+      "contextID": "string",
+      "appearanceCount": "integer"
+    },
+    "startup-association-ambiguous": {
+      "contextID": "string",
+      "reason": "string"
+    },
+    "startup-cancellation-requested": {
+      "contextID": "string",
+      "site": "string",
+      "taskPresent": "bool",
+      "pendingPresent": "bool",
+      "armedAttemptID": "nullableUUID",
+      "deferredAttemptID": "nullableUUID",
+      "associationValid": "bool"
+    },
+    "startup-board-load-call": {
+      "loadAttempt": "UUID",
+      "boardID": "string",
+      "presentationID": "string",
+      "taskCancelled": "bool"
+    },
+    "startup-board-load-return": {
+      "loadAttempt": "UUID",
+      "taskCancelled": "bool",
+      "sceneLifecycleToken": "UUID"
+    },
+    "startup-board-ready-published": {
+      "loadAttempt": "UUID",
+      "sceneLifecycleToken": "UUID"
+    },
+    "startup-board-load-error": {
+      "loadAttempt": "UUID",
+      "taskCancelled": "bool",
+      "errorType": "string"
+    },
+    "startup-audio-prepare-before": {
+      "contextID": "string",
+      "attemptID": "nullableUUID",
+      "parentAttemptID": "nullableUUID",
+      "associationValid": "bool",
+      "planID": "string",
+      "countdown": "string",
+      "audioEnabled": "bool",
+      "audioPreparation": "string",
+      "pendingRequestPresent": "bool",
+      "armTaskPresent": "bool",
+      "routineStartedIsNil": "bool",
+      "activeStartUptime": "nullableFinite",
+      "armUptime": "nullableFinite",
+      "countdownKind": "string",
+      "pausedElapsed": "finite",
+      "taskCancelled": "bool"
+    },
+    "startup-audio-prepare-after": {
+      "contextID": "string",
+      "attemptID": "nullableUUID",
+      "parentAttemptID": "nullableUUID",
+      "associationValid": "bool",
+      "planID": "string",
+      "countdown": "string",
+      "audioEnabled": "bool",
+      "audioPreparation": "string",
+      "pendingRequestPresent": "bool",
+      "armTaskPresent": "bool",
+      "routineStartedIsNil": "bool",
+      "activeStartUptime": "nullableFinite",
+      "armUptime": "nullableFinite",
+      "countdownKind": "string",
+      "pausedElapsed": "finite",
+      "taskCancelled": "bool"
+    }
+  },
+  "requiredEvents": [
+    "startup-context-appear"
+  ],
+  "commonAttemptEvents": [
+    "startup-audio-preparation-change",
+    "startup-deferred-dispatch",
+    "startup-request-entry",
+    "startup-request-deferred",
+    "startup-audio-arm-before",
+    "startup-audio-arm-after",
+    "startup-arm-task-enter",
+    "startup-arm-task-cancelled",
+    "startup-arm-task-resumed",
+    "startup-visible-countdown-before",
+    "startup-visible-countdown-after"
+  ],
+  "sourcePatchSHA256": "c53b409f878296d440c9eb567163a7afcb0c8c2c9be3a1288995411008d8241d",
+  "spans": [
+    {
+      "name": "load",
+      "beginEvent": "startup-board-load-call",
+      "endEvents": [
+        "startup-board-load-return",
+        "startup-board-load-error"
+      ],
+      "identityFields": [
+        "loadAttempt"
+      ]
+    },
+    {
+      "name": "audioPrepare",
+      "beginEvent": "startup-audio-prepare-before",
+      "endEvents": [
+        "startup-audio-prepare-after"
+      ],
+      "identityFields": [
+        "attemptID"
+      ]
+    },
+    {
+      "name": "audioArm",
+      "beginEvent": "startup-audio-arm-before",
+      "endEvents": [
+        "startup-audio-arm-after"
+      ],
+      "identityFields": [
+        "attemptID"
+      ]
+    },
+    {
+      "name": "armTask",
+      "beginEvent": "startup-arm-task-enter",
+      "endEvents": [
+        "startup-arm-task-resumed",
+        "startup-arm-task-cancelled"
+      ],
+      "identityFields": [
+        "attemptID"
+      ]
+    },
+    {
+      "name": "visibleCountdown",
+      "beginEvent": "startup-visible-countdown-before",
+      "endEvents": [
+        "startup-visible-countdown-after"
+      ],
+      "identityFields": [
+        "attemptID"
+      ]
+    }
+  ]
+}

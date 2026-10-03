@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/capture.py", line 221, in <module>
+    if branchError:raise AssertionError('Required hand readiness missing at mandatory checkpoint; screenshot retained without waiting: '+branchError)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Required hand readiness missing at mandatory checkpoint; screenshot retained without waiting: Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/capture.py", line 212, in <module>
+    try:branchBefore=schema.capture_evidence(beforeRows,role)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/branch_schema.py", line 99, in capture_evidence
+    require(len(attached)==1,'No unique LIVE attached pair in latest sparse census')
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/branch_schema.py", line 5, in require
+    if not ok: raise AssertionError(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: No unique LIVE attached pair in latest sparse census
+
