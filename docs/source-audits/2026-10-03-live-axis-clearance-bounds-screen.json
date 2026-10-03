@@ -1,0 +1,251 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "closed": true,
+  "speedGatePassed": false,
+  "checkpoint": {
+    "adopted": false,
+    "axisBounds": true,
+    "candidateMetrics": {
+      "clearanceMargin": 9.994055532242755e-05,
+      "geometryAccepted": true,
+      "lengthError": 9.326733274583887e-08,
+      "speed": 0.00029439116791770906,
+      "strain": 1.516625981801134e-05
+    },
+    "candidateQPs": 2,
+    "candidateTrace": [
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 0.00015958302990769517,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 0.00021355221966246063
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.4480377384391393e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.516625981801134e-05
+      }
+    ],
+    "clearanceBounds": true,
+    "currentDifferenceMeters": 0,
+    "failure": "invalid(\"fixed median <=0.80 complete-step speed gate\")",
+    "fallbackClearanceBounds": 0,
+    "fixturesPass": true,
+    "medianRatio": 0.9977863810082148,
+    "minimumBoundOracleSlack": 1.6479873021779667e-17,
+    "originalQPs": 2,
+    "originalTrace": [
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 0.00015958302990769517,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 0.00021355221966246063
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.4480377384391393e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.516625981801134e-05
+      }
+    ],
+    "owner": "strong-owl-live-physics",
+    "pairs": [
+      {
+        "candidateSeconds": 0.0047112499887589365,
+        "originalSeconds": 0.00516254166723229,
+        "ratio": 0.9125834312703384
+      },
+      {
+        "candidateSeconds": 0.005153999998583458,
+        "originalSeconds": 0.006613291669054888,
+        "ratio": 0.7793395870773716
+      },
+      {
+        "candidateSeconds": 0.005956166656687856,
+        "originalSeconds": 0.00511916667164769,
+        "ratio": 1.1635031712633734
+      },
+      {
+        "candidateSeconds": 0.00897741666994989,
+        "originalSeconds": 0.008997333337902091,
+        "ratio": 0.9977863810082148
+      },
+      {
+        "candidateSeconds": 0.01541358332906384,
+        "originalSeconds": 0.008407000001170672,
+        "ratio": 1.833422543941656
+      },
+      {
+        "candidateSeconds": 0.006310916680376977,
+        "originalSeconds": 0.006152875008410774,
+        "ratio": 1.0256858252036918
+      },
+      {
+        "candidateSeconds": 0.0049052083340939134,
+        "originalSeconds": 0.0056854166759876534,
+        "ratio": 0.8627702442304803
+      }
+    ],
+    "prefixIdentitySteps": 139,
+    "sigma": 0.1,
+    "step": 140,
+    "strictConverged": true,
+    "strictDifferenceMeters": 1.7280166712871417e-06,
+    "strictRetries": 0,
+    "strictTrace": [
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 0.00015958302990775008,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 0.0002135522196657913
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.448037738241142e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.5166259817567251e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.466445713636594e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.4996362600161461e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.5217012527756437e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.473593636491799e-05
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 3.5859014644920644e-06,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.0991293032169835e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 1.497525329787497e-07,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.3411536103902222e-08
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 1.1064717749923536e-07,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.182311293312921e-08
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 2.180336056319867e-08,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.065580956804979e-09
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 1.6062026799372495e-08,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.0359288982186854e-09
+      }
+    ],
+    "validClearanceBounds": 279,
+    "workAndAccuracyPass": true
+  },
+  "scalarProof": {
+    "owner": "strong-owl-live-physics",
+    "adopted": false,
+    "counts": {
+      "support": 10000,
+      "axis": 10000,
+      "bvh": 10000
+    },
+    "positiveSupportBounds": 3986,
+    "prunedBVHCases": 6916,
+    "exactRationalChecksPass": true,
+    "scalarOptimizedIRNoFastFlags": true,
+    "scope": "bounded deterministic native scalar corpus; operation-level BVH argument is separate; not generic rounded narrow-phase equivalence",
+    "hashes": {
+      ".context/strong-owl-live-physics-clearance-bounds-proof-axis/Axis.swift": "79863f08bb423be04f4c2f61450ceb7c5aaa6aa98efa6e4d679db7bc4f00fde1",
+      ".context/strong-owl-live-physics-clearance-bounds-proof-axis/Math.swift": "e1a990ed7f94b4c6c07311f11e397febefc87d93daf8bdba92ce6f82aea67acd",
+      ".context/strong-owl-live-physics-clearance-bounds-proof-axis/main.swift": "fb26d631ff629b40634920b046fda3b9e9d8dfcb006e02ffa92b5e5de6796588",
+      "Tools/HangboardRopePrototype/clearance_bounds/run_proof.py": "70c9a588e62443f62a94f17ab0c244b06a63e5065bfcb673559aadc216a21876",
+      ".context/strong-owl-live-physics-clearance-bounds-proof-axis/cases.json": "73e1aeec4491def1e84189c4f3bfeff760c17f6eb711d5954a85fa9a7e274307",
+      ".context/strong-owl-live-physics-clearance-bounds-proof-axis/bounds.ll": "a0bccb38a3dd3bb554dd7282b989545043b04a3db216064bbb79726699cefb7a"
+    }
+  },
+  "absentGroups": [
+    19156,
+    19685,
+    20092,
+    20223,
+    20724,
+    20876,
+    20892,
+    20728,
+    21040
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-clearance-bounds-axis-red/resources.jsonl": "191a2e41cd99906f337d5bde6cb15c8a8299886ac9006810e6997100140a617b",
+    ".context/strong-owl-live-physics-clearance-bounds-axis-red/run.log": "2ec6c5422aa7b6810c338bc825f446fe75cbc1dba62cda9af4a0a2c831bfd14f",
+    ".context/strong-owl-live-physics-clearance-bounds-axis-green/resources.jsonl": "56000a45d76e4324b49c33032ca906f46e1c29dfe3dc5253ba87a77008b02bab",
+    ".context/strong-owl-live-physics-clearance-bounds-axis-green/run.log": "07ef468598dee3686addcd1568420d1298c85bb22f9fd630e6dd2c45be9b6a30",
+    ".context/strong-owl-live-physics-clearance-bounds-proof-axis/resources.jsonl": "11bdc62b94577199b21cba23831bc8b723abf88c532324ae3bc88a9bf27eb907",
+    ".context/strong-owl-live-physics-clearance-bounds-proof-axis/result.json": "765461f5a62083cd4f36dd35bee61108485f9b20ecd8681834f807aa7414b239",
+    ".context/strong-owl-live-physics-clearance-bounds-proof-axis/proof-export.log": "5bfe58dff6f1dde87f8a1ba39d48cc2ba2be455e2b199352190a3d276e0f3fc3",
+    ".context/strong-owl-live-physics-clearance-bounds-proof-axis/bounds.ll": "a0bccb38a3dd3bb554dd7282b989545043b04a3db216064bbb79726699cefb7a",
+    ".context/strong-owl-live-physics-clearance-bounds-proof-axis/cases.json": "73e1aeec4491def1e84189c4f3bfeff760c17f6eb711d5954a85fa9a7e274307",
+    ".context/strong-owl-live-physics-armijo-b5f85b0e2-axis-bounds-checkpoint/native/resources.jsonl": "7c6805612573660f42eb2e3a778bce13c214ed07f2fef69c2e066d250d8aff89",
+    ".context/strong-owl-live-physics-armijo-b5f85b0e2-axis-bounds-checkpoint/native/result.json": "fa415e82c209798d02e1e404e63ec663002bf6982836a6170475a2c0d5cd2d9d",
+    ".context/strong-owl-live-physics-armijo-b5f85b0e2-axis-bounds-checkpoint/native/provenance.json": "02f6c078ee08b7a830066702780f3245fbed063d37cd09630616c31d4c6552a2",
+    ".context/strong-owl-live-physics-armijo-b5f85b0e2-axis-bounds-checkpoint/native/run.log": "fc66b57343df76b09abc7b75ecf0326659cbd7c2bda492dedea47f458ef133ec",
+    "Tools/HangboardRopePrototype/clearance_bounds/Math.swift": "e1a990ed7f94b4c6c07311f11e397febefc87d93daf8bdba92ce6f82aea67acd",
+    "Tools/HangboardRopePrototype/clearance_bounds/run_proof.py": "70c9a588e62443f62a94f17ab0c244b06a63e5065bfcb673559aadc216a21876",
+    "Tools/HangboardRopePrototype/clearance_bounds/Axis.swift": "79863f08bb423be04f4c2f61450ceb7c5aaa6aa98efa6e4d679db7bc4f00fde1",
+    "Tools/HangboardRopePrototype/clearance_bounds/Proof.swift": "fb26d631ff629b40634920b046fda3b9e9d8dfcb006e02ffa92b5e5de6796588",
+    "Tools/HangboardRopePrototype/clearance_bounds/run_fixtures.py": "88b9917a360f84b068710b6b5a1e326114252d60c05cfbc578d66fcf06651b54",
+    "Tools/HangboardRopePrototype/clearance_bounds/axis_snapshot.py": "b2ba55eaf27de808528b48e9c6612eaad22638c1935e08a79afbae4963e1235b",
+    "Tools/HangboardRopePrototype/clearance_bounds/snapshot.py": "10abdafa8f5f07a3973f479cdd255746f8ccaab50840996a42c211dd67d1bebb",
+    ".context/strong-owl-live-physics-clearance-bounds-proposal/AXIS_PLAN.md": "5ea988ad865f18461a9209905909c1b8230326a4f1afd1f74e28a49aefd12db7"
+  }
+}
