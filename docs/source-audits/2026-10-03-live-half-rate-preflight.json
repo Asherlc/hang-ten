@@ -1,0 +1,29 @@
+{
+  "accuracyPass": true,
+  "adopted": false,
+  "armijoEnabled": false,
+  "attemptedSteps": 20,
+  "candidateHz": 240,
+  "controlHz": 240,
+  "engineSeconds": 0.31180575002508704,
+  "hostRealtimePass": false,
+  "maxSeconds": 0.0464253749960335,
+  "owner": "strong-owl-live-physics",
+  "p50Seconds": 0.01097258334630169,
+  "p95EngineBatchSeconds": 0.09300058335065842,
+  "p95Seconds": 0.0464253749960335,
+  "preflight": true,
+  "preflightPass": true,
+  "simulatedSeconds": 0.08333333333333333,
+  "stageOnePass": true,
+  "sameRateIdenticalSteps": 20,
+  "independentlyAbsentGroups": [
+    22190,
+    22353
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-a8ef5b8c4-half-rate-preflight/native/result.json": "3dca56f33f1e2fb8b192c6e04574519882ebc285e98574960a69d0346c860075",
+    ".context/strong-owl-live-physics-armijo-a8ef5b8c4-half-rate-preflight/native/provenance.json": "16732fbff27b01bdaf6e8800796f22446d52cd460612551d143d821122e2253f",
+    ".context/strong-owl-live-physics-armijo-a8ef5b8c4-half-rate-preflight/native/resources.jsonl": "fbbd000e65e72d4c5bfd04f0c3e0465105f0ecb8e2dd88c248d24e18d899833d"
+  }
+}
