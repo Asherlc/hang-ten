@@ -682,7 +682,6 @@ struct WorkoutTimeline {
         isSkipCountdown: Bool = false
     ) -> WorkoutBoardCue {
         guard !isComplete,
-              (countdown == 0 || (countdown > 0 && isSkipCountdown)),
               let currentStep else {
             return WorkoutBoardCue(
                 step: nil,

@@ -810,11 +810,11 @@ struct PlanDetailView: View {
             if let currentPlan {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 21) {
-                        titleBlock(for: currentPlan)
                         if let firstStep = currentPlan.steps.first,
                            !firstStep.workRequirements.isEmpty {
                             boardPreview(for: currentPlan)
                         }
+                        titleBlock(for: currentPlan)
                         stepsCard(for: currentPlan)
                         sourceCard(for: currentPlan)
                     }
