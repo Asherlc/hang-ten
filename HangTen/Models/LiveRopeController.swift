@@ -68,6 +68,12 @@ actor LiveRopeWorker {
         LiveRopeReviewTrace.log("worker begin steps=\(steps) immediate=\(settleImmediately) target=\(target.vector)")
         #endif
         var frame: RopeFrameSnapshot?
+        #if DEBUG
+        var reviewAcceptedSteps = 0
+        var reviewMaximumStrain = 0.0
+        var reviewMinimumClearanceMargin = Double.infinity
+        var reviewCorrections = 0, reviewCaps = 0, reviewRetries = 0
+        #endif
         if settleImmediately {
             frame = try candidate.settled(targetOrientation: target, maxDuration: 5)
         } else {
@@ -75,6 +81,16 @@ actor LiveRopeWorker {
             for _ in 0..<steps {
                 try Task.checkCancellation()
                 frame = try candidate.step(dt: 1.0/240, targetOrientation: target)
+                #if DEBUG
+                reviewAcceptedSteps += 1
+                reviewCorrections += candidate.reviewStepCorrections
+                reviewCaps += candidate.reviewStepCaps
+                reviewRetries += candidate.reviewStepRetries
+                if let frame {
+                    reviewMaximumStrain = max(reviewMaximumStrain, frame.metrics.maximumLocalStrain)
+                    reviewMinimumClearanceMargin = min(reviewMinimumClearanceMargin, frame.metrics.minimumClearanceMargin)
+                }
+                #endif
                 if frame?.settled == true { break }
             }
         }
@@ -82,6 +98,7 @@ actor LiveRopeWorker {
         solver = candidate
         #if DEBUG
         LiveRopeReviewTrace.log("worker end orientation=\(String(describing: frame?.orientation.vector)) settled=\(String(describing: frame?.settled))")
+        LiveRopeReviewTrace.log("worker metrics acceptedSteps=\(reviewAcceptedSteps) corrections=\(reviewCorrections) caps=\(reviewCaps) retries=\(reviewRetries) maximumStrain=\(reviewMaximumStrain) minimumClearanceMargin=\(reviewMinimumClearanceMargin) speed=\(frame?.metrics.maximumSpeed ?? .infinity) displacement=\(frame?.metrics.boardDisplacement ?? .infinity)")
         #endif
         return frame
     }

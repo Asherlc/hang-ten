@@ -185,11 +185,14 @@ struct RopeTriangleCollider: Sendable {
     }
 
     func segmentContact(from start: SIMD3<Double>, to end: SIMD3<Double>, radius: Double) -> RopeSegmentContact? {
-        let closest=closestSegment(start,end)
-        let contact=closest.contact
-        let startSurface=closestSurface(at:start), endSurface=closestSurface(at:end)
+        segmentContactEvaluation(from:start,to:end,radius:radius).contact
+    }
+    private func segmentContactEvaluation(from start:SIMD3<Double>,to end:SIMD3<Double>,radius:Double)
+        -> (contact:RopeSegmentContact?,nearest:(distance:Double,contact:RopeSegmentContact)) {
+        let closest=closestSegment(start,end),contact=closest.contact
         var insideContact:RopeSegmentContact?
-        for (p,surface,fraction) in [(start,startSurface,0.0),(end,endSurface,1.0)] where contains(p) {
+        for (p,fraction) in [(start,0.0),(end,1.0)] where contains(p) {
+            let surface=closestSurface(at:p)
             let penetration=radius+surface.distance
             if penetration > (insideContact?.penetrationDepth ?? -Double.infinity) {
                 let delta=surface.point-p
@@ -197,10 +200,10 @@ struct RopeTriangleCollider: Sendable {
                 insideContact=RopeSegmentContact(centerlinePoint:p,surfacePoint:surface.point,normal:normal,fraction:fraction,penetrationDepth:penetration)
             }
         }
-        if let insideContact {return insideContact}
-        guard closest.distance < radius else { return nil }
-        return RopeSegmentContact(centerlinePoint:contact.centerlinePoint,surfacePoint:contact.surfacePoint,normal:contact.normal,
-                                  fraction:contact.fraction,penetrationDepth:radius-closest.distance)
+        if let insideContact {return (insideContact,closest)}
+        guard closest.distance < radius else {return (nil,closest)}
+        return (RopeSegmentContact(centerlinePoint:contact.centerlinePoint,surfacePoint:contact.surfacePoint,normal:contact.normal,
+                                  fraction:contact.fraction,penetrationDepth:radius-closest.distance),closest)
     }
 
     /// Retains independent nearby surface witnesses. A single closest normal
@@ -255,8 +258,9 @@ struct RopeTriangleCollider: Sendable {
         var time=0.0
         for _ in 0..<256 {
             let a=previousStart+(start-previousStart)*time, b=previousEnd+(end-previousEnd)*time
-            if var hit=segmentContact(from:a,to:b,radius:radius) { hit.timeOfImpact=time; return hit }
-            let nearest=closestSegment(a,b), gap=nearest.distance-radius
+            let evaluated=segmentContactEvaluation(from:a,to:b,radius:radius)
+            if var hit=evaluated.contact {hit.timeOfImpact=time;return hit}
+            let nearest=evaluated.nearest,gap=nearest.distance-radius
             if gap <= 1e-9 {
                 var hit=nearest.contact; hit.timeOfImpact=time; return hit
             }
@@ -311,7 +315,10 @@ struct RopeTriangleCollider: Sendable {
         return false
     }
 
+    func queryParity(_ point:SIMD3<Double>)->Bool {contains(point)}
     private func contains(_ point: SIMD3<Double>) -> Bool {
+        let root=tree[0]
+        if point.x<root.minimum.x || point.x>root.maximum.x || point.y<root.minimum.y || point.y>root.maximum.y || point.z<root.minimum.z || point.z>root.maximum.z {return false}
         let direction=simd_normalize(SIMD3<Double>(1,0.3713906763541037,0.5291502622129182))
         var distances: [Double]=[], stack=[0]
         while let index=stack.popLast() {
@@ -434,5 +441,160 @@ struct RopeTriangleCollider: Sendable {
             }
         }
         return (p+d1*s,a+d2*t,s)
+    }
+}
+
+// Share triangle arithmetic across queries while preserving each query's pruning and witness order.
+extension RopeTriangleCollider {
+    // Outputs: point(start), link(row), link(merit), point(end).
+    func fusedContactEvaluation(from start:SIMD3<Double>,to end:SIMD3<Double>,rowRadius:Double,meritRadius:Double,
+                       startInside:Bool,endInside:Bool)->(hits:[[RopeSegmentContact]],clearance:Double?) {
+        if startInside || endInside {
+            return ([segmentContacts(from:start,to:start,radius:rowRadius),
+                    segmentContacts(from:start,to:end,radius:rowRadius),
+                    segmentContacts(from:start,to:end,radius:meritRadius),
+                    segmentContacts(from:end,to:end,radius:rowRadius)],nil)
+        }
+        let low=simd_min(start,end),high=simd_max(start,end)
+        let rowSquare=rowRadius*rowRadius,meritSquare=meritRadius*meritRadius
+        var stack=[(0,15)],faces:[(Int,Int)]=[],firstHits:[RopeSegmentContact]=[],rowHits:[RopeSegmentContact]=[],meritHits:[RopeSegmentContact]=[],lastHits:[RopeSegmentContact]=[]
+        while let (index,parent)=stack.popLast() {
+            let node=tree[index]
+            let link=simd_length_squared(simd_max(simd_max(node.minimum-high,low-node.maximum),SIMD3(repeating:0)))
+            let first=simd_length_squared(simd_max(simd_max(node.minimum-start,start-node.maximum),SIMD3(repeating:0)))
+            let last=simd_length_squared(simd_max(simd_max(node.minimum-end,end-node.maximum),SIMD3(repeating:0)))
+            var mask=parent
+            if first>=rowSquare {mask &= ~1}
+            if link>=rowSquare {mask &= ~2}
+            if link>=meritSquare {mask &= ~4}
+            if last>=rowSquare {mask &= ~8}
+            if mask==0 {continue}
+            if node.left>=0 {stack.append((node.left,mask));stack.append((node.right,mask))}
+            else {for face in node.faces {faces.append((face,mask))}}
+        }
+        var minimum=Double.infinity
+        for (index,mask) in faces.sorted(by:{$0.0<$1.0}) {
+            let face=mesh.triangles[index],a=mesh.vertices[face.x],b=mesh.vertices[face.y],c=mesh.vertices[face.z]
+            let normal=simd_normalize(simd_cross(b-a,c-a))
+            var first=FusedWitness(best:rowSquare,radius:rowRadius,faceNormal:normal)
+            var row=FusedWitness(best:rowSquare,radius:rowRadius,faceNormal:normal)
+            var merit=FusedWitness(best:meritSquare,radius:meritRadius,faceNormal:normal)
+            var last=FusedWitness(best:rowSquare,radius:rowRadius,faceNormal:normal)
+            if mask & 7 != 0 {
+                let q=Self.triangleClosest(start,a,b,c)
+                if mask & 1 != 0 {first.consider(start,q,0)};if mask & 2 != 0 {row.consider(start,q,0)};if mask & 4 != 0 {merit.consider(start,q,0)}
+            }
+            if mask & 8 != 0 || (start != end && mask & 6 != 0) {
+                let q=Self.triangleClosest(end,a,b,c)
+                if mask & 8 != 0 {last.consider(end,q,0)}
+                if start != end {if mask & 2 != 0 {row.consider(end,q,1)};if mask & 4 != 0 {merit.consider(end,q,1)}}
+            }
+            if start != end && mask & 6 != 0 {
+                if let t=Self.rayTriangle(start,end-start,a,b,c),t>=0,t<=1 {
+                    let p=start+(end-start)*t;if mask & 2 != 0 {row.consider(p,p,t)};if mask & 4 != 0 {merit.consider(p,p,t)}
+                }
+                let ab=Self.segmentPair(start,end,a,b),bc=Self.segmentPair(start,end,b,c),ca=Self.segmentPair(start,end,c,a)
+                for q in [ab,bc,ca] {if mask & 2 != 0 {row.consider(q.0,q.1,q.2)};if mask & 4 != 0 {merit.consider(q.0,q.1,q.2)}}
+            }
+            if row.best<rowSquare {minimum=min(minimum,sqrt(row.best))}
+            Self.mergeFused(first.hit,into:&firstHits);Self.mergeFused(row.hit,into:&rowHits)
+            Self.mergeFused(merit.hit,into:&meritHits);Self.mergeFused(last.hit,into:&lastHits)
+        }
+        return ([firstHits,rowHits,meritHits,lastHits],minimum<1e-10 ? 0:minimum)
+    }
+    private struct FusedWitness {
+        var best:Double
+        let radius:Double
+        let faceNormal:SIMD3<Double>
+        var hit:RopeSegmentContact?
+        mutating func consider(_ p:SIMD3<Double>,_ q:SIMD3<Double>,_ fraction:Double) {
+            let distanceSquared=simd_length_squared(p-q)
+            guard distanceSquared<best else{return}
+            best=distanceSquared
+            let distance=sqrt(distanceSquared)
+            hit=RopeSegmentContact(centerlinePoint:p,surfacePoint:q,
+                normal:distance>1e-10 ? (p-q)/distance:faceNormal,fraction:fraction,penetrationDepth:radius-distance)
+        }
+    }
+    private static func mergeFused(_ witness:RopeSegmentContact?,into result:inout [RopeSegmentContact]) {
+        guard let hit=witness else{return}
+        if let duplicate=result.firstIndex(where:{abs($0.fraction-hit.fraction)<1e-6 && simd_dot($0.normal,hit.normal)>1-1e-8}) {
+            if hit.penetrationDepth>result[duplicate].penetrationDepth {result[duplicate]=hit}
+        } else {result.append(hit)}
+    }
+}
+
+import Dispatch
+// Each worker owns disjoint initialized slots. concurrentPerform joins before reads/destruction.
+private final class RopeContactBatchStorage:@unchecked Sendable {
+    let inside:UnsafeMutablePointer<Bool>
+    let results:UnsafeMutablePointer<(hits:[[RopeSegmentContact]],clearance:Double?)>
+    let pointCount:Int,linkCount:Int
+    init(points:Int) {
+        pointCount=points;linkCount=points-1
+        inside = .allocate(capacity:points);inside.initialize(repeating:false,count:points)
+        results = .allocate(capacity:linkCount);results.initialize(repeating:([],nil),count:linkCount)
+    }
+    deinit {inside.deinitialize(count:pointCount);inside.deallocate();results.deinitialize(count:linkCount);results.deallocate()}
+}
+extension RopeTriangleCollider {
+    func fusedChainContacts(points:[SIMD3<Double>],rowRadius:Double,meritRadius:Double)->(points:[[RopeSegmentContact]],rows:[[RopeSegmentContact]],merits:[[RopeSegmentContact]],clearances:[Double?]) {
+        precondition(points.count>=2)
+        let storage=RopeContactBatchStorage(points:points.count),links=points.count-1
+        let jobs=links>=64 ? 4:1
+        func ranges(_ count:Int,_ job:Int)->Range<Int> {let chunk=(count+jobs-1)/jobs;return min(count,job*chunk)..<min(count,(job+1)*chunk)}
+        DispatchQueue.concurrentPerform(iterations:jobs) {job in
+            for i in ranges(points.count,job) {storage.inside[i]=queryParity(points[i])}
+        }
+        DispatchQueue.concurrentPerform(iterations:jobs) {job in
+            for i in ranges(links,job) {
+                storage.results[i]=fusedContactEvaluation(from:points[i],to:points[i+1],rowRadius:rowRadius,meritRadius:meritRadius,
+                    startInside:storage.inside[i],endInside:storage.inside[i+1])
+            }
+        }
+        var p=Array(repeating:[RopeSegmentContact](),count:points.count),r:[[RopeSegmentContact]]=[],m:[[RopeSegmentContact]]=[]
+        var clearances:[Double?]=[]
+        for i in 0..<links {
+            let result=storage.results[i].hits;clearances.append(storage.results[i].clearance);p[i]=result[0];r.append(result[1]);m.append(result[2])
+            if i==links-1 {p[i+1]=result[3]}
+        }
+        return (p,r,m,clearances)
+    }
+}
+
+extension RopeTriangleCollider {
+ func fusedContacts(from a:SIMD3<Double>,to b:SIMD3<Double>,rowRadius:Double,meritRadius:Double,startInside:Bool,endInside:Bool)->[[RopeSegmentContact]] {fusedContactEvaluation(from:a,to:b,rowRadius:rowRadius,meritRadius:meritRadius,startInside:startInside,endInside:endInside).hits}
+}
+
+import Dispatch
+private final class RopeSweepBatch:@unchecked Sendable {
+    let values:UnsafeMutablePointer<Bool>
+    let count:Int
+    init(_ count:Int) {self.count=count;values = .allocate(capacity:count);values.initialize(repeating:true,count:count)}
+    deinit {values.deinitialize(count:count);values.deallocate()}
+}
+extension RopeTriangleCollider {
+    func sweepChainIsClear(previous:RopeSimulationState,next:RopeSimulationState,rope r:Int,clearances:[Double]?,globalClearance:Double?)->Bool {
+        let chain=next.ropes[r],old=previous.ropes[r],links=chain.restLengths.count
+        let radius=chain.radius-0.00005
+        let angle=2*acos(min(1,abs(simd_dot(previous.orientation.vector,next.orientation.vector))))
+        func deviation(_ i:Int)->Double {
+            if chain.attachments[i] != nil {return 0}
+            return RopeMotionSweep.rotationalDeviation(start:old.positions[i]-SIMD3(0,previous.boardHeight,0),
+                end:chain.positions[i]-SIMD3(0,next.boardHeight,0),angle:angle)
+        }
+        let output=RopeSweepBatch(links),jobs=links>=64 ? 4:1,chunk=(links+jobs-1)/jobs
+        DispatchQueue.concurrentPerform(iterations:jobs) {job in
+            for i in min(links,job*chunk)..<min(links,(job+1)*chunk) {
+                let a=previous.boardPoint(old.positions[i]),b=previous.boardPoint(old.positions[i+1])
+                let nextA=next.boardPoint(chain.positions[i]),nextB=next.boardPoint(chain.positions[i+1])
+                let movement=max(simd_distance(a,nextA),simd_distance(b,nextB))
+                let curveDeviation=max(deviation(i),deviation(i+1))
+                let clearance=clearances?[i] ?? globalClearance ?? segmentClearance(from:a,to:b)
+                if movement+curveDeviation<=clearance-radius {continue}
+                output.values[i]=sweptSegmentContact(previousStart:a,previousEnd:b,start:nextA,end:nextB,radius:radius+curveDeviation)==nil
+            }
+        }
+        return (0..<links).allSatisfy{output.values[$0]}
     }
 }

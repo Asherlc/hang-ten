@@ -1,0 +1,51 @@
+{
+  "owner": "strong-owl-live-physics",
+  "status": "native acceptance passed; app runtime and device performance pending",
+  "baselineCommit": "886067b15",
+  "productionAdoption": "exact fused evaluation, bounded four-job concurrency, receipts, per-link CCD bounds and duplicate-free swept queries",
+  "experimentalOnly": "DEBUG opt-in full-QP convergence norm 50 micrometers during turning, 1 mm/s times dt with full accepted correction at destination; contact hints/batched responses only on that experiment",
+  "physicalLimitsChanged": false,
+  "timeStepSeconds": 0.004166666666666667,
+  "independentQueryComparisons": 934,
+  "independentSweepComparisons": 2802,
+  "strictOriginalPhysicalCheckpointBitIdentitySteps": 20,
+  "trajectorySteps": 540,
+  "closedLines": [
+    "16-link job scheduling missed fixed 0.80 performance ratio (0.8625)",
+    "nongravity starting guess failed first-step cap/retry gate"
+  ],
+  "evidenceHashes": {
+    ".context/strong-owl-live-physics-current-strict-adoption/native/result.json": "42da5537ab78fea490828b0d5f4c661080655bfc4d1db3da81f9ea9c9e1c67c3",
+    ".context/strong-owl-live-physics-current-query-adoption/native/run.log": "8f3d6b29c79aea39ceb6c1d456b500cc9d244930b9f2da49402a2c3d635acbb2",
+    ".context/strong-owl-live-physics-current-diagnostic-trajectory/native/result.json": "f53af4dd14b4fa181f62e34113000b26e4b2bb9d810b256c2a7ee38e8cd3ba74",
+    ".context/strong-owl-live-physics-hinted-batch/native/result.json": "a60a0362ccda3769a421a09d28c6ccb67aa75df695a8ece78fe7118270880df9",
+    ".context/strong-owl-live-physics-sweep-fusion-paired/native/result.json": "262151b7947c6a27b96d1830b0d6def1f022e6348ae0798cc938a3bf72aa530f",
+    ".context/strong-owl-live-physics-inertial-guess/native/result.json": "36148d7bd9db0f6ec1a83f93839abac1ffdfc70442e02e42f6b25eed69019dbd",
+    ".context/strong-owl-live-physics-balanced-queries-built/native/result.json": "5feb46d8d17547edf36f4fcb86ecc45e4b92cf9090cce8b45d53487a9af09966"
+  },
+  "limitations": [
+    "Native timing is host-only; physical iPhone developer tunnel currently unavailable.",
+    "Other catalog boards remain seated/unpromoted.",
+    "Historical full-speed-profile matchesPriorAcceptedControl metadata is invalid: that comparison was removed from its driver. Only same-binary profile/unprofile identity was checked."
+  ],
+  "review": "Astra source review found no blocking ownership/receipt/CCD defect; requested cap/retry device diagnostics were added.",
+  "diagnosticTrajectory": {
+    "completed": true,
+    "caps": 0,
+    "retries": 0,
+    "phaseSettled": [
+      true,
+      true
+    ],
+    "maximumConvergedReferenceDifferenceMeters": 7.092141405393452e-06,
+    "sustainedTailStepsPerDestination": 60
+  },
+  "iOSValidation": {
+    "configuration": "Debug with -O",
+    "platform": "iOS Simulator 26.3 iPhone 16 Pro",
+    "selectedSuite": "9 rope/collider/contact/mesh/controller suites",
+    "passed": true,
+    "evidence": ".context/strong-owl-live-physics-ios-current/tests.log",
+    "testsPassed": 95
+  }
+}

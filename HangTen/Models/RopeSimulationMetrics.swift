@@ -108,20 +108,37 @@ struct RopeSimulationMetrics: Sendable {
     }
 
     static func measure(state:RopeSimulationState,input:RopePhysicsInput,collider:RopeTriangleCollider,
-                        boardHistory:[Double],includeSelfContact:Bool=true,channelCache:RopeChannelColliderCache?=nil) throws -> Self {
+                        boardHistory:[Double],includeSelfContact:Bool=true,channelCache:RopeChannelColliderCache?=nil,clearanceReceipts:[[Double?]]?=nil,clearanceObserver:((Int,Int,Double)->Void)?=nil) throws -> Self {
         var totalError=0.0,strain=0.0,clearance=Double.infinity,topology=true,speed=abs(state.boardVerticalVelocity)
         var failure:String?
         var margin=Double.infinity
         let portals=Dictionary(uniqueKeysWithValues:input.portals.map{($0.id,$0)})
         let channels=Dictionary(uniqueKeysWithValues:input.channels.map{($0.id,$0)})
         let channelColliders=try (channelCache ?? RopeChannelColliderCache(channels:input.channels)).matchingColliders(for:input.channels)
-        for rope in state.ropes {
+        var receiptMinimum=Double.infinity,receiptMargin=Double.infinity
+        if let receipts=clearanceReceipts {
+            precondition(receipts.count==state.ropes.count)
+            for r in receipts.indices {
+                precondition(receipts[r].count==state.ropes[r].restLengths.count)
+                for value in receipts[r].compactMap({$0}) where value.isFinite {
+                    receiptMinimum=min(receiptMinimum,value);receiptMargin=min(receiptMargin,value-state.ropes[r].radius)
+                }
+            }
+        }
+        for (r,rope) in state.ropes.enumerated() {
             var length=0.0
             for i in rope.restLengths.indices {
                 let distance=simd_distance(rope.positions[i],rope.positions[i+1])
                 length += distance;strain=max(strain,abs(distance/rope.restLengths[i]-1))
                 let a=state.boardPoint(rope.positions[i]),b=state.boardPoint(rope.positions[i+1])
-                let segmentClearance=collider.segmentClearance(from:a,to:b)
+                let segmentClearance:Double
+                if let receipt=clearanceReceipts?[r][i],receipt.isFinite {segmentClearance=receipt}
+                else if let receipt=clearanceReceipts?[r][i],receipt==Double.infinity {
+                    let lowerBound=rope.radius+RopeRegionGeometry.clearance+0.00005
+                    if receiptMinimum<=lowerBound && receiptMargin<=lowerBound-rope.radius {segmentClearance=lowerBound}
+                    else {segmentClearance=collider.segmentClearance(from:a,to:b)}
+                } else {segmentClearance=collider.segmentClearance(from:a,to:b)}
+                clearanceObserver?(r,i,segmentClearance)
                 clearance=min(clearance,segmentClearance);margin=min(margin,segmentClearance-rope.radius)
                 for (id,span) in rope.channelSpans {
                     let lo=max(Double(i),span.start.materialCoordinate),hi=min(Double(i+1),span.end.materialCoordinate)

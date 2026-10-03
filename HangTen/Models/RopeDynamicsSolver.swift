@@ -1,3 +1,4 @@
+import Foundation
 import simd
 
 /// Inextensible chain with a coupled mass-metric nonlinear projection. The scalar
@@ -12,10 +13,21 @@ struct RopeDynamicsSolver: Sendable {
     private var time=0.0
     private var history:[(Double,Double)]=[]
     private var acceptedMinimumClearance:Double?
+    private var acceptedSegmentClearanceBounds:[[Double]]?
     private let channelColliderCache:RopeChannelColliderCache
     private let portalMap:[String:RopePortalRegion]
     private var distanceTension:[[Double]]
     private var lastStepDuration=1.0/240
+    // User-approved isolated convergence screen; release behavior stays strict.
+    private var convergenceExperiment=false
+    private var lastCorrectionFullStep=false
+    private var contactHints:[(RopeLinearContact,Double)]=[]
+    private var cachedEvaluation:RopeConfigurationEvaluation?
+    #if DEBUG
+    private(set) var reviewStepCorrections = 0
+    private(set) var reviewStepCaps = 0
+    private(set) var reviewStepRetries = 0
+    #endif
 
     /// Return the solver and its first accepted display frame together. Raw
     /// geometry seeds may have separable finite-radius cord overlap; they are
@@ -29,6 +41,9 @@ struct RopeDynamicsSolver: Sendable {
 
     init(input:RopePhysicsInput,state:RopeSimulationState,collider:RopeTriangleCollider) throws {
         self.input=input;self.state=state;self.collider=collider
+        #if DEBUG
+        convergenceExperiment=ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PHYSICAL_CONVERGENCE"] == "1"
+        #endif
         channelColliderCache=try RopeChannelColliderCache(channels:input.channels)
         portalMap=Dictionary(uniqueKeysWithValues:input.portals.map{($0.id,$0)})
         guard let profile=input.profiles.first(where:{$0.id == state.profileID}),
@@ -56,6 +71,11 @@ struct RopeDynamicsSolver: Sendable {
 
     mutating func step(dt:Double,targetOrientation:simd_quatd) throws -> RopeFrameSnapshot {
         var candidate=self
+        #if DEBUG
+        candidate.reviewStepCorrections = 0
+        candidate.reviewStepCaps = 0
+        candidate.reviewStepRetries = 0
+        #endif
         let frame=try candidate.advanceBounded(dt:dt,targetOrientation:targetOrientation,depth:0)
         self=candidate
         return frame
@@ -67,6 +87,7 @@ struct RopeDynamicsSolver: Sendable {
     mutating func projectInitialization(maxIterations:Int=500) throws -> RopeFrameSnapshot {
         guard maxIterations>0,maxIterations<=2000 else {throw RopePhysicsError.invalid("Invalid initialization bound")}
         var candidate=self
+        candidate.cachedEvaluation=nil
         let preflight=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,
             boardHistory:[state.boardHeight],includeSelfContact:false,channelCache:channelColliderCache)
         guard preflight.geometryAccepted else {throw RopePhysicsError.invalid("Invalid initial wood geometry or threading")}
@@ -87,8 +108,9 @@ struct RopeDynamicsSolver: Sendable {
         }
         let prediction=state
         for iteration in 0...maxIterations {
+            var perSegment=candidate.state.ropes.map{Array(repeating:Double.infinity,count:$0.restLengths.count)}
             let metrics=try RopeSimulationMetrics.measure(state:candidate.state,input:input,collider:collider,
-                boardHistory:[candidate.state.boardHeight],channelCache:candidate.channelColliderCache)
+                boardHistory:[candidate.state.boardHeight],channelCache:candidate.channelColliderCache,clearanceObserver:{r,i,value in perSegment[r][i]=value})
             if metrics.geometryAccepted {
                 if iteration>0 {
                     candidate.history=[(0,candidate.state.boardHeight)]
@@ -98,6 +120,7 @@ struct RopeDynamicsSolver: Sendable {
                     }
                 }
                 candidate.acceptedMinimumClearance=metrics.minimumSegmentClearance
+                candidate.acceptedSegmentClearanceBounds=perSegment
                 self=candidate
                 return RopeFrameSnapshot(boardHeight:state.boardHeight,orientation:state.orientation,
                     ropes:state.ropes.map{RopeChainSnapshot(id:$0.id,radius:$0.radius,positions:$0.positions)},settled:false,metrics:metrics)
@@ -122,7 +145,17 @@ struct RopeDynamicsSolver: Sendable {
                 }
                 throw RopePhysicsError.invalid("Bounded solve could not resolve \(failure)")
             }
+            #if DEBUG
+            let failedCorrections = trial.reviewStepCorrections
+            let failedCaps = trial.reviewStepCaps
+            let failedRetries = trial.reviewStepRetries
+            #endif
             trial=self
+            #if DEBUG
+            trial.reviewStepCorrections = failedCorrections
+            trial.reviewStepCaps = failedCaps
+            trial.reviewStepRetries = failedRetries + 1
+            #endif
             _ = try trial.advanceBounded(dt:dt/2,targetOrientation:targetOrientation,depth:depth+1)
             let frame=try trial.advanceBounded(dt:dt/2,targetOrientation:targetOrientation,depth:depth+1)
             self=trial;return frame
@@ -155,37 +188,35 @@ struct RopeDynamicsSolver: Sendable {
             }
         }
         let prediction=state
+        cachedEvaluation=nil
         do {
             try RopePassageTopology.refresh(state:&state,input:input)
         } catch let error as RopePhysicsError {
             throw StepFailure.predictedTopology(error.localizedDescription)
         }
+        #if DEBUG
+        var reviewConverged = false
+        #endif
         for _ in 0..<80 {
+            #if DEBUG
+            reviewStepCorrections += 1
+            #endif
             let movement=try correctConstraints(prediction:prediction)
-            if maximumStrain()<0.0002 && movement<1e-8 {break}
+            let arrivedNow=abs(simd_dot(state.orientation.vector,targetOrientation.vector))>1-1e-12
+            let limit=convergenceExperiment ? (arrivedNow ? 0.001*dt:0.00005):1e-8
+            if maximumStrain()<0.0002 && movement<limit && (!convergenceExperiment || !arrivedNow || lastCorrectionFullStep) {
+                #if DEBUG
+                reviewConverged = true
+                #endif
+                break
+            }
         }
+        #if DEBUG
+        if !reviewConverged { reviewStepCaps += 1 }
+        #endif
         for r in state.ropes.indices {
-            let radius=state.ropes[r].radius-0.00005
-            let rotationAngle=2*acos(min(1,abs(simd_dot(old.orientation.vector,state.orientation.vector))))
-            func deviation(_ i:Int)->Double {
-                if state.ropes[r].attachments[i] != nil {return 0}
-                return RopeMotionSweep.rotationalDeviation(
-                    start:old.ropes[r].positions[i]-SIMD3(0,old.boardHeight,0),
-                    end:state.ropes[r].positions[i]-SIMD3(0,state.boardHeight,0),angle:rotationAngle)
-            }
-            for i in state.ropes[r].restLengths.indices {
-                let a=old.boardPoint(old.ropes[r].positions[i]),b=old.boardPoint(old.ropes[r].positions[i+1])
-                let nextA=state.boardPoint(state.ropes[r].positions[i]),nextB=state.boardPoint(state.ropes[r].positions[i+1])
-                let movement=max(simd_distance(a,nextA),simd_distance(b,nextB))
-                let curveDeviation=max(deviation(i),deviation(i+1))
-                let oldClearance=acceptedMinimumClearance ?? collider.segmentClearance(from:a,to:b)
-                // Signed distance is 1-Lipschitz. This bound certifies the
-                // complete segment motion; uncertain moves use exact CCD.
-                if movement+curveDeviation<=oldClearance-radius {continue}
-                if collider.sweptSegmentContact(previousStart:a,previousEnd:b,start:nextA,end:nextB,radius:radius+curveDeviation) != nil {
-                    throw StepFailure.sweptWoodTraversal
-                }
-            }
+            guard collider.sweepChainIsClear(previous:old,next:state,rope:r,
+                clearances:acceptedSegmentClearanceBounds?[r],globalClearance:acceptedMinimumClearance) else {throw StepFailure.sweptWoodTraversal}
             guard RopeMotionSweep.selfContactValid(previous:old.ropes[r].positions,positions:state.ropes[r].positions,
                 radius:state.ropes[r].radius,supports:state.ropes[r].supports,restLengths:state.ropes[r].restLengths) else {
                 throw StepFailure.sweptSelfTraversal
@@ -211,11 +242,14 @@ struct RopeDynamicsSolver: Sendable {
         }
         time += dt;history.append((time,state.boardHeight))
         history.removeAll{$0.0<time-0.5-dt/2}
-        let metrics=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,boardHistory:history.map{$0.1},channelCache:channelColliderCache)
+        let receipts=configurationEvaluation(state).clearances
+        var perSegment=state.ropes.map{Array(repeating:Double.infinity,count:$0.restLengths.count)}
+        let metrics=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,boardHistory:history.map{$0.1},channelCache:channelColliderCache,clearanceReceipts:receipts,clearanceObserver:{r,i,value in perSegment[r][i]=value})
         guard metrics.geometryAccepted else {
             state=old;throw StepFailure.geometry(metrics)
         }
         acceptedMinimumClearance=metrics.minimumSegmentClearance
+        acceptedSegmentClearanceBounds=perSegment
         lastStepDuration=dt
         let arrived=abs(simd_dot(state.orientation.vector,targetOrientation.vector))>1-1e-12
         let settled=arrived && time>=0.5 && metrics.maximumSpeed<0.001 && metrics.boardDisplacement<0.0001
@@ -262,6 +296,7 @@ struct RopeDynamicsSolver: Sendable {
     /// without pinning material. Unilateral tensile contacts are released, with inactive
     /// inequalities reconsidered before accepting a correction.
     private mutating func correctConstraints(prediction:RopeSimulationState) throws -> Double {
+        let evaluation=configurationEvaluation(state)
         var rows:[ConstraintRow]=[]
         var weights:[[Double]]=[]
         let worldUp=SIMD3<Double>(0,1,0)
@@ -273,8 +308,7 @@ struct RopeDynamicsSolver: Sendable {
                 return 2/(rope.linearMass*length)
             })
             for i in rope.positions.indices {
-                for hit in collider.segmentContacts(from:state.boardPoint(rope.positions[i]),to:state.boardPoint(rope.positions[i]),
-                    radius:rope.radius+RopeRegionGeometry.clearance+0.00005) {
+                for hit in evaluation.points[r][i] {
                     let normal=state.orientation.act(hit.normal)
                     let attached=rope.attachments[i] == nil ? SIMD3<Double>.zero:worldUp
                     rows.append(ConstraintRow(rope:r,particles:[i],gradients:[normal],
@@ -288,8 +322,7 @@ struct RopeDynamicsSolver: Sendable {
                 let attachedB=rope.attachments[i+1] == nil ? SIMD3<Double>.zero:worldUp
                 rows.append(ConstraintRow(rope:r,particles:[i,i+1],gradients:[-tangent,tangent],
                     boardGradient:simd_dot(tangent,attachedB-attachedA),residual:length-rope.restLengths[i],contact:false,lengthSegment:i))
-                let a=state.boardPoint(rope.positions[i]),b=state.boardPoint(rope.positions[i+1])
-                for hit in collider.segmentContacts(from:a,to:b,radius:rope.radius+RopeRegionGeometry.clearance+0.00005) where hit.fraction>1e-6 && hit.fraction<1-1e-6 {
+                for hit in evaluation.rows[r][i] where hit.fraction>1e-6 && hit.fraction<1-1e-6 {
                     let normal=state.orientation.act(hit.normal),f=hit.fraction
                     let gradients=[normal*(1-f),normal*f]
                     let boardGradient = -normal.y+simd_dot(gradients[0],attachedA)+simd_dot(gradients[1],attachedB)
@@ -314,7 +347,7 @@ struct RopeDynamicsSolver: Sendable {
                         residual:boundary.residual,contact:true,lengthSegment:nil))
                 }
             }
-            for pair in RopeSimulationMetrics.selfContactPairs(positions:rope.positions,radius:rope.radius,supports:rope.supports,margin:0.0001,restLengths:rope.restLengths) {
+            for pair in evaluation.selfPairs[r] {
                 let i=pair.x,j=pair.y
                 let witness=RopeTriangleCollider.segmentPair(rope.positions[i],rope.positions[i+1],rope.positions[j],rope.positions[j+1])
                 let delta=witness.0-witness.1,distance=simd_length(delta),f=witness.2
@@ -332,7 +365,7 @@ struct RopeDynamicsSolver: Sendable {
         }
         for first in state.ropes.indices {
             for second in state.ropes.indices where second>first {
-                for hit in RopeCordContacts.between(state.ropes[first],state.ropes[second],margin:0.0001) {
+                for hit in evaluation.cordContacts[SIMD2(first,second)]! {
                     let i=hit.firstSegment,j=hit.secondSegment,f=hit.firstFraction,g=hit.secondFraction,n=hit.normal
                     let particles=[i,i+1,j,j+1],gradients=[n*(1-f),n*f,-n*(1-g),-n*g]
                     let references=[first,first,second,second]
@@ -369,7 +402,8 @@ struct RopeDynamicsSolver: Sendable {
                             distanceTension[row.rope][link]=max(0,(1-alpha)*old+alpha*lambda[index])
                         }
                     }
-                    return alpha*max(maximum,abs(heightCorrection))
+                    lastCorrectionFullStep=alpha==1
+                    return (convergenceExperiment ? 1:alpha)*max(maximum,abs(heightCorrection))
                 }
             } catch RopePhysicsError.invalid { }
             alpha *= 0.5
@@ -399,7 +433,7 @@ struct RopeDynamicsSolver: Sendable {
         return fraction
     }
 
-    private func contactCorrection(rows:[ConstraintRow],weights:[[Double]],prediction:RopeSimulationState) throws
+    private mutating func contactCorrection(rows:[ConstraintRow],weights:[[Double]],prediction:RopeSimulationState) throws
         -> (particles:[[SIMD3<Double>]],height:Double,multipliers:[Double],ids:[Int]) {
         let equalityIDs=rows.indices.filter{!rows[$0].contact}
         let contactIDs=rows.indices.filter{rows[$0].contact}
@@ -414,11 +448,27 @@ struct RopeDynamicsSolver: Sendable {
             }}
             return RopeLinearContact(indices:indices,coefficients:coefficients,border:[row.boardGradient],residual:row.residual)
         }
+        var buckets:[[Int]:[Int]]=[:]
+        for id in contacts.indices {buckets[contacts[id].indices,default:[]].append(id)}
+        var initial:[Int:Double]=[:]
+        for (old,multiplier) in contactHints where convergenceExperiment && multiplier<0 {
+            var chosen:Int?,best=Double.infinity
+            for id in buckets[old.indices] ?? [] {
+                let row=contacts[id]
+                guard row.coefficients.count==old.coefficients.count,row.border.count==old.border.count else {continue}
+                var error=0.0
+                for k in row.coefficients.indices {let d=row.coefficients[k]-old.coefficients[k];error += d*d}
+                for k in row.border.indices {let d=row.border[k]-old.border[k];error += d*d}
+                if error<best {best=error;chosen=id}
+            }
+            if let chosen {initial[chosen,default:0] += multiplier}
+        }
+        let fallbackSolver=self
         let solved:RopeContactSystem.Solution
         do {
             solved=try RopeContactSystem.solve(factor:backbone.factor,base:backbone.base,border:backbone.border,
-                contacts:contacts,maxIterations:min(2048,rows.count*2+10),fallback:{
-                    let direct=try fullContactCorrection(rows:rows,weights:weights,prediction:prediction)
+                contacts:contacts,initialMultipliers:initial,maxIterations:min(2048,rows.count*2+10),fallback:{
+                    let direct=try fallbackSolver.fullContactCorrection(rows:rows,weights:weights,prediction:prediction)
                     var base=backbone.base
                     for r in weights.indices {for i in weights[r].indices where weights[r][i]>0 {
                         let v=variables[r][i]
@@ -433,6 +483,7 @@ struct RopeDynamicsSolver: Sendable {
                 })
         } catch RopeContactSystem.Failure.iterationLimit {throw StepFailure.nonlinearConvergence}
           catch RopeContactSystem.Failure.infeasible {throw StepFailure.nonlinearConvergence}
+        contactHints=solved.activeIDs.map{(contacts[$0],solved.multipliers[$0])}
         var particles=state.ropes.map{Array(repeating:SIMD3<Double>.zero,count:$0.positions.count)}
         for r in weights.indices {for i in weights[r].indices where weights[r][i]>0 {
             let v=variables[r][i];particles[r][i]=SIMD3(solved.base[v.x],solved.base[v.y],solved.base[v.z])
@@ -583,7 +634,13 @@ struct RopeDynamicsSolver: Sendable {
         return (factor,variables,rowVariables,solved.base,solved.border,multipliers)
     }
 
-    private func merit(_ candidate:RopeSimulationState,prediction:RopeSimulationState,weights:[[Double]],penalty:Double) throws -> Double {
+    private mutating func merit(_ candidate:RopeSimulationState,prediction:RopeSimulationState,weights:[[Double]],penalty:Double) throws -> Double {
+        let evaluation=configurationEvaluation(candidate)
+        var meritInputs=[state.boardMass.bitPattern,prediction.boardHeight.bitPattern]
+        for (r,rope) in prediction.ropes.enumerated() {for i in rope.positions.indices {
+            let p=rope.positions[i];meritInputs += [p.x.bitPattern,p.y.bitPattern,p.z.bitPattern,weights[r][i].bitPattern]
+        }}
+        if let parts=evaluation.meritParts,evaluation.meritInputs==meritInputs {return parts.0+penalty*parts.1}
         var objective=0.5*state.boardMass*pow(candidate.boardHeight-prediction.boardHeight,2),violation=0.0
         for (r,rope) in candidate.ropes.enumerated() {
             for i in rope.positions.indices where weights[r][i]>0 {
@@ -591,11 +648,10 @@ struct RopeDynamicsSolver: Sendable {
             }
             for i in rope.restLengths.indices {
                 violation += abs(simd_distance(rope.positions[i],rope.positions[i+1])-rope.restLengths[i])
-                let hits=collider.segmentContacts(from:candidate.boardPoint(rope.positions[i]),to:candidate.boardPoint(rope.positions[i+1]),
-                    radius:rope.radius+RopeRegionGeometry.clearance)
+                let hits=evaluation.merits[r][i]
                 violation += max(0,(hits.map{$0.penetrationDepth}.max() ?? 0)-Self.contactLinearTolerance)
             }
-            for pair in RopeSimulationMetrics.selfContactPairs(positions:rope.positions,radius:rope.radius,supports:rope.supports,margin:0.0001,restLengths:rope.restLengths) {
+            for pair in evaluation.selfPairs[r] {
                 let points=RopeTriangleCollider.segmentPair(rope.positions[pair.x],rope.positions[pair.x+1],rope.positions[pair.y],rope.positions[pair.y+1])
                 violation += max(0,2*rope.radius+0.00005-simd_distance(points.0,points.1)-Self.contactLinearTolerance)
             }
@@ -607,11 +663,13 @@ struct RopeDynamicsSolver: Sendable {
         }
         for first in candidate.ropes.indices {
             for second in candidate.ropes.indices where second>first {
-                for contact in RopeCordContacts.between(candidate.ropes[first],candidate.ropes[second],margin:0.0001) {
+                for contact in evaluation.cordContacts[SIMD2(first,second)]! {
                     violation += max(0,contact.targetDistance-contact.distance-Self.contactLinearTolerance)
                 }
             }
         }
+        cachedEvaluation?.meritParts=(objective,violation)
+        cachedEvaluation?.meritInputs=meritInputs
         return objective+penalty*violation
     }
 
@@ -755,5 +813,48 @@ struct RopeContactWorkingSet {
         }
         for j in activeIDs.indices {feasibleMultipliers[activeIDs[j]]=multipliers[j]}
         return false
+    }
+}
+
+private struct RopeConfigurationEvaluation:Sendable {
+    let bits:[UInt64]
+    let portalOrder:[String]
+    let points:[[[RopeSegmentContact]]]
+    let rows:[[[RopeSegmentContact]]]
+    let merits:[[[RopeSegmentContact]]]
+    let clearances:[[Double?]]
+    let selfPairs:[[SIMD2<Int>]]
+    let cordContacts:[SIMD2<Int>:[RopeCordContacts.Contact]]
+    var meritParts:(Double,Double)?=nil
+    var meritInputs:[UInt64]?=nil
+}
+extension RopeDynamicsSolver {
+    private mutating func configurationEvaluation(_ candidate:RopeSimulationState)->RopeConfigurationEvaluation {
+        var bits=[candidate.boardHeight.bitPattern,candidate.orientation.vector.x.bitPattern,candidate.orientation.vector.y.bitPattern,
+            candidate.orientation.vector.z.bitPattern,candidate.orientation.vector.w.bitPattern]
+        var portalOrder:[String]=[]
+        for rope in candidate.ropes {
+            bits.append(UInt64(rope.positions.count))
+            for p in rope.positions {bits += [p.x.bitPattern,p.y.bitPattern,p.z.bitPattern]}
+            for (id,crossing) in rope.portalCrossings {portalOrder.append(id);bits += [UInt64(crossing.segment),crossing.fraction.bitPattern]}
+            portalOrder.append("/")
+        }
+        if let cached=cachedEvaluation,cached.bits==bits,cached.portalOrder==portalOrder {return cached}
+        var clearances:[[Double?]]=[]
+        var points:[[[RopeSegmentContact]]]=[],rows:[[[RopeSegmentContact]]]=[],merits:[[[RopeSegmentContact]]]=[],pairs:[[SIMD2<Int>]]=[]
+        for rope in candidate.ropes {
+            let board=rope.positions.map{candidate.boardPoint($0)}
+            let batch=collider.fusedChainContacts(points:board,rowRadius:rope.radius+RopeRegionGeometry.clearance+0.00005,meritRadius:rope.radius+RopeRegionGeometry.clearance)
+            clearances.append(batch.clearances)
+            points.append(batch.points);rows.append(batch.rows);merits.append(batch.merits)
+            pairs.append(RopeSimulationMetrics.selfContactPairs(positions:rope.positions,radius:rope.radius,supports:rope.supports,margin:0.0001,restLengths:rope.restLengths))
+        }
+        var cords:[SIMD2<Int>:[RopeCordContacts.Contact]]=[:]
+        for first in candidate.ropes.indices {for second in candidate.ropes.indices where second>first {
+            cords[SIMD2(first,second)]=RopeCordContacts.between(candidate.ropes[first],candidate.ropes[second],margin:0.0001)
+        }}
+        let result=RopeConfigurationEvaluation(bits:bits,portalOrder:portalOrder,points:points,rows:rows,merits:merits,clearances:clearances,selfPairs:pairs,cordContacts:cords)
+        cachedEvaluation=result
+        return result
     }
 }

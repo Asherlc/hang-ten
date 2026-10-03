@@ -62,6 +62,23 @@ enum RopeContactSystem {
         // Responses belong to this linearization only. Reusing one after a
         // Jacobian or Hessian change would solve a different physical problem.
         var responses: [Int: [Double]]=[:]
+        let initialIDs=initialMultipliers.keys.sorted()
+        guard initialIDs.count*dimension<=8_000_000 else {throw RopePhysicsError.invalid("Excessive rope contact response storage")}
+        let batchCount=min(64,max(1,500_000/dimension))
+        for start in stride(from:0,to:initialIDs.count,by:batchCount) {
+            let ids=Array(initialIDs[start..<min(initialIDs.count,start+batchCount)])
+            var rhs=Array(repeating:0.0,count:size*ids.count),borderRHS:[Double]=[]
+            for (j,id) in ids.enumerated() {
+                let row=contacts[id]
+                for k in row.indices.indices {rhs[j*size+row.indices[k]] += row.coefficients[k]}
+                borderRHS += row.border
+            }
+            let result=try factor.solveBatch(rhs:rhs,borderRHS:borderRHS,count:ids.count)
+            let nb=border.count
+            for (j,id) in ids.enumerated() {
+                responses[id]=Array(result.base[j*size..<(j+1)*size])+Array(result.border[j*nb..<(j+1)*nb])
+            }
+        }
         func response(_ id: Int) throws -> [Double] {
             if let cached=responses[id] {return cached}
             guard (responses.count+1)*dimension<=8_000_000 else {
