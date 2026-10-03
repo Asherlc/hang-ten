@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AE034E2B4778CFF045AA2F42 /* WorkoutCueCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73BB087DEE4043CE4D71BBC1 /* WorkoutCueCard.swift */; };
+		D124854F1524ED273B860027 /* WorkoutControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1561CC9F49A8482434431C1D /* WorkoutControls.swift */; };
+		E12D3C8673A4330F01E4329C /* WorkoutTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF851F490988BBF1DC74E31 /* WorkoutTimerView.swift */; };
 		1FA42E3BA262FD5F860FDD87 /* WorkoutPresentationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA4FE4FCE8D84C5B733C8CCE /* WorkoutPresentationContent.swift */; };
 		89F55463D090314CD394F45A /* WorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280981D68BAEDAE6071622C2 /* WorkoutView.swift */; };
 		876CF8149B56E504650BEB86 /* WorkoutSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF2C8B2702AF877EC0A9457 /* WorkoutSessionState.swift */; };
@@ -251,6 +254,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		73BB087DEE4043CE4D71BBC1 /* WorkoutCueCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutCueCard.swift; sourceTree = "<group>"; };
+		1561CC9F49A8482434431C1D /* WorkoutControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutControls.swift; sourceTree = "<group>"; };
+		ECF851F490988BBF1DC74E31 /* WorkoutTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimerView.swift; sourceTree = "<group>"; };
 		DA4FE4FCE8D84C5B733C8CCE /* WorkoutPresentationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPresentationContent.swift; sourceTree = "<group>"; };
 		280981D68BAEDAE6071622C2 /* WorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutView.swift; sourceTree = "<group>"; };
 		2CF2C8B2702AF877EC0A9457 /* WorkoutSessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSessionState.swift; sourceTree = "<group>"; };
@@ -688,6 +694,9 @@
 				E32000000000000000000002 /* SuspendedBoardPresentation.swift */,
 				E32000000000000000000006 /* OrbitPanGestureDelegate.swift */,
 				BB0000000000000000000006 /* RootView.swift */,
+				73BB087DEE4043CE4D71BBC1 /* WorkoutCueCard.swift */,
+				1561CC9F49A8482434431C1D /* WorkoutControls.swift */,
+				ECF851F490988BBF1DC74E31 /* WorkoutTimerView.swift */,
 				DA4FE4FCE8D84C5B733C8CCE /* WorkoutPresentationContent.swift */,
 				280981D68BAEDAE6071622C2 /* WorkoutView.swift */,
 				2CF2C8B2702AF877EC0A9457 /* WorkoutSessionState.swift */,
@@ -1068,6 +1077,9 @@
 				F1290000000000000000000E /* LiveRopeController.swift in Sources */,
 				E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */,
 				AA0000000000000000000006 /* RootView.swift in Sources */,
+				AE034E2B4778CFF045AA2F42 /* WorkoutCueCard.swift in Sources */,
+				D124854F1524ED273B860027 /* WorkoutControls.swift in Sources */,
+				E12D3C8673A4330F01E4329C /* WorkoutTimerView.swift in Sources */,
 				1FA42E3BA262FD5F860FDD87 /* WorkoutPresentationContent.swift in Sources */,
 				89F55463D090314CD394F45A /* WorkoutView.swift in Sources */,
 				876CF8149B56E504650BEB86 /* WorkoutSessionState.swift in Sources */,

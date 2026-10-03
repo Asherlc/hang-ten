@@ -64,7 +64,7 @@ struct AppSettingsView: View {
                         in: RoundedRectangle(cornerRadius: 10, style: .continuous)
                     )
                 Text("Sensor settings")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
                 Spacer()
                 Image(systemName: "chevron.right")
@@ -81,7 +81,7 @@ struct AppSettingsView: View {
         VStack(alignment: .leading, spacing: 16) {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Weight unit")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
                 Picker("Weight unit", selection: $motherboardSettingsStore.loadAdjustmentUnit) {
                     ForEach(WorkoutLoadAdjustmentDisplayUnit.allCases) { unit in
@@ -94,7 +94,7 @@ struct AppSettingsView: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("Force unit")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
                 Picker("Force unit", selection: $motherboardSettingsStore.forceUnit) {
                     ForEach(MotherboardForceUnit.allCases) { unit in
@@ -121,20 +121,14 @@ struct AppSettingsView: View {
                     )
 
                 VStack(alignment: .leading, spacing: 5) {
-                    HStack {
-                        Text("Apple Health")
-                            .font(.system(size: 15, weight: .bold, design: .rounded))
-                            .foregroundStyle(Color.hangInk)
-                        Spacer()
-                        Pill(
-                            title: store.healthAuthorizationState.statusLabel,
-                            tint: healthStatusTint,
-                            fill: healthStatusTint.opacity(0.12)
-                        )
-                    }
+                    CardStatusHeading(
+                        title: "Apple Health",
+                        status: store.healthAuthorizationState.statusLabel,
+                        tint: healthStatusTint
+                    )
 
                     Text(store.healthAuthorizationState.detail)
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .font(.system(.footnote, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -142,12 +136,12 @@ struct AppSettingsView: View {
 
             if let healthAuthorizationError = store.healthAuthorizationError {
                 Text(healthAuthorizationError)
-                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    .font(.system(.caption, design: .rounded, weight: .semibold))
                     .foregroundStyle(Color.holdActiveDeep)
             }
 
             Text(historySourceMessage)
-                .font(.system(size: 13, weight: .medium, design: .rounded))
+                .font(.system(.footnote, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("health.historySource")
@@ -162,7 +156,7 @@ struct AppSettingsView: View {
                             Spacer()
                             Image(systemName: "arrow.right")
                         }
-                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangInk)
                         .padding(.horizontal, 14)
                         .padding(.vertical, 12)

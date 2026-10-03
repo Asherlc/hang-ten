@@ -49,11 +49,11 @@ struct FreeWorkoutStartSheet: View {
             VStack(alignment: .leading, spacing: 8) {
                 SectionLabel(title: "In progress")
                 Text("You have a free workout in progress.")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .font(.system(.callout, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
                 if let activeLog {
                     Text(resumeSubtitle(for: activeLog))
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .font(.system(.footnote, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
                 }
             }
@@ -120,10 +120,10 @@ struct FreeWorkoutStartSheet: View {
                         } label: {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(template.name)
-                                    .font(.system(size: 16, weight: .semibold, design: .rounded))
+                                    .font(.system(.callout, design: .rounded, weight: .semibold))
                                     .foregroundStyle(Color.hangInk)
                                 Text(templateSubtitle(template))
-                                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                                    .font(.system(.footnote, design: .rounded, weight: .medium))
                                     .foregroundStyle(Color.hangMuted)
                             }
                         }

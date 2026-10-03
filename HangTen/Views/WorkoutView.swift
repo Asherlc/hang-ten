@@ -20,6 +20,7 @@ struct WorkoutView: View {
 	@EnvironmentObject private var audioCoach: WorkoutAudioCoach
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @AppStorage("workoutAudioCuesEnabled") private var audioCuesEnabled = true
 
     let plan: TrainingPlan
@@ -133,7 +134,7 @@ struct WorkoutView: View {
 					taskIndex: highlightedTaskIndex,
 					selectedHandSide: highlightedSelectedHandSide
 				)
-				let isLandscape = geometry.size.width > geometry.size.height
+				let isLandscape = geometry.size.width > geometry.size.height && !dynamicTypeSize.isAccessibilitySize
 				let audioMoment = audioMoment(
 					step: step,
 					stepElapsed: stepElapsed,
@@ -270,7 +271,7 @@ struct WorkoutView: View {
 				Button("End") {
 					showEndConfirmation = true
 				}
-				.font(.system(size: 13, weight: .bold, design: .rounded))
+				.font(.system(.footnote, design: .rounded, weight: .bold))
 				.foregroundStyle(Color.hangGreenDark)
 			}
         }
@@ -502,7 +503,7 @@ struct WorkoutView: View {
 				for: cueStep, on: board, taskIndex: taskIndex
 			) {
 				Text("Use two boards, one hand on each.")
-					.font(.system(size: 13, weight: .medium, design: .rounded))
+					.font(.system(.footnote, design: .rounded, weight: .medium))
 					.foregroundStyle(Color.hangInk)
 			}
 			if cueStep.id == step.id, !isResting, countdown == 0,
@@ -510,7 +511,7 @@ struct WorkoutView: View {
 			   tasks[taskIndex].count == 1, tasks[taskIndex][0].side == nil {
 				HStack(spacing: 10) {
 					Text("Choose a hand")
-						.font(.system(size: 13, weight: .semibold, design: .rounded))
+						.font(.system(.footnote, design: .rounded, weight: .semibold))
 					ForEach([WorkoutSide.left, .right], id: \.self) { side in
 						Button(side == .left ? "Left" : "Right") {
 							taskCursor.choose(side, in: step)
@@ -528,7 +529,7 @@ struct WorkoutView: View {
 						.accessibilityIdentifier("workout.previousHold")
 					Spacer(minLength: 4)
 					Text("Hold \(taskIndex + 1) of \(taskCount)")
-						.font(.system(size: 13, weight: .semibold, design: .rounded))
+						.font(.system(.footnote, design: .rounded, weight: .semibold))
 					Spacer(minLength: 4)
 					Button("Next hold") { taskCursor.advance(in: step) }
 						.disabled(taskIndex + 1 == taskCount)
@@ -687,11 +688,12 @@ struct WorkoutView: View {
 						countdown: countdown,
 						isComplete: isComplete
 					) {
-						landscapeCueCard(
+						cueCard(
 							rows: cueCardRows,
 							step: step,
 							countdown: countdown,
-							isResting: isResting
+							isResting: isResting,
+							compact: true
 						)
 					}
 					controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
@@ -760,7 +762,7 @@ struct WorkoutView: View {
 							: "Step \(step.number) of \(activeSteps.count)"
 				)
 				Text(WorkoutPresentationContent.title(step: step, isComplete: isComplete))
-					.font(.system(size: 22, weight: .bold, design: .rounded))
+					.font(.system(.title2, design: .rounded, weight: .bold))
 					.foregroundStyle(Color.hangInk)
 					.lineLimit(1)
 			}
@@ -773,22 +775,15 @@ struct WorkoutView: View {
 				fill: (isComplete ? Color.hangGreen : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint).opacity(0.18)
 			)
 
-			Text(
-				timeLabel(
-					isComplete
-						? 0
-						: countdown > 0
-							? TimeInterval(countdown)
-							: intervalRemaining(step: step, stepElapsed: stepElapsed)
-				)
-			)
-			.font(.system(size: 34, weight: .heavy, design: .rounded).monospacedDigit())
-			.foregroundStyle(Color.hangInk)
+            WorkoutTimerView(
+                remaining: timerRemaining(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: isComplete),
+                compact: true
+            )
 
 			Button("Routine") {
 				showsStepPicker = true
 			}
-			.font(.system(size: 13, weight: .bold, design: .rounded))
+			.font(.system(.footnote, design: .rounded, weight: .bold))
 			.foregroundStyle(Color.hangGreenDark)
 			.disabled(!canNavigate)
 			.accessibilityLabel("Routine, current step \(step.number): \(step.title)")
@@ -798,36 +793,6 @@ struct WorkoutView: View {
 				handPreferenceMenu()
 			}
 		}
-	}
-
-	private func landscapeCueCard(
-		rows: [InstructionAccessoryCardRow],
-		step: WorkoutStep,
-		countdown: Int,
-		isResting: Bool
-	) -> some View {
-		let instructionText = rows.first { $0.kind == .instruction }?.text
-		let accessoryText = rows.first { $0.kind == .accessory }?.text
-		return VStack(alignment: .leading, spacing: 5) {
-			SectionLabel(title: countdown > 0 ? "Next" : isResting ? "Recovery" : "Instructions")
-			if let text = instructionText {
-				Text(text)
-                    .font(.system(size: 14, weight: .semibold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.82)
-            }
-
-			if let accessoryText {
-                Text(accessoryText)
-                    .font(.system(size: 11, weight: .bold, design: .rounded))
-                    .foregroundStyle(step.phase.textTint)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.78)
-            }
-		}
-		.frame(maxWidth: .infinity, alignment: .leading)
-		.hangCard(padding: 12)
 	}
 
 	private func landscapePreStartControls(
@@ -848,11 +813,12 @@ struct WorkoutView: View {
 		)
 		return HStack(alignment: .center, spacing: 12) {
 			if let cueCardRows = presentation.cueCardRows {
-				landscapeCueCard(
+				cueCard(
 					rows: cueCardRows,
 					step: step,
 					countdown: countdown,
-					isResting: isResting
+					isResting: isResting,
+					compact: true
 				)
 				.frame(minWidth: 156, maxWidth: .infinity)
 			}
@@ -867,7 +833,7 @@ struct WorkoutView: View {
 				}
 
 				if let stopwatchKey = presentation.stopwatchKey {
-					compactStopwatchControl(for: stopwatchKey, at: monotonicTime)
+					stopwatchControl(for: stopwatchKey, at: monotonicTime, compact: true)
 				}
 
 				if countdown == 0, !isResting, !isComplete, step.action == .loadedLift {
@@ -908,7 +874,7 @@ struct WorkoutView: View {
             Button("Routine") {
                 showsStepPicker = true
             }
-            .font(.system(size: 13, weight: .bold, design: .rounded))
+            .font(.system(.footnote, design: .rounded, weight: .bold))
             .foregroundStyle(Color.hangGreenDark)
             .disabled(!canNavigate)
             .accessibilityLabel("Routine, current step \(step.number): \(step.title)")
@@ -919,7 +885,7 @@ struct WorkoutView: View {
             }
 
 			Text(WorkoutPresentationContent.title(step: step, isComplete: isComplete))
-				.font(.system(size: 30, weight: .bold, design: .rounded))
+				.font(.system(.largeTitle, design: .rounded, weight: .bold))
 				.foregroundStyle(Color.hangInk)
 
 			if !step.isRestStep {
@@ -928,7 +894,7 @@ struct WorkoutView: View {
 					taskIndex: taskCursor.index(for: step),
 					selectedHandSide: taskCursor.selectedSide(for: step)
 				).joined(separator: " • "))
-					.font(.system(size: 13, weight: .bold, design: .rounded))
+					.font(.system(.footnote, design: .rounded, weight: .bold))
 					.foregroundStyle(step.phase.textTint)
 			}
 
@@ -945,63 +911,27 @@ struct WorkoutView: View {
         countdown: Int,
         isComplete: Bool
     ) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: 7) {
-            Text(
-                timeLabel(
-                    isComplete
-                        ? 0
-                        : countdown > 0
-                            ? TimeInterval(countdown)
-                            : intervalRemaining(step: step, stepElapsed: stepElapsed)
-                )
-            )
-            .font(.system(size: 46, weight: .heavy, design: .rounded).monospacedDigit())
-            .foregroundStyle(Color.hangInk)
-            .lineLimit(WorkoutPresentationContent.portraitTimerLineLimit)
-            .fixedSize(horizontal: true, vertical: false)
-            .layoutPriority(2)
-
-            if let supportingStatus = WorkoutPresentationContent.portraitTimerSupportingStatus {
-                Text(supportingStatus)
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
-            }
-        }
+        WorkoutTimerView(remaining: timerRemaining(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: isComplete))
     }
 
-	private func cueCard(
-		rows: [InstructionAccessoryCardRow],
-		step: WorkoutStep,
-		countdown: Int,
-		isResting: Bool
-	) -> some View {
-		let instructionText = rows.first { $0.kind == .instruction }?.text
-		let accessoryText = rows.first { $0.kind == .accessory }?.text
-		return VStack(alignment: .leading, spacing: 11) {
-			HStack {
-				SectionLabel(title: countdown > 0 ? "Next" : isResting ? "Recovery" : "Instructions")
-				Spacer()
-				if countdown == 0 {
-                    Text(intervalLabel(for: step))
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
-                        .foregroundStyle(isResting ? WorkoutPhase.rest.textTint : step.phase.textTint)
-                }
-            }
+    private func timerRemaining(step: WorkoutStep, stepElapsed: TimeInterval, countdown: Int, isComplete: Bool) -> TimeInterval {
+        isComplete ? 0 : countdown > 0 ? TimeInterval(countdown) : intervalRemaining(step: step, stepElapsed: stepElapsed)
+    }
 
-			if let text = instructionText {
-                Text(text)
-                    .font(.system(size: 16, weight: .semibold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-			if let text = accessoryText {
-				Text(text)
-                    .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundStyle(isResting ? WorkoutPhase.rest.textTint : step.phase.textTint)
-            }
-        }
-        .hangCard()
+    private func cueCard(
+        rows: [InstructionAccessoryCardRow],
+        step: WorkoutStep,
+        countdown: Int,
+        isResting: Bool,
+        compact: Bool = false
+    ) -> some View {
+        WorkoutCueCard(
+            rows: rows,
+            title: countdown > 0 ? "Next" : isResting ? "Recovery" : "Instructions",
+            intervalTitle: countdown == 0 ? intervalLabel(for: step) : nil,
+            tint: isResting && !compact ? WorkoutPhase.rest.textTint : step.phase.textTint,
+            compact: compact
+        )
     }
 
 	private func controlGroup(
@@ -1037,7 +967,7 @@ struct WorkoutView: View {
 		return VStack(spacing: 6) {
 			HStack(spacing: 8) {
 				Text("External load")
-					.font(.system(size: 13, weight: .bold, design: .rounded))
+					.font(.system(.footnote, design: .rounded, weight: .bold))
 					.foregroundStyle(Color.hangMuted)
 				TextField(
 					"0",
@@ -1050,17 +980,17 @@ struct WorkoutView: View {
 				.textFieldStyle(.roundedBorder)
 				.accessibilityIdentifier("workout.loadedLiftExternalLoad")
 				Text(unit.label)
-					.font(.system(size: 13, weight: .bold, design: .rounded))
+					.font(.system(.footnote, design: .rounded, weight: .bold))
 					.foregroundStyle(Color.hangMuted)
 			}
 			Text("\(completed) of \(prescribed) lifts complete")
-				.font(.system(size: 13, weight: .bold, design: .rounded))
+				.font(.system(.footnote, design: .rounded, weight: .bold))
 				.foregroundStyle(Color.hangMuted)
 			Button("Complete lift") {
 				liftCompletion.completeLift(for: step)
 			}
 			.frame(maxWidth: .infinity)
-			.font(.system(size: 15, weight: .bold, design: .rounded))
+			.font(.system(.subheadline, design: .rounded, weight: .bold))
 			.foregroundStyle(Color.hangGreenDark)
 			.padding(.vertical, 10)
 			.background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
@@ -1092,32 +1022,22 @@ struct WorkoutView: View {
 		)
 	}
 
-	private func skipStepButton(step: WorkoutStep, canNavigate: Bool, compact: Bool = false) -> some View {
-		Button {
-			skipCurrentStep()
-		} label: {
-			Group {
-				if compact {
-					Image(systemName: "forward.fill")
-				} else {
-					Label("Skip step", systemImage: "forward.fill")
-				}
-			}
-				.frame(maxWidth: .infinity)
-				.font(.system(size: 14, weight: .bold, design: .rounded))
-				.foregroundStyle(Color.hangGreenDark)
-				.padding(.horizontal, compact ? 13 : 0)
-				.padding(.vertical, 10)
-				.background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
-		}
-		.buttonStyle(.plain)
-		.disabled(!canNavigate)
-		.accessibilityLabel("Skip step \(step.number): \(step.title)")
-		.accessibilityIdentifier("workout.skipStep")
-	}
+    private func skipStepButton(step: WorkoutStep, canNavigate: Bool, compact: Bool = false) -> some View {
+        WorkoutSkipControl(
+            stepLabel: "\(step.number): \(step.title)",
+            isEnabled: canNavigate,
+            compact: compact,
+            action: skipCurrentStep
+        )
+    }
 
     private func controlButton(isComplete: Bool, countdown: Int) -> some View {
-        Button {
+        WorkoutPrimaryControl(
+            isComplete: isComplete,
+            countdown: countdown,
+            isRunning: sessionState.activeStartUptime != nil,
+            isFirstStart: WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt)
+        ) {
             if isComplete {
                 completeSession()
             } else if countdown > 0 {
@@ -1125,102 +1045,23 @@ struct WorkoutView: View {
             } else {
                 toggleRunning()
             }
-        } label: {
-			HStack {
-                    Image(systemName: isComplete ? "checkmark" : countdown > 0 ? "xmark" : (sessionState.activeStartUptime == nil ? "play.fill" : "pause.fill"))
-                Text(
-                    isComplete
-						? "Log session"
-						: countdown > 0
-							? "Cancel countdown"
-							: (sessionState.activeStartUptime == nil && WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt) ? "Start" : (sessionState.activeStartUptime == nil ? "Resume" : "Pause"))
-                )
-                if isComplete {
-                    Image(systemName: "arrow.right")
-                }
-            }
-			.frame(maxWidth: .infinity, alignment: .center)
-            .font(.system(size: 16, weight: .bold, design: .rounded))
-            .foregroundStyle(Color.hangInk)
-            .padding(.horizontal, 18)
-            .padding(.vertical, 16)
-            .background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 17, style: .continuous))
         }
-        .buttonStyle(.plain)
     }
 
-    private func stopwatchControl(for key: WorkoutActivitySegmentKey, at monotonicTime: TimeInterval) -> some View {
+    private func stopwatchControl(
+        for key: WorkoutActivitySegmentKey,
+        at monotonicTime: TimeInterval,
+        compact: Bool = false
+    ) -> some View {
         let stopwatch = stopwatches[key] ?? WorkoutStopwatch()
-        let elapsed = stopwatch.elapsed(at: monotonicTime) ?? 0
-        let label = stopwatch.isFinalized
-            ? "Stopwatch finalized"
-            : stopwatch.isRunning
-                ? "Stop stopwatch"
-                : stopwatch.hasStarted
-                    ? "Resume stopwatch"
-                    : "Start stopwatch"
-
-        return VStack(spacing: 6) {
-            Text(stopwatchTimeLabel(elapsed))
-                .font(.system(size: 34, weight: .heavy, design: .rounded).monospacedDigit())
-                .foregroundStyle(Color.hangInk)
-                .frame(maxWidth: .infinity)
-
-            Button {
-                toggleStopwatch(for: key, at: WorkoutClock.monotonicTime)
-            } label: {
-                Label(label, systemImage: stopwatch.isRunning ? "pause.fill" : stopwatch.isFinalized ? "checkmark" : "stopwatch")
-                    .frame(maxWidth: .infinity)
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangGreenDark)
-                    .padding(.vertical, 10)
-                    .background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
-            }
-	            .buttonStyle(.plain)
-	            .disabled(stopwatch.isFinalized)
-	            .accessibilityLabel(label)
-            .accessibilityIdentifier("workout.stopwatch.toggle")
+        return WorkoutStopwatchControl(
+            stopwatch: stopwatch,
+            elapsed: stopwatch.elapsed(at: monotonicTime) ?? 0,
+            compact: compact
+        ) {
+            toggleStopwatch(for: key, at: WorkoutClock.monotonicTime)
         }
-        .padding(.vertical, 4)
-        .accessibilityIdentifier("workout.stopwatch")
     }
-
-	private func compactStopwatchControl(for key: WorkoutActivitySegmentKey, at monotonicTime: TimeInterval) -> some View {
-		let stopwatch = stopwatches[key] ?? WorkoutStopwatch()
-		let elapsed = stopwatch.elapsed(at: monotonicTime) ?? 0
-		let label = stopwatch.isFinalized
-			? "Stopwatch finalized"
-			: stopwatch.isRunning
-				? "Stop stopwatch"
-				: stopwatch.hasStarted
-					? "Resume stopwatch"
-					: "Start stopwatch"
-
-		return HStack(spacing: 10) {
-			Text(stopwatchTimeLabel(elapsed))
-				.font(.system(size: 24, weight: .heavy, design: .rounded).monospacedDigit())
-				.foregroundStyle(Color.hangInk)
-				.frame(minWidth: 68, alignment: .leading)
-
-			Button {
-				toggleStopwatch(for: key, at: monotonicTime)
-			} label: {
-				Label(label, systemImage: stopwatch.isRunning ? "pause.fill" : stopwatch.isFinalized ? "checkmark" : "stopwatch")
-					.font(.system(size: 13, weight: .bold, design: .rounded))
-					.foregroundStyle(Color.hangGreenDark)
-					.padding(.horizontal, 12)
-					.padding(.vertical, 8)
-					.background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
-			}
-			.buttonStyle(.plain)
-			.disabled(stopwatch.isFinalized)
-			.accessibilityLabel(label)
-			.accessibilityIdentifier("workout.stopwatch.toggle")
-
-			Spacer(minLength: 0)
-		}
-		.accessibilityIdentifier("workout.stopwatch")
-	}
 
 	private func handPreferenceMenu() -> some View {
 		Menu {
@@ -1239,7 +1080,7 @@ struct WorkoutView: View {
 				Image(systemName: "hand.raised")
 				Text(handChoiceLabel)
 			}
-			.font(.system(size: 13, weight: .bold, design: .rounded))
+			.font(.system(.footnote, design: .rounded, weight: .bold))
 			.foregroundStyle(Color.hangGreenDark)
 		}
 		.disabled(!WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt))
@@ -1813,16 +1654,6 @@ struct WorkoutView: View {
         }
         return step.hasRestInterval ? "Hang" : "Cycle"
     }
-
-    private func timeLabel(_ value: TimeInterval) -> String {
-        let seconds = max(0, Int(value.rounded(.up)))
-        return String(format: "%02d:%02d", seconds / 60, seconds % 60)
-    }
-
-	private func stopwatchTimeLabel(_ value: TimeInterval) -> String {
-		let seconds = max(0, Int(value.rounded(.down)))
-		return String(format: "%02d:%02d", seconds / 60, seconds % 60)
-	}
 
 	private func audioMoment(
 		step: WorkoutStep,

@@ -174,7 +174,7 @@ struct WorkoutSessionHistoryView: View {
         List {
             if let persistenceError {
                 Label(persistenceError, systemImage: "exclamationmark.triangle.fill")
-                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    .font(.system(.footnote, design: .rounded, weight: .semibold))
                     .foregroundStyle(Color.holdActiveDeep)
             }
 
@@ -198,14 +198,14 @@ struct WorkoutSessionHistoryView: View {
                     } label: {
                         VStack(alignment: .leading, spacing: 5) {
                             Text(session.planTitle)
-                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .font(.system(.subheadline, design: .rounded, weight: .bold))
                                 .foregroundStyle(Color.hangInk)
                             Text(session.recordedAt.formatted(date: .abbreviated, time: .shortened))
-                                .font(.system(size: 12, weight: .medium, design: .rounded))
+                                .font(.system(.caption, design: .rounded, weight: .medium))
                                 .foregroundStyle(Color.hangMuted)
                             if session.initialWeight.source != .untracked {
                                 Text(session.initialWeight.source.label)
-                                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                                    .font(.system(.caption, design: .rounded, weight: .medium))
                                     .foregroundStyle(Color.hangMuted)
                             }
                         }
@@ -248,10 +248,10 @@ private struct WorkoutSummaryContent: View {
             Section {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(session.planTitle)
-                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                        .font(.system(.title2, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangInk)
                     Text(session.recordedAt.formatted(date: .long, time: .shortened))
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .font(.system(.footnote, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
                 }
                 .padding(.vertical, 4)
@@ -270,7 +270,7 @@ private struct WorkoutSummaryContent: View {
             if session.initialWeight.source == .sensor {
                 Section("Scale") {
                     Text(session.forceSensorProfile.label)
-                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .foregroundStyle(Color.hangInk)
                 }
             }
@@ -281,7 +281,7 @@ private struct WorkoutSummaryContent: View {
             ) {
                 Section("Initial weight") {
                     Text(initialWeightText)
-                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .foregroundStyle(Color.hangInk)
                 }
             }
@@ -292,7 +292,7 @@ private struct WorkoutSummaryContent: View {
             ) {
                 Section("Load adjustment") {
                     Text(loadAdjustmentText)
-                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .foregroundStyle(Color.hangInk)
                 }
             }
@@ -304,7 +304,7 @@ private struct WorkoutSummaryContent: View {
             ) {
                 Section("Bodyweight baseline") {
                     Text(bodyweightBaselineText)
-                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .foregroundStyle(Color.hangInk)
                 }
             }
@@ -317,7 +317,7 @@ private struct WorkoutSummaryContent: View {
             ) {
                 Section("Granular scale data") {
                     Text(granularSampleCountText)
-                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .foregroundStyle(Color.hangInk)
                 }
             }
@@ -326,7 +326,7 @@ private struct WorkoutSummaryContent: View {
                 Section {
                     Button("Save session", action: onSave)
                         .frame(maxWidth: .infinity)
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .font(.system(.callout, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangInk)
 
                     Button("Discard", role: .destructive, action: onDiscard)
@@ -347,12 +347,12 @@ private struct WorkoutSummaryContent: View {
         VStack(alignment: .leading, spacing: 7) {
             HStack(alignment: .firstTextBaseline) {
                 Text(title)
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
                 Spacer()
                 if showsMeasuredLoad {
                     Text(statusText(for: step.status))
-                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .font(.system(.caption2, design: .rounded, weight: .bold))
                         .foregroundStyle(statusTint(for: step.status))
                 }
             }
@@ -368,12 +368,12 @@ private struct WorkoutSummaryContent: View {
             }
 
             Text(WorkoutSummaryFormatting.semanticText(for: step, unit: unit))
-                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .font(.system(.caption, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangMuted)
 
             if step.intervals.count > 1 {
                 Text("\(step.intervals.count) intervals: \(step.intervals.map { $0.duration.durationText }.joined(separator: ", "))")
-                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .font(.system(.caption, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
             }
         }
@@ -383,10 +383,10 @@ private struct WorkoutSummaryContent: View {
     private func summaryValue(title: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(title.uppercased())
-                .font(.system(size: 10, weight: .bold, design: .rounded))
+                .font(.system(.caption2, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangMuted)
             Text(value)
-                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                .font(.system(.footnote, design: .rounded, weight: .semibold))
                 .foregroundStyle(Color.hangInk)
         }
     }

@@ -18,13 +18,7 @@ struct MotherboardCard: View {
                     .background(stateTint.opacity(0.13), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
 
                 VStack(alignment: .leading, spacing: 5) {
-                    HStack {
-                        Text("Training sensor")
-                            .font(.system(size: 15, weight: .bold, design: .rounded))
-                            .foregroundStyle(Color.hangInk)
-                        Spacer()
-                        Pill(title: service.state.label, tint: stateTint, fill: stateTint.opacity(0.12))
-                    }
+                    CardStatusHeading(title: "Training sensor", status: service.state.label, tint: stateTint)
 
                     Text(
                         ForceSensorConnectionCopy.detail(
@@ -32,7 +26,7 @@ struct MotherboardCard: View {
                             profile: service.connectedProfile ?? settings.forceSensorProfile
                         )
                     )
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .font(.system(.footnote, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -47,7 +41,8 @@ struct MotherboardCard: View {
                     bodyweightKGF: service.bodyweightKGF,
                     unit: settings.forceUnit,
                     state: service.state,
-                    thresholdKGF: settings.thresholdKGF
+                    thresholdKGF: settings.thresholdKGF,
+                    showsConnectionStatus: false
                 )
             }
 
@@ -106,10 +101,10 @@ struct MotherboardCard: View {
     private func sensorValue(title: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(title.uppercased())
-                .font(.system(size: 10, weight: .bold, design: .rounded))
+                .font(.system(.caption2, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangMuted)
             Text(value)
-                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                .font(.system(.footnote, design: .rounded, weight: .semibold))
                 .foregroundStyle(Color.hangInk)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -226,28 +221,31 @@ struct MotherboardMeterView: View {
     let unit: MotherboardForceUnit
     let state: MotherboardConnectionState
     let thresholdKGF: Double
+    var showsConnectionStatus = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .lastTextBaseline) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("CURRENT FORCE")
-                        .font(.system(size: 10, weight: .bold, design: .rounded))
+                        .font(.system(.caption2, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangMuted)
                     Text(currentForceText)
-                        .font(.system(size: 28, weight: .heavy, design: .rounded))
+                        .font(.system(.title, design: .rounded, weight: .heavy))
                         .foregroundStyle(Color.hangInk)
                 }
 
                 Spacer()
 
-                VStack(alignment: .trailing, spacing: 2) {
-                    Text("PEAK")
-                        .font(.system(size: 10, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
-                    Text(peakForceText)
-                        .font(.system(size: 14, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.hangInk)
+                if let peakForceText {
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Text("PEAK")
+                            .font(.system(.caption2, design: .rounded, weight: .bold))
+                            .foregroundStyle(Color.hangMuted)
+                        Text(peakForceText)
+                            .font(.system(.subheadline, design: .rounded, weight: .bold))
+                            .foregroundStyle(Color.hangInk)
+                    }
                 }
             }
 
@@ -255,11 +253,11 @@ struct MotherboardMeterView: View {
                 ProgressView(value: min(max(actualLoadedTime / plannedActiveDuration, 0), 1))
                     .tint(Color.hangGreenDark)
                 Text("\(actualLoadedTime.durationText) loaded of \(plannedActiveDuration.durationText) planned")
-                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .font(.system(.caption, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
             } else {
                 Text(state == .streaming ? "Listening for load." : "Connect the sensor to see live force.")
-                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .font(.system(.caption, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
             }
 
@@ -272,11 +270,11 @@ struct MotherboardMeterView: View {
                         .foregroundStyle(Color.hangMuted)
                 }
             }
-            .font(.system(size: 11, weight: .bold, design: .rounded))
+            .font(.system(.caption2, design: .rounded, weight: .bold))
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("FORCE VS THRESHOLD")
-                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .font(.system(.caption2, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangMuted)
                 MotherboardForceRockerView(
                     state: MotherboardForceRocker.state(
@@ -289,13 +287,15 @@ struct MotherboardMeterView: View {
             balanceContent
 
             Text(bodyweightFeedbackText)
-                .font(.system(size: 12, weight: .medium, design: .rounded))
+                .font(.system(.caption, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
                 .accessibilityLabel(bodyweightFeedbackText)
 
-            Label(state.label, systemImage: state == .streaming ? "dot.radiowaves.left.and.right" : "circle.fill")
-                .font(.system(size: 11, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangMuted)
+            if showsConnectionStatus {
+                Label(state.label, systemImage: state == .streaming ? "dot.radiowaves.left.and.right" : "circle.fill")
+                    .font(.system(.caption2, design: .rounded, weight: .bold))
+                    .foregroundStyle(Color.hangMuted)
+            }
         }
         .padding(14)
         .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
@@ -309,10 +309,10 @@ struct MotherboardMeterView: View {
         return text
     }
 
-    private var peakForceText: String {
+    private var peakForceText: String? {
         guard let peakLoadKGF,
               let text = formattedForce(peakLoadKGF) else {
-            return "Not measured"
+            return nil
         }
         return text
     }
@@ -339,7 +339,7 @@ struct MotherboardMeterView: View {
             .accessibilityLabel("Balance: left \(balance.left), right \(balance.right)")
         } else {
             Text(MotherboardBalancePresentation(for: measurement).unavailableCopy ?? "Balance unavailable — waiting for a measured load.")
-                .font(.system(size: 12, weight: .medium, design: .rounded))
+                .font(.system(.caption, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
         }
     }
@@ -372,10 +372,10 @@ struct MotherboardMeterView: View {
     private func balanceValue(title: String, value: String) -> some View {
         VStack(alignment: title == "LEFT" ? .leading : .trailing, spacing: 2) {
             Text(title)
-                .font(.system(size: 10, weight: .bold, design: .rounded))
+                .font(.system(.caption2, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangMuted)
             Text(value)
-                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangInk)
         }
     }

@@ -601,6 +601,7 @@ struct BoardMapView: View {
     private let requestedPresentationID: String?
     private let activeHoldID: String?
     private let isDisplayOnly: Bool
+    private let maximumMapHeight: CGFloat?
 
     @State private var presentationSelection: BoardMapPresentationSelection
     @State private var preferredPositionIDs: [String: String] = [:]
@@ -612,7 +613,8 @@ struct BoardMapView: View {
         selectedPresentationID: String? = nil,
         activeHoldID: String? = nil,
         onHoldTap: ((PhysicalContact) -> Void)? = nil,
-        isDisplayOnly: Bool = false
+        isDisplayOnly: Bool = false,
+        maximumMapHeight: CGFloat? = nil
     ) {
         self.board = board
         self.highlightedHoldIDs = highlightedHoldIDs
@@ -621,6 +623,7 @@ struct BoardMapView: View {
         requestedPresentationID = selectedPresentationID
         self.activeHoldID = activeHoldID
         self.isDisplayOnly = isDisplayOnly
+        self.maximumMapHeight = maximumMapHeight
         let resolvedSelection = BoardMapPresentationSelection(
             board: board,
             requestedPresentationID: selectedPresentationID,
@@ -711,6 +714,8 @@ struct BoardMapView: View {
                 }
             }
             .aspectRatio(content.presentation.aspectRatio, contentMode: .fit)
+            .frame(maxWidth: maximumMapHeight.map { $0 * content.presentation.aspectRatio })
+            .frame(maxWidth: .infinity)
         }
         .animation(.easeInOut(duration: 0.18), value: highlightedHoldIDs)
         .onChange(of: highlightedHoldIDs) { previousHoldIDs, holdIDs in

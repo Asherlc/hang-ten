@@ -269,10 +269,10 @@ struct FreeWorkoutLogSessionView: View {
             VStack(alignment: .leading, spacing: 4) {
                 SectionLabel(title: "Session")
                 Text("Free workout")
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
+                    .font(.system(.title2, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
                 Text(elapsedLabel(at: date))
-                    .font(.system(size: 14, weight: .medium, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
                     .accessibilityIdentifier("freeWorkout.elapsed")
             }
@@ -294,7 +294,7 @@ struct FreeWorkoutLogSessionView: View {
                 SectionLabel(title: "Rest", tint: .restBlueDeep)
                 Spacer()
                 Text(countdownLabel(remaining))
-                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .font(.system(.title, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.restBlueDeep)
                     .monospacedDigit()
                     .accessibilityIdentifier("freeWorkout.rest.remaining")
@@ -328,7 +328,7 @@ struct FreeWorkoutLogSessionView: View {
             SectionLabel(title: "Exercises")
             if log.exercises.isEmpty {
                 Text("Add a hang or pull-up to start logging sets.")
-                    .font(.system(size: 14, weight: .medium, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
                     .hangCard(padding: 14)
             } else {
@@ -345,10 +345,10 @@ struct FreeWorkoutLogSessionView: View {
             HStack(alignment: .firstTextBaseline) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(exercise.title)
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .font(.system(.body, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangInk)
                     Text(holdSubtitle(exercise.holdSelection))
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .font(.system(.caption, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
                 }
                 Spacer()
@@ -422,7 +422,7 @@ struct FreeWorkoutLogSessionView: View {
             Text("✓")
                 .frame(width: 36, alignment: .center)
         }
-        .font(.system(size: 11, weight: .bold, design: .rounded))
+        .font(.system(.caption2, design: .rounded, weight: .bold))
         .foregroundStyle(Color.hangMuted)
     }
 
@@ -434,7 +434,7 @@ struct FreeWorkoutLogSessionView: View {
     ) -> some View {
         HStack(spacing: 8) {
             Text("\(number)")
-                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .bold))
                 .foregroundStyle(isFocused ? Color.hangGreenDark : Color.hangInk)
                 .frame(width: 28, alignment: .leading)
 
@@ -445,7 +445,7 @@ struct FreeWorkoutLogSessionView: View {
             )
             .keyboardType(.decimalPad)
             .multilineTextAlignment(.center)
-            .font(.system(size: 15, weight: .medium, design: .rounded))
+            .font(.system(.subheadline, design: .rounded, weight: .medium))
             .padding(.vertical, 6)
             .padding(.horizontal, 4)
             .background(Color.hangBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -460,7 +460,7 @@ struct FreeWorkoutLogSessionView: View {
                 )
                 .keyboardType(.numberPad)
                 .multilineTextAlignment(.center)
-                .font(.system(size: 15, weight: .medium, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .medium))
                 .padding(.vertical, 6)
                 .padding(.horizontal, 4)
                 .background(Color.hangBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -474,7 +474,7 @@ struct FreeWorkoutLogSessionView: View {
                 )
                 .keyboardType(.numberPad)
                 .multilineTextAlignment(.center)
-                .font(.system(size: 15, weight: .medium, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .medium))
                 .padding(.vertical, 6)
                 .padding(.horizontal, 4)
                 .background(Color.hangBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))

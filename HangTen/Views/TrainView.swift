@@ -30,6 +30,8 @@ enum TrainReviewDestination: Hashable {
 struct TrainView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var deepLinkManager: DeepLinkManager
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var showsDeepLinkedBoardDetail = false
     @State private var showsDeepLinkedWorkout = false
     @State private var deepLinkedWorkoutPlan: TrainingPlan?
@@ -140,36 +142,48 @@ struct TrainView: View {
     }
 
     private var selectedBoardCard: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            BoardMapView(board: store.selectedBoard)
+        let isCompact = verticalSizeClass == .compact && !dynamicTypeSize.isAccessibilitySize
+        let layout = isCompact
+            ? AnyLayout(HStackLayout(alignment: .center, spacing: 20))
+            : AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
+        let headingLayout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
+            : AnyLayout(HStackLayout())
+        return layout {
+            BoardMapView(board: store.selectedBoard, maximumMapHeight: isCompact ? 72 : 80)
                 .cardPreviewStyle()
+                .frame(width: isCompact ? 220 : nil)
 
-            VStack(alignment: .leading, spacing: 5) {
-                HStack {
-                    SectionLabel(title: "Your board")
-                    Spacer()
-                    Link(destination: store.selectedBoard.productURL) {
-                        Label("Product page", systemImage: "arrow.up.right")
-                            .frame(minHeight: 44)
-                            .contentShape(Rectangle())
+            VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 5) {
+                    headingLayout {
+                        SectionLabel(title: "Your board")
+                        if !dynamicTypeSize.isAccessibilitySize { Spacer() }
+                        Link(destination: store.selectedBoard.productURL) {
+                            Label("Product page", systemImage: "arrow.up.right")
+                                .frame(minHeight: 44)
+                                .contentShape(Rectangle())
+                        }
+                        .font(.system(.footnote, design: .rounded, weight: .medium))
+                        .foregroundStyle(Color.hangGreenDark)
                     }
-                    .font(.system(.footnote, design: .rounded, weight: .medium))
-                    .foregroundStyle(Color.hangGreenDark)
+                    Text(store.selectedBoard.name)
+                        .font(.system(.title3, design: .rounded, weight: .bold))
+                        .foregroundStyle(Color.hangInk)
                 }
-                Text(store.selectedBoard.name)
-                    .font(.system(.title3, design: .rounded, weight: .bold))
-                    .foregroundStyle(Color.hangInk)
-            }
 
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: 12) { boardActions }
-                    .fixedSize(horizontal: true, vertical: false)
-                VStack(alignment: .leading, spacing: 8) { boardActions }
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 12) { boardActions }
+                        .fixedSize(horizontal: true, vertical: false)
+                    VStack(alignment: .leading, spacing: 8) { boardActions }
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+                .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                .tint(.hangGreenDark)
             }
-            .buttonStyle(.bordered)
-            .controlSize(.large)
-            .font(.system(.subheadline, design: .rounded, weight: .semibold))
-            .tint(.hangGreenDark)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .layoutPriority(1)
         }
         .hangCard()
         .accessibilityIdentifier("train.board")
@@ -226,8 +240,6 @@ struct TrainView: View {
                 ForEach(store.favoritePlans) { plan in
                     FavoritePlanCard(
                         plan: plan,
-                        board: store.board(for: plan),
-                        labels: store.metadata(for: plan).athleteFacingLabels,
                         isFavorite: store.isFavorite(plan),
                         isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
                     ) {
@@ -242,10 +254,10 @@ struct TrainView: View {
         VStack(alignment: .leading, spacing: 8) {
             SectionLabel(title: "No compatible routine")
             Text("No routines are available for this board.")
-                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .font(.system(.callout, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangInk)
             Text("Choose another board or browse plans.")
-                .font(.system(size: 13, weight: .medium, design: .rounded))
+                .font(.system(.footnote, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
         }
         .hangCard()
@@ -381,17 +393,17 @@ struct BoardDetailView: View {
         VStack(alignment: .leading, spacing: 14) {
             SectionLabel(title: "Selected hold", tint: .holdActiveDeep)
             Text(hold.name)
-                .font(.system(size: 21, weight: .bold, design: .rounded))
+                .font(.system(.title3, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangInk)
 
             ForEach(BoardHoldSpecifications.entries(for: hold)) { specification in
                 HStack(alignment: .firstTextBaseline, spacing: 16) {
                     Text(specification.label)
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .font(.system(.footnote, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
                     Spacer()
                     Text(specification.value)
-                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangInk)
                 }
             }
@@ -458,10 +470,10 @@ struct BoardPickerView: View {
                 if filteredBoards.isEmpty {
                     VStack(spacing: 8) {
                         Text("No boards match your filters.")
-                            .font(.system(size: 18, weight: .bold, design: .rounded))
+                            .font(.system(.headline, design: .rounded, weight: .bold))
                             .foregroundStyle(Color.hangInk)
                         Text("Try a different search or manufacturer.")
-                            .font(.system(size: 14, weight: .medium, design: .rounded))
+                            .font(.system(.subheadline, design: .rounded, weight: .medium))
                             .foregroundStyle(Color.hangMuted)
                         Button("Clear filters") {
                             filters.clear()
@@ -576,7 +588,7 @@ private struct BoardPickerCard: View {
                         HStack(alignment: .top, spacing: 12) {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(board.name)
-                                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                                    .font(.system(.headline, design: .rounded, weight: .bold))
                                     .foregroundStyle(Color.hangInk)
                             }
 
@@ -615,7 +627,7 @@ private struct BoardPickerCard: View {
             NavigationLink("View hold specs") {
                 BoardDetailView(board: board)
             }
-            .font(.system(size: 13, weight: .bold, design: .rounded))
+            .font(.system(.footnote, design: .rounded, weight: .bold))
             .foregroundStyle(Color.hangGreenDark)
             .accessibilityIdentifier("boardPicker.holdSpecs.\(board.id)")
         }

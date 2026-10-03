@@ -186,16 +186,31 @@ struct PlanDetailView: View {
                 Pill(title: currentPlan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
                 Spacer()
                 Label(currentPlan.durationLabel, systemImage: "timer")
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .font(.system(.footnote, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangMuted)
             }
             Text(currentPlan.title)
-                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .font(.system(.largeTitle, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangInk)
             Text(currentPlan.subtitle)
-                .font(.system(size: 15, weight: .medium, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
+
+            Label(store.board(for: currentPlan).name, systemImage: "rectangle.portrait")
+                .font(.system(.footnote, design: .rounded, weight: .semibold))
+                .foregroundStyle(Color.hangMuted)
+
+            let labels = WorkoutLabelPresentationContent.displayLabels(
+                for: store.metadata(for: currentPlan).athleteFacingLabels
+            )
+            if !labels.isEmpty {
+                Text(labels.joined(separator: " · "))
+                    .font(.system(.subheadline, design: .rounded, weight: .medium))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityLabel("Workout labels: \(labels.joined(separator: ", "))")
+            }
 
             if currentPlan.id == "research.max-hangs", !maxHangsDepths.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
@@ -211,7 +226,7 @@ struct PlanDetailView: View {
                     .pickerStyle(.menu)
                     .accessibilityIdentifier("plan.maxHangs.edgePicker")
                     Text("Choose one edge size for this session. Adjust added weight to keep 3 seconds in reserve. Warm up progressively before starting.")
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .font(.system(.footnote, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -241,7 +256,7 @@ struct PlanDetailView: View {
                     .buttonStyle(.plain)
                     .disabled(true)
                     Text(requirement)
-                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        .font(.system(.footnote, design: .rounded, weight: .semibold))
                         .foregroundStyle(Color.hangMuted)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -256,7 +271,7 @@ struct PlanDetailView: View {
             VStack(alignment: .leading, spacing: 5) {
                 SectionLabel(title: "Weight tracking")
                 Text("Optional. Skip tracking, connect a supported scale, or enter a weight manually before you start.")
-                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .font(.system(.footnote, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -273,7 +288,7 @@ struct PlanDetailView: View {
             switch initialWeightSource {
             case .untracked:
                 Text("No weight or scale data will be recorded. You can still run and save the routine.")
-                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .font(.system(.footnote, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
                     .fixedSize(horizontal: false, vertical: true)
             case .sensor:
@@ -300,7 +315,7 @@ struct PlanDetailView: View {
                 .accessibilityLabel("Manual weight")
 
                 Text(motherboardSettingsStore.loadAdjustmentUnit.label)
-                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
                     .foregroundStyle(Color.hangMuted)
             }
 
@@ -321,7 +336,7 @@ struct PlanDetailView: View {
             }
 
             Text("Off records a standalone weight. On records this as added load on top of bodyweight.")
-                .font(.system(size: 12, weight: .medium, design: .rounded))
+                .font(.system(.caption, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -338,14 +353,14 @@ struct PlanDetailView: View {
             .accessibilityIdentifier("plan.initialWeight.scaleProfile")
 
             Text(scaleConnectionDetail)
-                .font(.system(size: 13, weight: .medium, design: .rounded))
+                .font(.system(.footnote, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("plan.initialWeight.scaleStatus")
 
             Button(action: toggleScaleConnection) {
                 Label(scaleConnectionActionTitle, systemImage: scaleConnectionActionIcon)
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .bold))
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
@@ -430,9 +445,9 @@ struct PlanDetailView: View {
             Text("Start routine")
             Spacer()
             Text(plan.durationLabel)
-                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .font(.system(.caption, design: .rounded, weight: .bold))
         }
-        .font(.system(size: 16, weight: .bold, design: .rounded))
+        .font(.system(.callout, design: .rounded, weight: .bold))
         .foregroundStyle(Color.hangInk)
         .padding(.horizontal, 17)
         .padding(.vertical, 15)
@@ -469,12 +484,7 @@ struct PlanDetailView: View {
         )
 
         return VStack(alignment: .leading, spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
-                SectionLabel(title: "First hold cue")
-                Text(board.name)
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-            }
+            SectionLabel(title: "First hold cue")
             BoardMapView(
                 board: board,
                 highlightedHoldIDs: firstStepHoldIDs,
@@ -498,7 +508,7 @@ struct PlanDetailView: View {
                 SectionLabel(title: "Session flow")
                 Spacer()
                 Text("\(currentPlan.steps.count) cues")
-                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    .font(.system(.caption, design: .rounded, weight: .semibold))
                     .foregroundStyle(Color.hangMuted)
             }
             .padding(.bottom, 14)
@@ -530,10 +540,10 @@ struct PlanDetailView: View {
                 .foregroundStyle(Color.hangGreenDark)
             VStack(alignment: .leading, spacing: 5) {
                 Text("Created in Hang Ten")
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
                 Text("This is a custom routine stored on this device.")
-                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .font(.system(.caption, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -552,7 +562,7 @@ struct PlanDetailView: View {
                     .foregroundStyle(Color.hangGreenDark)
                 VStack(alignment: .leading, spacing: 5) {
                     Text(PlanSourcePresentationContent.label(for: currentPlan))
-                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangInk)
                 }
                 Spacer(minLength: 0)
@@ -572,10 +582,10 @@ struct PlanDetailView: View {
                 .foregroundStyle(Color.hangGreenDark)
             SectionLabel(title: "Routine unavailable")
             Text(plan.title)
-                .font(.system(size: 24, weight: .bold, design: .rounded))
+                .font(.system(.title2, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangInk)
             Text("Choose another board or a different routine.")
-                .font(.system(size: 14, weight: .medium, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
             Button("Go back", action: dismiss.callAsFunction)
@@ -650,7 +660,7 @@ private struct StepRow: View {
                         .fill(step.phase.tint.opacity(0.17))
                         .frame(width: 31, height: 31)
                     Text("\(step.number)")
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .font(.system(.caption, design: .rounded, weight: .bold))
                         .foregroundStyle(step.phase.textTint)
                 }
                 if !isLast {
@@ -663,11 +673,11 @@ private struct StepRow: View {
             VStack(alignment: .leading, spacing: 5) {
                 HStack(alignment: .firstTextBaseline) {
                     Text(step.title)
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangInk)
                     Spacer()
                     Text(step.durationLabel)
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .font(.system(.caption, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangMuted)
                 }
                 ForEach(
@@ -682,12 +692,12 @@ private struct StepRow: View {
                     switch row.kind {
                     case .instruction:
                         Text(row.text)
-                            .font(.system(size: 13, weight: .medium, design: .rounded))
+                            .font(.system(.footnote, design: .rounded, weight: .medium))
                             .foregroundStyle(Color.hangMuted)
                             .fixedSize(horizontal: false, vertical: true)
                     case .accessory:
                         Text(row.text)
-                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                            .font(.system(.caption2, design: .rounded, weight: .bold))
                             .foregroundStyle(step.phase.textTint)
                     }
                 }

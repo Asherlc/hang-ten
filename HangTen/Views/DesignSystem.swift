@@ -56,7 +56,7 @@ struct SectionLabel: View {
 
     var body: some View {
         Text(title.uppercased())
-            .font(.system(size: 11, weight: .bold, design: .rounded))
+            .font(.system(.caption2, design: .rounded, weight: .bold))
             .tracking(1.4)
             .foregroundStyle(tint)
     }
@@ -69,10 +69,34 @@ struct Pill: View {
 
     var body: some View {
         Text(title)
-            .font(.system(size: 12, weight: .semibold, design: .rounded))
+            .font(.system(.caption, design: .rounded, weight: .semibold))
             .foregroundStyle(tint)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .background(fill, in: Capsule())
+    }
+}
+
+struct CardStatusHeading: View {
+    let title: String
+    let status: String
+    let tint: Color
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private var layout: AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+            : AnyLayout(HStackLayout())
+    }
+
+    var body: some View {
+        layout {
+            Text(title)
+                .font(.system(.subheadline, design: .rounded, weight: .bold))
+                .foregroundStyle(Color.hangInk)
+            if !dynamicTypeSize.isAccessibilitySize { Spacer() }
+            Pill(title: status, tint: tint, fill: tint.opacity(0.12))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

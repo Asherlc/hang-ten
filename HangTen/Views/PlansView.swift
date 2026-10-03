@@ -46,10 +46,10 @@ struct PlansView: View {
                                     .foregroundStyle(.orange)
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text("Some custom routines are unavailable")
-                                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                                        .font(.system(.subheadline, design: .rounded, weight: .bold))
                                         .foregroundStyle(Color.hangInk)
                                     Text(persistenceError)
-                                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                                        .font(.system(.caption, design: .rounded, weight: .medium))
                                         .foregroundStyle(Color.hangMuted)
                                 }
                             }
@@ -70,8 +70,6 @@ struct PlansView: View {
                             ForEach(myRoutines) { plan in
                                 FavoritePlanCard(
                                     plan: plan,
-                                    board: store.board(for: plan),
-                                    labels: store.metadata(for: plan).athleteFacingLabels,
                                     isFavorite: store.isFavorite(plan),
                                     isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
                                 ) {
@@ -85,7 +83,7 @@ struct PlansView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             SectionLabel(title: "No compatible routines")
                             Text("No routines are available for \(store.selectedBoard.name).")
-                                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                                .font(.system(.subheadline, design: .rounded, weight: .semibold))
                                 .foregroundStyle(Color.hangInk)
                         }
                         .hangCard()
@@ -99,8 +97,6 @@ struct PlansView: View {
                             ForEach(libraryPlans) { plan in
                                 FavoritePlanCard(
                                     plan: plan,
-                                    board: store.board(for: plan),
-                                    labels: store.metadata(for: plan).athleteFacingLabels,
                                     isFavorite: store.isFavorite(plan),
                                     isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
                                 ) {
@@ -137,15 +133,15 @@ struct PlansView: View {
                     .foregroundStyle(Color.hangGreenDark)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Training on")
-                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+                        .font(.system(.caption, design: .rounded, weight: .semibold))
                         .foregroundStyle(Color.hangMuted)
                     Text(store.selectedBoard.name)
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangInk)
                 }
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .font(.system(.footnote, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangGreenDark)
             }
             .padding(14)
@@ -243,7 +239,7 @@ struct PlansView: View {
                     Button("Clear") {
                         filters.clear()
                     }
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .font(.system(.footnote, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangGreenDark)
                     .accessibilityLabel("Clear plan filters")
                 }
@@ -279,7 +275,7 @@ struct PlansView: View {
             Image(systemName: "chevron.down")
                 .font(.system(size: 10, weight: .bold))
         }
-        .font(.system(size: 13, weight: .bold, design: .rounded))
+        .font(.system(.footnote, design: .rounded, weight: .bold))
         .foregroundStyle(isActive ? Color.hangGreenDark : Color.hangInk)
         .padding(.horizontal, 11)
         .padding(.vertical, 8)
@@ -315,10 +311,10 @@ private struct NoMatchingPlansCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("No routines match these filters")
-                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .font(.system(.callout, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangInk)
             Button("Clear filters", action: onClear)
-                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .font(.system(.footnote, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangGreenDark)
         }
         .hangCard()
@@ -327,69 +323,43 @@ private struct NoMatchingPlansCard: View {
 
 private struct PlanCard: View {
     let plan: TrainingPlan
-    let board: BoardRevision
-    let labels: [String]
     var isIncompatible: Bool = false
 
     var body: some View {
-        let displayLabels = WorkoutLabelPresentationContent.displayLabels(for: labels)
+        VStack(alignment: .leading, spacing: 12) {
+            Text(plan.title)
+                .font(.system(.headline, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.trailing, 44)
+                .fixedSize(horizontal: false, vertical: true)
 
-        VStack(alignment: .leading, spacing: 15) {
-            HStack {
-                Pill(title: plan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
-                if isIncompatible {
-                    Pill(title: "Not on this board", tint: .orange, fill: Color.orange.opacity(0.12))
-                }
-                Spacer()
-                Text(plan.durationLabel)
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
-            }
-            .padding(.trailing, 52)
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text(plan.title)
-                    .font(.system(size: 21, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                Text(plan.subtitle)
-                    .font(.system(size: 14, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
-                    .fixedSize(horizontal: false, vertical: true)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 12) { metadata }
+                    .fixedSize(horizontal: true, vertical: false)
+                VStack(alignment: .leading, spacing: 8) { metadata }
             }
 
-            if !displayLabels.isEmpty {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 6) {
-                        ForEach(displayLabels, id: \.self) { label in
-                            Pill(
-                                title: label,
-                                tint: Color.hangGreenDark,
-                                fill: Color.hangGreen.opacity(0.18)
-                            )
-                        }
-                    }
-                }
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel("Workout labels: \(displayLabels.joined(separator: ", "))")
+            if isIncompatible {
+                Label("Not on this board", systemImage: "exclamationmark.triangle")
+                    .font(.system(.footnote, design: .rounded, weight: .semibold))
+                    .foregroundStyle(Color.holdActiveDeep)
             }
-
-            HStack(spacing: 8) {
-                Image(systemName: "rectangle.portrait.and.arrow.right")
-                Text(board.name)
-                Spacer()
-                Image(systemName: "chevron.right")
-            }
-            .font(.system(size: 12, weight: .semibold, design: .rounded))
-            .foregroundStyle(Color.hangGreenDark)
         }
         .hangCard()
+    }
+
+    @ViewBuilder
+    private var metadata: some View {
+        Pill(title: plan.level, tint: .hangGreenDark, fill: Color.hangGreen.opacity(0.25))
+        Label(plan.durationLabel, systemImage: "timer")
+            .font(.system(.subheadline, design: .rounded, weight: .medium))
+            .foregroundStyle(Color.hangMuted)
     }
 }
 
 struct FavoritePlanCard: View {
     let plan: TrainingPlan
-    let board: BoardRevision
-    var labels: [String] = []
     let isFavorite: Bool
     var isIncompatible: Bool = false
     let onToggle: () -> Void
@@ -397,7 +367,7 @@ struct FavoritePlanCard: View {
     var body: some View {
         ZStack(alignment: .topTrailing) {
             NavigationLink(destination: PlanDetailView(plan: plan)) {
-                PlanCard(plan: plan, board: board, labels: labels, isIncompatible: isIncompatible)
+                PlanCard(plan: plan, isIncompatible: isIncompatible)
             }
             .buttonStyle(.plain)
             .frame(maxWidth: .infinity)

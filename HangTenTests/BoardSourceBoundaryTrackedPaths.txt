@@ -111,8 +111,11 @@ HangTen/Views/RootView.swift
 HangTen/Views/SuspendedBoardPresentation.swift
 HangTen/Views/TrainView.swift
 HangTen/Views/WorkoutAccessGate.swift
+HangTen/Views/WorkoutControls.swift
+HangTen/Views/WorkoutCueCard.swift
 HangTen/Views/WorkoutPresentationContent.swift
 HangTen/Views/WorkoutSessionState.swift
 HangTen/Views/WorkoutStepPickerView.swift
 HangTen/Views/WorkoutSummaryView.swift
+HangTen/Views/WorkoutTimerView.swift
 HangTen/Views/WorkoutView.swift
