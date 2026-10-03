@@ -1,0 +1,37 @@
+{
+  "owner": "strong-owl-live-physics",
+  "steps": 540,
+  "completed": true,
+  "phaseSettled": [
+    true,
+    true
+  ],
+  "eligible": 64,
+  "stopReturns": 64,
+  "candidateCorrections": 1656,
+  "controlCorrections": 1657,
+  "netCorrectionsAvoided": 1,
+  "maximumPropagatedDifferenceMeters": 3.3148883612498724e-06,
+  "maximumConvergedSameInputDifferenceMeters": 7.092141405393452e-06,
+  "totalSecondsRatio": 1.2570394096279198,
+  "candidateTotalSeconds": 4.943261125168647,
+  "controlTotalSeconds": 3.9324631251074607,
+  "p95CandidateStepSeconds": 0.01555250000092201,
+  "caps": 0,
+  "retries": 0,
+  "adopted": false,
+  "closed": true,
+  "evidenceHashes": {
+    ".context/strong-owl-live-physics-residual-stop-plan/PLAN.md": "8069d00d3fc9a6b5f023aa8ada5af72cbcfa49bf99ae71ef97dee5f0cb9ce6c4",
+    ".context/strong-owl-live-physics-current-residual-stop-accuracy/native/provenance.json": "757c5c16b6f7e263c283c0450c429707bd2b9eb08ace19edd6b38a7c483fc470",
+    ".context/strong-owl-live-physics-current-residual-stop-accuracy/native/run.log": "7a1942e0a33df97a3b82195e63758dd5035aeac8a319c11a45665707fd1d101c",
+    ".context/strong-owl-live-physics-current-residual-stop-accuracy/native/resources.jsonl": "92fa2c411ab8123cb05de35dff47b976cb7f8ee417323640f0bad077ef17863b",
+    ".context/strong-owl-live-physics-current-residual-provenance/native/provenance.json": "bf3447018809500123477d1741e48e8cd32765ee6dbb4de3fe725ca7ea37785e",
+    ".context/strong-owl-live-physics-current-residual-provenance/native/run.log": "8f3d6b29c79aea39ceb6c1d456b500cc9d244930b9f2da49402a2c3d635acbb2",
+    ".context/strong-owl-live-physics-current-residual-provenance/native/resources.jsonl": "70de742fbba0e5ed19dea205d3ae25ac028e0b00f664ffb1bd23b5a490d29c51",
+    ".context/strong-owl-live-physics-current-residual-disabled-strict/native/provenance.json": "9e2c82136f05d8db820e5d951ee0b5bcac54a261820614c747c6baccd84424a6",
+    ".context/strong-owl-live-physics-current-residual-disabled-strict/native/run.log": "9f040dcdd9518269f22a1d56d5ede078f2ea98504d49fdc7944e0cf024f2dfd3",
+    ".context/strong-owl-live-physics-current-residual-disabled-strict/native/resources.jsonl": "95a23c5d3dcdcb5d192e307629fb4a7c3b53b95fee3d42e96923e44578fde7f5",
+    ".context/strong-owl-live-physics-current-residual-stop-accuracy/native/result.json": "41f9c67ba0012642a87e287677ccf7a6520ac8ed7f4a454f7cb2689b6b44ad62"
+  }
+}
