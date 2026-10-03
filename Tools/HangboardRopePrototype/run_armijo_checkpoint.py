@@ -12,9 +12,11 @@ parser.add_argument('--full-merit',action='store_true')
 parser.add_argument('--fixtures-only',action='store_true')
 parser.add_argument('--trajectory',action='store_true')
 parser.add_argument('--step-rate',type=int,choices=[240,120])
+parser.add_argument('--composed-step',action='store_true')
 parser.add_argument('--preflight',action='store_true');args=parser.parse_args()
 if args.trajectory and args.fixtures_only:parser.error('--trajectory and --fixtures-only conflict')
 if args.step_rate and (args.full_merit or args.trajectory or args.fixtures_only):parser.error('--step-rate uses the original solver only')
+if args.composed_step and not args.step_rate:parser.error('--composed-step requires --step-rate')
 if args.preflight and args.step_rate!=240:parser.error('--preflight requires --step-rate 240')
 if args.trajectory and not args.full_merit:parser.error('--trajectory requires --full-merit')
 if args.full_merit:
@@ -29,12 +31,18 @@ for name in NAMES:
     if name=='RopeDynamicsSolver.swift':
         text=solver_source(text).replace('private extension SIMD4','extension SIMD4')
         text+='\n'+(tool/'stock_chain/CheckpointAdapter.swift').read_text()+'\n'+(tool/'contact_bundle/CheckpointExtras.swift').read_text()
+        if args.composed_step:
+            from composed_step.snapshot import solver_source as composed_solver
+            text=composed_solver(text)
     if name=='RopeBandedSystem.swift':text=text.replace('        try RopeBandedFactorization(size:size','        return try RopeBandedFactorization(size:size')
     (sources/name).write_text(text)
 for name in ['Math.swift','Trace.swift','main.swift']:
     text=(tool/'armijo'/('StepRateMain.swift' if args.step_rate and name=='main.swift' else 'TrajectoryMain.swift' if args.trajectory and name=='main.swift' else name)).read_text()
     if name=='main.swift' and not args.full_merit:
         text=text.replace('    ArmijoTrace.collectOracleBranches=x.verifyArmijoDerivative\n','')
+    if name=='main.swift' and args.composed_step:
+        from composed_step.snapshot import driver_source
+        text=driver_source(text)
     if args.full_merit and name=='main.swift' and not args.trajectory:
         text=text.replace('candidate.armijoExperiment=true','candidate.armijoExperiment=true;candidate.verifyArmijoDerivative=true')
         text=text.replace('"step":109]','"step":109,"fullMeritDerivative":true]')
@@ -49,6 +57,8 @@ for name in ['Math.swift','Trace.swift','main.swift']:
         text=text.replace('    try fixtures();result["fixturesPass"]=true','    try ambiguityFixtures();try fixtures();result["fixturesPass"]=true')
     (sources/name).write_text(text)
 if args.full_merit:(sources/'AmbiguityFixtures.swift').write_bytes((tool/'armijo/AmbiguityFixtures.swift').read_bytes())
+if args.composed_step:
+    for name in ['Math.swift','Fixtures.swift']:(sources/('Composed'+name)).write_bytes((tool/'composed_step'/name).read_bytes())
 (sources/'ExactCheckpointJSON.swift').write_bytes((tool/'native_contact/ExactCheckpointJSON.swift').read_bytes())
 files=sorted(sources.glob('*.swift'));binary=stage/f'{REPO.name}-armijo'
 command=['xcrun','swiftc','-O','-D','DEBUG','-whole-module-optimization','-Xcc','-DACCELERATE_NEW_LAPACK',
@@ -57,6 +67,7 @@ prior=REPO/'.context/strong-owl-live-physics-current-diagnostic-trajectory/nativ
 inputs=[*files,*(REPO/'HangTen/Models'/n for n in NAMES),Path(__file__),*list((tool/'armijo').glob('*.*')),
     tool/'stock_chain/CheckpointAdapter.swift',tool/'contact_bundle/CheckpointExtras.swift',prior,
     REPO/'Hangboards/clavellium-training-block/assets/primary.physics.json']
+if args.composed_step:inputs += list((tool/'composed_step').glob('*.*'))
 (stage/'provenance.json').write_text(json.dumps({'owner':REPO.name,'command':command,
     'hashes':{str(p.relative_to(REPO)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}},indent=2))
 owner=OwnedCommands(REPO.name,stage)
