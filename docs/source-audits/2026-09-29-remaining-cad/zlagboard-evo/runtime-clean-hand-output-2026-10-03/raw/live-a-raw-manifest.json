@@ -1,0 +1,856 @@
+{
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/000-stdout.txt",
+      "sha256": "35292a343c3b3abbe0dc9c5cc9c928b16c91e85f351d96bdbd775253cdd38fbf",
+      "bytes": 117
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/001-stdout.txt",
+      "sha256": "0e1b9bf0f405a0b0279d8c606f93ce468ed3f0b1e064bc81840aead014e278aa",
+      "bytes": 176
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/002-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/002-stdout.txt",
+      "sha256": "5acfce28eafc754cf2cf2c2dedc2a98244d97119c5ccd77e639f2b818b51e5f5",
+      "bytes": 28
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/003-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/003-stdout.txt",
+      "sha256": "57e0f7f837a4015ab22034df3c1ecbf75bdf8d52fdbc9aac4a9da8646e9dfdbb",
+      "bytes": 164778
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/004-stderr.txt",
+      "sha256": "79d41710fb4c08c0bd89a2c5462f864e5504da006809f7e247e882e5151e5a51",
+      "bytes": 364
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/004-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/005-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/005-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/006-stderr.txt",
+      "sha256": "330189e99d2b205324f1f6cf47621b9e8ca1bcf57ac062e2387230323e6f3375",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/006-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/007-stderr.txt",
+      "sha256": "0922f7776386f4a76b4fc47980be366e1a694a66ad31fa340ff3cb69eef85d60",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/007-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/008-stderr.txt",
+      "sha256": "5264bb217ddd1094163caf90982cbebcc5e4eea264332b7ab56b9407c7ce2242",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/008-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/009-stderr.txt",
+      "sha256": "aaec0c9ef31e2fb654e58319a84ed87473357b5fcb582447999aa2763f4d6ac2",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/009-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/010-stderr.txt",
+      "sha256": "dc183b28a5ba66ad158f9b96993914ae8d3f08651e5a594d789cbe7dd2e1d233",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/010-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/011-stderr.txt",
+      "sha256": "aa94710bbbf8c17cdb210af01df45fbd699b647af88330ece929cf583d2bf3b4",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/011-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/012-stderr.txt",
+      "sha256": "a8f51faa4368107b1eb479005f96ef1699508793483c285211c927df0bbf06aa",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/012-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/013-stderr.txt",
+      "sha256": "0a1b02fde365346e43adaf6dd2f236265cdcd43e120c187bb91570117d61081d",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/013-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/014-stderr.txt",
+      "sha256": "5ff6aecde382e60dc267c663e230b7c1e80fcea62988700a8c5c982e72eed6ca",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/014-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/015-stderr.txt",
+      "sha256": "33cf6d41fba845f2589cb387c76236fce47876568531f8b6747c3fe0488d8918",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/015-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/016-stderr.txt",
+      "sha256": "9ee8999c5a2bb26c4e1c0f5039804377d1dfa35d99b74b037c195b3314a45bbc",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/016-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/017-stderr.txt",
+      "sha256": "c3e8836b5b2d7570b1c8cb6b220eb8adde8488dd2617f18ae4cd6d33b2249f74",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/017-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/018-stderr.txt",
+      "sha256": "50c94d4c3cbddeff8b4c0afa8d9849ce40ca508536321859231ec9d013a56920",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/018-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/019-stderr.txt",
+      "sha256": "2d221581a2789296a970be0758dc4e1f7a46f4661cd023f31358c1d3e82a635e",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/019-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/020-stderr.txt",
+      "sha256": "faf66a5c6cbdfaf5e1edb30e48fbafaa633ea0db867078be8395ee4bac9f58ec",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/020-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/021-stderr.txt",
+      "sha256": "7b4a847361db1256d8bc102894677c1514a1b3acba22428e4191a7ebcb62d275",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/021-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/022-stderr.txt",
+      "sha256": "76a009de4afdcb21c4582304c6698267ff1c70a3f939cc3998aada565d3ae727",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/022-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/023-stderr.txt",
+      "sha256": "d1cfb6989e76718f3ff7c8d896d11b989b569623df076b052c57dec1687c31d6",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/023-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/024-stderr.txt",
+      "sha256": "641db52990f151fb4c37be27265ca1ae17f591b12c3b54c46c731f04f55906b0",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/024-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/025-stderr.txt",
+      "sha256": "daacb2c675a65c486b00e6cc025bc39b84ca5c62ad355ed74cc06467790d7937",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/025-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/026-stderr.txt",
+      "sha256": "e1727707e3b4743cf9ed8a9841d5a05f5dd87957fd78aeb9a74d90bd27d118f6",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/026-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/027-stderr.txt",
+      "sha256": "2ff20822fa61190a989ee1eba57211cc1e1b1bd73b4b5519a251e358124c3488",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/027-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/028-stderr.txt",
+      "sha256": "0c9573d3f2f3ee08f8d638cc8fff8c27d5a84eba231eccefbe78c80e97d4980a",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/028-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/029-stderr.txt",
+      "sha256": "bab36d12251b72dc33586c4474ae4f32c3d10a18bcf512cb4f5819f4427bd641",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/029-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/030-stderr.txt",
+      "sha256": "5381483acca4af9396c03cde943671ea219512acf85f1e85355b1bfca1a2270d",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/030-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/031-stderr.txt",
+      "sha256": "371b8d4a65f61c117272d7cbac1cc873b96c8b0f919c3c6a4b00cfd050e05e45",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/031-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/032-stderr.txt",
+      "sha256": "9ae13ff56b9d546b05c432f8cdf0ec8e67d876fa9d22a98cd7d113f8fa6635a1",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/032-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/033-stderr.txt",
+      "sha256": "6792aae3a1c64ec2a18bff3ef549565087f87a89d6461ee1ff89d2d640813b04",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/033-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/034-stderr.txt",
+      "sha256": "c4a70c0546a675941db65e902976030cb8f55472fc33e69ee52d6c8761f91c33",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/034-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/035-stderr.txt",
+      "sha256": "cb4b3b6b94f59f467b3281967906cad524488dc746a7d3d1e6d83d5c33108ef7",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/035-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/036-stderr.txt",
+      "sha256": "5ef0af6427fa534be65871eb808c33728aae350b12fca870e088cf54e4438362",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/036-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/037-stderr.txt",
+      "sha256": "fbef3064ba6b78044837d067ef22af680eea623c0516344d2f2935c4108907be",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/037-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/038-stderr.txt",
+      "sha256": "dde6be7fefbc3ab213b0d9044c0cce332b67ffe1cd242f464c969f2b9103ca4d",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/038-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/039-stderr.txt",
+      "sha256": "8d2481745f3ee7b918958a31ee648ca542a2acc7be4fd562c1002b6eb5b8b511",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/039-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/040-stderr.txt",
+      "sha256": "d8c6f2d3b20a76cb3c866741dec2dcdd294890e5fdb1f943044619035dce6f9c",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/040-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/041-stderr.txt",
+      "sha256": "c21b41027a7b73975a144ad8cbbacb6b4b87c26dcecb242c44e9ee9cb0e25b7d",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/041-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/042-stderr.txt",
+      "sha256": "0aadf73d1c41a568376d4869940d7d28d1c18340935a6954f14fee6149f9cad1",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/042-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/043-stderr.txt",
+      "sha256": "f157a3b27f6c31d95285021d1757e6b5fe9f0e46b8fc507dc0d01dad8c009aaf",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/043-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/044-stderr.txt",
+      "sha256": "4f20c640ee9cb7345aa33c52830a0843da41dace05e4684a36248c050bee0348",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/044-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/045-stderr.txt",
+      "sha256": "07499db4ba15a058a6f258e4daab362920ff192c65ffc31ea4a0401f9efd7707",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/045-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/046-stderr.txt",
+      "sha256": "e38d57cf5fd1d2edc85a015c3cf904dec5ff995610fa1e9e087a6e10a0b4a654",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/046-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/047-stderr.txt",
+      "sha256": "1990d1d4e9c79c66b08b6d306fdc7ec4c10a74ce9cb93a9371ddf2b1ba12aa73",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/047-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/048-stderr.txt",
+      "sha256": "5b46721e36409c5ce6d4c21719e31c016c054b06175fe8ce1b43fe263133a44b",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/048-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/049-stderr.txt",
+      "sha256": "a42c4b4ea53b64e6b76b53d6880c599dc4d4b74611baee105c107bff649f70ae",
+      "bytes": 365
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/049-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/050-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/050-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/051-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/051-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/052-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/052-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/app-registration.json",
+      "sha256": "0708cd4acf12c1c7b8d083c18ece69cce699fb77b55b43db59cefa994990e895",
+      "bytes": 158
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/awake-ownership.json",
+      "sha256": "205a5abddd0eb03d3bbbc76ecf1621ec88353f91d4fd500d415c5f0b3105ccfd",
+      "bytes": 398
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/awake.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/awake.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/captures.json",
+      "sha256": "d56e8775fe41e2ac6af4d959e8ee9294e5707dd86bda992ee9c10164772bb699",
+      "bytes": 23905
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/cleanup.json",
+      "sha256": "1c24a58b672ffa16fb7b78c5e2edf234c564df11b582efc6d58a5b3f3357028b",
+      "bytes": 230
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/commands.json",
+      "sha256": "929c3a62b73a3be9e0721d53aed26d32ada0b3410955b990f87c0757ed8d1ebe",
+      "bytes": 25995
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/completion.json",
+      "sha256": "10058d1588408162f4df6fe2d91cbeba24d9772b141f3ef6b5f69b7f0dc82a26",
+      "bytes": 228
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-001s.png",
+      "sha256": "5ede364f9d69da5c8984908e85772e2f4f19470921ccad21f1253e0e24b8bb32",
+      "bytes": 314270
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-002s.png",
+      "sha256": "bbf4e8f025305dcf672b13dfb9d00f25c5cef433826608ed3115df30bbfcb092",
+      "bytes": 215117
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-003s.png",
+      "sha256": "123bb018f0c96a54221abe6dc2680c14b7d849988bade1d29f2694e6541baaf2",
+      "bytes": 205696
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-004s.png",
+      "sha256": "0dca6990046bd55d9500e829f42f0c7f15ac25953a8ef925585de1864fcc680d",
+      "bytes": 277321
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-005s.png",
+      "sha256": "fffec8e090edd169857c3dbb9dcf31184e8cd08f7eca05ebd00ffe1df9594492",
+      "bytes": 276842
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-006s.png",
+      "sha256": "986bd7d21750958289d894bb9404e7f807e750bda9b65b3baa4052a4ce9588bd",
+      "bytes": 334283
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-007s.png",
+      "sha256": "1834f6e15bfbc9e1e602dfd83356c77d4aa5d1d3554bfd7535d4eb6f84eff09b",
+      "bytes": 335562
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-008s.png",
+      "sha256": "6a3f16b1575fae543b1da2f0cbd3894ccc415f708cb133fdd3afedac7936acea",
+      "bytes": 334738
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-009s.png",
+      "sha256": "8f02c3ddaa4e1c4da41dab40eeb5694d7973132e2d90176a3b46d0b61ed2f58c",
+      "bytes": 333349
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-010s.png",
+      "sha256": "030e52d6b20be2ca3bd73537ea7d0b7e59ae0c0072f60b64a9d914b0cb6f9e14",
+      "bytes": 300928
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-011s.png",
+      "sha256": "ed52b8f363cac827bdbcd8426ab95151b1b599dafa46435a28da0799dd42ce8f",
+      "bytes": 305035
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-012s.png",
+      "sha256": "5353b003a3ddd6b5eb5528e5a05f9b5cc1141b10b9f4f04da8e872049575fb1a",
+      "bytes": 305273
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-013s.png",
+      "sha256": "c4a8be88e7d28f49e7754f19cb30d181fc883d31743af2aa2de924673eedf09e",
+      "bytes": 303368
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-014s.png",
+      "sha256": "4ba1d3457b83d7f9fc38b3e963e3144a6438e6f106dfff9d58b041b287d2e317",
+      "bytes": 304958
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-015s.png",
+      "sha256": "962f5987a4892509283aa8e2422fa73673ebe555a21f8ecaf8ea78f683d36309",
+      "bytes": 302179
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-016s.png",
+      "sha256": "c81c5d79fbb71f255fc465b9cb08da7476ca82230bd652188bd7e5f4640869fd",
+      "bytes": 303628
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-017s.png",
+      "sha256": "88f4fc1c1715824cecb19be34d0187a9d8641a0777d5cdc25c32560e5662ddcc",
+      "bytes": 304838
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-018s.png",
+      "sha256": "768b870ccff9af90be6383410379e63d95b7e79951791a6c1cfb562645a01bd8",
+      "bytes": 302625
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-090s.png",
+      "sha256": "17bbdaf1dab86cc7ef5cb8e3f1386aa44cdb8af7864d751e3ab9bc10589b556c",
+      "bytes": 299902
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-183s.png",
+      "sha256": "f00173e55ca846ac81d5b2f180b03af02c5f59c82bc1f1fdc79fd9585d1b842f",
+      "bytes": 299082
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-184s.png",
+      "sha256": "801d3476e2fab3b11b5a2ee1aa015df2589a36f06ea055abf605524df671fde1",
+      "bytes": 300578
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-185s.png",
+      "sha256": "c175b9b8971590a26d1f1b1f766eb796d58fd31150090548a28fba864755ca11",
+      "bytes": 300049
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-186s.png",
+      "sha256": "bedbad4a5333cf614362fb767ef4a9c4f28f4a1ab6d9c3052338258bc303d8ac",
+      "bytes": 299249
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-187s.png",
+      "sha256": "845b200137cbd2ff8e3d8e9ee15c676e7bef016ddbed6590f9c2b0337e88ad3e",
+      "bytes": 300465
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-188s.png",
+      "sha256": "80a97e852c61d92aee7ef0910e247196770ebd4adcd65cec8115fc170ed16395",
+      "bytes": 299820
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-189s.png",
+      "sha256": "12a0d226ffd6eebb6c6e7e40fa8b222f239639a5205149d532f360264658d0bf",
+      "bytes": 299804
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-190s.png",
+      "sha256": "0f94f96c586f3ba3266d32fa8f9ae4032e993e16994f249a4e7f73dabc608751",
+      "bytes": 298349
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-191s.png",
+      "sha256": "1b7457ae8c81535cc69b9e9de47f39440b157271423aeffe23bde4958d87faef",
+      "bytes": 335147
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-192s.png",
+      "sha256": "1c85bbf688225236ecda377b4873817ee6bfffe3bab18f7a41cc7b4850ef0770",
+      "bytes": 336524
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-193s.png",
+      "sha256": "51b11d65518f8896b11e6a1257c3cba64237faab58643c7f7f9ec92eb6b731a8",
+      "bytes": 336516
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-194s.png",
+      "sha256": "7129665d20c9e59963958a60a829c18a73e0f044deef3d42a02df8628996c5d6",
+      "bytes": 335498
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-195s.png",
+      "sha256": "d076050118f55f824c91d5e92b6a75db21ba3f7f09b3f06f6b996449dbe68e51",
+      "bytes": 336824
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-196s.png",
+      "sha256": "a6f51d1fbfa4e1167ca8f3e2305a242b80f099e746160e090473f21ef262599b",
+      "bytes": 335960
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-197s.png",
+      "sha256": "44565e91e2c8509dc55501508e197a091a0702534fbd055cdd7a9d6c412c0b12",
+      "bytes": 300613
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-198s.png",
+      "sha256": "5238300d2c8b03c157f781c47e93c00d78c70a53afaaae93c81f4261d89524a3",
+      "bytes": 304648
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-199s.png",
+      "sha256": "ed0899a2c2989f948d73c8eaf31456353515fcdadb57fee74b824eb24f950d4d",
+      "bytes": 304895
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-200s.png",
+      "sha256": "68deee5cec2699dbd6f0efc75acdba4d11f72177d4abe42fa5b03ad48d02beed",
+      "bytes": 302897
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-201s.png",
+      "sha256": "b00380588115602e507e57d290ee7a97f4b5dc75647e2a7760270d615f2c477b",
+      "bytes": 304564
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-202s.png",
+      "sha256": "c2551003bc23a8607f1a3a9e9f8a9c635c90486bec9eecaeffb93d2249f0862a",
+      "bytes": 301778
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-203s.png",
+      "sha256": "149445bae4070e76cbc85a9a2fbd593c5b90b3f949e68a1a7276e3ba758cae5d",
+      "bytes": 303237
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-204s.png",
+      "sha256": "1b87861c41afefa0cf8e33dbfdeaa24c679489133ac81c451688b675bd594e8a",
+      "bytes": 303240
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-205s.png",
+      "sha256": "1b87861c41afefa0cf8e33dbfdeaa24c679489133ac81c451688b675bd594e8a",
+      "bytes": 303240
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-206s.png",
+      "sha256": "a956ca8460257b43d463a6318c38de331a81803d31db8e5c9ea0742066c02cdb",
+      "bytes": 302180
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-207s.png",
+      "sha256": "dee5c5fd611835bab0294df48618d2601c2fffb646fc8eb6893a81a410141867",
+      "bytes": 302248
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/external-anchor.json",
+      "sha256": "d8a7ebfabded096f0de8089bbf06441cfa24bc6ae0a8ec2b147371328b033220",
+      "bytes": 212
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/host-clock-stability.json",
+      "sha256": "b2810531b760d5ec783d10a17792226c3ec86ab5ce52acc02a37e59119c17020",
+      "bytes": 2661
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/installed-binary-gate.json",
+      "sha256": "90bcc17b85fccf58e308932e1ce93fb2603eeb35e9249ca8afe69e6e423fad64",
+      "bytes": 292
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/launch-app-arguments.json",
+      "sha256": "59a90eec4c918f4fa86dcc98d7b3e13b3bbcc76365132ba919aa43dddc50a642",
+      "bytes": 41
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/launch-review-environment.json",
+      "sha256": "c41b653a127df274cf22d6bbf1be037081b8a527544f9c3864eca94e980e103e",
+      "bytes": 185
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/offline-validation.json",
+      "sha256": "23cdafa8d6fd5ce67a56bfed53bd9af3a329137ec194d0755777f79560c75a50",
+      "bytes": 7217
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/offline-validation.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/runtime-release.json",
+      "sha256": "b48244d0d2f80e80742a0cf6b4135233ebad7430f9c08c4749be8042735f85f5",
+      "bytes": 1429
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/schedule.json",
+      "sha256": "a1ddc84211b458b6a0e188bb110e83f64350290119de6b586050e8accf510701",
+      "bytes": 658
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/source-reference.json",
+      "sha256": "48f7f2a3918e90bd61d146945bb9db86a8621f72f9ca8595537691c8be6ab114",
+      "bytes": 1995
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/train-setup-ax.json",
+      "sha256": "6e16abac72dd6e88112067557c789d5e0249eb4a9372ec7cc13832f8801b0b6a",
+      "bytes": 150750
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/train-setup.png",
+      "sha256": "44bd0c79018c2a9e300721596dfc6d38a00c10c97dd9bd01fb0293f07ea254ad",
+      "bytes": 723387
+    }
+  ],
+  "count": 170,
+  "captureComplete": true
+}
