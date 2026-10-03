@@ -1645,7 +1645,7 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertFalse(cue.isSuppressed)
     }
 
-    func testBoardCuePreviewsDestinationWorkStepDuringSkipCountdown() {
+    func testBoardCuePreviewsDestinationWorkStepDuringCountdown() {
         let timeline = WorkoutTimeline(steps: restPreviewSteps)
 
         let cue = timeline.boardCue(
@@ -1689,10 +1689,10 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertFalse(cue.isSuppressed)
     }
 
-    func testBoardCuePreviewsCountdownAndSuppressesCompletion() {
+    func testBoardCuePreviewsInitialCountdownAndSuppressesCompletion() {
         let timeline = WorkoutTimeline(steps: restPreviewSteps)
 
-        let countdownCue = timeline.boardCue(at: 5, countdown: 3, isComplete: false)
+        let countdownCue = timeline.boardCue(at: 0, countdown: 3, isComplete: false)
         XCTAssertEqual(countdownCue.step?.id, "work")
         XCTAssertEqual(countdownCue.mode, .preview)
         XCTAssertFalse(countdownCue.isResting)

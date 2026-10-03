@@ -2009,8 +2009,7 @@ struct WorkoutView: View {
 					currentStep: step,
 					stepElapsed: stepElapsed,
 					countdown: countdown,
-					isComplete: isComplete,
-					isSkipCountdown: sessionState.countdownKind == .skip
+					isComplete: isComplete
 				)
 				let isResting = boardCue.isResting
 				let highlightedStep = boardCue.step
