@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/BFD113CE-0D3B-4B1D-9DF7-C0C1598422F6/Documents/HighlightDiagnostic-placid-badger-cad-second-half-prestart-hand-control/events-17D26FA5-2554-4CBF-BE42-1CA20923E495.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/events-17D26FA5-2554-4CBF-BE42-1CA20923E495.jsonl",
+      "sha256": "072b1cd9719e5b0cc92f112144f54d8e801aa5ee0e700d3087d6c6d42fb8b538"
+    }
+  ],
+  "records": 170,
+  "completeContiguous": true,
+  "copiedEpoch": 1790998454.621105,
+  "includesSamplerEnd": true
+}

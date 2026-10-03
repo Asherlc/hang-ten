@@ -1,0 +1,21 @@
+{
+  "epoch": 1790997894.375776,
+  "diagnosticOnly": true,
+  "patchSHA256": "904dc50c002eb69c03aafcfac197b81036f92f10dde18d32d9bc2bb2e7c72829",
+  "counterFreezeSHA256": "b9be609012589691867212e46caed8808508bf0f359996b92d98a1bb1e6ef685",
+  "counterValidFailure": true,
+  "all136FrozenBytesPreserved": true,
+  "files": [
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "beforeSHA256": "3d8ffd568e1f99e33652eb77bfe4e0d2ce4c014889bfee3a166fe9601d7e136e",
+      "proposedSHA256": "78398b0253e6bca1184a9c24c5c938a3dd1cc0afce807b0226b0f4605e6824a1"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "beforeSHA256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221",
+      "proposedSHA256": "5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926"
+    }
+  ],
+  "next": "Fresh same-binary control only; action requires valid reproduced failure and root gate; no production adoption"
+}
