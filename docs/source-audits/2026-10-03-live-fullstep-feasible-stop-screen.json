@@ -1,0 +1,400 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "closed": true,
+  "result": {
+    "adopted": false,
+    "armijoEnabled": false,
+    "attemptedSteps": 3,
+    "candidateHz": 240,
+    "controlHz": 240,
+    "failure": "invalid(\"matched-time pose/cap/retry step 3\")",
+    "fullstepFeasibleStop": true,
+    "measuredSteps": 3,
+    "owner": "strong-owl-live-physics",
+    "pendingPhase": 0,
+    "preflight": true,
+    "steps": [
+      {
+        "candidateCaps": 0,
+        "candidateQPs": 3,
+        "candidateRetries": 0,
+        "candidateSeconds": 0.01171445834916085,
+        "controlCaps": 0,
+        "controlQPs": 4,
+        "controlRetries": 0,
+        "controlSeconds": 0.013814833335345611,
+        "controlStep": 1,
+        "difference": 6.470501432352778e-06,
+        "metrics": {
+          "boardDisplacement": 0.00015800631251533526,
+          "clearanceMargin": 0.00010031125599294349,
+          "geometryAccepted": true,
+          "lengthError": 3.583928413597448e-06,
+          "speed": 0.06063703591064381,
+          "strain": 0.00018509391662502317
+        },
+        "phase": 0,
+        "settled": false,
+        "step": 1,
+        "strictDifference": 6.438595317604223e-06,
+        "strictReference": {
+          "caps": 0,
+          "qps": 6,
+          "retries": 0,
+          "traces": [
+            [
+              {
+                "alpha": 0.6136396393174166,
+                "armijoRejected": 0,
+                "movement": 0.0003313263956604868,
+                "originalRejected": 0,
+                "rows": 329,
+                "slope": null,
+                "strain": 0.033474008364062335
+              },
+              {
+                "alpha": 0.8138766784381328,
+                "armijoRejected": 0,
+                "movement": 0.0002212668893979661,
+                "originalRejected": 0,
+                "rows": 329,
+                "slope": null,
+                "strain": 0.009918393365493383
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 5.900037244628199e-05,
+                "originalRejected": 0,
+                "rows": 331,
+                "slope": null,
+                "strain": 0.00018509391662502317
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 6.470501432354107e-06,
+                "originalRejected": 0,
+                "rows": 333,
+                "slope": null,
+                "strain": 7.76583664841013e-06
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 1.0068258174376864e-07,
+                "originalRejected": 0,
+                "rows": 333,
+                "slope": null,
+                "strain": 1.0560539109860656e-09
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 1.286714691741534e-11,
+                "originalRejected": 0,
+                "rows": 333,
+                "slope": null,
+                "strain": 1.6471268793338822e-12
+              }
+            ]
+          ]
+        },
+        "trace": [
+          {
+            "alpha": 0.6136396393174166,
+            "armijoRejected": 0,
+            "movement": 0.0003313263956604868,
+            "originalRejected": 0,
+            "rows": 329,
+            "slope": null,
+            "strain": 0.033474008364062335
+          },
+          {
+            "alpha": 0.8138766784381328,
+            "armijoRejected": 0,
+            "movement": 0.0002212668893979661,
+            "originalRejected": 0,
+            "rows": 329,
+            "slope": null,
+            "strain": 0.009918393365493383
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.900037244628199e-05,
+            "originalRejected": 0,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.00018509391662502317
+          }
+        ]
+      },
+      {
+        "candidateCaps": 0,
+        "candidateQPs": 2,
+        "candidateRetries": 0,
+        "candidateSeconds": 0.013264416658785194,
+        "controlCaps": 0,
+        "controlQPs": 3,
+        "controlRetries": 0,
+        "controlSeconds": 0.015824916656129062,
+        "controlStep": 2,
+        "difference": 4.88221290456774e-06,
+        "metrics": {
+          "boardDisplacement": 0.00046260753878185623,
+          "clearanceMargin": 9.909312049969764e-05,
+          "geometryAccepted": true,
+          "lengthError": 2.064307567883894e-06,
+          "speed": 0.07360659619851925,
+          "strain": 0.0002513151961249793
+        },
+        "phase": 0,
+        "settled": false,
+        "step": 2,
+        "strictDifference": 2.7265213146883113e-06,
+        "strictReference": {
+          "caps": 0,
+          "qps": 8,
+          "retries": 0,
+          "traces": [
+            [
+              {
+                "alpha": 0.9040028142129669,
+                "armijoRejected": 0,
+                "movement": 0.00022482095606565677,
+                "originalRejected": 0,
+                "rows": 402,
+                "slope": null,
+                "strain": 0.007485997868446059
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 4.3033231576937686e-05,
+                "originalRejected": 0,
+                "rows": 370,
+                "slope": null,
+                "strain": 0.0002512901999933703
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 3.7999332016185677e-06,
+                "originalRejected": 0,
+                "rows": 380,
+                "slope": null,
+                "strain": 6.4805785966459695e-06
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 1.2606995606173987e-06,
+                "originalRejected": 0,
+                "rows": 380,
+                "slope": null,
+                "strain": 5.036860097895612e-07
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 3.4573793303764923e-07,
+                "originalRejected": 0,
+                "rows": 380,
+                "slope": null,
+                "strain": 3.9553997410735064e-08
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 9.718988276684613e-08,
+                "originalRejected": 0,
+                "rows": 380,
+                "slope": null,
+                "strain": 3.0871061262871535e-09
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 2.7124897837811525e-08,
+                "originalRejected": 0,
+                "rows": 380,
+                "slope": null,
+                "strain": 2.416205013844319e-10
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 7.585505956532943e-09,
+                "originalRejected": 0,
+                "rows": 380,
+                "slope": null,
+                "strain": 1.9196866318793582e-11
+              }
+            ]
+          ]
+        },
+        "trace": [
+          {
+            "alpha": 0.9040028142129669,
+            "armijoRejected": 0,
+            "movement": 0.00022482095606565677,
+            "originalRejected": 0,
+            "rows": 402,
+            "slope": null,
+            "strain": 0.007485997868446059
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.3035905887812e-05,
+            "originalRejected": 0,
+            "rows": 370,
+            "slope": null,
+            "strain": 0.0002513151961249793
+          }
+        ]
+      },
+      {
+        "candidateCaps": 0,
+        "candidateQPs": 9,
+        "candidateRetries": 0,
+        "candidateSeconds": 0.07058416667860001,
+        "controlCaps": 0,
+        "controlQPs": 12,
+        "controlRetries": 0,
+        "controlSeconds": 0.07663904168293811,
+        "controlStep": 3,
+        "difference": 0.00011526305886563608,
+        "metrics": {
+          "boardDisplacement": 0.000852623684054532,
+          "clearanceMargin": 9.050821182289516e-05,
+          "geometryAccepted": true,
+          "lengthError": 2.8977353284109775e-05,
+          "speed": 0.20385427574977788,
+          "strain": 0.0026342096436586804
+        },
+        "phase": 0,
+        "settled": false,
+        "step": 3,
+        "trace": [
+          {
+            "alpha": 0.6380809503464621,
+            "armijoRejected": 0,
+            "movement": 0.0002616324775443005,
+            "originalRejected": 0,
+            "rows": 422,
+            "slope": null,
+            "strain": 0.02802118598898007
+          },
+          {
+            "alpha": 0.29674761413609957,
+            "armijoRejected": 0,
+            "movement": 0.0006802484374939068,
+            "originalRejected": 0,
+            "rows": 430,
+            "slope": null,
+            "strain": 0.01971126023879144
+          },
+          {
+            "alpha": 0.21905145550836838,
+            "armijoRejected": 0,
+            "movement": 0.0007648122535161893,
+            "originalRejected": 0,
+            "rows": 428,
+            "slope": null,
+            "strain": 0.015401145178422393
+          },
+          {
+            "alpha": 0.18277241485173945,
+            "armijoRejected": 0,
+            "movement": 0.0005321470711149049,
+            "originalRejected": 1,
+            "rows": 437,
+            "slope": null,
+            "strain": 0.012593186266460554
+          },
+          {
+            "alpha": 0.29558555895221816,
+            "armijoRejected": 0,
+            "movement": 0.000837225261977065,
+            "originalRejected": 0,
+            "rows": 433,
+            "slope": null,
+            "strain": 0.009535014444884915
+          },
+          {
+            "alpha": 0.3956231192221247,
+            "armijoRejected": 0,
+            "movement": 0.0004001723032470045,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.010714828118058906
+          },
+          {
+            "alpha": 0.39048338911419184,
+            "armijoRejected": 0,
+            "movement": 0.00026692565744688355,
+            "originalRejected": 1,
+            "rows": 438,
+            "slope": null,
+            "strain": 0.007680370345495069
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 0.00038941400130446157,
+            "originalRejected": 1,
+            "rows": 436,
+            "slope": null,
+            "strain": 0.0038422564054170216
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00021244191864721392,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 0.0026342096436586804
+          }
+        ]
+      }
+    ]
+  },
+  "ownedGroupsAbsent": [
+    {
+      "group": 19603,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-e90e97280-fullstep-feasible-red/native/resources.jsonl"
+    },
+    {
+      "group": 22655,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-e90e97280-fullstep-feasible-red/native/resources.jsonl"
+    },
+    {
+      "group": 23725,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-e90e97280-fullstep-feasible-preflight/native/resources.jsonl"
+    },
+    {
+      "group": 24096,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-e90e97280-fullstep-feasible-preflight/native/resources.jsonl"
+    }
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-e90e97280-fullstep-feasible-red/native/result.json": "b9c408f76cda09aeac0283fa4e4fc6a44255936ed28e90fc723b777a7c085ea0",
+    ".context/strong-owl-live-physics-armijo-e90e97280-fullstep-feasible-red/native/provenance.json": "8f2d1a251ac9d99c9f794f02fe541ca63e3e457a8537cc310287cb6de78cbc6c",
+    ".context/strong-owl-live-physics-armijo-e90e97280-fullstep-feasible-preflight/native/result.json": "9822cf553e8485498fdb9a41b2c502655f0814a0b6502caafdf2e32e2607152f",
+    ".context/strong-owl-live-physics-armijo-e90e97280-fullstep-feasible-preflight/native/provenance.json": "03ffdb44f9c564b53e4426329d897c5f98cc2fe932003964afe0bad1862051a4",
+    ".context/strong-owl-live-physics-fullstep-feasible-proposal/PLAN.md": "b6622dd44bf4a324e13ad363d96875e018f27e942406dc2c76409ffff54c3d06",
+    "Tools/HangboardRopePrototype/fullstep_feasible/snapshot.py": "098617e2cc5d429fbfdd26cdd1213adda4e976c674156495c0c6c989ec9c1c89",
+    "Tools/HangboardRopePrototype/quiet_strain/snapshot.py": "9c612f6f52d32249925c52530c858b8efc536d6f251ff3671722359bf021d6fd",
+    "Tools/HangboardRopePrototype/arrival_stop/snapshot.py": "cfb8e31a00352fd0dd3df2caad07f856976a4fea962412487ab8a78ef5442d28",
+    "Tools/HangboardRopePrototype/run_armijo_checkpoint.py": "7bcaead6e779af822e91362c536782a75e31691a6404f6d83ed4881d07c778d2"
+  }
+}
