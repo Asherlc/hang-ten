@@ -1,0 +1,29 @@
+{
+  "runtimeAuthorized": false,
+  "rootSourceRuntimeRelease": false,
+  "owner": "placid-badger-cad-second-half",
+  "role": "live",
+  "arm": "hand-image-workout-live-a",
+  "simulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "controllerPID": 96137,
+  "helperSHA256": "0fbd7d54d20132df3dd22e4dc31be6b6d4d03d984b61d1756a19fe8c6462db96",
+  "schemaSHA256": "02b7547ae97c89558511d57ed078640ee91f5541332a9cf2b9a3212a5f2b3e18",
+  "eventSchemaSHA256": "67f947eeed4bb423d6d6d10a08eb31dce2c8811dac67e50b557a27f83cf47e88",
+  "binarySHA256": "ROOT_MUST_BIND_FINAL_INSTALLED_BINARY",
+  "codePackageParityPath": "ROOT_MUST_BIND_CURRENT_27_CHECKS",
+  "codePackageParitySHA256": "REQUIRED",
+  "priorFrozenManifestPath": "ROOT_MUST_BIND_IMMUTABLE_PRIOR_PROOFS",
+  "priorFrozenManifestSHA256": "REQUIRED",
+  "sourceAndPackageFiles": [],
+  "retainedDetachIntervention": false,
+  "fixedCueReviewRequired": true,
+  "staticFeasibilityApproved": false,
+  "staticDarkBackingApproved": false,
+  "expectedFixedCue": "halfCrimp/index,middle,ring,pinky/pair",
+  "commonValidatorsRequired": true,
+  "visualReviewRequired": true,
+  "routineSource": {
+    "path": "HangTen/Resources/PlanLibrary.json",
+    "sha256": "b203917f19e792e2d39abf15bbac96a6119ca0a7aa5384618fd1bb3978de2c6b"
+  }
+}

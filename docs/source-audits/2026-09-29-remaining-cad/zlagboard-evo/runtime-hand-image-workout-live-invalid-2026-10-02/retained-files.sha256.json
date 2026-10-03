@@ -1,0 +1,364 @@
+{
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "a8eb191ca8e25765578d9908f9ac007e14e5d5599b34797bead9c2c3234d8604",
+      "bytes": 2944
+    },
+    {
+      "path": "frozen-source-build-references.json",
+      "sha256": "994ca8746c2bdeedbd7b2fb7f696434f6437a1da590f62755b526b38bfa207be",
+      "bytes": 8302
+    },
+    {
+      "path": "index.md",
+      "sha256": "763fece9d72b716b95a21bfb1dc8876e172af43bb252d9905b0617a9a76d0a37",
+      "bytes": 1839
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/000-stdout.txt",
+      "sha256": "35292a343c3b3abbe0dc9c5cc9c928b16c91e85f351d96bdbd775253cdd38fbf",
+      "bytes": 117
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/001-stdout.txt",
+      "sha256": "6468283cbfebc9396fe0097f581814f45b2b98a85f8f9ba3205b3967fe51b7c8",
+      "bytes": 176
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/002-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/002-stdout.txt",
+      "sha256": "fab7d60dcd139971a2cc51eb4b978185ad98afbbbc9d05795982078072d5c529",
+      "bytes": 162
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/003-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/003-stdout.txt",
+      "sha256": "eb4dfe915e9072a9e4e48c92948fb9cbac36d40401260542896e93896994da7d",
+      "bytes": 28
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/004-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/004-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/005-stderr.txt",
+      "sha256": "0487066bbe2485779cb7286427a63eed062431d637f596005dea992222fd2264",
+      "bytes": 373
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/005-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/006-stderr.txt",
+      "sha256": "4083a0e9f5a293b0691768c60d0f454021e2822f2900bad791b5ca880a131099",
+      "bytes": 337
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/006-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/007-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/007-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/all-published-artifact-copies.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/app-cleanup.json",
+      "sha256": "e1b91986c11a38854f6a8bde2694aa7a120bd665959d289cb3468483f9ca8e40",
+      "bytes": 133
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/app-registration.json",
+      "sha256": "f05e30c6f00b8cacfd9825e3ba993822f1531dd4b970041ebd6ece50fa14484d",
+      "bytes": 158
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/appearance-anchor.json",
+      "sha256": "1fcc38bc0a71cd42a6afe9e4a91fdb6971646b37d064db9350bd0de800c67aec",
+      "bytes": 1338
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/captures.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/commands.json",
+      "sha256": "a026e0202ddd7e1840e8d05e81f959c877ac739e92e44194671f5b2d68bfd35d",
+      "bytes": 3891
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/completion.json",
+      "sha256": "bb71a60473c2c869bab633390018f27ebe50fc9eaa3a6facae45a8add8c0c92e",
+      "bytes": 595
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/events-4F1E2EDD-6532-46B6-8C55-6AD3AB5E0301.jsonl",
+      "sha256": "ad8bc018e07e6cd2ddb7b263fae0a1733d8ec3ff41908a6519c51181aa34d56b",
+      "bytes": 46927
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/failure.txt",
+      "sha256": "5442ca22e6a309c154aede6818bed93026b388af95d77e72319e9f426d76b26f",
+      "bytes": 766
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/installed-binary-gate.json",
+      "sha256": "83536971fb31836eae4f6eaabaa0e035209a2adc38bd1d6c75a1b3fa44c38de4",
+      "bytes": 374
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/launch-initial-capture.json",
+      "sha256": "fbf0fb28aa38f4250cf8da219821b306dd6fe98d1c51888fbe0b730ae4c9b65f",
+      "bytes": 152
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/launch-initial.png",
+      "sha256": "beefa880902137e376c5725d62acf7a648356b9d667c553eadece47f33b2b35f",
+      "bytes": 717621
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/launch-review-environment.json",
+      "sha256": "a980c581df4ee5a480eb9c784f05bb242706f68200bd9589eb7556e702a75c99",
+      "bytes": 616
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/missing-initial-sequence.json",
+      "sha256": "f4ca581367f6a847df6412515d9e24fc64fb80a8f565155a4c6ce17008f47541",
+      "bytes": 1407
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/protocol.json",
+      "sha256": "debf5491c479a1de5dd78a87a9d757c9f4a3c22e7ac510cac8bf48418943a9b3",
+      "bytes": 1089
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/runtime-release.json",
+      "sha256": "bb1a5eaf910cb84b1309e509d16c3c02e6708a5aca7980a7f4c11b93f6ae2359",
+      "bytes": 10912
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/startup-marker-observations.json",
+      "sha256": "7c8e51d3910465c9faf8d59509398dc0cecaa3ffc10200832591522ecbd2c275",
+      "bytes": 1074
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/trace-copy.json",
+      "sha256": "eb0c77a4bf588fdf0b7072f9779eb557ff771123b5f08f17be9a7d22e8a5b6cd",
+      "bytes": 725
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/train-startup-readiness.json",
+      "sha256": "341f0b620460f36e6d2cf4ce8d4b9fb1e3b7726227d9e09e7cdeea75dfc7c7ee",
+      "bytes": 22551
+    },
+    {
+      "path": "raw/evo/hand-image-workout-live-a-landscape/workout-openurl-timing.json",
+      "sha256": "1be23cff9115d6548333bcd32878a04bbca92aad9cacb9c4197e48c761def654",
+      "bytes": 153
+    },
+    {
+      "path": "raw/hand-image-live-startup-crash-audit/HangTen-2026-10-02-232849.ips",
+      "sha256": "a3b205c47fda1a0c44a8f758b4a0b526971990a4a6b55da406771f5f126d98d2",
+      "bytes": 103347
+    },
+    {
+      "path": "raw/hand-image-live-startup-crash-audit/audio-callsite.txt",
+      "sha256": "409e61c740bff17195ca8d2e4a82c887c7dbe7c916ca382459db837f68aab4df",
+      "bytes": 640
+    },
+    {
+      "path": "raw/hand-image-live-startup-crash-audit/report.json",
+      "sha256": "241240a326e7c4b30d382e2a8ea1472912985b06dd3eb89b43f6b93db1f973eb",
+      "bytes": 10796
+    },
+    {
+      "path": "raw/hand-image-workout-helper-independent-review/common-validator-command-plan.json",
+      "sha256": "eb59af26b3fc716fbe784f87fee5a50c8bc0c22e72a480fe26b4022465a3e20e",
+      "bytes": 5575
+    },
+    {
+      "path": "raw/hand-image-workout-helper-independent-review/report.json",
+      "sha256": "00b73c8a21cfbb3e3d92e1df597fe8cf91de65b709b5e9a5b6953ff54d22b854",
+      "bytes": 3896
+    },
+    {
+      "path": "raw/hand-image-workout-live-a-independent-audit/report.json",
+      "sha256": "e6021cc9f31be6082db453cc12e994d86336e91d6ba54cf1a9992a16001d8a11",
+      "bytes": 3606
+    },
+    {
+      "path": "raw/hand-image-workout-live-a-independent-audit/run-frozen-manifest.json",
+      "sha256": "29e23e11c10c75396419408c858c0d091727119fe98d1a2951c36d83bf7146c5",
+      "bytes": 11210
+    },
+    {
+      "path": "raw/hand-image-workout-live-a-independent-audit/summary.md",
+      "sha256": "3e42de3cf9b2b78b7806bfe6baae3867f6576bde6cf8b6abcd21c5ed00cfc26c",
+      "bytes": 874
+    },
+    {
+      "path": "raw/hand-image-workout-live-a-independent-audit/timeline.json",
+      "sha256": "9c0d6a70877fdf13a1fc0e327740053a3a9440d212c293d4a6a9204dcfa5b159",
+      "bytes": 3308
+    },
+    {
+      "path": "raw/hand-image-workout-live-a-independent-audit/verification.json",
+      "sha256": "7a62355031ee0b940db15e4f18a6a58b4704c5499c0391613651aec8bebcf085",
+      "bytes": 310
+    },
+    {
+      "path": "raw/hand-image-workout-retention-prep/preparation.json",
+      "sha256": "015d0b1a3f5bb63d31c88fad8282fa4cf52c0f1548835476aba7aedef40eec53",
+      "bytes": 372
+    },
+    {
+      "path": "raw/hand-image-workout-retention-prep/workflow.md",
+      "sha256": "5b4b27700ee340240d71585b314ea0789437aa2a080257f645cece904ee47802",
+      "bytes": 4225
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/README.md",
+      "sha256": "0d18c72d274fff129ddd68bddac10e6d0165cdaf88debd050dd6dd2b76f0877e",
+      "bytes": 3638
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/branch_schema.py",
+      "sha256": "87eb845d31e1dda2a23b5df847dab02454b2057e625d9ead35d0135cd9585aea",
+      "bytes": 9515
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/capture.diff",
+      "sha256": "13c9e0720b94d5710edf3316f59d0dbc11f76422b63077c10e1160006e2e7683",
+      "bytes": 22228
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/capture.py",
+      "sha256": "d582299ee0fe605c4d2f0febbad63137ab477aa39770f6518f9e36231cbfd24e",
+      "bytes": 22082
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/event-schema.json",
+      "sha256": "67f947eeed4bb423d6d6d10a08eb31dce2c8811dac67e50b557a27f83cf47e88",
+      "bytes": 4224
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/fixed-routine-reference.json",
+      "sha256": "c5f4f4bae33049e2a0100af2c052a74c31946be453a004c5b3dc4a9bddb48d22",
+      "bytes": 8010
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/prepared-files.sha256.json",
+      "sha256": "3306be2c31d7c755e46853a594aeae7bc2395f8f1f546f33aea7dd40b2406589",
+      "bytes": 2773
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/prior-full-color-capture.py.txt",
+      "sha256": "92c39f3c28e1fc940ae3aa8f1251098c68d4efe671d2638b5ce755dd3faf4466",
+      "bytes": 16774
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/read-only-fixture-checks-v3.json",
+      "sha256": "ac30a8a716fa45a18f8fb7bb57b38d38bf33502fadeaa467dda66755de1a3722",
+      "bytes": 1145
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/read-only-fixture-checks.json",
+      "sha256": "088aa968642dcf52f07270ab75985ad391c53041b42f9e6f7d0f47821b49a903",
+      "bytes": 480
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/release-template.NOT-AUTHORIZED.json",
+      "sha256": "2a85316d9521240c8522ef504d1eea9a45e22e1af723b76d06da1f95af75115b",
+      "bytes": 1263
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/review-v1/branch_schema.py",
+      "sha256": "02b7547ae97c89558511d57ed078640ee91f5541332a9cf2b9a3212a5f2b3e18",
+      "bytes": 8219
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/review-v1/capture.py",
+      "sha256": "92151092c563ff638e2ba2b8f00142b2bf904be963ae798994e09875a385b215",
+      "bytes": 21411
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/review-v1/release-template.NOT-AUTHORIZED.json",
+      "sha256": "57c53ee8d7d5c1e4c04b6b0c149af07c18487de188c066cb23610206ac79df5d",
+      "bytes": 1106
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/review-v2/branch_schema.py",
+      "sha256": "02b7547ae97c89558511d57ed078640ee91f5541332a9cf2b9a3212a5f2b3e18",
+      "bytes": 8219
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/review-v2/capture.py",
+      "sha256": "0fbd7d54d20132df3dd22e4dc31be6b6d4d03d984b61d1756a19fe8c6462db96",
+      "bytes": 21968
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/review-v2/release-template.NOT-AUTHORIZED.json",
+      "sha256": "71fdb73a1852cc8c8fb1a3f11629d2a9a634e4d0badbe402a951347e5ccf8c10",
+      "bytes": 1263
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/root-live-release.json",
+      "sha256": "bb1a5eaf910cb84b1309e509d16c3c02e6708a5aca7980a7f4c11b93f6ae2359",
+      "bytes": 10912
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/root-static-prerequisite-manifest.json",
+      "sha256": "7a0f6734679b9ab3707700988f6a8d345e75de93b20e8bc9c6906f1d3a3b44cb",
+      "bytes": 3725
+    },
+    {
+      "path": "raw/hand-image-workout-runtime-prep/source-references.json",
+      "sha256": "527ae5ada441354fccc85d0ed0a09c346f916429f2b27198c6e6528e69d7a9a8",
+      "bytes": 1180
+    },
+    {
+      "path": "retention-manifest.json",
+      "sha256": "518093092d09e4e340bed8d94a7c63c593454ef5f118ee56fc6fc23111106786",
+      "bytes": 24514
+    }
+  ]
+}
