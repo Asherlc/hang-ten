@@ -42,7 +42,7 @@
   "metadataAudit": "metadata-audit.json",
   "historicalReportNotes": "validation-notes.md",
   "appCaptures": "All 21 current-source packages; representative DEBUG contact review routes, plus physical selector taps for all three Plateau depths. RealityKit tests cover all authored presentation positions and transient non-pickable cords.",
-  "geometryAcceptance": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 shown CAD shape and seated cord accepted, current app unverified; #14 shown CAD shape and inferred barrel-wrap cord accepted, current app unverified; #15 shown for CAD shape review; human acceptance pending, current app unverified",
+  "geometryAcceptance": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 shown CAD shape and seated cord accepted, current app unverified; #14 shown CAD shape and inferred barrel-wrap cord accepted, current app unverified; #15 shown Forge CAD shape accepted after Opus review, current app unverified",
   "testArtifactSHA256": {
     "test-results/ios-summary.json": "6d38d38ec0659f98565df7ec135a99648db9f4964945c9fb58bdbda699a3febe",
     "test-results/ios-tests.log": "47c5b2b6d584d6df47cbf8e84e5bf2391f4ff3b4c82aa2fe6f8ad883f877e681",
@@ -722,6 +722,52 @@
       "geometryAcceptance": "Pending #15 human CAD shape review; current app appearance and workflow unverified",
       "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/human-review.json",
       "limits": "New recess, setback and blend dimensions are display estimates. Twenty original contacts/facts preserved; no pinch inventory added. Generic appearance category is inferred. No current runtime or manufacturing accuracy claim."
+    },
+    {
+      "owner": "placid-badger",
+      "eventType": "human-CAD-shape-acceptance",
+      "package": "trango-rock-prodigy-forge",
+      "reviewNumber": 15,
+      "reviewer": "asherlc",
+      "date": "2026-10-02",
+      "recordedUTC": "2026-10-03T02:36:51.174990+00:00",
+      "question": "Does #15 Forge look right?",
+      "answer": "y",
+      "followupRequest": "consult with opus tho",
+      "acceptedScope": "Shown #15 native Forge CAD shape with restored open outer-wing recess and set-back lower pinch return, paired native mirror, and whole prior/current front, side, top and oblique comparisons.",
+      "identity": {
+        "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+        "modelSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+        "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+        "generatedManifestSHA256": "2a8d9e959dbc7f09544049d8523d2cf1ee1a37f1da8fdaea157a51b40c714d6a"
+      },
+      "shownAssetCommit": "d236fb655406763d44875f49404107aba3591791",
+      "shownWholeImages": [
+        {
+          "path": "views/comparison-oblique.png",
+          "sha256": "3e03057919a1adcbdc3e47a089ad82a0a4c8ccace12d1b58c7ec9717eeba0cdb"
+        },
+        {
+          "path": "views/comparison-front-side-top.png",
+          "sha256": "5825f930e0e1d19b490effbbf4e1ac4ce7157e8d080a5c4d8a819f22a1f94499"
+        }
+      ],
+      "geometryHumanAcceptance": "accepted",
+      "currentAppAppearanceVerified": false,
+      "appWorkflowPassed": false,
+      "currentAppFrames": 0,
+      "iOSUnitCasesExecuted": 0,
+      "approvalLimit": "Human approval covers the shown CAD shape. New recess and roll dimensions remain display estimates; current app appearance, picking, highlighting, orbit and workout behavior remain unverified. Plastic is a generic appearance inference.",
+      "opusAdvisoryStatus": "pass for shown CAD geometry; no source-backed blocker",
+      "opusAdvisory": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review15-2026-10-02/opus-advisor/review.md",
+      "opusAdvisorySHA256": "a830ae0380a7aea1c8ee254c473599ea9e83db104938c47e37940fb22b624e5a",
+      "opusAdvisoryCompletedUTC": "2026-10-03T02:41:03.160038+00:00",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/human-review.json",
+      "recordingScript": {
+        "path": ".context/placid-badger/forge-review15/opus-advisor/record-acceptance.py",
+        "sha256": "e039834a4be18f1af3662308fa41ab0bef277961b847575fd34fbce651b55bab",
+        "committed": false
+      }
     }
   ],
   "historicalBaselineScope": {

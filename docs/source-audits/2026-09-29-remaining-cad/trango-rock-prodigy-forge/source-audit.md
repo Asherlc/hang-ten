@@ -1,4 +1,4 @@
-> Current review revision: [#15 outer-wing recess and set-back lower lip](review15-2026-10-02/index.html). Source/export hashes, current checks and pending human acceptance are recorded there. The original migration construction/export reports and app captures below describe the prior revision.
+> Current review revision: [#15 outer-wing recess and set-back lower lip](review15-2026-10-02/index.html). Source/export hashes, current checks and human CAD shape acceptance are recorded there. The original migration construction/export reports and app captures below describe the prior revision.
 
 # trango-rock-prodigy-forge source audit
 
@@ -44,4 +44,4 @@ All three final comparisons were visually inspected alongside the retained manuf
 
 ## 2026-10-02 individual correction
 
-The source-supported open outer-wing recess and set-back lower projection were restored with a constrained native section. The twenty original contact surfaces, identities, factual fields and published planes/depths remain unchanged. Unspecified cut dimensions and rolls are labeled display estimates. The sole embedded manifest edit is the generic plastic appearance selector, inferred from whole maker photos; no chemistry or exact-color claim is made. [Current evidence and whole comparisons](review15-2026-10-02/review.md) bind the final source and actual unbound export. Current app appearance is unverified; human shape acceptance is pending.
+The source-supported open outer-wing recess and set-back lower projection were restored with a constrained native section. The twenty original contact surfaces, identities, factual fields and published planes/depths remain unchanged. Unspecified cut dimensions and rolls are labeled display estimates. The sole embedded manifest edit is the generic plastic appearance selector, inferred from whole maker photos; no chemistry or exact-color claim is made. [Current evidence and whole comparisons](review15-2026-10-02/review.md) bind the final source and actual unbound export. Current app appearance is unverified; the shown CAD shape was accepted with `y` after [Opus reviewed the shape and native mirror](review15-2026-10-02/opus-advisor/review.md).

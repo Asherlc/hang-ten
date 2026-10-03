@@ -1,6 +1,6 @@
 # #15 Trango Rock Prodigy Forge — current CAD review
 
-Human acceptance is pending. The current source is `4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e`, model `6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61`, and descriptor `ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6`. [Human review scope](human-review.json) records the exact version.
+Human CAD shape was accepted with `y`. The requested [Opus advisory](opus-advisor/review.md) found no source-backed geometry blocker and confirmed the native mirror. Current app appearance and workflow remain unverified. The current source is `4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e`, model `6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61`, and descriptor `ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6`. [Human review scope](human-review.json) records the exact version.
 
 The outer wings now contain the open recessed band and a lower pinch return set back from the upper projection. Approved whole Trango product views 03/04 and the official hold chart support that visible topology. The earlier chamfered solid wing is retained as the rejected prior revision in [the independent diagnosis](historical-shape/shape-verdict.json). The first rounded-section scratch model was also set aside because its lower lip projected too far forward. The final native sketch carries the lower lip back; no pixels were measured, traced, cropped or transformed.
 
@@ -23,3 +23,5 @@ Independent native checks, two fresh deterministic compiles, unbound empty-stage
 The original inverse-rounded-point normal probe flagged 28 vertices and is retained as a completed failure. Independent unique native facet ownership supplied 106 full-precision point/UV witnesses across 90 triangles, resolving every flag without changing the 5e-6 normal tolerance, source, compiler or asset. Maximum vector error was 3.026965410505641e-8; the flags came from rounded inverse parameterization/face-candidate selection. See preflight/full-precision-normal-witness and the final normal disposition.
 
 Exact owned process groups, temporary staging directories and derived data were cleaned and their absence verified. Reports and raw logs are retained byte-for-byte. Only Forge's three package files changed; 203 other package files and all seven reserved shared source files are unchanged. No parallel workspace was inspected or merged.
+
+[Human acceptance and exact shown revision](human-acceptance.json). The original technical review snapshot remains in [the prior human record](human-review-before-acceptance.json).

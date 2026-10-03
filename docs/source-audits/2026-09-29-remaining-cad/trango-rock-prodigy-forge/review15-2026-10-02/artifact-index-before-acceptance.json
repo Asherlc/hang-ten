@@ -6,13 +6,8 @@
     "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
     "generatedManifestSHA256": "2a8d9e959dbc7f09544049d8523d2cf1ee1a37f1da8fdaea157a51b40c714d6a"
   },
-  "artifactCount": 182,
+  "artifactCount": 172,
   "artifacts": [
-    {
-      "path": "artifact-index-before-acceptance.json",
-      "sha256": "a5691c99fa92aa867764ee5beba14bc6a0ef13ed4389e92fa70db1c9f733211f",
-      "bytes": 31644
-    },
     {
       "path": "evidence-retention.json",
       "sha256": "a05fd567c6f8606383428d3b8c9405337cc713941b607298ea2abc299ca2217a",
@@ -39,19 +34,9 @@
       "bytes": 2629
     },
     {
-      "path": "human-acceptance.json",
-      "sha256": "fd8ed6710ea5ae6ef5cbf3f92b4b6eb382b8c41ef794b5941f578cbcf5fb32f4",
-      "bytes": 2464
-    },
-    {
-      "path": "human-review-before-acceptance.json",
+      "path": "human-review.json",
       "sha256": "e3da1c1203b8e9eed9cc53262b65c74ca8e734bcd24bd1c0fcab8c241e7e0207",
       "bytes": 3176
-    },
-    {
-      "path": "human-review.json",
-      "sha256": "6b56b4e4ec1427bd2ab6e814227ff65f8e2445ba0c3e880fa724fd63c3702d2e",
-      "bytes": 10924
     },
     {
       "path": "independent-shape/final-shape-verdict.json",
@@ -65,8 +50,8 @@
     },
     {
       "path": "index.html",
-      "sha256": "d7cdcc7f6665014ec38d01d02fbf22e16f9f8b407c72be1c1963cecb4be1f365",
-      "bytes": 1554
+      "sha256": "22e6421eb103bcbc8ec16558298946241853e0d44779b5432db6076cc3a27fdd",
+      "bytes": 1467
     },
     {
       "path": "install-guard-failure.json",
@@ -392,41 +377,6 @@
       "path": "native-author/jobs/superseded-source-notice.json",
       "sha256": "ab2809c80c86a88720b365b59545daaee319a2ea0cdc4497581459874780bf7c",
       "bytes": 757
-    },
-    {
-      "path": "opus-advisor/briefing.md",
-      "sha256": "635573755b4abdb994e5ae0147fbd271f39b8018c60c046c615f4b0a7b04f775",
-      "bytes": 5795
-    },
-    {
-      "path": "opus-advisor/cleanup-receipt.json",
-      "sha256": "de4a6137e0559b8103b072b85bbfcf0c24872d10cd52d9bde280c22d3fe8ce79",
-      "bytes": 319
-    },
-    {
-      "path": "opus-advisor/disposition.json",
-      "sha256": "fa30cb6a7591c60a2bbe5bb446e1676e7f6ec45c10868b3bbdd62bae7a881e27",
-      "bytes": 1847
-    },
-    {
-      "path": "opus-advisor/final-activity.json",
-      "sha256": "7ab00998f4fda4ff5bdfa15bff5c8c282f74c1bb9f754010c09662636e569ecf",
-      "bytes": 12506
-    },
-    {
-      "path": "opus-advisor/native-mirror-inspection.json",
-      "sha256": "8b11c0df5d0cf0541a97bc7d66bc1a15fa01cf5a65a65d6b1910f320822d6541",
-      "bytes": 4957
-    },
-    {
-      "path": "opus-advisor/ownership.json",
-      "sha256": "4d91ae95c49420abbc34079b5d5df9284ccdb3f085ad9796aeacc7b19ebe4a85",
-      "bytes": 709
-    },
-    {
-      "path": "opus-advisor/review.md",
-      "sha256": "a830ae0380a7aea1c8ee254c473599ea9e83db104938c47e37940fb22b624e5a",
-      "bytes": 5598
     },
     {
       "path": "package-delivery-validation.json",
@@ -830,8 +780,8 @@
     },
     {
       "path": "review.md",
-      "sha256": "724d4a770b8952ac8c40a0d57cb1329c4d064ec3c8a36dd0e530b0217d80d5c2",
-      "bytes": 4905
+      "sha256": "3ca65c55b3dae624db0108982e5c9125c7b1daf78d96d20ce97e4bc477358759",
+      "bytes": 4531
     },
     {
       "path": "root-baseline.json",

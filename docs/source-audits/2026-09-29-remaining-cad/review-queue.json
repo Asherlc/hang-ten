@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 shown CAD shape and seated cord accepted, current app unverified; #14 shown CAD shape and inferred barrel-wrap cord accepted, current app unverified; #15 shown for CAD shape review; human acceptance pending, current app unverified",
+  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 shown CAD shape and seated cord accepted, current app unverified; #14 shown CAD shape and inferred barrel-wrap cord accepted, current app unverified; #15 shown Forge CAD shape accepted after Opus review, current app unverified",
   "boards": [
     {
       "number": 1,
@@ -594,7 +594,7 @@
       "package": "trango-rock-prodigy-forge",
       "boardID": "trango.rock-prodigy-forge",
       "name": "Trango Rock Prodigy Forge",
-      "humanReview": "pending",
+      "humanReview": "Shown #15 Forge CAD shape accepted after Opus review; current app appearance, picking, highlights, orbit and workout behavior remain unverified",
       "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
       "reviewPage": "trango-rock-prodigy-forge/review15-2026-10-02/index.html",
       "sourceAudit": "trango-rock-prodigy-forge/source-audit.md",
@@ -614,7 +614,10 @@
       "appReviewPage": "trango-rock-prodigy-forge/review15-2026-10-02/index.html",
       "appReviewStatus": "Current app appearance and workflow unverified; generic compilation only",
       "historicalAppReview": "trango-rock-prodigy-forge/app-review/validation.json",
-      "humanReviewRecord": "trango-rock-prodigy-forge/human-review.json"
+      "humanReviewRecord": "trango-rock-prodigy-forge/human-review.json",
+      "geometryHumanAcceptance": "accepted",
+      "completionHumanAcceptance": "pending current app review",
+      "opusAdvisory": "trango-rock-prodigy-forge/review15-2026-10-02/opus-advisor/review.md"
     },
     {
       "number": 16,
