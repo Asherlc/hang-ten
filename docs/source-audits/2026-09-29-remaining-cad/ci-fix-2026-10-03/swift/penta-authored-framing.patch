@@ -1,0 +1,17 @@
+diff --git a/HangTenTests/SuspendedBoardPresentationTests.swift b/HangTenTests/SuspendedBoardPresentationTests.swift
+index 2b19ea0b4..60d383ffd 100644
+--- a/HangTenTests/SuspendedBoardPresentationTests.swift
++++ b/HangTenTests/SuspendedBoardPresentationTests.swift
+@@ -100,7 +100,11 @@ final class SuspendedBoardPresentationTests: XCTestCase {
+             for entity in scene.instanceEntities {
+                 XCTAssertEqual(entity.transform.matrix.columns.0.x, xDirection, accuracy: 1e-6)
+             }
+-            XCTAssertEqual(scene.camera.position.x, 0, accuracy: 1e-6)
++            // The native bounds have a small authored X offset. Frame that
++            // midpoint rather than the origin, and reflect it with the pose.
++            let sourceCenterX = Float((media.descriptor.modelBounds.minimum[0]
++                + media.descriptor.modelBounds.maximum[0]) / 2)
++            XCTAssertEqual(scene.camera.position.x, xDirection * sourceCenterX, accuracy: 1e-6)
+         }
+     }
+ 
