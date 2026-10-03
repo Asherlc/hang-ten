@@ -98,7 +98,8 @@ do {
     let strictTrace=try run(&strict).1
     result["strictTrace"]=strictTrace;result["strictDifferenceMeters"]=difference(strict,candidate)
     result["strictConverged"]=strict.reviewStepCaps==0
-    guard strict.reviewStepCaps==0,difference(strict,candidate)<=0.00005 else {
+    result["strictRetries"]=strict.reviewStepRetries
+    guard strict.reviewStepCaps==0,strict.reviewStepRetries==0,difference(strict,candidate)<=0.00005 else {
         throw RopePhysicsError.invalid("strict reference comparison/convergence")
     }
     guard candidate.reviewStepCorrections<=5 else {throw RopePhysicsError.invalid("fixed <=5-QP work gate")}
@@ -118,5 +119,5 @@ do {
     try persist(nil)
     guard median<=0.80 else {throw RopePhysicsError.invalid("fixed median <=0.80 speed gate")}
     result["checkpointPass"]=true;try persist(nil)
-    print("PASS isolated step109",result)
+    print("PASS isolated step109; QPs",candidate.reviewStepCorrections,"medianRatio",median,"strictDifference",difference(strict,candidate))
 } catch {try persist(String(describing:error));print("FAIL isolated step109",error);exit(2)}

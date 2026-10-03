@@ -7,19 +7,38 @@ sys.path.insert(0,str(Path(__file__).resolve().parent))
 from run_native_contact_screen import OwnedCommands,REPO
 from run_live_speed_screen import NAMES
 from armijo.snapshot import solver_source
-parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--label',required=True);args=parser.parse_args()
+parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--label',required=True)
+parser.add_argument('--full-merit',action='store_true');args=parser.parse_args()
+if args.full_merit:
+    from armijo.full_snapshot import solver_source,collider_source
 assert args.label and all(c in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in args.label)
 assert Path(os.environ.get('PASEO_WORKTREE_PATH',REPO)).resolve()==REPO and REPO.name=='strong-owl-live-physics'
 tool=Path(__file__).resolve().parent
 root=REPO/'.context'/f'{REPO.name}-armijo-{args.label}';root.mkdir();stage=root/'native';stage.mkdir();sources=stage/'sources';sources.mkdir()
 for name in NAMES:
     text=(REPO/'HangTen/Models'/name).read_text()
+    if args.full_merit and name=='RopeTriangleCollider.swift':text=collider_source(text)
     if name=='RopeDynamicsSolver.swift':
         text=solver_source(text).replace('private extension SIMD4','extension SIMD4')
         text+='\n'+(tool/'stock_chain/CheckpointAdapter.swift').read_text()+'\n'+(tool/'contact_bundle/CheckpointExtras.swift').read_text()
     if name=='RopeBandedSystem.swift':text=text.replace('        try RopeBandedFactorization(size:size','        return try RopeBandedFactorization(size:size')
     (sources/name).write_text(text)
-for name in ['Math.swift','Trace.swift','main.swift']:(sources/name).write_bytes((tool/'armijo'/name).read_bytes())
+for name in ['Math.swift','Trace.swift','main.swift']:
+    text=(tool/'armijo'/name).read_text()
+    if args.full_merit and name=='main.swift':
+        text=text.replace('candidate.armijoExperiment=true','candidate.armijoExperiment=true;candidate.verifyArmijoDerivative=true')
+        text=text.replace('"step":109]','"step":109,"fullMeritDerivative":true]')
+        text=text.replace('    // One-sided abs derivative', '''    guard RopeArmijo.hingeSlope(argument:0,rate:2)==2,RopeArmijo.hingeSlope(argument:0,rate:-2)==0,
+          RopeArmijo.hingeSlope(argument:1,rate:-2)==(-2),RopeArmijo.hingeSlope(argument:-1,rate:2)==0 else {
+        throw RopePhysicsError.invalid("hinge derivative")
+    }
+    let h=1e-7,rates=[-0.3,0.2]
+    let maxSlope=([1+h*rates[0],1+h*rates[1]].max()!-1)/h
+    guard abs(maxSlope-rates.max()!)<1e-8 else {throw RopePhysicsError.invalid("tied-max directional derivative")}
+    // One-sided abs derivative''')
+        text=text.replace('    try fixtures();result["fixturesPass"]=true','    try ambiguityFixtures();try fixtures();result["fixturesPass"]=true')
+    (sources/name).write_text(text)
+if args.full_merit:(sources/'AmbiguityFixtures.swift').write_bytes((tool/'armijo/AmbiguityFixtures.swift').read_bytes())
 (sources/'ExactCheckpointJSON.swift').write_bytes((tool/'native_contact/ExactCheckpointJSON.swift').read_bytes())
 files=sorted(sources.glob('*.swift'));binary=stage/f'{REPO.name}-armijo'
 command=['xcrun','swiftc','-O','-D','DEBUG','-whole-module-optimization','-Xcc','-DACCELERATE_NEW_LAPACK',

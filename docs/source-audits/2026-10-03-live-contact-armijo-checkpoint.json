@@ -1,0 +1,472 @@
+{
+  "adopted": false,
+  "candidateMetrics": {
+    "clearanceMargin": 9.999997580134113e-05,
+    "geometryAccepted": true,
+    "lengthError": 2.4866220194041944e-10,
+    "speed": 0.0003767591028618268,
+    "strain": 2.997562864592851e-09
+  },
+  "candidateQPs": 4,
+  "candidateTrace": [
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [
+        {
+          "alpha": 0.001,
+          "analytic": -0.00030645811754807274,
+          "error": 1.5493813424090341e-09,
+          "numerical": -0.00030645656816673033
+        },
+        {
+          "alpha": 0.0001,
+          "analytic": -0.00030645811754807274,
+          "error": 1.550159792196304e-10,
+          "numerical": -0.0003064579625320935
+        },
+        {
+          "alpha": 1e-05,
+          "analytic": -0.00030645811754807274,
+          "error": 1.385719317070766e-11,
+          "numerical": -0.00030645810369087957
+        }
+      ],
+      "movement": 0.00016004909659167568,
+      "originalRejected": 0,
+      "rows": 447,
+      "slope": -0.00030645811754807274,
+      "strain": 0.00021346669550803554
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [
+        {
+          "alpha": 0.001,
+          "analytic": -1.5972080650524187e-06,
+          "error": 7.442808867909332e-10,
+          "numerical": -1.5964637841656278e-06
+        },
+        {
+          "alpha": 0.0001,
+          "analytic": -1.5972080650524187e-06,
+          "error": 7.407147113441335e-11,
+          "numerical": -1.5971339935812843e-06
+        },
+        {
+          "alpha": 1e-05,
+          "analytic": -1.5972080650524187e-06,
+          "error": 7.252120890496619e-12,
+          "numerical": -1.5972008129315282e-06
+        }
+      ],
+      "movement": 4.45120927752953e-06,
+      "originalRejected": 0,
+      "rows": 445,
+      "slope": -1.5972080650524187e-06,
+      "strain": 3.054055729001526e-05
+    },
+    {
+      "alpha": 0.5,
+      "armijoRejected": 1,
+      "derivativeCheck": [
+        {
+          "alpha": 0.001,
+          "analytic": -7.444200779711437e-07,
+          "error": 7.389269682467638e-10,
+          "numerical": -7.43681151002897e-07
+        },
+        {
+          "alpha": 0.0001,
+          "analytic": -7.444200779711437e-07,
+          "error": 7.355405545016615e-11,
+          "numerical": -7.443465239156935e-07
+        },
+        {
+          "alpha": 1e-05,
+          "analytic": -7.444200779711437e-07,
+          "error": 7.838387018833534e-12,
+          "numerical": -7.444122395841249e-07
+        }
+      ],
+      "movement": 4.363614776941132e-06,
+      "originalRejected": 0,
+      "rows": 447,
+      "slope": -7.444200779711437e-07,
+      "strain": 2.3032628367669616e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [
+        {
+          "alpha": 0.001,
+          "analytic": -5.568913212609048e-07,
+          "error": 3.7150174417084245e-14,
+          "numerical": -5.568912841107303e-07
+        },
+        {
+          "alpha": 0.0001,
+          "analytic": -5.568913212609048e-07,
+          "error": 6.410215089152707e-13,
+          "numerical": -5.568906802393958e-07
+        },
+        {
+          "alpha": 1e-05,
+          "analytic": -5.568913212609048e-07,
+          "error": 2.79198968066705e-12,
+          "numerical": -5.568885292712241e-07
+        }
+      ],
+      "movement": 2.3278961724714655e-07,
+      "originalRejected": 0,
+      "rows": 447,
+      "slope": -5.568913212609048e-07,
+      "strain": 2.997562864592851e-09
+    }
+  ],
+  "checkpointPass": true,
+  "currentDifferenceMeters": 2.3151876464603742e-07,
+  "fixturesPass": true,
+  "fullMeritDerivative": true,
+  "medianRatio": 0.44599983855573294,
+  "originalQPs": 11,
+  "originalTrace": [
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 0.00016004909659167568,
+      "originalRejected": 0,
+      "rows": 447,
+      "slope": null,
+      "strain": 0.00021346669550803554
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.45120927752953e-06,
+      "originalRejected": 0,
+      "rows": 445,
+      "slope": null,
+      "strain": 3.054055729001526e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.363614776941132e-06,
+      "originalRejected": 0,
+      "rows": 447,
+      "slope": null,
+      "strain": 3.104870419456951e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.357433359111515e-06,
+      "originalRejected": 0,
+      "rows": 446,
+      "slope": null,
+      "strain": 3.150466906332028e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.358917201578541e-06,
+      "originalRejected": 0,
+      "rows": 448,
+      "slope": null,
+      "strain": 3.213347946862122e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.369466617266419e-06,
+      "originalRejected": 0,
+      "rows": 446,
+      "slope": null,
+      "strain": 3.298029973830552e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.390661409415182e-06,
+      "originalRejected": 0,
+      "rows": 448,
+      "slope": null,
+      "strain": 3.41444321874107e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.495650575113496e-06,
+      "originalRejected": 0,
+      "rows": 446,
+      "slope": null,
+      "strain": 3.5728948511781766e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.644513921021046e-06,
+      "originalRejected": 0,
+      "rows": 448,
+      "slope": null,
+      "strain": 3.792240894218146e-05
+    },
+    {
+      "alpha": 0.5,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.8582244050498376e-06,
+      "originalRejected": 1,
+      "rows": 446,
+      "slope": null,
+      "strain": 2.920198043243616e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 2.651672448779408e-07,
+      "originalRejected": 0,
+      "rows": 447,
+      "slope": null,
+      "strain": 6.805767549522557e-08
+    }
+  ],
+  "owner": "strong-owl-live-physics",
+  "pairs": [
+    {
+      "candidateSeconds": 0.012491333327488974,
+      "originalSeconds": 0.026989583333488554,
+      "ratio": 0.46282053239368776
+    },
+    {
+      "candidateSeconds": 0.017598291669855826,
+      "originalSeconds": 0.03247295832261443,
+      "ratio": 0.5419368169360853
+    },
+    {
+      "candidateSeconds": 0.010603958333376795,
+      "originalSeconds": 0.025562374998116866,
+      "ratio": 0.4148268044013113
+    },
+    {
+      "candidateSeconds": 0.010930791657301597,
+      "originalSeconds": 0.024389958329265937,
+      "ratio": 0.44816770532098654
+    },
+    {
+      "candidateSeconds": 0.010755666677141562,
+      "originalSeconds": 0.024745291666476987,
+      "ratio": 0.43465507790771
+    },
+    {
+      "candidateSeconds": 0.011034333336283453,
+      "originalSeconds": 0.024740666660363786,
+      "ratio": 0.44599983855573294
+    },
+    {
+      "candidateSeconds": 0.010814583336468786,
+      "originalSeconds": 0.025124916661297902,
+      "ratio": 0.4304326053000379
+    }
+  ],
+  "prefixIdentitySteps": 108,
+  "sigma": 0.1,
+  "step": 109,
+  "strictConverged": true,
+  "strictDifferenceMeters": 9.290537643364317e-08,
+  "strictRetries": 0,
+  "strictTrace": [
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 0.00016004909659172816,
+      "originalRejected": 0,
+      "rows": 447,
+      "slope": null,
+      "strain": 0.00021346669550914577
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.451209276659504e-06,
+      "originalRejected": 0,
+      "rows": 445,
+      "slope": null,
+      "strain": 3.0540557285574366e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.363614776309213e-06,
+      "originalRejected": 0,
+      "rows": 447,
+      "slope": null,
+      "strain": 3.1048704185687725e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.357433359690543e-06,
+      "originalRejected": 0,
+      "rows": 446,
+      "slope": null,
+      "strain": 3.150466904311422e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.358917202160768e-06,
+      "originalRejected": 0,
+      "rows": 448,
+      "slope": null,
+      "strain": 3.213347945862921e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.36946661791761e-06,
+      "originalRejected": 0,
+      "rows": 446,
+      "slope": null,
+      "strain": 3.298029973319849e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.390661410185832e-06,
+      "originalRejected": 0,
+      "rows": 448,
+      "slope": null,
+      "strain": 3.414443218163754e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.495650574679118e-06,
+      "originalRejected": 0,
+      "rows": 446,
+      "slope": null,
+      "strain": 3.572894851111563e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.644513920573407e-06,
+      "originalRejected": 0,
+      "rows": 448,
+      "slope": null,
+      "strain": 3.792240894529009e-05
+    },
+    {
+      "alpha": 0.5,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 4.858224405116486e-06,
+      "originalRejected": 1,
+      "rows": 446,
+      "slope": null,
+      "strain": 2.920198043199207e-05
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 2.6516724412680363e-07,
+      "originalRejected": 0,
+      "rows": 447,
+      "slope": null,
+      "strain": 6.805767460704715e-08
+    },
+    {
+      "alpha": 0.5,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 2.617060366907877e-07,
+      "originalRejected": 1,
+      "rows": 447,
+      "slope": null,
+      "strain": 6.075310876596518e-08
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 3.9852601065486845e-08,
+      "originalRejected": 0,
+      "rows": 447,
+      "slope": null,
+      "strain": 2.310174940234333e-09
+    },
+    {
+      "alpha": 0.5,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 3.867246085296316e-08,
+      "originalRejected": 1,
+      "rows": 447,
+      "slope": null,
+      "strain": 2.134268761722069e-09
+    },
+    {
+      "alpha": 1,
+      "armijoRejected": 0,
+      "derivativeCheck": [],
+      "movement": 7.139364563865802e-09,
+      "originalRejected": 0,
+      "rows": 447,
+      "slope": null,
+      "strain": 8.404676954398838e-10
+    }
+  ],
+  "workAndAccuracyPass": true,
+  "independentlyAbsentGroups": [
+    2843,
+    4472,
+    11856,
+    12031,
+    13901,
+    17445,
+    17650
+  ],
+  "priorPrototypes": [
+    {
+      "root": ".context/strong-owl-live-physics-armijo-a3bff8f8b-ambiguity-fix",
+      "disposition": "ambiguity fallback failed work"
+    },
+    {
+      "root": ".context/strong-owl-live-physics-armijo-a3bff8f8b-full-merit",
+      "disposition": "superseded incomplete tie derivative"
+    },
+    {
+      "root": ".context/strong-owl-live-physics-armijo-a3bff8f8b-tied-witnesses",
+      "disposition": "compile-only exclusivity failure"
+    }
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-a3bff8f8b-tied-output-fixed/native/result.json": "89fab513b4b93c114eb6e8076a1059090ba91498e9d27e527ea58db2dc8a0d4f",
+    ".context/strong-owl-live-physics-armijo-a3bff8f8b-tied-output-fixed/native/provenance.json": "d617f2911cb0eccdf6993eee3aa18dab700f63290e0c856388b17464dd9320b8",
+    ".context/strong-owl-live-physics-armijo-a3bff8f8b-tied-output-fixed/native/resources.jsonl": "e8e3b7ff40e289072ca80c71d685ca49924db3fac773178e127268d5ee36353b"
+  }
+}
