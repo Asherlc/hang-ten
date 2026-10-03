@@ -1,0 +1,58 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "kind": "normal-only subset reassessment of closed four-direction projection preflight",
+  "scope": "exact rational same-side whole-segment/triangle-plane classification; no query arithmetic skipped or timings",
+  "necessaryFraction": 0.7,
+  "pass": true,
+  "records": [
+    {
+      "step": 1,
+      "faceVisits": 24439,
+      "planeSeparated": 19621,
+      "fraction": 0.8028560906747412
+    },
+    {
+      "step": 6,
+      "faceVisits": 110068,
+      "planeSeparated": 85058,
+      "fraction": 0.7727768288694262
+    },
+    {
+      "step": 109,
+      "faceVisits": 64704,
+      "planeSeparated": 50668,
+      "fraction": 0.7830736894164194
+    },
+    {
+      "step": 139,
+      "faceVisits": 14934,
+      "planeSeparated": 11694,
+      "fraction": 0.7830453997589394
+    },
+    {
+      "step": 140,
+      "faceVisits": 14934,
+      "planeSeparated": 11694,
+      "fraction": 0.7830453997589394
+    },
+    {
+      "step": 493,
+      "faceVisits": 34244,
+      "planeSeparated": 26730,
+      "fraction": 0.7805746992173811
+    }
+  ],
+  "hashes": {
+    "Hangboards/clavellium-training-block/assets/primary.physics.json": "c60fbd6dfaf59bfd5fb7e6aa8d806f78af7e828a7f64074d326865e08f13e853",
+    ".context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/result.json": "58c1baf98e52618f6d20d5eaca13f47c8c929ecb70aa6edb1dd9c5015382d363",
+    "Tools/HangboardRopePrototype/census_face_planes.py": "bdf4b30f1ad84737dcf1b811c4d8ebc8a925f81012faf20b99dfe448e9665fab"
+  },
+  "independentlyAbsentGroups": [
+    85516
+  ],
+  "wrapperHashes": {
+    ".context/strong-owl-live-physics-plane-receipt-proposal/resources.jsonl": "caa58c6c9db5b21b8ae821b65c63a511ca75c892c2bf850d7f4c7c69b09449bd",
+    ".context/strong-owl-live-physics-plane-receipt-proposal/census.log": "5654e7154ca55af4af6e9bd3a3bb92f73ffa0269655d144f62b4abefeb51433d"
+  }
+}
