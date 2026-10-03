@@ -1,0 +1,556 @@
+{
+  "fileCount": 110,
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-normal-all-hand-workout.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "bytes": 3958
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-normal-projection-hosts.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "bytes": 3729
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-normal-strict-hand-absence.py",
+      "sha256": "9c0395c040a4cb62c79eca1c57b8127e6579b02a738f7483f54e29f802aa1ec6",
+      "bytes": 1152
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-strict-hand-lifetime.py",
+      "sha256": "44e560b3c31c1c44b8f2bee262c3718cbd82cbfcb35c435a7448ad71f0723fb6",
+      "bytes": 2919
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/analyze-lifetimes.py",
+      "sha256": "8dd453037ee35d9120e8668ae64d92e047c9a10f9cbc2fc068bbbdb18fe71c64",
+      "bytes": 3709
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/capture-helper.patch",
+      "sha256": "ded4e19d5c8e07438743740c03274c1358e8be4fa4b7b5060d9890148319a18c",
+      "bytes": 4843
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/check-parity.py",
+      "sha256": "69623d370f220e17216ddd36251caaa88cce8ed154e32daf0025e183478f5fe2",
+      "bytes": 1228
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/protocol.json",
+      "sha256": "f2f56847e5fbe8678e7e94f82b11a96941c704d01b07e56d29e3bcdc8051f0f9",
+      "bytes": 711
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/report.json",
+      "sha256": "830cbc25267d39a78a2d102233686d84e50861f5bb38485828fbd257f6dccdc5",
+      "bytes": 3175
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/root-application.json",
+      "sha256": "ac46de92b19473017591fc73cfd4974f98c060b00aeff38ebe1daaf72685e0af",
+      "bytes": 297
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/runtime-release.json",
+      "sha256": "7eac39684a0e5c96efb99b83017305b527f61ce5c6e55e3ccce5cf55f59a1a5f",
+      "bytes": 431
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "929ab78c1d4ed9806e156a4fbe04c0afd0622d3bf24bee03d4d2a8686686b0f3",
+      "bytes": 92428
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/source/HangTen/Views/BoardModelView.swift",
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c",
+      "bytes": 22063
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/source/HangTen/Views/GripHandModelView.swift",
+      "sha256": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2",
+      "bytes": 47424
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/source/HangTen/Views/RootView.swift",
+      "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221",
+      "bytes": 149223
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/source/HangTen/Views/TrainView.swift",
+      "sha256": "86245095b857d1ae864672ca4f6d3dfacbd1f17390ac1dd5f7d1a0b909b19af0",
+      "bytes": 26422
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/source-freeze.json",
+      "sha256": "487f0a765fba7c57fb1ab95134b1b41fcfd18106e3e359b6d1253bf51a5d9e7a",
+      "bytes": 815
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/weak-attachment-census.patch",
+      "sha256": "4560a4e56ae94bee073027c586bc0de53a3d0d83c7389defa8a4fe62ecd05f23",
+      "bytes": 3904
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-applied/workout-predecessor-attachment.py",
+      "sha256": "181e5daaba65f611c1ddffdede1843e75f8acc4e22f0ee2765f6d6626f8a919c",
+      "bytes": 8587
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-before-parity.json",
+      "sha256": "6397156798197b0d585aa2e2e7cf960d04edd7bb6636f9060331f81620fc1a42",
+      "bytes": 12855
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-build-command.json",
+      "sha256": "378d9118535d1d8f83724a0831c9648816e90236d5737879cd8f5c6e7261a13f",
+      "bytes": 534
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-build-command.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-build-command.stdout",
+      "sha256": "dae4013178b77de80b70e02090ba294d0a1f8c4364a9b3cc061cc6878ff6b720",
+      "bytes": 321183
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-code-parity/installed-container.txt",
+      "sha256": "b4dc8e5e662391746e3c7722f715552af6d75f43d575f562e2ca25d5a11ba8a4",
+      "bytes": 176
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-code-parity/mach-o-parity.json",
+      "sha256": "c3f1e0de31e3bede997390ee3b3936c82b2d1e6501d53006e6caac149a6d4f5a",
+      "bytes": 2030
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-final-parity.json",
+      "sha256": "6397156798197b0d585aa2e2e7cf960d04edd7bb6636f9060331f81620fc1a42",
+      "bytes": 12855
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-findings.json",
+      "sha256": "ec8db9062af0273d2ff8c1ac4917f238e7ec7bbcf96efa362343710ff8eab382",
+      "bytes": 6827
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-install-command.json",
+      "sha256": "7f2099b88eb5d84d7d4c9de53ee3bb18f6f3e7ee15166497ff7cf49e39df4419",
+      "bytes": 449
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-install-command.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-install-command.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/000-stdout.txt",
+      "sha256": "b4dc8e5e662391746e3c7722f715552af6d75f43d575f562e2ca25d5a11ba8a4",
+      "bytes": 176
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/001-stdout.txt",
+      "sha256": "eb8cf62011fa46dabadb2b1f924b1107d1527782c886ac49c53fce987bc8826a",
+      "bytes": 162
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/002-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/002-stdout.txt",
+      "sha256": "c21d9219e04a00f7523c4066970fec41ffa114e81d251f8fba8013142636e5b8",
+      "bytes": 28
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/003-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/003-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/004-stderr.txt",
+      "sha256": "b08c76731bde0cfbcfd12c91c9134a65cdf09a1ce4e7c0c71cbc34fa5f8746de",
+      "bytes": 377
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/004-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/005-stderr.txt",
+      "sha256": "d0b9e37142710facceabeefdc39ae5fe7d70fc62822836bea7537167fc988921",
+      "bytes": 387
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/005-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/006-stderr.txt",
+      "sha256": "944a8bf4c667fce0a2e9752ab8426a083c67f11047d2c4f0a16d4e72c34febc9",
+      "bytes": 384
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/006-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/007-stderr.txt",
+      "sha256": "ca9305849029258678671c08d2e82ff09f65c5cf81df5b50027181332d686b96",
+      "bytes": 384
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/007-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/008-stderr.txt",
+      "sha256": "9e40e0f66b537d45983579f589548e2a8d5b478c9e07545bf8edc4148792eccd",
+      "bytes": 384
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/008-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/009-stderr.txt",
+      "sha256": "fd3100629a2e13b046dd3974087f18eb519abecc1e08cad03c917bacac3d3798",
+      "bytes": 388
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/009-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/010-stderr.txt",
+      "sha256": "891313fa96611068706cd0d7d3c90770029b2300901dc1605e045e638ae9c68e",
+      "bytes": 385
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/010-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/011-stderr.txt",
+      "sha256": "2414225c93b13f2dfcf3a71384971340d2b29ac3f3426e15d400498732cbaf43",
+      "bytes": 385
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/011-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/012-stderr.txt",
+      "sha256": "539d726be4349192d8bb98939cf4870af4d038dc8b468d2aaa55048d9c7f5b3e",
+      "bytes": 385
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/012-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/013-stderr.txt",
+      "sha256": "7d22f2100a0ae5603dccff61a5b71d2619e937d4f0e36d2d87f546e024ba8c2c",
+      "bytes": 387
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/013-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/014-stderr.txt",
+      "sha256": "cea8eda4a2914a8e9b9f50cf8df1ada4dedd0c622570b7885f9043db9fa5bd01",
+      "bytes": 384
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/014-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/015-stderr.txt",
+      "sha256": "43c62d6c1fe22f357613ede72115373070fcef6f1cdafa545e605c0fe5473beb",
+      "bytes": 384
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/015-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/016-stderr.txt",
+      "sha256": "fb167d2605ebf56db03c225064186a89d95627c10173e7375f0ad48e7397c7c8",
+      "bytes": 384
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/016-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/capture-process-status.json",
+      "sha256": "874d56e68ac7ea32e16ef44b7f59e9f4e91bdb5f3b7a5554eb6881952ebfdf05",
+      "bytes": 147
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/captures.json",
+      "sha256": "ab97709610be20544df0b39fcd1cdf16416d48d39a163f90f030df4c7233cd03",
+      "bytes": 7979
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/commands.json",
+      "sha256": "0e2c922d686b39046729b55f05adeaf81fbeaa9957cea9c57ebbc5245e17a75b",
+      "bytes": 6551
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/early-attachment-observations.json",
+      "sha256": "9e7cb4d7b0975820abd08cbca064d4c4d32a1ab602f3acb7903e43684763ecd5",
+      "bytes": 25627
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/events-D8241A25-F109-41E0-8641-EA269042F6C7.jsonl",
+      "sha256": "7ceb4f1c84b8eede5f368afaabd0aa176cc8d6a778a10cfe0c5c97c4855edaf5",
+      "bytes": 776969
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/first-eight-visual-review.json",
+      "sha256": "efef95b8485f991e65a179816edd9b6a83d3cd57c8d90fe8f1e85da38418b333",
+      "bytes": 3788
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/following-preview-tail.json",
+      "sha256": "58b41aa9ab07aabb2db04b3bc55e012ba20dc90ab049b2d35c5e3280774ffe00",
+      "bytes": 9168
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/hand-lifetime-validation.json",
+      "sha256": "babe015a655af08c92be42725a4a7064afe60ea7c720e28623a57ab286cf40e0",
+      "bytes": 149176
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/installed-binary-gate.json",
+      "sha256": "110c0bb9f3f2d6b21541cf2c0484adaaa9603c40c657d5580a1d7ee43c51639c",
+      "bytes": 374
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/launch-initial-capture.json",
+      "sha256": "a36ff2ed5439e33c8268a752d8a2862d8ed54440a95c92e98314bf3f278fbf73",
+      "bytes": 152
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/launch-initial.png",
+      "sha256": "666ff028e2fa996de89a0f8b324c8528cd26dbf50622ad4001bccad7c3a8ae44",
+      "bytes": 284401
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/launch-review-environment.json",
+      "sha256": "9ff926825f0b722824162611b5431bfccab613a56eb148de347c62098b6d6209",
+      "bytes": 436
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/normal-host-frame-validation.json",
+      "sha256": "42d90ebe4a173023b6e076f4d8b1bb438483c19b924344ee65e3d4063ea81f73",
+      "bytes": 344669
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/phase-0-active-plus-0.25.png",
+      "sha256": "3ec86e78e7a1229ec0551f006e7c97740b4d8b1481dc35fd98b6dfd08541bfd7",
+      "bytes": 276285
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/phase-0-active-plus-1.png",
+      "sha256": "632393338ecc1fb605f05792e2ed4869711c93238306f153af51bd6c1af319e9",
+      "bytes": 277681
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/phase-0-active-plus-3.png",
+      "sha256": "ea4f6b04a92acc4747d0460a44277ab265165f4eaf086d2893e59ff947b205e5",
+      "bytes": 278327
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/phase-0-active-plus-5.png",
+      "sha256": "46508c2c745492ddca17a3b51de8576fd4cdaee5f311c30bba580d5cc960aca3",
+      "bytes": 278689
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/phase-1-preview-plus-0.25.png",
+      "sha256": "3c61b01eb9dcdb482e663b8dfecf660314d518f93f50b383ebf8f898392331e0",
+      "bytes": 245201
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/phase-1-preview-plus-1.png",
+      "sha256": "f89720fdecdc4cbb8b0698254ee99732f4c7b54ce09b4328bd3e9cceec94c8b6",
+      "bytes": 249250
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/phase-1-preview-plus-3.png",
+      "sha256": "bed81a70a682a2be4ef216a7216d96af7c92a7d0430c94ce926ab77a24ebdef8",
+      "bytes": 247708
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/phase-1-preview-plus-5.png",
+      "sha256": "960e8624279761069e2f81989cd8413b973d8dcc64413743a5e02ee9a114c39c",
+      "bytes": 246210
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "a1b13ccc7f7d43a31e69e2a8a73290801f13a0a5fc1d3dc5baee8f7af1ee928d",
+      "bytes": 279169
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/phase-2-active-plus-1.png",
+      "sha256": "08a754dfa2bad8f0dee1a1c326135b861f5d2dd9fe1fb33aacd558db39ddc092",
+      "bytes": 280808
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/phase-2-active-plus-3.png",
+      "sha256": "08a754dfa2bad8f0dee1a1c326135b861f5d2dd9fe1fb33aacd558db39ddc092",
+      "bytes": 280808
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/phase-2-active-plus-5.png",
+      "sha256": "3d99c9c5ee8f29d258f32ddee9a01bde95e13adcc7ddd0317ca4b09b0b062755",
+      "bytes": 280599
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/predecessor-lifetime-analysis.json",
+      "sha256": "b125f14a41864ec6f1ae9628a901fe6939cf2b1c46d4fc6fb1ba3e5579a39ea7",
+      "bytes": 224751
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/protocol.json",
+      "sha256": "18464c0a7bd1f401d16b191dd4488f0df1135a14eb6714d9ac746d23981633bc",
+      "bytes": 1026
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/root-visual-corroboration.json",
+      "sha256": "2bea76fe7ea77eebae1a86e6631f6093388b71f638cb3b1038176ff44a269a8e",
+      "bytes": 1108
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/runtime-release.json",
+      "sha256": "7eac39684a0e5c96efb99b83017305b527f61ce5c6e55e3ccce5cf55f59a1a5f",
+      "bytes": 431
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/strict-absence-validation.json",
+      "sha256": "0fbbbea29be6b7628e3a38c8b9a1c170a00f604b93a3303aadbf933731b7c031",
+      "bytes": 389
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/structural-correspondence.json",
+      "sha256": "9d69edf5f23b98c9852b5f0bbd831b423c322ddab03a5714f68450e280affed3",
+      "bytes": 255741
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/trace-copy.json",
+      "sha256": "8cfb453f556894b5da84334afe3e2569f8c3879731edcb1eb28d26cf84ab299c",
+      "bytes": 738
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/train-constructor-validation.json",
+      "sha256": "58b4d1a0020153e5a65b77dd59dc15c409c81a3abc83118261651d9b6e964f72",
+      "bytes": 174140
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/transition-observations.json",
+      "sha256": "dd79261f3aa7ff859bb6181283055249b2b6e3a776018bafded8bd048aac1446",
+      "bytes": 29431
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/visual-review.json",
+      "sha256": "f645da77d3f09d078400e7c012d669037cf6c045286084a5874ee75ec8d4f022",
+      "bytes": 5942
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-package-parity.json",
+      "sha256": "a11329519ba131918bebd880ee68cfd8bd08a96ed5c984dbad7cb441333e426b",
+      "bytes": 11183
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-prior-freeze-verification.json",
+      "sha256": "a33d27c11726c0798ef09cb4a2c5f7ea9b0ab483d3b277fdda48654c985da09a",
+      "bytes": 277
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-proposal/check-train-constructors.py",
+      "sha256": "8c671fee30985971a5db26847fd625a725f54829875b9fc688a5dbdfc29532c0",
+      "bytes": 2827
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/predecessor-attachment-proposal/apple-api-notes.md",
+      "sha256": "72f1257c5bb77799a07773d003013ceccd001eb43f21d594c4c2adcd4b2c6796",
+      "bytes": 1170
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/predecessor-attachment-proposal/apply-check.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/predecessor-attachment-proposal/apply-check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/predecessor-attachment-proposal/before.swift",
+      "sha256": "e186a896f012ee595690d78013dfef7816d5caf54a0bac7b699e1c20cdbfc872",
+      "bytes": 90070
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/predecessor-attachment-proposal/proposed.swift",
+      "sha256": "929ab78c1d4ed9806e156a4fbe04c0afd0622d3bf24bee03d4d2a8686686b0f3",
+      "bytes": 92428
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/predecessor-attachment-proposal/report.json",
+      "sha256": "830cbc25267d39a78a2d102233686d84e50861f5bb38485828fbd257f6dccdc5",
+      "bytes": 3175
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/predecessor-attachment-proposal/root-application.json",
+      "sha256": "ac46de92b19473017591fc73cfd4974f98c060b00aeff38ebe1daaf72685e0af",
+      "bytes": 297
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/predecessor-attachment-proposal/weak-attachment-census.patch",
+      "sha256": "4560a4e56ae94bee073027c586bc0de53a3d0d83c7389defa8a4fe62ecd05f23",
+      "bytes": 3904
+    }
+  ],
+  "excluded": "No app bundle or DerivedData. Original prior freeze unchanged; API notes included separately."
+}

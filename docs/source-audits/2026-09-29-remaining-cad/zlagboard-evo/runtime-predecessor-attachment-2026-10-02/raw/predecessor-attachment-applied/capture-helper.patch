@@ -1,0 +1,36 @@
+--- prior-train-host-helper.py
++++ workout-predecessor-attachment.py
+@@ -1,7 +1,7 @@
+ from pathlib import Path
+ import os,sys,json,time,subprocess,hashlib,traceback
+ base=Path('.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo')
+-arm=sys.argv[1];assert arm in ['present-a','suppressed','present-b']
++arm=sys.argv[1];assert arm == 'observation'
+ # This file is preparation only until the parent supplies a reviewed release record.
+ releasePath=Path(sys.argv[2]);release=json.loads(releasePath.read_text())
+ assert release['runtimeAuthorized'] is True and release['arm']==arm
+@@ -9,7 +9,7 @@
+ assert release['constructorMarkerAuditReady'] is True
+ assert release['previousArmGatePassed'] is True
+ assert len(release['binarySHA256'])==64
+-out=base/('train-host-'+arm+'-landscape');out.mkdir(exist_ok=False)
++out=base/'predecessor-attachment-normal-landscape';out.mkdir(exist_ok=False)
+ (out/'runtime-release.json').write_bytes(releasePath.read_bytes())
+ uid='BDCA0D77-94C2-4A97-900B-443F75C64691';commands=[];captures=[];transitions=[];tracefolder=None
+ start=time.monotonic();deadline=start+300;pending=[];known=set();scene=None
+@@ -43,12 +43,12 @@
+  (out/'installed-binary-gate.json').write_text(json.dumps({'path':str(binary),'sha256':actualBinarySHA,'expected':release['binarySHA256']},indent=2)+'\n')
+  assert actualBinarySHA==release['binarySHA256'],'Installed binary mismatch; no launch permitted'
+  data=Path(run('xcrun','simctl','get_app_container',uid,'com.hangten.training','data'))
+- flags={'HANGTEN_REVIEW_BOARD_ID':'zlagboard.evo','HANGTEN_REVIEW_PLAN_ID':'research.max-hangs','HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC':'1','HANGTEN_REVIEW_DIAGNOSTIC_RUN':'placid-badger-cad-second-half-train-host-'+arm,'HANGTEN_REVIEW_LANDSCAPE':'1','HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS':'1'}
++ flags={'HANGTEN_REVIEW_BOARD_ID':'zlagboard.evo','HANGTEN_REVIEW_PLAN_ID':'research.max-hangs','HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC':'1','HANGTEN_REVIEW_DIAGNOSTIC_RUN':'placid-badger-cad-second-half-predecessor-attachment-'+arm,'HANGTEN_REVIEW_LANDSCAPE':'1','HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS':'1'}
+  flags['HANGTEN_REVIEW_SUPPRESS_ALL_HAND_HOSTS']='1'
+- if arm=='suppressed':flags['HANGTEN_REVIEW_SUPPRESS_TRAIN_BOARD_HOST']='1'
++ flags['HANGTEN_REVIEW_PREDECESSOR_ATTACHMENT_CENSUS']='1'
+  env={k:v for k,v in os.environ.items() if not k.startswith('SIMCTL_CHILD_HANGTEN_REVIEW_')};env.update({'SIMCTL_CHILD_'+k:v for k,v in flags.items()})
+  (out/'launch-review-environment.json').write_text(json.dumps(flags,indent=2)+'\n')
+- (out/'protocol.json').write_text(json.dumps({'hardBoundSeconds':300,'plannedPhases':['active','preview','active'],'captureOffsetsAfterActualMutation':[.25,1,3,5],'afterLaunchUIAccess':'screenshots only; no AX queries/taps/Skip','externalTracePollingSeconds':.03,'routineUnchanged':True,'samplerLimit':'Existing120-iteration sampler remains; new identical both-arm boundary census on actual highlight-before/after supplies sparse late-phase app/window/placement evidence, not every capture instant','arm':arm,'startup':'Existing WorkoutAccessGate and production automatic-start policy in both arms; explicit DEBUG AUTOSTART omitted, fresh process/session; both arms normal launch plus existing workout deep link through original Train/navigation history; strict all-hand-host suppression remains enabled in every arm; only suppressed adds the Train-board-host suppression flag; perspective/old hand-OFF/camera/standalone/direct-root/root-navigation flags absent all arms'},indent=2)+'\n')
++ (out/'protocol.json').write_text(json.dumps({'hardBoundSeconds':300,'plannedPhases':['active','preview','active'],'captureOffsetsAfterActualMutation':[.25,1,3,5],'afterLaunchUIAccess':'screenshots only; no AX queries/taps/Skip','externalTracePollingSeconds':.03,'routineUnchanged':True,'samplerLimit':'Existing120-iteration sampler remains; new identical both-arm boundary census on actual highlight-before/after supplies sparse late-phase app/window/placement evidence, not every capture instant','arm':arm,'startup':'Existing WorkoutAccessGate and production automatic-start policy in both arms; explicit DEBUG AUTOSTART omitted, fresh process/session; both arms normal launch plus existing workout deep link through original Train/navigation history; strict all-hand-host suppression enabled; Train board PRESENT; only weak predecessor-attachment census added; one observation run; perspective/old hand-OFF/camera/standalone/direct-root/root-navigation flags absent all arms'},indent=2)+'\n')
+  tracefolder=data/'Documents'/('HighlightDiagnostic-'+flags['HANGTEN_REVIEW_DIAGNOSTIC_RUN']);assert not tracefolder.exists()
+  run('xcrun','simctl','launch','--terminate-running-process',uid,'com.hangten.training',env=env)
+  run('xcrun','simctl','openurl',uid,'hangten://plan/research.max-hangs/workout')

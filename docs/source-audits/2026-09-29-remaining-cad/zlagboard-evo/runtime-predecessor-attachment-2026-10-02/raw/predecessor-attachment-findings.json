@@ -1,0 +1,151 @@
+{
+  "status": "Completed valid diagnostic; color failure reproduced; no production fix",
+  "run": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape",
+  "debugDylibSHA256": "ed1309f520d49a80db45346b8789a2aa10d0ffe58455afe56fd93fa978c49512",
+  "visualSequence": {
+    "initialHang": [
+      "red",
+      "red",
+      "red",
+      "red"
+    ],
+    "rest": [
+      "red",
+      "red",
+      "red",
+      "blue"
+    ],
+    "nextHang": [
+      "blue",
+      "blue",
+      "blue",
+      "blue"
+    ]
+  },
+  "appWorkflowPassed": false,
+  "weakAttachmentFinding": {
+    "predecessorToken": "D98D8097-97C3-4AC0-BFE8-A433C25EC426",
+    "workoutToken": "3C542497-1648-4707-B1DA-C1C01D94EF11",
+    "summary": {
+      "observations": 140,
+      "wrapperAliveObservations": 140,
+      "attachedObservations": 140,
+      "bothActiveObservations": 140
+    },
+    "interpretation": "At all 140 recorded point observations the predecessor wrapper remained alive and its root and camera remained alive, active and attached. At first Hang, Rest, next Hang and following-preview tail its actual RealityKit scene differs from the workout actual scene. No sampled dead-wrapper/live-entity transition occurred.",
+    "causalityEstablished": false,
+    "predecessorVisibleRenderingEstablished": false
+  },
+  "checks": {
+    "structural-correspondence.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/structural-correspondence.json",
+      "sha256": "9d69edf5f23b98c9852b5f0bbd831b423c322ddab03a5714f68450e280affed3",
+      "checks": {
+        "completeContiguous": true,
+        "captures12": true,
+        "allCPUBrackets": true,
+        "sameScene": true,
+        "naturalFirstHang": true,
+        "naturalRest": true,
+        "freshSession": true,
+        "boundaryAppActive": true,
+        "boundaryWindowActive": true,
+        "boundaryLandscape": true,
+        "lateBoundaryCensus": true,
+        "noAXOrTouch": true
+      }
+    },
+    "hand-lifetime-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/hand-lifetime-validation.json",
+      "sha256": "babe015a655af08c92be42725a4a7064afe60ea7c720e28623a57ab286cf40e0",
+      "checks": {
+        "completeOpeningStream": true,
+        "instrumentationVersion": true,
+        "suppressionFlagCorrect": true,
+        "allFourCountsOnEveryRecord": true,
+        "openingCountsZero": true,
+        "countsMonotonic": true,
+        "finalMarkerAfterLastCapture": true,
+        "noRecorderErrorOrCap": true,
+        "strictOFFZeroAllFourLifetimeCounts": true
+      }
+    },
+    "strict-absence-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/strict-absence-validation.json",
+      "sha256": "0fbbbea29be6b7628e3a38c8b9a1c170a00f604b93a3303aadbf933731b7c031",
+      "checks": {
+        "strictFlagEnabled": true,
+        "perspectiveFlagAbsent": true,
+        "openingStrictEnabled": true,
+        "allFourCountsZeroThroughout": true,
+        "noHandLifecycleEvents": true,
+        "noHandCameraEvents": true
+      }
+    },
+    "normal-host-frame-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/normal-host-frame-validation.json",
+      "sha256": "42d90ebe4a173023b6e076f4d8b1bb438483c19b924344ee65e3d4063ea81f73",
+      "checks": {
+        "workoutSceneFromCountdown": true,
+        "hostObserved": true,
+        "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+        "sameHost": true,
+        "sameActualScene": true,
+        "rootCameraActiveSameScene": true,
+        "hostVisible": true,
+        "sampledFramesOnMonotoneOwnEndpointPath": true,
+        "allPostFirstCaptureCensusesFinal": true
+      }
+    },
+    "train-constructor-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/train-constructor-validation.json",
+      "sha256": "58b4d1a0020153e5a65b77dd59dc15c409c81a3abc83118261651d9b6e964f72",
+      "checks": {
+        "completeContiguous": true,
+        "openingBeforeConstructors": true,
+        "uniqueConstructorTokens": true,
+        "exactlyOneWorkoutConstructor": true,
+        "exactlyOneWorkoutMake": true,
+        "allSceneRecordsHaveConstructor": true,
+        "markerGateMatches": true,
+        "strictHandsEnabled": true,
+        "observedPredecessorConstruction": true
+      }
+    },
+    "predecessor-lifetime-analysis.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/predecessor-lifetime-analysis.json",
+      "sha256": "b125f14a41864ec6f1ae9628a901fe6939cf2b1c46d4fc6fb1ba3e5579a39ea7",
+      "checks": {
+        "weakCensusFlag": true,
+        "exactlyOnePredecessor": true,
+        "allFourBoundariesHaveOneObservation": true,
+        "constructedIdentityPreserved": true
+      }
+    }
+  },
+  "finalParity": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-final-parity.json",
+    "sha256": "6397156798197b0d585aa2e2e7cf960d04edd7bb6636f9060331f81620fc1a42",
+    "allEqual": true,
+    "checkCount": 27
+  },
+  "sourceAPINotesSeparateFromOriginalFreeze": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/predecessor-attachment-proposal/apple-api-notes.md",
+    "sha256": "72f1257c5bb77799a07773d003013ceccd001eb43f21d594c4c2adcd4b2c6796"
+  },
+  "limitations": [
+    "Weak census is observational and adds no strong scene/entity ownership or timer. Constructor marker records init completion, not every potential loader attempt.",
+    "The 1 Hz sampler ends after 120 seconds. Late phase-boundary observations are not a continuous late app/window census.",
+    "Exactly one intended workout ARView was found in each of 128 postattachment workout censuses. Attached predecessor scene does not establish visible predecessor rendering in that window.",
+    "Train placeholder slot was not measured. Actual workout frame history is retained without compensation.",
+    "Frontend history remains uncertain; no frontend actions or headless/isolation claim. Unknown DeviceHub remains untouched.",
+    "All accepted CAD/package bytes preserved. No detach operation or production fix was applied."
+  ],
+  "runtimeHandback": {
+    "exclusiveOwnershipReturnedTo": "/root",
+    "deviceUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+    "controllerSession": 90373,
+    "resourcesRemainLive": true,
+    "noFurtherRunAuthorized": true
+  }
+}
