@@ -1,0 +1,123 @@
+{
+  "scope": "Interrupted original reversal and exact-device recovery only",
+  "originalFrozenFileCount": 11,
+  "recoveryFileCount": 7,
+  "rawFiles": 19,
+  "rawBytes": 21821,
+  "entries": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape/000-stderr.txt",
+      "retained": "raw/train-unmount-control-b-landscape/000-stderr.txt",
+      "bytes": 145,
+      "sha256": "5a76947209a96086c83c0e238a53a5b1c3a4941c23ad3f3525ce11ebfaed5bd8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape/000-stdout.txt",
+      "retained": "raw/train-unmount-control-b-landscape/000-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape/captures.json",
+      "retained": "raw/train-unmount-control-b-landscape/captures.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape/commands.json",
+      "retained": "raw/train-unmount-control-b-landscape/commands.json",
+      "bytes": 303,
+      "sha256": "7723bd80cf078f8a5470ea769e2e44a757ea8b494dcc89a5f4bacdccded9afda"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape/failure.txt",
+      "retained": "raw/train-unmount-control-b-landscape/failure.txt",
+      "bytes": 1549,
+      "sha256": "faab5e80875df5598159f95006edd0303948bb8a16f7dee9d419853fd7a595c8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape/runtime-release.json",
+      "retained": "raw/train-unmount-control-b-landscape/runtime-release.json",
+      "bytes": 515,
+      "sha256": "c2205cd378b09ae41f17f17eea46baa5e1eaccf82b84ae05135213ace59ed077"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape/trace-copy.json",
+      "retained": "raw/train-unmount-control-b-landscape/trace-copy.json",
+      "bytes": 133,
+      "sha256": "77b84f5734f055f633bd349208d479add2dfbfb06d00251567b80bed3b9ab674"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-reversal/findings.json",
+      "retained": "raw/train-unmount-reversal/findings.json",
+      "bytes": 745,
+      "sha256": "0a32565e6d088edbc892ac691e215bbc70c808acab06f673a5770d3857085cc5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-reversal/helper-only-output-identity.patch",
+      "retained": "raw/train-unmount-reversal/helper-only-output-identity.patch",
+      "bytes": 1926,
+      "sha256": "61ac6c72d1fba22b35b85934b99cf4933ef3c903cbbaee36206cca30e4d4098a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-reversal/runtime-release.json",
+      "retained": "raw/train-unmount-reversal/runtime-release.json",
+      "bytes": 515,
+      "sha256": "c2205cd378b09ae41f17f17eea46baa5e1eaccf82b84ae05135213ace59ed077"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-reversal/workout-control-b.py",
+      "retained": "raw/train-unmount-reversal/workout-control-b.py",
+      "bytes": 11421,
+      "sha256": "26653696c56cfc1fae90ae9ff6fb9ab5c528749fcb8d2b8e432db3d9968d5427"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-reversal-frozen-manifest.json",
+      "retained": "raw/train-unmount-reversal-frozen-manifest.json",
+      "bytes": 2843,
+      "sha256": "371ffaa0e171a6f6b988ee17eab66f6624e6e67f0677cef9f85a4be992825174"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/simulator-recovery-2026-10-02/boot-command.json",
+      "retained": "recovery/boot-command.json",
+      "bytes": 264,
+      "sha256": "cb4bf63d23e22fa3a6f6461c55a8b031e760879f6e1e353076bca4970d32f142"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/simulator-recovery-2026-10-02/boot-command.stderr",
+      "retained": "recovery/boot-command.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/simulator-recovery-2026-10-02/boot-command.stdout",
+      "retained": "recovery/boot-command.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/simulator-recovery-2026-10-02/bootstatus-command.json",
+      "retained": "recovery/bootstatus-command.json",
+      "bytes": 281,
+      "sha256": "af3b4921ed79c9ff917ce85aaac18ef7a5ea9a6dbd38304cda05e4160e6570a4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/simulator-recovery-2026-10-02/bootstatus-command.stderr",
+      "retained": "recovery/bootstatus-command.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/simulator-recovery-2026-10-02/bootstatus-command.stdout",
+      "retained": "recovery/bootstatus-command.stdout",
+      "bytes": 195,
+      "sha256": "1e107d753e3def02f892b71cd2a20cbd16739394672a5fb1df41e1813e0e9733"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/simulator-recovery-2026-10-02/preflight.json",
+      "retained": "recovery/preflight.json",
+      "bytes": 983,
+      "sha256": "df72965c8fb2c84b5b8f5a8e62f6def2a8b274d364a9067956e10c63e43f96c6"
+    }
+  ]
+}

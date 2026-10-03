@@ -1,0 +1,11 @@
+{
+  "runtimeAuthorized": true,
+  "arm": "control",
+  "helperSHA256": "26653696c56cfc1fae90ae9ff6fb9ab5c528749fcb8d2b8e432db3d9968d5427",
+  "constructorMarkerAuditReady": true,
+  "structuralNavEventAuditReady": true,
+  "rootSourceRuntimeRelease": true,
+  "previousArmGatePassed": true,
+  "binarySHA256": "9855fc146d9bf381797b8a982a70f96e7f001c9838e5fd49df2d590e8d6d2242",
+  "authorization": "Parent explicitly authorized exactly ONE unchanged-binary CONTROL-B, original230-file freeze immutable; no further arms."
+}
