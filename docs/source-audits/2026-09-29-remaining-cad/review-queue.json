@@ -629,9 +629,9 @@
       "package": "zlagboard-pro",
       "boardID": "zlagboard.pro",
       "name": "Zlagboard Zlagboard.Pro 2.0",
-      "humanReview": "native geometry accepted; fresh 28/28 contact app verification and corrected workout sequence passed; human app review pending",
+      "humanReview": "reviewed; native geometry, wood finish, fresh contact selection views and displayed corrected workout highlight sequence accepted",
       "sourceSHA256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
-      "reviewPage": "zlagboard-pro/app-review-2026-10-03/review.md",
+      "reviewPage": "zlagboard-pro/app-review-2026-10-03/accepted-app-review.md",
       "sourceAudit": "zlagboard-pro/source-audit.md",
       "comparisons": [
         "zlagboard-pro/review/comparison-side.png",
@@ -646,10 +646,11 @@
         }
       },
       "appReview": "zlagboard-pro/app-review-2026-10-03/validation.json",
-      "appReviewPage": "zlagboard-pro/app-review-2026-10-03/review.md",
+      "appReviewPage": "zlagboard-pro/app-review-2026-10-03/accepted-app-review.md",
       "reviewPageHistory": [
         "zlagboard-pro/source-audit.md",
-        "zlagboard-pro/individual-review-2026-10-02/review.md"
+        "zlagboard-pro/individual-review-2026-10-02/review.md",
+        "zlagboard-pro/app-review-2026-10-03/review.md"
       ],
       "appReviewHistory": [
         "zlagboard-pro/app-review/validation.json",
@@ -669,8 +670,19 @@
         "freshViewReentries": 6
       },
       "freshAppVisualReviewPassed": true,
-      "humanAppAccepted": false,
-      "freshAppReviewSourceCommit": "1e1a931ed97a067c9f31bfffd84e50051f883294"
+      "humanAppAccepted": true,
+      "freshAppReviewSourceCommit": "1e1a931ed97a067c9f31bfffd84e50051f883294",
+      "appHumanReviewRecord": "zlagboard-pro/app-review-2026-10-03/human-app-review.json",
+      "appReviewAnswer": "y",
+      "appAcceptedDate": "2026-10-03",
+      "appAcceptedRevisionCommit": "0c1ebae25a6c9a591b3c3dbb7d6627cded5b58fd",
+      "appAcceptedScope": "Displayed Zlagboard.Pro 2.0 fresh jug and incut selection views, wood finish, and normal-workout red Hang / blue Rest preview / red following Hang with both hand cues visible, together with the linked fresh 28-contact review and original/prior/native front-side-top comparisons. Adds app acceptance to the prior native geometry approval; display-estimate limits remain.",
+      "runtimeHumanReviewRecord": "zlagboard-pro/app-review-2026-10-03/human-app-review.json",
+      "runtimeReviewAnswer": "y",
+      "runtimeAcceptedDate": "2026-10-03",
+      "runtimeAcceptedRevisionCommit": "0c1ebae25a6c9a591b3c3dbb7d6627cded5b58fd",
+      "runtimeAcceptedScope": "Displayed Zlagboard.Pro 2.0 fresh jug and incut selection views, wood finish, and normal-workout red Hang / blue Rest preview / red following Hang with both hand cues visible, together with the linked fresh 28-contact review and original/prior/native front-side-top comparisons. Adds app acceptance to the prior native geometry approval; display-estimate limits remain.",
+      "runtimeReview": "zlagboard-pro/app-review-2026-10-03/accepted-app-review.md"
     }
   ],
   "reviewScope": {
