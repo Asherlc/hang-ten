@@ -1,0 +1,39 @@
+--- v2/HangTen/Views/BoardModelView.swift
++++ v3/HangTen/Views/BoardModelView.swift
+@@ -131,7 +131,9 @@
+                 #if DEBUG
+                 if let startupLoadAttempt {
+                     BoardHighlightDiagnostic.shared.startupObservation("startup-board-load-return", fields: [
+-                        "loadAttempt": startupLoadAttempt, "taskCancelled": Task.isCancelled
++                        "loadAttempt": startupLoadAttempt,
++                        "sceneLifecycleToken": model.diagnosticLifecycleToken.uuidString,
++                        "taskCancelled": Task.isCancelled
+                     ])
+                 }
+                 #endif
+@@ -140,7 +142,8 @@
+                 #if DEBUG
+                 if let startupLoadAttempt {
+                     BoardHighlightDiagnostic.shared.startupObservation("startup-board-ready-published", fields: [
+-                        "loadAttempt": startupLoadAttempt
++                        "loadAttempt": startupLoadAttempt,
++                        "sceneLifecycleToken": model.diagnosticLifecycleToken.uuidString
+                     ])
+                 }
+                 #endif
+--- v2/HangTen/Views/RootView.swift
++++ v3/HangTen/Views/RootView.swift
+@@ -3244,7 +3244,13 @@
+ 		   WorkoutSessionPolicy.shouldPrepareCountdownAudio(
+ 			preparationState: audioCoach.countdownPreparationState
+ 		   ) {
++            #if DEBUG
++            recordStartupObservation("startup-audio-prepare-before", countdown: countdown, attemptID: startupAttemptID)
++            #endif
+ 			audioCoach.prepareCountdownAudio()
++            #if DEBUG
++            recordStartupObservation("startup-audio-prepare-after", countdown: countdown, attemptID: startupAttemptID)
++            #endif
+ 		}
+ 		if audioCuesEnabled,
+ 		   WorkoutSessionPolicy.shouldDeferCountdownStart(

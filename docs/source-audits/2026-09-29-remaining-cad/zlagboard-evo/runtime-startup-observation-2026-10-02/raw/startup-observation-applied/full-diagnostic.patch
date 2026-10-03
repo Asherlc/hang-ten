@@ -1,0 +1,2711 @@
+diff --git a/HangTen/Models/BoardModelRealityTypes.swift b/HangTen/Models/BoardModelRealityTypes.swift
+index 9d268157d..183ef252a 100644
+--- a/HangTen/Models/BoardModelRealityTypes.swift
++++ b/HangTen/Models/BoardModelRealityTypes.swift
+@@ -1,4 +1,7 @@
+ import Foundation
++#if DEBUG
++import Combine
++#endif
+ import RealityKit
+ import Metal
+ import SwiftUI
+@@ -164,6 +167,12 @@ enum BoardModelRealityError: Error, Equatable {
+ /// RealityKit-native scene that owns the full model lifecycle.
+ @MainActor
+ final class BoardModelRealityScene {
++    #if DEBUG
++    let diagnosticLifecycleToken = UUID()
++    var diagnosticSelection: (Set<String>?, BoardHighlightMode?) {
++        (lastHighlightedContactIDs, lastHighlightMode)
++    }
++    #endif
+     // Core state
+     let root = Entity()
+     let camera = PerspectiveCamera()
+@@ -228,6 +237,11 @@ final class BoardModelRealityScene {
+                 : plasticNodes.contains($0.nodeID) ? .plastic
+                 : graniteNodes.contains($0.nodeID) ? .granite : display.surfaceFinish)
+         })
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.boardSceneConstructed(scene: self)
++        }
++        #endif
+     }
+ 
+ /// Loads the USDZ model directly into RealityKit and binds descriptor nodes.
+@@ -295,6 +309,11 @@ final class BoardModelRealityScene {
+             case .neutral: material = Self.neutralMaterial()
+             }
+             modelEntity.model?.materials = [material]
++            #if DEBUG
++            if BoardHighlightDiagnostic.countsSyncDelivery {
++                BoardHighlightDiagnostic.shared.countSync(.baselineMaterialWrites, scene: self)
++            }
++            #endif
+             baselineMaterials[modelEntity] = material
+         }
+         for child in entity.children {
+@@ -715,7 +734,31 @@ final class BoardModelRealityScene {
+     }
+ 
+     func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {
++        #if DEBUG
++        if BoardHighlightDiagnostic.countsSyncDelivery {
++            BoardHighlightDiagnostic.shared.countSync(.highlightEntries, scene: self)
++        }
++        #endif
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled,
++           contactIDs != lastHighlightedContactIDs || mode != lastHighlightMode {
++            BoardHighlightDiagnostic.shared.capture("highlight-before", scene: self,
++                ids: contactIDs, mode: mode, priorIDs: lastHighlightedContactIDs,
++                priorMode: lastHighlightMode)
++        }
++        #endif
++        #if DEBUG
++        if BoardHighlightDiagnostic.countsSyncDelivery,
++           contactIDs == lastHighlightedContactIDs && mode == lastHighlightMode {
++            BoardHighlightDiagnostic.shared.countSync(.unchangedHighlightRequests, scene: self)
++        }
++        #endif
+         guard contactIDs != lastHighlightedContactIDs || mode != lastHighlightMode else { return }
++        #if DEBUG
++        if BoardHighlightDiagnostic.countsSyncDelivery {
++            BoardHighlightDiagnostic.shared.countSync(.highlightUpdatePasses, scene: self)
++        }
++        #endif
+         lastHighlightedContactIDs = contactIDs
+         lastHighlightMode = mode
+         // A shared mesh is selected when any of its logical contacts is selected.
+@@ -727,6 +770,11 @@ final class BoardModelRealityScene {
+                 ? (mode == .active ? Color.holdActive : Color.restBlue) : .clear
+             applyHighlight(to: entity, color: highlightColor, mode: mode)
+         }
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.capture("highlight-after", scene: self)
++        }
++        #endif
+     }
+ 
+     func contactID(for entity: Entity) -> String? {
+@@ -764,6 +812,11 @@ final class BoardModelRealityScene {
+     }
+ 
+     func frame(in size: CGSize) {
++        #if DEBUG
++        if BoardHighlightDiagnostic.countsSyncDelivery {
++            BoardHighlightDiagnostic.shared.countSync(.frameCalls, scene: self)
++        }
++        #endif
+         viewportSize = size
+         updateCameraTransform()
+     }
+@@ -925,6 +978,11 @@ final class BoardModelRealityScene {
+         if color == .clear {
+             // Restore the complete runtime finish, including a wood shader.
+             entity.model?.materials = [baseline]
++            #if DEBUG
++            if BoardHighlightDiagnostic.countsSyncDelivery, entity.model != nil {
++                BoardHighlightDiagnostic.shared.countSync(.clearMaterialWrites, scene: self)
++            }
++            #endif
+             return
+         }
+ 
+@@ -935,9 +993,19 @@ final class BoardModelRealityScene {
+         material.roughness = .init(floatLiteral: 0.8)
+ 
+         entity.model?.materials = [material]
++        #if DEBUG
++        if BoardHighlightDiagnostic.countsSyncDelivery, entity.model != nil {
++            BoardHighlightDiagnostic.shared.countSync(.highlightMaterialWrites, scene: self)
++        }
++        #endif
+     }
+ 
+     private func updateCameraTransform(animated: Bool = false, completion: (() -> Void)? = nil) {
++        #if DEBUG
++        if BoardHighlightDiagnostic.countsSyncDelivery {
++            BoardHighlightDiagnostic.shared.countSync(.cameraTransformEntries, scene: self)
++        }
++        #endif
+         // Update camera position based on orbit state and framing
+         let framing = currentFraming
+         let fov = camera.camera.fieldOfViewInDegrees
+@@ -957,7 +1025,17 @@ final class BoardModelRealityScene {
+         let yawedRight = simd_normalize(yaw.act(right))
+         let pitch = simd_quatf(angle: -orbitElevation, axis: yawedRight)
+         camera.position = target + pitch.act(yawedDirection) * zoomedDistance
++        #if DEBUG
++        if BoardHighlightDiagnostic.countsSyncDelivery {
++            BoardHighlightDiagnostic.shared.countSync(.cameraPositionWrites, scene: self)
++        }
++        #endif
+         camera.look(at: target, from: camera.position, relativeTo: nil)
++        #if DEBUG
++        if BoardHighlightDiagnostic.countsSyncDelivery {
++            BoardHighlightDiagnostic.shared.countSync(.cameraLookAtWrites, scene: self)
++        }
++        #endif
+ 
+         if animated {
+             // Animate camera transition
+@@ -1349,6 +1427,12 @@ final class BoardModelRealityLoader {
+             throw BoardModelRealityError.resourceUnavailable
+         }
+ 
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            // Open the existing process stream before the app's only scene constructor.
++            _ = BoardHighlightDiagnostic.shared
++        }
++        #endif
+         let scene = BoardModelRealityScene(
+             descriptor: media.descriptor,
+             display: media.display,
+@@ -1371,3 +1455,966 @@ final class BoardModelRealityLoader {
+         return scene
+     }
+ }
++
++#if DEBUG
++/// Temporary recorder; an explicit DEBUG gate enables the bounded visibility experiment.
++struct BoardDiagnosticSurfaceInputs: Equatable {
++    let boardID: String
++    let presentationID: String
++    let positionID: String?
++    let ids: Set<String>
++    let mode: BoardHighlightMode
++    let isDisplayOnly: Bool
++}
++
++@MainActor
++final class BoardHighlightDiagnostic {
++    static let isEnabled = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC"] == "1"
++    // Diagnostic launch constant: never toggled within an app process.
++    static let suppressesAllHandHosts = isEnabled
++        && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_ALL_HAND_HOSTS"] == "1"
++    static let usesPerspectiveHandCameras = isEnabled
++        && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_ALL_HAND_PERSPECTIVE"] == "1"
++    static let countsSyncDelivery = isEnabled
++        && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SYNC_DELIVERY_COUNTERS"] == "1"
++    static let shared = BoardHighlightDiagnostic()
++    private var handLifecycleCounts: [String: Int] = [
++        "single.constructor-entry": 0, "single.make-entry": 0,
++        "pair.constructor-entry": 0, "pair.make-entry": 0
++    ]
++    // Launch-gated, weak-only census. Values never own a board scene or entity.
++    private static let recordsPredecessorAttachments = isEnabled
++        && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PREDECESSOR_ATTACHMENT_CENSUS"] == "1"
++    @MainActor
++    private final class WeakBoardLifetime {
++        weak var wrapper: BoardModelRealityScene?
++        weak var root: Entity?
++        weak var camera: Entity?
++        var constructedIDs: [String: String] = [:]
++    }
++    private var boardLifetimes: [UUID: WeakBoardLifetime] = [:]
++    static let recordsHandLifetimes = isEnabled
++        && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HAND_LIFETIME_CENSUS"] == "1"
++    @MainActor
++    private final class WeakHandLifetime {
++        let kind: String
++        let constructedRootID: String
++        let constructedCameraID: String
++        weak var root: Entity?
++        weak var camera: Entity?
++        var configuredObserved = false
++        var registrationIssue: String?
++        init(kind: String, root: Entity, camera: Entity) {
++            self.kind = kind; self.root = root; self.camera = camera
++            constructedRootID = String(describing: ObjectIdentifier(root))
++            constructedCameraID = String(describing: ObjectIdentifier(camera))
++        }
++    }
++    private struct HandViewObservation {
++        var lifetimes: Set<UUID> = []
++        var lastSwiftUIEvent = "unobserved"
++        var lastSwiftUIEventSequence: Int?
++        var lastSwiftUIEventUptime: TimeInterval?
++    }
++    private var handLifetimes: [UUID: WeakHandLifetime] = [:]
++    private var handViews: [UUID: HandViewObservation] = [:]
++
++    private func observeHandLifetime(kind: String, event: String, root: Entity,
++                                     camera: Entity, lifetime: UUID, view: UUID?) {
++        if event == "constructor-entry" {
++            if let previous = handLifetimes[lifetime] {
++                previous.registrationIssue = "duplicate-lifetime-constructor"
++            } else {
++                handLifetimes[lifetime] = WeakHandLifetime(kind: kind, root: root, camera: camera)
++            }
++        }
++        guard let record = handLifetimes[lifetime] else { return }
++        if record.kind != kind || record.root !== root || record.camera !== camera {
++            record.registrationIssue = "lifetime-entity-mismatch"
++        }
++        if event == "make-entry", let view {
++            handViews[view, default: HandViewObservation()].lifetimes.insert(lifetime)
++        }
++    }
++
++    /// A value-only callback: never load sceneStorage.scene to observe appearance.
++    func handViewLifecycle(view: UUID, event: String) {
++        guard Self.recordsHandLifetimes else { return }
++        handViews[view, default: HandViewObservation()].lastSwiftUIEvent = event
++        handViews[view, default: HandViewObservation()].lastSwiftUIEventSequence = sequence + 1
++        handViews[view, default: HandViewObservation()].lastSwiftUIEventUptime = ProcessInfo.processInfo.systemUptime
++        emit(["event": "hand-view-lifecycle", "viewToken": view.uuidString,
++              "swiftUIEvent": event,
++              "knownLifetimeTokens": handViews[view]!.lifetimes.map(\.uuidString).sorted()])
++    }
++
++    private func handLifetimeSnapshot() -> [[String: Any]] {
++        func entity(_ value: Entity?) -> [String: Any] {
++            guard let value else { return ["alive": false] }
++            return ["alive": true, "entityID": identity(value),
++                "parentEntityID": value.parent.map(identity) ?? "nil",
++                "realitySceneID": value.scene.map(identity) ?? "nil",
++                "enabled": value.isEnabled, "isActive": value.isActive,
++                "orthographicComponent": value.components[OrthographicCameraComponent.self] != nil,
++                "perspectiveComponent": value.components[PerspectiveCameraComponent.self] != nil]
++        }
++        return handLifetimes.keys.sorted { $0.uuidString < $1.uuidString }.map { token in
++            let record = handLifetimes[token]!
++            let views: [[String: Any]] = handViews.keys.sorted { $0.uuidString < $1.uuidString }
++                .filter { handViews[$0]!.lifetimes.contains(token) }.map { view in
++                    let observation = handViews[view]!
++                    return ["viewToken": view.uuidString,
++                        "allAssociatedLifetimeTokens": observation.lifetimes.map(\.uuidString).sorted(),
++                        "lastSwiftUIEvent": observation.lastSwiftUIEvent,
++                        "lastSwiftUIEventSequence": observation.lastSwiftUIEventSequence.map { $0 as Any } ?? NSNull(),
++                        "lastSwiftUIEventUptime": observation.lastSwiftUIEventUptime.map { $0 as Any } ?? NSNull()]
++                }
++            return ["handLifetimeToken": token.uuidString, "kind": record.kind,
++                "constructedRootID": record.constructedRootID,
++                "constructedCameraID": record.constructedCameraID,
++                "configuredObserved": record.configuredObserved,
++                "registrationIssue": record.registrationIssue ?? "nil",
++                "root": entity(record.root), "camera": entity(record.camera),
++                "viewObservations": views]
++        }
++    }
++
++    private let enabled: Bool
++    private var sink: FileHandle?
++    private var sequence = 0
++    private var failed = false
++    private struct ViewSceneKey: Hashable {
++        let scene: UUID
++        let view: UUID
++    }
++    // Application-side call/assignment counts, including repeated equal values.
++    // A nonnil component setter does not prove a render commit or displayed frame.
++    enum SyncMetric: String, CaseIterable {
++        case realityMakeEntries, realityUpdateEntries, applySyncEntries, applySyncCompletions
++        case cameraComponentWrites, frameCalls
++        case cameraTransformEntries, cameraPositionWrites, cameraLookAtWrites
++        case highlightEntries, unchangedHighlightRequests, highlightUpdatePasses
++        case baselineMaterialWrites, clearMaterialWrites, highlightMaterialWrites
++    }
++    private var syncSceneCounts: [UUID: [String: Int]] = [:]
++    private var syncViewCounts: [ViewSceneKey: [String: Int]] = [:]
++    private var syncSceneFirstUptime: [UUID: [String: Double]] = [:]
++    private var syncSceneLatestUptime: [UUID: [String: Double]] = [:]
++    private var syncViewFirstUptime: [ViewSceneKey: [String: Double]] = [:]
++    private var syncViewLatestUptime: [ViewSceneKey: [String: Double]] = [:]
++    private var syncContexts: [UUID: [UUID]] = [:]
++    private var syncContextMismatches: [UUID: Int] = [:]
++
++    func countSync(_ metric: SyncMetric, scene: BoardModelRealityScene, view: UUID? = nil) {
++        guard Self.countsSyncDelivery else { return }
++        let sceneID = scene.diagnosticLifecycleToken
++        let uptime = ProcessInfo.processInfo.systemUptime
++        syncSceneCounts[sceneID, default: [:]][metric.rawValue, default: 0] += 1
++        if syncSceneFirstUptime[sceneID]?[metric.rawValue] == nil {
++            syncSceneFirstUptime[sceneID, default: [:]][metric.rawValue] = uptime
++        }
++        syncSceneLatestUptime[sceneID, default: [:]][metric.rawValue] = uptime
++        // Model writes are attributed only to a real synchronous applySync call stack.
++        // Calls outside that scope remain scene-only; never infer the last visible view.
++        if let viewID = view ?? syncContexts[sceneID]?.last {
++            let key = ViewSceneKey(scene: sceneID, view: viewID)
++            syncViewCounts[key, default: [:]][metric.rawValue, default: 0] += 1
++            if syncViewFirstUptime[key]?[metric.rawValue] == nil {
++                syncViewFirstUptime[key, default: [:]][metric.rawValue] = uptime
++            }
++            syncViewLatestUptime[key, default: [:]][metric.rawValue] = uptime
++        }
++    }
++
++    func beginSync(scene: BoardModelRealityScene, view: UUID) {
++        guard Self.countsSyncDelivery else { return }
++        let sceneID = scene.diagnosticLifecycleToken
++        syncContexts[sceneID, default: []].append(view)
++        countSync(.applySyncEntries, scene: scene, view: view)
++    }
++
++    func endSync(scene: BoardModelRealityScene, view: UUID) {
++        guard Self.countsSyncDelivery else { return }
++        let sceneID = scene.diagnosticLifecycleToken
++        guard syncContexts[sceneID]?.last == view else {
++            syncContextMismatches[sceneID, default: 0] += 1
++            return
++        }
++        countSync(.applySyncCompletions, scene: scene, view: view)
++        syncContexts[sceneID]?.removeLast()
++    }
++
++    private func syncCounterSnapshot(sceneID: UUID) -> [String: Any] {
++        func filled(_ values: [String: Int]) -> [String: Int] {
++            Dictionary(uniqueKeysWithValues: SyncMetric.allCases.map { ($0.rawValue, values[$0.rawValue] ?? 0) })
++        }
++        let viewRows: [[String: Any]] = syncViewCounts.keys.filter { $0.scene == sceneID }
++            .sorted { $0.view.uuidString < $1.view.uuidString }.map { key in
++                ["viewToken": key.view.uuidString, "counts": filled(syncViewCounts[key] ?? [:]),
++                 "firstUptime": syncViewFirstUptime[key] ?? [:],
++                 "latestUptime": syncViewLatestUptime[key] ?? [:]]
++            }
++        return ["version": 2, "sceneToken": sceneID.uuidString,
++                "sceneTotals": filled(syncSceneCounts[sceneID] ?? [:]), "views": viewRows,
++                "firstUptime": syncSceneFirstUptime[sceneID] ?? [:],
++                "latestUptime": syncSceneLatestUptime[sceneID] ?? [:],
++                "semanticRevision": syncSceneCounts[sceneID]?[SyncMetric.highlightUpdatePasses.rawValue] ?? 0,
++                "synchronousScopeDepth": syncContexts[sceneID]?.count ?? 0,
++                "scopeMismatches": syncContextMismatches[sceneID] ?? 0]
++    }
++
++    static let boardDetachTrial = isEnabled
++        && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DETACH_TRIAL"] == "1"
++    // Observation/tagging/navigation can run without intentional retention or detachment.
++    static let observesBoardHosts = boardDetachTrial || (isEnabled
++        && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_HOST_OBSERVATION"] == "1")
++    private static let detachesTrainHost = boardDetachTrial
++        && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_DETACH_DISAPPEARING_BOARD_HOST"] == "1"
++    @MainActor
++    private final class TrialHost {
++        let token = UUID()
++        weak var model: BoardModelRealityScene?
++        weak var root: Entity?
++        weak var camera: Entity?
++        // Legacy trial only. Observation-only records own no model or resource lease.
++        let retainedModel: BoardModelRealityScene?
++        let train: Bool
++        weak var parent: Entity?
++        weak var actualScene: RealityKit.Scene?
++        var observed = false
++        var disappeared = false
++        var detached = false
++        var invalid: String?
++        init(model: BoardModelRealityScene, train: Bool) {
++            self.model = model; self.root = model.root; self.camera = model.camera
++            self.retainedModel = BoardHighlightDiagnostic.boardDetachTrial ? model : nil
++            self.train = train
++        }
++    }
++    private var trialHosts: [ViewSceneKey: TrialHost] = [:]
++    private var trialOwners: [UUID: UUID] = [:]
++
++    /// Called only after both content.add calls. Scene attachment may still be pending.
++    func trialHostAdded(scene: BoardModelRealityScene, view: UUID, train: Bool) {
++        guard Self.observesBoardHosts else { return }
++        let key = ViewSceneKey(scene: scene.diagnosticLifecycleToken, view: view)
++        if let previous = trialHosts[key] {
++            // Observe normal repeated make, but never detach using ambiguous ownership.
++            previous.invalid = "repeated-make"
++            trialOwners[key.scene] = UUID()
++            return
++        }
++        let host = TrialHost(model: scene, train: train)
++        trialHosts[key] = host
++        trialOwners[key.scene] = host.token
++        observeTrialAttachment(scene: scene, view: view)
++    }
++
++    private func observeTrialAttachment(scene: BoardModelRealityScene, view: UUID) {
++        guard Self.observesBoardHosts,
++              let host = trialHosts[ViewSceneKey(scene: scene.diagnosticLifecycleToken, view: view)],
++              trialOwners[scene.diagnosticLifecycleToken] == host.token,
++              !host.disappeared, host.invalid == nil else { return }
++        let root = scene.root, camera = scene.camera
++        if host.observed {
++            guard let parent = host.parent, let actual = host.actualScene,
++                  root.parent === parent, camera.parent === parent,
++                  root.scene === actual, camera.scene === actual else {
++                host.invalid = "attachment-changed-before-disappear"; return
++            }
++        } else if let parent = root.parent, camera.parent === parent,
++                  let actual = root.scene, camera.scene === actual {
++            host.parent = parent; host.actualScene = actual; host.observed = true
++        }
++    }
++
++    private func trialHostSnapshot() -> [[String: Any]] {
++        trialHosts.keys.sorted { ($0.scene.uuidString + $0.view.uuidString)
++            < ($1.scene.uuidString + $1.view.uuidString) }.map { key in
++            let host = trialHosts[key]!
++            let root = host.root, camera = host.camera
++            return ["sceneLifecycleToken": key.scene.uuidString, "viewToken": key.view.uuidString,
++                "ownerToken": host.token.uuidString, "trainMarked": host.train,
++                "modelRetainedForTrial": host.retainedModel != nil,
++                "modelAlive": host.model != nil, "rootAlive": root != nil,
++                "cameraAlive": camera != nil, "attachmentObserved": host.observed,
++                "currentOwner": trialOwners[key.scene] == host.token,
++                "disappeared": host.disappeared, "detached": host.detached,
++                "invalid": host.invalid ?? "nil",
++                "recordedParentID": host.parent.map(identity) ?? "nil",
++                "recordedActualSceneID": host.actualScene.map(identity) ?? "nil",
++                "rootParentID": root?.parent.map(identity) ?? "nil",
++                "cameraParentID": camera?.parent.map(identity) ?? "nil",
++                "rootActualSceneID": root?.scene.map(identity) ?? "nil",
++                "cameraActualSceneID": camera?.scene.map(identity) ?? "nil",
++                "reattachedAfterDetach": host.detached && (root?.scene != nil || camera?.scene != nil)]
++        }
++    }
++
++    func trialHostDisappeared(scene: BoardModelRealityScene, view: UUID) {
++        guard Self.observesBoardHosts else { return }
++        let key = ViewSceneKey(scene: scene.diagnosticLifecycleToken, view: view)
++        guard let host = trialHosts[key] else { return }
++        // Last synchronous ownership observation; no suspension between guard and action.
++        observeTrialAttachment(scene: scene, view: view)
++        let alreadyDisappeared = host.disappeared
++        host.disappeared = true
++        capture("detach-trial-before", scene: scene, view: view)
++        let root = scene.root, camera = scene.camera
++        if Self.detachesTrainHost && host.train {
++            if !alreadyDisappeared, host.invalid == nil, host.observed,
++               host.model === scene, trialOwners[key.scene] == host.token,
++               let parent = host.parent, let actual = host.actualScene,
++               root.parent === parent, camera.parent === parent,
++               root.scene === actual, camera.scene === actual {
++                // Never remove the shared parent or touch another host's entities.
++                root.removeFromParent()
++                camera.removeFromParent()
++                host.detached = root.parent == nil && camera.parent == nil
++                    && root.scene == nil && camera.scene == nil
++                if !host.detached { host.invalid = "detach-did-not-clear-scene-membership" }
++            } else {
++                host.invalid = host.invalid ?? "detach-ownership-guard-rejected"
++            }
++        }
++        capture("detach-trial-after", scene: scene, view: view)
++    }
++
++    private var samplers: [ViewSceneKey: Task<Void, Never>] = [:]
++    private var viewSignatures: [ViewSceneKey: String] = [:]
++    private var requestedIDs: [UUID: Set<String>] = [:]
++    private var requestedModes: [UUID: String] = [:]
++    private var resolvedSurfaceInputs: [UUID: [String: Any]] = [:]
++    private var visibilityPending: Set<UUID> = []
++    private var visibilityStarted: Set<UUID> = []
++    private var visibilityTasks: [UUID: Task<Void, Never>] = [:]
++    private var visibilityRestores: [UUID: () -> Void] = [:]
++    private weak var secondHostRoot: Entity?
++    private weak var secondHostCamera: Entity?
++    private var secondHostToken: UUID?
++    private var viewports: [UUID: CGSize] = [:]
++    private weak var standaloneScene: BoardModelRealityScene?
++    private var standaloneViewToken: UUID?
++    private var standaloneViewport: CGSize = .zero
++    private var standaloneViewportChanged: TimeInterval = 0
++    private var standaloneCounter: BoardDiagnosticUpdateCounter?
++    private var standaloneSubscription: (any Cancellable)?
++
++    private init() {
++        let env = ProcessInfo.processInfo.environment
++        enabled = Self.isEnabled
++        guard enabled else { return }
++        do {
++            let rawRun = env["HANGTEN_REVIEW_DIAGNOSTIC_RUN"] ?? "placid-badger-cad-second-half"
++            let run = String(rawRun.filter { $0.isASCII && ($0.isLetter || $0.isNumber || $0 == "-" || $0 == "_") }.prefix(100))
++            guard !run.isEmpty else { throw CocoaError(.fileWriteInvalidFileName) }
++            let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
++                .appendingPathComponent("HighlightDiagnostic-\(run)", isDirectory: true)
++            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
++            // Unique per process: never append to or truncate an earlier evidence file.
++            let url = directory.appendingPathComponent("events-\(UUID().uuidString).jsonl")
++            guard FileManager.default.createFile(atPath: url.path, contents: nil) else {
++                throw CocoaError(.fileWriteUnknown)
++            }
++            sink = try FileHandle(forWritingTo: url)
++            emit(["event": "recorder-open", "path": url.path,
++                  "processID": ProcessInfo.processInfo.processIdentifier,
++                  "handLifecycleInstrumentationVersion": 1,
++                  "suppressesAllHandHosts": Self.suppressesAllHandHosts,
++                  "usesPerspectiveHandCameras": Self.usesPerspectiveHandCameras,
++                  "syncDeliveryCountersEnabled": Self.countsSyncDelivery])
++        } catch { fail(error) }
++    }
++
++    /// Sparse lifetime observations only; no SwiftUI state or scene mutation.
++    func handLifecycle(kind: String, event: String, root: Entity, camera: Entity,
++                       lifetime: UUID, view: UUID? = nil) {
++        guard enabled else { return }
++        let key = "\(kind).\(event)"
++        guard let previous = handLifecycleCounts[key] else { return }
++        handLifecycleCounts[key] = previous + 1
++        var value: [String: Any] = ["event": "hand-lifecycle", "handKind": kind,
++            "lifecycleEvent": event, "handRootID": identity(root)]
++        if Self.recordsHandLifetimes {
++            observeHandLifetime(kind: kind, event: event, root: root,
++                                camera: camera, lifetime: lifetime, view: view)
++            value["handLifetimeToken"] = lifetime.uuidString
++            value["handCameraID"] = identity(camera)
++            if let view { value["viewToken"] = view.uuidString }
++        }
++        emit(value)
++    }
++
++    /// Sparse configuration/reset evidence; never called from body or per frame.
++    func handCamera(kind: String, event: String, camera: Entity, lifetime: UUID,
++                    points: [SIMD4<Float>]? = nil) {
++        guard enabled else { return }
++        let perspective = camera.components[PerspectiveCameraComponent.self]
++        let orthographic = camera.components[OrthographicCameraComponent.self]
++        var value: [String: Any] = ["event": "hand-camera", "handKind": kind,
++            "cameraEvent": event, "handCameraID": String(describing: ObjectIdentifier(camera)),
++            "cameraTransform": matrix(camera),
++            "perspectivePresent": perspective != nil, "orthographicPresent": orthographic != nil]
++        if Self.recordsHandLifetimes {
++            value["handLifetimeToken"] = lifetime.uuidString
++            if let record = handLifetimes[lifetime] {
++                if record.camera !== camera || record.kind != kind {
++                    record.registrationIssue = "configured-camera-mismatch"
++                }
++                if event == "configured" { record.configuredObserved = true }
++            }
++        }
++        if let perspective {
++            value["near"] = perspective.near
++            value["far"] = perspective.far
++            value["fieldOfViewInDegrees"] = perspective.fieldOfViewInDegrees
++            value["fieldOfViewOrientation"] = String(describing: perspective.fieldOfViewOrientation)
++        }
++        if let orthographic {
++            value["near"] = orthographic.near
++            value["far"] = orthographic.far
++            value["orthographicScale"] = orthographic.scale
++        }
++        if let points {
++            let inverse = simd_inverse(camera.transform.matrix)
++            let depths = points.map { -(inverse * $0).z }
++            value["framingVertexCount"] = points.count
++            value["allDepthsFinite"] = depths.allSatisfy(\.isFinite)
++            if !depths.isEmpty, depths.allSatisfy(\.isFinite) {
++                value["minimumDepth"] = depths.min()!
++                value["maximumDepth"] = depths.max()!
++                value["allDepthsInsideUnchangedClips"] = depths.allSatisfy { $0 > 0.1 && $0 < 100 }
++            }
++        }
++        emit(value)
++    }
++
++    /// Sparse actual navigation-state observation; no body logging or mutation.
++    func trainNavigation(stage: String, boardID: String, planID: String?,
++                         presentationCount: Int, showsWorkout: Bool,
++                         clearSlotRequested: Bool) {
++        guard Self.observesBoardHosts else { return }
++        let env = ProcessInfo.processInfo.environment
++        emit(["event": "train-navigation-source", "stage": stage,
++            "boardID": boardID, "planID": planID ?? "nil",
++            "presentationCount": presentationCount,
++            "showsDeepLinkedWorkout": showsWorkout,
++            "sourceBranchRequested": clearSlotRequested ? "clear-slot" : "board-map",
++            "unmountTrainForWorkoutRequested": env["HANGTEN_REVIEW_UNMOUNT_TRAIN_FOR_WORKOUT"] == "1",
++            "initialTrainSuppressionRequested": env["HANGTEN_REVIEW_SUPPRESS_TRAIN_BOARD_HOST"] == "1",
++            "detachRequested": Self.detachesTrainHost,
++            "retentionRequested": Self.boardDetachTrial,
++            "trialHosts": trialHostSnapshot()])
++    }
++
++    /// Once per native board scene init, before its asynchronous USDZ load.
++    func boardSceneConstructed(scene: BoardModelRealityScene) {
++        guard enabled else { return }
++        if Self.recordsPredecessorAttachments {
++            let lifetime = WeakBoardLifetime()
++            lifetime.wrapper = scene
++            lifetime.root = scene.root
++            lifetime.camera = scene.camera
++            lifetime.constructedIDs = ["wrapperID": identity(scene),
++                "rootID": identity(scene.root), "cameraID": identity(scene.camera),
++                "modelSHA256": scene.descriptorForTesting.modelSHA256]
++            boardLifetimes[scene.diagnosticLifecycleToken] = lifetime
++        }
++        emit(["event": "board-scene-constructed",
++              "sceneLifecycleToken": scene.diagnosticLifecycleToken.uuidString,
++              "sceneID": identity(scene), "rootID": identity(scene.root),
++              "cameraID": identity(scene.camera),
++              "modelSHA256": scene.descriptorForTesting.modelSHA256,
++              "trainBoardSuppressionRequested": ProcessInfo.processInfo.environment[
++                  "HANGTEN_REVIEW_SUPPRESS_TRAIN_BOARD_HOST"] == "1"])
++    }
++
++    /// Point observations only: retention and entity attachment do not prove rendering.
++    private func boardLifetimeSnapshot() -> [[String: Any]] {
++        func entitySnapshot(_ entity: Entity?) -> [String: Any] {
++            guard let entity else { return ["alive": false] }
++            return ["alive": true, "entityID": identity(entity),
++                "parentEntityID": entity.parent.map(identity) ?? "nil",
++                "realitySceneID": entity.scene.map(identity) ?? "nil",
++                "enabled": entity.isEnabled, "isActive": entity.isActive]
++        }
++        return boardLifetimes.keys.sorted { $0.uuidString < $1.uuidString }.map { token in
++            let lifetime = boardLifetimes[token]!
++            return ["sceneLifecycleToken": token.uuidString,
++                "constructedIDs": lifetime.constructedIDs,
++                "wrapperAlive": lifetime.wrapper != nil,
++                "root": entitySnapshot(lifetime.root),
++                "camera": entitySnapshot(lifetime.camera)]
++        }
++    }
++
++    private func fail(_ error: Error) {
++        failed = true
++        let text = "[BoardHighlightDiagnostic] recorder failure: \(error)\n"
++        try? FileHandle.standardError.write(contentsOf: Data(text.utf8))
++    }
++
++    private func emit(_ fields: [String: Any]) {
++        guard enabled, !failed, let sink else { return }
++        // Hard bound: the diagnostic never becomes an indefinite background logger.
++        guard sequence < 4096 else { return }
++        sequence += 1
++        var value = fields
++        value["handLifecycleCounts"] = handLifecycleCounts
++        value["sequence"] = sequence
++        value["epoch"] = Date().timeIntervalSince1970
++        value["uptime"] = ProcessInfo.processInfo.systemUptime
++        value["complete"] = true
++        if sequence == 4096 { value["eventLimitReached"] = true }
++        do {
++            var data = try JSONSerialization.data(withJSONObject: value, options: [.sortedKeys])
++            data.append(0x0a)
++            try sink.write(contentsOf: data)
++            // Direct FileHandle writes bypass stdio buffering; synchronize at sparse markers.
++            if fields["event"] as? String == "sample-end"
++                || fields["event"] as? String == "view-disappear" || sequence == 4096 {
++                try sink.synchronize()
++            }
++        } catch { fail(error) }
++    }
++
++    func standaloneViewportMatches(_ expected: CGSize) -> Bool {
++        standaloneViewport == expected
++    }
++
++    var standaloneIsReady: Bool {
++        guard let standaloneScene else { return false }
++        return standaloneScene.root.scene != nil && standaloneScene.camera.isActive
++            && standaloneViewport.width > 0 && standaloneViewport.height > 0
++            && ProcessInfo.processInfo.systemUptime - standaloneViewportChanged >= 1
++            && UIApplication.shared.applicationState == .active
++    }
++
++    func standaloneSchedule(baseUptime: TimeInterval, viewport: CGSize,
++                            phaseDurations: [TimeInterval], phaseStartOffsets: [TimeInterval],
++                            captureOffsets: [TimeInterval], snapshotOffsets: [[TimeInterval]],
++                            completionTailOffset: TimeInterval, timingProfile: String) {
++        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SCENE_UPDATE_COUNTER"] == "1",
++           let actualScene = standaloneScene?.root.scene {
++            let counter = BoardDiagnosticUpdateCounter()
++            standaloneCounter = counter
++            standaloneSubscription = actualScene.subscribe(to: SceneEvents.Update.self) { [weak counter] _ in
++                counter?.increment()
++            }
++        }
++        var schedule: [String: Any] = ["event": "standalone-schedule", "baseUptime": baseUptime,
++              "driver": ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STANDALONE_DRIVER"] ?? "A",
++              "baseEpoch": Date().timeIntervalSince1970 + baseUptime - ProcessInfo.processInfo.systemUptime,
++              "phases": ["clear", "active", "preview", "active", "preview"],
++              "phaseDurations": phaseDurations, "phaseStartOffsets": phaseStartOffsets,
++              "totalDuration": phaseDurations.reduce(0, +), "completionTailOffset": completionTailOffset,
++              "captureOffsets": captureOffsets, "snapshotOffsets": snapshotOffsets,
++              "timingProfileLabel": timingProfile,
++              "configuredViewportPoints": [Double(viewport.width), Double(viewport.height)],
++              "actualViewportPoints": [Double(standaloneViewport.width), Double(standaloneViewport.height)],
++              "applicationCensus": applicationCensus()]
++        if let uniformDuration = phaseDurations.first,
++           phaseDurations.allSatisfy({ $0 == uniformDuration }) {
++            schedule["phaseSeconds"] = uniformDuration
++        }
++        emit(schedule)
++    }
++
++    func standaloneSnapshot(_ event: String) {
++        guard let standaloneScene else { return }
++        capture(event, scene: standaloneScene, view: standaloneViewToken)
++    }
++
++    func finishStandaloneObservation() {
++        standaloneSnapshot("standalone-observation-end")
++        standaloneSubscription?.cancel()
++        standaloneSubscription = nil
++        standaloneCounter = nil
++    }
++
++    func harnessObservedSelection(state: String, ids: Set<String>, mode: BoardHighlightMode,
++                                  positionID: String?, viewport: CGSize) {
++        guard enabled else { return }
++        emit(["event": "standalone-observed-selection", "state": state,
++              "ids": ids.sorted(), "mode": String(describing: mode),
++              "positionID": positionID ?? "nil",
++              "viewportPoints": [Double(viewport.width), Double(viewport.height)]])
++    }
++
++    static let recordsStartupObservation = isEnabled
++        && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STARTUP_OBSERVATION"] == "1"
++
++    // Scalar diagnostic association only; never retain coach, task, view, or scene.
++    private var startupAppearances: [String: Int] = [:]
++    private var startupAmbiguous: Set<String> = []
++    private var startupScopes: [String: [String]] = [:]
++    private var startupParents: [String: String] = [:]
++    private var startupPending: [String: String] = [:]
++    private var startupArmed: [String: String] = [:]
++
++    func startupContextAppeared(_ context: String) {
++        guard Self.recordsStartupObservation else { return }
++        startupAppearances[context, default: 0] += 1
++        if startupAppearances[context] != 1 || startupAppearances.count != 1 {
++            startupAssociationIssue(context, reason: "multiple-workout-appearances-or-contexts")
++        }
++        startupObservation("startup-context-appear", fields: ["contextID": context,
++            "appearanceCount": startupAppearances[context] ?? 0])
++    }
++    private func startupAssociationIssue(_ context: String, reason: String) {
++        startupAmbiguous.insert(context)
++        startupObservation("startup-association-ambiguous", fields: ["contextID": context, "reason": reason])
++    }
++    func startupAssociationValid(_ context: String) -> Bool {
++        startupAppearances[context] == 1 && startupAppearances.count == 1 && !startupAmbiguous.contains(context)
++    }
++    func startupCurrentAttempt(_ context: String) -> String? { startupScopes[context]?.last }
++    func startupParentAttempt(_ attempt: String) -> String? { startupParents[attempt] }
++    func startupBeginRequest(_ context: String) -> String? {
++        guard Self.recordsStartupObservation else { return nil }
++        let attempt = UUID().uuidString
++        if let pending = startupPending[context], startupCurrentAttempt(context) != pending {
++            startupAssociationIssue(context, reason: "request-overlaps-unconsumed-deferred-request")
++        }
++        if let parent = startupCurrentAttempt(context) { startupParents[attempt] = parent }
++        startupPushAttempt(context, attempt: attempt)
++        return attempt
++    }
++    func startupPushAttempt(_ context: String, attempt: String?) {
++        guard Self.recordsStartupObservation, let attempt else { return }
++        startupScopes[context, default: []].append(attempt)
++    }
++    func startupPopAttempt(_ context: String, attempt: String?) {
++        guard Self.recordsStartupObservation, let attempt else { return }
++        guard startupScopes[context]?.last == attempt else {
++            startupAssociationIssue(context, reason: "synchronous-attempt-scope-mismatch"); return
++        }
++        startupScopes[context]?.removeLast()
++    }
++    func startupDeferRequest(_ context: String, attempt: String?) {
++        guard Self.recordsStartupObservation, let attempt else { return }
++        if let old = startupPending[context], old != attempt {
++            startupAssociationIssue(context, reason: "deferred-request-overwrite")
++        }
++        startupPending[context] = attempt
++    }
++    func startupTakeDeferred(_ context: String) -> String? {
++        guard Self.recordsStartupObservation else { return nil }
++        let attempt = startupPending.removeValue(forKey: context)
++        guard let attempt, startupAssociationValid(context) else {
++            startupAssociationIssue(context, reason: "missing-or-ambiguous-deferred-association"); return nil
++        }
++        return attempt
++    }
++    func startupArmRequest(_ context: String, attempt: String?) {
++        guard Self.recordsStartupObservation, let attempt else { return }
++        if startupArmed[context] != nil { startupAssociationIssue(context, reason: "armed-request-overwrite") }
++        startupArmed[context] = attempt
++    }
++    func startupArmCompleted(_ context: String, attempt: String?) {
++        guard Self.recordsStartupObservation, let attempt else { return }
++        guard startupArmed[context] == attempt else {
++            startupAssociationIssue(context, reason: "old-task-completed-after-arm-association-changed"); return
++        }
++        startupArmed.removeValue(forKey: context)
++    }
++    func startupCancellationRequested(_ context: String, taskPresent: Bool, pendingPresent: Bool, site: String) {
++        guard Self.recordsStartupObservation else { return }
++        if (taskPresent && startupArmed[context] == nil) || (pendingPresent && startupPending[context] == nil) {
++            startupAssociationIssue(context, reason: "cancellation-target-association-missing")
++        }
++        startupObservation("startup-cancellation-requested", fields: ["contextID": context,
++            "site": site, "taskPresent": taskPresent, "pendingPresent": pendingPresent,
++            "armedAttemptID": startupArmed[context].map { $0 as Any } ?? NSNull(),
++            "deferredAttemptID": startupPending[context].map { $0 as Any } ?? NSNull(),
++            "associationValid": startupAssociationValid(context)])
++        startupArmed.removeValue(forKey: context)
++        startupPending.removeValue(forKey: context)
++    }
++
++    // Scalar-only startup markers: no UIKit census, entity access, or new scheduling.
++    func startupObservation(_ event: String, fields: [String: Any]) {
++        guard Self.recordsStartupObservation else { return }
++        var row = fields
++        row["event"] = event
++        emit(row)
++    }
++
++    func harnessEvent(_ event: String, state: String, viewport: CGSize) {
++        guard enabled else { return }
++        emit(["event": event, "state": state,
++              "viewportPoints": [Double(viewport.width), Double(viewport.height)],
++              "applicationCensus": applicationCensus()])
++    }
++
++    func surfaceInputs(_ inputs: BoardDiagnosticSurfaceInputs, scene: BoardModelRealityScene) {
++        guard enabled else { return }
++        let row: [String: Any] = ["boardID": inputs.boardID,
++            "presentationID": inputs.presentationID, "positionID": inputs.positionID ?? "nil",
++            "ids": inputs.ids.sorted(), "mode": String(describing: inputs.mode),
++            "isDisplayOnly": inputs.isDisplayOnly]
++        resolvedSurfaceInputs[scene.diagnosticLifecycleToken] = row
++        emit(["event": "surface-inputs", "sceneLifecycleToken": scene.diagnosticLifecycleToken.uuidString,
++              "resolvedSurfaceInputs": row])
++    }
++
++    private func applicationCensus() -> [String: Any] {
++        let app = UIApplication.shared
++        let scenes: [[String: Any]] = app.connectedScenes.compactMap { scene in
++            guard let windowScene = scene as? UIWindowScene else { return nil }
++            return ["sceneID": identity(windowScene),
++                    "sessionID": windowScene.session.persistentIdentifier,
++                    "activationState": windowScene.activationState.rawValue,
++                    "interfaceOrientation": windowScene.interfaceOrientation.rawValue,
++                    "windows": windowScene.windows.map { window -> [String: Any] in
++                        var counts: [String: Int] = [:]
++                        var placements: [[String: Any]] = []
++                        func visit(_ view: UIView) {
++                            let name = String(reflecting: type(of: view))
++                            if name.contains("Reality") || name.contains("ARView") {
++                                counts[name, default: 0] += 1
++                                let rect = view.convert(view.bounds, to: window)
++                                var placement: [String: Any] = ["viewID": String(describing: ObjectIdentifier(view)), "class": name,
++                                    "frameInWindow": [Double(rect.minX), Double(rect.minY), Double(rect.width), Double(rect.height)],
++                                    "hidden": view.isHidden, "alpha": Double(view.alpha)]
++                                if let host = view as? ARView { placement["realitySceneID"] = String(describing: ObjectIdentifier(host.scene)) }
++                                placements.append(placement)
++                            }
++                            view.subviews.forEach(visit)
++                        }
++                        visit(window)
++                        return ["windowID": identity(window), "hidden": window.isHidden,
++                                "alpha": Double(window.alpha), "key": window.isKeyWindow,
++                                "bounds": [Double(window.bounds.width), Double(window.bounds.height)],
++                                "rendererNamedViewClasses": counts, "rendererPlacements": placements]
++                    }]
++        }
++        return ["applicationState": app.applicationState.rawValue, "windowScenes": scenes,
++                "standaloneGate": ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STANDALONE_BOARD"] == "1"]
++    }
++
++    private func identity(_ object: AnyObject) -> String { String(describing: ObjectIdentifier(object)) }
++    private func renderMembership(root: Entity, camera: Entity) -> [String: Any] {
++        var result: [String: Any] = [
++            "rootEntityID": identity(root), "cameraEntityID": identity(camera),
++            "rootRealitySceneID": root.scene.map(identity) ?? "nil",
++            "cameraRealitySceneID": camera.scene.map(identity) ?? "nil",
++            "rootActive": root.isActive, "cameraActive": camera.isActive,
++            "orthographic": camera.components[OrthographicCameraComponent.self] != nil,
++            "perspective": camera.components[PerspectiveCameraComponent.self] != nil,
++            "cameraTransform": matrix(camera)]
++        if let c = camera.components[OrthographicCameraComponent.self] {
++            result["near"] = c.near; result["far"] = c.far; result["scale"] = c.scale
++        }
++        if let c = camera.components[PerspectiveCameraComponent.self] {
++            result["near"] = c.near; result["far"] = c.far
++            result["verticalFOVDegrees"] = c.fieldOfViewInDegrees
++        }
++        return result
++    }
++
++    func captureSecondHost(_ event: String, token: UUID, root: Entity, camera: Entity) {
++        guard enabled else { return }
++        if event == "second-host-make" {
++            secondHostRoot = root; secondHostCamera = camera; secondHostToken = token
++        }
++        emit(["event": event, "secondHostLifecycleToken": token.uuidString,
++              "secondHost": renderMembership(root: root, camera: camera)])
++        if event == "second-host-disappear", secondHostToken == token {
++            secondHostRoot = nil; secondHostCamera = nil; secondHostToken = nil
++        }
++    }
++
++    private func matrix(_ entity: Entity) -> [Float] {
++        let m = entity.transform.matrix
++        return [m.columns.0, m.columns.1, m.columns.2, m.columns.3]
++            .flatMap { [$0.x, $0.y, $0.z, $0.w] }
++    }
++
++    func capture(_ event: String, scene: BoardModelRealityScene,
++                 view: UUID? = nil, roots: [Entity]? = nil,
++                 ids: Set<String>? = nil, mode: BoardHighlightMode? = nil,
++                 priorIDs: Set<String>? = nil, priorMode: BoardHighlightMode? = nil,
++                 viewport: CGSize? = nil) {
++        guard enabled else { return }
++        let key = scene.diagnosticLifecycleToken
++        if let viewport {
++            viewports[key] = viewport
++            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STANDALONE_BOARD"] == "1" {
++                if standaloneViewport != viewport || standaloneScene !== scene {
++                    standaloneViewport = viewport
++                    standaloneViewportChanged = ProcessInfo.processInfo.systemUptime
++                }
++                standaloneScene = scene
++                if let view { standaloneViewToken = view }
++            }
++        }
++        if let ids { requestedIDs[key] = ids }
++        if let mode { requestedModes[key] = String(describing: mode) }
++        let selected = requestedIDs[key] ?? []
++        if let view, let roots, event == "view-make" || event == "view-update" {
++            let viewKey = ViewSceneKey(scene: key, view: view)
++            let signature = ([key.uuidString] + roots.map(identity) + [
++                String(describing: matrix(scene.root)), String(describing: matrix(scene.camera)),
++                requestedModes[key] ?? "unset", selected.sorted().joined(separator: ",")
++            ]).joined(separator: "|")
++            if event == "view-update", viewSignatures[viewKey] == signature { return }
++            viewSignatures[viewKey] = signature
++        }
++        let surfaces: [[String: Any]] = selected.sorted().flatMap { id in
++            (scene.contactEntities[id] ?? []).map { entity in
++                var chain: [String] = []
++                var parent: Entity? = entity
++                var underRoot = false
++                while let current = parent {
++                    chain.append(identity(current))
++                    if current === scene.root { underRoot = true }
++                    parent = current.parent
++                }
++                var row: [String: Any] = ["contactID": id, "entityID": identity(entity),
++                    "name": entity.name, "ancestors": chain, "underRegisteredRoot": underRoot,
++                    "attached": entity.scene != nil, "enabled": entity.isEnabled,
++                    "transform": matrix(entity)]
++                if let material = entity.model?.materials.first {
++                    row["materialType"] = String(describing: type(of: material))
++                    if let pbr = material as? PhysicallyBasedMaterial {
++                        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
++                        row["resolvedRGBAValid"] = pbr.baseColor.tint.getRed(&r, green: &g, blue: &b, alpha: &a)
++                        row["rgba"] = [Double(r), Double(g), Double(b), Double(a)]
++                    }
++                }
++                return row
++            }
++        }
++        var row: [String: Any] = ["event": event, "sceneID": identity(scene),
++            "sceneLifecycleToken": scene.diagnosticLifecycleToken.uuidString,
++            "rootID": identity(scene.root), "cameraID": identity(scene.camera),
++            "modelSHA256": scene.descriptorForTesting.modelSHA256,
++            "selectedIDs": selected.sorted(), "requestedMode": requestedModes[key] ?? "unset",
++            "cachedIDs": (scene.diagnosticSelection.0 ?? []).sorted(),
++            "cachedMode": scene.diagnosticSelection.1.map { String(describing: $0) } ?? "unset",
++            "rootAttached": scene.root.scene != nil, "rootEnabled": scene.root.isEnabled,
++            "rootTransform": matrix(scene.root), "cameraTransform": matrix(scene.camera),
++            "surfaces": surfaces]
++        if Self.countsSyncDelivery {
++            row["syncDeliveryCounters"] = syncCounterSnapshot(sceneID: key)
++        }
++        if let inputs = resolvedSurfaceInputs[key] { row["resolvedSurfaceInputs"] = inputs }
++        if let standaloneCounter, scene === standaloneScene {
++            row["sceneUpdateCount"] = standaloneCounter.value
++        }
++        if let viewport = viewports[key] {
++            row["viewportPoints"] = [Double(viewport.width), Double(viewport.height)]
++        }
++        let workoutBoundaryCensus = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS"] == "1"
++            && (event == "highlight-before" || event == "highlight-after")
++        if event == "view-make" || event == "sample" || event.hasPrefix("standalone-") || workoutBoundaryCensus {
++            row["applicationCensus"] = applicationCensus()
++        }
++        row["boardRenderMembership"] = renderMembership(root: scene.root, camera: scene.camera)
++        // Census is outside the view-update signature; no new capture is scheduled.
++        if Self.recordsHandLifetimes {
++            row["handLifetimeCensus"] = handLifetimeSnapshot()
++        }
++        if Self.observesBoardHosts {
++            if let view { observeTrialAttachment(scene: scene, view: view) }
++            row["boardDetachTrial"] = ["detachRequested": Self.detachesTrainHost,
++            "retentionRequested": Self.boardDetachTrial,
++                "hosts": trialHostSnapshot()]
++        }
++        // After the existing view-update dedup guard; never part of its signature.
++        // No additional event or sample is scheduled for this census.
++        if Self.recordsPredecessorAttachments {
++            row["boardLifetimeCensus"] = boardLifetimeSnapshot()
++        }
++        if let secondHostRoot, let secondHostCamera, let secondHostToken {
++            row["secondHostLifecycleToken"] = secondHostToken.uuidString
++            row["secondHost"] = renderMembership(root: secondHostRoot, camera: secondHostCamera)
++        }
++        if let view { row["viewToken"] = view.uuidString }
++        if let roots {
++            row["contentRootIDs"] = roots.map(identity)
++            row["contentContainsRegisteredRoot"] = roots.contains { $0 === scene.root }
++        }
++        if let priorIDs { row["priorCachedIDs"] = priorIDs.sorted() }
++        if let priorMode { row["priorCachedMode"] = String(describing: priorMode) }
++        emit(row)
++        let env = ProcessInfo.processInfo.environment
++        if env["HANGTEN_REVIEW_ENTITY_VISIBILITY_PROBE"] == "1",
++           env["HANGTEN_REVIEW_BOARD_ARVIEW_HOST"] != "1",
++           env["HANGTEN_REVIEW_SUPPRESS_WORKOUT_HAND_HOST"] != "1" {
++            if event == "highlight-before", mode == .preview, priorMode == .active, !selected.isEmpty {
++                visibilityPending.insert(key)
++            }
++            if event == "highlight-after", visibilityPending.remove(key) != nil {
++                startVisibilityProbe(scene: scene, ids: selected)
++            }
++        }
++    }
++
++    private func startVisibilityProbe(scene: BoardModelRealityScene, ids: Set<String>) {
++        let key = scene.diagnosticLifecycleToken
++        guard visibilityStarted.insert(key).inserted else { return }
++        capture("visibility-scheduled", scene: scene)
++        visibilityTasks[key] = Task { @MainActor [weak scene] in
++            do { try await Task.sleep(for: .seconds(3)) }
++            catch { return }
++            guard !Task.isCancelled, let scene else { return }
++            let entities = Set(ids.flatMap { scene.contactEntities[$0] ?? [] })
++            let saved = entities.map { ($0, $0.isEnabled) }
++            self.visibilityRestores[key] = { saved.forEach { $0.0.isEnabled = $0.1 } }
++            defer {
++                self.visibilityRestores.removeValue(forKey: key)?()
++                self.visibilityTasks.removeValue(forKey: key)
++                self.capture("visibility-restored", scene: scene)
++            }
++            self.capture("visibility-before-disable", scene: scene)
++            entities.forEach { $0.isEnabled = false }
++            self.capture("visibility-disabled", scene: scene)
++            do { try await Task.sleep(for: .seconds(3)) }
++            catch { return }
++        }
++    }
++
++    func startSamples(view: UUID, scene: BoardModelRealityScene) {
++        guard enabled else { return }
++        // Standalone observations follow scripted sparse brackets instead of this sampler.
++        guard ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STANDALONE_BOARD"] != "1" else { return }
++        let key = ViewSceneKey(scene: scene.diagnosticLifecycleToken, view: view)
++        guard samplers[key] == nil else { return }
++        samplers[key] = Task { @MainActor [weak scene] in
++            for _ in 0..<120 {
++                do { try await Task.sleep(for: .seconds(1)) }
++                catch { return }
++                guard !Task.isCancelled, let scene else { return }
++                self.capture("sample", scene: scene, view: view)
++            }
++            if let scene { self.capture("sample-end", scene: scene, view: view) }
++        }
++    }
++
++    func disappear(view: UUID, scene: BoardModelRealityScene) {
++        guard enabled else { return }
++        capture("view-disappear", scene: scene, view: view)
++        if scene === standaloneScene, view == standaloneViewToken { finishStandaloneObservation() }
++        let key = ViewSceneKey(scene: scene.diagnosticLifecycleToken, view: view)
++        samplers.removeValue(forKey: key)?.cancel()
++        if let restore = visibilityRestores.removeValue(forKey: scene.diagnosticLifecycleToken) {
++            restore()
++            capture("visibility-teardown-restored", scene: scene, view: view)
++        }
++        visibilityTasks.removeValue(forKey: scene.diagnosticLifecycleToken)?.cancel()
++        viewSignatures.removeValue(forKey: key)
++    }
++}
++#endif
++
++#if DEBUG
++/// No SwiftUI observations, per-frame I/O, scene ownership or rendering mutation.
++private final class BoardDiagnosticUpdateCounter: @unchecked Sendable {
++    private let lock = NSLock()
++    private var count: UInt64 = 0
++    func increment() { lock.lock(); count &+= 1; lock.unlock() }
++    var value: UInt64 { lock.lock(); defer { lock.unlock() }; return count }
++}
++#endif
+diff --git a/HangTen/Views/BoardModelView.swift b/HangTen/Views/BoardModelView.swift
+index 13e528a96..dfab3aee7 100644
+--- a/HangTen/Views/BoardModelView.swift
++++ b/HangTen/Views/BoardModelView.swift
+@@ -59,14 +59,33 @@ struct BoardModelSurface: View {
+                 // SwiftUI hits here would intercept the card select tap even
+                 // when the hosted RealityView has user interaction disabled.
+                 .allowsHitTesting(!isDisplayOnly)
++                #if DEBUG
++                let diagnosticHost = Group {
++                    if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SEMANTIC_BOARD_HOST"] == "1" {
++                        realityView.id(BoardDiagnosticHostIdentity(
++                            scene: ObjectIdentifier(model), contactIDs: highlightedContactIDs,
++                            mode: highlightMode, positionID: positionID))
++                    } else {
++                        realityView
++                    }
++                }
++                .onChange(of: BoardDiagnosticSurfaceInputs(
++                    boardID: board.id, presentationID: presentation.id, positionID: positionID,
++                    ids: highlightedContactIDs, mode: highlightMode, isDisplayOnly: isDisplayOnly),
++                    initial: true) { _, inputs in
++                    BoardHighlightDiagnostic.shared.surfaceInputs(inputs, scene: model)
++                }
++                #else
++                let diagnosticHost = realityView
++                #endif
+                 if onContactTap == nil {
+-                    realityView.accessibilityIdentifier("boardModel.3d")
++                    diagnosticHost.accessibilityIdentifier("boardModel.3d")
+                 } else {
+                     // A parent accessibility identifier propagates to the
+                     // RealityView's projected contact buttons. Keep their
+                     // per-contact identifiers available to UI automation and
+                     // assistive technology on interactive board maps.
+-                    realityView
++                    diagnosticHost
+                 }
+             } else if let loadingMessage = result.loadingMessage {
+                 HStack(spacing: 12) {
+@@ -94,15 +113,49 @@ struct BoardModelSurface: View {
+                 return
+             }
+             result = .loading
++            #if DEBUG
++            let startupLoadAttempt = BoardHighlightDiagnostic.recordsStartupObservation ? UUID().uuidString : nil
++            if let startupLoadAttempt {
++                BoardHighlightDiagnostic.shared.startupObservation("startup-board-load-call", fields: [
++                    "loadAttempt": startupLoadAttempt, "boardID": board.id,
++                    "presentationID": presentation.id, "taskCancelled": Task.isCancelled
++                ])
++            }
++            #endif
+             do {
+                 let model = try await BoardModelRealityLoader.load(
+                     board: board,
+                     presentation: presentation,
+                     store: BoardCatalog.packageStore
+                 )
++                #if DEBUG
++                if let startupLoadAttempt {
++                    BoardHighlightDiagnostic.shared.startupObservation("startup-board-load-return", fields: [
++                        "loadAttempt": startupLoadAttempt,
++                        "sceneLifecycleToken": model.diagnosticLifecycleToken.uuidString,
++                        "taskCancelled": Task.isCancelled
++                    ])
++                }
++                #endif
+                 guard !Task.isCancelled else { return }
+                 result = .ready(model)
++                #if DEBUG
++                if let startupLoadAttempt {
++                    BoardHighlightDiagnostic.shared.startupObservation("startup-board-ready-published", fields: [
++                        "loadAttempt": startupLoadAttempt,
++                        "sceneLifecycleToken": model.diagnosticLifecycleToken.uuidString
++                    ])
++                }
++                #endif
+             } catch {
++                #if DEBUG
++                if let startupLoadAttempt {
++                    BoardHighlightDiagnostic.shared.startupObservation("startup-board-load-error", fields: [
++                        "loadAttempt": startupLoadAttempt, "taskCancelled": Task.isCancelled,
++                        "errorType": String(describing: type(of: error))
++                    ])
++                }
++                #endif
+                 guard !Task.isCancelled else { return }
+                 #if DEBUG
+                 print("[BoardModelSurface] RealityKit model load failed: \(error)")
+@@ -145,6 +198,18 @@ struct BoardModelUnavailableView: View {
+     }
+ }
+ 
++#if DEBUG
++private struct BoardDiagnosticTrainHostKey: EnvironmentKey {
++    static let defaultValue = false
++}
++extension EnvironmentValues {
++    var boardDiagnosticTrainHost: Bool {
++        get { self[BoardDiagnosticTrainHostKey.self] }
++        set { self[BoardDiagnosticTrainHostKey.self] = newValue }
++    }
++}
++#endif
++
+ struct BoardModelRealityView: View {
+     let model: BoardModelRealityScene
+     let boardName: String
+@@ -161,6 +226,10 @@ struct BoardModelRealityView: View {
+     @State private var lastDragTranslation: CGSize = .zero
+     @State private var lastMagnification: CGFloat = 1
+     @State private var didReportUnavailable = false
++    #if DEBUG
++    @State private var diagnosticViewToken = UUID()
++    @Environment(\.boardDiagnosticTrainHost) private var diagnosticTrainHost
++    #endif
+ 
+     private var fieldOfViewDegrees: Double {
+         #if DEBUG
+@@ -175,12 +244,75 @@ struct BoardModelRealityView: View {
+         let _ = cameraRevision
+         GeometryReader { proxy in
+             let size = proxy.size
++            #if DEBUG
++            if onContactTap == nil,
++               ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_ARVIEW_HOST"] == "1" {
++                BoardNonARHostProbe(model: model, viewToken: diagnosticViewToken,
++                                    selectedIDs: highlightedContactIDs, mode: highlightMode,
++                                    synchronize: { applySync(size: size) })
++                    .id(ObjectIdentifier(model))
++                    .allowsHitTesting(false)
++            } else {
++                realityHost(size: size)
++            }
++            #else
++            realityHost(size: size)
++            #endif
++        }
++        // A display-only card is one element (its host Button owns the tap). An
++        // interactive board exposes its contact elements instead, so the
++        // container must not collapse them into a single element.
++        .modifier(BoardModelAccessibilityContainer(
++            label: onContactTap == nil ? "\(boardName) hangboard" : nil,
++            value: onContactTap == nil ? accessibilityValue : nil))
++    }
++
++    private func realityHost(size: CGSize) -> some View {
+             RealityView { content in
++                #if DEBUG
++                if BoardHighlightDiagnostic.countsSyncDelivery {
++                    BoardHighlightDiagnostic.shared.countSync(.realityMakeEntries, scene: model, view: diagnosticViewToken)
++                }
++                #endif
++                #if DEBUG
++                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_VIRTUAL_CAMERA"] == "1" {
++                    content.camera = .virtual
++                }
++                #endif
+                 content.add(model.root)
+                 content.add(model.camera)
++                #if DEBUG
++                if BoardHighlightDiagnostic.observesBoardHosts {
++                    BoardHighlightDiagnostic.shared.trialHostAdded(scene: model,
++                        view: diagnosticViewToken, train: diagnosticTrainHost)
++                }
++                #endif
+                 applySync(size: size)
++                #if DEBUG
++                if BoardHighlightDiagnostic.isEnabled {
++                    BoardHighlightDiagnostic.shared.capture("view-make", scene: model,
++                        view: diagnosticViewToken, roots: Array(content.entities), viewport: size)
++                    BoardHighlightDiagnostic.shared.startSamples(view: diagnosticViewToken, scene: model)
++                }
++                #endif
+             } update: { content in
++                #if DEBUG
++                if BoardHighlightDiagnostic.countsSyncDelivery {
++                    BoardHighlightDiagnostic.shared.countSync(.realityUpdateEntries, scene: model, view: diagnosticViewToken)
++                }
++                #endif
++                #if DEBUG
++                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_VIRTUAL_CAMERA"] == "1" {
++                    content.camera = .virtual
++                }
++                #endif
+                 applySync(size: size)
++                #if DEBUG
++                if BoardHighlightDiagnostic.isEnabled {
++                    BoardHighlightDiagnostic.shared.capture("view-update", scene: model,
++                        view: diagnosticViewToken, roots: Array(content.entities), viewport: size)
++                }
++                #endif
+             }
+             .gesture(orbitGesture(size: size))
+             .simultaneousGesture(magnifyGesture)
+@@ -190,16 +322,28 @@ struct BoardModelRealityView: View {
+             // A different scene needs a fresh RealityView make closure so its
+             // root and camera replace the prior scene's entities.
+             .id(ObjectIdentifier(model))
+-        }
+-        // A display-only card is one element (its host Button owns the tap). An
+-        // interactive board exposes its contact elements instead, so the
+-        // container must not collapse them into a single element.
+-        .modifier(BoardModelAccessibilityContainer(
+-            label: onContactTap == nil ? "\(boardName) hangboard" : nil,
+-            value: onContactTap == nil ? accessibilityValue : nil))
++            .onDisappear {
++                #if DEBUG
++                if BoardHighlightDiagnostic.isEnabled {
++                    BoardHighlightDiagnostic.shared.trialHostDisappeared(
++                        scene: model, view: diagnosticViewToken)
++                    BoardHighlightDiagnostic.shared.disappear(view: diagnosticViewToken, scene: model)
++                }
++                #endif
++            }
+     }
+ 
+     private func applySync(size: CGSize) {
++        #if DEBUG
++        if BoardHighlightDiagnostic.countsSyncDelivery {
++            BoardHighlightDiagnostic.shared.beginSync(scene: model, view: diagnosticViewToken)
++        }
++        defer {
++            if BoardHighlightDiagnostic.countsSyncDelivery {
++                BoardHighlightDiagnostic.shared.endSync(scene: model, view: diagnosticViewToken)
++            }
++        }
++        #endif
+         let priorCameraTransform = model.camera.transform.matrix
+         let priorInstanceTransforms = model.instanceEntities.map { $0.transform.matrix }
+         var camera = model.camera.camera
+@@ -208,6 +352,11 @@ struct BoardModelRealityView: View {
+         camera.near = 0.001
+         camera.far = 1000
+         model.camera.camera = camera
++        #if DEBUG
++        if BoardHighlightDiagnostic.countsSyncDelivery {
++            BoardHighlightDiagnostic.shared.countSync(.cameraComponentWrites, scene: model, view: diagnosticViewToken)
++        }
++        #endif
+         model.frame(in: size)
+         let didSelect = model.select(positionID: positionID)
+         model.highlight(highlightedContactIDs, mode: highlightMode)
+@@ -309,3 +458,126 @@ private struct BoardModelAccessibilityContainer: ViewModifier {
+         }
+     }
+ }
++
++#if DEBUG
++/// Temporary host comparison; interactive boards retain the RealityView branch.
++@MainActor
++private struct BoardNonARHostProbe: UIViewRepresentable {
++    let model: BoardModelRealityScene
++    let viewToken: UUID
++    let selectedIDs: Set<String>
++    let mode: BoardHighlightMode
++    let synchronize: () -> Void
++
++    func makeCoordinator() -> Coordinator { Coordinator(model: model, viewToken: viewToken) }
++
++    func makeUIView(context: Context) -> ARView {
++        let view = ARView(frame: .zero, cameraMode: .nonAR, automaticallyConfigureSession: false)
++        view.isOpaque = false
++        view.backgroundColor = .clear
++        view.environment.background = .color(.clear)
++        view.isUserInteractionEnabled = false
++        context.coordinator.anchor.addChild(model.root)
++        context.coordinator.anchor.addChild(model.camera)
++        view.scene.addAnchor(context.coordinator.anchor)
++        synchronize()
++        context.coordinator.record("view-make", view: view, ids: selectedIDs, mode: mode)
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.startSamples(view: viewToken, scene: model)
++        }
++        return view
++    }
++
++    func updateUIView(_ view: ARView, context: Context) {
++        synchronize()
++        context.coordinator.record("view-update", view: view, ids: selectedIDs, mode: mode)
++    }
++
++    static func dismantleUIView(_ view: ARView, coordinator: Coordinator) {
++        coordinator.record("view-disappear", view: view, ids: [], mode: .active)
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.disappear(view: coordinator.viewToken, scene: coordinator.model)
++        }
++        if coordinator.model.root.parent === coordinator.anchor { coordinator.model.root.removeFromParent() }
++        if coordinator.model.camera.parent === coordinator.anchor { coordinator.model.camera.removeFromParent() }
++        view.scene.removeAnchor(coordinator.anchor)
++    }
++
++    @MainActor
++    final class Coordinator {
++        let model: BoardModelRealityScene
++        let viewToken: UUID
++        let hostToken = UUID()
++        let anchor = AnchorEntity(world: .zero)
++        private var lastSignature: String?
++        private var sink: FileHandle?
++        private var sequence = 0
++
++        init(model: BoardModelRealityScene, viewToken: UUID) {
++            self.model = model
++            self.viewToken = viewToken
++        }
++
++        func record(_ event: String, view: ARView, ids: Set<String>, mode: BoardHighlightMode) {
++            guard BoardHighlightDiagnostic.isEnabled else { return }
++            let anchors = Array(view.scene.anchors)
++            let present = anchors.contains { $0 === anchor }
++            let children = present ? Array(anchor.children) : []
++            // Here roots means enumerated attachment-anchor children, not fabricated model references.
++            BoardHighlightDiagnostic.shared.capture(event, scene: model, view: viewToken,
++                                                      roots: children)
++            let identity: (AnyObject) -> String = { String(describing: ObjectIdentifier($0)) }
++            let signature = "\(ids.sorted())|\(mode)|\(present)|\(model.root.isActive)|\(model.camera.isActive)|\(view.bounds)"
++            if event == "view-update", signature == lastSignature { return }
++            lastSignature = signature
++            guard sequence < 256 else { return }
++            sequence += 1
++            let row: [String: Any] = [
++                "event": event, "sequence": sequence, "complete": true,
++                "epoch": Date().timeIntervalSince1970, "uptime": ProcessInfo.processInfo.systemUptime,
++                "hostToken": hostToken.uuidString, "viewToken": viewToken.uuidString,
++                "sceneLifecycleToken": model.diagnosticLifecycleToken.uuidString,
++                "arViewID": identity(view), "arSceneID": identity(view.scene),
++                "anchorID": identity(anchor), "sceneAnchorIDs": anchors.map(identity),
++                "anchorPresent": present, "anchorChildIDs": children.map(identity),
++                "rootID": identity(model.root), "cameraID": identity(model.camera),
++                "rootParentIsOwnedAnchor": model.root.parent === anchor,
++                "cameraParentIsOwnedAnchor": model.camera.parent === anchor,
++                "rootSceneIsHostScene": model.root.scene === view.scene,
++                "cameraSceneIsHostScene": model.camera.scene === view.scene,
++                "rootActive": model.root.isActive, "cameraActive": model.camera.isActive,
++                "bounds": [view.bounds.width, view.bounds.height],
++                "requestedIDs": ids.sorted(), "requestedMode": String(describing: mode),
++                "cameraMode": "nonAR", "contentRootIDScope": "actual owned attachmentAnchor.children"
++            ]
++            do {
++                if sink == nil {
++                    let raw = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_DIAGNOSTIC_RUN"] ?? "placid-badger-cad-second-half"
++                    let run = String(raw.filter { $0.isASCII && ($0.isLetter || $0.isNumber || $0 == "-" || $0 == "_") }.prefix(100))
++                    let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
++                        .appendingPathComponent("HighlightDiagnostic-\(run)", isDirectory: true)
++                    try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
++                    let url = folder.appendingPathComponent("arview-host-\(hostToken.uuidString).jsonl")
++                    guard FileManager.default.createFile(atPath: url.path, contents: nil) else { throw CocoaError(.fileWriteUnknown) }
++                    sink = try FileHandle(forWritingTo: url)
++                }
++                var data = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
++                data.append(0x0a)
++                try sink?.write(contentsOf: data)
++                if event == "view-disappear" { try sink?.synchronize(); try sink?.close(); sink = nil }
++            } catch {
++                try? FileHandle.standardError.write(contentsOf: Data("ARView host diagnostic error: \(error)\n".utf8))
++            }
++        }
++    }
++}
++#endif
++
++#if DEBUG
++private struct BoardDiagnosticHostIdentity: Hashable {
++    let scene: ObjectIdentifier
++    let contactIDs: Set<String>
++    let mode: BoardHighlightMode
++    let positionID: String?
++}
++#endif
+diff --git a/HangTen/Views/GripHandModelView.swift b/HangTen/Views/GripHandModelView.swift
+index 618abb795..4b65849fa 100644
+--- a/HangTen/Views/GripHandModelView.swift
++++ b/HangTen/Views/GripHandModelView.swift
+@@ -75,6 +75,26 @@ struct GripHandDragState {
+     mutating func reset() { self = Self() }
+ }
+ 
++#if DEBUG
++// Diagnostic launch constant. This affects only descendants of WorkoutView.
++@MainActor
++enum WorkoutPrestartHandDiagnostic {
++    static let isEnabled = BoardHighlightDiagnostic.isEnabled
++        && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_PRESTART_HAND_HOSTS"] == "1"
++}
++
++private struct WorkoutDiagnosticPrestartHandKey: EnvironmentKey {
++    static let defaultValue = false
++}
++
++extension EnvironmentValues {
++    var workoutDiagnosticIsPrestart: Bool {
++        get { self[WorkoutDiagnosticPrestartHandKey.self] }
++        set { self[WorkoutDiagnosticPrestartHandKey.self] = newValue }
++    }
++}
++#endif
++
+ @MainActor
+ struct GripHandModelView: View {
+     let posture: GripType?
+@@ -86,6 +106,10 @@ struct GripHandModelView: View {
+     @State private var dragState = GripHandDragState()
+     @State private var lastMagnification: CGFloat = 1
+     @State private var cameraRevision = 0
++    #if DEBUG
++    @State private var diagnosticHandViewToken = UUID()
++    @Environment(\.workoutDiagnosticIsPrestart) private var diagnosticIsPrestart
++    #endif
+ 
+     private var scene: GripHandRealityScene { sceneStorage.scene }
+ 
+@@ -110,10 +134,33 @@ struct GripHandModelView: View {
+     }
+ 
+     var body: some View {
++        #if DEBUG
++        if BoardHighlightDiagnostic.suppressesAllHandHosts
++            || (WorkoutPrestartHandDiagnostic.isEnabled && diagnosticIsPrestart) {
++            Color.clear
++                .frame(maxWidth: .infinity, maxHeight: .infinity)
++                .allowsHitTesting(false)
++                .accessibilityHidden(true)
++        } else {
++            handContent
++        }
++        #else
++        handContent
++        #endif
++    }
++
++    private var handContent: some View {
+         let _ = cameraRevision
+-        GeometryReader { proxy in
++        return GeometryReader { proxy in
+             let size = proxy.size
+             RealityView { content in
++                #if DEBUG
++                if BoardHighlightDiagnostic.isEnabled {
++                    BoardHighlightDiagnostic.shared.handLifecycle(kind: "single",
++                        event: "make-entry", root: scene.root, camera: scene.camera,
++                        lifetime: scene.diagnosticHandLifetimeToken, view: diagnosticHandViewToken)
++                }
++                #endif
+                 content.camera = .virtual
+                 content.add(scene.root)
+                 syncScene(in: size)
+@@ -134,6 +181,18 @@ struct GripHandModelView: View {
+                         .accessibilityHidden(true)
+                 }
+             }
++            #if DEBUG
++            .onAppear { [viewToken = diagnosticHandViewToken] in
++                if BoardHighlightDiagnostic.recordsHandLifetimes {
++                    BoardHighlightDiagnostic.shared.handViewLifecycle(view: viewToken, event: "appeared")
++                }
++            }
++            .onDisappear { [viewToken = diagnosticHandViewToken] in
++                if BoardHighlightDiagnostic.recordsHandLifetimes {
++                    BoardHighlightDiagnostic.shared.handViewLifecycle(view: viewToken, event: "disappeared")
++                }
++            }
++            #endif
+             .accessibilityHidden(true)
+         }
+     }
+@@ -374,8 +433,37 @@ final class GripHandRealitySurface {
+     }
+ }
+ 
++#if DEBUG
++/// Diagnostic framing adaptation from the unchanged authored 3D vertices.
++/// The result is fixed until the existing pose/viewport/reset path runs again.
++@MainActor
++private func gripHandDiagnosticFieldOfView(points: [SIMD4<Float>],
++                                           cameraTransform: simd_float4x4,
++                                           aspect: Float) -> Float? {
++    guard !points.isEmpty, aspect.isFinite, aspect > 0 else { return nil }
++    let inverse = simd_inverse(cameraTransform)
++    var tangent: Float = 0
++    for point in points {
++        let projected = inverse * point
++        let depth = -projected.z
++        guard projected.x.isFinite, projected.y.isFinite, depth.isFinite,
++              depth > 0.1, depth < 100 else { return nil }
++        tangent = max(tangent, abs(projected.y) / depth,
++                      abs(projected.x) / (aspect * depth))
++    }
++    tangent *= 1.08
++    let degrees = 2 * atan(tangent) * 180 / Float.pi
++    guard tangent.isFinite, tangent > 0, degrees.isFinite,
++          degrees > 0, degrees < 180 else { return nil }
++    return degrees
++}
++#endif
++
+ @MainActor
+ final class GripHandRealityScene {
++    #if DEBUG
++    let diagnosticHandLifetimeToken = UUID()
++    #endif
+     let root = Entity()
+     let hand = Entity()
+     let camera = Entity()
+@@ -395,13 +483,41 @@ final class GripHandRealityScene {
+     private var orbitElevation: Float = 0
+     private var orbitZoom: Float = 1
+     init(assetResult: Result<GripHandAsset, Error> = GripHandAsset.bundled) {
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handLifecycle(kind: "single",
++                event: "constructor-entry", root: root, camera: camera,
++                lifetime: diagnosticHandLifetimeToken)
++        }
++        #endif
+         root.addChild(hand)
++        #if DEBUG
++        if BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            // Explicit diagnostic placeholder; the first valid reset fits the vertices.
++            camera.components.set(PerspectiveCameraComponent(near: 0.1, far: 100,
++                fieldOfViewInDegrees: 60, fieldOfViewOrientation: .vertical))
++        } else {
++            var orthographicCamera = OrthographicCameraComponent()
++            orthographicCamera.near = 0.1
++            orthographicCamera.far = 100
++            orthographicCamera.scale = 3.2
++            orthographicCamera.scaleDirection = .vertical
++            camera.components.set(orthographicCamera)
++        }
++        #else
+         var orthographicCamera = OrthographicCameraComponent()
+         orthographicCamera.near = 0.1
+         orthographicCamera.far = 100
+         orthographicCamera.scale = 3.2
+         orthographicCamera.scaleDirection = .vertical
+         camera.components.set(orthographicCamera)
++        #endif
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handCamera(kind: "single",
++                event: "configured", camera: camera, lifetime: diagnosticHandLifetimeToken)
++        }
++        #endif
+         root.addChild(camera)
+ 
+         root.addChild(keyLight)
+@@ -473,10 +589,36 @@ final class GripHandRealityScene {
+         guard aspect.isFinite, aspect > 0 else { return }
+         let orthographicScale = max(halfHeight, halfWidth / aspect) * 1.08
+         guard orthographicScale.isFinite, orthographicScale > 0 else { return }
++        #if DEBUG
++        if BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            guard let degrees = gripHandDiagnosticFieldOfView(points: points,
++                    cameraTransform: transform, aspect: aspect),
++                  var component = camera.components[PerspectiveCameraComponent.self] else {
++                BoardHighlightDiagnostic.shared.handCamera(kind: "single",
++                    event: "fit-rejected", camera: camera, lifetime: diagnosticHandLifetimeToken, points: points)
++                return
++            }
++            camera.transform = Transform(matrix: transform)
++            component.fieldOfViewInDegrees = degrees
++            camera.components.set(component)
++        } else {
++            camera.transform = Transform(matrix: transform)
++            var component = camera.components[OrthographicCameraComponent.self]!
++            component.scale = orthographicScale
++            camera.components.set(component)
++        }
++        #else
+         camera.transform = Transform(matrix: transform)
+         var component = camera.components[OrthographicCameraComponent.self]!
+         component.scale = orthographicScale
+         camera.components.set(component)
++        #endif
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handCamera(kind: "single",
++                event: "reset-fitted", camera: camera, lifetime: diagnosticHandLifetimeToken, points: points)
++        }
++        #endif
+ 
+         canonicalCenter = center
+         canonicalOffset = offset
+@@ -510,9 +652,17 @@ final class GripHandRealityScene {
+               let transform = Self.cameraTransform(position: canonicalCenter + rotatedOffset,
+                                                    target: canonicalCenter) else { return }
+         camera.transform = Transform(matrix: transform)
++        #if DEBUG
++        if !BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            var component = camera.components[OrthographicCameraComponent.self]!
++            component.scale = canonicalOrthographicScale / nextZoom
++            camera.components.set(component)
++        }
++        #else
+         var component = camera.components[OrthographicCameraComponent.self]!
+         component.scale = canonicalOrthographicScale / nextZoom
+         camera.components.set(component)
++        #endif
+         orbitAzimuth = nextAzimuth
+         orbitElevation = nextElevation
+         orbitZoom = nextZoom
+@@ -557,6 +707,9 @@ final class GripHandRealityScene {
+ /// different frames after a synchronized pose update.
+ @MainActor
+ final class GripHandRealityPairScene {
++    #if DEBUG
++    let diagnosticHandLifetimeToken = UUID()
++    #endif
+     let root = Entity()
+     let camera = Entity()
+     let leftHand = Entity()
+@@ -579,17 +732,45 @@ final class GripHandRealityPairScene {
+     private var orbitZoom: Float = 1
+ 
+     init(assetResult: Result<GripHandAsset, Error> = GripHandAsset.bundled) {
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handLifecycle(kind: "pair",
++                event: "constructor-entry", root: root, camera: camera,
++                lifetime: diagnosticHandLifetimeToken)
++        }
++        #endif
+         root.addChild(leftHand)
+         root.addChild(rightHand)
+         leftHand.position.x = -slotOffset
+         rightHand.position.x = slotOffset
+         leftHand.scale.x = -1
++        #if DEBUG
++        if BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            // Explicit diagnostic placeholder; the first valid reset fits the vertices.
++            camera.components.set(PerspectiveCameraComponent(near: 0.1, far: 100,
++                fieldOfViewInDegrees: 60, fieldOfViewOrientation: .vertical))
++        } else {
++            var orthographicCamera = OrthographicCameraComponent()
++            orthographicCamera.near = 0.1
++            orthographicCamera.far = 100
++            orthographicCamera.scale = 3.2
++            orthographicCamera.scaleDirection = .vertical
++            camera.components.set(orthographicCamera)
++        }
++        #else
+         var orthographicCamera = OrthographicCameraComponent()
+         orthographicCamera.near = 0.1
+         orthographicCamera.far = 100
+         orthographicCamera.scale = 3.2
+         orthographicCamera.scaleDirection = .vertical
+         camera.components.set(orthographicCamera)
++        #endif
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handCamera(kind: "pair",
++                event: "configured", camera: camera, lifetime: diagnosticHandLifetimeToken)
++        }
++        #endif
+         root.addChild(camera)
+         root.addChild(keyLight)
+         root.addChild(fillLight)
+@@ -665,10 +846,36 @@ final class GripHandRealityPairScene {
+         guard aspect.isFinite, aspect > 0 else { return }
+         let scale = max(halfHeight, halfWidth / aspect) * 1.08
+         guard scale.isFinite, scale > 0 else { return }
++        #if DEBUG
++        if BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            guard let degrees = gripHandDiagnosticFieldOfView(points: points,
++                    cameraTransform: transform, aspect: aspect),
++                  var component = camera.components[PerspectiveCameraComponent.self] else {
++                BoardHighlightDiagnostic.shared.handCamera(kind: "pair",
++                    event: "fit-rejected", camera: camera, lifetime: diagnosticHandLifetimeToken, points: points)
++                return
++            }
++            camera.transform = Transform(matrix: transform)
++            component.fieldOfViewInDegrees = degrees
++            camera.components.set(component)
++        } else {
++            camera.transform = Transform(matrix: transform)
++            var component = camera.components[OrthographicCameraComponent.self]!
++            component.scale = scale
++            camera.components.set(component)
++        }
++        #else
+         camera.transform = Transform(matrix: transform)
+         var component = camera.components[OrthographicCameraComponent.self]!
+         component.scale = scale
+         camera.components.set(component)
++        #endif
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handCamera(kind: "pair",
++                event: "reset-fitted", camera: camera, lifetime: diagnosticHandLifetimeToken, points: points)
++        }
++        #endif
+         canonicalCenter = center
+         canonicalOffset = offset
+         canonicalOrthographicScale = scale
+@@ -695,9 +902,17 @@ final class GripHandRealityPairScene {
+         guard let transform = Self.cameraTransform(position: canonicalCenter + rotatedOffset,
+                                                    target: canonicalCenter) else { return }
+         camera.transform = Transform(matrix: transform)
++        #if DEBUG
++        if !BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            var component = camera.components[OrthographicCameraComponent.self]!
++            component.scale = canonicalOrthographicScale / nextZoom
++            camera.components.set(component)
++        }
++        #else
+         var component = camera.components[OrthographicCameraComponent.self]!
+         component.scale = canonicalOrthographicScale / nextZoom
+         camera.components.set(component)
++        #endif
+         orbitAzimuth = nextAzimuth
+         orbitElevation = nextElevation
+         orbitZoom = nextZoom
+@@ -747,6 +962,10 @@ struct GripHandPairModelView: View {
+     @State private var dragState = GripHandDragState()
+     @State private var lastMagnification: CGFloat = 1
+     @State private var cameraRevision = 0
++    #if DEBUG
++    @State private var diagnosticHandViewToken = UUID()
++    @Environment(\.workoutDiagnosticIsPrestart) private var diagnosticIsPrestart
++    #endif
+ 
+     private var scene: GripHandRealityPairScene { sceneStorage.scene }
+ 
+@@ -768,10 +987,33 @@ struct GripHandPairModelView: View {
+     }
+ 
+     var body: some View {
++        #if DEBUG
++        if BoardHighlightDiagnostic.suppressesAllHandHosts
++            || (WorkoutPrestartHandDiagnostic.isEnabled && diagnosticIsPrestart) {
++            Color.clear
++                .frame(maxWidth: .infinity, maxHeight: .infinity)
++                .allowsHitTesting(false)
++                .accessibilityHidden(true)
++        } else {
++            handContent
++        }
++        #else
++        handContent
++        #endif
++    }
++
++    private var handContent: some View {
+         let _ = cameraRevision
+-        GeometryReader { proxy in
++        return GeometryReader { proxy in
+             let size = proxy.size
+             RealityView { content in
++                #if DEBUG
++                if BoardHighlightDiagnostic.isEnabled {
++                    BoardHighlightDiagnostic.shared.handLifecycle(kind: "pair",
++                        event: "make-entry", root: scene.root, camera: scene.camera,
++                        lifetime: scene.diagnosticHandLifetimeToken, view: diagnosticHandViewToken)
++                }
++                #endif
+                 content.camera = .virtual
+                 content.add(scene.root)
+                 syncScene(in: size)
+@@ -792,6 +1034,18 @@ struct GripHandPairModelView: View {
+                         .accessibilityHidden(true)
+                 }
+             }
++            #if DEBUG
++            .onAppear { [viewToken = diagnosticHandViewToken] in
++                if BoardHighlightDiagnostic.recordsHandLifetimes {
++                    BoardHighlightDiagnostic.shared.handViewLifecycle(view: viewToken, event: "appeared")
++                }
++            }
++            .onDisappear { [viewToken = diagnosticHandViewToken] in
++                if BoardHighlightDiagnostic.recordsHandLifetimes {
++                    BoardHighlightDiagnostic.shared.handViewLifecycle(view: viewToken, event: "disappeared")
++                }
++            }
++            #endif
+             .accessibilityHidden(true)
+         }
+     }
+diff --git a/HangTen/Views/RootView.swift b/HangTen/Views/RootView.swift
+index d848c8daf..066aab66c 100644
+--- a/HangTen/Views/RootView.swift
++++ b/HangTen/Views/RootView.swift
+@@ -1,5 +1,8 @@
+ import SwiftUI
+ import UIKit
++#if DEBUG
++import RealityKit
++#endif
+ 
+ struct MotherboardWorkoutPreparationHandoff {
+     private(set) var didAccept = false
+@@ -196,6 +199,60 @@ struct RootView: View {
+     )
+ 
+     var body: some View {
++        #if DEBUG
++        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STANDALONE_BOARD"] == "1" {
++            StandaloneBoardHighlightProbe()
++        } else if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_WORKOUT_AT_ROOT"] == "1" {
++            diagnosticRootWorkout
++        } else {
++            normalBody
++        }
++        #else
++        normalBody
++        #endif
++    }
++
++    #if DEBUG
++    @ViewBuilder
++    private var diagnosticRootWorkout: some View {
++        let environment = ProcessInfo.processInfo.environment
++        if environment["HANGTEN_REVIEW_PLAN_ID"] == "research.max-hangs",
++           environment["HANGTEN_REVIEW_BOARD_ID"] == "zlagboard.evo",
++           let plan = store.plans.first(where: { $0.id == "research.max-hangs" }),
++           store.selectedBoard.id == "zlagboard.evo",
++           store.board(for: plan).id == "zlagboard.evo" {
++            Group {
++                if environment["HANGTEN_REVIEW_ROOT_NAVIGATION_STACK"] == "1" {
++                    NavigationStack {
++                        WorkoutAccessGate(plan: plan)
++                    }
++                } else {
++                    WorkoutAccessGate(plan: plan)
++                }
++            }
++                .environmentObject(workoutAudioCoach)
++                .environmentObject(deepLinkManager)
++                .onAppear {
++                    let orientationMask: UIInterfaceOrientationMask?
++                    if environment["HANGTEN_REVIEW_LANDSCAPE"] == "1" {
++                        orientationMask = .landscapeRight
++                    } else if environment["HANGTEN_REVIEW_PORTRAIT"] == "1" {
++                        orientationMask = .portrait
++                    } else {
++                        orientationMask = nil
++                    }
++                    guard let orientationMask,
++                          let windowScene = UIApplication.shared.connectedScenes
++                            .compactMap({ $0 as? UIWindowScene }).first else { return }
++                    windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: orientationMask))
++                }
++        } else {
++            Text("Root workout diagnostic: exact Evo/Max Hangs inputs unavailable")
++        }
++    }
++    #endif
++
++    private var normalBody: some View {
+ 		TabView(selection: $selectedTab) {
+ 			TrainView { selectedTab = .plans }
+ 				.tabItem { Label("Train", systemImage: "figure.climbing") }
+@@ -2015,6 +2072,9 @@ struct WorkoutView: View {
+ 						)
+ 					}
+ 				}
++                #if DEBUG
++                .environment(\.workoutDiagnosticIsPrestart, sessionState.routineStartedAt == nil)
++                #endif
+ 				.frame(maxWidth: .infinity, maxHeight: .infinity)
+ 				.background(Color.hangBackground)
+ 				.onChange(of: isComplete) { _, routineComplete in
+@@ -2044,6 +2104,15 @@ struct WorkoutView: View {
+ 				)
+ 				}
+ 				.onChange(of: countdown, initial: true) { _, countdown in
++                    #if DEBUG
++                    if BoardHighlightDiagnostic.recordsHandLifetimes {
++                        BoardHighlightDiagnostic.shared.harnessEvent(
++                            "workout-prestart-hand-state",
++                            state: "flag=\(WorkoutPrestartHandDiagnostic.isEnabled);routineStartedIsNil=\(sessionState.routineStartedAt == nil);suppressed=\(WorkoutPrestartHandDiagnostic.isEnabled && sessionState.routineStartedAt == nil);countdown=\(countdown)",
++                            viewport: .zero // State evidence, not a layout measurement.
++                        )
++                    }
++                    #endif
+ 					guard countdown == 0 else { return }
+ 					sessionState.transitionExpiredCountdown(at: monotonicTime)
+ 				}
+@@ -2146,6 +2215,11 @@ struct WorkoutView: View {
+ 			)
+ 		}
+ 		.onAppear {
++            #if DEBUG
++            if BoardHighlightDiagnostic.recordsStartupObservation {
++                BoardHighlightDiagnostic.shared.startupContextAppeared(startupObservationContext)
++            }
++            #endif
+ 			UIApplication.shared.isIdleTimerDisabled = true
+ 			configureRecorder()
+ 			if planNeedsHandChoice {
+@@ -2157,6 +2231,13 @@ struct WorkoutView: View {
+ 				}
+ 			}
+ 			#if DEBUG
++            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS"] == "1" {
++                BoardHighlightDiagnostic.shared.harnessEvent(
++                    "workout-probe-appear-before-autostart",
++                    state: "plan=\(plan.id);board=\(board.id);pausedElapsed=\(sessionState.pausedElapsed);activeStartIsNil=\(sessionState.activeStartUptime == nil);routineStartedIsNil=\(sessionState.routineStartedAt == nil);prestartHandFlag=\(WorkoutPrestartHandDiagnostic.isEnabled);prestartHandsSuppressed=\(WorkoutPrestartHandDiagnostic.isEnabled && sessionState.routineStartedAt == nil)",
++                    viewport: .zero // Not a layout measurement; actual leaf comes from scene snapshots.
++                )
++            }
+ 			if !didApplyReviewStep {
+ 				didApplyReviewStep = true
+ 				if let rawStep = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STEP"],
+@@ -2190,6 +2271,9 @@ struct WorkoutView: View {
+ 			pauseForInterruption()
+ 		}
+ 		.onChange(of: audioCoach.countdownPreparationState) { _, state in
++            #if DEBUG
++            recordStartupObservation("startup-audio-preparation-change", countdown: pendingCountdownStart)
++            #endif
+ 			guard let pendingCountdownStart else { return }
+ 			switch WorkoutSessionPolicy.consumePendingCountdown(
+ 				&self.pendingCountdownStart,
+@@ -2198,8 +2282,22 @@ struct WorkoutView: View {
+ 			case .none:
+ 				return
+ 			case .beginVisibly:
++                #if DEBUG
++                let startupContext = startupObservationContext
++                let startupDeferredID = BoardHighlightDiagnostic.shared.startupTakeDeferred(startupContext)
++                BoardHighlightDiagnostic.shared.startupPushAttempt(startupContext, attempt: startupDeferredID)
++                defer { BoardHighlightDiagnostic.shared.startupPopAttempt(startupContext, attempt: startupDeferredID) }
++                recordStartupObservation("startup-deferred-dispatch", countdown: pendingCountdownStart, attemptID: startupDeferredID)
++                #endif
+ 				beginVisibleCountdown(pendingCountdownStart, at: WorkoutClock.monotonicTime)
+ 			case .requestAudioCountdown:
++                #if DEBUG
++                let startupContext = startupObservationContext
++                let startupDeferredID = BoardHighlightDiagnostic.shared.startupTakeDeferred(startupContext)
++                BoardHighlightDiagnostic.shared.startupPushAttempt(startupContext, attempt: startupDeferredID)
++                defer { BoardHighlightDiagnostic.shared.startupPopAttempt(startupContext, attempt: startupDeferredID) }
++                recordStartupObservation("startup-deferred-dispatch", countdown: pendingCountdownStart, attemptID: startupDeferredID)
++                #endif
+ 				requestCountdownStart(pendingCountdownStart)
+ 			}
+ 		}
+@@ -2216,6 +2314,9 @@ struct WorkoutView: View {
+ 			interruptRecorderForSensorLoss()
+ 		}
+ 		.onDisappear {
++			#if DEBUG
++			BoardHighlightDiagnostic.shared.startupCancellationRequested(startupObservationContext, taskPresent: countdownArmTask != nil, pendingPresent: pendingCountdownStart != nil, site: "existing-cancel-1")
++			#endif
+ 			countdownArmTask?.cancel()
+ 			countdownArmTask = nil
+ 			pendingCountdownStart = nil
+@@ -2366,8 +2467,22 @@ struct WorkoutView: View {
+ 
+ 			VStack(spacing: 2) {
+ 				if showsPairedHandCue, let holdCue {
+-					GripHandPairModelView(posture: holdCue.gripType,
+-										 fingerConfiguration: holdCue.fingerConfiguration)
++					Group {
++						#if DEBUG
++						if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_WORKOUT_HAND_HOST"] == "1" {
++							Color.clear
++						} else if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAIN_SECOND_HOST"] == "1" {
++							WorkoutPlainSecondHostProbe(posture: holdCue.gripType,
++								fingerConfiguration: holdCue.fingerConfiguration)
++						} else {
++							GripHandPairModelView(posture: holdCue.gripType,
++								fingerConfiguration: holdCue.fingerConfiguration)
++						}
++						#else
++						GripHandPairModelView(posture: holdCue.gripType,
++							fingerConfiguration: holdCue.fingerConfiguration)
++						#endif
++					}
+ 						.frame(height: 68)
+ 						.accessibilityHidden(true)
+ 				}
+@@ -3049,6 +3164,9 @@ struct WorkoutView: View {
+ 		}
+ 		let monotonicTime = WorkoutClock.monotonicTime
+ 		if pendingCountdownStart != nil || countdownArmTask != nil {
++			#if DEBUG
++			BoardHighlightDiagnostic.shared.startupCancellationRequested(startupObservationContext, taskPresent: countdownArmTask != nil, pendingPresent: pendingCountdownStart != nil, site: "existing-cancel-2")
++			#endif
+ 			countdownArmTask?.cancel()
+ 			countdownArmTask = nil
+ 			pendingCountdownStart = nil
+@@ -3082,12 +3200,57 @@ struct WorkoutView: View {
+ 		}
+     }
+ 
++    #if DEBUG
++    private var startupObservationContext: String {
++        "\(ObjectIdentifier(audioCoach))|\(plan.id)"
++    }
++
++    private func recordStartupObservation(_ event: String,
++                                          countdown: PendingCountdownStart? = nil,
++                                          armUptime: TimeInterval? = nil,
++                                          attemptID: String? = nil) {
++        guard BoardHighlightDiagnostic.recordsStartupObservation else { return }
++        let context = startupObservationContext
++        let resolvedAttempt = attemptID ?? BoardHighlightDiagnostic.shared.startupCurrentAttempt(context)
++        BoardHighlightDiagnostic.shared.startupObservation(event, fields: [
++            "contextID": context,
++            "attemptID": resolvedAttempt.map { $0 as Any } ?? NSNull(),
++            "parentAttemptID": resolvedAttempt.flatMap { BoardHighlightDiagnostic.shared.startupParentAttempt($0) }.map { $0 as Any } ?? NSNull(),
++            "associationValid": BoardHighlightDiagnostic.shared.startupAssociationValid(context),
++            "planID": plan.id,
++            "countdown": countdown.map { String(describing: $0) } ?? "nil",
++            "audioEnabled": audioCuesEnabled,
++            "audioPreparation": String(describing: audioCoach.countdownPreparationState),
++            "pendingRequestPresent": pendingCountdownStart != nil,
++            "armTaskPresent": countdownArmTask != nil,
++            "routineStartedIsNil": sessionState.routineStartedAt == nil,
++            "activeStartUptime": sessionState.activeStartUptime.map { $0 as Any } ?? NSNull(),
++            "armUptime": armUptime.map { $0 as Any } ?? NSNull(),
++            "countdownKind": sessionState.countdownKind.map { String(describing: $0) } ?? "nil",
++            "pausedElapsed": sessionState.pausedElapsed,
++            "taskCancelled": Task.isCancelled
++        ])
++    }
++    #endif
++
+ 	private func requestCountdownStart(_ countdown: PendingCountdownStart) {
++        #if DEBUG
++        let startupContext = startupObservationContext
++        let startupAttemptID = BoardHighlightDiagnostic.shared.startupBeginRequest(startupContext)
++        defer { BoardHighlightDiagnostic.shared.startupPopAttempt(startupContext, attempt: startupAttemptID) }
++        recordStartupObservation("startup-request-entry", countdown: countdown, attemptID: startupAttemptID)
++        #endif
+ 		if audioCuesEnabled,
+ 		   WorkoutSessionPolicy.shouldPrepareCountdownAudio(
+ 			preparationState: audioCoach.countdownPreparationState
+ 		   ) {
++            #if DEBUG
++            recordStartupObservation("startup-audio-prepare-before", countdown: countdown, attemptID: startupAttemptID)
++            #endif
+ 			audioCoach.prepareCountdownAudio()
++            #if DEBUG
++            recordStartupObservation("startup-audio-prepare-after", countdown: countdown, attemptID: startupAttemptID)
++            #endif
+ 		}
+ 		if audioCuesEnabled,
+ 		   WorkoutSessionPolicy.shouldDeferCountdownStart(
+@@ -3095,6 +3258,10 @@ struct WorkoutView: View {
+ 			preparationState: audioCoach.countdownPreparationState
+ 		   ) {
+ 			pendingCountdownStart = countdown
++            #if DEBUG
++            BoardHighlightDiagnostic.shared.startupDeferRequest(startupContext, attempt: startupAttemptID)
++            recordStartupObservation("startup-request-deferred", countdown: countdown, attemptID: startupAttemptID)
++            #endif
+ 			return
+ 		}
+ 
+@@ -3122,16 +3289,42 @@ struct WorkoutView: View {
+ 				),
+ 				startingAt: 3
+ 			)
++        #if DEBUG
++        recordStartupObservation("startup-audio-arm-before", countdown: countdown, armUptime: armUptime)
++        #endif
+ 		_ = audioCoach.startCountdown(schedule, startUptime: armUptime)
++        #if DEBUG
++        recordStartupObservation("startup-audio-arm-after", countdown: countdown, armUptime: armUptime)
++        #endif
++		#if DEBUG
++		BoardHighlightDiagnostic.shared.startupCancellationRequested(startupObservationContext, taskPresent: countdownArmTask != nil, pendingPresent: pendingCountdownStart != nil, site: "existing-cancel-3")
++		#endif
+ 		countdownArmTask?.cancel()
++        #if DEBUG
++        BoardHighlightDiagnostic.shared.startupArmRequest(startupContext, attempt: startupAttemptID)
++        #endif
+ 		countdownArmTask = Task { @MainActor in
++            #if DEBUG
++            recordStartupObservation("startup-arm-task-enter", countdown: countdown, armUptime: armUptime, attemptID: startupAttemptID)
++            #endif
+ 			do {
+ 				try await Task.sleep(for: .seconds(max(0, armUptime - WorkoutClock.monotonicTime)))
+ 			} catch {
++                #if DEBUG
++                recordStartupObservation("startup-arm-task-cancelled", countdown: countdown, armUptime: armUptime, attemptID: startupAttemptID)
++                #endif
+ 				return
+ 			}
++            #if DEBUG
++            recordStartupObservation("startup-arm-task-resumed", countdown: countdown, armUptime: armUptime, attemptID: startupAttemptID)
++            #endif
+ 			guard !Task.isCancelled else { return }
+ 			countdownArmTask = nil
++            #if DEBUG
++            BoardHighlightDiagnostic.shared.startupArmCompleted(startupContext, attempt: startupAttemptID)
++            BoardHighlightDiagnostic.shared.startupPushAttempt(startupContext, attempt: startupAttemptID)
++            defer { BoardHighlightDiagnostic.shared.startupPopAttempt(startupContext, attempt: startupAttemptID) }
++            #endif
+ 			beginVisibleCountdown(countdown, at: armUptime)
+ 		}
+ 	}
+@@ -3140,12 +3333,18 @@ struct WorkoutView: View {
+ 		_ countdown: PendingCountdownStart,
+ 		at armUptime: TimeInterval
+ 	) {
++        #if DEBUG
++        recordStartupObservation("startup-visible-countdown-before", countdown: countdown, armUptime: armUptime)
++        #endif
+ 		switch countdown {
+ 		case .initial:
+ 			sessionState.toggleRunning(uptime: armUptime, now: Date())
+ 		case .skip(let targetElapsed):
+ 			sessionState.startSkipCountdown(to: targetElapsed, at: armUptime)
+ 		}
++        #if DEBUG
++        recordStartupObservation("startup-visible-countdown-after", countdown: countdown, armUptime: armUptime)
++        #endif
+ 	}
+ 
+     private func cancelCountdown() {
+@@ -3188,6 +3387,9 @@ struct WorkoutView: View {
+ 	}
+ 
+ 	private func cancelPendingCountdownArm() {
++		#if DEBUG
++		BoardHighlightDiagnostic.shared.startupCancellationRequested(startupObservationContext, taskPresent: countdownArmTask != nil, pendingPresent: pendingCountdownStart != nil, site: "existing-cancel-4")
++		#endif
+ 		countdownArmTask?.cancel()
+ 		countdownArmTask = nil
+ 		pendingCountdownStart = nil
+@@ -3626,3 +3828,374 @@ struct WorkoutView: View {
+ 			- TimeInterval(remaining)
+ 	}
+ }
++
++#if DEBUG
++/// Diagnostic-only nonempty second renderer without hand meshes or custom materials.
++@MainActor
++private struct WorkoutPlainSecondHostProbe: View {
++    let posture: GripType?
++    let fingerConfiguration: FingerConfiguration?
++    @State private var storage = WorkoutPlainSecondHostStorage()
++
++    var body: some View {
++        GeometryReader { proxy in
++            let size = proxy.size
++            RealityView { content in
++                content.camera = .virtual
++                // Both variants finish camera configuration before root attachment.
++                storage.scene.update(pose: GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration),
++                                     viewportSize: size)
++                content.add(storage.scene.root)
++                storage.scene.record("second-host-make")
++            } update: { _ in
++                storage.scene.update(pose: GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration),
++                                     viewportSize: size)
++            }
++        }
++        .accessibilityHidden(true)
++        .onDisappear { storage.scene.record("second-host-disappear") }
++    }
++}
++
++@MainActor
++private final class WorkoutPlainSecondHostStorage {
++    lazy var scene = WorkoutPlainSecondHostScene()
++}
++
++@MainActor
++private final class WorkoutPlainSecondHostScene {
++    let root = Entity()
++    private let camera = Entity()
++    private let lifecycleToken = UUID()
++    private let perspective = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAIN_SECOND_HOST_PROJECTION"] == "perspective"
++    private var currentPose: GripHandPose?
++    private var currentViewportSize: CGSize = .zero
++    private let halfSize = SIMD3<Float>(0.65, 0.5, 0.275)
++
++    init() {
++        var material = PhysicallyBasedMaterial()
++        material.baseColor = .init(tint: .systemPurple)
++        material.roughness = .init(floatLiteral: 0.8)
++        material.metallic = .init(floatLiteral: 0)
++        let box = ModelEntity(mesh: .generateBox(size: halfSize * 2), materials: [material])
++        box.name = "diagnostic_plain_pbr_box"
++        root.addChild(box)
++        // Exactly one projection component, chosen once before attachment.
++        if perspective {
++            camera.components.set(PerspectiveCameraComponent(
++                near: 0.1, far: 100, fieldOfViewInDegrees: 60,
++                fieldOfViewOrientation: .vertical))
++        } else {
++            var component = OrthographicCameraComponent()
++            component.near = 0.1
++            component.far = 100
++            component.scale = 3.2
++            component.scaleDirection = .vertical
++            camera.components.set(component)
++        }
++        root.addChild(camera)
++        let key = Entity()
++        let fill = Entity()
++        key.components.set(DirectionalLightComponent(color: .white, intensity: 3_200))
++        fill.components.set(DirectionalLightComponent(color: .white, intensity: 600))
++        root.addChild(key)
++        root.addChild(fill)
++        key.look(at: .zero, from: SIMD3(0, 8, 7), relativeTo: root)
++        fill.look(at: .zero, from: SIMD3(0, 2, -5), relativeTo: root)
++    }
++
++    func update(pose: GripHandPose, viewportSize: CGSize) {
++        guard currentPose != pose || currentViewportSize != viewportSize else { return }
++        currentPose = pose
++        currentViewportSize = viewportSize
++        camera.look(at: .zero, from: SIMD3<Float>(0, 2.75, 9.4), relativeTo: root)
++        let inverse = simd_inverse(camera.transform.matrix)
++        var halfWidth: Float = 0
++        var halfHeight: Float = 0
++        var tangentHalfFOV: Float = 0
++        let aspect = viewportSize.width > 0 && viewportSize.height > 0
++            ? Float(viewportSize.width / viewportSize.height) : 0.85
++        for x: Float in [-halfSize.x, halfSize.x] {
++            for y: Float in [-halfSize.y, halfSize.y] {
++                for z: Float in [-halfSize.z, halfSize.z] {
++                    let point = inverse * SIMD4<Float>(x, y, z, 1)
++                    halfWidth = max(halfWidth, abs(point.x))
++                    halfHeight = max(halfHeight, abs(point.y))
++                    let depth = -point.z
++                    precondition(depth > 0)
++                    tangentHalfFOV = max(tangentHalfFOV,
++                        max(abs(point.y), abs(point.x) / aspect) / depth)
++                }
++            }
++        }
++        if perspective {
++            var component = camera.components[PerspectiveCameraComponent.self]!
++            component.fieldOfViewInDegrees = 2 * atan(tangentHalfFOV * 1.08) * 180 / .pi
++            camera.components.set(component)
++        } else {
++            var component = camera.components[OrthographicCameraComponent.self]!
++            component.scale = max(halfHeight, halfWidth / aspect) * 1.08
++            camera.components.set(component)
++        }
++        record("second-host-semantic-update")
++    }
++
++    func record(_ event: String) {
++        guard BoardHighlightDiagnostic.isEnabled else { return }
++        BoardHighlightDiagnostic.shared.captureSecondHost(event, token: lifecycleToken,
++                                                           root: root, camera: camera)
++    }
++}
++#endif
++
++#if DEBUG
++/// Deliberately outside TabView, navigation, workout and every hand host.
++@MainActor
++private struct StandaloneBoardHighlightProbe: View {
++    private enum Selection: String { case active, preview, clear }
++    private struct SemanticSelection: Equatable {
++        let ids: Set<String>
++        let mode: BoardHighlightMode
++        let positionID: String?
++    }
++    @State private var selection: Selection = .clear
++    @State private var scriptEpoch: TimeInterval?
++    private var driver: String { env["HANGTEN_REVIEW_STANDALONE_DRIVER"] ?? "A" }
++    private let env = ProcessInfo.processInfo.environment
++    private var viewport: CGSize {
++        CGSize(width: Double(env["HANGTEN_REVIEW_STANDALONE_WIDTH"] ?? "210") ?? 210,
++               height: Double(env["HANGTEN_REVIEW_STANDALONE_HEIGHT"] ?? "36") ?? 36)
++    }
++    private var timingProfile: String { env["HANGTEN_REVIEW_STANDALONE_TIMING_PROFILE"] ?? "legacy" }
++    private var phaseDurations: [TimeInterval] {
++        switch timingProfile {
++        case "short": return [8, 7, 8, 7, 8]
++        case "long": return [8, 7, 180, 7, 8]
++        default: return [8, 8, 8, 8, 8]
++        }
++    }
++    private var phaseStartOffsets: [TimeInterval] {
++        phaseDurations.indices.map { phaseDurations.prefix($0).reduce(0, +) }
++    }
++    private var captureOffsets: [TimeInterval] {
++        timingProfile == "legacy" ? [0.25, 1, 3, 7] : [0.25, 1, 3, 5]
++    }
++    private var snapshotOffsets: [[TimeInterval]] {
++        phaseDurations.indices.map { index in
++            guard timingProfile == "legacy" else {
++                return [0.15, 0.85, 1.75, 2.85, 3.75, 4.85, 5.85, 6.75]
++            }
++            let regular: [TimeInterval] = [0.15, 0.85, 1.75, 2.85, 3.75, 6.85, 7.75]
++            return index == 1
++                ? ([0.025, 0.075, 0.225, 0.325, 0.45, 0.60] + regular).sorted()
++                : regular
++        }
++    }
++    private var completionTailOffset: TimeInterval { phaseDurations.reduce(0, +) + 2 }
++    private var isResizeDriver: Bool { ["F", "G"].contains(driver) }
++    private var initialViewport: CGSize {
++        isResizeDriver ? CGSize(width: 410.0, height: 410.0 * 120.0 / 700.0) : viewport
++    }
++    private func viewport(for phase: Selection) -> CGSize {
++        isResizeDriver && phase == .clear ? initialViewport : viewport
++    }
++    var body: some View {
++        driverContent
++        .frame(maxWidth: .infinity, maxHeight: .infinity)
++        .background(Color.hangBackground)
++        .task { await runScript() }
++        .onAppear {
++            if env["HANGTEN_REVIEW_LANDSCAPE"] == "1",
++               let scene = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first {
++                scene.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
++            }
++            BoardHighlightDiagnostic.shared.harnessEvent("standalone-appear", state: selection.rawValue,
++                                                         viewport: initialViewport)
++        }
++    }
++    @ViewBuilder
++    private var driverContent: some View {
++        if driver == "A" {
++            fixedContent(phase: selection)
++        } else {
++            TimelineView(.periodic(from: .now, by: 0.25)) { _ in
++                // Production also reads monotonic uptime rather than context.date.
++                let uptime = ProcessInfo.processInfo.systemUptime
++                let phase = ["C", "D", "E", "F", "G", "H0", "H1"].contains(driver) ? derivedPhase(at: uptime) : selection
++                fixedContent(phase: phase)
++                    .frame(maxWidth: .infinity, maxHeight: .infinity)
++                    .overlay(alignment: .top) {
++                        if ["H0", "H1"].contains(driver) {
++                            diagnosticSiblings(at: uptime)
++                        }
++                    }
++            }
++        }
++    }
++
++    // Synthetic 40-second diagnostic presentation, not authored training content.
++    private func diagnosticSiblings(at uptime: TimeInterval) -> some View {
++        let elapsed = min(max(uptime - (scriptEpoch ?? uptime), 0), 40)
++        let progress = driver == "H1" ? elapsed : 0
++        let remaining = driver == "H1"
++            ? (elapsed >= 40 ? 0 : 8 - elapsed.truncatingRemainder(dividingBy: 8))
++            : 8
++        return VStack(spacing: 8) {
++            Text(diagnosticTimeLabel(remaining))
++                .font(.system(size: 34, weight: .heavy, design: .rounded).monospacedDigit())
++                .foregroundStyle(Color.hangInk)
++                .accessibilityLabel("Synthetic diagnostic phase timer")
++            ProgressView(value: progress, total: 40)
++                .tint(Color.hangGreenDark)
++                .accessibilityLabel("Synthetic 40-second diagnostic progress")
++        }
++        .frame(width: 210, height: 54)
++    }
++
++    // Exact production timeLabel arithmetic, with diagnostic-only input values.
++    private func diagnosticTimeLabel(_ value: TimeInterval) -> String {
++        let seconds = max(0, Int(value.rounded(.up)))
++        return String(format: "%02d:%02d", seconds / 60, seconds % 60)
++    }
++
++    private func derivedPhase(at uptime: TimeInterval) -> Selection {
++        guard let scriptEpoch else { return .clear }
++        let elapsed = uptime - scriptEpoch
++        let phases: [Selection] = [.clear, .active, .preview, .active, .preview]
++        for index in 0..<4 where elapsed < phaseStartOffsets[index] + phaseDurations[index] {
++            return phases[index]
++        }
++        return .preview
++    }
++
++    private func fixedContent(phase: Selection) -> some View {
++        let renderViewport = viewport(for: phase)
++        return VStack(spacing: 24) {
++            Text(["D", "E", "F", "G", "H0", "H1"].contains(driver) ? "Standalone board" : "Standalone board: \(phase.rawValue)")
++                .accessibilityIdentifier("standalone.state")
++            if let board = BoardCatalog.all.first(where: { $0.id == "zlagboard.evo" }) {
++                let semantic = SemanticSelection(
++                    ids: phase == .clear ? [] : ["edge-20-left", "edge-20-right"],
++                    mode: phase == .preview ? .preview : .active,
++                    positionID: board.position(presentationID: board.defaultPresentation.id,
++                                               containingContactID: "edge-20-left")?.id)
++                Group {
++                    if ["E", "F", "G", "H0", "H1"].contains(driver) {
++                        // Controlled workout-equivalent inputs; verify actual Surface resolution.
++                        BoardMapView(board: board,
++                            highlightedHoldIDs: semantic.ids, highlightMode: semantic.mode,
++                            selectedPresentationID: board.defaultPresentation.id,
++                            activeHoldID: phase == .clear ? nil : "edge-20-left")
++                    } else {
++                        BoardModelSurface(board: board, presentation: board.defaultPresentation,
++                            positionID: semantic.positionID,
++                            highlightedContactIDs: semantic.ids,
++                            highlightMode: semantic.mode,
++                            onContactTap: nil, isDisplayOnly: false)
++                    }
++                }
++                    .frame(width: renderViewport.width, height: renderViewport.height)
++                    // Experimental resize arms; this is not a production repair.
++                    .animation(driver == "G" ? .easeInOut(duration: 0.18) : nil,
++                               value: renderViewport)
++                    .transaction { transaction in
++                        if driver == "F" {
++                            transaction.animation = nil
++                            transaction.disablesAnimations = true
++                        }
++                    }
++                    .onChange(of: semantic, initial: true) { _, observed in
++                        BoardHighlightDiagnostic.shared.harnessObservedSelection(
++                            state: observed.ids.isEmpty ? "clear" : (observed.mode == .preview ? "preview" : "active"),
++                            ids: observed.ids, mode: observed.mode, positionID: observed.positionID,
++                            viewport: renderViewport)
++                    }
++            } else {
++                Text("Missing Evo catalog entry")
++            }
++            HStack {
++                control("Active", .active)
++                control("Preview", .preview)
++                control("Clear", .clear)
++            }
++        }
++    }
++
++    private func runScript() async {
++        let recorder = BoardHighlightDiagnostic.shared
++        guard ["A", "B", "C", "D", "E", "F", "G", "H0", "H1"].contains(driver),
++              env["HANGTEN_REVIEW_SCENE_UPDATE_COUNTER"] != "1",
++              ["legacy", "short", "long"].contains(timingProfile),
++              (timingProfile == "legacy" || (driver == "E" && viewport == CGSize(width: 210, height: 36))) else {
++            recorder.harnessEvent("standalone-driver-invalid", state: driver, viewport: viewport)
++            return
++        }
++        let readyDeadline = ProcessInfo.processInfo.systemUptime + 20
++        do {
++            while !recorder.standaloneIsReady {
++                guard ProcessInfo.processInfo.systemUptime < readyDeadline else {
++                    recorder.harnessEvent("standalone-readiness-timeout", state: selection.rawValue,
++                                          viewport: viewport)
++                    return
++                }
++                try await Task.sleep(for: .milliseconds(100))
++            }
++            guard viewport.width.isFinite, viewport.height.isFinite,
++                  viewport.width > 0, viewport.height > 0,
++                  (!isResizeDriver || viewport == CGSize(width: 210, height: 36)),
++                  recorder.standaloneViewportMatches(initialViewport) else {
++                recorder.harnessEvent("standalone-viewport-invalid", state: selection.rawValue,
++                                      viewport: initialViewport)
++                return
++            }
++            // Future epoch lets host schedule screenshots before the first state window.
++            let baseUptime = ProcessInfo.processInfo.systemUptime + 2
++            scriptEpoch = baseUptime // Established once, before the measurement window.
++            recorder.standaloneSchedule(baseUptime: baseUptime, viewport: initialViewport,
++                phaseDurations: phaseDurations, phaseStartOffsets: phaseStartOffsets,
++                captureOffsets: captureOffsets, snapshotOffsets: snapshotOffsets,
++                completionTailOffset: completionTailOffset, timingProfile: timingProfile)
++            defer { recorder.finishStandaloneObservation() }
++            let phases: [Selection] = [.clear, .active, .preview, .active, .preview]
++            for (index, phase) in phases.enumerated() {
++                let start = baseUptime + phaseStartOffsets[index]
++                try await sleepUntil(start)
++                recorder.harnessEvent("standalone-intended-\(index)", state: phase.rawValue,
++                                      viewport: viewport(for: phase))
++                // C/D/E/F/G tasks observe only: no state writes after epoch establishment.
++                if ["A", "B"].contains(driver), selection != phase { selection = phase }
++                // Predetermined sparse snapshots, no 1 Hz sampler in standalone mode.
++                for offset in snapshotOffsets[index] {
++                    try await sleepUntil(start + offset)
++                    recorder.standaloneSnapshot("standalone-snapshot-\(index)-\(offset)")
++                }
++            }
++            // Identical off-body tail observation for robust final screenshot bracketing.
++            try await sleepUntil(baseUptime + completionTailOffset)
++            recorder.standaloneSnapshot(timingProfile == "legacy" ? "standalone-tail-42" : "standalone-timing-tail")
++            recorder.harnessEvent("standalone-script-complete", state: "preview",
++                                  viewport: viewport)
++        } catch {
++            recorder.harnessEvent("standalone-script-cancelled", state: selection.rawValue,
++                                  viewport: viewport)
++        }
++    }
++
++    private func sleepUntil(_ uptime: TimeInterval) async throws {
++        try Task.checkCancellation()
++        let remaining = uptime - ProcessInfo.processInfo.systemUptime
++        if remaining > 0 { try await Task.sleep(for: .seconds(remaining)) }
++    }
++
++    private func control(_ title: String, _ target: Selection) -> some View {
++        Button(title) {
++            guard selection != target else { return }
++            BoardHighlightDiagnostic.shared.harnessEvent("standalone-button", state: target.rawValue,
++                                                         viewport: viewport)
++            selection = target
++        }
++        .buttonStyle(.borderedProminent)
++        .accessibilityIdentifier("standalone.\(target.rawValue)")
++    }
++}
++#endif
+diff --git a/HangTen/Views/TrainView.swift b/HangTen/Views/TrainView.swift
+index ed3034572..bdcab3e01 100644
+--- a/HangTen/Views/TrainView.swift
++++ b/HangTen/Views/TrainView.swift
+@@ -96,6 +96,11 @@ struct TrainView: View {
+                     noCompatiblePlan
+                 }
+             }
++            #if DEBUG
++            .onChange(of: showsDeepLinkedWorkout, initial: true) { _, showsWorkout in
++                recordDiagnosticTrainNavigation(showsWorkout: showsWorkout)
++            }
++            #endif
+             .onChange(of: deepLinkManager.pendingBoardID, initial: true) { _, boardID in
+                 guard boardID != nil else { return }
+                 showsDeepLinkedBoardDetail = true
+@@ -136,10 +141,59 @@ struct TrainView: View {
+         store.featuredPlan
+     }
+ 
++    #if DEBUG
++    private var diagnosticTrainClearSlotRequested: Bool {
++        let env = ProcessInfo.processInfo.environment
++        return BoardHighlightDiagnostic.isEnabled
++            && store.selectedBoard.id == "zlagboard.evo"
++            && store.selectedBoard.presentations.count == 1
++            && (env["HANGTEN_REVIEW_SUPPRESS_TRAIN_BOARD_HOST"] == "1"
++                || (BoardHighlightDiagnostic.observesBoardHosts
++                    && env["HANGTEN_REVIEW_UNMOUNT_TRAIN_FOR_WORKOUT"] == "1"
++                    && showsDeepLinkedWorkout))
++    }
++
++    private func recordDiagnosticTrainNavigation(showsWorkout: Bool) {
++        guard BoardHighlightDiagnostic.observesBoardHosts else { return }
++        BoardHighlightDiagnostic.shared.trainNavigation(stage: "workout-navigation-state",
++            boardID: store.selectedBoard.id, planID: deepLinkedWorkoutPlan?.id,
++            presentationCount: store.selectedBoard.presentations.count,
++            showsWorkout: showsWorkout,
++            clearSlotRequested: diagnosticTrainClearSlotRequested)
++    }
++    #endif
++
+     private var selectedBoardCard: some View {
+         VStack(alignment: .leading, spacing: 16) {
+-            BoardMapView(board: store.selectedBoard)
+-                .cardPreviewStyle()
++            Group {
++                #if DEBUG
++                if diagnosticTrainClearSlotRequested {
++                    // This diagnostic targets only Evo's one-presentation model card.
++                    // Resolve its exact normal slot without constructing BoardMapView.
++                    VStack(spacing: 8) {
++                        Color.clear
++                            .aspectRatio(store.selectedBoard.defaultPresentation.aspectRatio(
++                                for: BoardMapPresentationSelection.resolvePositionID(
++                                    board: store.selectedBoard,
++                                    presentationID: store.selectedBoard.defaultPresentation.id,
++                                    activeHoldID: nil)), contentMode: .fit)
++                    }
++                    .allowsHitTesting(false)
++                    .accessibilityHidden(true)
++                } else {
++                    BoardMapView(board: store.selectedBoard)
++                        .cardPreviewStyle()
++                }
++                #else
++                BoardMapView(board: store.selectedBoard)
++                    .cardPreviewStyle()
++                #endif
++            }
++            #if DEBUG
++            .environment(\.boardDiagnosticTrainHost, BoardHighlightDiagnostic.observesBoardHosts
++                && store.selectedBoard.id == "zlagboard.evo"
++                && store.selectedBoard.presentations.count == 1)
++            #endif
+ 
+             VStack(alignment: .leading, spacing: 5) {
+                 SectionLabel(title: "Your board")

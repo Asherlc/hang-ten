@@ -1,0 +1,14 @@
+{
+  "arm": "startup-observation-action",
+  "setupHardBoundSeconds": 90,
+  "trainReadinessSeconds": 20,
+  "appearanceArrivalSecondsAfterOpenURLStart": 30,
+  "observationSecondsAfterRecordedAppearance": 30,
+  "externalTracePollingSeconds": 0.03,
+  "commandMaxSeconds": 20,
+  "initialScreenshotUnchanged": true,
+  "noAXOrTouches": true,
+  "noPhaseOrColorPrerequisite": true,
+  "newAppSampler": false,
+  "termination": "Executor terminates exact launched app PID after helper exit; observation is not extended for cleanup."
+}
