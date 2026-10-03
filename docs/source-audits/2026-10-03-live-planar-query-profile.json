@@ -1,0 +1,74 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "closed": true,
+  "result": {
+    "adopted": false,
+    "boundaryPairs": 1771,
+    "buckets": {
+      "candidatesIncludingMembership": {
+        "calls": 1684,
+        "seconds": 0.001539583143312484
+      },
+      "membershipNested": {
+        "calls": 3092,
+        "seconds": 0.0005024576094001532
+      },
+      "originalTrianglesAndMerge": {
+        "calls": 131143,
+        "seconds": 0.02298891836835537
+      },
+      "planarHitsAndMerge": {
+        "calls": 1684,
+        "seconds": 0.0006110414396971464
+      },
+      "traversalAndSort": {
+        "calls": 3236,
+        "seconds": 0.011474958067992702
+      }
+    },
+    "emptyTimerPairs": 10000,
+    "emptyTimerSeconds": 0.0006474583351518959,
+    "fallbacks": 0,
+    "instrumentedSeconds": 0.04684641667699907,
+    "maximumDepthDifferenceMeters": 0,
+    "outputsBitIdentical": true,
+    "owner": "strong-owl-live-physics",
+    "pairs": [],
+    "queries": 3236,
+    "regionCalls": 18149,
+    "remainderSeconds": 0.010231915657641366,
+    "scope": "instrumentation-only serial query corpus; no timing-gate retry"
+  },
+  "resources": [
+    {
+      "group": 98709,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-90e78274f-region-cost-split-v2/native/resources.jsonl"
+    },
+    {
+      "group": 98968,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-90e78274f-region-cost-split-v3/native/resources.jsonl"
+    },
+    {
+      "group": 99155,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-90e78274f-region-cost-split-v3/native/resources.jsonl"
+    }
+  ],
+  "limits": [
+    "Instrumentation-only one serial corpus run, full output Double bits/order identical enabled vs disabled; no timing-gate retry.",
+    "Timers inflate short per-face calls; empty pair cost is scale only, not an acceptance-time correction.",
+    "First source transform asserted duplicate marker before any process; subsequent compile missing Foundation failed, then corrected."
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-90e78274f-region-cost-split-v3/native/result.json": "20cae9b95e8dbb719e54181034e913ed48e7ac4455c107293375608725fa8583",
+    ".context/strong-owl-live-physics-region-profile-proposal/PLAN.md": "51daaa2acf117f069536aabf56a5bca1eac4f0d72ed0cc89259954a8bb9f6114",
+    "Tools/HangboardRopePrototype/planar_regions/Profile.swift": "42ac4463190fd844ed59d1643afdb40d9c9ca018403518aaaed8ab3e7c599869",
+    "Tools/HangboardRopePrototype/planar_regions/profile.py": "a1237a33e4b1de6eadeb6845bb37970c91b57c663c3004491297672f5e456c7e",
+    "Tools/HangboardRopePrototype/run_armijo_checkpoint.py": "3158941636cf80d3e6c9c10323f42b2717dd5ef905485ad6321c960244c6fd89",
+    ".context/strong-owl-live-physics-armijo-90e78274f-region-cost-split-v2/native/provenance.json": "c2f497b820d34059742e0f2a9418a340285280d06e3a47d24eeba60aa4e063e1",
+    ".context/strong-owl-live-physics-armijo-90e78274f-region-cost-split-v3/native/provenance.json": "4fcb7660f64c97512508ce11b92325486f92e5ce0b10be65c16754bdc9c2409e"
+  }
+}

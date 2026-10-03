@@ -14,9 +14,11 @@ parser.add_argument('--trajectory',action='store_true')
 parser.add_argument('--step-rate',type=int,choices=[240,120])
 parser.add_argument('--composed-step',action='store_true')
 parser.add_argument('--mass-only',action='store_true')
+parser.add_argument('--lagged-reaction',action='store_true')
 parser.add_argument('--planar-regions',action='store_true')
 parser.add_argument('--region-queries',action='store_true')
 parser.add_argument('--clipped-regions',action='store_true')
+parser.add_argument('--region-profile',action='store_true')
 parser.add_argument('--scaled-merit',action='store_true')
 parser.add_argument('--spectral-step',action='store_true')
 parser.add_argument('--geometry-hints',action='store_true')
@@ -32,8 +34,10 @@ parser.add_argument('--spectral-checkpoint',type=int,choices=[109,140],default=1
 parser.add_argument('--preflight',action='store_true');args=parser.parse_args()
 if args.planar_regions and (args.clearance_bounds or args.full_merit or args.trajectory or args.step_rate or args.spectral_step or args.scaled_merit or args.geometry_hints):parser.error('--planar-regions is isolated')
 if args.clipped_regions and not args.planar_regions:parser.error('--clipped-regions requires --planar-regions')
+if args.region_profile and (not args.region_queries or not args.clipped_regions):parser.error('--region-profile requires clipped region queries')
 if args.region_queries and not args.planar_regions:parser.error('--region-queries requires --planar-regions')
 if args.mass_only and (args.step_rate!=240 or not args.preflight or args.composed_step or args.clearance_bounds or args.spectral_step or args.scaled_merit):parser.error('--mass-only requires isolated --step-rate 240 --preflight')
+if args.lagged_reaction and (args.step_rate or args.mass_only or args.composed_step or args.planar_regions or args.clearance_bounds or args.full_merit or args.trajectory or args.spectral_step or args.scaled_merit or args.geometry_hints):parser.error('--lagged-reaction is isolated')
 if args.bounds_profile and not args.clearance_bounds:parser.error('--bounds-profile requires --clearance-bounds')
 if args.axis_bounds and not args.clearance_bounds:parser.error('--axis-bounds requires --clearance-bounds')
 if args.free_balls and (not args.clearance_bounds or args.axis_bounds or args.bounds_profile):parser.error('--free-balls requires isolated --clearance-bounds')
@@ -62,6 +66,9 @@ for name in NAMES:
     if args.planar_regions and name=='RopeTriangleCollider.swift':
         from planar_regions.snapshot import collider_source as region_collider
         text=region_collider(text)
+        if args.region_profile:
+            from planar_regions.profile import collider_source as profile_collider
+            text=profile_collider(text)
     if args.geometry_hints and name=='RopeTriangleCollider.swift':
         from geometry_hints.snapshot import collider_source as hint_collider
         text=hint_collider(text)
@@ -83,6 +90,9 @@ for name in NAMES:
     if name=='RopeDynamicsSolver.swift':
         text=solver_source(text).replace('private extension SIMD4','extension SIMD4')
         text+='\n'+(tool/'stock_chain/CheckpointAdapter.swift').read_text()+'\n'+(tool/'contact_bundle/CheckpointExtras.swift').read_text()
+        if args.lagged_reaction:
+            from lagged_reaction.snapshot import solver_source as lagged_solver
+            text=lagged_solver(text)
         if args.clearance_bounds:
             from clearance_bounds.snapshot import solver_source as bound_solver
             text=bound_solver(text)
@@ -125,12 +135,18 @@ for name in ['Math.swift','Trace.swift','main.swift']:
     text=(tool/'armijo'/('StepRateMain.swift' if (args.step_rate or args.spectral_trajectory) and name=='main.swift' else 'TrajectoryMain.swift' if args.trajectory and name=='main.swift' else name)).read_text()
     if name=='main.swift' and not args.full_merit:
         text=text.replace('    ArmijoTrace.collectOracleBranches=x.verifyArmijoDerivative\n','')
+    if name=='main.swift' and args.lagged_reaction:
+        from lagged_reaction.snapshot import driver_source as lagged_driver
+        text=lagged_driver(text)
     if name=='main.swift' and args.planar_regions:
         from planar_regions.snapshot import driver_source as region_driver
         text=region_driver(text,args.clipped_regions)
         if args.region_queries:
             from planar_regions.snapshot import query_driver
             text=query_driver(text,args.clipped_regions)
+            if args.region_profile:
+                from planar_regions.profile import driver_source as profile_driver
+                text=profile_driver(text)
     if name=='main.swift' and args.geometry_hints:
         from geometry_hints.snapshot import driver_source as hint_driver
         text=hint_driver(text)
@@ -198,9 +214,15 @@ if args.planar_regions:
     from census_planar_regions import generate_regions
     atlas,metadata=generate_regions(REPO/'Hangboards/clavellium-training-block/assets/primary.physics.json')
     (sources/'PlanarAtlas.swift').write_text(atlas)
-    (sources/'PlanarMath.swift').write_bytes((tool/'planar_regions/Math.swift').read_bytes())
+    region_math=(tool/'planar_regions/Math.swift').read_text()
+    if args.region_profile:
+        from planar_regions.profile import math_source,profile_source
+        region_math=math_source(region_math)
+        (sources/'PlanarProfile.swift').write_text(profile_source())
+    (sources/'PlanarMath.swift').write_text(region_math)
     (stage/'region-topology.json').write_text(json.dumps(metadata,indent=2)+'\n')
 if args.mass_only:(sources/'MassOnlyMath.swift').write_bytes((tool/'mass_only/Math.swift').read_bytes())
+if args.lagged_reaction:(sources/'LaggedReactionMath.swift').write_bytes((tool/'lagged_reaction/Math.swift').read_bytes())
 if args.composed_step:
     for name in ['Math.swift','Fixtures.swift']:(sources/('Composed'+name)).write_bytes((tool/'composed_step'/name).read_bytes())
 (sources/'ExactCheckpointJSON.swift').write_bytes((tool/'native_contact/ExactCheckpointJSON.swift').read_bytes())
@@ -221,6 +243,7 @@ if args.scaled_merit:inputs += list((tool/'scaled_merit').glob('*.*'))
 if args.region_queries:inputs += [REPO/'.context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/result.json']
 if args.planar_regions:inputs += [*list((tool/'planar_regions').glob('*.*')),tool/'census_planar_regions.py',stage/'region-topology.json']
 if args.mass_only:inputs += list((tool/'mass_only').glob('*.*'))
+if args.lagged_reaction:inputs += list((tool/'lagged_reaction').glob('*.*'))
 if args.composed_step:inputs += list((tool/'composed_step').glob('*.*'))
 (stage/'provenance.json').write_text(json.dumps({'owner':REPO.name,'command':command,
     'hashes':{str(p.relative_to(REPO)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}},indent=2))

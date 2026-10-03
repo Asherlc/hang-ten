@@ -1,0 +1,433 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "closed": true,
+  "result": {
+    "adopted": false,
+    "candidateMetrics": {
+      "clearanceMargin": 6.79755805094058e-05,
+      "geometryAccepted": false,
+      "lengthError": 0.00023929464381966525,
+      "speed": 0.10714522791723509,
+      "strain": 0.04254201366781629,
+      "topologyFailure": null
+    },
+    "candidateQPs": 0,
+    "controlQPs": 12,
+    "currentDifferenceMeters": 0.0008689932861734367,
+    "failure": "invalid(\"first held stage original physical/CCD/reference gate\")",
+    "fixturesPass": true,
+    "immutable": true,
+    "maximumVelocityDifference": 0.2085583886816248,
+    "originalTrace": [
+      {
+        "alpha": 0.6539699582761551,
+        "armijoRejected": 0,
+        "movement": 0.0002637324177802809,
+        "originalRejected": 0,
+        "rows": 420,
+        "slope": null,
+        "strain": 0.026797901338586394
+      },
+      {
+        "alpha": 0.27736194161352606,
+        "armijoRejected": 0,
+        "movement": 0.0006909109475315297,
+        "originalRejected": 0,
+        "rows": 432,
+        "slope": null,
+        "strain": 0.019369295252429808
+      },
+      {
+        "alpha": 0.23634769487208002,
+        "armijoRejected": 0,
+        "movement": 0.0007024498970800133,
+        "originalRejected": 0,
+        "rows": 430,
+        "slope": null,
+        "strain": 0.014799676467107448
+      },
+      {
+        "alpha": 0.33335792648851087,
+        "armijoRejected": 0,
+        "movement": 0.0005805222615419928,
+        "originalRejected": 0,
+        "rows": 437,
+        "slope": null,
+        "strain": 0.009889708337952774
+      },
+      {
+        "alpha": 0.42321984182694494,
+        "armijoRejected": 0,
+        "movement": 0.00032584803037643943,
+        "originalRejected": 0,
+        "rows": 433,
+        "slope": null,
+        "strain": 0.010153090800447906
+      },
+      {
+        "alpha": 0.23216506681304555,
+        "armijoRejected": 0,
+        "movement": 0.0004455298716933101,
+        "originalRejected": 1,
+        "rows": 434,
+        "slope": null,
+        "strain": 0.007973541660488692
+      },
+      {
+        "alpha": 0.3913010064544743,
+        "armijoRejected": 0,
+        "movement": 0.0005936993639467741,
+        "originalRejected": 1,
+        "rows": 438,
+        "slope": null,
+        "strain": 0.005115314360090606
+      },
+      {
+        "alpha": 0.4810771942047269,
+        "armijoRejected": 0,
+        "movement": 0.00024669364257275133,
+        "originalRejected": 1,
+        "rows": 442,
+        "slope": null,
+        "strain": 0.0030256852058541117
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 0.00033207551588057554,
+        "originalRejected": 0,
+        "rows": 435,
+        "slope": null,
+        "strain": 0.0013003401615894195
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 9.671089720138446e-05,
+        "originalRejected": 1,
+        "rows": 435,
+        "slope": null,
+        "strain": 0.0009865973104143944
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 5.648292115616311e-05,
+        "originalRejected": 0,
+        "rows": 415,
+        "slope": null,
+        "strain": 6.960174396497543e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 1.4121665442950298e-05,
+        "originalRejected": 0,
+        "rows": 391,
+        "slope": null,
+        "strain": 5.261096347464189e-05
+      }
+    ],
+    "owner": "strong-owl-live-physics",
+    "pairs": [],
+    "prefixIdentitySteps": 2,
+    "reactionChangeMeters": 0.0008689932861734367,
+    "referenceCaps": 0,
+    "referenceRetries": 0,
+    "scope": "first held reaction stage, no integration or speed claim",
+    "step": 3,
+    "strictDifferenceMeters": 0.0008724869285300317,
+    "strictTrace": [
+      {
+        "alpha": 0.6539699582761593,
+        "armijoRejected": 0,
+        "movement": 0.00026373241778028056,
+        "originalRejected": 0,
+        "rows": 420,
+        "slope": null,
+        "strain": 0.026797901338586394
+      },
+      {
+        "alpha": 0.27736194161357736,
+        "armijoRejected": 0,
+        "movement": 0.0006909109475314784,
+        "originalRejected": 0,
+        "rows": 432,
+        "slope": null,
+        "strain": 0.019369295252429808
+      },
+      {
+        "alpha": 0.23634769487222024,
+        "armijoRejected": 0,
+        "movement": 0.0007024498970794178,
+        "originalRejected": 0,
+        "rows": 430,
+        "slope": null,
+        "strain": 0.014799676467107892
+      },
+      {
+        "alpha": 0.33335792648906626,
+        "armijoRejected": 0,
+        "movement": 0.0005805222615406682,
+        "originalRejected": 0,
+        "rows": 437,
+        "slope": null,
+        "strain": 0.009889708337944114
+      },
+      {
+        "alpha": 0.42321991253787355,
+        "armijoRejected": 0,
+        "movement": 0.00032584793349058674,
+        "originalRejected": 0,
+        "rows": 433,
+        "slope": null,
+        "strain": 0.010153090163881995
+      },
+      {
+        "alpha": 0.2321651210665319,
+        "armijoRejected": 0,
+        "movement": 0.0004455296315612588,
+        "originalRejected": 1,
+        "rows": 434,
+        "slope": null,
+        "strain": 0.007973540812297841
+      },
+      {
+        "alpha": 0.3913010261921283,
+        "armijoRejected": 0,
+        "movement": 0.0005936993848674723,
+        "originalRejected": 1,
+        "rows": 438,
+        "slope": null,
+        "strain": 0.005115314402811988
+      },
+      {
+        "alpha": 0.4810771994956714,
+        "armijoRejected": 0,
+        "movement": 0.00024669360953363405,
+        "originalRejected": 1,
+        "rows": 442,
+        "slope": null,
+        "strain": 0.003025685259478772
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 0.00033207554059286727,
+        "originalRejected": 0,
+        "rows": 435,
+        "slope": null,
+        "strain": 0.001300339940313311
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 9.67108914862799e-05,
+        "originalRejected": 1,
+        "rows": 435,
+        "slope": null,
+        "strain": 0.000986597173670667
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 5.6482910419767745e-05,
+        "originalRejected": 0,
+        "rows": 415,
+        "slope": null,
+        "strain": 6.96017262724613e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 1.412166362923808e-05,
+        "originalRejected": 0,
+        "rows": 391,
+        "slope": null,
+        "strain": 5.2610949660580886e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 1.1930795707097467e-05,
+        "originalRejected": 0,
+        "rows": 413,
+        "slope": null,
+        "strain": 3.7612644237849935e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 1.0210850249939523e-05,
+        "originalRejected": 0,
+        "rows": 393,
+        "slope": null,
+        "strain": 2.7351736087366518e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 8.561542237818936e-06,
+        "originalRejected": 0,
+        "rows": 409,
+        "slope": null,
+        "strain": 1.9399191093727453e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 7.253421648376111e-06,
+        "originalRejected": 0,
+        "rows": 393,
+        "slope": null,
+        "strain": 1.3843538865243588e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 6.027683298771468e-06,
+        "originalRejected": 0,
+        "rows": 409,
+        "slope": null,
+        "strain": 9.954855947569285e-06
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 5.014877942638095e-06,
+        "originalRejected": 0,
+        "rows": 395,
+        "slope": null,
+        "strain": 7.855409499990529e-06
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 4.067606018998067e-06,
+        "originalRejected": 0,
+        "rows": 409,
+        "slope": null,
+        "strain": 7.966996200536869e-06
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.242535318451535e-06,
+        "originalRejected": 0,
+        "rows": 393,
+        "slope": null,
+        "strain": 9.562160706577671e-06
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 2.930509561020503e-06,
+        "originalRejected": 1,
+        "rows": 411,
+        "slope": null,
+        "strain": 7.871962299788038e-06
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 4.6944748322900286e-07,
+        "originalRejected": 0,
+        "rows": 399,
+        "slope": null,
+        "strain": 8.612683610742522e-08
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 3.7649523379073917e-07,
+        "originalRejected": 1,
+        "rows": 401,
+        "slope": null,
+        "strain": 8.434330212025998e-08
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 5.964624207455257e-08,
+        "originalRejected": 0,
+        "rows": 401,
+        "slope": null,
+        "strain": 5.3993454152134746e-09
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 7.48774460642274e-08,
+        "originalRejected": 1,
+        "rows": 401,
+        "slope": null,
+        "strain": 4.87418128081174e-09
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 1.0030555543823244e-08,
+        "originalRejected": 0,
+        "rows": 401,
+        "slope": null,
+        "strain": 4.774460826695304e-10
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 1.3020090314057767e-08,
+        "originalRejected": 1,
+        "rows": 401,
+        "slope": null,
+        "strain": 4.65981919717251e-10
+      }
+    ],
+    "sweptInterCord": true,
+    "sweptSelf": true,
+    "sweptWood": true
+  },
+  "resources": [
+    {
+      "group": 7768,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-90e78274f-lagged-red/native/resources.jsonl"
+    },
+    {
+      "group": 8300,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-90e78274f-lagged-red-v2/native/resources.jsonl"
+    },
+    {
+      "group": 8468,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-90e78274f-lagged-red-v2/native/resources.jsonl"
+    },
+    {
+      "group": 11196,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-90e78274f-lagged-first-held/native/resources.jsonl"
+    },
+    {
+      "group": 11906,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-90e78274f-lagged-first-held/native/resources.jsonl"
+    }
+  ],
+  "limits": [
+    "Actual first held stage only, never displayed or adopted; original/strict full solves from identical actual input.",
+    "Scalar changing-force fixtures observed RED then GREEN27cases. First compile failed Swift Any-context inference, fixed without changing arithmetic.",
+    "Failure closes before alternating integration, timing, full trajectory, simulator or video; no reaction scaling or extrapolation rescue."
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-90e78274f-lagged-first-held/native/result.json": "16c26c0e6aff9071be3f45f3ab10e13ce78073c4592290c1f312e4d437c8222d",
+    ".context/strong-owl-live-physics-lagged-reaction-proposal/PLAN.md": "858b611ee4aa513ac030c834a0fb9dfe904d8a53cccb55eea8ca147f8dc986c3",
+    "Tools/HangboardRopePrototype/lagged_reaction/Math.swift": "857ef7d6c9e577107b3839d26b510ecb3bc7be44312e1576507f076d2fab864f",
+    "Tools/HangboardRopePrototype/lagged_reaction/Main.swift": "299f3fe3be15cd4f897064341b1d1cee4ff78ac18e952fccfc7d58cc49ce6595",
+    "Tools/HangboardRopePrototype/lagged_reaction/snapshot.py": "db6b59bcbd21e01f0c1c9467158842c05d82261119d88fcd268abe9052a5804f",
+    "Tools/HangboardRopePrototype/run_armijo_checkpoint.py": "3158941636cf80d3e6c9c10323f42b2717dd5ef905485ad6321c960244c6fd89",
+    ".context/strong-owl-live-physics-armijo-90e78274f-lagged-red/native/provenance.json": "78fc236ba24b1c49a206a9dae82694119a6617bacde9aee6a3d5a4fd48686473",
+    ".context/strong-owl-live-physics-armijo-90e78274f-lagged-red-v2/native/provenance.json": "ab839ba33827f000e8174f97ac03180bc72ca59362fd843fe7661bf5abb44a37",
+    ".context/strong-owl-live-physics-armijo-90e78274f-lagged-first-held/native/provenance.json": "bbeda22a7781f8ac00a1250e288dd1c7c56dce2163eb61646177ab4da9109d3a"
+  }
+}
