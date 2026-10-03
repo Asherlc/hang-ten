@@ -550,6 +550,7 @@ struct BoardDetailMapView: View {
 private struct BoardDetailMapSizeModifier: ViewModifier {
     let aspectRatio: CGFloat
     let maximumHeight: CGFloat?
+    var accessibilityIdentifier: String? = "boardDetail.map"
 
     /// Fits the map through one modifier chain so compact-height changes preserve its renderer identity.
     func body(content: Content) -> some View {
@@ -561,9 +562,11 @@ private struct BoardDetailMapSizeModifier: ViewModifier {
             // Keep the accessibility node on the fitted map, before the outer
             // frame expands to the available width.
             .background {
-                Color.clear
-                    .accessibilityElement()
-                    .accessibilityIdentifier("boardDetail.map")
+                if let accessibilityIdentifier {
+                    Color.clear
+                        .accessibilityElement()
+                        .accessibilityIdentifier(accessibilityIdentifier)
+                }
             }
             .frame(maxWidth: .infinity)
     }
@@ -601,6 +604,7 @@ struct BoardMapView: View {
     private let requestedPresentationID: String?
     private let activeHoldID: String?
     private let isDisplayOnly: Bool
+    private let maximumMapHeight: CGFloat?
 
     @State private var presentationSelection: BoardMapPresentationSelection
     @State private var preferredPositionIDs: [String: String] = [:]
@@ -612,7 +616,8 @@ struct BoardMapView: View {
         selectedPresentationID: String? = nil,
         activeHoldID: String? = nil,
         onHoldTap: ((PhysicalContact) -> Void)? = nil,
-        isDisplayOnly: Bool = false
+        isDisplayOnly: Bool = false,
+        maximumMapHeight: CGFloat? = nil
     ) {
         self.board = board
         self.highlightedHoldIDs = highlightedHoldIDs
@@ -621,6 +626,7 @@ struct BoardMapView: View {
         requestedPresentationID = selectedPresentationID
         self.activeHoldID = activeHoldID
         self.isDisplayOnly = isDisplayOnly
+        self.maximumMapHeight = maximumMapHeight
         let resolvedSelection = BoardMapPresentationSelection(
             board: board,
             requestedPresentationID: selectedPresentationID,
@@ -710,7 +716,11 @@ struct BoardMapView: View {
                     )
                 }
             }
-            .aspectRatio(content.presentation.aspectRatio, contentMode: .fit)
+            .modifier(BoardDetailMapSizeModifier(
+                aspectRatio: content.presentation.aspectRatio,
+                maximumHeight: maximumMapHeight,
+                accessibilityIdentifier: nil
+            ))
         }
         .animation(.easeInOut(duration: 0.18), value: highlightedHoldIDs)
         .onChange(of: highlightedHoldIDs) { previousHoldIDs, holdIDs in

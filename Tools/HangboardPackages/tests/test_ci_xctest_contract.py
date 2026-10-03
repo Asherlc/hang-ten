@@ -216,8 +216,9 @@ def test_build_required_gate_rejects_missing_required_validation(
         ("test-without-building", ["build-for-testing", "test-without-building"]),
     ],
 )
+@pytest.mark.parametrize("toolchain", ["", "com.apple.dt.toolchain.Metal.123"])
 def test_xctest_runner_stops_after_first_failed_phase(
-    tmp_path: Path, failed_phase: str, expected_calls: list[str]
+    tmp_path: Path, failed_phase: str, expected_calls: list[str], toolchain: str
 ) -> None:
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
@@ -264,6 +265,7 @@ def test_xctest_runner_stops_after_first_failed_phase(
         MOCK_XCODEBUILD_CALLS=str(calls),
         MOCK_TOOL_EVENTS=str(events),
         MOCK_FAIL_PHASE=failed_phase,
+        XCTEST_TOOLCHAIN=toolchain,
         XCTEST_LABEL="mock-xctest",
         XCTEST_DERIVED_DATA=str(tmp_path / "derived-data"),
         XCTEST_LOG_ROOT=str(tmp_path / "logs"),
@@ -296,6 +298,11 @@ def test_xctest_runner_stops_after_first_failed_phase(
         event.startswith("xcrun:simctl spawn 22452A91-4697-4369-8812-53ADB77EB73B launchctl print system")
         for event in event_lines[:build_for_testing]
     )
+    for event in event_lines:
+        if event.startswith("xcodebuild:"):
+            assert ("-toolchain " in event) == bool(toolchain)
+            if toolchain:
+                assert f"-toolchain {toolchain} " in event
     assert sum(event.startswith("xcrun:simctl boot ") for event in event_lines) == 1
     assert "-destination platform=iOS Simulator,id=22452A91-4697-4369-8812-53ADB77EB73B" in event_lines[build_for_testing]
 
@@ -359,3 +366,59 @@ def test_optimized_unit_lane_preserves_swift_debug_assertions() -> None:
     assert optimized_steps
     for run in optimized_steps:
         assert "OTHER_SWIFT_FLAGS = $(inherited) -assert-config Debug" in run
+
+
+@pytest.mark.parametrize("mode", ["installed", "needs-selection", "download-fails", "unavailable", "missing-identifier"])
+def test_metal_setup_selects_installed_component_and_verifies_compiler(tmp_path: Path, mode: str) -> None:
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
+    step = next(step for step in workflow["jobs"]["test-ui-map"]["steps"]
+                if step["name"] == "Ensure Metal compiler is available")
+    bin_path = tmp_path / "bin"
+    bin_path.mkdir()
+    commands = {
+        "xcrun": '\n'.join([
+            '#!/usr/bin/env bash',
+            'printf "xcrun %s\\n" "$*" >> "$METAL_TEST_LOG"',
+            'if [[ "$*" == "--kill-cache" || "$*" == "swift --version" ]]; then exit 0; fi',
+            'if [[ "$METAL_TEST_MODE" == "installed" ]]; then exit 0; fi',
+            '[[ "$METAL_TEST_MODE" != "unavailable" && "${TOOLCHAINS:-}" == "com.apple.dt.toolchain.Metal.123,com.apple.dt.toolchain.XcodeDefault" ]]',
+        ]),
+        "xcodebuild": '\n'.join([
+            '#!/usr/bin/env bash',
+            'printf "xcodebuild %s\\n" "$*" >> "$METAL_TEST_LOG"',
+            'case "$1" in',
+            '  -downloadComponent) [[ "$METAL_TEST_MODE" != "download-fails" ]] || exit 7 ;;',
+            '  -showComponent)',
+            '    if [[ "$METAL_TEST_MODE" == "missing-identifier" ]]; then echo \'{}\';',
+            '    else echo \'{"status":"installed","toolchainIdentifier":"com.apple.dt.toolchain.Metal.123"}\'; fi ;;',
+            'esac',
+        ]),
+    }
+    for name, source in commands.items():
+        tool = bin_path / name
+        tool.write_text(source + "\n")
+        tool.chmod(0o755)
+    log = tmp_path / "commands.log"
+    github_env = tmp_path / "github-env"
+    result = subprocess.run(
+        ["bash", "-c", step["run"]], cwd=tmp_path,
+        env={**os.environ, "PATH": f"{bin_path}:{os.environ['PATH']}",
+             "METAL_TEST_LOG": str(log), "TOOLCHAINS": "",
+             "METAL_TEST_MODE": mode, "GITHUB_ENV": str(github_env)},
+        capture_output=True, text=True, check=False,
+    )
+    assert (result.returncode == 0) == (mode in {"installed", "needs-selection"}), result.stdout + result.stderr
+    history = log.read_text().splitlines()
+    expected = ["xcrun metal -v"]
+    if mode != "installed":
+        expected.append("xcodebuild -downloadComponent MetalToolchain")
+    if mode not in {"installed", "download-fails"}:
+        expected.append("xcodebuild -showComponent MetalToolchain -json")
+    if mode in {"needs-selection", "unavailable"}:
+        expected.extend(["xcrun --kill-cache", "xcrun metal -v"])
+    if mode == "needs-selection":
+        expected.append("xcrun swift --version")
+        assert github_env.read_text() == "XCTEST_TOOLCHAIN=com.apple.dt.toolchain.Metal.123\n"
+    else:
+        assert not github_env.exists()
+    assert history == expected

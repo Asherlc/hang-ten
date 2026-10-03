@@ -118,7 +118,8 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
 
         let leftHandCue = app.otherElements["workout.gripCue.left"]
         XCTAssertTrue(leftHandCue.waitForExistence(timeout: 10))
-        XCTAssertTrue(app.buttons["workout.gripCue.left.model"].exists)
+        XCTAssertFalse(app.buttons["workout.gripCue.left.model"].exists)
+        XCTAssertFalse(app.buttons["workout.gripCue.right.model"].exists)
         XCTAssertTrue(leftHandCue.label.contains("Exact fingers: index, middle, ring, and pinky"))
         XCTAssertFalse(app.staticTexts["P+R+M+I"].exists)
         XCTAssertFalse(app.staticTexts["I+M+R+P"].exists)
@@ -139,6 +140,64 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         attachment.name = "Inline manual weight setup in landscape"
         attachment.lifetime = .keepAlways
         add(attachment)
+    }
+
+    func testWorkoutPauseSurvivesRotationAndResumes() {
+        defer { XCUIDevice.shared.orientation = .portrait }
+        app.terminate()
+        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
+        XCUIDevice.shared.orientation = .landscapeLeft
+        app.launch()
+        openWorkoutDeepLinkAndChooseLeftHandIfNeeded()
+        let landscapeLayout = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                let frame = self.app.windows.firstMatch.frame
+                return frame.width > frame.height
+            },
+            object: nil
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [landscapeLayout], timeout: 10), .completed)
+        app.buttons["Pause"].tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 10))
+        let timer = app.staticTexts["workout.timer"]
+        XCTAssertTrue(timer.exists)
+        let pausedTime = timer.label
+        let landscape = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        landscape.name = "Paused workout landscape"
+        landscape.lifetime = .keepAlways
+        add(landscape)
+
+        XCUIDevice.shared.orientation = .portrait
+        let portrait = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                let frame = self.app.windows.firstMatch.frame
+                return frame.height > frame.width
+            },
+            object: nil
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [portrait], timeout: 10), .completed)
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 10))
+        XCTAssertEqual(timer.label, pausedTime, "Rotation must preserve the paused clock")
+        let portraitScreenshot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        portraitScreenshot.name = "Paused workout portrait"
+        portraitScreenshot.lifetime = .keepAlways
+        add(portraitScreenshot)
+
+        app.buttons["Resume"].tap()
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 10))
+        let skip = app.buttons["workout.skipStep"]
+        XCTAssertTrue(skip.isEnabled)
+        skip.tap()
+        // Entering a rest step is immediate; the next work step gets a countdown.
+        let restStep = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label == %@", "Skip step 2: Rest"),
+            object: skip
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [restStep], timeout: 5), .completed)
+        skip.tap()
+        XCTAssertTrue(app.buttons["Cancel countdown"].waitForExistence(timeout: 5))
+        app.buttons["Cancel countdown"].tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 10))
     }
 
     func testLandscapeManualWorkoutHidesStreamingSensorMeter() throws {

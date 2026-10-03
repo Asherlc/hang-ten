@@ -806,10 +806,30 @@ jobs:
       - name: Ensure Metal compiler is available
         run: |
           set -euo pipefail
-          if ! xcrun metal -v; then
-            xcodebuild -downloadComponent MetalToolchain
+          if xcrun metal -v; then
+            exit 0
           fi
+
+          # Downloading installs the asset, but xcrun can still select Xcode's
+          # placeholder compiler. Resolve and select the installed component.
+          xcodebuild -downloadComponent MetalToolchain
+          metal_identifier="$(xcodebuild -showComponent MetalToolchain -json | python3 -c '
+          import json, sys
+          component = json.load(sys.stdin)
+          identifier = component.get("toolchainIdentifier", "")
+          if component.get("status") != "installed" or not identifier.startswith("com.apple.dt.toolchain.Metal."):
+              raise SystemExit("Xcode did not report an installed Metal toolchain identifier")
+          if any(character.isspace() for character in identifier):
+              raise SystemExit("Invalid Metal toolchain identifier")
+          print(identifier)
+          ')"
+          export TOOLCHAINS="$metal_identifier,com.apple.dt.toolchain.XcodeDefault"
+          xcrun --kill-cache
           xcrun metal -v
+          xcrun swift --version
+          # xcodebuild does not honor xcrun's TOOLCHAINS environment selection;
+          # the test runner must also pass the explicit -toolchain argument.
+          printf 'XCTEST_TOOLCHAIN=%s\n' "$metal_identifier" >> "$GITHUB_ENV"
 
       - name: Select latest available iOS Pro simulator for the board comparison
         run: |

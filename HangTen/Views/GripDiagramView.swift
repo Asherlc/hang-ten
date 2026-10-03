@@ -126,40 +126,21 @@ struct GripDiagramView: View {
     }
 }
 
-/// The same 3D rig drives compact workout cues and the rotatable detail view.
+/// Inline grip illustration and its accessible finger description.
 struct GripHandCueCard: View {
     let posture: GripType?
     let fingerConfiguration: FingerConfiguration?
     let side: GripCueSide
     var usesSharedPairPreview = false
-    @State private var showsModel = false
 
     var body: some View {
         VStack(spacing: 3) {
-            Button {
-                showsModel = true
-            } label: {
-                Group {
-                    if usesSharedPairPreview {
-                        Image(systemName: "arrow.up.left.and.arrow.down.right")
-                            .font(.system(size: 9, weight: .semibold))
-                            .foregroundStyle(Color.hangMuted)
-                            .frame(maxWidth: .infinity, minHeight: 28)
-                    } else {
-                        GripHandModelView(posture: posture, fingerConfiguration: fingerConfiguration, side: side)
-                            .frame(height: 88)
-                            .overlay(alignment: .topTrailing) {
-                                Image(systemName: "arrow.up.left.and.arrow.down.right")
-                                    .font(.system(size: 9, weight: .semibold))
-                                    .foregroundStyle(Color.hangMuted)
-                            }
-                    }
-                }
-                .contentShape(Rectangle())
+            if !usesSharedPairPreview {
+                GripHandModelView(posture: posture, fingerConfiguration: fingerConfiguration, side: side)
+                    .frame(height: 88)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Explore \(side.accessibilityIdentifier) hand in 3D")
-            .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier).model")
 
             Text(posture?.label ?? "Grip not specified")
                 .font(.system(size: 10, weight: .bold, design: .rounded))
@@ -186,9 +167,6 @@ struct GripHandCueCard: View {
         .accessibilityElement(children: .contain)
         .accessibilityLabel(accessibilityLabel)
         .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier)")
-        .sheet(isPresented: $showsModel) {
-            GripHandModelInspector(posture: posture, fingerConfiguration: fingerConfiguration, side: side)
-        }
     }
 
     var fingerSummary: String {

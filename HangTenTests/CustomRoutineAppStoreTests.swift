@@ -165,6 +165,27 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         )
     }
 
+    func testPlanDetailDuplicatesSelectedMaxHangsEdge() throws {
+        let (suiteName, defaults) = makeDefaults()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-1000"))
+        store.selectBoard(board)
+        let basePlan = try XCTUnwrap(store.plans.first { $0.id == "research.max-hangs" })
+        let variants = MaxHangsEdgeSelection.resolvedPlans(for: basePlan, on: board)
+        let selected = try XCTUnwrap(PlanDetailPlanResolver.maxHangsVariant(from: variants, selectedDepth: 15))
+
+        let duplicate = try PlanDetailView.duplicateDefinition(for: basePlan, in: store, resolvedPlan: selected)
+        let expected = try store.duplicateRoutine(selected)
+        let baseCopy = try store.duplicateRoutine(basePlan)
+
+        XCTAssertEqual(duplicate.steps, expected.steps)
+        XCTAssertNotEqual(duplicate.steps, baseCopy.steps)
+        XCTAssertEqual(selected, variants[15])
+        XCTAssertEqual(PlanDetailPlanResolver.maxHangsVariant(from: variants, selectedDepth: 999), variants[20])
+        XCTAssertNil(PlanDetailPlanResolver.maxHangsVariant(from: [:], selectedDepth: 15))
+    }
+
     func testPlanDetailDuplicateUsesCurrentPlanAfterStoredEdit() throws {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }

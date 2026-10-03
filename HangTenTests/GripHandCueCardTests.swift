@@ -3,7 +3,7 @@ import XCTest
 
 final class GripHandCueCardTests: XCTestCase {
     @MainActor
-    func testProductionCueAndInspectorLabelUnspecifiedFingersAsAssumed() {
+    func testProductionCueLabelsUnspecifiedFingersAsAssumed() {
         let hold = PhysicalContact(id: "edge", name: "Edge", kind: .edge)
         let diagram = GripDiagramView(hold: hold, gripType: .halfCrimp)
         XCTAssertEqual(diagram.accessibilityCueLabel, "Half crimp, 4 fingers (assumed)")
@@ -14,19 +14,15 @@ final class GripHandCueCardTests: XCTestCase {
                 XCTAssertEqual(card.fingerSummary, "4 fingers (assumed)")
                 XCTAssertEqual(card.accessibilityLabel, "Half crimp, 4 fingers (assumed)")
             }
-            let inspector = GripHandModelInspector(posture: .halfCrimp, fingerConfiguration: nil, side: side)
-            XCTAssertEqual(inspector.fingerSummary, "4 fingers (assumed)")
         }
     }
 
     @MainActor
-    func testProductionCueAndInspectorKeepExplicitFingerLabels() throws {
+    func testProductionCueKeepsExplicitFingerLabels() throws {
         let fingers = try XCTUnwrap(FingerConfiguration(engagedFingers: [.middle, .ring]))
         let card = GripHandCueCard(posture: .twoFingerPocket, fingerConfiguration: fingers, side: .left)
         XCTAssertEqual(card.fingerSummary, "Exact fingers: middle and ring")
         XCTAssertEqual(card.accessibilityLabel, "Two-finger pocket, Exact fingers: middle and ring")
-        let inspector = GripHandModelInspector(posture: .twoFingerPocket, fingerConfiguration: fingers, side: .left)
-        XCTAssertEqual(inspector.fingerSummary, "Highlighted: middle, ring")
     }
 
     func testHandCueArtworkFacesTheBoardCenter() {
