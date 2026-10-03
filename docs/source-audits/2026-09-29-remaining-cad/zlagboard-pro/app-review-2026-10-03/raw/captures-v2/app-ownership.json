@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "uuid": "790E10AD-5154-463E-8232-288E28FA57D7",
+  "appPIDs": [
+    98874
+  ],
+  "launchFlags": {
+    "HANGTEN_REVIEW_BOARD_ID": "zlagboard.pro",
+    "HANGTEN_REVIEW_BOARD_DETAIL": "1",
+    "HANGTEN_REVIEW_BOARD_HOLD_ID": "top-jug-left",
+    "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1"
+  }
+}

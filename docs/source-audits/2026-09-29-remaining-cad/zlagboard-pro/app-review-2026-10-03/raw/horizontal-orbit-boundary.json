@@ -1,0 +1,9 @@
+{
+  "previousRun": "captures-v3",
+  "previousStatus": "FAIL_ORBIT_NOT_DELIVERED_FROM_KNOWN_TAP_TARGET",
+  "rawStatusPreserved": true,
+  "sourceGestureChainUnchangedFromHistoricalWorkingBaseline": true,
+  "nextSeparateProtocol": "Pure horizontal55-point1-second drag from proven physical tap point; differs in direction/displacement/duration as a bundle. Tests parent ScrollView arbitration boundary without any app code change.",
+  "noEmptySurfaceOrRootCauseClaim": true,
+  "noFurtherAutomaticGestureVariants": true
+}

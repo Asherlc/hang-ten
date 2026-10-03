@@ -1,0 +1,9 @@
+{
+  "firstRun": "captures",
+  "firstRunStatus": "FAILED_HARNESS_NONE_IDENTIFIER",
+  "firstRawStatusUnchanged": true,
+  "firstCompletedImages": 2,
+  "firstPhysicalContactConfirmed": 1,
+  "correction": "AXUniqueId may be null; safely exclude null IDs from frame dictionary. New separate v2 run also requires cameraSettled, explicitly requests physical taps, captures both jug obliques and uses unique per-lifetime app log files.",
+  "canonicalAssetsOrAppSourceChanged": false
+}

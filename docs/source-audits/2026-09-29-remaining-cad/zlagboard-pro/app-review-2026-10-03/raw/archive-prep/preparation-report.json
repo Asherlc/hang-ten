@@ -1,0 +1,142 @@
+{
+  "scope": "Read-only Pro canonical/approval verification and final-only archive preparation. Activev4 capture not interpreted. No copies/runtime/source/git actions.",
+  "head": "1e1a931ed97a067c9f31bfffd84e50051f883294",
+  "canonicalPro": [
+    {
+      "path": "Hangboards/zlagboard-pro/zlagboard-pro.FCStd",
+      "sha256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "exactHEAD": true,
+      "workingIsPointer": false,
+      "realZip": true,
+      "committedLFSPointer": true,
+      "localLFSObjectMatches": true,
+      "nativeDocumentAndGeometry": true
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.model.json",
+      "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+      "exactHEAD": true,
+      "workingIsPointer": false
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.usdz",
+      "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+      "exactHEAD": true,
+      "workingIsPointer": false
+    }
+  ],
+  "allProCanonicalExact": true,
+  "allHangboardsUnchanged": true,
+  "queueExactHEAD": true,
+  "acceptanceCommitChangedQueueRows": [
+    20
+  ],
+  "allOther20QueueRowsExactParentCommit": true,
+  "EvoRuntimeApproval": {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/human-runtime-review.json",
+    "sha256": "16b5cdc322bd59277f19c0415c79b034ddab9f99a0346d108ba18970223d102e",
+    "reply": "Y",
+    "reviewedCommit": "c42815f8cf4ac09d0d409e53e466d0e3ade92cb8",
+    "scope": "Displayed clean Zlagboard.Evo workout views: red selected contacts during Hang, blue Rest preview, red contacts during following Hang, with both hands and native wood board visible. Existing native/static acceptance remains unchanged.",
+    "workflowScope": "Captured normal-route landscape Hang\u2192Rest\u2192following Hang sequence only; not every app interaction, physical-device behavior or combined integration.",
+    "allDisplayedProofHashesMatch": true,
+    "proofs": [
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/raw/clean-evo/elapsed-006s.png",
+        "matches": true
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/raw/clean-evo/elapsed-015s.png",
+        "matches": true
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/raw/clean-evo/elapsed-195s.png",
+        "matches": true
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/raw/clean-evo-whole-visual-review.json",
+        "matches": true
+      }
+    ],
+    "originalGeometryRecordExactPreviousCommit": true
+  },
+  "sourceFreeze12": [
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "currentMatchesRecorded": true,
+      "sameC428": true
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "currentMatchesRecorded": true,
+      "sameC428": true
+    },
+    {
+      "path": "HangTen/Views/WorkoutView.swift",
+      "currentMatchesRecorded": true,
+      "sameC428": true
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "currentMatchesRecorded": true,
+      "sameC428": true
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "currentMatchesRecorded": true,
+      "sameC428": true
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "currentMatchesRecorded": true,
+      "sameC428": true
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "currentMatchesRecorded": true,
+      "sameC428": true
+    },
+    {
+      "path": "HangTen/Resources/PlanLibrary.json",
+      "currentMatchesRecorded": true,
+      "sameC428": true
+    },
+    {
+      "path": "HangTen/Models/WorkoutTimeline.swift",
+      "currentMatchesRecorded": true,
+      "sameC428": true
+    },
+    {
+      "path": "HangTen/Models/WorkoutActivityRecording.swift",
+      "currentMatchesRecorded": true,
+      "sameC428": true
+    },
+    {
+      "path": "HangTenTests/WorkoutTimelineTests.swift",
+      "currentMatchesRecorded": true,
+      "sameC428": true
+    },
+    {
+      "path": "HangTenTests/BoardModelRealityTests.swift",
+      "currentMatchesRecorded": true,
+      "sameC428": true
+    }
+  ],
+  "all12MatchRecordedAndC428": true,
+  "sourceReferenceQualification": "Retained uncommittedCandidate:true is inherited metadata; actual current source is clean committed1e1a and byte-identical to c428 for all12 paths. Do not rewrite raw reference.",
+  "parityReport": {
+    "path": ".context/placid-badger-cad-second-half/pro-app-review-2026-10-03/build/parity.json",
+    "sha256": "7acf8667aef1b05aba22875575777b5da0e427408f84b98f06286bcc79a63731",
+    "count": 22,
+    "allRecordedEqual": true,
+    "installedPathsNotRead": true
+  },
+  "archiveScriptSHA256": "b40c476d0809e2973f3f655c94226cc6e9d9214d40d0844c82f812c4381e35e0",
+  "scriptSyntax": "AST PASS; not executed",
+  "gaps": [
+    "captures-v4 completion/cleanup and independent whole-view judgment remain pending at audit; no outcome inferred.",
+    "Final exact Simulator/DD/result cleanup proof required before plan or copy. Preserve raw result archive first if needed.",
+    "All failed captures-v1/v2/v3 plus original raw PENDING statuses must remain; later result supplements rather than rewrites.",
+    "Pro native acceptance is historical; separate fresh-app human approval remains outstanding until shown and answered."
+  ]
+}

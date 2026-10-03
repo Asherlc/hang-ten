@@ -1,0 +1,15 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "get_app_container",
+    "790E10AD-5154-463E-8232-288E28FA57D7",
+    "com.hangten.training",
+    "app"
+  ],
+  "pid": 85749,
+  "boundSeconds": 10,
+  "startedEpoch": 1791057591.27372
+}

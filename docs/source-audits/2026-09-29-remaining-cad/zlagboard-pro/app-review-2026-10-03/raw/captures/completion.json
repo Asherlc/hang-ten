@@ -1,0 +1,10 @@
+{
+  "completed": false,
+  "expectedContacts": 28,
+  "capturedContacts": 1,
+  "totalImages": 2,
+  "sourceAndPackageParityPreserved": true,
+  "visualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+  "error": "Traceback (most recent call last):\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/prep/capture.py\", line 68, in <module>\n    after=capture(representatives[contact]+'-orbit',contact);assert frames(after)!=frames(rows),'No projected camera change'\n                                                                    ^^^^^^^^^^^^^\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/prep/capture.py\", line 56, in frames\n    def frames(rows):return {x['AXUniqueId']:x['frame'] for x in rows if x.get('AXUniqueId','').startswith('boardModel.contact.')}\n                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'startswith'\n",
+  "cleanupPassed": true
+}

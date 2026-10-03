@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/prep/capture-v2.py", line 68, in <module>
+    after=capture(representatives[contact]+'-orbit',contact);assert frames(after)!=frames(rows),'No projected camera change'
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: No projected camera change
