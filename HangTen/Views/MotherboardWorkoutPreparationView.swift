@@ -14,18 +14,19 @@ struct MotherboardWorkoutPreparationView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 22) {
-                switch preparation.step {
-                case .tare:
-                    tareContent
-                case .bodyweight:
-                    bodyweightContent
-                case .ready:
-                    readyContent
+            ScrollView {
+                VStack(alignment: .leading, spacing: 22) {
+                    switch preparation.step {
+                    case .tare:
+                        tareContent
+                    case .bodyweight:
+                        bodyweightContent
+                    case .ready:
+                        readyContent
+                    }
                 }
+                .padding(24)
             }
-            .padding(24)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .background(Color.hangBackground)
             .navigationTitle("Prepare \(sensorName)")
             .navigationBarTitleDisplayMode(.inline)
@@ -58,10 +59,10 @@ struct MotherboardWorkoutPreparationView: View {
         VStack(alignment: .leading, spacing: 16) {
             SectionLabel(title: "Step 1 of 2")
             Text("Tare sensor")
-                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .font(.system(.largeTitle, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangInk)
             Text(tareInstruction)
-                .font(.system(size: 16, weight: .medium, design: .rounded))
+                .font(.system(.callout, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
 
             if preparation.isTareInProgress {
@@ -72,7 +73,7 @@ struct MotherboardWorkoutPreparationView: View {
                 .tint(Color.hangGreenDark)
 
                 Text("\(service.tareSamplesCollected) of \(service.tareSampleTarget) tare samples")
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
             } else {
                 Button("Start tare", action: startTare)
@@ -83,7 +84,7 @@ struct MotherboardWorkoutPreparationView: View {
 
             if preparation.failure == .tareInterrupted {
                 Text("The sensor stopped streaming before tare completed. Reconnect it, then try again or skip preparation.")
-                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
 
                 Button("Try tare again", action: retryTare)
@@ -93,7 +94,7 @@ struct MotherboardWorkoutPreparationView: View {
             }
 
             Button("Skip preparation", action: skipPreparation)
-                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangMuted)
         }
     }
@@ -102,12 +103,12 @@ struct MotherboardWorkoutPreparationView: View {
         VStack(alignment: .leading, spacing: 16) {
             SectionLabel(title: "Step 2 of 2")
             Text(preparation.isBodyweightCaptureInProgress ? "Capture bodyweight" : "Ready to hang")
-                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .font(.system(.largeTitle, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangInk)
             Text(preparation.isBodyweightCaptureInProgress
                  ? "Hang relaxed on the jugs for \(durationText(bodyweightCaptureDuration)). Keep still while the sensor averages your load."
                  : "Get onto the relaxed jugs, then start the timed bodyweight measurement when you are settled.")
-                .font(.system(size: 16, weight: .medium, design: .rounded))
+                .font(.system(.callout, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
 
             if preparation.isBodyweightCaptureInProgress {
@@ -123,7 +124,7 @@ struct MotherboardWorkoutPreparationView: View {
 
             if let failure = preparation.failure {
                 Text(bodyweightFailureText(for: failure))
-                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
 
                 Button("Retry capture", action: retryBodyweightCapture)
@@ -133,7 +134,7 @@ struct MotherboardWorkoutPreparationView: View {
             }
 
             Button("Skip bodyweight", action: skipPreparation)
-                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangMuted)
         }
     }
@@ -151,7 +152,7 @@ struct MotherboardWorkoutPreparationView: View {
                 Spacer()
                 Text("\(durationText(remaining)) remaining")
             }
-            .font(.system(size: 14, weight: .bold, design: .rounded))
+            .font(.system(.subheadline, design: .rounded, weight: .bold))
             .foregroundStyle(Color.hangInk)
         }
     }
@@ -160,16 +161,16 @@ struct MotherboardWorkoutPreparationView: View {
         VStack(alignment: .leading, spacing: 16) {
             SectionLabel(title: "Preparation complete")
             Text("Ready to train")
-                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .font(.system(.largeTitle, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangInk)
 
             if let bodyweightKGF = preparation.bodyweightKGF,
                preparation.canContinue(isStreaming: service.state == .streaming) {
                 Text("Captured baseline: \(forceText(bodyweightKGF))")
-                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .font(.system(.headline, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
                 Text("Use this relaxed jug hang as your bodyweight reference for this workout.")
-                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
 
                 Button("Measure again", action: retryBodyweightCapture)
@@ -188,7 +189,7 @@ struct MotherboardWorkoutPreparationView: View {
             }
 
             Button("Skip bodyweight", action: skipPreparation)
-            .font(.system(size: 15, weight: .bold, design: .rounded))
+            .font(.system(.subheadline, design: .rounded, weight: .bold))
             .foregroundStyle(Color.hangMuted)
         }
     }

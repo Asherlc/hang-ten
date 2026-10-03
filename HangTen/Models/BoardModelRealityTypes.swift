@@ -184,6 +184,40 @@ final class BoardModelRealityScene {
     private var currentFraming: SuspendedCameraFraming?
     private var activePositionID: String?
 
+    private let liveSceneID = UUID()
+    private var liveGeneration: UInt64 = 0
+    private var liveControllers: [LiveRopeController] = []
+    private var liveMeshes: [[LiveRopeMesh]] = []
+    private var liveFrames: [RopeFrameSnapshot] = []
+    private var liveBaseTransforms: [simd_float4x4] = []
+    private var liveSubscription: EventSubscription?
+    private var liveFailure: Error?
+    private var liveActivity = true
+    #if DEBUG
+    private var reviewCameraApplied = false
+    private var reviewRotations: [Double] = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_ROPE_ROTATION_SEQUENCE"]?
+        .split(separator:",").compactMap { Double($0) }.filter(\.isFinite) ?? []
+    #endif
+    var onLiveFailure: (() -> Void)?
+    var onLiveFrame: (() -> Void)?
+    var hasLiveRopes: Bool { !liveControllers.isEmpty }
+    var liveFramesForTesting: [RopeFrameSnapshot] { liveFrames }
+
+    private struct GeometricCordPose {
+        let instance: Int
+        let boardTransform: simd_float4x4
+        let pivot: SIMD3<Float>
+        let axis: SIMD3<Float>
+        let framingEnvelope: [SIMD3<Float>]
+    }
+    private var geometricCordPoses: [GeometricCordPose] = []
+    private var geometricUncordedPoses: [GeometricCordPose] = []
+    private var displayedCordAngles = SIMD2<Float>.zero
+    private var targetCordAngles: SIMD2<Float>?
+    private var geometricTiltTask: Task<Void, Never>?
+    private var geometricTiltGeneration: UInt64 = 0
+    private var geometricMotionImmediate = false
+
     // Orbit state
     var orbitAzimuth: Float = 0
     var orbitElevation: Float = 0
@@ -191,6 +225,10 @@ final class BoardModelRealityScene {
     private var viewportSize: CGSize = .zero
     private var lastHighlightedContactIDs: Set<String>?
     private var lastHighlightMode: BoardHighlightMode?
+    private var lastFocusedPositionID: String?
+    private var viewingMeshes: [Entity: (mesh: MeshResource, geometry: BoardViewingMesh)] = [:]
+    private var cameraTargetTransform: Transform?
+    private var cameraAnimation: AnimationPlaybackController?
 
     // Config
     private let descriptor: BoardModelDescriptor
@@ -198,6 +236,8 @@ final class BoardModelRealityScene {
     private let orientation: BoardModelOrientation?
     private let allowedPositionIDs: Set<String>
     private let instances: [BoardModelInstance]?
+    private let physics: RopePhysicsInput?
+    private let presentationID: String?
 
     // Retain the resource lease until the scene is deallocated,
     // because RealityKit may still stream textures from the USDZ asynchronously.
@@ -211,13 +251,15 @@ final class BoardModelRealityScene {
     var suspensionForTesting: BoardModelSuspension? { suspension }
     var instancesForTesting: [BoardModelInstance]? { instances }
 
-    init(descriptor: BoardModelDescriptor, display: BoardModelDisplay, suspension: BoardModelSuspension?, orientation: BoardModelOrientation?, allowedPositionIDs: Set<String>, instances: [BoardModelInstance]? = nil, resourceLease: BoardModelRealityResourceLease) {
+    init(descriptor: BoardModelDescriptor, display: BoardModelDisplay, suspension: BoardModelSuspension?, orientation: BoardModelOrientation?, allowedPositionIDs: Set<String>, instances: [BoardModelInstance]? = nil, physics: RopePhysicsInput? = nil, presentationID: String? = nil, resourceLease: BoardModelRealityResourceLease) {
         self.descriptor = descriptor
         self.display = display
         self.suspension = suspension
         self.orientation = orientation
         self.allowedPositionIDs = allowedPositionIDs
         self.instances = instances
+        self.physics = physics
+        self.presentationID = presentationID
         self.resourceLease = resourceLease
         let woodNodes = Set(display.woodNodeIDs)
         let plasticNodes = Set(display.plasticNodeIDs)
@@ -239,7 +281,7 @@ final class BoardModelRealityScene {
 
         // Build instance entities from media instances
         if let instances = instances, !instances.isEmpty {
-            buildInstanceEntities(from: modelEntity, instances: instances)
+            try buildInstanceEntities(from: modelEntity, instances: instances)
         } else {
             // Single instance (legacy behavior)
             root.addChild(modelEntity)
@@ -256,22 +298,80 @@ final class BoardModelRealityScene {
 
         // Set up camera framing based on model bounds
         setupCameraFraming()
+        try await prepareLiveRopes()
     }
 
-    private func buildInstanceEntities(from sourceEntity: Entity, instances: [BoardModelInstance]) {
+    private func buildInstanceEntities(from sourceEntity: Entity, instances: [BoardModelInstance]) throws {
         instanceEntities = []
         let center = Self.boundsCenter(descriptor.modelBounds)
 
         for instance in instances {
             // Clone the source entity hierarchy for this instance
             let instanceEntity = sourceEntity.clone(recursive: true)
-
-            instanceEntity.transform = Transform(matrix: Self.instanceMatrix(
-                instance: instance, positionID: nil, center: center))
+            if instance.baseTransform.reflection == .x {
+                try Self.reflectMeshes(in: instanceEntity, center: center)
+            }
+            instanceEntity.transform = renderTransform(Self.instanceMatrix(
+                instance: instance, positionID: nil, center: center), instance: instance)
 
             root.addChild(instanceEntity)
             instanceEntities.append(instanceEntity)
         }
+    }
+
+    /// Bake the reflection into independent mesh resources. A negative entity
+    /// scale reverses front-face winding, so double-sided shading lights the
+    /// reflected front with inward normals. Reflect normals and reverse the
+    /// triangles together, keeping imported node names and contact bindings.
+    private static func reflectMeshes(in root: Entity, center: SIMD3<Float>) throws {
+        let reflection = reflectionMatrix(center: center)
+        func visit(_ entity: Entity) throws {
+            if let entity = entity as? ModelEntity, var component = entity.model {
+                let localToBoard = entity.transformMatrix(relativeTo: root)
+                let localReflection = simd_inverse(localToBoard) * reflection * localToBoard
+                component.mesh = try reflectedMesh(component.mesh, reflection: localReflection)
+                entity.model = component
+            }
+            for child in entity.children { try visit(child) }
+        }
+        try visit(root)
+    }
+
+    static func reflectedMesh(_ mesh: MeshResource, reflection: simd_float4x4) throws -> MeshResource {
+        var contents = mesh.contents
+        let originReflection = reflectionMatrix(center: .zero)
+        func reflect(_ value: SIMD3<Float>) -> SIMD3<Float> { SIMD3(-value.x, value.y, value.z) }
+        for var model in contents.models {
+            for var part in model.parts {
+                guard var indices = part.triangleIndices?.elements, indices.count.isMultiple(of: 3) else {
+                    throw BoardModelRealityError.geometryProcessingFailed(reason: "Reflected board mesh must contain triangles")
+                }
+                part.positions = .init(part.positions.map(reflect))
+                if let normals = part.normals { part.normals = .init(normals.map(reflect)) }
+                if let tangents = part.tangents { part.tangents = .init(tangents.map(reflect)) }
+                if let bitangents = part.bitangents { part.bitangents = .init(bitangents.map(reflect)) }
+                for offset in stride(from: 0, to: indices.count, by: 3) {
+                    indices.swapAt(offset + 1, offset + 2)
+                }
+                part.triangleIndices = .init(indices)
+                model.parts.update(part)
+            }
+            contents.models.update(model)
+        }
+        for var instance in contents.instances {
+            // Conjugate imported mesh-instance transforms so translating or
+            // rotating a mesh within its named node preserves board-space reflection.
+            instance.transform = reflection * instance.transform * originReflection
+            contents.instances.update(instance)
+        }
+        return try MeshResource.generate(from: contents)
+    }
+
+    private func renderTransform(_ matrix: simd_float4x4, instance: BoardModelInstance) -> Transform {
+        guard instance.baseTransform.reflection == .x else { return Transform(matrix: matrix) }
+        // The mesh already owns this reflection. Cancel it from the authored
+        // presentation matrix on load, pose changes, and clearing selection.
+        return Transform(matrix: matrix * Self.reflectionMatrix(center: Self.boundsCenter(descriptor.modelBounds)))
     }
 
     func applyBoardMaterials() {
@@ -307,6 +407,7 @@ final class BoardModelRealityScene {
         base.baseColor = .init(tint: UIColor(red: 0.78, green: 0.66, blue: 0.49, alpha: 1))
         base.roughness = .init(floatLiteral: 0.82)
         base.metallic = .init(floatLiteral: 0)
+        base.faceCulling = .none
         guard let device = MTLCreateSystemDefaultDevice(),
               let library = device.makeDefaultLibrary() else { return base }
         do {
@@ -326,6 +427,7 @@ final class BoardModelRealityScene {
         base.baseColor = .init(tint: UIColor(red: 0.25, green: 0.26, blue: 0.27, alpha: 1))
         base.roughness = .init(floatLiteral: 0.92)
         base.metallic = .init(floatLiteral: 0)
+        base.faceCulling = .none
         guard let device = MTLCreateSystemDefaultDevice(),
               let library = device.makeDefaultLibrary() else { return base }
         do {
@@ -346,6 +448,9 @@ final class BoardModelRealityScene {
                                             blue: 178.0 / 255, alpha: 1))
         base.roughness = .init(floatLiteral: 0.78)
         base.metallic = .init(floatLiteral: 0)
+        // Like the neutral finish, retain front surfaces when an instance's
+        // reflection reverses winding. CustomMaterial inherits this setting.
+        base.faceCulling = .none
         guard let device = MTLCreateSystemDefaultDevice(),
               let library = device.makeDefaultLibrary() else { return base }
         do {
@@ -440,6 +545,9 @@ final class BoardModelRealityScene {
         material.baseColor = .init(tint: UIColor(red: 0.82, green: 0.80, blue: 0.77, alpha: 1))
         material.roughness = .init(floatLiteral: 0.5)
         material.metallic = .init(floatLiteral: 0)
+        // A reflected instance reverses triangle winding. Some CAD contacts
+        // are open front surfaces, so culling would hide the mirrored half.
+        material.faceCulling = .none
         return material
     }
 
@@ -538,26 +646,77 @@ final class BoardModelRealityScene {
         guard allowedPositionIDs.contains(positionID) else {
             return false
         }
+        if liveFailure != nil { return false }
         if activePositionID == positionID { return true }
+        if hasLiveRopes {
+            var targets:[simd_quatd]=[]
+            for index in liveControllers.indices {
+                let setup=instances.flatMap{$0.indices.contains(index) ? $0[index].suspension:nil} ?? suspension
+                guard let pose=setup?.canonicalPoses[positionID],pose.rotation.count == 4 else {return false}
+                let q=simd_quatd(ix:pose.rotation[0],iy:pose.rotation[1],iz:pose.rotation[2],r:pose.rotation[3])
+                guard q.vector.x.isFinite,q.vector.y.isFinite,q.vector.z.isFinite,q.vector.w.isFinite,
+                      abs(simd_length(q.vector)-1)<1e-6 else {return false}
+                targets.append(simd_normalize(q))
+            }
+            liveGeneration &+= 1
+            for (controller,target) in zip(liveControllers,targets) {
+                controller.setTarget(orientation:target,generation:liveGeneration)
+                if liveActivity { controller.resume() } else { controller.pause() }
+            }
+            if transientCordEntity == nil {
+                do {
+                    for index in liveFrames.indices { try applyLiveFrame(liveFrames[index],instance:index) }
+                    attachLiveCordGroup()
+                } catch { failLiveRopes(error); return false }
+            }
+            activePositionID = positionID
+            #if DEBUG
+            if let degrees = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_ROPE_ROTATION_DEGREES"].flatMap(Double.init), degrees.isFinite {
+                setLivePhysicalOrientation(simd_quatd(angle:degrees*Double.pi/180,axis:SIMD3(0,0,1)))
+            }
+            #endif
+            return true
+        }
 
         if let instances, !instances.isEmpty {
             guard instances.count == instanceEntities.count else { return false }
-            var selectedFraming: SuspendedCameraFraming?
+            var selectedFramings: [SuspendedCameraFraming] = []
             var selectedTransforms: [simd_float4x4] = []
+            var framingPose: BoardModelCanonicalPose?
+            var framingTransform: simd_float4x4?
             let cordGroup = Entity()
-            for instance in instances {
+            var cordPoses: [GeometricCordPose] = []
+            for (index, instance) in instances.enumerated() {
                 let transform: simd_float4x4
                 if let suspension = instance.suspension {
                     guard let pose = suspension.canonicalPoses[positionID] else { return false }
                     do {
                         let base = Self.instanceMatrix(instance: instance, positionID: nil,
                                                        center: Self.boundsCenter(descriptor.modelBounds))
+                        let instanceTransform: simd_float4x4
+                        switch suspension {
+                        case .twoBranchCord, .cadRoutedCord:
+                            // These adapters compose the canonical pose themselves.
+                            // Supplying a posed base applies the hanging transform twice.
+                            instanceTransform = base
+                        default:
+                            instanceTransform = try SuspendedBoardPresentation.boardTransform(for: pose) * base
+                        }
                         let solved = try SuspendedBoardPresentation.solveInstance(
                             pose: pose, suspension: suspension, bounds: descriptor.modelBounds,
-                            transform: base)
+                            transform: instanceTransform)
                         transform = solved.boardTransform
-                        selectedFraming = solved.cameraFraming
-                        cordGroup.addChild(Self.makeCordEntity(for: solved))
+                        if framingPose == nil {
+                            framingPose = pose
+                            framingTransform = transform
+                        }
+                        selectedFramings.append(solved.cameraFraming)
+                        let cord = Self.makeCordEntity(for: solved)
+                        cordGroup.addChild(cord)
+                        if let cordPose = try makeGeometricCordPose(solved: solved, suspension: suspension,
+                            instance: index, boardTransform: renderTransform(transform, instance: instance).matrix) {
+                            cordPoses.append(cordPose)
+                        }
                     } catch { return false }
                 } else {
                     guard instance.positionTransforms == nil || instance.positionTransforms?[positionID] != nil else {
@@ -568,14 +727,43 @@ final class BoardModelRealityScene {
                 }
                 selectedTransforms.append(transform)
             }
-            for (entity, transform) in zip(instanceEntities, selectedTransforms) {
-                entity.transform = Transform(matrix: transform)
+            var combinedFraming: SuspendedCameraFraming?
+            if !selectedFramings.isEmpty {
+                let allBounds = selectedTransforms.flatMap { transform in
+                    Self.boundsCorners(descriptor.modelBounds).map { point in
+                        let placed = transform * SIMD4<Float>(point, 1)
+                        return SIMD3<Float>(placed.x, placed.y, placed.z)
+                    }
+                }
+                guard let pose = framingPose, let transform = framingTransform,
+                      let framing = try? SuspendedBoardPresentation.makeCameraFraming(
+                        pose: pose, transform: transform,
+                        minimumFitPadding: selectedFramings.map(\.fitPadding).max() ?? 1,
+                        points: selectedFramings.flatMap(\.includedPoints) + allBounds) else { return false }
+                combinedFraming = framing
             }
-            if let selectedFraming {
-                currentFraming = selectedFraming
-            } else {
-                setupCameraFraming()
+            var uncordedPoses: [GeometricCordPose] = []
+            if !cordPoses.isEmpty, let framing = combinedFraming {
+                // A mixed scene keeps the cord and camera fixed. Give its
+                // uncorded instances the equivalent pitch view by rotating
+                // them inversely to the camera's former pitch around its target.
+                for (index, instance) in instances.enumerated() where instance.suspension == nil {
+                    let matrix = renderTransform(selectedTransforms[index], instance: instance).matrix
+                    uncordedPoses.append(GeometricCordPose(instance: index, boardTransform: matrix,
+                        pivot: framing.target, axis: framing.right,
+                        framingEnvelope: rotationEnvelope(boardTransform: matrix, pivot: framing.target)))
+                }
             }
+            cancelGeometricTilt()
+            geometricUncordedPoses = uncordedPoses
+            geometricCordPoses = cordPoses
+            displayedCordAngles = .zero
+            targetCordAngles = nil
+            for (index, transform) in selectedTransforms.enumerated() {
+                instanceEntities[index].transform = renderTransform(transform, instance: instances[index])
+            }
+            if let combinedFraming { currentFraming = combinedFraming }
+            else { setupCameraFraming() }
             transientCordEntity?.removeFromParent()
             if !cordGroup.children.isEmpty {
                 transientCordEntity = cordGroup
@@ -631,10 +819,16 @@ final class BoardModelRealityScene {
                 }
                 let solved = try Self.solveSuspension(
                     pose: resolvedPose, suspension: suspension, bounds: descriptor.modelBounds)
+                let cord = Self.makeCordEntity(for: solved)
+                let cordPose = try makeGeometricCordPose(solved: solved, suspension: suspension,
+                    instance: 0, boardTransform: solved.boardTransform)
+                cancelGeometricTilt()
+                geometricCordPoses = cordPose.map { [$0] } ?? []
+                displayedCordAngles = .zero
+                targetCordAngles = nil
                 instanceEntities.first?.transform = Transform(matrix: solved.boardTransform)
                 currentFraming = solved.cameraFraming
                 transientCordEntity?.removeFromParent()
-                let cord = Self.makeCordEntity(for: solved)
                 transientCordEntity = cord
                 root.addChild(cord)
             } catch { return false }
@@ -683,14 +877,22 @@ final class BoardModelRealityScene {
     }
 
     private func clearSelection() {
+        cancelGeometricTilt()
+        geometricCordPoses = []
+        geometricUncordedPoses = []
+        displayedCordAngles = .zero
+        targetCordAngles = nil
+        installLiveUpdateSubscription(nil)
+        liveGeneration &+= 1
+        liveControllers.forEach { $0.pause() }
         activePositionID = nil
         transientCordEntity?.removeFromParent()
         transientCordEntity = nil
         if let instances, !instances.isEmpty, instances.count == instanceEntities.count {
             let center = Self.boundsCenter(descriptor.modelBounds)
             for (entity, instance) in zip(instanceEntities, instances) {
-                entity.transform = Transform(matrix: Self.instanceMatrix(
-                    instance: instance, positionID: nil, center: center))
+                entity.transform = renderTransform(Self.instanceMatrix(
+                    instance: instance, positionID: nil, center: center), instance: instance)
             }
         } else {
             for entity in instanceEntities { entity.transform = .identity }
@@ -699,8 +901,178 @@ final class BoardModelRealityScene {
         updateCameraTransform()
     }
 
+    private func prepareLiveRopes() async throws {
+        guard let physics else { return }
+        let candidates=physics.profiles.filter { presentationID == nil || $0.presentationID == presentationID }
+        guard candidates.count == instanceEntities.count else { throw BoardModelRealityError.invalidSuspension }
+        let profiles:[RopePhysicsProfile]
+        if let instances,!instances.isEmpty {
+            guard instances.count == instanceEntities.count,
+                  Set(instances.map(\.equipmentObjectID)).count == instances.count else {throw BoardModelRealityError.invalidSuspension}
+            profiles=try instances.map {instance in
+                let matching=candidates.filter{$0.instanceID == instance.equipmentObjectID}
+                guard matching.count == 1 else {throw BoardModelRealityError.invalidSuspension}
+                return matching[0]
+            }
+            liveBaseTransforms=instances.map {Self.instanceMatrix(instance:$0,positionID:nil,
+                center:Self.boundsCenter(descriptor.modelBounds))}
+        } else {
+            guard candidates.count == 1,candidates[0].instanceID == nil else {throw BoardModelRealityError.invalidSuspension}
+            profiles=candidates;liveBaseTransforms=[matrix_identity_float4x4]
+        }
+        // Each independent solver uses vertical gravity in its local world.
+        // A display placement must preserve that direction; tilted worlds need
+        // a physics coordinate adapter before their profiles can be enabled.
+        guard liveBaseTransforms.allSatisfy({base in
+            let up=base*SIMD4<Float>(0,1,0,0)
+            return simd_length(up-SIMD4<Float>(0,1,0,0))<1e-6
+        }) else {throw BoardModelRealityError.invalidSuspension}
+        for (index,profile) in profiles.enumerated() {
+            let prepared = try await Task.detached(priority:.userInitiated) {
+                let collider=try RopeTriangleCollider(input:physics)
+                let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
+                let state=try RopeThreadedSeed.make(input:physics,profileID:profile.id,orientation:q,collider:collider)
+                return try RopeDynamicsSolver.prepareDisplay(input:physics,state:state,collider:collider)
+            }.value
+            try Task.checkCancellation()
+            let meshes=try prepared.1.ropes.map { try LiveRopeMesh(capacity:$0.positions.count,radialSegments:8,radius:Float($0.radius)) }
+            liveMeshes.append(meshes); liveFrames.append(prepared.1)
+            let controller=LiveRopeController(solver:prepared.0,sceneID:liveSceneID,delivery:{ [weak self] sceneID,generation,frame in
+                guard let self,sceneID == self.liveSceneID,generation == self.liveGeneration,self.activePositionID != nil else { return }
+                do { try self.applyLiveFrame(frame,instance:index) }
+                catch { self.failLiveRopes(error) }
+            },failure:{ [weak self] error in self?.failLiveRopes(error) })
+            controller.pause(); liveControllers.append(controller)
+            try applyLiveFrame(prepared.1,instance:index)
+        }
+    }
+
+    private func attachLiveCordGroup() {
+        let group=Entity()
+        for meshes in liveMeshes { for mesh in meshes { group.addChild(mesh.entity) } }
+        transientCordEntity?.removeFromParent()
+        transientCordEntity=group; root.addChild(group)
+        updateLiveFraming()
+    }
+
+    private func applyLiveFrame(_ frame:RopeFrameSnapshot,instance:Int) throws {
+        guard liveMeshes.indices.contains(instance),liveBaseTransforms.indices.contains(instance),
+              frame.metrics.geometryAccepted,liveMeshes[instance].count == frame.ropes.count else { throw BoardModelRealityError.invalidSuspension }
+        let base=liveBaseTransforms[instance]
+        for (mesh,rope) in zip(liveMeshes[instance],frame.ropes) {
+            guard abs(Double(mesh.radius)-rope.radius)<1e-8 else { throw BoardModelRealityError.invalidSuspension }
+            try mesh.update(positions:rope.positions)
+            mesh.entity.transform=Transform(matrix:base)
+        }
+        liveFrames[instance]=frame
+        let q=frame.orientation.vector
+        let physical=Transform(scale:SIMD3(repeating:1),
+            rotation:simd_quatf(ix:Float(q.x),iy:Float(q.y),iz:Float(q.z),r:Float(q.w)),
+            translation:SIMD3(0,Float(frame.boardHeight),0))
+        instanceEntities[instance].transform=Transform(matrix:base*physical.matrix)
+        if frame.settled {
+            updateLiveFraming()
+            #if DEBUG
+            if activePositionID != nil,!reviewRotations.isEmpty {
+                let degrees=reviewRotations.removeFirst()
+                setLivePhysicalOrientation(simd_quatd(angle:degrees*Double.pi/180,axis:SIMD3(0,0,1)))
+            }
+            #endif
+        }
+        onLiveFrame?()
+    }
+
+    private func updateLiveFraming() {
+        var points:[SIMD3<Float>]=[]
+        for entity in instanceEntities {
+            let bounds=entity.visualBounds(relativeTo:root)
+            points += Self.boundsCorners(BoardModelBounds(minimum:[Double(bounds.min.x),Double(bounds.min.y),Double(bounds.min.z)],
+                maximum:[Double(bounds.max.x),Double(bounds.max.y),Double(bounds.max.z)]))
+        }
+        for (index,frame) in liveFrames.enumerated() { for rope in frame.ropes { for point in rope.positions {
+            let world=liveBaseTransforms[index]*SIMD4<Float>(Float(point.x),Float(point.y),Float(point.z),1)
+            let p=SIMD3<Float>(world.x,world.y,world.z),r=Float(rope.radius)
+            points += [p-SIMD3(repeating:r),p+SIMD3(repeating:r)]
+        } } }
+        guard !points.isEmpty else { return }
+        let minimum=points.reduce(SIMD3<Float>(repeating:.infinity),simd_min)
+        let maximum=points.reduce(SIMD3<Float>(repeating:-.infinity),simd_max)
+        // A conservative body rotation envelope keeps the camera stationary
+        // while the board moves; refitting happens only at accepted rest.
+        let radius=Self.boundsCorners(descriptor.modelBounds).map(simd_length).max() ?? 0
+        var low=minimum,high=maximum
+        for (index,frame) in liveFrames.enumerated() {
+            let world=liveBaseTransforms[index]*SIMD4<Float>(0,Float(frame.boardHeight),0,1)
+            let center=SIMD3<Float>(world.x,world.y,world.z)
+            low=simd_min(low,center-SIMD3(repeating:radius))
+            high=simd_max(high,center+SIMD3(repeating:radius))
+        }
+        if let framing=Self.framing(bounds:BoardModelBounds(minimum:[Double(low.x),Double(low.y),Double(low.z)],
+            maximum:[Double(high.x),Double(high.y),Double(high.z)]),display:display) {
+            currentFraming=framing
+        }
+        updateCameraTransform()
+    }
+
+    var hasLiveUpdateSubscription: Bool { liveSubscription != nil }
+
+    func installLiveUpdateSubscription(_ subscription:EventSubscription?) {
+        liveSubscription?.cancel(); liveSubscription=subscription
+    }
+    func advanceLiveRopes(elapsed:Double) {
+        guard activePositionID != nil,liveFailure == nil else { return }
+        liveControllers.forEach { $0.advance(elapsed:elapsed) }
+    }
+    func setLiveActivity(_ active:Bool) {
+        guard liveActivity != active else { return }
+        liveActivity=active
+        if !active, geometricTiltTask != nil {
+            cancelGeometricTilt()
+            applyGeometricCordPose(angles: SIMD2(orbitAzimuth, orbitElevation))
+        }
+        for controller in liveControllers {
+            if active && activePositionID != nil { controller.resume() } else { controller.pause() }
+        }
+    }
+    func configureLiveMotion(reduceMotion:Bool,displayOnly:Bool) {
+        geometricMotionImmediate = reduceMotion || displayOnly
+        if geometricMotionImmediate, geometricTiltTask != nil {
+            cancelGeometricTilt()
+            applyGeometricCordPose(angles: SIMD2(orbitAzimuth, orbitElevation))
+        }
+        liveControllers.forEach { $0.settleImmediately = reduceMotion || displayOnly }
+    }
+    func stopLiveRopes() {
+        cancelGeometricTilt()
+        liveSubscription?.cancel(); liveSubscription=nil
+        liveControllers.forEach { $0.stop() }
+    }
+    private func failLiveRopes(_ error:Error) {
+        liveFailure=error; stopLiveRopes()
+        transientCordEntity?.removeFromParent(); transientCordEntity=nil
+        onLiveFailure?()
+    }
+    #if DEBUG
+    func applyReviewCamera() {
+        guard !reviewCameraApplied,let view=ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_VIEW"],
+              ["front","side","top"].contains(view),let framing=currentFraming else { return }
+        reviewCameraApplied=true
+        let front = Float.pi-atan2(framing.direction.x,framing.direction.z)
+        orbitAzimuth=front+(view == "side" ? .pi/2:0)
+        orbitElevation=view == "top" ? .pi/2-0.001:0
+        updateCameraTransform()
+    }
+    func setLivePhysicalOrientation(_ orientation:simd_quatd) {
+        liveGeneration &+= 1
+        for controller in liveControllers { controller.setTarget(orientation:orientation,generation:liveGeneration) }
+    }
+    #endif
+    deinit { liveSubscription?.cancel(); geometricTiltTask?.cancel() }
+
     func orbit(azimuth: Float, elevation: Float, zoomScale: Float = 1) {
         guard azimuth.isFinite, elevation.isFinite, zoomScale.isFinite, zoomScale > 0 else { return }
+        cancelGeometricTilt()
+        targetCordAngles = nil
         orbitAzimuth = azimuth.truncatingRemainder(dividingBy: .pi * 2)
         orbitElevation = min(max(elevation, -0.55), 0.55)
         orbitZoom = min(max(zoomScale, 0.75), 1.35)
@@ -714,9 +1086,36 @@ final class BoardModelRealityScene {
         updateCameraTransform(animated: animated, completion: completion)
     }
 
+    var isCameraAnimating: Bool { cameraAnimation?.isPlaying == true || geometricTiltTask != nil }
+
+    var isCameraAtTarget: Bool {
+        guard geometricTiltTask == nil else { return false }
+        guard let target = cameraTargetTransform?.matrix else { return false }
+        let actual = camera.transform.matrix
+        return (0..<4).allSatisfy { column in
+            (0..<4).allSatisfy { row in abs(actual[column][row] - target[column][row]) < 0.0001 }
+        }
+    }
+
     func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {
-        guard contactIDs != lastHighlightedContactIDs || mode != lastHighlightMode else { return }
+        let selectionChanged = contactIDs != lastHighlightedContactIDs
+            || activePositionID != lastFocusedPositionID
+        guard selectionChanged || mode != lastHighlightMode else { return }
+        let hadSelection = !(lastHighlightedContactIDs ?? []).isEmpty
         lastHighlightedContactIDs = contactIDs
+        lastFocusedPositionID = activePositionID
+        if selectionChanged, !contactIDs.isEmpty || hadSelection {
+            // Evaluate visibility in the canonical board pose so repeated
+            // selections do not add another pitch to the already tilted body.
+            let previousAngles = displayedCordAngles
+            applyGeometricCordPose(angles: .zero)
+            let adjustment = selectionOrbit(for: contactIDs)
+            applyGeometricCordPose(angles: previousAngles)
+            orbitAzimuth = adjustment.x
+            orbitElevation = adjustment.y
+            orbitZoom = 1
+            updateCameraTransform(animated: true)
+        }
         lastHighlightMode = mode
         // A shared mesh is selected when any of its logical contacts is selected.
         // Update each entity once so an unselected membership cannot clear it.
@@ -727,6 +1126,162 @@ final class BoardModelRealityScene {
                 ? (mode == .active ? Color.holdActive : Color.restBlue) : .clear
             applyHighlight(to: entity, color: highlightColor, mode: mode)
         }
+    }
+
+    /// Evaluate exposed contact faces and clear sight lines into enclosed
+    /// contacts. A cavity's finger floor can face upward while its opening
+    /// faces front; contact normals alone cannot distinguish those geometries.
+    private func selectionOrbit(for contactIDs: Set<String>) -> SIMD2<Float> {
+        guard let framing = currentFraming, !contactIDs.isEmpty else { return .zero }
+        var sources: [(geometry: BoardViewingMesh, inverse: simd_float4x4,
+                       minimum: SIMD3<Float>, maximum: SIMD3<Float>)] = []
+        var sceneMinimum = SIMD3<Float>(repeating: .infinity), sceneMaximum = -sceneMinimum
+        for instance in instanceEntities {
+            traverseEntities(instance) { entity in
+                guard let entity = entity as? ModelEntity,
+                      let geometry = viewingMesh(for: entity) else { return }
+                let transform = entity.transformMatrix(relativeTo: nil)
+                let determinant = simd_determinant(transform)
+                guard determinant.isFinite, abs(determinant) > 1e-8,
+                      let bounds = geometry.bounds(transformedBy: transform) else { return }
+                sources.append((geometry, simd_inverse(transform), bounds.minimum, bounds.maximum))
+                sceneMinimum = simd_min(sceneMinimum, bounds.minimum)
+                sceneMaximum = simd_max(sceneMaximum, bounds.maximum)
+            }
+        }
+        let rayLength = sources.isEmpty ? 0.1 : max(simd_length(sceneMaximum - sceneMinimum) * 2, 0.1)
+        func blocked(_ origin: SIMD3<Float>, _ direction: SIMD3<Float>, length: Float? = nil) -> Bool {
+            let delta = direction * (length ?? rayLength)
+            return sources.contains { source in
+                // Cheap world bounds reject unrelated meshes before transforming
+                // a ray. The mesh-local BVH survives every instance pose change.
+                guard BoardViewingMesh.intersectsBox(origin: origin, delta: delta,
+                    minimum: source.minimum, maximum: source.maximum) else { return false }
+                let localOrigin = source.inverse * SIMD4<Float>(origin, 1)
+                let localDelta = source.inverse * SIMD4<Float>(delta, 0)
+                // Keep the segment parameterization through nonuniform scales;
+                // normalizing this transformed delta would change its reach.
+                return source.geometry.intersects(origin: SIMD3(localOrigin.x, localOrigin.y, localOrigin.z),
+                    delta: SIMD3(localDelta.x, localDelta.y, localDelta.z))
+            }
+        }
+        struct Sample {
+            let origin: SIMD3<Float>
+            let normal: SIMD3<Float>
+            let enclosed: Bool
+        }
+        let surfaces = contactIDs.sorted().compactMap { id -> [Sample]? in
+            var triangles: [BoardViewingMesh.Triangle] = []
+            for entity in contactEntities[id] ?? [] {
+                guard let geometry = viewingMesh(for: entity) else { continue }
+                let transform = entity.transformMatrix(relativeTo: nil)
+                let determinant = simd_determinant(transform)
+                guard determinant.isFinite, abs(determinant) > 1e-8 else { continue }
+                let facing: Float = determinant < 0 ? -1 : 1
+                triangles += geometry.triangles.map { $0.transformed(by: transform, facing: facing) }
+            }
+            triangles = triangles.filter { $0.area > 1e-10 }
+            let area = triangles.reduce(Float(0)) { $0 + $1.area }
+            guard area > 0 else { return nil }
+            let low = triangles.reduce(SIMD3<Float>(repeating: .infinity)) {
+                simd_min($0, simd_min($1.a, simd_min($1.b, $1.c)))
+            }
+            let high = triangles.reduce(SIMD3<Float>(repeating: -.infinity)) {
+                simd_max($0, simd_max($1.a, simd_max($1.b, $1.c)))
+            }
+            // A cavity roof is nearby on the contact's own scale. A distant
+            // instance along the normal does not make an exposed surface enclosed.
+            let enclosureReach = max(simd_length(high - low), 0.01)
+            // Equal-area stratification bounds ray queries independently of mesh
+            // tessellation, while giving tiny facets proportionally little weight.
+            let count = 32
+            var index = 0, cumulative = triangles[0].area
+            let samples = (0..<count).map { i -> Sample in
+                let target = area * (Float(i) + 0.5) / Float(count)
+                while cumulative < target, index < triangles.count - 1 {
+                    index += 1
+                    cumulative += triangles[index].area
+                }
+                let triangle = triangles[index]
+                let normal = triangle.normal
+                // Step into the air to avoid hitting the contact's own triangle.
+                let origin = triangle.center + normal * 0.0001
+                return Sample(origin: origin, normal: normal,
+                              enclosed: blocked(origin, normal, length: enclosureReach))
+            }
+            return samples
+        }
+        guard !surfaces.isEmpty else { return .zero }
+        func surfaceVisibility(_ samples: [Sample], direction: SIMD3<Float>) -> Float {
+            samples.reduce(Float(0)) { score, sample in
+                let contribution = sample.enclosed ? 1 : max(0, simd_dot(sample.normal, direction))
+                guard contribution > 1e-6, !blocked(sample.origin, direction) else { return score }
+                return score + contribution
+            } / Float(samples.count)
+        }
+        let frontDirection = -framing.direction
+        let frontScores = surfaces.map { (samples: $0, score: surfaceVisibility($0, direction: frontDirection)) }
+            .sorted { $0.score < $1.score }
+        let baseline = frontScores.first?.score ?? 1
+        func visibility(_ angles: SIMD2<Float>, floor: Float) -> Float {
+            let direction = orbitRotation(azimuth: angles.x, elevation: angles.y, framing: framing)
+                .act(frontDirection)
+            // Start with the least-visible front surfaces so rejected candidate
+            // angles do not query every otherwise readable opening on the board.
+            var leastVisible: Float = 1
+            for surface in frontScores {
+                leastVisible = min(leastVisible, surfaceVisibility(surface.samples, direction: direction))
+                if leastVisible <= floor { break }
+            }
+            return leastVisible
+        }
+        let readableArea: Float = 0.5
+        guard baseline < readableArea else { return .zero }
+        // Search a small 20-degree neighborhood, closest angles first. Prefer
+        // an upward tilt in ties, while outward normals choose the correct side.
+        let step: Float = .pi / 45
+        var candidates: [SIMD2<Float>] = []
+        for x in -5...5 {
+            for y in -5...5 {
+                let candidate = SIMD2<Float>(Float(x) * step, Float(y) * step)
+                if candidate != .zero, simd_length(candidate) <= step * 5 + 1e-6 {
+                    candidates.append(candidate)
+                }
+            }
+        }
+        candidates.sort {
+            let a = simd_length_squared($0), b = simd_length_squared($1)
+            if abs(a - b) > 1e-6 { return a < b }
+            if $0.y != $1.y { return $0.y > $1.y }
+            return $0.x > $1.x
+        }
+        var best = SIMD2<Float>.zero
+        var bestVisibility = baseline
+        for candidate in candidates {
+            let score = visibility(candidate, floor: bestVisibility)
+            if score > bestVisibility + 1e-5 {
+                best = candidate
+                bestVisibility = score
+            }
+            if score >= readableArea { return candidate }
+        }
+        // Avoid moving the board for a negligible or unhelpful improvement.
+        return bestVisibility >= baseline + 0.04 ? best : .zero
+    }
+
+    private func viewingMesh(for entity: ModelEntity) -> BoardViewingMesh? {
+        guard let mesh = entity.model?.mesh else { return nil }
+        if let cached = viewingMeshes[entity], cached.mesh === mesh { return cached.geometry }
+        let geometry = BoardViewingMesh(mesh: mesh)
+        viewingMeshes[entity] = (mesh, geometry)
+        return geometry
+    }
+
+    private func orbitRotation(azimuth: Float, elevation: Float,
+                               framing: SuspendedCameraFraming) -> simd_quatf {
+        let yaw = simd_quatf(angle: azimuth, axis: framing.up)
+        let pitch = simd_quatf(angle: -elevation, axis: simd_normalize(yaw.act(framing.right)))
+        return pitch * yaw
     }
 
     func contactID(for entity: Entity) -> String? {
@@ -937,30 +1492,177 @@ final class BoardModelRealityScene {
         entity.model?.materials = [material]
     }
 
-    private func updateCameraTransform(animated: Bool = false, completion: (() -> Void)? = nil) {
-        // Update camera position based on orbit state and framing
-        let framing = currentFraming
-        let fov = camera.camera.fieldOfViewInDegrees
-        let distanceMultiplier = Float(display.camera.distanceMultiplier ?? 1)
-        let distance = framing.flatMap {
-            Self.perspectiveFitDistance(framing: $0, viewportSize: viewportSize,
-                                       fieldOfViewDegrees: fov,
-                                       distanceMultiplier: distanceMultiplier)
-        } ?? (framing?.distance ?? 1)
-        let zoomedDistance = distance * orbitZoom
-        let target = framing?.target ?? SIMD3<Float>(0, 0, 0)
-        let up = framing?.up ?? SIMD3<Float>(0, 1, 0)
-        let direction = simd_normalize(-(framing?.direction ?? SIMD3<Float>(0, 0, -1)))
-        let right = framing?.right ?? SIMD3<Float>(1, 0, 0)
-        let yaw = simd_quatf(angle: orbitAzimuth, axis: up)
-        let yawedDirection = yaw.act(direction)
-        let yawedRight = simd_normalize(yaw.act(right))
-        let pitch = simd_quatf(angle: -orbitElevation, axis: yawedRight)
-        camera.position = target + pitch.act(yawedDirection) * zoomedDistance
-        camera.look(at: target, from: camera.position, relativeTo: nil)
+    private func makeGeometricCordPose(solved: BoardModelSolvedSuspension,
+                                      suspension: BoardModelSuspension,
+                                      instance: Int, boardTransform: simd_float4x4) throws -> GeometricCordPose? {
+        let localPoints: [[Double]]
+        switch suspension {
+        case .cadRoutedCord:
+            // Native routes bind the exact solved body and cord placement. They
+            // do not author a generic rigid pivot; retain camera-only orbit.
+            return nil
+        case .singleCord(let profile): localPoints = [profile.attachment.pointInModel]
+        case .pairedLeadCord(let profile): localPoints = profile.attachments.map(\.pointInModel)
+        case .twoBranchCord(let profile):
+            let passages = profile.passages.left + profile.passages.right
+            // Validated packages have at least two passages. A bore
+            // contributes its center to the shared attachment axis.
+            localPoints = passages.map { passage in
+                passage.isThroughBore
+                    ? zip(passage.entryPointInModel, passage.exitPointInModel).map { ($0 + $1) / 2 }
+                    : passage.pointInModel
+            }
+        }
+        guard !localPoints.isEmpty else { throw BoardModelRealityError.invalidSuspension }
+        let points = localPoints.map { point -> SIMD3<Float> in
+            // Retain authored reflection for the cord coordinates, even when
+            // the corresponding renderer reflection is baked into its mesh.
+            let p = solved.boardTransform * SIMD4<Float>(SIMD3(point.map(Float.init)), 1)
+            return SIMD3(p.x, p.y, p.z)
+        }
+        let pivot = points.reduce(.zero, +) / Float(points.count)
+        var axis = solved.cameraFraming.right
+        var largestDistance: Float = 1e-10
+        for (index, start) in points.enumerated() {
+            for end in points.dropFirst(index + 1) {
+                let delta = end - start, distance = simd_length_squared(delta)
+                if distance > largestDistance { largestDistance = distance; axis = simd_normalize(delta) }
+            }
+        }
+        // Keep gesture direction consistent with the canonical view. The axis
+        // itself stays fixed when the camera yaws around the hanging board.
+        if simd_dot(axis, solved.cameraFraming.right) < 0 { axis = -axis }
+        return GeometricCordPose(instance: instance, boardTransform: boardTransform, pivot: pivot,
+            axis: axis, framingEnvelope: rotationEnvelope(boardTransform: solved.boardTransform, pivot: pivot))
+    }
 
-        if animated {
-            // Animate camera transition
+    private func rotationEnvelope(boardTransform: simd_float4x4, pivot: SIMD3<Float>) -> [SIMD3<Float>] {
+        let radius = Self.boundsCorners(descriptor.modelBounds).map { point -> Float in
+            let p = boardTransform * SIMD4(point, 1)
+            return simd_distance(SIMD3(p.x, p.y, p.z), pivot)
+        }.max() ?? 0
+        return Self.boundsCorners(BoardModelBounds(
+            minimum: [Double(pivot.x-radius), Double(pivot.y-radius), Double(pivot.z-radius)],
+            maximum: [Double(pivot.x+radius), Double(pivot.y+radius), Double(pivot.z+radius)]))
+    }
+
+    private func applyGeometricCordPose(angles: SIMD2<Float>) {
+        for pose in geometricCordPoses {
+            let rotation = simd_quatf(angle: angles.y, axis: pose.axis)
+            let matrix = angles.y == 0 ? pose.boardTransform
+                : Self.transform(rotation: rotation, about: pose.pivot) * pose.boardTransform
+            instanceEntities[pose.instance].transform = Transform(matrix: matrix)
+        }
+        if let framing = currentFraming {
+            let yaw = simd_quatf(angle: angles.x, axis: framing.up)
+            for pose in geometricUncordedPoses {
+                let rotation = simd_quatf(angle: angles.y, axis: simd_normalize(yaw.act(pose.axis)))
+                let matrix = angles.y == 0 ? pose.boardTransform
+                    : Self.transform(rotation: rotation, about: pose.pivot) * pose.boardTransform
+                instanceEntities[pose.instance].transform = Transform(matrix: matrix)
+            }
+        }
+        // The complete cord remains in its canonical pose. Only the boards turn.
+        displayedCordAngles = angles
+    }
+
+    private func cancelGeometricTilt() {
+        geometricTiltGeneration &+= 1
+        geometricTiltTask?.cancel()
+        geometricTiltTask = nil
+    }
+
+    private func updateGeometricCordTilt(animated: Bool) {
+        guard !geometricCordPoses.isEmpty else { return }
+        let target = SIMD2(orbitAzimuth, orbitElevation)
+        if targetCordAngles == target {
+            if geometricTiltTask == nil { applyGeometricCordPose(angles: target) }
+            return
+        }
+        cancelGeometricTilt()
+        targetCordAngles = target
+        guard animated, root.isActive, liveActivity, !geometricMotionImmediate,
+              !UIAccessibility.isReduceMotionEnabled, displayedCordAngles != target else {
+            applyGeometricCordPose(angles: target)
+            return
+        }
+        let start = displayedCordAngles, generation = geometricTiltGeneration
+        geometricTiltTask = Task { [weak self] in
+            for step in 1...18 {
+                do { try await Task.sleep(for: .seconds(0.28/18)) } catch { return }
+                guard let self, self.geometricTiltGeneration == generation else { return }
+                let t = Float(step)/18, smooth = t*t*(3-2*t)
+                self.applyGeometricCordPose(angles: start + (target-start)*smooth)
+                self.onLiveFrame?() // Refresh projected contact controls too.
+            }
+            guard let self, self.geometricTiltGeneration == generation else { return }
+            self.geometricTiltTask = nil
+            self.applyGeometricCordPose(angles: target)
+            self.onLiveFrame?()
+        }
+    }
+
+    private func updateCameraTransform(animated: Bool = false, completion: (() -> Void)? = nil) {
+        guard let framing = currentFraming else { completion?(); return }
+        updateGeometricCordTilt(animated: animated)
+        let geometricPitch = !geometricCordPoses.isEmpty
+        let rotation = orbitRotation(azimuth: orbitAzimuth, elevation: geometricPitch ? 0 : orbitElevation, framing: framing)
+        let backward = simd_normalize(rotation.act(-framing.direction))
+        let right = simd_normalize(rotation.act(framing.right))
+        let up = simd_normalize(simd_cross(backward, right))
+        let orbitTarget = framing.target
+        // Fit the full local rotation envelope at rest too, so pitching the
+        // board cannot move the camera and make the fixed cord appear to move.
+        let points = framing.includedPoints + geometricCordPoses.flatMap(\.framingEnvelope)
+            + geometricUncordedPoses.flatMap(\.framingEnvelope)
+        var fitted = framing
+        if geometricPitch || orbitAzimuth != 0 || orbitElevation != 0 {
+            // Refit the complete board/cord bounds around the tilted view's
+            // target, keeping the cord pivot separate from the fit center.
+            let relative = points.map { $0 - orbitTarget }
+            let width = 2 * (relative.map { abs(simd_dot($0, right)) }.max() ?? framing.width / 2)
+            let height = 2 * (relative.map { abs(simd_dot($0, up)) }.max() ?? framing.height / 2)
+            let depth = 2 * (relative.map { abs(simd_dot($0, backward)) }.max() ?? framing.depth / 2)
+            fitted = SuspendedCameraFraming(
+                target: orbitTarget, direction: -backward, viewDirection: -backward,
+                right: right, up: up, distance: framing.distance,
+                width: width, height: height, depth: depth,
+                fitPadding: framing.fitPadding, includedPoints: points)
+        }
+        var distance = Self.perspectiveFitDistance(
+            framing: fitted, viewportSize: viewportSize,
+            fieldOfViewDegrees: camera.camera.fieldOfViewInDegrees,
+            distanceMultiplier: Float(display.camera.distanceMultiplier ?? 1)) ?? framing.distance
+        if !points.isEmpty, viewportSize.width > 0, viewportSize.height > 0 {
+            // Retain main's conservative body/cord envelope fit in the actual
+            // camera basis, including corners not present in the source spans.
+            let low = points.reduce(SIMD3<Float>(repeating: .infinity), simd_min)
+            let high = points.reduce(SIMD3<Float>(repeating: -.infinity), simd_max)
+            let tangent = tan(camera.camera.fieldOfViewInDegrees * .pi / 360)
+            let aspect = Float(viewportSize.width / viewportSize.height)
+            for x in [low.x, high.x] {
+                for y in [low.y, high.y] {
+                    for z in [low.z, high.z] {
+                        let offset = SIMD3(x, y, z) - orbitTarget
+                        let span = max(abs(simd_dot(offset, right)) / aspect, abs(simd_dot(offset, up)))
+                        distance = max(distance, simd_dot(offset, backward) + span * framing.fitPadding / tangent)
+                    }
+                }
+            }
+        }
+        let target = Transform(
+            scale: .one, rotation: simd_quatf(simd_float3x3(columns: (right, up, backward))),
+            translation: orbitTarget + backward * distance * orbitZoom)
+        // SwiftUI resynchronizes framing during animations. Reapplying the
+        // same target would cancel the transition on its very next frame.
+        guard target.matrix != cameraTargetTransform?.matrix else { completion?(); return }
+        cameraTargetTransform = target
+        cameraAnimation?.stop()
+        cameraAnimation = nil
+        if animated, camera.isActive, !UIAccessibility.isReduceMotionEnabled {
+            cameraAnimation = camera.move(to: target, relativeTo: nil, duration: 0.28, timingFunction: .easeInOut)
+        } else {
+            camera.transform = target
         }
         completion?()
     }
@@ -988,10 +1690,7 @@ final class BoardModelRealityScene {
                                                   Float(transform.translation[2]), 0)
             }
             if transform.reflection == .x {
-                var reflection = matrix_identity_float4x4
-                reflection.columns.0.x = -1
-                reflection.columns.3.x = 2 * center.x
-                result = result * reflection
+                result = result * reflectionMatrix(center: center)
             }
             return result
         }
@@ -1000,6 +1699,13 @@ final class BoardModelRealityScene {
         let baseTranslation = instance.baseTransform.translation.count == 3
             ? SIMD3<Float>(instance.baseTransform.translation.map(Float.init)) : .zero
         return transformMatrix(position, pivot: center + baseTranslation) * base
+    }
+
+    private static func reflectionMatrix(center: SIMD3<Float>) -> simd_float4x4 {
+        var reflection = matrix_identity_float4x4
+        reflection.columns.0.x = -1
+        reflection.columns.3.x = 2 * center.x
+        return reflection
     }
 
     private static func translationMatrix(_ value: SIMD3<Float>) -> simd_float4x4 {
@@ -1320,7 +2026,8 @@ final class BoardModelRealityLoader {
         board: BoardRevision,
         presentation: BoardPresentation,
         store: BoardPackageStore = BoardCatalog.packageStore,
-        resourceAccess: BoardModelResourceAccess = .live
+        resourceAccess: BoardModelResourceAccess = .live,
+        useLivePhysics: Bool = false
     ) async throws -> BoardModelRealityScene {
         guard case .model(let media) = presentation.media else {
             throw BoardModelRealityError.presentationNotModel
@@ -1358,6 +2065,8 @@ final class BoardModelRealityLoader {
                 $0.presentationID == presentation.id
             }.map(\.id)),
             instances: media.instances,
+            physics: useLivePhysics ? try store.presentationPhysicsInput(for: board, presentationID: presentation.id) : nil,
+            presentationID: presentation.id,
             resourceLease: source.resourceLease
         )
 
@@ -1369,5 +2078,158 @@ final class BoardModelRealityLoader {
         // Do NOT release it here.
 
         return scene
+    }
+}
+
+/// Cached mesh-local triangles and a mesh-local tree for viewing rays.
+/// Unlike the physics collider, this accepts open contact meshes and queries
+/// both windings: either side of a board surface can obstruct an opening.
+private struct BoardViewingMesh {
+    struct Triangle {
+        let a: SIMD3<Float>
+        let b: SIMD3<Float>
+        let c: SIMD3<Float>
+        let facing: Float
+        let area: Float
+        let normal: SIMD3<Float>
+        let center: SIMD3<Float>
+
+        init(a: SIMD3<Float>, b: SIMD3<Float>, c: SIMD3<Float>, facing: Float) {
+            self.a = a; self.b = b; self.c = c; self.facing = facing
+            let vector = facing * simd_cross(b - a, c - a)
+            self.area = simd_length(vector)
+            self.normal = simd_normalize(vector)
+            self.center = (a + b + c) / 3
+        }
+
+        func transformed(by matrix: simd_float4x4, facing: Float) -> Triangle {
+            func point(_ p: SIMD3<Float>) -> SIMD3<Float> {
+                let q = matrix * SIMD4<Float>(p, 1)
+                return SIMD3(q.x, q.y, q.z)
+            }
+            return Triangle(a: point(a), b: point(b), c: point(c), facing: self.facing * facing)
+        }
+    }
+    private struct Node {
+        let low: SIMD3<Float>
+        let high: SIMD3<Float>
+        let left: Int
+        let right: Int
+        let faces: [Int]
+    }
+    let triangles: [Triangle]
+    private let nodes: [Node]
+
+    init(mesh: MeshResource) {
+        var triangles: [Triangle] = []
+        let contents = mesh.contents
+        for model in contents.models {
+            let instances = contents.instances.filter { $0.model == model.id }.map(\.transform)
+            for transform in instances.isEmpty ? [matrix_identity_float4x4] : instances {
+                for part in model.parts {
+                    guard let indices = part.triangleIndices else { continue }
+                    let positions = Array(part.positions), ids = Array(indices)
+                    guard ids.count >= 3 else { continue }
+                    for i in stride(from: 0, to: ids.count - 2, by: 3) {
+                        let indices = [Int(ids[i]), Int(ids[i + 1]), Int(ids[i + 2])]
+                        guard indices.allSatisfy({ positions.indices.contains($0) }) else { continue }
+                        let triangle = Triangle(a: positions[indices[0]], b: positions[indices[1]],
+                            c: positions[indices[2]], facing: 1).transformed(by: transform,
+                                facing: simd_determinant(transform) < 0 ? -1 : 1)
+                        guard [triangle.a, triangle.b, triangle.c].allSatisfy({
+                            $0.x.isFinite && $0.y.isFinite && $0.z.isFinite
+                        }), triangle.area.isFinite, triangle.area > 1e-10 else { continue }
+                        triangles.append(triangle)
+                    }
+                }
+            }
+        }
+        self.init(triangles: triangles)
+    }
+
+    private init(triangles: [Triangle]) {
+        var nodes: [Node] = []
+        func build(_ faces: [Int]) -> Int {
+            var low = SIMD3<Float>(repeating: .infinity), high = -low
+            for i in faces {
+                for point in [triangles[i].a, triangles[i].b, triangles[i].c] {
+                    low = simd_min(low, point); high = simd_max(high, point)
+                }
+            }
+            let index = nodes.count
+            nodes.append(Node(low: low, high: high, left: -1, right: -1, faces: []))
+            if faces.count <= 8 {
+                nodes[index] = Node(low: low, high: high, left: -1, right: -1, faces: faces)
+            } else {
+                let span = high - low
+                let axis = span.x >= span.y && span.x >= span.z ? 0 : (span.y >= span.z ? 1 : 2)
+                let sorted = faces.sorted { triangles[$0].center[axis] < triangles[$1].center[axis] }
+                let split = sorted.count / 2
+                let left = build(Array(sorted[..<split])), right = build(Array(sorted[split...]))
+                nodes[index] = Node(low: low, high: high, left: left, right: right, faces: [])
+            }
+            return index
+        }
+        if !triangles.isEmpty { _ = build(Array(triangles.indices)) }
+        self.triangles = triangles
+        self.nodes = nodes
+    }
+
+    func bounds(transformedBy transform: simd_float4x4) -> (minimum: SIMD3<Float>, maximum: SIMD3<Float>)? {
+        guard let root = nodes.first else { return nil }
+        var low = SIMD3<Float>(repeating: .infinity), high = -low
+        for x in [root.low.x, root.high.x] {
+            for y in [root.low.y, root.high.y] {
+                for z in [root.low.z, root.high.z] {
+                    let p = transform * SIMD4<Float>(x, y, z, 1)
+                    guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { return nil }
+                    let point = SIMD3(p.x, p.y, p.z)
+                    low = simd_min(low, point); high = simd_max(high, point)
+                }
+            }
+        }
+        return (low, high)
+    }
+
+    static func intersectsBox(origin: SIMD3<Float>, delta: SIMD3<Float>,
+                              minimum: SIMD3<Float>, maximum: SIMD3<Float>) -> Bool {
+        var near: Float = 0, far: Float = 1
+        func clip(_ start: Float, _ delta: Float, _ low: Float, _ high: Float) -> Bool {
+            if abs(delta) < 1e-10 { return start >= low && start <= high }
+            let a = (low - start) / delta, b = (high - start) / delta
+            near = max(near, min(a, b)); far = min(far, max(a, b))
+            return near <= far
+        }
+        return clip(origin.x, delta.x, minimum.x, maximum.x)
+            && clip(origin.y, delta.y, minimum.y, maximum.y)
+            && clip(origin.z, delta.z, minimum.z, maximum.z)
+    }
+
+    func intersects(origin: SIMD3<Float>, delta: SIMD3<Float>) -> Bool {
+        guard !nodes.isEmpty else { return false }
+        var stack = [0]
+        while let index = stack.popLast() {
+            let node = nodes[index]
+            guard Self.intersectsBox(origin: origin, delta: delta,
+                                     minimum: node.low, maximum: node.high) else { continue }
+            if node.left >= 0 {
+                stack.append(node.left); stack.append(node.right)
+                continue
+            }
+            for face in node.faces {
+                let triangle = triangles[face]
+                let e1 = triangle.b - triangle.a, e2 = triangle.c - triangle.a
+                let cross = simd_cross(delta, e2), determinant = simd_dot(e1, cross)
+                guard abs(determinant) > 1e-12 else { continue }
+                let inverse = 1 / determinant, offset = origin - triangle.a
+                let u = simd_dot(offset, cross) * inverse
+                guard u >= -1e-6, u <= 1 + 1e-6 else { continue }
+                let q = simd_cross(offset, e1), v = simd_dot(delta, q) * inverse
+                guard v >= -1e-6, u + v <= 1 + 1e-6 else { continue }
+                let t = simd_dot(e2, q) * inverse
+                if t > 1e-6, t <= 1 { return true }
+            }
+        }
+        return false
     }
 }

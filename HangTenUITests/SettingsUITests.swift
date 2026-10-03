@@ -24,7 +24,7 @@ final class SettingsUITests: XCTestCase {
         app.launchEnvironment["HANGTEN_REVIEW_PLANS"] = "1"
         app.launch()
 
-        XCTAssertTrue(app.staticTexts["Choose your session."].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.navigationBars["Plans"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.staticTexts["Learn more"].exists)
         XCTAssertFalse(app.staticTexts["Each routine includes its source link."].exists)
         XCTAssertFalse(app.staticTexts["Read the evidence overview"].exists)

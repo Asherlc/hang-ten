@@ -63,6 +63,82 @@ final class WorkoutSpeechVoiceSelectorTests: XCTestCase {
 }
 
 final class WorkoutTimelineTests: XCTestCase {
+    func testAnyHoldTaskDoesNotHighlightAnInventedContact() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.contact"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "metolius.contact.entry"))
+        let step = try XCTUnwrap(plan.steps.first { $0.id == "metolius.contact.entry.minute-4" })
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: step, on: board), [])
+        XCTAssertEqual(
+            Set(WorkoutHighlightResolver.contactIDs(for: step, on: board, taskIndex: 1)),
+            ["pocket-11-left", "pocket-11-right"]
+        )
+    }
+
+    func testTwoHandTaskOnOneHandBoardExplainsTwoBoards() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "lattice.mini-bar"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.max-hangs"))
+        let step = try XCTUnwrap(plan.steps.first { $0.segments.contains { $0.target?.planTasks != nil } })
+        XCTAssertTrue(board.isOneHanded)
+        XCTAssertTrue(WorkoutTaskPresentationPolicy.requiresTwoBoards(
+            for: step, on: board, taskIndex: 0
+        ))
+    }
+
+    func testUnsidedOneArmTasksNeedAnAthleteSideChoice() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.contact"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "metolius.contact.intermediate"))
+        let step = try XCTUnwrap(plan.steps.first { $0.id == "metolius.contact.intermediate.minute-9" })
+        var cursor = WorkoutTaskCursor()
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: step, on: board), [])
+        XCTAssertEqual(WorkoutTimeline.labels(for: step), ["Hang", "Choose a hand"])
+        XCTAssertFalse(WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: step))
+        XCTAssertFalse(WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: step))
+        cursor.choose(.right, in: step)
+        XCTAssertEqual(WorkoutTimeline.labels(
+            for: step, selectedHandSide: cursor.selectedSide(for: step)
+        ), ["Hang", "Right hand"])
+        XCTAssertFalse(WorkoutHoldCueVisibilityPolicy.showsCue(
+            for: .left, step: step, selectedHandSide: cursor.selectedSide(for: step)
+        ))
+        XCTAssertTrue(WorkoutHoldCueVisibilityPolicy.showsCue(
+            for: .right, step: step, selectedHandSide: cursor.selectedSide(for: step)
+        ))
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(
+            for: step, on: board, selectedHandSide: cursor.selectedSide(for: step)
+        ), ["round-sloper-3-right"])
+        XCTAssertTrue(cursor.advance(in: step))
+        XCTAssertNil(cursor.selectedSide(for: step))
+        cursor.choose(.left, in: step)
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(
+            for: step, on: board, taskIndex: 1,
+            selectedHandSide: cursor.selectedSide(for: step)
+        ), ["round-sloper-3-left"])
+    }
+
+    func testManualTaskCursorChangesHoldWithoutChangingStepClock() throws {
+        let step = WorkoutStep(
+            id: "ladder", number: 1, title: "Ladder", instruction: "Move holds.",
+            accessory: "", duration: 40, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .tasks([
+                    [.init(target: .init(kind: .edge)), .init(target: .init(kind: .edge))],
+                    [.init(target: .init(kind: .jug)), .init(target: .init(kind: .jug))]
+                ]), timing: .fixed, duration: 40
+            )], timedWorkDuration: 40
+        )
+        let timeline = WorkoutTimeline(steps: [step])
+        var cursor = WorkoutTaskCursor()
+        XCTAssertEqual(cursor.index(for: step), 0)
+        XCTAssertEqual(timeline.elapsedInStep(at: 12), 12)
+        XCTAssertTrue(cursor.advance(in: step))
+        XCTAssertEqual(cursor.index(for: step), 1)
+        XCTAssertEqual(timeline.elapsedInStep(at: 12), 12)
+        XCTAssertFalse(cursor.advance(in: step))
+        XCTAssertTrue(cursor.retreat(in: step))
+        XCTAssertEqual(cursor.performedIndices(for: step), [0, 1])
+    }
+
     func testLivePresentationMaterializesEitherHandForLabelsAndPreservesUnresolvedStep() {
         let eitherHand = WorkoutStep(
             id: "either", number: 1, title: "Either hand", instruction: "Hang.",
@@ -1026,6 +1102,59 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(cue?.hold, hold)
     }
 
+    func testTaskHoldCueUsesActiveTaskAndChosenOneHandSide() {
+        let rightSloper = PhysicalContact(
+            id: "right-sloper", name: "Right sloper", kind: .sloper, side: .right
+        )
+        let leftSloper = PhysicalContact(
+            id: "left-sloper", name: "Left sloper", kind: .sloper, side: .left
+        )
+        let leftEdge = PhysicalContact(
+            id: "left-edge", name: "Left edge", kind: .edge, side: .left
+        )
+        let rightEdge = PhysicalContact(
+            id: "right-edge", name: "Right edge", kind: .edge, side: .right
+        )
+        let leftJug = PhysicalContact(
+            id: "left-jug", name: "Left jug", kind: .jug, side: .left
+        )
+        let rightJug = PhysicalContact(
+            id: "right-jug", name: "Right jug", kind: .jug, side: .right
+        )
+        let board = handTargetBoard([
+            leftSloper, rightSloper, leftEdge, rightEdge, leftJug, rightJug
+        ])
+        let step = WorkoutStep(
+            id: "task-cues", number: 1, title: "Task cues", instruction: "Hang.",
+            accessory: "", duration: 30, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .tasks([
+                    [.init(target: .init(kind: .sloper))],
+                    [.init(target: .init(kind: .edge)), .init(target: .init(kind: .edge))],
+                    [.init(target: .init(kind: .jug)), .init(target: .init(kind: .jug))]
+                ]),
+                timing: .fixed, duration: 30
+            )],
+            gripType: .halfCrimp,
+            fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle])
+        )
+
+        let oneHandCue = WorkoutHoldCuePolicy.resolve(
+            step: step, hold: rightSloper, on: board, selectedHandSide: .right
+        )
+        let mismatchedSideCue = WorkoutHoldCuePolicy.resolve(
+            step: step, hold: leftSloper, on: board, selectedHandSide: .right
+        )
+        let laterTaskCue = WorkoutHoldCuePolicy.resolve(
+            step: step, hold: rightJug, on: board, taskIndex: 2
+        )
+
+        XCTAssertEqual(oneHandCue?.hold, rightSloper)
+        XCTAssertNil(mismatchedSideCue)
+        XCTAssertEqual(laterTaskCue?.hold, rightJug)
+    }
+
     func testHoldCueIsUnavailableForMultiTargetSteps() {
         let hold = PhysicalContact(
             id: "cue-edge",
@@ -1511,7 +1640,7 @@ final class WorkoutTimelineTests: XCTestCase {
         let timeline = WorkoutTimeline(steps: [rest, work])
         let restCue = timeline.boardCue(at: 2, countdown: 0, isComplete: false)
         let skipCue = timeline.boardCue(currentStep: work, stepElapsed: 0, countdown: 3,
-                                       isComplete: false, isSkipCountdown: true)
+                                       isComplete: false)
         for cue in [restCue, skipCue] {
             let preview = try XCTUnwrap(cue.step)
             XCTAssertEqual(preview.segments, [work.segments[0]])
@@ -1613,15 +1742,14 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertFalse(cue.isSuppressed)
     }
 
-    func testBoardCuePreviewsDestinationWorkStepDuringSkipCountdown() {
+    func testBoardCuePreviewsDestinationWorkStepDuringCountdown() {
         let timeline = WorkoutTimeline(steps: restPreviewSteps)
 
         let cue = timeline.boardCue(
             currentStep: restPreviewSteps[3],
             stepElapsed: 0,
             countdown: 3,
-            isComplete: false,
-            isSkipCountdown: true
+            isComplete: false
         )
 
         XCTAssertEqual(cue.step?.id, "next-work")
@@ -1658,12 +1786,14 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertFalse(cue.isSuppressed)
     }
 
-    func testBoardCueSuppressesCountdownAndCompletion() {
+    func testBoardCuePreviewsInitialCountdownAndSuppressesCompletion() {
         let timeline = WorkoutTimeline(steps: restPreviewSteps)
 
-        let countdownCue = timeline.boardCue(at: 5, countdown: 3, isComplete: false)
-        XCTAssertNil(countdownCue.step)
-        XCTAssertTrue(countdownCue.isSuppressed)
+        let countdownCue = timeline.boardCue(at: 0, countdown: 3, isComplete: false)
+        XCTAssertEqual(countdownCue.step?.id, "work")
+        XCTAssertEqual(countdownCue.mode, .preview)
+        XCTAssertFalse(countdownCue.isResting)
+        XCTAssertFalse(countdownCue.isSuppressed)
 
         let completionCue = timeline.boardCue(at: 72, countdown: 0, isComplete: true)
         XCTAssertNil(completionCue.step)
@@ -1719,6 +1849,83 @@ final class WorkoutTimelineTests: XCTestCase {
 
         let pinnedPair = ContactRequirement(contactID: "left-edge", kind: .edge, selection: .bilateralPair)
         XCTAssertEqual(pinnedPair.bilateralSelection.selection, .single)
+    }
+
+    func testPerHandResolverAssignsAsymmetricContactsAndRejectsMissingSecondHold() throws {
+        let board = handTargetBoard([
+            PhysicalContact(id: "left-edge", name: "Left edge", kind: .edge, side: .left),
+            PhysicalContact(id: "right-sloper", name: "Right sloper", kind: .sloper, side: .right)
+        ])
+        let step = handTargetStep()
+        let task = [
+            PlanHandTarget(target: .init(kind: .edge), side: .left),
+            PlanHandTarget(target: .init(kind: .sloper), side: .right)
+        ]
+        XCTAssertEqual(try ContactResolver.resolve(task, step: step, board: board).map(\.id), ["left-edge", "right-sloper"])
+        XCTAssertEqual(try ContactResolver.resolve([task, task], step: step, board: board).map { $0.map(\.id) }, [
+            ["left-edge", "right-sloper"], ["left-edge", "right-sloper"]
+        ])
+        XCTAssertThrowsError(try ContactResolver.resolve([
+            .init(target: .init(kind: .edge)),
+            .init(target: .init(kind: .edge))
+        ], step: step, board: board))
+        XCTAssertThrowsError(try ContactResolver.resolve([task, [
+            .init(target: .init(kind: .edge)), .init(target: .init(kind: .edge))
+        ]], step: step, board: board))
+    }
+
+    func testPerHandResolverUsesPairOrSharedContactAccordingToBoardCapacity() throws {
+        let task = [
+            PlanHandTarget(target: .init(kind: .edge)),
+            PlanHandTarget(target: .init(kind: .edge))
+        ]
+        let step = handTargetStep()
+        let pair = handTargetBoard([
+            PhysicalContact(id: "left-edge", name: "Left", kind: .edge, side: .left),
+            PhysicalContact(id: "right-edge", name: "Right", kind: .edge, side: .right)
+        ])
+        XCTAssertEqual(try ContactResolver.resolve(task, step: step, board: pair).map(\.id), ["left-edge", "right-edge"])
+
+        let shared = handTargetBoard([
+            PhysicalContact(id: "shared-edge", name: "Shared", kind: .edge, handCapacity: 2)
+        ])
+        XCTAssertEqual(try ContactResolver.resolve(task, step: step, board: shared).map(\.id), ["shared-edge", "shared-edge"])
+
+        let oneHand = handTargetBoard([
+            PhysicalContact(id: "portable-edge", name: "Portable", kind: .edge, handCapacity: 1)
+        ], handCapacity: 1)
+        XCTAssertEqual(try ContactResolver.resolve(task, step: step, board: oneHand).map(\.id), ["portable-edge", "portable-edge"])
+        XCTAssertThrowsError(try ContactResolver.resolve(task, step: step, board: handTargetBoard([
+            PhysicalContact(id: "single-edge", name: "Single", kind: .edge, handCapacity: 1)
+        ])))
+    }
+
+    private func handTargetStep() -> WorkoutStep {
+        WorkoutStep(
+            id: "per-hand", number: 1, title: "Per-hand", instruction: "",
+            accessory: "", duration: 7, phase: .hang, handUse: .double
+        )
+    }
+
+    private func handTargetBoard(_ contacts: [PhysicalContact], handCapacity: Int = 2) -> BoardRevision {
+        let geometry = Dictionary(uniqueKeysWithValues: contacts.enumerated().map { index, contact in
+            (contact.id, [BoardContactPiece(
+                id: "\(contact.id)-piece", contactID: contact.id,
+                frame: CGRect(x: contacts.count == 1 ? 0.45 : (index == 0 ? 0.1 : 0.8),
+                              y: 0, width: 0.1, height: 0.1),
+                shape: .roundedRect(cornerRadiusFraction: 0), treatment: .surface
+            )])
+        })
+        return BoardRevision(
+            id: "fixture.per-hand", revisionID: "test", manufacturer: "Fixture",
+            name: "Per-hand", subtitle: "", dimensions: nil,
+            aspectRatio: 1, handCapacity: handCapacity, contacts: contacts,
+            productURL: URL(string: "https://example.com/board")!, photoAssetName: nil,
+            presentations: [BoardPresentation(
+                id: "front", name: "Front", aspectRatio: 1, isDefault: true,
+                media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))
+            )]
+        )
     }
 
     func testDefaultHandPreferenceFollowsBoardCapacity() {
@@ -3816,11 +4023,11 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         XCTAssertEqual(steps.map(\.duration), [10, 20, 30])
         XCTAssertEqual(
             steps[0].workRequirements,
-            [ContactRequirement(kind: .sloper, shape: .round)]
+            Array(repeating: ContactRequirement(kind: .sloper, shape: .round), count: 2)
         )
         XCTAssertEqual(
             steps[1].workRequirements,
-            [ContactRequirement.edge(depth: .category(.medium))]
+            Array(repeating: ContactRequirement.edge(depth: .category(.medium)), count: 2)
         )
         XCTAssertEqual(steps[2].phase, .rest)
     }
@@ -3854,10 +4061,14 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         XCTAssertEqual(work.kind, .work)
         XCTAssertEqual(work.timing, .stopwatch)
         XCTAssertNil(work.duration)
-        guard case let .requirements(requirements)? = work.target else {
-            return XCTFail("Expected stopwatch work to keep round-sloper requirements")
+        guard case let .tasks(tasks)? = work.target else {
+            return XCTFail("Expected stopwatch work to keep its two-hand round-sloper task")
         }
-        XCTAssertEqual(requirements, [ContactRequirement(kind: .sloper, shape: .round)])
+        XCTAssertEqual(tasks.count, 1)
+        XCTAssertEqual(
+            tasks.first?.map { $0.target?.legacyRequirement ?? ContactRequirement() } ?? [],
+            Array(repeating: ContactRequirement(kind: .sloper, shape: .round), count: 2)
+        )
     }
 
     func testAdvancedMinuteFourLeavesTwentySecondsToRest() {
@@ -3897,11 +4108,11 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         XCTAssertEqual(entryMinuteSix.map(\.duration), [10, 5, 45])
         XCTAssertEqual(
             entryMinuteSix[0].workRequirements,
-            [ContactRequirement(kind: .sloper, shape: .round)]
+            Array(repeating: ContactRequirement(kind: .sloper, shape: .round), count: 2)
         )
         XCTAssertEqual(
             entryMinuteSix[1].workRequirements,
-            [ContactRequirement.kind(.pocket)]
+            Array(repeating: ContactRequirement.kind(.pocket), count: 2)
         )
 
         let advancedMinuteEight = advanced.filter { $0.id.hasPrefix("advanced.minute-8.") }
@@ -4326,6 +4537,29 @@ final class WorkoutSessionStateTests: XCTestCase {
             phase: .hang)
     ]
 
+    func testCancellingPendingSkipPausesOnlyAnAlreadyRunningSession() {
+        for kind in [WorkoutCountdownKind?.none, .initial, .skip] {
+            for isRunning in [false, true] {
+                var state = WorkoutSessionState(
+                    activeStartUptime: isRunning ? 90 : nil,
+                    pausedElapsed: 5,
+                    routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
+                )
+                let original = state
+                if WorkoutSessionPolicy.shouldPauseAfterCancellingPendingCountdown(kind: kind, isRunning: isRunning) {
+                    state.toggleRunning(uptime: 100)
+                }
+                if kind == .skip && isRunning {
+                    XCTAssertNil(state.activeStartUptime)
+                    XCTAssertEqual(state.pausedElapsed, 15)
+                    XCTAssertEqual(state.currentElapsed(planDuration: 90, at: 110), 15)
+                } else {
+                    XCTAssertEqual(state, original)
+                }
+            }
+        }
+    }
+
     func testInitialStartUsesMonotonicUptimeForElapsedAndCountdown() {
         let wallClockStart = Date(timeIntervalSinceReferenceDate: 3_000)
         let uptime: TimeInterval = 100
@@ -4386,6 +4620,7 @@ final class WorkoutSessionStateTests: XCTestCase {
             routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
 
+        XCTAssertEqual(state.skipDecision(timeline: timeline, planDuration: timeline.duration, at: now), .seek(60))
         XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
 
         XCTAssertNil(state.countdownKind)
@@ -4404,6 +4639,7 @@ final class WorkoutSessionStateTests: XCTestCase {
             routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
 
+        XCTAssertEqual(state.skipDecision(timeline: timeline, planDuration: timeline.duration, at: now), .seek(60))
         XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
 
         XCTAssertNil(state.countdownKind)
@@ -4421,6 +4657,7 @@ final class WorkoutSessionStateTests: XCTestCase {
             routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
 
+        XCTAssertEqual(state.skipDecision(timeline: timeline, planDuration: timeline.duration, at: now), .countdown(80))
         XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
         XCTAssertEqual(state.pausedElapsed, 80)
         XCTAssertEqual(state.countdownKind, .skip)

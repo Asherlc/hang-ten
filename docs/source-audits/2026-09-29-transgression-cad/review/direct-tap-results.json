@@ -1,0 +1,62 @@
+[
+  {
+    "year": 2011,
+    "contact": "jug-top",
+    "point": [
+      201.00000000000003,
+      288
+    ],
+    "selectedID": "boardDetail.selectedHold.jug-top",
+    "method": "physical coordinate tap on rendered model; accessibility overlay has hit testing disabled"
+  },
+  {
+    "year": 2011,
+    "contact": "edge-18",
+    "point": [
+      201.00000000000003,
+      314.3333333333333
+    ],
+    "selectedID": "boardDetail.selectedHold.edge-18",
+    "method": "physical coordinate tap on rendered model; accessibility overlay has hit testing disabled"
+  },
+  {
+    "year": 2011,
+    "contact": "edge-6",
+    "point": [
+      201.00000000000003,
+      450.66666666666663
+    ],
+    "selectedID": "boardDetail.selectedHold.edge-6",
+    "method": "physical coordinate tap on rendered model; accessibility overlay has hit testing disabled"
+  },
+  {
+    "year": 2013,
+    "contact": "jug-top",
+    "point": [
+      201.00000000000003,
+      288
+    ],
+    "selectedID": "boardDetail.selectedHold.jug-top",
+    "method": "physical coordinate tap on rendered model; accessibility overlay has hit testing disabled"
+  },
+  {
+    "year": 2013,
+    "contact": "edge-18",
+    "point": [
+      201.00000000000003,
+      314.66666666666663
+    ],
+    "selectedID": "boardDetail.selectedHold.edge-18",
+    "method": "physical coordinate tap on rendered model; accessibility overlay has hit testing disabled"
+  },
+  {
+    "year": 2013,
+    "contact": "edge-6",
+    "point": [
+      201.00000000000003,
+      451.3333333333333
+    ],
+    "selectedID": "boardDetail.selectedHold.edge-6",
+    "method": "physical coordinate tap on rendered model; accessibility overlay has hit testing disabled"
+  }
+]

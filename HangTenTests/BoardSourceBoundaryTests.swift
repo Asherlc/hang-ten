@@ -51,6 +51,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "soill.iron-palm-2",
             "soill.split-palm",
             "soill.training-tiles",
+            "surfaces-for-climbing-transgression-2011",
+            "surfaces-for-climbing-transgression-2013",
             "target10a.linebreaker-base",
             "tension.flash-board",
             "tension.grindstone",
@@ -283,6 +285,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
         }
     }
 
+    /// Checks each catalog package against the declared raster or model-only asset boundary.
     func testEveryCatalogPackageMatchesTypedMediaBoundary() throws {
         let repositoryRoot = repositoryRootURL()
         let packagePaths = try discoveredPackagePaths(at: repositoryRoot)
@@ -333,6 +336,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "tension.flash-board",
             "tension.grindstone",
             "tension.grindstone-pro",
+            "tension.grindstone-original",
+            "tension.honestone",
             "tension.whetstone",
             "trango.rock-prodigy-pivot",
             "metolius.climbers-edge",
@@ -341,11 +346,17 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "soill.iron-palm-2",
             "soill.split-palm",
             "soill.training-tiles",
+            "surfaces-for-climbing-transgression-2011",
+            "surfaces-for-climbing-transgression-2013",
             "the-hangboard.the-hangboard",
             "trango.rock-prodigy-training-center",
             "target10a.linebreaker-base",
             "yy.baguette-evo",
-            "yy.penta-evo"
+            "yy.penta-evo",
+            "yy.verticalboard-first",
+            "yy.verticalboard-light",
+            "yy.verticalboard-one",
+            "yy.verticalboard-evo"
         ]
 
         XCTAssertFalse(
@@ -371,13 +382,13 @@ final class BoardSourceBoundaryTests: XCTestCase {
             )
             let assetPaths = try packageRelativeAssetPaths(in: packageURL)
 
-            // A CAD package may also carry an authoring-only suspension sidecar.
-            // Both sources generate board.json; neither is staged at runtime.
+            // CAD authoring sidecars are distinct from the declared runtime assets.
             let authoringSource = "\(packagePath).FCStd"
             let extraEntries = packageEntries.subtracting(["assets", "board.json"])
             XCTAssertTrue(
                 extraEntries.isEmpty || extraEntries == [authoringSource]
-                    || extraEntries == [authoringSource, "suspension.json"],
+                    || extraEntries == [authoringSource, "suspension.json"]
+                    || extraEntries == [authoringSource, "suspension.json", "rope-physics.json"],
                 "unexpected package entries: \(extraEntries.sorted())"
             )
             if packageEntries.contains(authoringSource) {
@@ -399,6 +410,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 var paths = [assetPath]
                 if let descriptorPath = media["descriptorPath"] as? String {
                     paths.append(descriptorPath)
+                }
+                if let physicsPath = media["physicsDescriptorPath"] as? String {
+                    paths.append(physicsPath)
                 }
                 return paths
             })
@@ -458,15 +472,21 @@ final class BoardSourceBoundaryTests: XCTestCase {
                     logicalHoldIDs,
                     "Original raster media must cover every logical hold exactly once."
                 )
-            case .model:
+            case .model(let media):
                 XCTAssertTrue(
                     migratedModelBoardIDs.contains(board.id),
                     "Only migrated boards may use model media."
                 )
                 let modelAssets = Set(board.presentations.flatMap { presentation -> [String] in
                     guard case .model(let model) = presentation.media else { return [] }
-                    return [model.assetPath, model.descriptorPath]
+                    return [model.assetPath, model.descriptorPath] + [model.physicsDescriptorPath].compactMap { $0 }
                 })
+                if media.physicsDescriptorPath != nil {
+                    XCTAssertNotNil(try BoardCatalog.packageStore.presentationPhysicsInput(for: board))
+                }
+                if packageEntries.contains("rope-physics.json") {
+                    XCTAssertNotNil(media.physicsDescriptorPath)
+                }
                 XCTAssertEqual(assetPaths, modelAssets)
                 XCTAssertTrue(
                     presentations.allSatisfy { presentation in

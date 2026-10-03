@@ -1,5 +1,11 @@
 # Suspended portable hangboard presentation
 
+The camera reset policy in this historical design is superseded by the
+[selected-hold visibility contract](2026-10-01-selected-hold-camera-visibility.md).
+Board position selection still applies the authored board pose and cord setup;
+camera selection now follows that newer contract, including preservation when
+no visibility adjustment is needed and on same-hold retaps.
+
 ## Goal
 
 Extend the 3D hangboard migration contract so a portable board with usable
@@ -22,9 +28,10 @@ or other mounting scene object.
 - The app owns an invisible, fixed world-space anchor and renders the cord as
   presentation-only geometry. The anchor is never represented by a visible
   node, image, accessibility element, or hit target.
-- A selected hold or resolved workout position smoothly resets the board to
-  that position's canonical pose. This intentionally overrides a prior manual
-  inspection view.
+- A selected hold or resolved workout position applies that position's
+  authored board pose. The original requirement to override a prior manual
+  camera view is superseded by the
+  [selected-hold visibility contract](2026-10-01-selected-hold-camera-visibility.md).
 - Manual inspection orbits the camera around the stable suspended scene. It
   does not rotate the board independently, because that would make a fixed
   cord appear to pass through or detach from the product.
@@ -146,17 +153,20 @@ the descriptor-bound USDZ meshes.
 ## Runtime interaction
 
 Hold selection and workout resolution select a `positionID` before presenting
-the model. The renderer commits the board, destination-solved cord, and
-canonical camera as one atomic presentation change. It does not interpolate
-the board while retaining an old cord, and it does not independently
-interpolate cord samples. Selecting another hold always restores that hold's
-position's canonical pose, even after manual inspection.
+the model. The renderer commits the board and destination-solved cord as one
+atomic presentation change. Camera behavior follows the
+[selected-hold visibility contract](2026-10-01-selected-hold-camera-visibility.md).
+It does not interpolate the board while retaining an old cord, and it does
+not independently interpolate cord samples. Selecting another hold always
+restores that hold's position's canonical pose, even after manual inspection.
 
 Manual gestures alter only orbit camera azimuth, elevation, and allowed zoom
 around the suspended board-and-cord scene. The board transform, invisible
 anchor, and solved cord remain fixed. On release the camera stays at the
-chosen inspection view; the next position/hold selection resets the canonical
-board pose and its canonical camera framing with a short smooth transition.
+chosen inspection view. Position selection still applies the authored board
+pose. The original requirement to reset canonical camera framing on every
+position/hold selection is superseded: unchanged selections, same-hold retaps,
+and new selections needing no visibility adjustment preserve manual framing.
 The camera must keep the active hold and its cord attachment legible without
 changing the source-derived identity of the active position.
 

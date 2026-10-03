@@ -27,13 +27,13 @@ struct ReportProblemView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
                     Text("Wrong hold, highlight alignment, or workout step? Describe what you see.")
-                        .font(.system(size: 15, weight: .medium, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
 
                     VStack(alignment: .leading, spacing: 8) {
                         SectionLabel(title: "What went wrong")
                         TextEditor(text: $message)
-                            .font(.system(size: 16, weight: .medium, design: .rounded))
+                            .font(.system(.callout, design: .rounded, weight: .medium))
                             .foregroundStyle(Color.hangInk)
                             .scrollContentBackground(.hidden)
                             .frame(minHeight: 140)
@@ -45,7 +45,7 @@ struct ReportProblemView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         SectionLabel(title: "Email (optional)")
                         TextField("Email for follow-up", text: $contactEmail)
-                            .font(.system(size: 16, weight: .medium, design: .rounded))
+                            .font(.system(.callout, design: .rounded, weight: .medium))
                             .foregroundStyle(Color.hangInk)
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
@@ -58,7 +58,7 @@ struct ReportProblemView: View {
 
                     Button(action: send) {
                         Text("Send report")
-                            .font(.system(size: 17, weight: .bold, design: .rounded))
+                            .font(.system(.body, design: .rounded, weight: .bold))
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
                     }

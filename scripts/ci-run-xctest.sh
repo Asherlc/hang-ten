@@ -15,6 +15,7 @@
 # Optional:
 #   SWIFT_PACKAGE_CACHE_PATH     -clonedSourcePackagesDirPath
 #   XCTEST_DESTINATION           xcodebuild -destination (default: iPhone 17 Pro)
+#   XCTEST_TOOLCHAIN             explicit xcodebuild -toolchain identifier
 set -euo pipefail
 
 : "${XCTEST_LABEL:?XCTEST_LABEL is required}"
@@ -157,6 +158,9 @@ run_xcodebuild_with_watchdog() {
     -parallel-testing-enabled "$parallel_enabled"
     -maximum-parallel-testing-workers "$XCTEST_PARALLEL_WORKERS"
   )
+  if [[ -n "${XCTEST_TOOLCHAIN:-}" ]]; then
+    cmd+=(-toolchain "$XCTEST_TOOLCHAIN")
+  fi
   for target in "${only_testing_targets[@]}"; do
     cmd+=("-only-testing:${target}")
   done
@@ -230,8 +234,19 @@ run_xcodebuild_with_watchdog "build-for-testing" "build-for-testing"
 if [[ "${CI:-}" == "true" && "$XCTEST_LABEL" == HangTenUITests-map-* ]]; then
   app_resources="$XCTEST_DERIVED_DATA/Build/Products/Debug-iphonesimulator/HangTen.app/HangTenDebugSimulatorModels"
   for model in \
+    clavellium-training-block \
+    lattice-mini-bar \
     frictitious-doormount-pro-7 \
     frictitious-megalith \
+    tension-whetstone \
+    surfaces-for-climbing-transgression-2011 \
+    surfaces-for-climbing-transgression-2013 \
+    yy-verticalboard-first \
+    yy-verticalboard-light \
+    yy-verticalboard-one \
+    yy-verticalboard-evo \
+    tension-honestone \
+    tension-grindstone-original \
     trango-rock-prodigy-forge \
     trango-rock-prodigy-natural \
     zlagboard-evo \

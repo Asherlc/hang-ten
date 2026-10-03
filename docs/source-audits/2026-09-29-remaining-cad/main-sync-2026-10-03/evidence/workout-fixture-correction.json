@@ -1,0 +1,14 @@
+{
+  "modifiedOnly": "HangTenTests/WorkoutActivityRecordingTests.swift",
+  "test": "testRockProdigyReusableFramesResolveToDistinctPhysicalSides",
+  "reason": "Native Forge contains distinct left/right physical contacts and disjoint descriptor nodes in one full-board asset; equipment instance IDs left-half/right-half are not its topology.",
+  "retained": "Existing all-contact left/right bounds/mirroring checks; Natural and Training Center template equipment-ID assertion unchanged.",
+  "newAssertions": [
+    "Selected pair contains distinct left/right contact IDs",
+    "Selected frames lie on opposite physical sides",
+    "Descriptor node sets nonempty and disjoint"
+  ],
+  "productionEdits": false,
+  "buildOrTestsRun": false,
+  "sha256": "3d1d85376963c03b5cc3f88c3d3b7284d0d8b1487ef14bf1b592dea93864216e"
+}

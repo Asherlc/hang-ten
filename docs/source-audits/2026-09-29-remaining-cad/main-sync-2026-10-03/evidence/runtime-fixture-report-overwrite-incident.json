@@ -1,0 +1,39 @@
+{
+  "recordedAtUTC": "2026-10-03T15:49:22.610167+00:00",
+  "author": "/root/baguette_review_prep",
+  "status": "CONFIRMED_OVERWRITE_ORIGINAL_INTERMEDIATE_ANALYSIS_UNRECOVERABLE",
+  "description": "During runtime test-expectation correction, the worker used unconditional Path.write_text on native-fixture-test-corrections.json and .patch without checking that the parent had already created earlier Forge/Penta integration analysis under those names. The earlier report and patch bytes were overwritten. The newly produced runtime report and patch are retained byte-exact under distinct runtime-fixture-test-corrections names. The old paths now contain aliases of these new bytes, not the original analysis.",
+  "entries": [
+    {
+      "overwrittenPath": ".context/placid-badger-cad-second-half/main-sync-2026-10-03/native-fixture-test-corrections.json",
+      "newReportCanonicalPath": ".context/placid-badger-cad-second-half/main-sync-2026-10-03/runtime-fixture-test-corrections.json",
+      "currentBothSHA256": "f277066e0b1001b5f8bd3fe86835c19b2a8f0b501801eb2a55e86f98d51bc201",
+      "originalBytesRecovered": false,
+      "originalHashKnown": false,
+      "currentOldPathIsAliasOnly": true
+    },
+    {
+      "overwrittenPath": ".context/placid-badger-cad-second-half/main-sync-2026-10-03/native-fixture-test-corrections.patch",
+      "newReportCanonicalPath": ".context/placid-badger-cad-second-half/main-sync-2026-10-03/runtime-fixture-test-corrections.patch",
+      "currentBothSHA256": "45fb3f6997032ba2c2974ccca6a3e2cbd923c50f578c9170c0a41a4430912d29",
+      "originalBytesRecovered": false,
+      "originalHashKnown": false,
+      "currentOldPathIsAliasOnly": true
+    }
+  ],
+  "recoveryChecks": [
+    "No second same-named copy found by no-ignore filename search under workspace .context and docs.",
+    "git ls-files returned no tracked copy of either report.",
+    "No references/content backup identified in scoped main-sync JSON/Markdown/Python or historical docs search.",
+    "tmutil listlocalsnapshots / returned no local snapshots.",
+    "Parent confirms no original report bytes/hash available in context; exact reconstruction must not be claimed."
+  ],
+  "evidenceLimits": [
+    "The two earlier intermediate analysis files are not preserved and are not recoverable from checked locations.",
+    "No statement that all original main-sync analysis remains exact is valid.",
+    "This operation did not rewrite first-test logs, frozen tested Swift source, or historical review proof files; parent separately verified those retained sources.",
+    "This incident does not change any test result or the unresolved live-physics failure."
+  ],
+  "parentInstruction": "Stop recovery search after this handoff; retain alias provenance and distinct runtime names.",
+  "sourceOrRuntimeChangesByRecovery": false
+}

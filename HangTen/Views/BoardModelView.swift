@@ -47,7 +47,9 @@ struct BoardModelSurface: View {
     }
 
     var body: some View {
-        Group {
+        // Keep loading and disappearance scoped to this surface. Group forwards
+        // lifecycle modifiers to its changing placeholder/model children.
+        ZStack {
             if case .ready(let model) = result {
                 if usesFrameRenderer, onContactTap == nil {
                     BoardFrameImageView(model: model, positionID: positionID,
@@ -112,6 +114,11 @@ struct BoardModelSurface: View {
             }
             result = .loading
             if usesFrameRenderer { BoardFrameEnvironment.prewarm() }
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
+                print("[BoardModelSurface] load begin \(board.id) displayOnly=\(isDisplayOnly)")
+            }
+            #endif
             do {
                 let model = try await BoardModelRealityLoader.load(
                     board: board,
@@ -119,6 +126,11 @@ struct BoardModelSurface: View {
                     store: BoardCatalog.packageStore
                 )
                 guard !Task.isCancelled else { return }
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
+                    print("[BoardModelSurface] load ready \(board.id) scene=\(ObjectIdentifier(model)) displayOnly=\(isDisplayOnly)")
+                }
+                #endif
                 result = .ready(model)
             } catch {
                 guard !Task.isCancelled else { return }
@@ -129,6 +141,11 @@ struct BoardModelSurface: View {
             }
         }
         .onDisappear {
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
+                print("[BoardModelSurface] disappear \(board.id) displayOnly=\(isDisplayOnly)")
+            }
+            #endif
             result = .loading
         }
     }
@@ -142,11 +159,21 @@ struct BoardModelSurface: View {
         )
     }
 
+    /// Expose all highlighted hold cues, including bilateral and mixed tasks.
+    static func highlightedContactCue(
+        for contacts: [PhysicalContact],
+        highlightedContactIDs: Set<String>
+    ) -> String? {
+        let cues = Set(contacts.filter { highlightedContactIDs.contains($0.id) }
+            .map { GripDiagramView.cueLabel(for: $0) }).sorted()
+        return cues.isEmpty ? nil : cues.joined(separator: ", ")
+    }
+
     private var highlightedContactCue: String? {
-        let boardContacts = board.contacts(in: presentation)
-        let highlighted = boardContacts.filter { highlightedContactIDs.contains($0.id) }
-        guard highlighted.count == 1, let contact = highlighted.first else { return nil }
-        return GripDiagramView.cueLabel(for: contact)
+        Self.highlightedContactCue(
+            for: board.contacts(in: presentation),
+            highlightedContactIDs: highlightedContactIDs
+        )
     }
 }
 
@@ -175,10 +202,17 @@ struct BoardModelRealityView: View {
     let onUnavailable: (() -> Void)?
     var isDisplayOnly = false
 
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var cameraRevision = 0
     @State private var lastDragTranslation: CGSize = .zero
     @State private var lastMagnification: CGFloat = 1
     @State private var didReportUnavailable = false
+    #if DEBUG
+    @State private var synchronizedCameraDiagnostic = "pending"
+    @State private var contactTapRevision = 0
+    @State private var lastTappedContactID = ""
+    #endif
 
     private var fieldOfViewDegrees: Double {
         #if DEBUG
@@ -194,30 +228,121 @@ struct BoardModelRealityView: View {
         GeometryReader { proxy in
             let size = proxy.size
             RealityView { content in
+                // Board maps use the authored camera, without device tracking
+                // or the AR session's implicit non-AR fallback.
+                content.camera = .virtual
                 content.add(model.root)
                 content.add(model.camera)
                 applySync(size: size)
+                if model.hasLiveRopes, positionID != nil {
+                    if !model.hasLiveUpdateSubscription {
+                        model.installLiveUpdateSubscription(content.subscribe(to: SceneEvents.Update.self) { [weak model] event in
+                            let elapsed = event.deltaTime
+                            Task { @MainActor [weak model] in model?.advanceLiveRopes(elapsed: elapsed) }
+                        })
+                    }
+                } else {
+                    model.installLiveUpdateSubscription(nil)
+                }
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
+                    print("[BoardModelRealityView] attach scene=\(ObjectIdentifier(model)) camera=\(content.camera) size=\(size) transform=\(model.camera.transform.matrix) rootScene=\(String(describing: model.root.scene))")
+                }
+                #endif
             } update: { content in
+                // Observe orbit invalidation in the RealityView update itself,
+                // as well as the projected SwiftUI accessibility overlay.
+                let revision = cameraRevision
+                content.camera = .virtual
                 applySync(size: size)
+                if model.hasLiveRopes, positionID != nil {
+                    if !model.hasLiveUpdateSubscription {
+                        model.installLiveUpdateSubscription(content.subscribe(to: SceneEvents.Update.self) { [weak model] event in
+                            let elapsed = event.deltaTime
+                            Task { @MainActor [weak model] in model?.advanceLiveRopes(elapsed: elapsed) }
+                        })
+                    }
+                } else {
+                    model.installLiveUpdateSubscription(nil)
+                }
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
+                    let diagnostic = "revision=\(revision);rootActive=\(model.root.isActive);cameraActive=\(model.camera.isActive);sameScene=\(model.root.scene != nil && model.root.scene === model.camera.scene);azimuth=\(model.orbitAzimuth);elevation=\(model.orbitElevation);cameraPitch=\(asin(model.camera.orientation.act(SIMD3<Float>(0, 0, 1)).y));cameraSettled=\(model.isCameraAtTarget);selection=\(highlightedContactIDs.sorted().joined(separator: ","));tapRevision=\(contactTapRevision);pickedContact=\(lastTappedContactID)"
+                    Task { @MainActor in
+                        if synchronizedCameraDiagnostic != diagnostic {
+                            synchronizedCameraDiagnostic = diagnostic
+                        }
+                    }
+                }
+                #endif
+            }
+            .task(id: CameraSelection(positionID: positionID, contactIDs: highlightedContactIDs)) {
+                guard !UIAccessibility.isReduceMotionEnabled else { return }
+                var wasAnimating = false
+                for _ in 0..<10 {
+                    try? await Task.sleep(for: .milliseconds(35))
+                    guard !Task.isCancelled else { return }
+                    let isAnimating = model.isCameraAnimating
+                    if isAnimating || wasAnimating { cameraRevision &+= 1 }
+                    wasAnimating = isAnimating
+                }
             }
             .gesture(orbitGesture(size: size))
             .simultaneousGesture(magnifyGesture)
             .gesture(tapGesture)
             .overlay { accessibilityOverlay(size: size) }
+            #if targetEnvironment(simulator)
+            .background {
+                if onContactTap != nil {
+                    BoardSimulatorPresentation().allowsHitTesting(false)
+                }
+            }
+            #endif
+            #if DEBUG
+            .overlay(alignment: .topLeading) {
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
+                    Color.clear
+                        .frame(width: 1, height: 1)
+                        .accessibilityElement()
+                        .accessibilityIdentifier("boardModel.renderDiagnostic")
+                        .accessibilityLabel("Board renderer diagnostic")
+                        .accessibilityValue(synchronizedCameraDiagnostic)
+                        .allowsHitTesting(false)
+                }
+            }
+            #endif
             .allowsHitTesting(!isDisplayOnly)
             // A different scene needs a fresh RealityView make closure so its
-            // root and camera replace the prior scene's entities.
+            // root and camera replace the prior scene entities.
             .id(ObjectIdentifier(model))
         }
         // A display-only card is one element (its host Button owns the tap). An
         // interactive board exposes its contact elements instead, so the
         // container must not collapse them into a single element.
+        .onAppear { model.setLiveActivity(scenePhase == .active) }
+        .onDisappear {
+            model.onLiveFrame=nil
+            model.onLiveFailure=nil
+            model.setLiveActivity(false)
+        }
+        .onChange(of:scenePhase) { _,phase in model.setLiveActivity(phase == .active) }
+        .onChange(of:reduceMotion) { _,value in model.configureLiveMotion(reduceMotion:value,displayOnly:isDisplayOnly) }
         .modifier(BoardModelAccessibilityContainer(
             label: onContactTap == nil ? "\(boardName) hangboard" : nil,
             value: onContactTap == nil ? accessibilityValue : nil))
     }
 
+    private struct CameraSelection: Hashable {
+        let positionID: String?
+        let contactIDs: Set<String>
+    }
+
     private func applySync(size: CGSize) {
+        model.configureLiveMotion(reduceMotion:reduceMotion,displayOnly:isDisplayOnly)
+        let unavailableCallback = onUnavailable
+        model.onLiveFailure = { unavailableCallback?() }
+        let revisionBinding = $cameraRevision
+        model.onLiveFrame = { Task { @MainActor in revisionBinding.wrappedValue &+= 1 } }
         let priorCameraTransform = model.camera.transform.matrix
         let priorInstanceTransforms = model.instanceEntities.map { $0.transform.matrix }
         var camera = model.camera.camera
@@ -229,12 +354,17 @@ struct BoardModelRealityView: View {
         model.frame(in: size)
         let didSelect = model.select(positionID: positionID)
         model.highlight(highlightedContactIDs, mode: highlightMode)
+        #if DEBUG
+        model.applyReviewCamera()
+        #endif
         // RealityView synchronizes after SwiftUI evaluates the accessibility
         // overlay. Reproject once when framing or a board pose actually changes.
         // The unchanged follow-up update must not schedule another invalidation.
         if model.camera.transform.matrix != priorCameraTransform
             || model.instanceEntities.map({ $0.transform.matrix }) != priorInstanceTransforms {
-            Task { @MainActor in cameraRevision &+= 1 }
+            Task { @MainActor in
+                cameraRevision &+= 1
+            }
         }
         if let positionID, !didSelect {
             Task { @MainActor in
@@ -253,8 +383,13 @@ struct BoardModelRealityView: View {
             .onEnded { value in
                 guard let id = model.contactID(for: value.entity),
                       let contact = contacts.first(where: { $0.id == id }) else { return }
-                model.resetCamera(animated: true)
-                cameraRevision &+= 1
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
+                    lastTappedContactID = id
+                    contactTapRevision &+= 1
+                    cameraRevision &+= 1
+                }
+                #endif
                 onContactTap?(contact)
             }
     }
@@ -629,3 +764,96 @@ private struct BoardFrameImageView: View {
         .onDisappear { coordinator.disappear() }
     }
 }
+#if targetEnvironment(simulator)
+import QuartzCore
+/// Keep Simulator drawable presentation independent of worker-thread CA transactions.
+private struct BoardSimulatorPresentation: UIViewRepresentable {
+    func makeUIView(context: Context) -> PresentationView { PresentationView() }
+    func updateUIView(_ view: PresentationView, context: Context) { view.scheduleConfiguration() }
+
+    final class PresentationView: UIView {
+        private var pending: DispatchWorkItem?
+        private var attempts = 0
+        private var attemptedViewport: CGRect?
+        private weak var configuredLayer: CAMetalLayer?
+
+        override func didMoveToWindow() {
+            super.didMoveToWindow()
+            pending?.cancel()
+            pending = nil
+            attempts = 0
+            attemptedViewport = nil
+            configuredLayer = nil
+            if window != nil { scheduleConfiguration() }
+        }
+
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            scheduleConfiguration()
+        }
+
+        func scheduleConfiguration() {
+            guard let window else { return }
+            let viewport = convert(bounds, to: window)
+            if attemptedViewport != viewport || configuredLayer?.presentsWithTransaction == true {
+                attempts = 0
+                configuredLayer = nil
+                attemptedViewport = viewport
+            }
+            if let configuredLayer, configuredLayer.superlayer != nil,
+               !configuredLayer.presentsWithTransaction { return }
+            guard pending == nil, attempts < 120 else { return }
+            let work = DispatchWorkItem { [weak self] in
+                guard let self else { return }
+                self.pending = nil
+                self.configurePresentation()
+            }
+            pending = work
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05, execute: work)
+        }
+
+        private func configurePresentation() {
+            guard let window, bounds.width > 0, bounds.height > 0 else {
+                attempts += 1
+                scheduleConfiguration()
+                return
+            }
+            let viewport = convert(bounds, to: window)
+            var ancestor = superview
+            while let container = ancestor {
+                var candidates: [CAMetalLayer] = []
+                var visited = 0
+                func collect(_ layer: CALayer) {
+                    visited += 1
+                    guard visited < 4096 else { return }
+                    if let metal = layer as? CAMetalLayer {
+                        let frame = metal.convert(metal.bounds, to: window.layer)
+                        if abs(frame.minX - viewport.minX) < 1,
+                           abs(frame.minY - viewport.minY) < 1,
+                           abs(frame.width - viewport.width) < 1,
+                           abs(frame.height - viewport.height) < 1 {
+                            candidates.append(metal)
+                        }
+                    }
+                    for child in layer.sublayers ?? [] { collect(child) }
+                }
+                collect(container.layer)
+                if candidates.count == 1, visited < 4096 {
+                    let layer = candidates[0]
+                    layer.presentsWithTransaction = false
+                    configuredLayer = layer
+                    #if DEBUG
+                    print("[BoardSimulatorPresentation] asynchronous=\(!layer.presentsWithTransaction) viewport=\(viewport)")
+                    #endif
+                    attempts = 120
+                    return
+                }
+                if container === window { break }
+                ancestor = container.superview
+            }
+            attempts += 1
+            scheduleConfiguration()
+        }
+    }
+}
+#endif

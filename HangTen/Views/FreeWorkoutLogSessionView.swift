@@ -29,6 +29,7 @@ struct FreeWorkoutLogSessionView: View {
     @State private var showsAddExercise = false
     @State private var guidedHangTarget: FreeWorkoutSetTarget?
     @State private var logSetTarget: FreeWorkoutSetTarget?
+    @FocusState private var focusedSetField: String?
 
     init(onFinished: (() -> Void)? = nil, onClose: (() -> Void)? = nil) {
         self.onFinished = onFinished
@@ -97,6 +98,8 @@ struct FreeWorkoutLogSessionView: View {
                     .padding(.horizontal, 20)
                     .padding(.vertical, 16)
                 }
+                .scrollDismissesKeyboard(.immediately)
+                .accessibilityIdentifier("freeWorkout.log.scroll")
             }
             .background(Color.hangBackground)
             .onChange(of: now) { _, date in
@@ -111,6 +114,11 @@ struct FreeWorkoutLogSessionView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") { focusedSetField = nil }
+                    .accessibilityIdentifier("freeWorkout.keyboard.done")
+            }
             ToolbarItem(placement: .cancellationAction) {
                 Button("Close") {
                     if let onClose {
@@ -261,10 +269,10 @@ struct FreeWorkoutLogSessionView: View {
             VStack(alignment: .leading, spacing: 4) {
                 SectionLabel(title: "Session")
                 Text("Free workout")
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
+                    .font(.system(.title2, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
                 Text(elapsedLabel(at: date))
-                    .font(.system(size: 14, weight: .medium, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
                     .accessibilityIdentifier("freeWorkout.elapsed")
             }
@@ -286,7 +294,7 @@ struct FreeWorkoutLogSessionView: View {
                 SectionLabel(title: "Rest", tint: .restBlueDeep)
                 Spacer()
                 Text(countdownLabel(remaining))
-                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .font(.system(.title, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.restBlueDeep)
                     .monospacedDigit()
                     .accessibilityIdentifier("freeWorkout.rest.remaining")
@@ -320,7 +328,7 @@ struct FreeWorkoutLogSessionView: View {
             SectionLabel(title: "Exercises")
             if log.exercises.isEmpty {
                 Text("Add a hang or pull-up to start logging sets.")
-                    .font(.system(size: 14, weight: .medium, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
                     .hangCard(padding: 14)
             } else {
@@ -337,10 +345,10 @@ struct FreeWorkoutLogSessionView: View {
             HStack(alignment: .firstTextBaseline) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(exercise.title)
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .font(.system(.body, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangInk)
                     Text(holdSubtitle(exercise.holdSelection))
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .font(.system(.caption, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
                 }
                 Spacer()
@@ -401,7 +409,8 @@ struct FreeWorkoutLogSessionView: View {
     private func setHeaderRow(for exercise: FreeExercise) -> some View {
         HStack(spacing: 8) {
             Text("#")
-                .frame(width: 28, alignment: .leading)
+                .fixedSize(horizontal: true, vertical: false)
+                .frame(minWidth: 28, alignment: .leading)
             Text("kg")
                 .frame(maxWidth: .infinity)
             if exercise.type == .hang {
@@ -414,7 +423,7 @@ struct FreeWorkoutLogSessionView: View {
             Text("✓")
                 .frame(width: 36, alignment: .center)
         }
-        .font(.system(size: 11, weight: .bold, design: .rounded))
+        .font(.system(.caption2, design: .rounded, weight: .bold))
         .foregroundStyle(Color.hangMuted)
     }
 
@@ -426,9 +435,10 @@ struct FreeWorkoutLogSessionView: View {
     ) -> some View {
         HStack(spacing: 8) {
             Text("\(number)")
-                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .bold))
                 .foregroundStyle(isFocused ? Color.hangGreenDark : Color.hangInk)
-                .frame(width: 28, alignment: .leading)
+                .fixedSize(horizontal: true, vertical: false)
+                .frame(minWidth: 28, alignment: .leading)
 
             TextField(
                 "kg",
@@ -437,11 +447,12 @@ struct FreeWorkoutLogSessionView: View {
             )
             .keyboardType(.decimalPad)
             .multilineTextAlignment(.center)
-            .font(.system(size: 15, weight: .medium, design: .rounded))
+            .font(.system(.subheadline, design: .rounded, weight: .medium))
             .padding(.vertical, 6)
             .padding(.horizontal, 4)
             .background(Color.hangBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
             .accessibilityIdentifier("freeWorkout.set.weight.\(set.id.uuidString)")
+            .focused($focusedSetField, equals: "weight.\(set.id.uuidString)")
 
             if exercise.type == .hang {
                 TextField(
@@ -451,11 +462,12 @@ struct FreeWorkoutLogSessionView: View {
                 )
                 .keyboardType(.numberPad)
                 .multilineTextAlignment(.center)
-                .font(.system(size: 15, weight: .medium, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .medium))
                 .padding(.vertical, 6)
                 .padding(.horizontal, 4)
                 .background(Color.hangBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .accessibilityIdentifier("freeWorkout.set.duration.\(set.id.uuidString)")
+                .focused($focusedSetField, equals: "duration.\(set.id.uuidString)")
             } else {
                 TextField(
                     "reps",
@@ -464,11 +476,12 @@ struct FreeWorkoutLogSessionView: View {
                 )
                 .keyboardType(.numberPad)
                 .multilineTextAlignment(.center)
-                .font(.system(size: 15, weight: .medium, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .medium))
                 .padding(.vertical, 6)
                 .padding(.horizontal, 4)
                 .background(Color.hangBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .accessibilityIdentifier("freeWorkout.set.reps.\(set.id.uuidString)")
+                .focused($focusedSetField, equals: "reps.\(set.id.uuidString)")
             }
 
             Button {
@@ -491,6 +504,7 @@ struct FreeWorkoutLogSessionView: View {
         .padding(.vertical, 2)
         .background(isFocused ? Color.hangGreen.opacity(0.12) : Color.clear)
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("freeWorkout.set.\(set.id.uuidString)")
     }
 

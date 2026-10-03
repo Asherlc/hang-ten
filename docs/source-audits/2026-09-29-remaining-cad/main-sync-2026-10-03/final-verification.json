@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "branch": "placid-badger-cad-second-half",
+  "main": "d53c019c43319a70b32e6dc654814de29e87ab89",
+  "preMergeTip": "e1cc8ff270ba1a0b16b621582f2fc8296b5dd64e",
+  "noUnresolvedEntries": true,
+  "noUnstagedTrackedChanges": true,
+  "sourceNonRawDiffCheckPassed": true,
+  "testedSourcesExact": true,
+  "sixPackageFilesExact": 22,
+  "historicalReviewGitObjectsExact": 20006,
+  "onlyExistingReviewDocumentChanged": "docs/source-audits/2026-09-29-remaining-cad/second-half-ownership.md",
+  "reviewQueueExact": true,
+  "nativeLFSObjectsVerified": 66,
+  "rawEvidenceCopiesVerified": 201,
+  "cleanupIndependentlyVerified": true,
+  "outgoingMainOrParentMerge": false
+}

@@ -2,6 +2,87 @@ import XCTest
 @testable import HangTen
 
 final class ContactResolverTests: XCTestCase {
+    func testLopezMaxHangsOffersBothBeastmakersAndRecordsChosenEdges() throws {
+        for (boardID, depth, ids, expectedCue) in [
+            ("beastmaker-1000", 20.0, Set(["pocket-bottom-outer-left", "pocket-bottom-outer-right"]),
+             "20 mm 4 Finger Edge Left, 20 mm 4 Finger Edge Right"),
+            ("beastmaker-1000", 15.0, Set(["pocket-top-outer-left", "pocket-top-outer-right"]),
+             "15 mm 4 Finger Edge Left, 15 mm 4 Finger Edge Right"),
+            ("beastmaker-2000", 15.0, Set(["front-lower-1", "front-lower-9"]),
+             "15 mm 4 Finger Edge Left, 15 mm 4 Finger Edge Right")
+        ] {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            let plan = PlanCatalog.maxHangs
+            XCTAssertTrue(MaxHangsEdgeSelection.availableDepths(for: plan, on: board).contains(depth))
+            let selected = try XCTUnwrap(MaxHangsEdgeSelection.resolvedPlans(for: plan, on: board)[depth])
+            let accessibleCue = try XCTUnwrap(BoardModelSurface.highlightedContactCue(
+                for: board.contacts,
+                highlightedContactIDs: ids
+            ))
+            XCTAssertEqual(accessibleCue, expectedCue, "\(boardID) / \(depth) mm")
+            for step in selected.steps where !step.isRestStep {
+                XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: step, on: board)), ids)
+            }
+            let recorded = try WorkoutActivityRecorder().segments(for: selected, on: board)
+            let work = recorded.filter { $0.kind == .work }
+            XCTAssertEqual(work.count, 5)
+            XCTAssertTrue(work.allSatisfy { $0.durationSeconds == 10 })
+            for segment in work {
+                guard case .resolvedContacts(let snapshot) = segment.target else {
+                    return XCTFail("Selected edges must be recorded as resolved contacts")
+                }
+                XCTAssertEqual(Set(snapshot.contactIDs), ids)
+            }
+        }
+    }
+
+    func testLopezMaxHangsRejectsUnsupportedAndOutOfRangeEdgeSelections() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-2000"))
+        XCTAssertNil(MaxHangsEdgeSelection.selecting(20, in: PlanCatalog.maxHangs, on: board))
+        XCTAssertNil(MaxHangsEdgeSelection.selecting(22, in: PlanCatalog.maxHangs, on: board))
+        XCTAssertNil(MaxHangsEdgeSelection.selecting(7, in: PlanCatalog.maxHangs, on: board))
+        XCTAssertTrue(MaxHangsEdgeSelection.availableDepths(for: PlanCatalog.abrahangs, on: board).isEmpty)
+    }
+
+    func testCatalogSevenThreeCueUsesTwoHandsOnCompactBoard() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.seven-three-repeaters"))
+        let step = try XCTUnwrap(plan.steps.first { $0.phase == .hang && $0.title.contains("29 mm") })
+        let tasks = try XCTUnwrap(step.segments.first?.target?.planTasks)
+        XCTAssertEqual(tasks.first?.count, 2)
+        XCTAssertEqual(
+            Set(try ContactResolver.resolve(tasks[0], step: step, board: board).map(\.id)),
+            ["edge-29-left", "edge-29-right"]
+        )
+    }
+
+    func testEveryBoardSpecificCatalogTaskResolves() throws {
+        for plan in PlanCatalog.all where plan.boardID != nil {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: plan.boardID!))
+            for step in plan.steps {
+                for segment in step.segments where segment.kind == .work {
+                    guard let tasks = segment.target?.planTasks else { continue }
+                    XCTAssertNoThrow(
+                        try ContactResolver.resolve(tasks, step: step, board: board),
+                        "\(plan.id) / \(step.id)"
+                    )
+                }
+            }
+        }
+    }
+
+    func testRepeatersFirstCueHighlightsBothCompactTwentyNineMillimeterEdges() throws {
+        let board = try XCTUnwrap(
+            BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii")
+        )
+        let step = try XCTUnwrap(LegacyPlanSeedCatalog.repeaters.steps.first)
+
+        XCTAssertEqual(
+            Set(WorkoutHighlightResolver.contactIDs(for: step, on: board)),
+            ["edge-29-left", "edge-29-right"]
+        )
+    }
+
     func testResolutionFailuresDescribeSelectionOrGeometricPairingFailures() {
         XCTAssertEqual(
             ContactResolutionError.noMatches.errorDescription,

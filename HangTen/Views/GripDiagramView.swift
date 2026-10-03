@@ -116,50 +116,31 @@ struct GripDiagramView: View {
         Self.cueLabel(for: hold)
     }
 
-    private var accessibilityCueLabel: String {
+    var accessibilityCueLabel: String {
         [
             gripType?.label ?? "Grip not specified",
-            fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" }
+            fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" } ?? "4 fingers (assumed)"
         ]
             .compactMap { $0 }
             .joined(separator: ", ")
     }
 }
 
-/// The same 3D rig drives compact workout cues and the rotatable detail view.
+/// Inline grip illustration and its accessible finger description.
 struct GripHandCueCard: View {
     let posture: GripType?
     let fingerConfiguration: FingerConfiguration?
     let side: GripCueSide
     var usesSharedPairPreview = false
-    @State private var showsModel = false
 
     var body: some View {
         VStack(spacing: 3) {
-            Button {
-                showsModel = true
-            } label: {
-                Group {
-                    if usesSharedPairPreview {
-                        Image(systemName: "arrow.up.left.and.arrow.down.right")
-                            .font(.system(size: 9, weight: .semibold))
-                            .foregroundStyle(Color.hangMuted)
-                            .frame(maxWidth: .infinity, minHeight: 28)
-                    } else {
-                        GripHandModelView(posture: posture, fingerConfiguration: fingerConfiguration, side: side)
-                            .frame(height: 88)
-                            .overlay(alignment: .topTrailing) {
-                                Image(systemName: "arrow.up.left.and.arrow.down.right")
-                                    .font(.system(size: 9, weight: .semibold))
-                                    .foregroundStyle(Color.hangMuted)
-                            }
-                    }
-                }
-                .contentShape(Rectangle())
+            if !usesSharedPairPreview {
+                GripHandModelView(posture: posture, fingerConfiguration: fingerConfiguration, side: side)
+                    .frame(height: 88)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Explore \(side.accessibilityIdentifier) hand in 3D")
-            .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier).model")
 
             Text(posture?.label ?? "Grip not specified")
                 .font(.system(size: 10, weight: .bold, design: .rounded))
@@ -167,7 +148,7 @@ struct GripHandCueCard: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.68)
             if fingerConfiguration == nil {
-                Text("Fingers not specified")
+                Text(fingerSummary)
                     .font(.system(size: 10, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
                     .lineLimit(1)
@@ -186,15 +167,16 @@ struct GripHandCueCard: View {
         .accessibilityElement(children: .contain)
         .accessibilityLabel(accessibilityLabel)
         .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier)")
-        .sheet(isPresented: $showsModel) {
-            GripHandModelInspector(posture: posture, fingerConfiguration: fingerConfiguration, side: side)
-        }
     }
 
-    private var accessibilityLabel: String {
+    var fingerSummary: String {
+        fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" } ?? "4 fingers (assumed)"
+    }
+
+    var accessibilityLabel: String {
         [
             posture?.label ?? "Grip not specified",
-            fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" } ?? "Fingers not specified"
+            fingerSummary
         ].joined(separator: ", ")
     }
 }

@@ -79,6 +79,9 @@ def require_disjoint_pinch_triangles(triangles_by_contact: Mapping[str, set[tupl
 
 def verify_shipped_package(package_root: Path) -> dict[str, object]:
     """Hash-check, empty-scene reimport, and descriptor-rebuild the shipped USDZ."""
+    descriptor_path = Path(package_root) / "assets/primary.model.json"
+    if _load_object(descriptor_path, "descriptor").get("schemaVersion") == 2:
+        return _verify_reusable_package(Path(package_root))
     try:
         import bpy
         import contact_model_package as compiler
@@ -149,6 +152,97 @@ def verify_shipped_package(package_root: Path) -> dict[str, object]:
         "distinctBilateralPinchBindings": required_pinch_nodes,
         "disjointPinchTriangleCounts": disjoint_counts,
     }
+
+
+def require_reusable_descriptor_matches_source(package, model_bytes, model, descriptor):
+    """Rebuild caches from native authored bindings/outlines and exported points."""
+    import zipfile
+    import xml.etree.ElementTree as ET
+    from contact_model_descriptor import SlotNodeBinding, compile_reusable_descriptor
+
+    with zipfile.ZipFile(package / f"{package.name}.FCStd") as archive:
+        document = ET.fromstring(archive.read("Document.xml"))
+    nodes, outlines = [], {}
+    for obj in document.findall("./ObjectData/Object"):
+        properties = {
+            prop.attrib["name"]: prop.find("String").get("value")
+            for prop in obj.findall("./Properties/Property")
+            if prop.find("String") is not None
+        }
+        role = properties.get("NodeRole")
+        if not role:
+            continue
+        slot = properties.get("ContactSlotID") if role == "contact" else None
+        nodes.append(SlotNodeBinding(properties["NodeID"], role, slot))
+        if slot and properties.get("HangTenHoldOutline"):
+            outlines[slot] = [tuple(value / 1000 for value in point)
+                              for point in json.loads(properties["HangTenHoldOutline"])]
+    vertices = {name: node["points_m"] for name, node in model["nodes"].items()}
+    rebuilt = compile_reusable_descriptor(
+        model_bytes, nodes, vertices,
+        frozenset(node.contact_slot_id for node in nodes if node.role == "contact"),
+        outlines,
+    ).to_json()
+    if rebuilt != descriptor:
+        raise ValueError("descriptor does not match CAD source bindings/outlines and exported USDZ geometry")
+
+
+def _verify_reusable_package(package: Path) -> dict[str, object]:
+    """Verify the canonical CAD half and both physical instance bindings."""
+    from pxr import Usd, UsdShade
+    cad_tools = _TOOLS.parent / "HangboardCAD"
+    sys.path.insert(0, str(cad_tools))
+    import board_manifest  # Installs the shared package module search path.
+    from hangboard_packages.cad_source import load_board
+    from usdz_writer import read_usdz
+
+    model_path = package / "assets/primary.usdz"
+    descriptor = _load_object(package / "assets/primary.model.json", "descriptor")
+    board = load_board(package / f"{package.name}.FCStd")
+    if tuple(c["id"] for c in board["contacts"]) != EXPECTED_CONTACT_IDS:
+        raise ValueError("physical Training Center contact inventory changed")
+    digest = hashlib.sha256(model_path.read_bytes()).hexdigest()
+    if descriptor["modelSHA256"] != digest:
+        raise ValueError("descriptor model hash does not match shipped USDZ")
+    model = read_usdz(model_path)
+    if set(model["nodes"]) != {n["nodeID"] for n in descriptor["nodes"]}:
+        raise ValueError("descriptor node inventory differs from shipped USDZ")
+    require_reusable_descriptor_matches_source(package, model_path.read_bytes(), model, descriptor)
+    stage = Usd.Stage.Open(str(model_path))
+    for prim in stage.Traverse():
+        if prim.IsA(UsdShade.Material) or prim.IsA(UsdShade.Shader) or prim.HasAPI(UsdShade.MaterialBindingAPI):
+            raise ValueError("canonical model must remain unbound")
+    if any(p[0] >= 0 for node in model["nodes"].values() for p in node["points_m"]):
+        raise ValueError("canonical asset contains geometry outside its left half")
+    instances = board["presentations"][0]["media"]["instances"]
+    if len(instances) != 2 or instances[1]["baseTransform"].get("reflection") != "x":
+        raise ValueError("expected two instances with the right half reflected")
+    triangles = {}
+    mapped = []
+    for side, instance in zip(("left", "right"), instances):
+        bindings = instance["contactIDsBySlotID"]
+        if set(bindings) != set(descriptor["contactSlots"]):
+            raise ValueError("instance does not bind every canonical slot")
+        for slot, contact_id in bindings.items():
+            if contact_id != f"{slot}-{side}":
+                raise ValueError("left/right contact binding changed")
+            mapped.append(contact_id)
+        for kind in ("medium", "wide"):
+            slot = f"pinch-{kind}"
+            region = set()
+            for node_id in descriptor["contactSlots"][slot]["nodeIDs"]:
+                node = model["nodes"][node_id]
+                for face in node["triangles"]:
+                    region.add(tuple(sorted(tuple(round(v, 9) for v in node["points_m"][i]) for i in face)))
+            triangles[bindings[slot]] = region
+    if len(set(mapped)) != 24 or set(mapped) != set(EXPECTED_CONTACT_IDS):
+        raise ValueError("physical contact coverage is incomplete")
+    counts = require_disjoint_pinch_triangles(triangles)
+    return {"status": "verified", "modelSHA256": digest,
+            "descriptorMatchesCADAndUSDZ": True,
+            "nodeCount": len(model["nodes"]), "canonicalHalfCount": 1,
+            "physicalInstanceCount": 2, "contactCount": len(mapped),
+            "disjointPinchTriangleCounts": counts}
 
 
 def _arguments(argv: Sequence[str]) -> argparse.Namespace:

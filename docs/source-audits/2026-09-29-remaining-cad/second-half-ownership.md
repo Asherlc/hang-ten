@@ -311,3 +311,14 @@ The [minimal Train-only comparison](zlagboard-evo/runtime-train-only-2026-10-03/
 The [clean hand-output comparison](zlagboard-evo/runtime-clean-hand-output-2026-10-03/README.md) fails in both same-binary arms: on-demand hand images do not restore timely board highlights. Each arm retains all 44 captures, whole-image reviews, and passing mechanical checks; early missing cues and the image lighting adaptation remain explicit. No reversal, production workaround, new acceptance, or PR readiness is claimed. All seven reserved source/test paths are restored to their committed bytes and their no-overlap reservation is released. The exact owned Simulator, DerivedData, result bundles, and module cache were deleted and independently verified absent; this workspace and its agents remain available. Evo workout correctness, Pro fresh runtime/app review, and explicit combined integration remain outstanding.
 
 The [experimental board frame packet](zlagboard-evo/runtime-board-frame-2026-10-03/README.md) preserves the failing control and first candidate, four cache tests, short lit appearance check, and incomplete 20/44 lit candidate. The DEBUG experiment remains disabled and unvalidated; no repair or human acceptance is claimed. Exact temporary Simulator/DerivedData/result cleanup passed. Work is saved before the explicitly requested Main sync; our #16–21 allocation and all review decisions remain unchanged.
+
+The user subsequently authorized updating this branch with Main. The
+[Main integration record](main-sync-2026-10-03/README.md) covers exact Main tip
+`d53c019c43319a70b32e6dc654814de29e87ab89`, preserving our six packages and
+all existing review records while reconciling shared code and canonical
+metadata. The 155 affected iOS contracts and package checks pass; the separate
+Main live-physics timeout and early Evo appearance failure remain retained.
+The renderer experiment stays disabled, with no new acceptance or runtime
+repair claim. Exact temporary validation resources were removed; this
+workspace and its agents remain available. No outgoing Main/parent merge is
+authorized or performed by this update.

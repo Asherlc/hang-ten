@@ -101,6 +101,7 @@ final class WorkoutPaywallUITests: XCTestCase {
     }
 
     func testVerifiedPurchaseCarriesManualWeightSnapshotIntoSummary() {
+        continueAfterFailure = false
         let app = lockedPlanApp()
         app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_VERIFIED_PURCHASE"] = "1"
@@ -112,10 +113,23 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         XCTAssertTrue(app.staticTexts["Max Hangs"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.staticTexts["Grindstone"].exists,
-                      "The weight-flow fixture must resolve to the requested raster board.")
+                      "The weight-flow fixture must resolve to the requested board.")
         let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
         XCTAssertTrue(source.waitForExistence(timeout: 10))
         source.buttons["Manual"].tap()
+
+        // Set the switch before focusing the decimal-pad field. A keyboard-active
+        // tap can leave the switch off even when XCTest reports it as hittable.
+        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
+        XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
+        XCTAssertEqual(bodyweight.value as? String, "0")
+        app.buttons["workout.initialWeight.addBodyweight.label"].tap()
+        let bodyweightEnabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "1"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
+                       "Add bodyweight must be on before purchasing")
 
         let field = app.textFields["workout.initialWeight.manualField"]
         XCTAssertTrue(field.waitForExistence(timeout: 10))
@@ -135,32 +149,45 @@ final class WorkoutPaywallUITests: XCTestCase {
             )
         )
         field.typeText("12.5")
-
-        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        let bodyweightReady = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == true AND hittable == true"),
-            object: bodyweight
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
-        XCTAssertEqual(bodyweight.value as? String, "0")
-        bodyweight.tap()
-        let bodyweightEnabled = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "value == %@", "1"),
-            object: bodyweight
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
-                       "Add bodyweight must be on before purchasing")
+        XCTAssertEqual(bodyweight.value as? String, "1")
 
         let start = app.buttons["plan.startRoutine"]
         XCTAssertTrue(start.waitForExistence(timeout: 2))
-        var remainingScrollAttempts = 4
-        while !start.isHittable, remainingScrollAttempts > 0 {
-            app.swipeUp()
+        // A full-screen swipe with the keyboard open can move Start behind
+        // the navigation bar while XCTest still reports it as hittable.
+        let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let navigationBar = app.navigationBars["Plan"]
+        func contentBottom() -> CGFloat {
+            let viewport = screen.frame
+            guard keyboard.exists else { return viewport.maxY }
+            let frame = keyboard.frame
+            guard frame.minY.isFinite, frame.width.isFinite, frame.height.isFinite,
+                  frame.width > 0, frame.height > 0,
+                  frame.minY > navigationBar.frame.maxY,
+                  frame.intersects(viewport) else { return viewport.maxY }
+            return min(frame.minY, viewport.maxY)
+        }
+        func isStartVisible() -> Bool {
+            let frame = start.frame
+            return start.isHittable
+                && frame.minY >= navigationBar.frame.maxY
+                && frame.maxY <= contentBottom()
+        }
+        var remainingScrollAttempts = 8
+        while !isStartVisible(), remainingScrollAttempts > 0 {
+            let viewport = screen.frame
+            let contentTop = navigationBar.frame.maxY
+            let visibleBottom = contentBottom()
+            let origin = screen.coordinate(withNormalizedOffset: .zero).withOffset(
+                CGVector(dx: viewport.width / 2, dy: (contentTop + visibleBottom) / 2 - viewport.minY)
+            )
+            let scrollDelta: CGFloat = start.frame.minY < contentTop ? 100 : -100
+            origin.press(forDuration: 0.05, thenDragTo: origin.withOffset(CGVector(dx: 0, dy: scrollDelta)))
             remainingScrollAttempts -= 1
         }
-        XCTAssertTrue(start.isHittable)
-        start.tap()
-        XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 2))
+        XCTAssertTrue(isStartVisible(), "Start must be below the navigation bar and above the keyboard")
+        tapVisibleControl(start, in: app)
+        XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 10))
 
         app.buttons["paywall.purchase"].tap()
 
