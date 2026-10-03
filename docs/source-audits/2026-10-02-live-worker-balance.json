@@ -1,0 +1,143 @@
+{
+  "adopted": false,
+  "ceilingPassed": false,
+  "necessaryFraction": 0.2,
+  "optimisticCompleteStepFraction": 0.18234794324846051,
+  "optimisticNarrowphaseSavingsSeconds": 0.0007874999828345608,
+  "owner": "strong-owl-live-physics",
+  "pairedUnprofiledCompleteStepSeconds": 0.004318666658946313,
+  "prefixSteps": 139,
+  "runs": [
+    {
+      "candidateSeconds": 0.004410833338624798,
+      "controlSeconds": 0.004318666658946313,
+      "corrections": 2,
+      "ratio": 1.0213414664657106,
+      "run": 0,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.004537583343335427,
+      "controlSeconds": 0.0044880833447678015,
+      "corrections": 2,
+      "ratio": 1.0110292066267736,
+      "run": 1,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.004240166672389023,
+      "controlSeconds": 0.004447208339115605,
+      "corrections": 2,
+      "ratio": 0.9534445767009523,
+      "run": 2,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.0042512500076554716,
+      "controlSeconds": 0.004443416677531786,
+      "corrections": 2,
+      "ratio": 0.956752498398809,
+      "run": 3,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.0043221249943599105,
+      "controlSeconds": 0.004536708336672746,
+      "corrections": 2,
+      "ratio": 0.9527006528988786,
+      "run": 4,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.004602749992045574,
+      "controlSeconds": 0.004362125007901341,
+      "corrections": 2,
+      "ratio": 1.0551623311364018,
+      "run": 5,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.00438495833077468,
+      "controlSeconds": 0.004363583342637867,
+      "corrections": 2,
+      "ratio": 1.0048984943012207,
+      "run": 6,
+      "wholePhysicalCheckpointBitIdentity": true
+    }
+  ],
+  "scope": "current-source step140 instrumentation only; run0 per-worker timers; no scheduling change or runtime performance acceptance",
+  "wholeCheckpointAndCorrectionScheduleIdentical": true,
+  "workerEvaluations": [
+    {
+      "candidateFaces": [
+        0,
+        2567,
+        2411,
+        0
+      ],
+      "jobs": 4,
+      "narrowphaseSeconds": [
+        6.999995093792677e-06,
+        0.0004984583210898563,
+        0.0004896250029560179,
+        1.0291667422279716e-05
+      ],
+      "paritySeconds": [
+        3.333261702209711e-07,
+        7.195833313744515e-05,
+        7.083332457114011e-05,
+        3.749883035197854e-07
+      ]
+    },
+    {
+      "candidateFaces": [
+        0,
+        2567,
+        2411,
+        0
+      ],
+      "jobs": 4,
+      "narrowphaseSeconds": [
+        8.25000461190939e-06,
+        0.0005684166681021452,
+        0.0005388333374867216,
+        6.958332960493863e-06
+      ],
+      "paritySeconds": [
+        3.333261702209711e-07,
+        5.962500290479511e-05,
+        6.687499990221113e-05,
+        3.333261702209711e-07
+      ]
+    },
+    {
+      "candidateFaces": [
+        0,
+        2567,
+        2411,
+        0
+      ],
+      "jobs": 4,
+      "narrowphaseSeconds": [
+        6.2083418015390635e-06,
+        0.0005030833272030577,
+        0.0004827083321288228,
+        1.0000003385357559e-05
+      ],
+      "paritySeconds": [
+        2.916640369221568e-07,
+        6.158332689665258e-05,
+        6.91666646162048e-05,
+        3.333407221361995e-07
+      ]
+    }
+  ],
+  "evidenceHashes": {
+    ".context/strong-owl-live-physics-worker-balance-current-c1856bc70-buildfix/native/result.json": "e232ce8186a79ab50b5121af23748fa05e6e8aa4742d2404470f5e39b65ee8c2",
+    ".context/strong-owl-live-physics-worker-balance-current-c1856bc70-buildfix/native/provenance.json": "0e593daadcbf762ea5b104ddd94b073d985dedb468ef1fe7ae0853391caa719e",
+    ".context/strong-owl-live-physics-worker-balance-current-c1856bc70-buildfix/native/resources.jsonl": "78e97bb9a72802fe3451b36b3d9743fceac5255ac7fdc8b366b9d03a84f06ac8",
+    ".context/strong-owl-live-physics-worker-balance-plan/PLAN.md": "3b6f803899e7dc17ca5fec18dcf5ad5bb4c2e8cd420562e811f5daefa36d15b5"
+  },
+  "stridedCandidateImplemented": false,
+  "lineClosed": true
+}
