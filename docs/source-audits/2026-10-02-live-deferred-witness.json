@@ -1,0 +1,211 @@
+{
+  "adopted": false,
+  "countOrder": [
+    "successfulUpdates",
+    "finalWitnesses",
+    "sharedFinalRowMerit",
+    "divisionUpdates",
+    "finalDivisions",
+    "insideFallbackLinks",
+    "candidateFaces"
+  ],
+  "countsPassed": false,
+  "necessaryRedundancyFraction": 0.5,
+  "owner": "strong-owl-live-physics",
+  "prefixSteps": 139,
+  "removableMaterializationFraction": 0.2972793629727936,
+  "removableMaterializations": 448,
+  "runs": [
+    {
+      "candidateSeconds": 0.0054445833375211805,
+      "controlSeconds": 0.004968000008375384,
+      "corrections": 2,
+      "ratio": 1.095930621647009,
+      "run": 0,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.005314374997396953,
+      "controlSeconds": 0.004890916665317491,
+      "corrections": 2,
+      "ratio": 1.0865805657827488,
+      "run": 1,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.005294874994433485,
+      "controlSeconds": 0.0048844166594790295,
+      "corrections": 2,
+      "ratio": 1.0840342590671277,
+      "run": 2,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.005371749997721054,
+      "controlSeconds": 0.004878916661255062,
+      "corrections": 2,
+      "ratio": 1.101012862215854,
+      "run": 3,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.0052914583357051015,
+      "controlSeconds": 0.004863041671342216,
+      "corrections": 2,
+      "ratio": 1.0880964411404357,
+      "run": 4,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.005382041665143333,
+      "controlSeconds": 0.004884333320660517,
+      "corrections": 2,
+      "ratio": 1.1018989310941438,
+      "run": 5,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.005286250001518056,
+      "controlSeconds": 0.004939499995089136,
+      "corrections": 2,
+      "ratio": 1.070199414267367,
+      "run": 6,
+      "wholePhysicalCheckpointBitIdentity": true
+    }
+  ],
+  "scope": "current-source step140 operation counts only; not a wall-time ceiling or speed claim",
+  "totals": [
+    1507,
+    1143,
+    84,
+    1507,
+    1143,
+    0,
+    14934
+  ],
+  "wholeCheckpointAndCorrectionScheduleIdentical": true,
+  "workerEvaluations": [
+    [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        230,
+        189,
+        14,
+        230,
+        189,
+        0,
+        2567
+      ],
+      [
+        272,
+        192,
+        14,
+        272,
+        192,
+        0,
+        2411
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        231,
+        189,
+        14,
+        231,
+        189,
+        0,
+        2567
+      ],
+      [
+        272,
+        192,
+        14,
+        272,
+        192,
+        0,
+        2411
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        230,
+        189,
+        14,
+        230,
+        189,
+        0,
+        2567
+      ],
+      [
+        272,
+        192,
+        14,
+        272,
+        192,
+        0,
+        2411
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  ],
+  "deferredCandidateImplemented": false,
+  "lineClosed": true,
+  "evidenceHashes": {
+    ".context/strong-owl-live-physics-witness-counts-current-b7f27d742-buildfix/native/result.json": "1cde4aa75e6f1ea8052940252aad8299ebd862862c66181959f3379c7c059591",
+    ".context/strong-owl-live-physics-witness-counts-current-b7f27d742-buildfix/native/provenance.json": "f662f1a68898e6d2ba20fd4c9d17bb977a89e9c0fa088b7f887684b60ecf3d3f",
+    ".context/strong-owl-live-physics-witness-counts-current-b7f27d742-buildfix/native/resources.jsonl": "6f74a9a182a2677550d82be75b236ffe9791720fc585705007b40dd18cb7ed08",
+    ".context/strong-owl-live-physics-deferred-witness-plan/PLAN.md": "91592e527b159a9906497be0a9949a50bcb03eb24071a02f00cd135098e16cb4"
+  }
+}
