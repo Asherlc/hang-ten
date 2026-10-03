@@ -1,0 +1,6 @@
+{
+  "exact12": true,
+  "allStartsWithin150ms": true,
+  "noMissedWindow": true,
+  "noMissingInitialSequence": true
+}

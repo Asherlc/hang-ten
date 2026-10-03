@@ -1,0 +1,215 @@
+{
+  "result": "VALID_COMPLETE_CONTROL_VISUAL_FAILURE",
+  "visualResult": "FAIL",
+  "validCompleteControl": true,
+  "actionAuthorized": false,
+  "productionFix": false,
+  "sourceRuntimeDDHandbackToRoot": true,
+  "binarySHA256": "09310b53114826e1e9c39a499846b2e57a6b464e576aa7bf879b56709d267854",
+  "captureSession": 73242,
+  "elapsedSeconds": 203.69567658301094,
+  "traceRecords": 195,
+  "captureCount": 12,
+  "captureStartLatenessSeconds": {
+    "min": 0.011049032211303711,
+    "max": 0.06005406379699707,
+    "limit": 0.15
+  },
+  "validatorStatuses": [
+    {
+      "helper": "check-cpu-semantics.py",
+      "exitStatus": 0
+    },
+    {
+      "helper": "check-frames.py",
+      "exitStatus": 0
+    },
+    {
+      "helper": "check-constructors.py",
+      "exitStatus": 0
+    },
+    {
+      "helper": "check-ownership.py",
+      "exitStatus": 0
+    },
+    {
+      "helper": "check-navigation.py",
+      "exitStatus": 0
+    },
+    {
+      "helper": "check-real-hands.py",
+      "exitStatus": 0
+    },
+    {
+      "helper": "check-weak-hand-census.py",
+      "exitStatus": 0
+    },
+    {
+      "helper": "check-sync-counters.py",
+      "exitStatus": 0
+    },
+    {
+      "helper": "check-prestart-hands.py",
+      "exitStatus": 0
+    },
+    {
+      "helper": "check-supplemental-timing.py",
+      "exitStatus": 0
+    }
+  ],
+  "originalPrestartValidatorPassed": true,
+  "supplementalTimingCriterionPassed": true,
+  "incompleteFirstOwnershipBracket": false,
+  "requiredAttachedPoints": 24,
+  "startupFirstHandHistoryReproduced": true,
+  "currentExpiryCorrelation": [
+    {
+      "event": "constructor-entry",
+      "sequence": 53,
+      "epoch": 1791002741.357747,
+      "lastPositiveCountdownSequence": 46,
+      "secondsAfterLastPositive": 1.0729432106018066,
+      "secondsRelativeToFirstHangMutation": 0.0038061141967773438,
+      "secondsRelativeToZeroCallback": 0.00033211708068847656,
+      "firstCaptureBeforeSequence": 57
+    },
+    {
+      "event": "make-entry",
+      "sequence": 55,
+      "epoch": 1791002741.369827,
+      "lastPositiveCountdownSequence": 46,
+      "secondsAfterLastPositive": 1.0850231647491455,
+      "secondsRelativeToFirstHangMutation": 0.01588606834411621,
+      "secondsRelativeToZeroCallback": 0.012412071228027344,
+      "firstCaptureBeforeSequence": 57
+    }
+  ],
+  "visual": {
+    "firstHang": "RED4correct",
+    "rest": "RED4wrong",
+    "nextHang": "BLUE4wrong",
+    "handsVisibleAll12": true,
+    "all12DirectWholeImagesViewed": true
+  },
+  "captureBrackets": [
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-0-active-plus-0.25.png",
+      "beforeSequence": 57,
+      "afterSequence": 59,
+      "spanSeconds": 1.0026371479034424
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-0-active-plus-1.png",
+      "beforeSequence": 57,
+      "afterSequence": 60,
+      "spanSeconds": 2.0514371395111084
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-0-active-plus-3.png",
+      "beforeSequence": 60,
+      "afterSequence": 63,
+      "spanSeconds": 2.0526108741760254
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-0-active-plus-5.png",
+      "beforeSequence": 63,
+      "afterSequence": 65,
+      "spanSeconds": 2.074181079864502
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-1-preview-plus-0.25.png",
+      "beforeSequence": 68,
+      "afterSequence": 72,
+      "spanSeconds": 1.4713048934936523
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-1-preview-plus-1.png",
+      "beforeSequence": 71,
+      "afterSequence": 73,
+      "spanSeconds": 2.1228511333465576
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-1-preview-plus-3.png",
+      "beforeSequence": 73,
+      "afterSequence": 74,
+      "spanSeconds": 1.0659990310668945
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-1-preview-plus-5.png",
+      "beforeSequence": 75,
+      "afterSequence": 76,
+      "spanSeconds": 2.002718925476074
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-2-active-plus-0.25.png",
+      "beforeSequence": 187,
+      "afterSequence": 191,
+      "spanSeconds": 7.018395900726318
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-2-active-plus-1.png",
+      "beforeSequence": 187,
+      "afterSequence": 191,
+      "spanSeconds": 7.018395900726318
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-2-active-plus-3.png",
+      "beforeSequence": 187,
+      "afterSequence": 191,
+      "spanSeconds": 7.018395900726318
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-2-active-plus-5.png",
+      "beforeSequence": 187,
+      "afterSequence": 191,
+      "spanSeconds": 7.018395900726318
+    }
+  ],
+  "rootVisualCorroboration": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-root-visual.json",
+    "sha256": "d7451cde180c241fbb483b1fcd5adde190b0e8cbaaea8e2f31ee3fe5a85cf954",
+    "scope": "Exactly4wholeimages: firstHang+.25,Rest+5,nextHang+.25/+5."
+  },
+  "prelaunchFinal27ParityPassed": true,
+  "exactAppPID": 40213,
+  "exactAppTerminatedAndVerifiedAbsent": true,
+  "priorFreezeVerification": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-observation-frozen-manifest.json",
+      "sha256": "f16c7ce3df36d1ea6e4f1d3c22c66df6f85f303a702fdf606673ec6abe23ee65",
+      "count": 114,
+      "allExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-repeat-frozen-manifest.json",
+      "sha256": "a44d5f1bc0841bfbd7968257e2792045c7c90d449cb1a33d9e6055f4c7c038b3",
+      "count": 76,
+      "allExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-frozen-manifest.json",
+      "sha256": "2b7052ebde5e5bca2b6950675d749aafa6ae8f080805e33051c1314740567ab1",
+      "count": 44,
+      "allExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-frozen-manifest.json",
+      "sha256": "625345549e35d3231fdbb9f8222d7a46d6cc0b9b54f02e976e6ac61106e8b1eb",
+      "count": 152,
+      "allExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-frozen-manifest.json",
+      "sha256": "b9be609012589691867212e46caed8808508bf0f359996b92d98a1bb1e6ef685",
+      "count": 136,
+      "allExact": true
+    }
+  ],
+  "limits": [
+    "Sparse CPU/entity brackets and scalar counters do not establish continuous attachment or GPU presentation. AllnextHang brackets span7.018seconds.",
+    "Image-visible timer values are retained independently from intended offsets; Rest+5 visibly02:56.",
+    "Originalprestart checker passes in this control; earlierfailedchecker evidence remains untouched. No timing exception was needed here.",
+    "This control reproduces failure with startupmarkers and externalasync initialscreenshot polling. It does not isolate a cause or authorize an action by itself."
+  ],
+  "completedEpoch": 1791003301.570755
+}
