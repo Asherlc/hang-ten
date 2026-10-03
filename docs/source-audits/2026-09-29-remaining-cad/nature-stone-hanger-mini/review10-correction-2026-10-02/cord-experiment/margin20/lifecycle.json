@@ -1,0 +1,58 @@
+{
+  "owner": "placid-badger",
+  "atUTC": "2026-10-03T03:54:13.891670+00:00",
+  "exitTrapInstalledBeforeResources": true,
+  "allRecordedProcessGroups": [
+    {
+      "owner": "placid-badger",
+      "job": "placid-badger-mini10-above",
+      "action": "apply",
+      "pid": 18147,
+      "processGroupID": 18147,
+      "createdNewSession": true,
+      "atUTC": "2026-10-03T03:54:04.075198+00:00",
+      "actionsDuringFinalCleanup": [],
+      "processGroupAbsent": true
+    },
+    {
+      "owner": "placid-badger",
+      "job": "placid-badger-mini10-below",
+      "action": "apply",
+      "pid": 19519,
+      "processGroupID": 19519,
+      "createdNewSession": true,
+      "atUTC": "2026-10-03T03:54:09.945427+00:00",
+      "actionsDuringFinalCleanup": [],
+      "processGroupAbsent": true
+    }
+  ],
+  "temporaryCacheConfigResources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/placid-badger-mini10-apply-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/placid-badger-mini10-apply-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/placid-badger-mini10-apply-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/placid-badger-mini10-apply-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/placid-badger-mini10-apply-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/placid-badger-mini10-apply-tmp",
+      "absent": true
+    }
+  ],
+  "allRecordedGroupsAbsent": true,
+  "allOwnedTemporaryResourcesAbsent": true,
+  "unknownOrSharedResourcesTouched": false
+}

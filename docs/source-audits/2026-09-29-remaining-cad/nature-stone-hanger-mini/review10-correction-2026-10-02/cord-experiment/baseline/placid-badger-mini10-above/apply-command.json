@@ -1,0 +1,51 @@
+{
+  "argv": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/run-existing-native.py",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above",
+    "--package",
+    "nature-stone-hanger-mini",
+    "--solid",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/cord-collider/native-collider.json",
+    "--apply",
+    "--report",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/apply-report.json"
+  ],
+  "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+  "environmentOverrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/placid-badger-mini10-apply-config",
+    "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/placid-badger-mini10-apply-cache",
+    "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/placid-badger-mini10-apply-tmp",
+    "MPLCONFIGDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/placid-badger-mini10-apply-config",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1"
+  },
+  "inputSidecar": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/suspension.json",
+    "sha256": "849d75d14287b6eefb6657fa6ec132af3e121b1f7a95c4027877206d310fb35f"
+  },
+  "source": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+    "sha256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4"
+  },
+  "solid": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/cord-collider/native-collider.json",
+    "sha256": "b73af61a65e79ed989434bcb0ea734d4bcd10f9d33b289c33c3536b5dc48d62e"
+  },
+  "unchangedRetainedCLI": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/solve_threaded_rope.py",
+    "sha256": "bcd7531950cc198ce8e5ad146d999dca3b11e7901076a8af2d08b5b1bf638f71"
+  },
+  "unchangedNativeSolver": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/native_cord_routes.py",
+    "sha256": "307a4db1b44c80396f2e42638f0fbc0ff6ea588d9b96829bebce9c014da45e5a"
+  },
+  "wrapper": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/run-existing-native.py",
+    "sha256": "e05c0d977b112777acfb417bb4757ea89213f65184f18e3544bb1e7b0f31c8d3"
+  },
+  "atUTC": "2026-10-03T03:53:21.488385+00:00"
+}

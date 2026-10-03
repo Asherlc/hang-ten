@@ -312,27 +312,25 @@
       "package": "nature-stone-hanger-mini",
       "boardID": "nature.stone-hanger-mini",
       "name": "Nature Climbing Stone Hanger Mini",
-      "humanReview": "Overall Mini shape accepted with Lgtm; final seat, finishes, shorter cords and jug pose review pending; app appearance unverified due simulator startup failure",
-      "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
-      "reviewPage": "nature-stone-hanger-mini/completion-review/index.html",
+      "humanReview": "Corrected outside top/back jug and seated compact cords ready for CAD review; human acceptance pending; current app appearance and interaction unverified.",
+      "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
+      "reviewPage": "nature-stone-hanger-mini/review10-correction-2026-10-02/index.html",
       "sourceAudit": "nature-stone-hanger-mini/native-authoring.md",
       "comparisons": [
-        "nature-stone-hanger-mini/completion-review/comparison-front.png",
-        "nature-stone-hanger-mini/completion-review/comparison-side.png",
-        "nature-stone-hanger-mini/completion-review/comparison-top.png",
-        "nature-stone-hanger-mini/completion-review/comparison-oblique.png"
+        "nature-stone-hanger-mini/review10-correction-2026-10-02/views/prior-current-jug-front-side-top.png",
+        "nature-stone-hanger-mini/review10-correction-2026-10-02/views/prior-current-cord-front-side-top.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
-          "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57"
+          "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
+          "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
         }
       },
       "appReview": "nature-stone-hanger-mini/completion-review/runtime-validation.json",
       "appReviewPage": "nature-stone-hanger-mini/completion-review/index.html",
-      "suspensionSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
+      "suspensionSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1",
       "humanReviewRecord": "nature-stone-hanger-mini/human-review.json",
-      "latestRevision": "nature-stone-hanger-mini/completion-review/review.md",
+      "latestRevision": "nature-stone-hanger-mini/review10-correction-2026-10-02/review.md",
       "runtimeRevision": "nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
       "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views.",
       "reviewAnswer": "Lgtm",
@@ -362,7 +360,35 @@
         "appReview": "nature-stone-hanger-mini/app-review/validation.json",
         "appReviewPage": "nature-stone-hanger-mini/app-review/index.html"
       },
-      "latestRuntimeAttempt": "nature-stone-hanger-mini/runtime-retry-2026-10-02/review.md"
+      "latestRuntimeAttempt": "nature-stone-hanger-mini/runtime-retry-2026-10-02/review.md",
+      "finalCADReviewQuestion": "Does the Mini’s jug and cord look right now?",
+      "completionHumanAcceptance": "pending",
+      "cadReviewViews": [
+        "nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-jug-loaded-front.png",
+        "nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-jug-loaded-back.png",
+        "nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-granite-loaded.png",
+        "nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-wood-loaded.png",
+        "nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-pinch-loaded.png"
+      ],
+      "completionValidationPage": "nature-stone-hanger-mini/completion-review/index.html",
+      "latestHumanFeedback": {
+        "owner": "placid-badger",
+        "dateUTC": "2026-10-03T03:32:26.588696+00:00",
+        "reviewNumber": 10,
+        "boardID": "nature.stone-hanger-mini",
+        "rawFeedback": [
+          "those cords dont look right",
+          "and the jug isnt the right part"
+        ],
+        "identityClarification": {
+          "question": "For the Stone Hanger Mini, is the pull-up jug the rounded outside top/back rail, or a lip inside the recess?",
+          "answer": "Rounded outside top/back rail"
+        },
+        "priorPreviewAccepted": false,
+        "physicalCorrectionAuthorized": true,
+        "priorOverallBodyApprovalPreserved": true,
+        "scope": "Jug contact ownership, usable upright pose, cord routing/seating; accepted overall body remains."
+      }
     },
     {
       "number": 11,

@@ -1,0 +1,36 @@
+{
+  "owner": "placid-badger",
+  "verifiedAt": "2026-10-03T03:12:40.846890+00:00",
+  "canonicalFourBytesUnchanged": true,
+  "canonical4SHA256": {
+    "nature-stone-hanger-mini.FCStd": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+    "assets/primary.usdz": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+    "assets/primary.model.json": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+    "suspension.json": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+  },
+  "allExactOwnedProcessGroupsAbsent": true,
+  "recordedProcessGroups": [
+    {
+      "pid": 17613,
+      "pgid": 17613,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/render-mini-current.py"
+      ]
+    }
+  ],
+  "allExactOwnedConfigCacheTMPAbsent": true,
+  "cleanup": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/cleanup-receipt.json",
+    "sha256": "d074cc0f4cc7e32f0577168b8cd1869dc5cf14aaa74ce4e187f4a38104e3c529"
+  },
+  "referenceScriptsAndToolsUnchanged": true,
+  "reservedPathsReadOrEdited": false,
+  "sourceModelDescriptorSidecarOrExistingPacketMutation": false,
+  "gitMutation": false,
+  "externalResourcesStarted": [],
+  "runtimeVerified": false,
+  "currentAppFrames": 0
+}

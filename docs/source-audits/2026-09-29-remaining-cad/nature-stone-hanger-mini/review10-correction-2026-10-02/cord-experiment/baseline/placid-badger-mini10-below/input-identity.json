@@ -1,0 +1,116 @@
+{
+  "owner": "placid-badger",
+  "sourcePackage": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini",
+  "exact3": {
+    "nature-stone-hanger-mini.FCStd": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4"
+    },
+    "assets/primary.usdz": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+      "sha256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
+    },
+    "assets/primary.model.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+      "sha256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+    }
+  },
+  "sidecar": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/suspension.json",
+    "sha256": "da557918d474c84745cca063f1ddbd4b3b9f22ae7548684f48add6c897fadaf4"
+  },
+  "immutableInput": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/immutable-authoring-input.json",
+    "sha256": "da557918d474c84745cca063f1ddbd4b3b9f22ae7548684f48add6c897fadaf4"
+  },
+  "supportDirection": -1,
+  "worldAnchorM": [
+    0,
+    -0.045,
+    0
+  ],
+  "derivedStations": {
+    "left-lead": {
+      "points": [
+        [
+          -0.049300000000000004,
+          0.0,
+          0.00625
+        ]
+      ],
+      "planeNormal": [
+        0,
+        0,
+        1
+      ],
+      "planeAxis": [
+        0,
+        1,
+        0
+      ]
+    },
+    "left-cross-return": {
+      "points": [
+        [
+          -0.049300000000000004,
+          0.0,
+          0.00625
+        ],
+        [
+          -0.049300000000000004,
+          0.0,
+          -0.00625
+        ]
+      ],
+      "planeNormal": [
+        0,
+        1,
+        0
+      ]
+    },
+    "right-lead": {
+      "points": [
+        [
+          0.049300000000000004,
+          0.0,
+          0.00625
+        ]
+      ],
+      "planeNormal": [
+        0,
+        0,
+        1
+      ],
+      "planeAxis": [
+        0,
+        1,
+        0
+      ]
+    },
+    "right-cross-return": {
+      "points": [
+        [
+          0.049300000000000004,
+          0.0,
+          0.00625
+        ],
+        [
+          0.049300000000000004,
+          0.0,
+          -0.00625
+        ]
+      ],
+      "planeNormal": [
+        0,
+        1,
+        0
+      ]
+    }
+  },
+  "remainingPoses": [
+    "front-upright",
+    "wood-inverted",
+    "pinch-side"
+  ],
+  "atUTC": "2026-10-03T03:53:23.372039+00:00"
+}

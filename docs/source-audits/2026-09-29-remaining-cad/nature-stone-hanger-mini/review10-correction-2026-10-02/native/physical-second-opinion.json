@@ -1,0 +1,11 @@
+{
+  "supportedObservations": [
+    "Whole maker MiniHanger-86 shows this Oak board upright, a hand wrapping the upper rail, and leads running below to a loading pin/carabinier. It supports the selected upright jug review with the load below.",
+    "Whole Oakminihanger8 and Oakminihanger6 are consistent with existing rounded upper rail and end-groove body. No new geometry is justified.",
+    "Native jug top flat normal is model [0,1,0]; its long top/back roll midpoint normal is [0,0.70710678,-0.70710678]. The identity quaternion exposes the physical upper rail without turning the recess wall into a floor.",
+    "Native granite top plane normal is model [0,1,0] in front-upright. Native wood incut main plane normal is [0,-0.99227788,-0.12403473] upright and [0,0.99227788,-0.12403473] in existing wood-inverted."
+  ],
+  "physicalInference": "Both preserved edge poses present their main bearing surfaces upward. Under a simplified isolated bearing-contact interpretation, a hand lifting a downward-loaded board would require the opposite force sense; therefore these edge poses are not established as lifting orientations merely by changing support below. A wrapping grasp can engage other surfaces and friction, so normal signs alone do not determine the intended hand technique.",
+  "uncertaintyAndRecommendation": "The maker hand photo does not isolate granite-edge or wood-edge use. Keep the authorized existing edge rotations pending separate source-supported/human contact review, and label below-load preview as a display estimate. Do not automatically swap wood/granite poses. No suspension, contact, body, or pose metadata changes were made for this opinion.",
+  "evidence": "native-orientation-evidence.json; whole root/research/MiniHanger-86.jpg, Oakminihanger8.jpg, Oakminihanger6.jpg; user identity rounded outside top/back rail."
+}

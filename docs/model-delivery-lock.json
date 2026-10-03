@@ -62,7 +62,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "c2963fa7e5e8a39c7f1011c24ed5bac2b887d11ad48ab2f9f822ba66a0b593c8",
+  "sha256Manifest": "205a0dee4db2b87087643f76abc6c2e75038231e4090d371186dd34d62795ec2",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -845,26 +845,26 @@
     },
     "nature-stone-hanger-mini": {
       "source": "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
-      "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+      "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
-      "assetSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
-      "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+      "assetSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+      "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
       "assets": {
         "assets/primary.usdz": {
-          "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+          "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
           "descriptorPath": "assets/primary.model.json",
-          "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71"
+          "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
         }
       },
       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
       "provenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/native-authoring.md",
-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/index.html",
-      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/manifest-preservation.json",
-      "nativeValidation": "Fresh native reopen/edit/restore, exact source-bound double compile, independent actual mesh ownership and vertex checks, all four native cord solves and sixteen continuous route certificates; reports in completion-review.",
+      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/index.html",
+      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/root-verification/final-metadata/contact-order-correction-proof.json",
+      "nativeValidation": "Exact two-way native body equality, deterministic export and unchanged triangle positions; shared pinch membership; three fresh native cord solves and twelve continuous certificates. Reports in review10-correction-2026-10-02.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/runtime-validation.json",
-      "geometryAcceptance": "Overall Mini shape accepted with Lgtm; final seat, finishes, shorter cords and jug pose review pending; app appearance unverified due simulator startup failure",
+      "geometryAcceptance": "Corrected outside top/back jug and seated compact cords ready for CAD review; human acceptance pending; current app appearance and interaction unverified.",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-      "suspensionSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
+      "suspensionSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1",
       "historicalMigrationReview": {
         "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review/index.html",
         "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/metadata-diff.json",
@@ -873,7 +873,9 @@
         "assetSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
         "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
         "suspensionSHA256": "3ededde32246c2b90cbf89dbb28ec26f362f387ae60f5f3f22dff2c76f115325"
-      }
+      },
+      "cadReview": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/index.html",
+      "currentValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/validation.json"
     },
     "nature-stone-hanger-mini-karma8a": {
       "source": "Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd",
@@ -1353,6 +1355,13 @@
       "date": "2026-10-02",
       "reason": "Forge outer-wing recess, set-back lower lip and generic plastic display selector",
       "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review15-2026-10-02/prior-delivery-checksums.txt"
+    },
+    {
+      "sha256Manifest": "c2963fa7e5e8a39c7f1011c24ed5bac2b887d11ad48ab2f9f822ba66a0b593c8",
+      "date": "2026-10-02",
+      "recordedUTC": "2026-10-03T04:23:41.655488+00:00",
+      "reason": "Mini outside top/back jug, shared pinch membership and seated native cord correction",
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/prior-delivery-checksums.txt"
     }
   ],
   "individualReviewRevisions": [
@@ -2109,6 +2118,65 @@
         "path": ".context/placid-badger/forge-review15/opus-advisor/record-acceptance.py",
         "sha256": "e039834a4be18f1af3662308fa41ab0bef277961b847575fd34fbce651b55bab",
         "committed": false
+      }
+    },
+    {
+      "date": "2026-10-02",
+      "owner": "placid-badger",
+      "package": "nature-stone-hanger-mini",
+      "reviewNumber": 10,
+      "kind": "final CAD preview presentation only",
+      "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-resume-2026-10-02/index.html",
+      "identity": {
+        "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+        "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+        "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+        "sidecarSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+      },
+      "humanAcceptance": "rejected-corrections-requested",
+      "runtimeVerified": false,
+      "packageChanged": false,
+      "feedback": [
+        "those cords dont look right",
+        "and the jug isnt the right part"
+      ],
+      "identityClarification": {
+        "question": "For the Stone Hanger Mini, is the pull-up jug the rounded outside top/back rail, or a lip inside the recess?",
+        "answer": "Rounded outside top/back rail"
+      }
+    },
+    {
+      "date": "2026-10-02",
+      "preparedUTC": "2026-10-03T04:23:41.655488+00:00",
+      "owner": "placid-badger",
+      "package": "nature-stone-hanger-mini",
+      "reviewNumber": 10,
+      "kind": "Native contact ownership, pose and cord-seating correction",
+      "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/index.html",
+      "identity": {
+        "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
+        "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+        "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
+        "sidecarSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1"
+      },
+      "humanAcceptance": "pending",
+      "runtimeVerified": false,
+      "packageChanged": true,
+      "nativeBodyChanged": false,
+      "factualContactsChanged": false,
+      "validation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/validation.json",
+      "metadataOrderCorrection": "Final catalog gate rejected front-upright contactIDs order; supported metadata tool restored canonical ordering only. All archive geometry members byte-identical; fresh native export/rebuild/check retained separately.",
+      "finalChecks": {
+        "pythonPassed": 67,
+        "catalogBoards": 64,
+        "platformStaging": [
+          "xcode",
+          "android"
+        ],
+        "nativePoses": 3,
+        "nativeRoutes": 12,
+        "freshFinalSourceByteIdenticalRebuild": true,
+        "runtimeVerified": false
       }
     }
   ]

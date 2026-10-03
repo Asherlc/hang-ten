@@ -1,7 +1,7 @@
 {
   "reviewNumber": 10,
   "boardID": "nature.stone-hanger-mini",
-  "status": "Overall Mini shape accepted with Lgtm; final seat, finishes, shorter cords and jug pose review pending; app appearance unverified due simulator startup failure",
+  "status": "Corrected outside top/back jug and seated compact cords ready for CAD review; human acceptance pending; current app appearance and interaction unverified.",
   "answer": "Lgtm",
   "acceptedDate": "2026-10-01",
   "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views.",
@@ -12,10 +12,10 @@
     "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35"
   },
   "identity": {
-    "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
-    "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
-    "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
-    "sidecarSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+    "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
+    "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+    "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
+    "sidecarSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1"
   },
   "history": [
     {
@@ -40,13 +40,64 @@
         "Existing long visual cord"
       ],
       "laterTechnicalFinding": "Native inspection identifies old jug region as a wall in the upright pose; positive-grip presentation being checked without redoing accepted body."
+    },
+    {
+      "date": "2026-10-02",
+      "reviewNumber": 10,
+      "status": "Final detail presentation rejected; correction authorized.",
+      "identity": {
+        "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+        "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+        "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+        "sidecarSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+      },
+      "rawFeedback": [
+        "those cords dont look right",
+        "and the jug isnt the right part"
+      ],
+      "identityClarification": {
+        "question": "For the Stone Hanger Mini, is the pull-up jug the rounded outside top/back rail, or a lip inside the recess?",
+        "answer": "Rounded outside top/back rail"
+      },
+      "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-resume-2026-10-02/index.html",
+      "priorOverallBodyApprovalPreserved": true
+    },
+    {
+      "owner": "placid-badger",
+      "preparedUTC": "2026-10-03T04:23:41.655488+00:00",
+      "reviewNumber": 10,
+      "status": "Intermediate unpresented preparation; canonical position contact order subsequently corrected.",
+      "identity": {
+        "sourceSHA256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4",
+        "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+        "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
+        "sidecarSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1"
+      },
+      "question": "Does the Mini’s jug and cord look right now?",
+      "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/index.html",
+      "runtimeVerified": false
+    },
+    {
+      "owner": "placid-badger",
+      "preparedUTC": "2026-10-03T04:30:53.378470+00:00",
+      "reviewNumber": 10,
+      "status": "Corrected final metadata prepared; human answer pending.",
+      "identity": {
+        "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
+        "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+        "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
+        "sidecarSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1"
+      },
+      "question": "Does the Mini’s jug and cord look right now?",
+      "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/index.html",
+      "runtimeVerified": false
     }
   ],
-  "completedTechnicalScope": "Fitted granite seat, metadata for existing runtime wood/granite rendering, four freshly solved compact cord poses, and opening-up display jug pose. App appearance remains unverified.",
+  "completedTechnicalScope": "Same accepted body; jug moved to existing outer upper rail with unchanged pinch union, identity front-upright jug, three fresh native cord solves with groove-floor seating and load-below display. Runtime verification pending.",
   "runtimeGate": "blocked-environment",
   "completionHumanAcceptance": "pending",
-  "completionQuestion": null,
-  "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/index.html",
+  "completionQuestion": "Does the Mini’s jug and cord look right now?",
+  "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/index.html",
   "runtimeValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
   "postIntegrationTests": {
     "pythonPassed": 284,
@@ -60,7 +111,7 @@
     "iOSUnitCasesExecuted": 0,
     "iOSExecutedCaseFailures": 0
   },
-  "approvalLimit": "Prior overall shape approval does not establish final pose/finish acceptance; geometry, rope lengths, surface finish and jug angle are display estimates, not manufacturing or real-load certification.",
+  "approvalLimit": "Earlier Lgtm accepted overall body only. New jug and cord correction awaits human acceptance. Neutral CAD views do not establish runtime finish, touch, orbit or workout behavior.",
   "runtimeAttemptHistory": [
     {
       "date": "2026-10-02",
@@ -83,5 +134,196 @@
     "nativeTestHarnessRuns": 0,
     "readinessHarnessFailures": 1,
     "usableAppFrames": 0
+  },
+  "completionValidationPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/index.html",
+  "currentShownAssetCommit": null,
+  "latestCADShapeReview": {
+    "owner": "placid-badger",
+    "reviewNumber": 10,
+    "boardID": "nature.stone-hanger-mini",
+    "preparedUTC": "2026-10-03T04:30:53.378470+00:00",
+    "status": "ready-pending-human-review",
+    "question": "Does the Mini’s jug and cord look right now?",
+    "baselineCommit": "5eae12bb9c0493c7b29f982d92ab855ac7f5696c",
+    "identity": {
+      "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
+      "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+      "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
+      "sidecarSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1"
+    },
+    "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
+    "views": [
+      {
+        "sha256": "7f1bdf20ca99d7272d70856db03aaba3314039a99f8df55c76be5075cea92efd",
+        "poseID": "front-upright",
+        "selectedContactID": "pull-up-jug",
+        "selectedNodeIDs": [
+          "nature_jug"
+        ],
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-jug-loaded-front.png"
+      },
+      {
+        "sha256": "806f3b3901352c2413d7bc5f5dd0b8a15e787fd86786be1f0620a902258aa9a0",
+        "poseID": "front-upright",
+        "selectedContactID": "pull-up-jug",
+        "selectedNodeIDs": [
+          "nature_jug"
+        ],
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-jug-loaded-back.png"
+      },
+      {
+        "sha256": "5046017a43e0f8ea70da75442f7fb1127f611ffaf5f1261bbf286d54c61de9ce",
+        "poseID": "front-upright",
+        "selectedContactID": "granite-edge-15",
+        "selectedNodeIDs": [
+          "nature_stone"
+        ],
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-granite-loaded.png"
+      },
+      {
+        "sha256": "a58fe98e504e9479f63ce16feae25aae2345276f5b9eeb31c04c0b66d5170321",
+        "poseID": "wood-inverted",
+        "selectedContactID": "wood-edge-15-incut",
+        "selectedNodeIDs": [
+          "nature_wood"
+        ],
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-wood-loaded.png"
+      },
+      {
+        "sha256": "f604a0ab139228435133bf11b5e57e0163acd7f75db49a3bac12f69fa24bfdd6",
+        "poseID": "pinch-side",
+        "selectedContactID": "pinch-60",
+        "selectedNodeIDs": [
+          "nature_jug",
+          "nature_pinch"
+        ],
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-pinch-loaded.png"
+      }
+    ],
+    "wholePriorCurrentComparisons": [
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/views/prior-current-jug-front-side-top.png",
+        "sha256": "c9621373bec47483f17ab288453ebf4b317bef98d9ba501a68ab1b23c783ed82"
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/views/prior-current-cord-front-side-top.png",
+        "sha256": "987e9680b82160c966279172e6975af66349ca249386086d7de8bb2bc28c84e9"
+      }
+    ],
+    "scope": "Outside top/back rail jug membership, shared pinch coverage, upright jug pose, native groove-floor cord seating, below-load display.",
+    "humanAnswer": null,
+    "priorOverallBodyApprovalPreserved": true,
+    "runtimeVerified": false,
+    "usableAppFrames": 0,
+    "neutralCADPreviews": true,
+    "rootVisualReview": {
+      "croppedOrMeasuredPixels": false,
+      "finding": "Outside upper rail selected, recess wall neutral; side cords follow lower longitudinal grooves and transverse grooves to compact below-load leads. Granite and wood regions intact; pinch includes upper rail.",
+      "allSevenWholeImagesInspected": true,
+      "cordComparisonFinding": "Same approved body, prior cord outside grooves and above support; corrected cord seated in lower side grooves with below-load support. No apparent body defect."
+    },
+    "limitations": [
+      "New app appearance and interaction unverified; latest retained Simulator attempt produced zero usable frames.",
+      "100 × 60 × 25 mm accepted display envelope retained; current maker page states 105 × 60 × 30 mm.",
+      "Hidden continuation, knot and tails not reconstructed; no new native bores.",
+      "Granite/wood rotations are preserved display poses, not newly verified lifting orientations.",
+      "Native route feasibility and tolerance certificates are not equilibrium or real-load certification.",
+      "Inherited body-thickness and granite-depth edit fragility remains documented in native proofs."
+    ],
+    "supersededPreparedIdentity": {
+      "sourceSHA256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4",
+      "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+      "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
+      "sidecarSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1"
+    },
+    "metadataOrderCorrection": "Final catalog gate rejected front-upright contactIDs order; supported metadata tool restored canonical ordering only. All archive geometry members byte-identical; fresh native export/rebuild/check retained separately.",
+    "previewProvenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/root-verification/final-metadata/preview-provenance.json",
+    "cordComparisonProvenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/root-verification/final-metadata/cord-comparison-provenance.json"
+  },
+  "latestHumanFeedback": {
+    "owner": "placid-badger",
+    "dateUTC": "2026-10-03T03:32:26.588696+00:00",
+    "reviewNumber": 10,
+    "boardID": "nature.stone-hanger-mini",
+    "rawFeedback": [
+      "those cords dont look right",
+      "and the jug isnt the right part"
+    ],
+    "identityClarification": {
+      "question": "For the Stone Hanger Mini, is the pull-up jug the rounded outside top/back rail, or a lip inside the recess?",
+      "answer": "Rounded outside top/back rail"
+    },
+    "priorPreviewAccepted": false,
+    "physicalCorrectionAuthorized": true,
+    "priorOverallBodyApprovalPreserved": true,
+    "scope": "Jug contact ownership, usable upright pose, cord routing/seating; accepted overall body remains."
+  },
+  "priorDetailReview": {
+    "owner": "placid-badger",
+    "reviewNumber": 10,
+    "date": "2026-10-02",
+    "preparedUTC": "2026-10-03T03:17:00.703879+00:00",
+    "status": "rejected-correction-in-progress",
+    "question": "Does #10’s fitted granite seat, shorter cord and opening-up jug position look right?",
+    "baselineCommit": "5eae12bb9c0493c7b29f982d92ab855ac7f5696c",
+    "identity": {
+      "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+      "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+      "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+      "sidecarSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+    },
+    "generatedManifestSHA256": "2125d52a00ff55777505b3ca28777c5dc499955d05f6aaf441226a0d1275b76f",
+    "packet": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-resume-2026-10-02/index.html",
+    "views": [
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-resume-2026-10-02/preview-evidence/mini-current-upright-granite-selection.png",
+        "sha256": "d424805aee1f86a020a15c3e2a948149d6795554324c7c1e5f10f7a03d976304",
+        "poseID": "front-upright",
+        "selectedContactID": "granite-edge-15",
+        "selectedNodeIDs": [
+          "nature_stone"
+        ]
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-resume-2026-10-02/preview-evidence/mini-current-jug-open-up-selection.png",
+        "sha256": "960ca0a83b500518cdb397dee3f27ab85beac09a9cebd1e3e7d813924dda7a94",
+        "poseID": "jug-open-up",
+        "selectedContactID": "pull-up-jug",
+        "selectedNodeIDs": [
+          "nature_jug"
+        ]
+      }
+    ],
+    "wholePriorCurrentComparisons": [
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-resume-2026-10-02/comparison-front-side-top.png",
+        "sha256": "c9a32259f2267f16c82a300dadd969864c86a636545671434288376d89c67728"
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-resume-2026-10-02/comparison-oblique.png",
+        "sha256": "7a1821d6257ed8ceccf87771adf02092b34a42a35cb0b85b2ea90e3b3cf03cc5"
+      }
+    ],
+    "scope": "Final fitted granite seat, existing 110 mm saved lead routes and opening-up jug display pose. Neutral exact CAD/cache views; runtime finishes and interactions remain unverified.",
+    "newGeometryOrPackageEdits": false,
+    "runtimeVerified": false,
+    "humanAnswer": [
+      "those cords dont look right",
+      "and the jug isnt the right part"
+    ],
+    "identityClarification": {
+      "question": "For the Stone Hanger Mini, is the pull-up jug the rounded outside top/back rail, or a lip inside the recess?",
+      "answer": "Rounded outside top/back rail"
+    },
+    "questionDisposition": "Answered with corrections; no approval of these final details."
+  },
+  "currentShownAssetCommitNote": "Prepared against baseline 5eae12bb9c0493c7b29f982d92ab855ac7f5696c; exact current asset identities are pinned below.",
+  "latestValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/validation.json",
+  "historicalCompletedTechnicalScope": "Fitted granite seat, metadata for existing runtime wood/granite rendering, four freshly solved compact cord poses, and opening-up display jug pose. App appearance remains unverified.",
+  "latestPackageTests": {
+    "passed": 67,
+    "failures": 0,
+    "skipped": 0,
+    "scope": "Final source and sidecar catalog/contract tests; runtime tests unexecuted."
   }
 }
