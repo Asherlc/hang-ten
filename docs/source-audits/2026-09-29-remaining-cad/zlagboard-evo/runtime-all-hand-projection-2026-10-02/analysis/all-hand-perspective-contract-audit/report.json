@@ -1,0 +1,192 @@
+{
+  "status": "READ_ONLY_CONTRACT_AUDIT_WITH_AUTHORED_VERTEX_MATH",
+  "source": {
+    "path": "HangTen/Views/GripHandModelView.swift",
+    "currentSHA256": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2",
+    "HEADSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+    "diffSHA256": "d1c9aa94f9af78052443558856dcde13ba2cff4c9df3107abe91874e63ed0db0"
+  },
+  "unchangedAuthoredAssets": {
+    "handMeshExactHEAD": true,
+    "handMeshSHA256": "d53dca888e264a1ed581bcd76e5eec91576c3c5cd14456fc34eb82c934e3d433",
+    "surfaceShaderExactHEAD": true,
+    "surfaceShaderSHA256": "6fe32276a9c9ff123997dee1427000dbce37099a5f300bb73db1666592de7d80"
+  },
+  "clippingConclusion": {
+    "all21PosesBothSidesAndPair": true,
+    "summary": [
+      {
+        "kind": "single-right",
+        "poses": 21,
+        "maximumBoundingRadius": 2.1903344427763196,
+        "largestRadiusPose": "Neutral",
+        "canonicalDistance": 11.38255243783221,
+        "minimumCameraDistance": 8.431520324320156,
+        "minimumAllAnglesNearDepthBound": 6.241185881543836,
+        "maximumAllAnglesFarDepthBound": 17.3670710265526,
+        "allAuthoredPosesClipsSafe": true,
+        "relativeMaxZoomGainBounds": [
+          0.9465381049152247,
+          1.0909866323391353
+        ]
+      },
+      {
+        "kind": "single-left",
+        "poses": 21,
+        "maximumBoundingRadius": 2.1903344427763196,
+        "largestRadiusPose": "Neutral",
+        "canonicalDistance": 11.38255243783221,
+        "minimumCameraDistance": 8.431520324320156,
+        "minimumAllAnglesNearDepthBound": 6.241185881543836,
+        "maximumAllAnglesFarDepthBound": 17.3670710265526,
+        "allAuthoredPosesClipsSafe": true,
+        "relativeMaxZoomGainBounds": [
+          0.9465381049152247,
+          1.0909866323391353
+        ]
+      },
+      {
+        "kind": "pair",
+        "poses": 21,
+        "maximumBoundingRadius": 2.544979974805745,
+        "largestRadiusPose": "Neutral",
+        "canonicalDistance": 9.79400326730597,
+        "minimumCameraDistance": 7.254817235041458,
+        "minimumAllAnglesNearDepthBound": 4.709837260235713,
+        "maximumAllAnglesFarDepthBound": 15.60365099788037,
+        "allAuthoredPosesClipsSafe": true,
+        "relativeMaxZoomGainBounds": [
+          0.9326710942105226,
+          1.1400918092581322
+        ]
+      }
+    ],
+    "meaning": "A conservative sphere bound proves all source vertices and triangle interiors remain between .1 and100 for any orbit orientation under current center, camera distance/zoom .75..1.35 and hand transforms. This is stronger than sampling a finite set of yaw angles. It is not an app runtime test.",
+    "numericalCaveat": "Python double arithmetic on authored JSON numbers; not bitwise RealityKit Float computation. Margins are several world units, far exceeding Float rounding."
+  },
+  "canonicalPerspectiveFit": {
+    "formula": "At existing canonical transform, t=1.08*max(abs(y)/depth,abs(x)/(aspect*depth)), verticalFOV=2atan(t). All source vertices then have max absolute normalized x/y <=1/1.08=.9259259.",
+    "exampleAspectResults": [
+      {
+        "kind": "single-right",
+        "aspectLabel": "fallback",
+        "minFOV": 18.35194646876913,
+        "maxFOV": 23.22696977941374,
+        "maxNormalizedCoordinate": 0.925925925925926
+      },
+      {
+        "kind": "single-right",
+        "aspectLabel": "singleExistingTest200x260",
+        "minFOV": 18.370810775462918,
+        "maxFOV": 23.22696977941374,
+        "maxNormalizedCoordinate": 0.925925925925926
+      },
+      {
+        "kind": "single-right",
+        "aspectLabel": "pairExistingTest360x260",
+        "minFOV": 17.93125781672199,
+        "maxFOV": 23.22696977941374,
+        "maxNormalizedCoordinate": 0.925925925925926
+      },
+      {
+        "kind": "single-right",
+        "aspectLabel": "retainedLandscapePair718x67.6667",
+        "minFOV": 17.93125781672199,
+        "maxFOV": 23.22696977941374,
+        "maxNormalizedCoordinate": 0.925925925925926
+      },
+      {
+        "kind": "single-left",
+        "aspectLabel": "fallback",
+        "minFOV": 18.35194646876913,
+        "maxFOV": 23.22696977941374,
+        "maxNormalizedCoordinate": 0.925925925925926
+      },
+      {
+        "kind": "single-left",
+        "aspectLabel": "singleExistingTest200x260",
+        "minFOV": 18.370810775462918,
+        "maxFOV": 23.22696977941374,
+        "maxNormalizedCoordinate": 0.925925925925926
+      },
+      {
+        "kind": "single-left",
+        "aspectLabel": "pairExistingTest360x260",
+        "minFOV": 17.93125781672199,
+        "maxFOV": 23.22696977941374,
+        "maxNormalizedCoordinate": 0.925925925925926
+      },
+      {
+        "kind": "single-left",
+        "aspectLabel": "retainedLandscapePair718x67.6667",
+        "minFOV": 17.93125781672199,
+        "maxFOV": 23.22696977941374,
+        "maxNormalizedCoordinate": 0.925925925925926
+      },
+      {
+        "kind": "pair",
+        "aspectLabel": "fallback",
+        "minFOV": 28.060884857866387,
+        "maxFOV": 32.45255393890845,
+        "maxNormalizedCoordinate": 0.9259259259259259
+      },
+      {
+        "kind": "pair",
+        "aspectLabel": "singleExistingTest200x260",
+        "minFOV": 30.872972649850876,
+        "maxFOV": 35.65369153269088,
+        "maxNormalizedCoordinate": 0.9259259259259259
+      },
+      {
+        "kind": "pair",
+        "aspectLabel": "pairExistingTest360x260",
+        "minFOV": 20.397496934636163,
+        "maxFOV": 26.907092882028312,
+        "maxNormalizedCoordinate": 0.925925925925926
+      },
+      {
+        "kind": "pair",
+        "aspectLabel": "retainedLandscapePair718x67.6667",
+        "minFOV": 20.397496934636163,
+        "maxFOV": 26.907092882028312,
+        "maxNormalizedCoordinate": 0.925925925925926
+      }
+    ],
+    "limit": "Each labeled aspect is an arithmetic example. The formula covers any finite positive aspect if representable FOV remains strictly between0 and180; exhaustive app layout coverage is not claimed."
+  },
+  "orbitUX": {
+    "preserved": [
+      "Same target/canonical center, canonical offset, yaw direction, elevation clamp\u00b1.55, wrapping/full azimuth, zoom clamp .75..1.35 and reset conditions.",
+      "Same gestures/state invalidation/lifetime and no new periodic work.",
+      "Perspective FOV stays fixed through gestures and changes only at existing pose/side/viewport/reset points."
+    ],
+    "changed": [
+      "Perspective introduces depth-dependent apparent size, foreshortening and parallax. It cannot reproduce orthographic pixels.",
+      "At canonical depth plane zoom gain is exactly the existing zoom factor. Other depths differ: conservative maxzoom1.35 relative gains span.9465\u20261.0910(single) and.9327\u20261.1401(pair) relative to orthographic zoom, across sphere bounds. These are bounds, not measured subjective effects.",
+      "Canonical8% framing margin does not promise full outline visible after orbit/zoom. At1.35, even flat central-plane geometry may exceed the .9259 canonical normalized extent. Existing orthographic zoom also allows edge cropping. Do not silently clamp/auto-refit or change gesture semantics to conceal this."
+    ]
+  },
+  "risksBeforeProduction": [
+    "Current DEBUG scene constructors use60deg placeholder before first valid reset; invalid/missing assets or degenerate fit must have an intentional unavailable/failure path. Do not ship a silently wrong placeholder as successful fit.",
+    "Current diagnosis duplicates orthographic branches and carries suppression/counters. A production candidate should not retain that debug scaffolding as the fix.",
+    "All hand camera forced unwrap assumptions and tests must be migrated coherently if projection becomes permanent. Do not select projection dynamically perframe or leave both camera components installed.",
+    "Repeated direct contrast and normal-route perspective validation are required before choosing a production candidate; current math cannot establish the renderer defect or its cause."
+  ],
+  "conditionalNarrowCandidate": [
+    "Only after parent accepts repeated contrast and normal-route evidence, replace hand orthographic camera configuration with perspective in both real scene classes using a small deterministic per-vertex fit helper. Keep scene/host/mesh/material/lighting and camera transform/gesture lifecycle unchanged.",
+    "Remove only now-unused orthographic-scale bookkeeping and diagnostic gates/hooks from the production change; retain all diagnostic patches/results separately. No board renderer rewrite, shader change, geometry change or timer.",
+    "Keep current .1/100 clips and existing padding1.08, and documented pure fit failure behavior; preserve package contents byte-for-byte."
+  ],
+  "meaningfulConditionalTests": [
+    "Pure actual-vertex fit over all21 poses, mirrored single sides and paired union: finite FOV, expected horizontal/vertical frustum inclusion and fixed clips across narrow/wide valid aspects. Use independent projection inequalities, not only equality to implementation formula.",
+    "Orbit near/far invariant from radius bound and representative runtime camera states at zoom extremes, full azimuth and elevation clamps; no requirement that zoomed silhouette never crosses screen edges.",
+    "Nonzero orbit followed by pose/viewport/resetToken changes restores canonical transform/FOV; unchanged input update preserves orbit; invalid inputs do not change camera.",
+    "Both actual view sync entry paths and existing drag arbitration/clamp/mirroring tests retain behavior. Replace orthographic-component-specific assertions with meaningful perspective FOV/transform/projection behavior only if production decision is made.",
+    "Fresh app validation in normal navigation/history, both orientations, both single and pair cue presentations, all relevant active/rest direction transitions and physical orbit/reset; preserve original failed runs."
+  ],
+  "limitations": [
+    "No app tests, build, Simulator/resource operations, image measurements or source edits. Scratch-only data arithmetic and report files.",
+    "Mesh positions and surface shader were compared to HEAD exactly; no manufacturing, ergonomic or anatomical fidelity claim.",
+    "Public APIs support the camera parameters; no API contract guarantees perspective repairs the observed stale board rendering."
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "scope": "Four complete P1 next-Hang screenshots directly opened by root; not all 12 captures reviewed by root in this report",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-p1-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "13d9bff2900d8de3099faec398fe35bfb2769195c3e18c9901ce72a968915932",
+      "observation": "Both selected outer lower pockets red; board and paired hands visible; no obvious clipping"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-p1-landscape/phase-2-active-plus-1.png",
+      "sha256": "c47b3937a6c2f94642d5b9dab8d3760f538b1fe8b210bbcfe0505664687a4b6b",
+      "observation": "Both selected outer lower pockets red; board and paired hands visible; no obvious clipping"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-p1-landscape/phase-2-active-plus-3.png",
+      "sha256": "8bec7de3c01d5405dfc4eab66fe93df33f0bf2443f281ff4eb053ee569cff041",
+      "observation": "Both selected outer lower pockets red; board and paired hands visible; no obvious clipping"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-p1-landscape/phase-2-active-plus-5.png",
+      "sha256": "ff60101f62a68ced3055b66302fbfc578976c0e1ffc9c1b081cf59705219d668",
+      "observation": "Both selected outer lower pockets red; board and paired hands visible; no obvious clipping"
+    }
+  ],
+  "limits": [
+    "No pixel measurements or image processing",
+    "Does not replace failed original exact-frame-set gate",
+    "No production fix or human acceptance asserted"
+  ]
+}

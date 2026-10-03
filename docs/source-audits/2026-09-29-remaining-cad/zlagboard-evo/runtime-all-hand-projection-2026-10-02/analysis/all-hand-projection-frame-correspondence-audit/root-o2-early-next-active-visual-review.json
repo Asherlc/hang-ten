@@ -1,0 +1,20 @@
+{
+  "scope": "Root directly opened only O2 next-Hang +.25 and+1 whole screenshots in this report",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o2-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "792ca5c9fd98d771da44676e2484623facd92b4afe4d15f915e7b2dc3ae4d269",
+      "observation": "Selected outer lower pockets red, board and hand cues visible"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o2-landscape/phase-2-active-plus-1.png",
+      "sha256": "e0b2616525736a9977c2b17a49eaa73b80ecccb2aaec8248416f45e914ec9833",
+      "observation": "Selected outer lower pockets red, board and hand cues visible"
+    }
+  ],
+  "interpretation": "These orthographic images do not reproduce O1 early next-Hang failure; no repeated projection-only contrast established",
+  "limits": [
+    "No pixel measurements",
+    "No production repair claim"
+  ]
+}

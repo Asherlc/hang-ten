@@ -1,0 +1,61 @@
+2431: 			VStack(spacing: 2) {
+2432: 				if showsPairedHandCue, let holdCue {
+2433: 					Group {
+2434: 						#if DEBUG
+2435: 						if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_WORKOUT_HAND_HOST"] == "1" {
+2436: 							Color.clear
+2437: 						} else if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAIN_SECOND_HOST"] == "1" {
+2438: 							WorkoutPlainSecondHostProbe(posture: holdCue.gripType,
+2439: 								fingerConfiguration: holdCue.fingerConfiguration)
+2440: 						} else {
+2441: 							GripHandPairModelView(posture: holdCue.gripType,
+2442: 								fingerConfiguration: holdCue.fingerConfiguration)
+2443: 						}
+2444: 						#else
+2445: 						GripHandPairModelView(posture: holdCue.gripType,
+2446: 							fingerConfiguration: holdCue.fingerConfiguration)
+2447: 						#endif
+2448: 					}
+2449: 						.frame(height: 68)
+2450: 						.accessibilityHidden(true)
+2451: 				}
+2452: 				HStack(spacing: 12) {
+2453: 				landscapeHandCueSlot(
+2454: 					holdCue: holdCue,
+2455: 					cueStep: cueStep,
+2456: 					countdown: countdown,
+2457: 					isComplete: isComplete,
+2458: 					isSkipCountdown: isSkipCountdown,
+2459: 					side: .left,
+2460: 					usesSharedPairPreview: showsPairedHandCue
+2461: 				)
+2462: 
+2463: 				VStack(alignment: .leading, spacing: 4) {
+2464: 					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+2465: 						.frame(maxWidth: .infinity, minHeight: LandscapeLayout.previewLabelHeight, alignment: .center)
+2466: 						.opacity(showsHoldPreview ? 1 : 0)
+2467: 						.accessibilityHidden(!showsHoldPreview)
+2468: 					BoardMapView(
+2469: 						board: board,
+2470: 						highlightedHoldIDs: highlightedHoldIDs,
+2471: 						highlightMode: highlightMode,
+2472: 						selectedPresentationID: WorkoutHighlightResolver.presentationID(for: cueStep, on: board),
+2473: 						activeHoldID: holdCue?.hold?.id
+2474: 					)
+2475: 						.frame(maxWidth: .infinity)
+2476: 						.frame(maxHeight: LandscapeLayout.boardMaxHeight)
+2477: 				}
+2478: 				.frame(maxWidth: .infinity)
+2479: 
+2480: 				landscapeHandCueSlot(
+2481: 					holdCue: holdCue,
+2482: 					cueStep: cueStep,
+2483: 					countdown: countdown,
+2484: 					isComplete: isComplete,
+2485: 					isSkipCountdown: isSkipCountdown,
+2486: 					side: .right,
+2487: 					usesSharedPairPreview: showsPairedHandCue
+2488: 				)
+2489: 				}
+2490: 			}
+2491: 			.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
