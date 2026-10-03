@@ -108,6 +108,55 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
     }
 
+    @MainActor
+    func testPentaProductionCameraCentersNativeBodyAndCordEnvelopeForEveryPose() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
+        guard case .model(let media) = board.defaultPresentation.media else {
+            return XCTFail("expected native Penta model")
+        }
+        let instances = try XCTUnwrap(media.instances)
+        let scene = try await BoardModelRealityLoader.load(
+            board: board, presentation: board.defaultPresentation)
+        scene.frame(in: CGSize(width: 800, height: 500))
+        XCTAssertEqual(scene.instanceEntities.count, instances.count)
+        var verifiedNonzeroCenter = false
+
+        for position in board.positions where position.presentationID == board.defaultPresentation.id {
+            XCTAssertTrue(scene.select(positionID: position.id), position.id)
+            scene.resetCamera(animated: false)
+            var horizontalEnvelope: [Float] = []
+            for (entity, instance) in zip(scene.instanceEntities, instances) {
+                guard case .cadRoutedCord(let profile) = instance.suspension else {
+                    return XCTFail("expected native Penta route")
+                }
+                let pose = try XCTUnwrap(profile.canonicalPoses[position.id])
+                let routes = try XCTUnwrap(pose.wrappedRoutes)
+                let transform = entity.transform.matrix
+                for x in [media.descriptor.modelBounds.minimum[0], media.descriptor.modelBounds.maximum[0]] {
+                    for y in [media.descriptor.modelBounds.minimum[1], media.descriptor.modelBounds.maximum[1]] {
+                        for z in [media.descriptor.modelBounds.minimum[2], media.descriptor.modelBounds.maximum[2]] {
+                            horizontalEnvelope.append((transform * SIMD4<Float>(
+                                Float(x), Float(y), Float(z), 1)).x)
+                        }
+                    }
+                }
+                for route in routes.values {
+                    for point in route {
+                        horizontalEnvelope.append((transform * SIMD4<Float>(
+                            Float(point[0]), Float(point[1]), Float(point[2]), 1)).x)
+                    }
+                }
+                horizontalEnvelope.append(Float(profile.anchor.position[0]))
+            }
+            let minimum = try XCTUnwrap(horizontalEnvelope.min())
+            let maximum = try XCTUnwrap(horizontalEnvelope.max())
+            let expectedCenter = (minimum + maximum) / 2
+            verifiedNonzeroCenter = verifiedNonzeroCenter || abs(expectedCenter) > 1e-6
+            XCTAssertEqual(scene.camera.position.x, expectedCenter, accuracy: 1e-6, position.id)
+        }
+        XCTAssertTrue(verifiedNonzeroCenter, "The authored bounds must catch incorrect origin centering")
+    }
+
     func testSeatedCatalogRoutesSolveEveryCachedPose() throws {
         let boardIDs = ["captain-fingerfood.dual", "captain-fingerfood.unlevel",
                         "j-bryant.ftg-32", "metolius.light-rail-2", "yy.penta-evo"]

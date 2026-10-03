@@ -1025,6 +1025,7 @@ struct WorkoutActivityRecorder {
         selectedHandSide: WorkoutSide?,
         board: BoardRevision
     ) throws -> WorkoutStep {
+        guard !step.isRestStep else { return step }
         let boardIsOneHanded = board.isOneHanded
         if step.segments.contains(where: { $0.target?.planTasks != nil }) { return step }
         guard step.handUse == .either || (step.handUse == .double && boardIsOneHanded) else { return step }
