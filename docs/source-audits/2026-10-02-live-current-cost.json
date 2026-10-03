@@ -1,0 +1,23 @@
+{
+  "owner": "strong-owl-live-physics",
+  "evidenceHashes": {
+    ".context/strong-owl-live-physics-current-cost-current-597333b/native/result.json": "69cce547b2f76ddacf5a15be79e82fd8a6537015ebef591a62ceb27eda65a228",
+    ".context/strong-owl-live-physics-current-cost-current-597333b/native/provenance.json": "925ee53dcd577fb2a345a1cf67fc929bf54e680947d8c3a6a31ab81ac24e5246",
+    ".context/strong-owl-live-physics-current-cost-current-597333b/native/resources.jsonl": "8d12d4020e5951ed8e9dcc47ef405601cf4e62ce73aae497ccbb7048c8506fb9",
+    ".context/strong-owl-live-physics-current-cost-current-597333b/native/run.log": "bc58b45d95c1cc538bc48a13526b45f237ddd4a51a852ce34f39d604565a3f3b",
+    ".context/strong-owl-live-physics-current-cost-geometry-split-597333b/native/result.json": "3d94fbb5fe863899ebf0decc2f762b5b777bc71ad783d513af95f30e46d5415d",
+    ".context/strong-owl-live-physics-current-cost-geometry-split-597333b/native/provenance.json": "7e37e77ddd363c67fbed58c796da8ad820752f4244657d45e8b7dbf858c4717b",
+    ".context/strong-owl-live-physics-current-cost-geometry-split-597333b/native/resources.jsonl": "f1e5ebde8e593810d1f3f3ae3fb056d56cfd93de13aa15c02ef1416c57cc5a86",
+    ".context/strong-owl-live-physics-current-cost-geometry-split-597333b/native/run.log": "59bbb5f2657a69a1142611d64156c64d9b01c4a03b3e0f295a3728567e5c385b",
+    ".context/strong-owl-live-physics-leaf-replay-step140/native/result.json": "3be41f4bee6d4c824dfce74a551e4833efa1765a31ed6c2a5a0677972c61b10f",
+    ".context/strong-owl-live-physics-leaf-replay-step140/native/provenance.json": "a634b54af4340ba5903a2ccf9d139056ee1cf4f7728e5d940dd477cda5c622fd",
+    ".context/strong-owl-live-physics-leaf-replay-step140/native/resources.jsonl": "318fa6e33c5aa4047493c1f7105f10d145c8b04fb48de5a60587f3adf998136e",
+    ".context/strong-owl-live-physics-leaf-replay-step140/native/run.log": "94a4eae56e51105d0eb8d8c215954a59b2674f17501767bea630167caf04eb55"
+  },
+  "leafReplayMedianRatio": 0.913786083698743,
+  "leafReplayAdopted": false,
+  "closed": [
+    "packet-traversal",
+    "temporal-candidate-leaf-reuse"
+  ]
+}
