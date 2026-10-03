@@ -1,0 +1,1532 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "closed": true,
+  "result": {
+    "adopted": false,
+    "armijoEnabled": false,
+    "attemptedSteps": 2,
+    "candidateHz": 240,
+    "controlHz": 240,
+    "failure": "invalid(\"matched-time pose/cap/retry step 2\")",
+    "massOnly": true,
+    "measuredSteps": 2,
+    "owner": "strong-owl-live-physics",
+    "pendingPhase": 0,
+    "preflight": true,
+    "steps": [
+      {
+        "candidateCaps": 0,
+        "candidateQPs": 71,
+        "candidateRetries": 0,
+        "candidateSeconds": 0.3361052083346294,
+        "controlCaps": 0,
+        "controlQPs": 4,
+        "controlRetries": 0,
+        "controlSeconds": 0.007899875010480173,
+        "controlStep": 1,
+        "difference": 9.390369743802419e-06,
+        "metrics": {
+          "boardDisplacement": 0.00015800631251533526,
+          "clearanceMargin": 0.00010025756245068225,
+          "geometryAccepted": true,
+          "lengthError": 6.561067392718556e-07,
+          "speed": 0.06015278554299527,
+          "strain": 4.145122653653743e-05
+        },
+        "phase": 0,
+        "settled": false,
+        "step": 1,
+        "strictDifference": 9.390255019312496e-06,
+        "strictReference": {
+          "caps": 0,
+          "qps": 6,
+          "retries": 0,
+          "traces": [
+            [
+              {
+                "alpha": 0.6136396393174166,
+                "armijoRejected": 0,
+                "movement": 0.0003313263956604868,
+                "originalRejected": 0,
+                "rows": 329,
+                "slope": null,
+                "strain": 0.033474008364062335
+              },
+              {
+                "alpha": 0.8138766784381328,
+                "armijoRejected": 0,
+                "movement": 0.0002212668893979661,
+                "originalRejected": 0,
+                "rows": 329,
+                "slope": null,
+                "strain": 0.009918393365493383
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 5.900037244628199e-05,
+                "originalRejected": 0,
+                "rows": 331,
+                "slope": null,
+                "strain": 0.00018509391662502317
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 6.470501432354107e-06,
+                "originalRejected": 0,
+                "rows": 333,
+                "slope": null,
+                "strain": 7.76583664841013e-06
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 1.0068258174376864e-07,
+                "originalRejected": 0,
+                "rows": 333,
+                "slope": null,
+                "strain": 1.0560539109860656e-09
+              },
+              {
+                "alpha": 1,
+                "armijoRejected": 0,
+                "movement": 1.286714691741534e-11,
+                "originalRejected": 0,
+                "rows": 333,
+                "slope": null,
+                "strain": 1.6471268793338822e-12
+              }
+            ]
+          ]
+        },
+        "trace": [
+          {
+            "alpha": 0.6136396393174166,
+            "armijoRejected": 0,
+            "movement": 0.0003313263956604868,
+            "originalRejected": 0,
+            "rows": 329,
+            "slope": null,
+            "strain": 0.033474008364062335
+          },
+          {
+            "alpha": 0.20305112594814487,
+            "armijoRejected": 0,
+            "movement": 0.0006893799883128022,
+            "originalRejected": 0,
+            "rows": 329,
+            "slope": null,
+            "strain": 0.02905817055487603
+          },
+          {
+            "alpha": 0.21451237042053822,
+            "armijoRejected": 0,
+            "movement": 0.0005639431663177981,
+            "originalRejected": 0,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.022900198591922827
+          },
+          {
+            "alpha": 0.11233522641943867,
+            "armijoRejected": 0,
+            "movement": 0.00047186724204274154,
+            "originalRejected": 1,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.020460658554165567
+          },
+          {
+            "alpha": 0.10964188055839019,
+            "armijoRejected": 0,
+            "movement": 0.0005037731977587879,
+            "originalRejected": 1,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.018274908788705524
+          },
+          {
+            "alpha": 0.10305723054137197,
+            "armijoRejected": 0,
+            "movement": 0.0005290610004908403,
+            "originalRejected": 1,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.016551961357401446
+          },
+          {
+            "alpha": 0.10723751312842715,
+            "armijoRejected": 0,
+            "movement": 0.0004944375464633364,
+            "originalRejected": 1,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.014935513595886851
+          },
+          {
+            "alpha": 0.10587807206801116,
+            "armijoRejected": 0,
+            "movement": 0.000489231659227528,
+            "originalRejected": 1,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.013495178870447155
+          },
+          {
+            "alpha": 0.1103619529194857,
+            "armijoRejected": 0,
+            "movement": 0.0004540241575836635,
+            "originalRejected": 1,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.012134642571673071
+          },
+          {
+            "alpha": 0.1105559147041231,
+            "armijoRejected": 0,
+            "movement": 0.0004535298021352904,
+            "originalRejected": 1,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.01091057112301752
+          },
+          {
+            "alpha": 0.11510145566212934,
+            "armijoRejected": 0,
+            "movement": 0.0004460421828911602,
+            "originalRejected": 1,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.009767104269174265
+          },
+          {
+            "alpha": 0.05811788355579319,
+            "armijoRejected": 0,
+            "movement": 0.00044287234245793817,
+            "originalRejected": 2,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.009225711728359176
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00013264539819425836,
+            "originalRejected": 0,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0009614091853311635
+          },
+          {
+            "alpha": 0.014425490259237438,
+            "armijoRejected": 0,
+            "movement": 0.0004412304546279315,
+            "originalRejected": 4,
+            "rows": 351,
+            "slope": null,
+            "strain": 0.0009486214209648569
+          },
+          {
+            "alpha": 0.013985051716403686,
+            "armijoRejected": 0,
+            "movement": 0.00045624369500902657,
+            "originalRejected": 4,
+            "rows": 349,
+            "slope": null,
+            "strain": 0.0009363169433498353
+          },
+          {
+            "alpha": 0.013953142736166858,
+            "armijoRejected": 0,
+            "movement": 0.00045835891930516223,
+            "originalRejected": 4,
+            "rows": 349,
+            "slope": null,
+            "strain": 0.0009241433292614953
+          },
+          {
+            "alpha": 0.014726114371434089,
+            "armijoRejected": 0,
+            "movement": 0.00043500755879435037,
+            "originalRejected": 4,
+            "rows": 345,
+            "slope": null,
+            "strain": 0.000911433468559153
+          },
+          {
+            "alpha": 0.01727405494761468,
+            "armijoRejected": 0,
+            "movement": 0.0003681649948063773,
+            "originalRejected": 4,
+            "rows": 345,
+            "slope": null,
+            "strain": 0.0008967686344902859
+          },
+          {
+            "alpha": 0.04983053328002239,
+            "armijoRejected": 0,
+            "movement": 0.00025842859733344123,
+            "originalRejected": 3,
+            "rows": 345,
+            "slope": null,
+            "strain": 0.0008823653618121874
+          },
+          {
+            "alpha": 0.2066231874684989,
+            "armijoRejected": 0,
+            "movement": 0.0001404802965407029,
+            "originalRejected": 2,
+            "rows": 343,
+            "slope": null,
+            "strain": 0.000993796842004624
+          },
+          {
+            "alpha": 0.014466045927484652,
+            "armijoRejected": 0,
+            "movement": 0.00043203971243678296,
+            "originalRejected": 4,
+            "rows": 336,
+            "slope": null,
+            "strain": 0.000998932377259898
+          },
+          {
+            "alpha": 0.017932108042652332,
+            "armijoRejected": 0,
+            "movement": 0.0003482997883477773,
+            "originalRejected": 4,
+            "rows": 333,
+            "slope": null,
+            "strain": 0.0010005311717629084
+          },
+          {
+            "alpha": 0.05896693655606139,
+            "armijoRejected": 0,
+            "movement": 0.00021392189047423442,
+            "originalRejected": 3,
+            "rows": 333,
+            "slope": null,
+            "strain": 0.001019579644121027
+          },
+          {
+            "alpha": 0.08583821621950369,
+            "armijoRejected": 0,
+            "movement": 0.0001452439917753031,
+            "originalRejected": 3,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0010101061279572665
+          },
+          {
+            "alpha": 0.055248466862198066,
+            "armijoRejected": 0,
+            "movement": 0.00022880017489795433,
+            "originalRejected": 3,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0010323452311526982
+          },
+          {
+            "alpha": 0.0886321533052145,
+            "armijoRejected": 0,
+            "movement": 0.00014358110884056833,
+            "originalRejected": 3,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0010188905912860147
+          },
+          {
+            "alpha": 0.02744148889477945,
+            "armijoRejected": 0,
+            "movement": 0.00023595051471234066,
+            "originalRejected": 4,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0010104420508767475
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.113321978404273e-05,
+            "originalRejected": 0,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0012588790033900565
+          },
+          {
+            "alpha": 0.0075265120187254205,
+            "armijoRejected": 0,
+            "movement": 0.0004195222766632544,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0012542806982438481
+          },
+          {
+            "alpha": 0.0073504861018941,
+            "armijoRejected": 0,
+            "movement": 0.00042831004376744626,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0012499378117392101
+          },
+          {
+            "alpha": 0.007189483025370594,
+            "armijoRejected": 0,
+            "movement": 0.0004366517733821627,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0012458281135361293
+          },
+          {
+            "alpha": 0.007048916024199446,
+            "armijoRejected": 0,
+            "movement": 0.00044412393156169155,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.001241923105097964
+          },
+          {
+            "alpha": 0.006936001462012365,
+            "armijoRejected": 0,
+            "movement": 0.0004501404779506334,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.001238185873603026
+          },
+          {
+            "alpha": 0.006860603270622931,
+            "armijoRejected": 0,
+            "movement": 0.00045554108228182237,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.001234567939161435
+          },
+          {
+            "alpha": 0.006836610204308289,
+            "armijoRejected": 0,
+            "movement": 0.00045781679316303205,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.001231004464823382
+          },
+          {
+            "alpha": 0.006884284298311546,
+            "armijoRejected": 0,
+            "movement": 0.0004553174586488942,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0012274066827846486
+          },
+          {
+            "alpha": 0.007034485877938171,
+            "armijoRejected": 0,
+            "movement": 0.00044624960790656267,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0012236493274124793
+          },
+          {
+            "alpha": 0.007336792936303124,
+            "armijoRejected": 0,
+            "movement": 0.0004284868440290592,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0012195485022270525
+          },
+          {
+            "alpha": 0.007876462125405792,
+            "armijoRejected": 0,
+            "movement": 0.0003997102220684226,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.001214819628410968
+          },
+          {
+            "alpha": 0.017627906519399328,
+            "armijoRejected": 0,
+            "movement": 0.0003577233949408016,
+            "originalRejected": 4,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0012129124516144785
+          },
+          {
+            "alpha": 0.02759631411981578,
+            "armijoRejected": 0,
+            "movement": 0.00022918558210793477,
+            "originalRejected": 4,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0011989480302581068
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 5.036961476694918e-05,
+            "originalRejected": 1,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0009003671790086543
+          },
+          {
+            "alpha": 0.007034602470048679,
+            "armijoRejected": 0,
+            "movement": 0.0004483604024904776,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0008989118729112455
+          },
+          {
+            "alpha": 0.007381049979581961,
+            "armijoRejected": 0,
+            "movement": 0.0004259882307524085,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0008971553851391256
+          },
+          {
+            "alpha": 0.00798999937269826,
+            "armijoRejected": 0,
+            "movement": 0.00039223175442749437,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0008948655473508538
+          },
+          {
+            "alpha": 0.009045053982166911,
+            "armijoRejected": 0,
+            "movement": 0.0003452502241131975,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0008916498819611096
+          },
+          {
+            "alpha": 0.021900582780509104,
+            "armijoRejected": 0,
+            "movement": 0.0002843690829817205,
+            "originalRejected": 4,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0008916360804196444
+          },
+          {
+            "alpha": 0.10019055713299702,
+            "armijoRejected": 0,
+            "movement": 0.0001259961208757821,
+            "originalRejected": 3,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0008803579043650256
+          },
+          {
+            "alpha": 0.026182905032173034,
+            "armijoRejected": 0,
+            "movement": 0.0002402080619466502,
+            "originalRejected": 4,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0008768216413861385
+          },
+          {
+            "alpha": 0.25,
+            "armijoRejected": 0,
+            "movement": 6.590315006018362e-05,
+            "originalRejected": 2,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0007880189843170182
+          },
+          {
+            "alpha": 0.00884409689410696,
+            "armijoRejected": 0,
+            "movement": 0.0003550520078267954,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0007859286336719951
+          },
+          {
+            "alpha": 0.010572270147817196,
+            "armijoRejected": 0,
+            "movement": 0.0002981092854790722,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0007824985559510278
+          },
+          {
+            "alpha": 0.027943146344708018,
+            "armijoRejected": 0,
+            "movement": 0.00022665394354733139,
+            "originalRejected": 4,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.000780149060349844
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 4.928454046261737e-05,
+            "originalRejected": 1,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0006646213682091062
+          },
+          {
+            "alpha": 0.0035753893576186144,
+            "armijoRejected": 0,
+            "movement": 0.0004590415317907262,
+            "originalRejected": 6,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0006634649797421233
+          },
+          {
+            "alpha": 0.0073411484263650574,
+            "armijoRejected": 0,
+            "movement": 0.0004468533741747875,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0006634739599284956
+          },
+          {
+            "alpha": 0.00791584646757456,
+            "armijoRejected": 0,
+            "movement": 0.0004139844401381078,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0006631015768963078
+          },
+          {
+            "alpha": 0.008894285116235018,
+            "armijoRejected": 0,
+            "movement": 0.00036819427455686457,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0006620833387496194
+          },
+          {
+            "alpha": 0.010624599600510909,
+            "armijoRejected": 0,
+            "movement": 0.0003081789346732412,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0006599285478796624
+          },
+          {
+            "alpha": 0.014009267157744393,
+            "armijoRejected": 0,
+            "movement": 0.00023387724348672976,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0006555630153632919
+          },
+          {
+            "alpha": 0.04468163775994562,
+            "armijoRejected": 0,
+            "movement": 0.00014700969513301143,
+            "originalRejected": 4,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0006457897929532663
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 4.743584968140556e-05,
+            "originalRejected": 1,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.00059226541552726
+          },
+          {
+            "alpha": 0.003583205826235411,
+            "armijoRejected": 0,
+            "movement": 0.00044567785733083795,
+            "originalRejected": 6,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0005913631868070812
+          },
+          {
+            "alpha": 0.0036808540059577646,
+            "armijoRejected": 0,
+            "movement": 0.0004334994483869649,
+            "originalRejected": 6,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0005904064464696823
+          },
+          {
+            "alpha": 0.003809190761846087,
+            "armijoRejected": 0,
+            "movement": 0.0004185727263438047,
+            "originalRejected": 6,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0005893774580025823
+          },
+          {
+            "alpha": 0.003976836487349909,
+            "armijoRejected": 0,
+            "movement": 0.00040064253626057587,
+            "originalRejected": 6,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0005882535836942981
+          },
+          {
+            "alpha": 0.00839180161412806,
+            "armijoRejected": 0,
+            "movement": 0.0003794796122743482,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.000588197018187353
+          },
+          {
+            "alpha": 0.009735178216355205,
+            "armijoRejected": 0,
+            "movement": 0.0003267897052923036,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0005873507571769743
+          },
+          {
+            "alpha": 0.012235529962568973,
+            "armijoRejected": 0,
+            "movement": 0.0002598742497493203,
+            "originalRejected": 5,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0005850441530055317
+          },
+          {
+            "alpha": 0.03539401483663853,
+            "armijoRejected": 0,
+            "movement": 0.00017972811377439565,
+            "originalRejected": 4,
+            "rows": 331,
+            "slope": null,
+            "strain": 0.0005838569209610789
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 1.0269111037744228e-05,
+            "originalRejected": 0,
+            "rows": 331,
+            "slope": null,
+            "strain": 4.145122653653743e-05
+          }
+        ]
+      },
+      {
+        "candidateCaps": 1,
+        "candidateQPs": 80,
+        "candidateRetries": 0,
+        "candidateSeconds": 0.28146233333973214,
+        "controlCaps": 0,
+        "controlQPs": 3,
+        "controlRetries": 0,
+        "controlSeconds": 0.006970666669076309,
+        "controlStep": 2,
+        "difference": 1.0820491145938025e-05,
+        "metrics": {
+          "boardDisplacement": 0.0004626068765225255,
+          "clearanceMargin": 9.998460310723474e-05,
+          "geometryAccepted": true,
+          "lengthError": 1.813229016256468e-05,
+          "speed": 0.07369109333046535,
+          "strain": 0.0008421797827087296
+        },
+        "phase": 0,
+        "settled": false,
+        "step": 2,
+        "trace": [
+          {
+            "alpha": 0.2888055605818363,
+            "armijoRejected": 0,
+            "movement": 0.0004052351482670489,
+            "originalRejected": 0,
+            "rows": 400,
+            "slope": null,
+            "strain": 0.056313194748084605
+          },
+          {
+            "alpha": 0.42434810435912523,
+            "armijoRejected": 0,
+            "movement": 0.00024839375296987424,
+            "originalRejected": 0,
+            "rows": 398,
+            "slope": null,
+            "strain": 0.03349654381138034
+          },
+          {
+            "alpha": 0.21985107892522446,
+            "armijoRejected": 0,
+            "movement": 0.0004651210610956492,
+            "originalRejected": 0,
+            "rows": 390,
+            "slope": null,
+            "strain": 0.026858479955008674
+          },
+          {
+            "alpha": 0.3044059820614331,
+            "armijoRejected": 0,
+            "movement": 0.0003279194396563002,
+            "originalRejected": 0,
+            "rows": 385,
+            "slope": null,
+            "strain": 0.019431539612600357
+          },
+          {
+            "alpha": 0.23361365951075444,
+            "armijoRejected": 0,
+            "movement": 0.00044492177362774263,
+            "originalRejected": 0,
+            "rows": 382,
+            "slope": null,
+            "strain": 0.015634465079342297
+          },
+          {
+            "alpha": 0.3371093602765909,
+            "armijoRejected": 0,
+            "movement": 0.0003069753850551244,
+            "originalRejected": 0,
+            "rows": 380,
+            "slope": null,
+            "strain": 0.014241419806993783
+          },
+          {
+            "alpha": 0.11781045583092786,
+            "armijoRejected": 0,
+            "movement": 0.0004396878358092824,
+            "originalRejected": 1,
+            "rows": 375,
+            "slope": null,
+            "strain": 0.013795982021534314
+          },
+          {
+            "alpha": 0.11135122771578028,
+            "armijoRejected": 0,
+            "movement": 0.00045092757655039624,
+            "originalRejected": 1,
+            "rows": 376,
+            "slope": null,
+            "strain": 0.013492726826178636
+          },
+          {
+            "alpha": 0.11980272241921067,
+            "armijoRejected": 0,
+            "movement": 0.000449201316936072,
+            "originalRejected": 1,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.013109547612795591
+          },
+          {
+            "alpha": 0.11554934103882977,
+            "armijoRejected": 0,
+            "movement": 0.00044431180819831477,
+            "originalRejected": 1,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.012792512480503282
+          },
+          {
+            "alpha": 0.12069880642264612,
+            "armijoRejected": 0,
+            "movement": 0.0004340089900917164,
+            "originalRejected": 1,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.012406963271929472
+          },
+          {
+            "alpha": 0.1166748158120078,
+            "armijoRejected": 0,
+            "movement": 0.0004356298651597401,
+            "originalRejected": 1,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.012091949722514261
+          },
+          {
+            "alpha": 0.12208423664053215,
+            "armijoRejected": 0,
+            "movement": 0.0004218168839898706,
+            "originalRejected": 1,
+            "rows": 372,
+            "slope": null,
+            "strain": 0.011732307796135544
+          },
+          {
+            "alpha": 0.11836003547838204,
+            "armijoRejected": 0,
+            "movement": 0.00042713758032883844,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.01144350141047279
+          },
+          {
+            "alpha": 0.12350663033937442,
+            "armijoRejected": 0,
+            "movement": 0.0004125774796302606,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.01112282974624823
+          },
+          {
+            "alpha": 0.12001485269701823,
+            "armijoRejected": 0,
+            "movement": 0.0004199333071721882,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.010885457597886505
+          },
+          {
+            "alpha": 0.12475889872816767,
+            "armijoRejected": 0,
+            "movement": 0.00040577157714487614,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.010763932290782208
+          },
+          {
+            "alpha": 0.12145011200943218,
+            "armijoRejected": 0,
+            "movement": 0.0004141867809958581,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.01069333741332934
+          },
+          {
+            "alpha": 0.12578579088170846,
+            "armijoRejected": 0,
+            "movement": 0.00040084932723903984,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.010585036457530395
+          },
+          {
+            "alpha": 0.12261778674966535,
+            "armijoRejected": 0,
+            "movement": 0.00040977359598556477,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.010524028164244248
+          },
+          {
+            "alpha": 0.1265918282533759,
+            "armijoRejected": 0,
+            "movement": 0.000397344109476669,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.010428749673670135
+          },
+          {
+            "alpha": 0.12352927906011564,
+            "armijoRejected": 0,
+            "movement": 0.0004064754568961447,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.0103775910582673
+          },
+          {
+            "alpha": 0.12720542884593378,
+            "armijoRejected": 0,
+            "movement": 0.0003948825449163008,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.010294662980720348
+          },
+          {
+            "alpha": 0.12422006357269698,
+            "armijoRejected": 0,
+            "movement": 0.0004040618725515635,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.010253121233308127
+          },
+          {
+            "alpha": 0.127661996603407,
+            "armijoRejected": 0,
+            "movement": 0.0003931758067950377,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.010181498439385761
+          },
+          {
+            "alpha": 0.12473207146005268,
+            "armijoRejected": 0,
+            "movement": 0.00040232523037929565,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.01014893992345467
+          },
+          {
+            "alpha": 0.12799577270377827,
+            "armijoRejected": 0,
+            "movement": 0.0003920064290350503,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.01008735792157922
+          },
+          {
+            "alpha": 0.12510507240223576,
+            "armijoRejected": 0,
+            "movement": 0.00040109320957763074,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.010062894708156689
+          },
+          {
+            "alpha": 0.12823636309913544,
+            "armijoRejected": 0,
+            "movement": 0.0003912143608543188,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.010010011002110852
+          },
+          {
+            "alpha": 0.1253730741205163,
+            "armijoRejected": 0,
+            "movement": 0.0004002298785464549,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.009992636496758411
+          },
+          {
+            "alpha": 0.12840777154844266,
+            "armijoRejected": 0,
+            "movement": 0.0003906840299910811,
+            "originalRejected": 1,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.00994713607298281
+          },
+          {
+            "alpha": 0.06278171897592018,
+            "armijoRejected": 0,
+            "movement": 0.0003996316758589711,
+            "originalRejected": 2,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.009632010744428099
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00010874388823134005,
+            "originalRejected": 0,
+            "rows": 366,
+            "slope": null,
+            "strain": 0.003333629395784188
+          },
+          {
+            "alpha": 0.10789063739622941,
+            "armijoRejected": 0,
+            "movement": 0.000261369179456376,
+            "originalRejected": 2,
+            "rows": 380,
+            "slope": null,
+            "strain": 0.0032854225394416403
+          },
+          {
+            "alpha": 0.09337512812660081,
+            "armijoRejected": 0,
+            "movement": 0.0002926972388244804,
+            "originalRejected": 2,
+            "rows": 380,
+            "slope": null,
+            "strain": 0.0032784526041707007
+          },
+          {
+            "alpha": 0.03595998358822918,
+            "armijoRejected": 0,
+            "movement": 0.0003666724482624748,
+            "originalRejected": 3,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0032285854731237684
+          },
+          {
+            "alpha": 0.03447183969948263,
+            "armijoRejected": 0,
+            "movement": 0.0003741669446129907,
+            "originalRejected": 3,
+            "rows": 376,
+            "slope": null,
+            "strain": 0.003184876630638822
+          },
+          {
+            "alpha": 0.12984103375828165,
+            "armijoRejected": 0,
+            "movement": 0.00019345558769337038,
+            "originalRejected": 2,
+            "rows": 376,
+            "slope": null,
+            "strain": 0.003075304515649524
+          },
+          {
+            "alpha": 0.031861753040722245,
+            "armijoRejected": 0,
+            "movement": 0.0004028799973908004,
+            "originalRejected": 3,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.0030350726099752645
+          },
+          {
+            "alpha": 0.10744513190056858,
+            "armijoRejected": 0,
+            "movement": 0.0002410827657914329,
+            "originalRejected": 2,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.0030095362324500385
+          },
+          {
+            "alpha": 0.03454983290592522,
+            "armijoRejected": 0,
+            "movement": 0.00038107446101237776,
+            "originalRejected": 3,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.0029834475047034736
+          },
+          {
+            "alpha": 0.15704214553992493,
+            "armijoRejected": 0,
+            "movement": 0.0001647036556239043,
+            "originalRejected": 2,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.0028264786706910794
+          },
+          {
+            "alpha": 0.032083995983222,
+            "armijoRejected": 0,
+            "movement": 0.0003899026296243012,
+            "originalRejected": 3,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.00281369866270631
+          },
+          {
+            "alpha": 0.10600529134474426,
+            "armijoRejected": 0,
+            "movement": 0.00024151284844808836,
+            "originalRejected": 2,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.0028270548136908324
+          },
+          {
+            "alpha": 0.034356847488997526,
+            "armijoRejected": 0,
+            "movement": 0.00038054692880574385,
+            "originalRejected": 3,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.002805970314927686
+          },
+          {
+            "alpha": 0.1530466653092859,
+            "armijoRejected": 0,
+            "movement": 0.00016809799819013317,
+            "originalRejected": 2,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.0026837499483016725
+          },
+          {
+            "alpha": 0.03210508489577269,
+            "armijoRejected": 0,
+            "movement": 0.0003914599887077149,
+            "originalRejected": 3,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.002674030919826098
+          },
+          {
+            "alpha": 0.10578133903653143,
+            "armijoRejected": 0,
+            "movement": 0.0002424557798822502,
+            "originalRejected": 2,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.0026896605084685277
+          },
+          {
+            "alpha": 0.03419062104471274,
+            "armijoRejected": 0,
+            "movement": 0.0003787553508837281,
+            "originalRejected": 3,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.0026714395835234495
+          },
+          {
+            "alpha": 0.15282759359550419,
+            "armijoRejected": 0,
+            "movement": 0.00016556542040715788,
+            "originalRejected": 2,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.0025567501601793108
+          },
+          {
+            "alpha": 0.03192906977927314,
+            "armijoRejected": 0,
+            "movement": 0.0003911274379345587,
+            "originalRejected": 3,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.002549196326657066
+          },
+          {
+            "alpha": 0.05306217338818106,
+            "armijoRejected": 0,
+            "movement": 0.00023971232203174564,
+            "originalRejected": 3,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.002485364655791189
+          },
+          {
+            "alpha": 0.1527787659796278,
+            "armijoRejected": 0,
+            "movement": 0.00016327833837193506,
+            "originalRejected": 2,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.0024129038824307614
+          },
+          {
+            "alpha": 0.03244028462827781,
+            "armijoRejected": 0,
+            "movement": 0.0003866781952578803,
+            "originalRejected": 3,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0024125655393198997
+          },
+          {
+            "alpha": 0.053016278581385065,
+            "armijoRejected": 0,
+            "movement": 0.00023718910748994054,
+            "originalRejected": 3,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.002362596019148233
+          },
+          {
+            "alpha": 0.1526907277680149,
+            "armijoRejected": 0,
+            "movement": 0.0001633317051314571,
+            "originalRejected": 2,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.002313611745875299
+          },
+          {
+            "alpha": 0.016375567218229733,
+            "armijoRejected": 0,
+            "movement": 0.0003836925782909415,
+            "originalRejected": 4,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0022952110389025115
+          },
+          {
+            "alpha": 0.036150249389120516,
+            "armijoRejected": 0,
+            "movement": 0.0003445086032908466,
+            "originalRejected": 3,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.002290184672145479
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.643147634497483e-05,
+            "originalRejected": 0,
+            "rows": 374,
+            "slope": null,
+            "strain": 0.0009415189131740664
+          },
+          {
+            "alpha": 0.020653606579057016,
+            "armijoRejected": 0,
+            "movement": 0.00031979778359941406,
+            "originalRejected": 4,
+            "rows": 380,
+            "slope": null,
+            "strain": 0.0009415859855905762
+          },
+          {
+            "alpha": 0.009592787998291784,
+            "armijoRejected": 0,
+            "movement": 0.000339442869595214,
+            "originalRejected": 5,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.000937431749777895
+          },
+          {
+            "alpha": 0.009261745265932238,
+            "armijoRejected": 0,
+            "movement": 0.0003492186163647691,
+            "originalRejected": 5,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0009336277166345219
+          },
+          {
+            "alpha": 0.008970726702540751,
+            "armijoRejected": 0,
+            "movement": 0.00035818272637302447,
+            "originalRejected": 5,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0009301306393023623
+          },
+          {
+            "alpha": 0.008738813989719185,
+            "armijoRejected": 0,
+            "movement": 0.000365326844194688,
+            "originalRejected": 5,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0009268806627378279
+          },
+          {
+            "alpha": 0.008595008158922173,
+            "armijoRejected": 0,
+            "movement": 0.00036909944109724034,
+            "originalRejected": 5,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0009237923987412966
+          },
+          {
+            "alpha": 0.008585492352271963,
+            "armijoRejected": 0,
+            "movement": 0.0003672168773749451,
+            "originalRejected": 5,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0009207394874759522
+          },
+          {
+            "alpha": 0.0087895602149239,
+            "armijoRejected": 0,
+            "movement": 0.0003564845216585813,
+            "originalRejected": 5,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0009175249079944603
+          },
+          {
+            "alpha": 0.009356669123999291,
+            "armijoRejected": 0,
+            "movement": 0.0003329700458279992,
+            "originalRejected": 5,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0009138182606691636
+          },
+          {
+            "alpha": 0.021216051043148967,
+            "armijoRejected": 0,
+            "movement": 0.0002952611517030602,
+            "originalRejected": 4,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0009139440641090513
+          },
+          {
+            "alpha": 0.08342948965605013,
+            "armijoRejected": 0,
+            "movement": 0.000152613383234238,
+            "originalRejected": 3,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0009157478390962037
+          },
+          {
+            "alpha": 0.025394111983099887,
+            "armijoRejected": 0,
+            "movement": 0.0002503848259209155,
+            "originalRejected": 4,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0009120066096337531
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 5.937760159540512e-05,
+            "originalRejected": 1,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0008900061018886074
+          },
+          {
+            "alpha": 0.00876310007744354,
+            "armijoRejected": 0,
+            "movement": 0.0003632239507793764,
+            "originalRejected": 5,
+            "rows": 380,
+            "slope": null,
+            "strain": 0.0008870853004536716
+          },
+          {
+            "alpha": 0.008580374213024865,
+            "armijoRejected": 0,
+            "movement": 0.00036884669133801286,
+            "originalRejected": 5,
+            "rows": 380,
+            "slope": null,
+            "strain": 0.0008843522223271894
+          },
+          {
+            "alpha": 0.008505654962571293,
+            "armijoRejected": 0,
+            "movement": 0.00037004957280134353,
+            "originalRejected": 5,
+            "rows": 380,
+            "slope": null,
+            "strain": 0.0008817087208694563
+          },
+          {
+            "alpha": 0.008598710090675627,
+            "armijoRejected": 0,
+            "movement": 0.0003641269864007521,
+            "originalRejected": 5,
+            "rows": 380,
+            "slope": null,
+            "strain": 0.0008790056706238225
+          },
+          {
+            "alpha": 0.008966663948302403,
+            "armijoRejected": 0,
+            "movement": 0.00034744709889916774,
+            "originalRejected": 5,
+            "rows": 380,
+            "slope": null,
+            "strain": 0.0008760024419196544
+          },
+          {
+            "alpha": 0.009823540256117095,
+            "armijoRejected": 0,
+            "movement": 0.00031821424134878437,
+            "originalRejected": 5,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.000872275528631894
+          },
+          {
+            "alpha": 0.023342064733459695,
+            "armijoRejected": 0,
+            "movement": 0.00026877613201789046,
+            "originalRejected": 4,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.000871429044669414
+          },
+          {
+            "alpha": 0.1231377520879055,
+            "armijoRejected": 0,
+            "movement": 0.00010244650962270476,
+            "originalRejected": 3,
+            "rows": 378,
+            "slope": null,
+            "strain": 0.0008421797827087296
+          }
+        ]
+      }
+    ]
+  },
+  "resources": [
+    {
+      "group": 62112,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-1127a7ef1-mass-only-preflight/native/resources.jsonl"
+    },
+    {
+      "group": 62277,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-1127a7ef1-mass-only-preflight/native/resources.jsonl"
+    },
+    {
+      "group": 61473,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-clearance-bounds-mass-only-red/resources.jsonl"
+    },
+    {
+      "group": 61589,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-clearance-bounds-mass-only-red/resources.jsonl"
+    },
+    {
+      "group": 61929,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-clearance-bounds-mass-only-green/resources.jsonl"
+    },
+    {
+      "group": 62060,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-clearance-bounds-mass-only-green/resources.jsonl"
+    }
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-1127a7ef1-mass-only-preflight/native/result.json": "eefb67bedd42010bbc040f3786d199b54a099350b710ae9b903500359f25b65f",
+    ".context/strong-owl-live-physics-armijo-1127a7ef1-mass-only-preflight/native/provenance.json": "b3fed4bb1bb3715dcee9b18f347fb994e6857fad3474a9cc6df0174be159e007",
+    "Tools/HangboardRopePrototype/mass_only/Math.swift": "2fe512cff05e0c3f2bb66fc1485f9400d7735783d6b902b102022dfe39407d00",
+    "Tools/HangboardRopePrototype/mass_only/snapshot.py": "48ef7ab5e457614663304329f846a4e47ea1806def961ba9c5f6d1592c9383e3",
+    ".context/strong-owl-live-physics-mass-only-proposal/PLAN.md": "a3d2b98f96f6b8ba1c31682d9703033d860b19af71690985f41cf9e337ed393a"
+  }
+}

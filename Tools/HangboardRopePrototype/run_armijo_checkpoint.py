@@ -13,6 +13,7 @@ parser.add_argument('--fixtures-only',action='store_true')
 parser.add_argument('--trajectory',action='store_true')
 parser.add_argument('--step-rate',type=int,choices=[240,120])
 parser.add_argument('--composed-step',action='store_true')
+parser.add_argument('--mass-only',action='store_true')
 parser.add_argument('--scaled-merit',action='store_true')
 parser.add_argument('--spectral-step',action='store_true')
 parser.add_argument('--geometry-hints',action='store_true')
@@ -26,6 +27,7 @@ parser.add_argument('--geometry-profile',action='store_true')
 parser.add_argument('--spectral-trajectory',action='store_true')
 parser.add_argument('--spectral-checkpoint',type=int,choices=[109,140],default=109)
 parser.add_argument('--preflight',action='store_true');args=parser.parse_args()
+if args.mass_only and (args.step_rate!=240 or not args.preflight or args.composed_step or args.clearance_bounds or args.spectral_step or args.scaled_merit):parser.error('--mass-only requires isolated --step-rate 240 --preflight')
 if args.bounds_profile and not args.clearance_bounds:parser.error('--bounds-profile requires --clearance-bounds')
 if args.axis_bounds and not args.clearance_bounds:parser.error('--axis-bounds requires --clearance-bounds')
 if args.free_balls and (not args.clearance_bounds or args.axis_bounds or args.bounds_profile):parser.error('--free-balls requires isolated --clearance-bounds')
@@ -102,6 +104,9 @@ for name in NAMES:
         if args.scaled_merit:
             from scaled_merit.snapshot import solver_source as scaled_solver
             text=scaled_solver(text)
+        if args.mass_only:
+            from mass_only.snapshot import solver_source as mass_solver
+            text=mass_solver(text)
         if args.composed_step:
             from composed_step.snapshot import solver_source as composed_solver
             text=composed_solver(text)
@@ -141,6 +146,9 @@ for name in ['Math.swift','Trace.swift','main.swift']:
     if name=='main.swift' and args.scaled_merit:
         from scaled_merit.snapshot import driver_source as scaled_driver
         text=scaled_driver(text)
+    if name=='main.swift' and args.mass_only:
+        from mass_only.snapshot import driver_source as mass_driver
+        text=mass_driver(text)
     if name=='main.swift' and args.composed_step:
         from composed_step.snapshot import driver_source
         text=driver_source(text)
@@ -171,6 +179,7 @@ if args.plane_reuse:
 if args.spectral_step:(sources/'SpectralStepMath.swift').write_bytes((tool/'spectral_step/Math.swift').read_bytes())
 if args.scaled_merit:(sources/'ScaledMeritMath.swift').write_bytes((tool/'scaled_merit/Math.swift').read_bytes())
 if args.full_merit:(sources/'AmbiguityFixtures.swift').write_bytes((tool/'armijo/AmbiguityFixtures.swift').read_bytes())
+if args.mass_only:(sources/'MassOnlyMath.swift').write_bytes((tool/'mass_only/Math.swift').read_bytes())
 if args.composed_step:
     for name in ['Math.swift','Fixtures.swift']:(sources/('Composed'+name)).write_bytes((tool/'composed_step'/name).read_bytes())
 (sources/'ExactCheckpointJSON.swift').write_bytes((tool/'native_contact/ExactCheckpointJSON.swift').read_bytes())
@@ -188,6 +197,7 @@ if args.neighborhoods:inputs += list((tool/'neighborhoods').glob('*.*'))
 if args.plane_reuse:inputs += [*list((tool/'plane_reuse').glob('*.*')),stage/'atlas.json']
 if args.spectral_step:inputs += list((tool/'spectral_step').glob('*.*'))
 if args.scaled_merit:inputs += list((tool/'scaled_merit').glob('*.*'))
+if args.mass_only:inputs += list((tool/'mass_only').glob('*.*'))
 if args.composed_step:inputs += list((tool/'composed_step').glob('*.*'))
 (stage/'provenance.json').write_text(json.dumps({'owner':REPO.name,'command':command,
     'hashes':{str(p.relative_to(REPO)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}},indent=2))
