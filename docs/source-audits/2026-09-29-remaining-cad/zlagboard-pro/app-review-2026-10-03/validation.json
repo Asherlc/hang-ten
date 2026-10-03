@@ -96,7 +96,7 @@
     "Fresh-view reset means app detail re-entry after relaunch, not a reset button or same-contact toggle.",
     "Selected title/specification text fits; long hold-map button titles are ellipsized and lower rows continue below the viewport/tab bar. No full scrolling legend review claimed.",
     "System black status capsule appears in some raw images without obscuring board or selected title; no cause assigned.",
-    "App cleanup above does not assert Simulator/DD cleanup; root owns that lifecycle.",
+    "The original independent image-review app cleanup did not itself certify Simulator/DerivedData deletion. The final aggregate cleanup links separate root and independent deletion proofs, both passed.",
     "Only completed screenshots reviewed, no continuous-frame/GPU timing or physical-device claim.",
     "Native source geometry remains previously accepted and unchanged; this independent review does not confer human app acceptance.",
     "Simulator evidence only; no physical iPhone available. No manufacturing-accuracy claim or full-suite pass. Earlier null-accessibility-ID and unsuccessful diagonal-orbit trials remain retained failures.",
