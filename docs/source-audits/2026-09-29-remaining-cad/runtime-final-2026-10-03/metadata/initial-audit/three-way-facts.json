@@ -1,0 +1,1248 @@
+{
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "mainCommit": "d53c019c43319a70b32e6dc654814de29e87ab89",
+  "currentCommitAtTask": "f9554600c",
+  "missingSentinel": {
+    "$absent": true
+  },
+  "scope": "All contact fields keyed by exact contactID, plus board.handCapacity; no presentation/render/geometry diff used as facts",
+  "boards": [
+    {
+      "number": 1,
+      "package": "aelith-cyclops-011",
+      "boardID": "aelith.cyclops-011",
+      "sourceSHA256": "6caa7db79f8c92ff3801c15e7cf42016b92808ac312dbb99b7e3dbfedf4e32da",
+      "reviewQueueGeometrySourceSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "mono-20"
+        ],
+        "main": [
+          "mono-20"
+        ],
+        "current": [
+          "mono-20"
+        ]
+      },
+      "changes": []
+    },
+    {
+      "number": 2,
+      "package": "captain-fingerfood-dual",
+      "boardID": "captain-fingerfood.dual",
+      "sourceSHA256": "10b254fc3e2ad3c3b4c25b2876c2c0fc086d9ed4f634025d42397352e0e5cd8e",
+      "reviewQueueGeometrySourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "straight-edge-20",
+          "outer-jug",
+          "curved-edge-20",
+          "pocket-end-wall-20"
+        ],
+        "main": [
+          "straight-edge-20",
+          "outer-jug",
+          "curved-edge-20",
+          "pocket-end-wall-20"
+        ],
+        "current": [
+          "straight-edge-20",
+          "outer-jug",
+          "curved-edge-20",
+          "pocket-end-wall-20"
+        ]
+      },
+      "changes": []
+    },
+    {
+      "number": 3,
+      "package": "captain-fingerfood-unlevel",
+      "boardID": "captain-fingerfood.unlevel",
+      "sourceSHA256": "b4e8941017237f1196ab8c29632e0c19b7c9301ed92b5fd2011bb3229cb05e87",
+      "reviewQueueGeometrySourceSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "curved-edge-20",
+          "outer-jug",
+          "curved-edge-25",
+          "pocket-end-wall-20-25"
+        ],
+        "main": [
+          "curved-edge-20",
+          "outer-jug",
+          "curved-edge-25",
+          "pocket-end-wall-20-25"
+        ],
+        "current": [
+          "curved-edge-20",
+          "outer-jug",
+          "curved-edge-25",
+          "pocket-end-wall-20-25"
+        ]
+      },
+      "changes": []
+    },
+    {
+      "number": 4,
+      "package": "frictitious-nug",
+      "boardID": "frictitious.nug",
+      "sourceSHA256": "b01c9692af21073b1e0a67af4fd7fcea350decd87fe24fbced569ce3a830e2fa",
+      "reviewQueueGeometrySourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "edge-20",
+          "edge-25",
+          "edge-8",
+          "edge-13",
+          "jug-40",
+          "pinch-60"
+        ],
+        "main": [
+          "edge-20",
+          "edge-25",
+          "edge-8",
+          "edge-13",
+          "jug-40",
+          "pinch-60"
+        ],
+        "current": [
+          "edge-20",
+          "edge-25",
+          "edge-8",
+          "edge-13",
+          "jug-40",
+          "pinch-60"
+        ]
+      },
+      "changes": []
+    },
+    {
+      "number": 5,
+      "package": "frictitious-port-a-board",
+      "boardID": "frictitious.port-a-board",
+      "sourceSHA256": "45ca78a21b1f0f25f1c471a0e1244bfd8a77ca57abac37dcc99cde034e29a289",
+      "reviewQueueGeometrySourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "edge-30",
+          "pocket-30-two-finger-mono",
+          "edge-25",
+          "edge-20",
+          "edge-15",
+          "edge-12",
+          "edge-10",
+          "edge-8",
+          "jug-outer-rim",
+          "pinch-body"
+        ],
+        "main": [
+          "edge-30",
+          "pocket-30-two-finger-mono",
+          "edge-25",
+          "edge-20",
+          "edge-15",
+          "edge-12",
+          "edge-10",
+          "edge-8",
+          "jug-outer-rim",
+          "pinch-body"
+        ],
+        "current": [
+          "edge-30",
+          "edge-25",
+          "edge-20",
+          "edge-15",
+          "edge-12",
+          "edge-10",
+          "edge-8",
+          "jug-outer-rim",
+          "pinch-body"
+        ]
+      },
+      "changes": [
+        {
+          "field": "contacts[pocket-30-two-finger-mono].depth",
+          "baseline": {
+            "range": {
+              "minimum": 30,
+              "maximum": 30
+            }
+          },
+          "main": {
+            "range": {
+              "minimum": 30,
+              "maximum": 30
+            }
+          },
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[pocket-30-two-finger-mono].equipmentObjectID",
+          "baseline": "primary",
+          "main": "primary",
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[pocket-30-two-finger-mono].fingerCapacity",
+          "baseline": 2,
+          "main": 2,
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[pocket-30-two-finger-mono].gripTypes",
+          "baseline": [],
+          "main": [],
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[pocket-30-two-finger-mono].kind",
+          "baseline": "pocket",
+          "main": "pocket",
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[pocket-30-two-finger-mono].name",
+          "baseline": "30 mm two-finger / mono pocket contact",
+          "main": "30 mm two-finger / mono pocket contact",
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "package": "mammut-diamond-finger",
+      "boardID": "mammut.diamond-finger",
+      "sourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+      "reviewQueueGeometrySourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "mam-jug-l",
+          "mam-jug-r",
+          "mam-sloper-c",
+          "mam-mid-edge-c",
+          "mam-mono-l",
+          "mam-mono-r",
+          "mam-upper-pocket-l",
+          "mam-upper-pocket-r",
+          "mam-lateral-ledge-l",
+          "mam-lateral-ledge-r",
+          "mam-upper-pocket-c",
+          "mam-lower-edge-c",
+          "mam-upper-open-bay-l",
+          "mam-upper-open-bay-r",
+          "mam-upper-inset-l",
+          "mam-upper-inset-r"
+        ],
+        "main": [
+          "mam-jug-l",
+          "mam-jug-r",
+          "mam-sloper-c",
+          "mam-mid-edge-c",
+          "mam-mono-l",
+          "mam-mono-r",
+          "mam-upper-pocket-l",
+          "mam-upper-pocket-r",
+          "mam-lateral-ledge-l",
+          "mam-lateral-ledge-r",
+          "mam-upper-pocket-c",
+          "mam-lower-edge-c",
+          "mam-upper-open-bay-l",
+          "mam-upper-open-bay-r",
+          "mam-upper-inset-l",
+          "mam-upper-inset-r"
+        ],
+        "current": [
+          "mam-jug-l",
+          "mam-jug-r",
+          "mam-sloper-c",
+          "mam-mid-edge-c",
+          "mam-mono-l",
+          "mam-mono-r",
+          "mam-upper-pocket-l",
+          "mam-upper-pocket-r",
+          "mam-lateral-ledge-l",
+          "mam-lateral-ledge-r",
+          "mam-upper-pocket-c",
+          "mam-lower-edge-c",
+          "mam-upper-open-bay-l",
+          "mam-upper-open-bay-r",
+          "mam-upper-inset-l",
+          "mam-upper-inset-r"
+        ]
+      },
+      "changes": []
+    },
+    {
+      "number": 7,
+      "package": "metolius-contact",
+      "boardID": "metolius.contact",
+      "sourceSHA256": "732ee95e7b434e188708b96f974bd3afdacdd62fedc93d382f66e7401a480be1",
+      "reviewQueueGeometrySourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "pinch-left",
+          "jug-left",
+          "flat-sloper-center",
+          "pocket-4-left",
+          "pocket-5-left",
+          "pocket-6-left",
+          "pocket-7-left",
+          "pocket-8-left",
+          "pocket-9-left",
+          "pocket-10-left",
+          "pocket-11-left",
+          "pocket-12-left",
+          "pocket-13-left",
+          "pocket-14-left",
+          "edge-16-center",
+          "edge-17-center",
+          "edge-18-center",
+          "edge-19-center",
+          "pocket-14-right",
+          "pocket-13-right",
+          "pocket-12-right",
+          "pocket-11-right",
+          "pocket-10-right",
+          "pocket-9-right",
+          "pocket-8-right",
+          "pocket-7-right",
+          "pocket-6-right",
+          "pocket-5-right",
+          "pocket-4-right",
+          "round-sloper-3-left",
+          "round-sloper-3-right",
+          "jug-right",
+          "pinch-right"
+        ],
+        "main": [
+          "pinch-left",
+          "jug-left",
+          "flat-sloper-center",
+          "pocket-4-left",
+          "pocket-5-left",
+          "pocket-6-left",
+          "pocket-7-left",
+          "pocket-8-left",
+          "pocket-9-left",
+          "pocket-10-left",
+          "pocket-11-left",
+          "pocket-12-left",
+          "pocket-13-left",
+          "pocket-14-left",
+          "edge-16-center",
+          "edge-17-center",
+          "edge-18-center",
+          "edge-19-center",
+          "pocket-14-right",
+          "pocket-13-right",
+          "pocket-12-right",
+          "pocket-11-right",
+          "pocket-10-right",
+          "pocket-9-right",
+          "pocket-8-right",
+          "pocket-7-right",
+          "pocket-6-right",
+          "pocket-5-right",
+          "pocket-4-right",
+          "round-sloper-3-left",
+          "round-sloper-3-right",
+          "jug-right",
+          "pinch-right"
+        ],
+        "current": [
+          "pinch-left",
+          "jug-left",
+          "flat-sloper-center",
+          "pocket-4-left",
+          "pocket-5-left",
+          "pocket-6-left",
+          "pocket-7-left",
+          "pocket-8-left",
+          "pocket-9-left",
+          "pocket-10-left",
+          "pocket-11-left",
+          "pocket-12-left",
+          "pocket-13-left",
+          "pocket-14-left",
+          "edge-16-center",
+          "edge-17-center",
+          "edge-18-center",
+          "edge-19-center",
+          "pocket-14-right",
+          "pocket-13-right",
+          "pocket-12-right",
+          "pocket-11-right",
+          "pocket-10-right",
+          "pocket-9-right",
+          "pocket-8-right",
+          "pocket-7-right",
+          "pocket-6-right",
+          "pocket-5-right",
+          "pocket-4-right",
+          "round-sloper-3-left",
+          "round-sloper-3-right",
+          "jug-right",
+          "pinch-right"
+        ]
+      },
+      "changes": [
+        {
+          "field": "contacts[edge-17-center].handCapacity",
+          "baseline": {
+            "$absent": true
+          },
+          "main": 2,
+          "current": 2,
+          "category": "upstream-integrated"
+        },
+        {
+          "field": "contacts[edge-18-center].handCapacity",
+          "baseline": {
+            "$absent": true
+          },
+          "main": 2,
+          "current": 2,
+          "category": "upstream-integrated"
+        },
+        {
+          "field": "contacts[flat-sloper-center].handCapacity",
+          "baseline": {
+            "$absent": true
+          },
+          "main": 2,
+          "current": 2,
+          "category": "upstream-integrated"
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "package": "metolius-simulator-3d",
+      "boardID": "metolius.simulator-3d",
+      "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+      "reviewQueueGeometrySourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "jug-1-left",
+          "flat-sloper-2-left",
+          "round-sloper-3-center",
+          "jug-14-center",
+          "flat-sloper-2-right",
+          "jug-1-right",
+          "pocket-4-left",
+          "edge-5-left",
+          "edge-6-left",
+          "edge-7-left",
+          "pocket-8-left",
+          "pocket-9-left",
+          "pocket-10-left",
+          "edge-11-left",
+          "pocket-12-left",
+          "pocket-13-left",
+          "pocket-15-center",
+          "pocket-16-center",
+          "pocket-17-center",
+          "pocket-18-center",
+          "pocket-13-right",
+          "pocket-12-right",
+          "edge-11-right",
+          "pocket-10-right",
+          "pocket-9-right",
+          "pocket-8-right",
+          "edge-7-right",
+          "edge-6-right",
+          "edge-5-right",
+          "pocket-4-right"
+        ],
+        "main": [
+          "jug-1-left",
+          "flat-sloper-2-left",
+          "round-sloper-3-center",
+          "jug-14-center",
+          "flat-sloper-2-right",
+          "jug-1-right",
+          "pocket-4-left",
+          "edge-5-left",
+          "edge-6-left",
+          "edge-7-left",
+          "pocket-8-left",
+          "pocket-9-left",
+          "pocket-10-left",
+          "edge-11-left",
+          "pocket-12-left",
+          "pocket-13-left",
+          "pocket-15-center",
+          "pocket-16-center",
+          "pocket-17-center",
+          "pocket-18-center",
+          "pocket-13-right",
+          "pocket-12-right",
+          "edge-11-right",
+          "pocket-10-right",
+          "pocket-9-right",
+          "pocket-8-right",
+          "edge-7-right",
+          "edge-6-right",
+          "edge-5-right",
+          "pocket-4-right"
+        ],
+        "current": [
+          "jug-1-left",
+          "flat-sloper-2-left",
+          "round-sloper-3-center",
+          "jug-14-center",
+          "flat-sloper-2-right",
+          "jug-1-right",
+          "pocket-4-left",
+          "edge-5-left",
+          "edge-6-left",
+          "edge-7-left",
+          "pocket-8-left",
+          "pocket-9-left",
+          "pocket-10-left",
+          "edge-11-left",
+          "pocket-12-left",
+          "pocket-13-left",
+          "pocket-15-center",
+          "pocket-16-center",
+          "pocket-17-center",
+          "pocket-18-center",
+          "pocket-13-right",
+          "pocket-12-right",
+          "edge-11-right",
+          "pocket-10-right",
+          "pocket-9-right",
+          "pocket-8-right",
+          "edge-7-right",
+          "edge-6-right",
+          "edge-5-right",
+          "pocket-4-right"
+        ]
+      },
+      "changes": [
+        {
+          "field": "contacts[round-sloper-3-center].handCapacity",
+          "baseline": {
+            "$absent": true
+          },
+          "main": 2,
+          "current": {
+            "$absent": true
+          },
+          "category": "upstream-missed-unchanged-local"
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "package": "nature-stone-hanger",
+      "boardID": "nature.stone-hanger",
+      "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+      "reviewQueueGeometrySourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "edge-front-15mm-incut",
+          "edge-front-15mm-flat",
+          "edge-front-20mm-wood-flat",
+          "edge-front-20mm-granite",
+          "edge-reverse-10mm-incut",
+          "edge-reverse-10mm-flat",
+          "edge-reverse-06mm-flat",
+          "edge-reverse-06mm-incut"
+        ],
+        "main": [
+          "edge-front-15mm-incut",
+          "edge-front-15mm-flat",
+          "edge-front-20mm-wood-flat",
+          "edge-front-20mm-granite",
+          "edge-reverse-10mm-incut",
+          "edge-reverse-10mm-flat",
+          "edge-reverse-06mm-flat",
+          "edge-reverse-06mm-incut"
+        ],
+        "current": [
+          "edge-front-15mm-incut",
+          "edge-front-15mm-flat",
+          "edge-front-20mm-wood-flat",
+          "edge-front-20mm-granite",
+          "edge-reverse-10mm-incut",
+          "edge-reverse-10mm-flat",
+          "edge-reverse-06mm-flat",
+          "edge-reverse-06mm-incut"
+        ]
+      },
+      "changes": []
+    },
+    {
+      "number": 10,
+      "package": "nature-stone-hanger-mini",
+      "boardID": "nature.stone-hanger-mini",
+      "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+      "reviewQueueGeometrySourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "pull-up-jug",
+          "wood-edge-15-incut",
+          "granite-edge-15",
+          "pinch-60"
+        ],
+        "main": [
+          "pull-up-jug",
+          "wood-edge-15-incut",
+          "granite-edge-15",
+          "pinch-60"
+        ],
+        "current": [
+          "pull-up-jug",
+          "wood-edge-15-incut",
+          "granite-edge-15",
+          "pinch-60"
+        ]
+      },
+      "changes": []
+    },
+    {
+      "number": 11,
+      "package": "nature-stone-hanger-mini-karma8a",
+      "boardID": "nature.stone-hanger-mini-karma8a",
+      "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+      "reviewQueueGeometrySourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "wood-edge-15",
+          "granite-edge-15",
+          "pinch-60"
+        ],
+        "main": [
+          "wood-edge-15",
+          "granite-edge-15",
+          "pinch-60"
+        ],
+        "current": [
+          "wood-edge-15",
+          "granite-edge-15",
+          "pinch-60"
+        ]
+      },
+      "changes": []
+    },
+    {
+      "number": 12,
+      "package": "owl-climb-poker",
+      "boardID": "owl-climb.poker",
+      "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+      "reviewQueueGeometrySourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "face-a-left-outer-slot",
+          "face-a-left-single-pocket",
+          "face-a-left-dual-pocket",
+          "face-a-center-pull-up-slot",
+          "face-a-right-dual-pocket",
+          "face-a-right-single-pocket",
+          "face-a-right-outer-slot",
+          "face-b-left-outer-slot",
+          "face-b-left-single-pocket",
+          "face-b-left-dual-pocket",
+          "face-b-left-deep-sloper",
+          "face-b-center-pull-up-slot",
+          "face-b-right-deep-sloper",
+          "face-b-right-dual-pocket",
+          "face-b-right-single-pocket",
+          "face-b-right-outer-slot",
+          "face-c-left-outer-slot",
+          "face-c-left-single-pocket",
+          "face-c-left-dual-pocket",
+          "face-c-left-shallow-half-round",
+          "face-c-center-pull-up-slot",
+          "face-c-right-shallow-half-round",
+          "face-c-right-dual-pocket",
+          "face-c-right-single-pocket",
+          "face-c-right-outer-slot",
+          "face-d-left-outer-slot",
+          "face-d-left-single-pocket",
+          "face-d-left-dual-pocket",
+          "face-d-left-deep-rounded-recess",
+          "face-d-center-pull-up-slot",
+          "face-d-right-deep-rounded-recess",
+          "face-d-right-dual-pocket",
+          "face-d-right-single-pocket",
+          "face-d-right-outer-slot"
+        ],
+        "main": [
+          "face-a-left-outer-slot",
+          "face-a-left-single-pocket",
+          "face-a-left-dual-pocket",
+          "face-a-center-pull-up-slot",
+          "face-a-right-dual-pocket",
+          "face-a-right-single-pocket",
+          "face-a-right-outer-slot",
+          "face-b-left-outer-slot",
+          "face-b-left-single-pocket",
+          "face-b-left-dual-pocket",
+          "face-b-left-deep-sloper",
+          "face-b-center-pull-up-slot",
+          "face-b-right-deep-sloper",
+          "face-b-right-dual-pocket",
+          "face-b-right-single-pocket",
+          "face-b-right-outer-slot",
+          "face-c-left-outer-slot",
+          "face-c-left-single-pocket",
+          "face-c-left-dual-pocket",
+          "face-c-left-shallow-half-round",
+          "face-c-center-pull-up-slot",
+          "face-c-right-shallow-half-round",
+          "face-c-right-dual-pocket",
+          "face-c-right-single-pocket",
+          "face-c-right-outer-slot",
+          "face-d-left-outer-slot",
+          "face-d-left-single-pocket",
+          "face-d-left-dual-pocket",
+          "face-d-left-deep-rounded-recess",
+          "face-d-center-pull-up-slot",
+          "face-d-right-deep-rounded-recess",
+          "face-d-right-dual-pocket",
+          "face-d-right-single-pocket",
+          "face-d-right-outer-slot"
+        ],
+        "current": [
+          "face-a-left-outer-slot",
+          "face-a-left-single-pocket",
+          "face-a-left-dual-pocket",
+          "face-a-center-pull-up-slot",
+          "face-a-right-dual-pocket",
+          "face-a-right-single-pocket",
+          "face-a-right-outer-slot",
+          "face-b-left-outer-slot",
+          "face-b-left-single-pocket",
+          "face-b-left-dual-pocket",
+          "face-b-left-deep-sloper",
+          "face-b-center-pull-up-slot",
+          "face-b-right-deep-sloper",
+          "face-b-right-dual-pocket",
+          "face-b-right-single-pocket",
+          "face-b-right-outer-slot",
+          "face-c-left-outer-slot",
+          "face-c-left-single-pocket",
+          "face-c-left-dual-pocket",
+          "face-c-left-shallow-half-round",
+          "face-c-center-pull-up-slot",
+          "face-c-right-shallow-half-round",
+          "face-c-right-dual-pocket",
+          "face-c-right-single-pocket",
+          "face-c-right-outer-slot",
+          "face-d-left-outer-slot",
+          "face-d-left-single-pocket",
+          "face-d-left-dual-pocket",
+          "face-d-left-deep-rounded-recess",
+          "face-d-center-pull-up-slot",
+          "face-d-right-deep-rounded-recess",
+          "face-d-right-dual-pocket",
+          "face-d-right-single-pocket",
+          "face-d-right-outer-slot"
+        ]
+      },
+      "changes": [
+        {
+          "field": "contacts[face-c-left-shallow-half-round].depth",
+          "baseline": {
+            "range": {
+              "minimum": 100,
+              "maximum": 100
+            }
+          },
+          "main": {
+            "range": {
+              "minimum": 100,
+              "maximum": 100
+            }
+          },
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[face-c-right-shallow-half-round].depth",
+          "baseline": {
+            "range": {
+              "minimum": 100,
+              "maximum": 100
+            }
+          },
+          "main": {
+            "range": {
+              "minimum": 100,
+              "maximum": 100
+            }
+          },
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "reviewQueueGeometrySourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "edge-18",
+          "blocker-edge-15",
+          "blocker-edge-10"
+        ],
+        "main": [
+          "edge-18",
+          "blocker-edge-15",
+          "blocker-edge-10"
+        ],
+        "current": [
+          "edge-18"
+        ]
+      },
+      "changes": [
+        {
+          "field": "contacts[blocker-edge-10].depth",
+          "baseline": {
+            "range": {
+              "minimum": 10,
+              "maximum": 10
+            }
+          },
+          "main": {
+            "range": {
+              "minimum": 10,
+              "maximum": 10
+            }
+          },
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[blocker-edge-10].equipmentObjectID",
+          "baseline": "primary",
+          "main": "primary",
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[blocker-edge-10].gripTypes",
+          "baseline": [],
+          "main": [],
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[blocker-edge-10].handCapacity",
+          "baseline": 1,
+          "main": 1,
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[blocker-edge-10].kind",
+          "baseline": "edge",
+          "main": "edge",
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[blocker-edge-10].name",
+          "baseline": "10 mm blocker edge",
+          "main": "10 mm blocker edge",
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[blocker-edge-15].depth",
+          "baseline": {
+            "range": {
+              "minimum": 15,
+              "maximum": 15
+            }
+          },
+          "main": {
+            "range": {
+              "minimum": 15,
+              "maximum": 15
+            }
+          },
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[blocker-edge-15].equipmentObjectID",
+          "baseline": "primary",
+          "main": "primary",
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[blocker-edge-15].gripTypes",
+          "baseline": [],
+          "main": [],
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[blocker-edge-15].handCapacity",
+          "baseline": 1,
+          "main": 1,
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[blocker-edge-15].kind",
+          "baseline": "edge",
+          "main": "edge",
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[blocker-edge-15].name",
+          "baseline": "15 mm blocker edge",
+          "main": "15 mm blocker edge",
+          "current": {
+            "$absent": true
+          },
+          "category": "local-only-override"
+        },
+        {
+          "field": "contacts[edge-18].name",
+          "baseline": "18 mm wood edge",
+          "main": "18 mm wood edge",
+          "current": "Wood edge",
+          "category": "local-only-override"
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "package": "tension-flash-board",
+      "boardID": "tension.flash-board",
+      "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+      "reviewQueueGeometrySourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "three-edge-left",
+          "three-edge-center",
+          "three-edge-right",
+          "two-edge-left",
+          "two-edge-right",
+          "small-crimp-left",
+          "small-crimp-right"
+        ],
+        "main": [
+          "three-edge-left",
+          "three-edge-center",
+          "three-edge-right",
+          "two-edge-left",
+          "two-edge-right",
+          "small-crimp-left",
+          "small-crimp-right"
+        ],
+        "current": [
+          "three-edge-left",
+          "three-edge-center",
+          "three-edge-right",
+          "two-edge-left",
+          "two-edge-right",
+          "small-crimp-left",
+          "small-crimp-right"
+        ]
+      },
+      "changes": []
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+      "reviewQueueGeometrySourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+      "factualGeneratedEqualsEmbedded": true,
+      "builtFactsEqualGenerated": true,
+      "contactIDs": {
+        "baseline": [
+          "sloper-30-left",
+          "sloper-30-right",
+          "sloper-40-left",
+          "sloper-40-right",
+          "large-flat-edge-left",
+          "large-flat-edge-right",
+          "slopey-crimper-left",
+          "slopey-crimper-right",
+          "variable-edge-rail-left",
+          "variable-edge-rail-right",
+          "closed-crimp-left",
+          "closed-crimp-right",
+          "mr-deep-left",
+          "mr-deep-right",
+          "mr-shallow-left",
+          "mr-shallow-right",
+          "im-deep-left",
+          "im-deep-right",
+          "im-shallow-left",
+          "im-shallow-right"
+        ],
+        "main": [
+          "sloper-30-left",
+          "sloper-30-right",
+          "sloper-40-left",
+          "sloper-40-right",
+          "large-flat-edge-left",
+          "large-flat-edge-right",
+          "slopey-crimper-left",
+          "slopey-crimper-right",
+          "variable-edge-rail-left",
+          "variable-edge-rail-right",
+          "closed-crimp-left",
+          "closed-crimp-right",
+          "mr-deep-left",
+          "mr-deep-right",
+          "mr-shallow-left",
+          "mr-shallow-right",
+          "im-deep-left",
+          "im-deep-right",
+          "im-shallow-left",
+          "im-shallow-right"
+        ],
+        "current": [
+          "sloper-30-left",
+          "sloper-30-right",
+          "sloper-40-left",
+          "sloper-40-right",
+          "large-flat-edge-left",
+          "large-flat-edge-right",
+          "slopey-crimper-left",
+          "slopey-crimper-right",
+          "variable-edge-rail-left",
+          "variable-edge-rail-right",
+          "closed-crimp-left",
+          "closed-crimp-right",
+          "mr-deep-left",
+          "mr-deep-right",
+          "mr-shallow-left",
+          "mr-shallow-right",
+          "im-deep-left",
+          "im-deep-right",
+          "im-shallow-left",
+          "im-shallow-right"
+        ]
+      },
+      "changes": [
+        {
+          "field": "contacts[closed-crimp-left].equipmentObjectID",
+          "baseline": "primary",
+          "main": "left-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[closed-crimp-right].equipmentObjectID",
+          "baseline": "primary",
+          "main": "right-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[im-deep-left].equipmentObjectID",
+          "baseline": "primary",
+          "main": "left-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[im-deep-right].equipmentObjectID",
+          "baseline": "primary",
+          "main": "right-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[im-shallow-left].equipmentObjectID",
+          "baseline": "primary",
+          "main": "left-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[im-shallow-right].equipmentObjectID",
+          "baseline": "primary",
+          "main": "right-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[large-flat-edge-left].equipmentObjectID",
+          "baseline": "primary",
+          "main": "left-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[large-flat-edge-right].equipmentObjectID",
+          "baseline": "primary",
+          "main": "right-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[mr-deep-left].equipmentObjectID",
+          "baseline": "primary",
+          "main": "left-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[mr-deep-right].equipmentObjectID",
+          "baseline": "primary",
+          "main": "right-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[mr-shallow-left].equipmentObjectID",
+          "baseline": "primary",
+          "main": "left-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[mr-shallow-right].equipmentObjectID",
+          "baseline": "primary",
+          "main": "right-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[sloper-30-left].equipmentObjectID",
+          "baseline": "primary",
+          "main": "left-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[sloper-30-right].equipmentObjectID",
+          "baseline": "primary",
+          "main": "right-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[sloper-40-left].equipmentObjectID",
+          "baseline": "primary",
+          "main": "left-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[sloper-40-right].equipmentObjectID",
+          "baseline": "primary",
+          "main": "right-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[slopey-crimper-left].equipmentObjectID",
+          "baseline": "primary",
+          "main": "left-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[slopey-crimper-right].equipmentObjectID",
+          "baseline": "primary",
+          "main": "right-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[variable-edge-rail-left].equipmentObjectID",
+          "baseline": "primary",
+          "main": "left-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        },
+        {
+          "field": "contacts[variable-edge-rail-right].equipmentObjectID",
+          "baseline": "primary",
+          "main": "right-half",
+          "current": "primary",
+          "category": "upstream-missed-unchanged-local"
+        }
+      ]
+    }
+  ]
+}

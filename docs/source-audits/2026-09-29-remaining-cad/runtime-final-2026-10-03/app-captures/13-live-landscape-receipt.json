@@ -1,0 +1,28 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 13,
+    "boardID": "plateau.lifting-edge",
+    "package": "plateau-lifting-edge",
+    "contactID": "edge-18",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "plateau.lifting-edge",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "LANDSCAPE": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "edge-18"
+    },
+    "launchedAt": 1791055872.29058
+  },
+  "image": "13-live-landscape.png",
+  "imageSHA256": "6d367877215951db528e2e0e5f06bd69ba84c01a40593f74903fc063f11f8117",
+  "accessibilitySHA256": "fa2dd802d9f6ef726539fe918f65848059e7b674f768fc784a107a954042637e",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=-0.2914568;cameraSettled=true;selection=edge-18;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "rawFailureCapture": false
+}

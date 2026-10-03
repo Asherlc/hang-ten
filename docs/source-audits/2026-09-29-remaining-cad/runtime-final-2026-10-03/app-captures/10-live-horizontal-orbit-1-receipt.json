@@ -1,0 +1,65 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 10,
+    "boardID": "nature.stone-hanger-mini",
+    "package": "nature-stone-hanger-mini",
+    "contactID": "pull-up-jug",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "nature.stone-hanger-mini",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "pull-up-jug",
+      "BOARD_TELEPHOTO": "1"
+    },
+    "launchedAt": 1791054285.694135
+  },
+  "image": "10-live-horizontal-orbit-1.png",
+  "imageSHA256": "97677e27b83c9a61d1723ac21025913decc3c0839a22ecb62fbefdfe67d9f318",
+  "accessibilitySHA256": "d4e009406709fdcf243d72f0884ca68ce7514c010d997e7e92d98934a8bd0e09",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=14;rootActive=true;cameraActive=true;sameScene=true;azimuth=-0.54071856;elevation=0.4463712;cameraPitch=0.6889224;cameraSettled=true;selection=pull-up-jug;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "actualPhysicalOrbit": true,
+  "projectedBefore": {
+    "boardModel.contact.pull-up-jug": [
+      0.5,
+      0.17664670658682635
+    ],
+    "boardModel.contact.wood-edge-15-incut": [
+      0.5,
+      0.31636726546906174
+    ],
+    "boardModel.contact.pinch-60": [
+      0.5,
+      0.3243512974051896
+    ],
+    "boardModel.contact.granite-edge-15": [
+      0.5,
+      0.4161676646706587
+    ]
+  },
+  "projectedAfter": {
+    "boardModel.contact.pull-up-jug": [
+      0.5319361277445109,
+      0.23752495009980035
+    ],
+    "boardModel.contact.pinch-60": [
+      0.5089820359281437,
+      0.3562874251497006
+    ],
+    "boardModel.contact.wood-edge-15-incut": [
+      0.5279441117764471,
+      0.3512974051896207
+    ],
+    "boardModel.contact.granite-edge-15": [
+      0.5129740518962075,
+      0.4321357285429141
+    ]
+  }
+}

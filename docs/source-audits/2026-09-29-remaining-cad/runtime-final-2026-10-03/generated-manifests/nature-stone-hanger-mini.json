@@ -1,0 +1,511 @@
+{
+  "schemaVersion": 3,
+  "id": "nature.stone-hanger-mini",
+  "manufacturer": "Nature Climbing",
+  "name": "Stone Hanger Mini",
+  "subtitle": "Compact lifting edge with granite, wood, pinch, and jug contacts.",
+  "productURL": "https://natureclimbing.com/products/stone-hanger-mini-oak",
+  "dimensions": "10 × 6 × 2.5 cm",
+  "aspectRatio": 1.0,
+  "handCapacity": 1,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "3D model",
+      "aspectRatio": 1.0,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.12
+          },
+          "surfaceFinish": "wood",
+          "graniteNodeIDs": [
+            "nature_stone"
+          ]
+        },
+        "suspension": {
+          "type": "cadRoutedCord",
+          "bodyNodeID": "nature_body",
+          "strands": [
+            {
+              "id": "left-lead",
+              "kind": "lead",
+              "restLength": 0.11,
+              "radius": 0.001,
+              "material": "matteCord",
+              "provenance": "Manufacturer Oak end photos show an exterior lead seated in the longitudinal groove, turning into the transverse groove. Loaded maker hand photo shows leads below the board. Radius 1 mm and visible length 110 mm are compact display estimates; fresh native CAD sections generate routes and settled height. The knot and hidden continuation are omitted."
+            },
+            {
+              "id": "left-cross-return",
+              "kind": "segment",
+              "restLength": 0.014,
+              "radius": 0.001,
+              "material": "matteCord",
+              "provenance": "Manufacturer Oak end photos show the visible transverse portion between the two longitudinal groove intersections, ending where continuation becomes obscured. Native station span is 12.5 mm; 14 mm restLength is a display feasibility allowance, not a maker length or rendered slack. Radius 1 mm is a display estimate. No hidden connection is asserted."
+            },
+            {
+              "id": "right-lead",
+              "kind": "lead",
+              "restLength": 0.11,
+              "radius": 0.001,
+              "material": "matteCord",
+              "provenance": "Manufacturer Oak end photos show an exterior lead seated in the longitudinal groove, turning into the transverse groove. Loaded maker hand photo shows leads below the board. Radius 1 mm and visible length 110 mm are compact display estimates; fresh native CAD sections generate routes and settled height. The knot and hidden continuation are omitted."
+            },
+            {
+              "id": "right-cross-return",
+              "kind": "segment",
+              "restLength": 0.014,
+              "radius": 0.001,
+              "material": "matteCord",
+              "provenance": "Manufacturer Oak end photos show the visible transverse portion between the two longitudinal groove intersections, ending where continuation becomes obscured. Native station span is 12.5 mm; 14 mm restLength is a display feasibility allowance, not a maker length or rendered slack. Radius 1 mm is a display estimate. No hidden connection is asserted."
+            }
+          ],
+          "anchor": {
+            "offsetFromBoardBounds": [
+              0,
+              -0.075,
+              0
+            ],
+            "visibility": "invisible",
+            "provenance": "Invisible display support 15 mm below the model lower bound, following the loaded manufacturer hand photo. Its offset and compact cord lengths are display estimates; the native solver derives the board height. Existing edge rotations are preserved and are not independently established as lifting orientations by this photo."
+          },
+          "canonicalPoses": {
+            "front-upright": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                0.0484317,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  -0.3,
+                  -1
+                ],
+                "fitPadding": 0.12
+              },
+              "wrappedRoutes": {
+                "left-lead": [
+                  [
+                    -0.049100178,
+                    -0.027554944,
+                    0.006222143
+                  ],
+                  [
+                    -0.049218605,
+                    -0.027362724,
+                    0.006237151
+                  ],
+                  [
+                    -0.049292076,
+                    -0.027148915,
+                    0.006246461
+                  ],
+                  [
+                    -0.049316976,
+                    -0.02692404,
+                    0.006249617
+                  ],
+                  [
+                    -0.049320001,
+                    0.0,
+                    0.00625
+                  ]
+                ],
+                "left-cross-return": [
+                  [
+                    -0.049320001,
+                    0.0,
+                    0.00625
+                  ],
+                  [
+                    -0.049320001,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    -0.049320001,
+                    0.0,
+                    -0.00625
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    0.049098938,
+                    -0.02755653,
+                    0.006221986
+                  ],
+                  [
+                    0.04921801,
+                    -0.027363947,
+                    0.006237075
+                  ],
+                  [
+                    0.049291894,
+                    -0.027149594,
+                    0.006246438
+                  ],
+                  [
+                    0.049316934,
+                    -0.026924079,
+                    0.006249611
+                  ],
+                  [
+                    0.049320001,
+                    0.0,
+                    0.00625
+                  ]
+                ],
+                "right-cross-return": [
+                  [
+                    0.049320001,
+                    0.0,
+                    0.00625
+                  ],
+                  [
+                    0.049320001,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.049320001,
+                    0.0,
+                    -0.00625
+                  ]
+                ]
+              }
+            },
+            "wood-inverted": {
+              "rotation": [
+                0,
+                0,
+                1,
+                0
+              ],
+              "translation": [
+                0,
+                0.048431701,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0.3,
+                  -1
+                ],
+                "fitPadding": 0.12
+              },
+              "wrappedRoutes": {
+                "left-lead": [
+                  [
+                    -0.049099957,
+                    0.027555227,
+                    0.006222115
+                  ],
+                  [
+                    -0.049218503,
+                    0.02736294,
+                    0.006237138
+                  ],
+                  [
+                    -0.04929205,
+                    0.027149032,
+                    0.006246458
+                  ],
+                  [
+                    -0.049316976,
+                    0.02692404,
+                    0.006249617
+                  ],
+                  [
+                    -0.049320001,
+                    0.0,
+                    0.00625
+                  ]
+                ],
+                "left-cross-return": [
+                  [
+                    -0.049320001,
+                    0.0,
+                    0.00625
+                  ],
+                  [
+                    -0.049320001,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    -0.049320001,
+                    0.0,
+                    -0.00625
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    0.04910002,
+                    0.027555147,
+                    0.006222123
+                  ],
+                  [
+                    0.049218511,
+                    0.027362887,
+                    0.006237139
+                  ],
+                  [
+                    0.049292023,
+                    0.027149021,
+                    0.006246454
+                  ],
+                  [
+                    0.049316934,
+                    0.026924079,
+                    0.006249611
+                  ],
+                  [
+                    0.049320001,
+                    0.0,
+                    0.00625
+                  ]
+                ],
+                "right-cross-return": [
+                  [
+                    0.049320001,
+                    0.0,
+                    0.00625
+                  ],
+                  [
+                    0.049320001,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.049320001,
+                    0.0,
+                    -0.00625
+                  ]
+                ]
+              }
+            },
+            "pinch-side": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                0.0484317,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  -0.3,
+                  -1
+                ],
+                "fitPadding": 0.12
+              },
+              "wrappedRoutes": {
+                "left-lead": [
+                  [
+                    -0.049100178,
+                    -0.027554944,
+                    0.006222143
+                  ],
+                  [
+                    -0.049218605,
+                    -0.027362724,
+                    0.006237151
+                  ],
+                  [
+                    -0.049292076,
+                    -0.027148915,
+                    0.006246461
+                  ],
+                  [
+                    -0.049316976,
+                    -0.02692404,
+                    0.006249617
+                  ],
+                  [
+                    -0.049320001,
+                    0.0,
+                    0.00625
+                  ]
+                ],
+                "left-cross-return": [
+                  [
+                    -0.049320001,
+                    0.0,
+                    0.00625
+                  ],
+                  [
+                    -0.049320001,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    -0.049320001,
+                    0.0,
+                    -0.00625
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    0.049098938,
+                    -0.02755653,
+                    0.006221986
+                  ],
+                  [
+                    0.04921801,
+                    -0.027363947,
+                    0.006237075
+                  ],
+                  [
+                    0.049291894,
+                    -0.027149594,
+                    0.006246438
+                  ],
+                  [
+                    0.049316934,
+                    -0.026924079,
+                    0.006249611
+                  ],
+                  [
+                    0.049320001,
+                    0.0,
+                    0.00625
+                  ]
+                ],
+                "right-cross-return": [
+                  [
+                    0.049320001,
+                    0.0,
+                    0.00625
+                  ],
+                  [
+                    0.049320001,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.049320001,
+                    0.0,
+                    -0.00625
+                  ]
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "pull-up-jug",
+      "equipmentObjectID": "primary",
+      "name": "Smooth pull-up jug",
+      "kind": "jug",
+      "handCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "wood-edge-15-incut",
+      "equipmentObjectID": "primary",
+      "name": "15 mm incut wood edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "granite-edge-15",
+      "equipmentObjectID": "primary",
+      "name": "15 mm granite edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "pinch-60",
+      "equipmentObjectID": "primary",
+      "name": "60 mm pinch",
+      "kind": "pinch",
+      "handCapacity": 1,
+      "depth": {
+        "range": {
+          "minimum": 60,
+          "maximum": 60
+        }
+      },
+      "gripTypes": []
+    }
+  ],
+  "positions": [
+    {
+      "id": "front-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pull-up-jug",
+        "granite-edge-15"
+      ]
+    },
+    {
+      "id": "wood-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "wood-edge-15-incut"
+      ]
+    },
+    {
+      "id": "pinch-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-60"
+      ]
+    }
+  ]
+}

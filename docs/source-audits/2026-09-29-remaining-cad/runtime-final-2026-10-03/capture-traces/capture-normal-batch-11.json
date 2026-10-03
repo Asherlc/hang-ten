@@ -1,0 +1,327 @@
+{
+  "owner": "placid-badger",
+  "number": 11,
+  "steps": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "11",
+        "granite-edge-15",
+        "--telephoto"
+      ],
+      "startedAt": 1791055268.343861,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"nature.stone-hanger-mini-karma8a\", \"contact\": \"granite-edge-15\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.275847911834717
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "11-live-front"
+      ],
+      "startedAt": 1791055278.620058,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/11-live-front.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.8353159427642822
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "11",
+        "granite-edge-15",
+        "--telephoto"
+      ],
+      "startedAt": 1791055280.455699,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"nature.stone-hanger-mini-karma8a\", \"contact\": \"granite-edge-15\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.315669059753418
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "11-live-hold-granite-edge-15"
+      ],
+      "startedAt": 1791055290.7716851,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/11-live-hold-granite-edge-15.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.7859418392181396
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "11",
+        "wood-edge-15",
+        "--telephoto"
+      ],
+      "startedAt": 1791055292.558182,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"nature.stone-hanger-mini-karma8a\", \"contact\": \"wood-edge-15\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=wood-edge-15;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.321247816085815
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "11-live-hold-wood-edge-15"
+      ],
+      "startedAt": 1791055302.8798022,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/11-live-hold-wood-edge-15.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=wood-edge-15;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.6634747982025146
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "11",
+        "pinch-60",
+        "--telephoto"
+      ],
+      "startedAt": 1791055304.543668,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"nature.stone-hanger-mini-karma8a\", \"contact\": \"pinch-60\", \"rendererDiagnostic\": \"revision=10;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.34906584;cameraPitch=0.6405226;cameraSettled=true;selection=pinch-60;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.016289949417114
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "11-live-hold-pinch-60"
+      ],
+      "startedAt": 1791055314.560617,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/11-live-hold-pinch-60.png\", \"rendererDiagnostic\": \"revision=10;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.34906584;cameraPitch=0.6405226;cameraSettled=true;selection=pinch-60;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.6677281856536865
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "11",
+        "pinch-60",
+        "--telephoto"
+      ],
+      "startedAt": 1791055316.2288792,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"nature.stone-hanger-mini-karma8a\", \"contact\": \"pinch-60\", \"rendererDiagnostic\": \"revision=10;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.34906584;cameraPitch=0.6405226;cameraSettled=true;selection=pinch-60;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 9.879106760025024
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "orbit",
+        "11-live-horizontal-orbit-1"
+      ],
+      "startedAt": 1791055326.108473,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/11-live-horizontal-orbit-1.png\", \"rendererDiagnostic\": \"revision=14;rootActive=true;cameraActive=true;sameScene=true;azimuth=-0.54071856;elevation=0.4463712;cameraPitch=0.6889224;cameraSettled=true;selection=pinch-60;tapRevision=0;pickedContact=\", \"actualPhysicalOrbit\": true, \"projectedBefore\": {\"boardModel.contact.pinch-60\": [0.5, 0.6656686626746507], \"boardModel.contact.wood-edge-15\": [0.5, 0.6716566866267466], \"boardModel.contact.granite-edge-15\": [0.5, 0.7644710578842316]}, \"projectedAfter\": {\"boardModel.contact.pinch-60\": [0.4950099800399201, 0.6347305389221558], \"boardModel.contact.wood-edge-15\": [0.5199600798403193, 0.6407185628742516], \"boardModel.contact.granite-edge-15\": [0.5049900199600799, 0.715568862275449]}}\n",
+      "stderr": "",
+      "elapsedSeconds": 4.151933908462524
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "orbit",
+        "11-live-horizontal-orbit-2"
+      ],
+      "startedAt": 1791055330.260911,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/11-live-horizontal-orbit-2.png\", \"rendererDiagnostic\": \"revision=18;rootActive=true;cameraActive=true;sameScene=true;azimuth=-1.0814371;elevation=0.5436766;cameraPitch=0.657406;cameraSettled=true;selection=pinch-60;tapRevision=0;pickedContact=\", \"actualPhysicalOrbit\": true, \"projectedBefore\": {\"boardModel.contact.pinch-60\": [0.4950099800399201, 0.6347305389221558], \"boardModel.contact.wood-edge-15\": [0.5199600798403193, 0.6407185628742516], \"boardModel.contact.granite-edge-15\": [0.5049900199600799, 0.715568862275449]}, \"projectedAfter\": {\"boardModel.contact.pinch-60\": [0.4930139720558882, 0.6137724550898205], \"boardModel.contact.wood-edge-15\": [0.5309381237524949, 0.6137724550898205], \"boardModel.contact.granite-edge-15\": [0.5079840319361277, 0.6796407185628743]}}\n",
+      "stderr": "",
+      "elapsedSeconds": 4.072873115539551
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "orbit",
+        "11-live-horizontal-orbit-3"
+      ],
+      "startedAt": 1791055334.3343449,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/11-live-horizontal-orbit-3.png\", \"rendererDiagnostic\": \"revision=22;rootActive=true;cameraActive=true;sameScene=true;azimuth=-1.6221557;elevation=0.55;cameraPitch=0.5098743;cameraSettled=true;selection=pinch-60;tapRevision=0;pickedContact=\", \"actualPhysicalOrbit\": true, \"projectedBefore\": {\"boardModel.contact.pinch-60\": [0.4930139720558882, 0.6137724550898205], \"boardModel.contact.wood-edge-15\": [0.5309381237524949, 0.6137724550898205], \"boardModel.contact.granite-edge-15\": [0.5079840319361277, 0.6796407185628743]}, \"projectedAfter\": {\"boardModel.contact.pinch-60\": [0.4920159680638722, 0.6127744510978046], \"boardModel.contact.wood-edge-15\": [0.5339321357285428, 0.6017964071856289], \"boardModel.contact.granite-edge-15\": [0.5089820359281437, 0.6716566866267466]}}\n",
+      "stderr": "",
+      "elapsedSeconds": 4.133380174636841
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "11",
+        "pinch-60",
+        "--telephoto"
+      ],
+      "startedAt": 1791055338.4682748,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"nature.stone-hanger-mini-karma8a\", \"contact\": \"pinch-60\", \"rendererDiagnostic\": \"revision=10;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.34906584;cameraPitch=0.6405226;cameraSettled=true;selection=pinch-60;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.121914148330688
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "orbit",
+        "11-live-top-oblique",
+        "--start",
+        ".5",
+        ".72",
+        "--end",
+        ".5",
+        ".22"
+      ],
+      "startedAt": 1791055348.5906692,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/11-live-top-oblique.png\", \"rendererDiagnostic\": \"revision=13;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.55;cameraPitch=0.84145665;cameraSettled=true;selection=pinch-60;tapRevision=0;pickedContact=\", \"actualPhysicalOrbit\": true, \"projectedBefore\": {\"boardModel.contact.pinch-60\": [0.5, 0.6656686626746507], \"boardModel.contact.wood-edge-15\": [0.5, 0.6716566866267466], \"boardModel.contact.granite-edge-15\": [0.5, 0.7644710578842316]}, \"projectedAfter\": {\"boardModel.contact.pinch-60\": [0.5, 0.6576846307385231], \"boardModel.contact.wood-edge-15\": [0.5, 0.6766467065868265], \"boardModel.contact.granite-edge-15\": [0.5, 0.7584830339321358]}}\n",
+      "stderr": "",
+      "elapsedSeconds": 4.126351833343506
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "11",
+        "granite-edge-15",
+        "--landscape"
+      ],
+      "startedAt": 1791055352.717483,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"nature.stone-hanger-mini-karma8a\", \"contact\": \"granite-edge-15\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 9.790339946746826
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "11-live-landscape"
+      ],
+      "startedAt": 1791055362.508391,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/11-live-landscape.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.4645769596099854
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "11"
+      ],
+      "startedAt": 1791055363.973449,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"nature.stone-hanger-mini-karma8a\", \"contact\": null, \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 9.947632074356079
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "11-live-unselected-train"
+      ],
+      "startedAt": 1791055373.921688,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/11-live-unselected-train.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.5995628833770752
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "11",
+        "granite-edge-15"
+      ],
+      "startedAt": 1791055375.521869,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"nature.stone-hanger-mini-karma8a\", \"contact\": \"granite-edge-15\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 9.99243712425232
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "11-live-normal-lens"
+      ],
+      "startedAt": 1791055385.514793,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/11-live-normal-lens.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.688551902770996
+    }
+  ]
+}

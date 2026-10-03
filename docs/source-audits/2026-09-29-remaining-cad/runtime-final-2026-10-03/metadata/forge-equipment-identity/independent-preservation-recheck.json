@@ -1,0 +1,40 @@
+{
+  "owner": "placid-badger",
+  "scope": "Forge identity metadata only; no source writes or FreeCAD process",
+  "proofCopySHA256": "4ddc995fc1eada68462d5c0714baf29e5473efa960c7a8d2c0de0ed99c721bcd",
+  "beforeManifestSHA256": "6442f177b75793f3b2608143830a21b536d2dfdc4390598999be251dac0e4f90",
+  "afterManifestSHA256": "0736ba24735cf3e85f5e6ed99b525ead38d8a6b47a69776596f7af108c708d3a",
+  "currentManifestMatchesAfter": true,
+  "comparisonMethod": "cad_source.board_to_manifest(cad_source.load_board(source)) removes the reader-generated board id before exact comparison to authored manifest",
+  "initialVerificationAttempt": "Direct comparison of generated board to authored manifest failed solely because load_board injects board id; corrected comparison uses board_to_manifest without changing any data.",
+  "equipmentObjectsAndAll20ContactEquipmentIDsMatchIncomingMain": true,
+  "allOtherManifestFieldsExactlyUnchanged": true,
+  "changedArchiveMembers": [
+    "Document.xml"
+  ],
+  "identicalBRepCount": 128,
+  "noMediaInstancesAdded": true,
+  "protectedSHA256": {
+    "Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124",
+    "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/human-review.json": "6b56b4e4ec1427bd2ab6e814227ff65f8e2445ba0c3e880fa724fd63c3702d2e",
+    "HangTen/Resources/PlanLibrary.json": "2c2ecd7ae62de57928c9434029a812dfae4043fa17b071408b6ee22c5aa481d1",
+    "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+    "Hangboards/trango-rock-prodigy-forge/assets/primary.model.json": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6"
+  },
+  "failureLog": {
+    "sourcePath": ".context/placid-badger/runtime-final-2026-10-03/commands/focused-final.log",
+    "sha256": "1db75f3da37acf8c3f2796e721bda27e674073d3cb958f213f096c66077883a7",
+    "excerpt": "pre-correction-equipment-identity-failure.txt",
+    "meaning": "Observed failure before Forge equipment identity restoration; no passing rerun result claimed"
+  },
+  "frozenInitialAuditSHA256": {
+    "audit-report.json": "2be4278786cca5526fb7c80fb75e5552e17221090552af1f530d291dc48be64c",
+    "audit.md": "d51eee0a5357744c8bd7ce8e38d5b40338c4d576aeccf3fd3af66b3e4150f185"
+  },
+  "documentationBefore": {
+    "queueSHA256": "a35637621f19d9fa54fd2f33ede7b31ede75aa58357f07c208710fcb2663d36e",
+    "sourceAuditSHA256": "c90cd3d7cfa339b83a06dba2fcb4dba30f8dd4bfe954d3e3fad42d0c94a7a39b",
+    "metadataReadmeSHA256": "a9554b2e67e3bf11dad569638521f548c148d4f098c7e6e7f79c919504543770"
+  },
+  "postCorrectionRuntimeStatus": "Pending root rerun at documentation handoff"
+}

@@ -1,0 +1,37 @@
+{
+  "owner": "placid-badger",
+  "label": "full-green",
+  "command": [
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+    "-derivedDataPath",
+    ".context/DerivedData",
+    "-parallel-testing-enabled",
+    "NO",
+    "-collect-test-diagnostics",
+    "never",
+    "-resultBundlePath",
+    ".context/placid-badger/runtime-final-2026-10-03/placid-badger-full-green.xcresult",
+    "-only-testing:HangTenTests",
+    "test-without-building"
+  ],
+  "timeoutSeconds": 1200.0,
+  "ownedProcessGroup": 9800,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "failure": {
+    "type": "TimeoutExpired",
+    "message": "Command '['rtk', 'proxy', 'xcodebuild', '-project', 'HangTen.xcodeproj', '-scheme', 'HangTen', '-configuration', 'Debug', '-destination', 'platform=iOS Simulator,id=2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E', '-derivedDataPath', '.context/DerivedData', '-parallel-testing-enabled', 'NO', '-collect-test-diagnostics', 'never', '-resultBundlePath', '.context/placid-badger/runtime-final-2026-10-03/placid-badger-full-green.xcresult', '-only-testing:HangTenTests', 'test-without-building']' timed out after 1200.0 seconds",
+    "traceback": "Traceback (most recent call last):\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/run_command.py\", line 42, in <module>\n    status = proc.wait(timeout=float(timeout))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py\", line 1264, in wait\n    return self._wait(timeout=timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py\", line 2045, in _wait\n    raise TimeoutExpired(self.args, timeout)\nsubprocess.TimeoutExpired: Command '['rtk', 'proxy', 'xcodebuild', '-project', 'HangTen.xcodeproj', '-scheme', 'HangTen', '-configuration', 'Debug', '-destination', 'platform=iOS Simulator,id=2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E', '-derivedDataPath', '.context/DerivedData', '-parallel-testing-enabled', 'NO', '-collect-test-diagnostics', 'never', '-resultBundlePath', '.context/placid-badger/runtime-final-2026-10-03/placid-badger-full-green.xcresult', '-only-testing:HangTenTests', 'test-without-building']' timed out after 1200.0 seconds\n"
+  },
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 124,
+  "elapsedSeconds": 1200.031106209004
+}

@@ -1,0 +1,40 @@
+diff --git a/Hangboards/metolius-contact/board.json b/Hangboards/metolius-contact/board.json
+index d92e6012f..ef09cac58 100644
+--- a/Hangboards/metolius-contact/board.json
++++ b/Hangboards/metolius-contact/board.json
+@@ -66,6 +66,7 @@
+       "name": "Center 53 mm flat sloper",
+       "kind": "sloper",
+       "shape": "flat",
++      "handCapacity": 2,
+       "gripTypes": []
+     },
+     {
+@@ -262,6 +263,7 @@
+       "equipmentObjectID": "primary",
+       "name": "Center #17 35 mm edge",
+       "kind": "edge",
++      "handCapacity": 2,
+       "depth": {
+         "range": {
+           "minimum": 35,
+@@ -275,6 +277,7 @@
+       "equipmentObjectID": "primary",
+       "name": "Center #18 28 mm edge",
+       "kind": "edge",
++      "handCapacity": 2,
+       "depth": {
+         "range": {
+           "minimum": 28,
+diff --git a/Hangboards/metolius-simulator-3d/board.json b/Hangboards/metolius-simulator-3d/board.json
+index 2a684f11d..903282bff 100644
+--- a/Hangboards/metolius-simulator-3d/board.json
++++ b/Hangboards/metolius-simulator-3d/board.json
+@@ -68,6 +68,7 @@
+       "name": "Center #3 65 mm round sloper",
+       "kind": "sloper",
+       "shape": "round",
++      "handCapacity": 2,
+       "gripTypes": []
+     },
+     {

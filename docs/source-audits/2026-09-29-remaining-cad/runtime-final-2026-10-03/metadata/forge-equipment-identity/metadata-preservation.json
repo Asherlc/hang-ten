@@ -1,0 +1,58 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "mainCommit": "d53c019c43319a70b32e6dc654814de29e87ab89",
+  "fields": [
+    "equipmentObjects",
+    "contacts[sloper-30-left].equipmentObjectID",
+    "contacts[sloper-30-right].equipmentObjectID",
+    "contacts[sloper-40-left].equipmentObjectID",
+    "contacts[sloper-40-right].equipmentObjectID",
+    "contacts[large-flat-edge-left].equipmentObjectID",
+    "contacts[large-flat-edge-right].equipmentObjectID",
+    "contacts[slopey-crimper-left].equipmentObjectID",
+    "contacts[slopey-crimper-right].equipmentObjectID",
+    "contacts[variable-edge-rail-left].equipmentObjectID",
+    "contacts[variable-edge-rail-right].equipmentObjectID",
+    "contacts[closed-crimp-left].equipmentObjectID",
+    "contacts[closed-crimp-right].equipmentObjectID",
+    "contacts[mr-deep-left].equipmentObjectID",
+    "contacts[mr-deep-right].equipmentObjectID",
+    "contacts[mr-shallow-left].equipmentObjectID",
+    "contacts[mr-shallow-right].equipmentObjectID",
+    "contacts[im-deep-left].equipmentObjectID",
+    "contacts[im-deep-right].equipmentObjectID",
+    "contacts[im-shallow-left].equipmentObjectID",
+    "contacts[im-shallow-right].equipmentObjectID"
+  ],
+  "beforeEquipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "afterEquipmentObjects": [
+    {
+      "id": "left-half"
+    },
+    {
+      "id": "right-half"
+    }
+  ],
+  "nativeSourceBeforeSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+  "nativeSourceAfterSHA256": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124",
+  "changedArchiveMembers": [
+    "Document.xml"
+  ],
+  "brepEntriesByteIdentical": 128,
+  "allOtherArchiveEntriesByteIdentical": true,
+  "modelsAndDescriptorsUnchanged": {
+    "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+    "Hangboards/trango-rock-prodigy-forge/assets/primary.model.json": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6"
+  },
+  "geometryChanged": false,
+  "contactIDsFactsAndPathsChanged": false,
+  "planContentChanged": false,
+  "sourceURL": "https://trango.com/products/rock-prodigy-forge",
+  "sourceMeaning": "Restored merged-main distinct physical left/right equipment identities. One full native paired export remains; identities do not require runtime clones.",
+  "regression": "WorkoutActivityRecordingTests.testRockProdigyReusableFramesResolveToDistinctPhysicalSides"
+}

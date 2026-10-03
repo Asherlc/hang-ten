@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 3,
+  "id": "aelith.cyclops-011",
+  "manufacturer": "Aelith Equipment",
+  "name": "Cyclops #011 Blue x Black",
+  "subtitle": "Portable anodized-aluminium trainer with one mono edge.",
+  "productURL": "https://aelithequipment.com/product/011-blue-x-black-cyclops-portable-hangboard/",
+  "aspectRatio": 1.0,
+  "handCapacity": 1,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "3D model",
+      "aspectRatio": 1.0,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.12
+          },
+          "surfaceFinish": "neutral"
+        }
+      }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "mono-20",
+      "equipmentObjectID": "primary",
+      "name": "20 mm mono edge",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "handCapacity": 1,
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    }
+  ],
+  "positions": [
+    {
+      "id": "front-cup",
+      "presentationID": "primary",
+      "contactIDs": [
+        "mono-20"
+      ]
+    }
+  ]
+}

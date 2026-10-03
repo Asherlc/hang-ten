@@ -1,0 +1,31 @@
+{
+  "owner": "placid-badger",
+  "summariesArchivedBeforeDeletion": true,
+  "exactResultBundles": [
+    {
+      "path": ".context/placid-badger/runtime-final-2026-10-03/placid-badger-focused-red.xcresult",
+      "existed": true,
+      "removed": true
+    },
+    {
+      "path": ".context/placid-badger/runtime-final-2026-10-03/placid-badger-full-green.xcresult",
+      "existed": true,
+      "removed": true
+    },
+    {
+      "path": ".context/placid-badger/runtime-final-2026-10-03/placid-badger-focused-final.xcresult",
+      "existed": true,
+      "removed": true
+    },
+    {
+      "path": ".context/placid-badger/runtime-final-2026-10-03/placid-badger-hardware-final.xcresult",
+      "existed": true,
+      "removed": true
+    },
+    {
+      "path": ".context/placid-badger/runtime-final-2026-10-03/placid-badger-final-strong.xcresult",
+      "existed": true,
+      "removed": true
+    }
+  ]
+}

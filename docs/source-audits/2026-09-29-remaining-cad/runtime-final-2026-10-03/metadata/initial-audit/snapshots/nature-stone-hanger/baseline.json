@@ -1,0 +1,310 @@
+{
+  "schemaVersion": 3,
+  "id": "nature.stone-hanger",
+  "manufacturer": "Nature Climbing",
+  "name": "Stone Hanger",
+  "subtitle": "Portable oak and granite edge block.",
+  "productURL": "https://natureclimbing.com/products/stone-hanger-1",
+  "dimensions": "105 \u00d7 105 \u00d7 35 mm",
+  "aspectRatio": 1.0,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "aspectRatio": 1.0,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          }
+        },
+        "suspension": {
+          "type": "pairedLeadCord",
+          "attachments": [
+            {
+              "id": "left-lead",
+              "nodeID": "body_oak_mesh_001",
+              "pointInModel": [
+                -0.0524,
+                -0.0024,
+                0
+              ],
+              "contactPointsInModel": [
+                [
+                  -0.07,
+                  0.056,
+                  0
+                ],
+                [
+                  -0.07,
+                  -0.0024,
+                  0
+                ]
+              ],
+              "provenance": "Measured from primary.usdz: 4 mm lateral cord port in body_oak_mesh_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"
+            },
+            {
+              "id": "right-lead",
+              "nodeID": "body_oak_mesh_001",
+              "pointInModel": [
+                0.0524,
+                -0.0024,
+                0
+              ],
+              "contactPointsInModel": [
+                [
+                  0.07,
+                  0.056,
+                  0
+                ],
+                [
+                  0.07,
+                  -0.0024,
+                  0
+                ]
+              ],
+              "provenance": "Measured from primary.usdz: 4 mm lateral cord port in body_oak_mesh_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"
+            }
+          ],
+          "passages": {
+            "left": [
+              {
+                "id": "left-lip-mouth",
+                "nodeID": "body_oak_mesh_001",
+                "pointInModel": [
+                  -0.0524,
+                  -0.0024,
+                  0
+                ],
+                "provenance": "Measured from primary.usdz: 4 mm lateral cord port in body_oak_mesh_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"
+              }
+            ],
+            "right": [
+              {
+                "id": "right-lip-mouth",
+                "nodeID": "body_oak_mesh_001",
+                "pointInModel": [
+                  0.0524,
+                  -0.0024,
+                  0
+                ],
+                "provenance": "Measured from primary.usdz: 4 mm lateral cord port in body_oak_mesh_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"
+              }
+            ]
+          },
+          "anchor": {
+            "offsetFromBoardBounds": [
+              0,
+              0.3,
+              0
+            ],
+            "visibility": "invisible",
+            "provenance": "displayEstimate; shared overhead convergence"
+          },
+          "cord": {
+            "restLength": 0.55,
+            "radius": 0.002,
+            "material": "matteCord",
+            "provenance": "displayEstimate; supplied cord diameter"
+          },
+          "canonicalPoses": {
+            "front": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              }
+            },
+            "reverse": {
+              "rotation": [
+                0,
+                1,
+                0,
+                0
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  1
+                ],
+                "fitPadding": 0.1
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "positions": [
+    {
+      "id": "front",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-front-15mm-incut",
+        "edge-front-15mm-flat",
+        "edge-front-20mm-wood-flat",
+        "edge-front-20mm-granite"
+      ]
+    },
+    {
+      "id": "reverse",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-reverse-10mm-incut",
+        "edge-reverse-10mm-flat",
+        "edge-reverse-06mm-flat",
+        "edge-reverse-06mm-incut"
+      ]
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "edge-front-15mm-incut",
+      "equipmentObjectID": "primary",
+      "name": "Front 15 mm incut edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-front-15mm-flat",
+      "equipmentObjectID": "primary",
+      "name": "Front 15 mm flat edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-front-20mm-wood-flat",
+      "equipmentObjectID": "primary",
+      "name": "Front 20 mm wood flat edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-front-20mm-granite",
+      "equipmentObjectID": "primary",
+      "name": "Front 20 mm granite edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-reverse-10mm-incut",
+      "equipmentObjectID": "primary",
+      "name": "Reverse 10 mm incut edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-reverse-10mm-flat",
+      "equipmentObjectID": "primary",
+      "name": "Reverse 10 mm flat edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-reverse-06mm-flat",
+      "equipmentObjectID": "primary",
+      "name": "Reverse 6 mm flat edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 6,
+          "maximum": 6
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-reverse-06mm-incut",
+      "equipmentObjectID": "primary",
+      "name": "Reverse 6 mm incut edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 6,
+          "maximum": 6
+        }
+      },
+      "gripTypes": []
+    }
+  ]
+}

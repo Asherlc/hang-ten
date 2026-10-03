@@ -1,0 +1,305 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 12,
+    "boardID": "owl-climb.poker",
+    "package": "owl-climb-poker",
+    "contactID": "face-b-left-deep-sloper",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "owl-climb.poker",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "face-b-left-deep-sloper",
+      "BOARD_TELEPHOTO": "1"
+    },
+    "launchedAt": 1791055537.5660028
+  },
+  "image": "12-live-horizontal-orbit-2.png",
+  "imageSHA256": "ae9d112eac35a4da9c88b122647dc3b3887588b62e91ae81d71a65e562516325",
+  "accessibilitySHA256": "3e507d90fe58f0d927a73376271877a6e457dc7a1ffc72e92a2463b2506db8a1",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=9;rootActive=true;cameraActive=true;sameScene=true;azimuth=-1.0814371;elevation=0.19694608;cameraPitch=0.19694607;cameraSettled=true;selection=face-b-left-deep-sloper;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "actualPhysicalOrbit": true,
+  "projectedBefore": {
+    "boardModel.contact.face-d-left-single-pocket": [
+      0.2704590818363273,
+      0.453947368421053
+    ],
+    "boardModel.contact.face-c-left-single-pocket": [
+      0.2894211576846307,
+      0.3618421052631578
+    ],
+    "boardModel.contact.face-a-left-single-pocket": [
+      0.27744510978043907,
+      0.7960526315789476
+    ],
+    "boardModel.contact.face-d-left-outer-slot": [
+      0.2974051896207584,
+      0.6249999999999997
+    ],
+    "boardModel.contact.face-b-left-single-pocket": [
+      0.2974051896207584,
+      0.7171052631578949
+    ],
+    "boardModel.contact.face-c-left-outer-slot": [
+      0.30638722554890213,
+      0.33552631578947395
+    ],
+    "boardModel.contact.face-d-left-dual-pocket": [
+      0.3133732534930139,
+      0.4407894736842105
+    ],
+    "boardModel.contact.face-a-left-outer-slot": [
+      0.31636726546906185,
+      0.7960526315789476
+    ],
+    "boardModel.contact.face-a-left-dual-pocket": [
+      0.32135728542914166,
+      0.7763157894736844
+    ],
+    "boardModel.contact.face-b-left-outer-slot": [
+      0.3253493013972056,
+      0.5131578947368425
+    ],
+    "boardModel.contact.face-c-left-dual-pocket": [
+      0.33433133732534925,
+      0.3486842105263153
+    ],
+    "boardModel.contact.face-b-left-dual-pocket": [
+      0.3413173652694611,
+      0.6973684210526317
+    ],
+    "boardModel.contact.face-d-left-deep-rounded-recess": [
+      0.39620758483033924,
+      0.4605263157894737
+    ],
+    "boardModel.contact.face-c-left-shallow-half-round": [
+      0.40119760479041916,
+      0.29605263157894757
+    ],
+    "boardModel.contact.face-b-left-deep-sloper": [
+      0.4151696606786427,
+      0.5789473684210527
+    ],
+    "boardModel.contact.face-d-center-pull-up-slot": [
+      0.4840319361277445,
+      0.3552631578947371
+    ],
+    "boardModel.contact.face-a-center-pull-up-slot": [
+      0.4900199600798403,
+      0.6973684210526317
+    ],
+    "boardModel.contact.face-c-center-pull-up-slot": [
+      0.5099800399201596,
+      0.29605263157894757
+    ],
+    "boardModel.contact.face-b-center-pull-up-slot": [
+      0.5159680638722555,
+      0.6447368421052629
+    ],
+    "boardModel.contact.face-d-right-deep-rounded-recess": [
+      0.5688622754491018,
+      0.4013157894736841
+    ],
+    "boardModel.contact.face-c-right-shallow-half-round": [
+      0.5748502994011976,
+      0.24342105263157876
+    ],
+    "boardModel.contact.face-b-right-deep-sloper": [
+      0.590818363273453,
+      0.5065789473684207
+    ],
+    "boardModel.contact.face-d-right-single-pocket": [
+      0.6247504990019959,
+      0.33552631578947395
+    ],
+    "boardModel.contact.face-a-right-single-pocket": [
+      0.6337325349301396,
+      0.6315789473684216
+    ],
+    "boardModel.contact.face-d-right-outer-slot": [
+      0.6437125748502994,
+      0.4868421052631575
+    ],
+    "boardModel.contact.face-c-right-single-pocket": [
+      0.651696606786427,
+      0.25
+    ],
+    "boardModel.contact.face-c-right-outer-slot": [
+      0.6576846307385228,
+      0.23026315789473684
+    ],
+    "boardModel.contact.face-d-right-dual-pocket": [
+      0.6576846307385228,
+      0.32236842105263147
+    ],
+    "boardModel.contact.face-b-right-single-pocket": [
+      0.6596806387225548,
+      0.5592105263157895
+    ],
+    "boardModel.contact.face-a-right-dual-pocket": [
+      0.6656686626746506,
+      0.618421052631579
+    ],
+    "boardModel.contact.face-a-right-outer-slot": [
+      0.6686626746506985,
+      0.6249999999999997
+    ],
+    "boardModel.contact.face-b-right-outer-slot": [
+      0.6816367265469061,
+      0.38157894736842096
+    ],
+    "boardModel.contact.face-c-right-dual-pocket": [
+      0.684630738522954,
+      0.23684210526315808
+    ],
+    "boardModel.contact.face-b-right-dual-pocket": [
+      0.6926147704590818,
+      0.5394736842105263
+    ]
+  },
+  "projectedAfter": {
+    "boardModel.contact.face-d-left-single-pocket": [
+      0.4041916167664671,
+      0.5986842105263158
+    ],
+    "boardModel.contact.face-a-left-single-pocket": [
+      0.4141716566866267,
+      0.8223684210526314
+    ],
+    "boardModel.contact.face-c-left-outer-slot": [
+      0.4261477045908183,
+      0.5065789473684207
+    ],
+    "boardModel.contact.face-a-left-dual-pocket": [
+      0.4301397205588822,
+      0.7828947368421051
+    ],
+    "boardModel.contact.face-c-left-single-pocket": [
+      0.4321357285429141,
+      0.546052631578947
+    ],
+    "boardModel.contact.face-a-left-outer-slot": [
+      0.44011976047904194,
+      0.8026315789473683
+    ],
+    "boardModel.contact.face-b-left-single-pocket": [
+      0.4421157684630738,
+      0.7697368421052637
+    ],
+    "boardModel.contact.face-c-left-dual-pocket": [
+      0.4481037924151696,
+      0.5065789473684207
+    ],
+    "boardModel.contact.face-b-left-outer-slot": [
+      0.45209580838323354,
+      0.6249999999999997
+    ],
+    "boardModel.contact.face-b-left-dual-pocket": [
+      0.45708582834331335,
+      0.7302631578947374
+    ],
+    "boardModel.contact.face-c-left-shallow-half-round": [
+      0.45808383233532934,
+      0.4210526315789473
+    ],
+    "boardModel.contact.face-b-left-deep-sloper": [
+      0.47504990019960075,
+      0.6052631578947365
+    ],
+    "boardModel.contact.face-a-center-pull-up-slot": [
+      0.4890219560878243,
+      0.6249999999999997
+    ],
+    "boardModel.contact.face-c-center-pull-up-slot": [
+      0.5109780439121756,
+      0.3684210526315785
+    ],
+    "boardModel.contact.face-b-center-pull-up-slot": [
+      0.5179640718562875,
+      0.5921052631578951
+    ],
+    "boardModel.contact.face-c-right-shallow-half-round": [
+      0.5199600798403193,
+      0.2828947368421051
+    ],
+    "boardModel.contact.face-b-right-deep-sloper": [
+      0.5359281437125748,
+      0.453947368421053
+    ],
+    "boardModel.contact.face-a-right-single-pocket": [
+      0.5419161676646707,
+      0.5
+    ],
+    "boardModel.contact.face-c-right-outer-slot": [
+      0.5518962075848303,
+      0.23026315789473684
+    ],
+    "boardModel.contact.face-a-right-dual-pocket": [
+      0.5528942115768463,
+      0.46710526315789436
+    ],
+    "boardModel.contact.face-c-right-single-pocket": [
+      0.5588822355289421,
+      0.25657894736842124
+    ],
+    "boardModel.contact.face-a-right-outer-slot": [
+      0.562874251497006,
+      0.48026315789473684
+    ],
+    "boardModel.contact.face-b-right-single-pocket": [
+      0.5668662674650699,
+      0.4473684210526312
+    ],
+    "boardModel.contact.face-c-right-dual-pocket": [
+      0.5698602794411177,
+      0.23026315789473684
+    ],
+    "boardModel.contact.face-d-left-outer-slot": [
+      0.41217564870259477,
+      0.6973684210526317
+    ],
+    "boardModel.contact.face-d-left-dual-pocket": [
+      0.4201596806387225,
+      0.5657894736842102
+    ],
+    "boardModel.contact.face-d-left-deep-rounded-recess": [
+      0.45109780439121755,
+      0.5263157894736838
+    ],
+    "boardModel.contact.face-d-center-pull-up-slot": [
+      0.4820359281437126,
+      0.4078947368421048
+    ],
+    "boardModel.contact.face-d-right-deep-rounded-recess": [
+      0.5139720558882235,
+      0.38157894736842096
+    ],
+    "boardModel.contact.face-d-right-single-pocket": [
+      0.5329341317365269,
+      0.30921052631578894
+    ],
+    "boardModel.contact.face-d-right-outer-slot": [
+      0.5389221556886228,
+      0.38815789473684165
+    ],
+    "boardModel.contact.face-d-right-dual-pocket": [
+      0.5449101796407185,
+      0.2828947368421051
+    ],
+    "boardModel.contact.face-b-right-outer-slot": [
+      0.5748502994011976,
+      0.32894736842105216
+    ],
+    "boardModel.contact.face-b-right-dual-pocket": [
+      0.5778443113772455,
+      0.4210526315789473
+    ]
+  }
+}

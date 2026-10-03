@@ -80,8 +80,6 @@ final class BoardModelRealityTests: XCTestCase {
     @MainActor
     func testBoardPitchUsesPairedAttachmentsBoreMouthsAndIndependentInstancePivots() async throws {
         let cases: [(String, SIMD3<Float>)] = [
-            ("nature.stone-hanger", [0, -0.0024, 0]),
-            ("tension.flash-board", [0.25, 0.047999999, 0.038669699]),
             ("metolius.rock-rings-3d", [0, 0.091, 0])
         ]
         for (id, localPivot) in cases {
@@ -97,6 +95,49 @@ final class BoardModelRealityTests: XCTestCase {
                     let after = body.transformMatrix(relativeTo: scene.root)
                     XCTAssertNotEqual(after, before[index], id)
                     XCTAssertLessThan(simd_distance(after * SIMD4(localPivot, 1), before[index] * SIMD4(localPivot, 1)), 1e-6, id)
+                }
+            }
+        }
+    }
+
+    @MainActor
+    func testNativeCADCordRoutesKeepBodyAndCordTogetherDuringOrbit() async throws {
+        for id in ["nature.stone-hanger", "nature.stone-hanger-mini",
+                   "nature.stone-hanger-mini-karma8a", "plateau.lifting-edge", "tension.flash-board"] {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: id))
+            for presentation in board.presentations {
+                guard case .model(let media) = presentation.media,
+                      case .cadRoutedCord = media.suspension else { return XCTFail("Native CAD cord required: \(id)") }
+                let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+                for position in board.positions where position.presentationID == presentation.id {
+                    XCTAssertTrue(scene.select(positionID: position.id), "\(id)/\(position.id)")
+                    scene.frame(in: CGSize(width: 800, height: 500))
+                    let before = scene.instanceEntities.map { $0.transformMatrix(relativeTo: scene.root) }
+                    let cord = try XCTUnwrap(scene.transientCordEntity)
+                    func transforms(_ entity: Entity) -> [simd_float4x4] {
+                        [entity.transformMatrix(relativeTo: scene.root)] + entity.children.flatMap(transforms)
+                    }
+                    let beforeCord = transforms(cord)
+                    let beforeCamera = scene.camera.transform.matrix
+                    scene.orbit(azimuth: 0.3, elevation: 0)
+                    let yawCamera = scene.camera.transform.matrix
+                    for pitch in [Float.pi / 9, -Float.pi / 9] {
+                        scene.orbit(azimuth: 0.3, elevation: pitch)
+                        XCTAssertNotEqual(scene.camera.transform.matrix, beforeCamera, id)
+                        XCTAssertNotEqual(scene.camera.transform.matrix, yawCamera,
+                                          "\(id): pitch must move the camera at fixed yaw")
+                        XCTAssertEqual(scene.instanceEntities.map { $0.transformMatrix(relativeTo: scene.root) }, before, id)
+                        XCTAssertEqual(transforms(cord), beforeCord, id)
+                        scene.highlight(Set(position.contactIDs), mode: .active)
+                        XCTAssertEqual(scene.instanceEntities.map { $0.transformMatrix(relativeTo: scene.root) }, before, id)
+                        XCTAssertEqual(transforms(cord), beforeCord, id)
+                        scene.highlight([], mode: .active)
+                        XCTAssertEqual(scene.instanceEntities.map { $0.transformMatrix(relativeTo: scene.root) }, before, id)
+                        XCTAssertEqual(transforms(cord), beforeCord, id)
+                    }
+                    scene.resetCamera(animated: false)
+                    XCTAssertEqual(scene.instanceEntities.map { $0.transformMatrix(relativeTo: scene.root) }, before, id)
+                    XCTAssertEqual(transforms(cord), beforeCord, id)
                 }
             }
         }
@@ -637,37 +678,49 @@ final class BoardModelRealityTests: XCTestCase {
             if let positionID = board.positions.first?.id {
                 XCTAssertTrue(scene.select(positionID: positionID))
             }
-            var mirroredInstancesChecked = 0
-            for (instance, root) in zip(media.instances ?? [], scene.instanceEntities)
-            where instance.baseTransform.reflection == .x {
-                mirroredInstancesChecked += 1
-                var trianglesChecked = 0
-                var inwardTriangles = 0
+            func windingStats(in root: Entity) throws -> (triangles: Int, inward: Int, left: Int, right: Int) {
+                var triangles = 0
+                var inward = 0
+                var left = 0
+                var right = 0
                 func check(_ entity: Entity) throws {
                     if let component = (entity as? ModelEntity)?.model {
                         for meshInstance in component.mesh.contents.instances {
                             let model = try XCTUnwrap(component.mesh.contents.models[meshInstance.model])
                             let transform = entity.transformMatrix(relativeTo: scene.root) * meshInstance.transform
-                            let linear = simd_float3x3(SIMD3(transform.columns.0.x, transform.columns.0.y, transform.columns.0.z),
-                                                     SIMD3(transform.columns.1.x, transform.columns.1.y, transform.columns.1.z),
-                                                     SIMD3(transform.columns.2.x, transform.columns.2.y, transform.columns.2.z))
+                            let linear = simd_float3x3(
+                                SIMD3(transform.columns.0.x, transform.columns.0.y, transform.columns.0.z),
+                                SIMD3(transform.columns.1.x, transform.columns.1.y, transform.columns.1.z),
+                                SIMD3(transform.columns.2.x, transform.columns.2.y, transform.columns.2.z)
+                            )
                             let normalTransform = simd_transpose(simd_inverse(linear))
                             for part in model.parts {
                                 let positions = part.positions.elements
                                 let normals = try XCTUnwrap(part.normals).elements
                                 let indices = try XCTUnwrap(part.triangleIndices).elements
+                                guard indices.count.isMultiple(of: 3),
+                                      indices.allSatisfy({
+                                          Int($0) < positions.count && Int($0) < normals.count
+                                      }) else {
+                                    XCTFail("\(boardID): malformed imported triangle/normal buffers")
+                                    continue
+                                }
                                 for offset in stride(from: 0, to: indices.count, by: 3) {
                                     let a = Int(indices[offset]), b = Int(indices[offset + 1]), c = Int(indices[offset + 2])
-                                    let edge1 = linear * (positions[b] - positions[a])
-                                    let edge2 = linear * (positions[c] - positions[a])
-                                    let face = simd_cross(edge1, edge2)
+                                    let face = simd_cross(
+                                        linear * (positions[b] - positions[a]),
+                                        linear * (positions[c] - positions[a])
+                                    )
                                     guard simd_length(face) > 1e-12 else { continue }
                                     let normal = normalTransform * (normals[a] + normals[b] + normals[c])
                                     guard simd_length(normal) > 1e-6 else { continue }
-                                    trianglesChecked += 1
+                                    triangles += 1
                                     if simd_dot(simd_normalize(face), simd_normalize(normal)) < -0.01 {
-                                        inwardTriangles += 1
+                                        inward += 1
                                     }
+                                    let center = transform * SIMD4((positions[a] + positions[b] + positions[c]) / 3, 1)
+                                    if center.x < 0 { left += 1 }
+                                    if center.x > 0 { right += 1 }
                                 }
                             }
                         }
@@ -675,23 +728,51 @@ final class BoardModelRealityTests: XCTestCase {
                     for child in entity.children { try check(child) }
                 }
                 try check(root)
-                XCTAssertGreaterThan(trianglesChecked, 0, boardID)
-                let mirroredTriangles = trianglesChecked
-                let mirroredInwardTriangles = inwardTriangles
-                trianglesChecked = 0
-                inwardTriangles = 0
+                return (triangles, inward, left, right)
+            }
+
+            if boardID == "trango.rock-prodigy-forge" {
+                // Forge contains both native mirrored halves in one export.
+                XCTAssertEqual(media.descriptor.schemaVersion, 1)
+                XCTAssertNil(media.instances)
+                XCTAssertEqual(scene.instanceEntities.count, 1, boardID)
+                guard scene.instanceEntities.count == 1,
+                      let nativePair = scene.instanceEntities.first else {
+                    XCTFail("\(boardID): expected one full native paired model")
+                    continue
+                }
+                XCTAssertEqual(board.contacts.count, 20)
+                XCTAssertEqual(media.descriptor.nodes.count, 21)
+                XCTAssertEqual(Set(scene.contactEntities.keys), Set(board.contacts.map(\.id)))
+                let native = try windingStats(in: nativePair)
+                // The accepted native asset has 20,748 nondegenerate triangles;
+                // inspect the entire imported body and every contact surface.
+                XCTAssertGreaterThanOrEqual(native.triangles, 20_748, boardID)
+                XCTAssertEqual(native.inward, 0, boardID)
+                XCTAssertGreaterThan(native.left, 0, boardID)
+                XCTAssertEqual(native.left, native.right, boardID)
+                XCTAssertEqual(native.left + native.right, native.triangles, boardID)
+                continue
+            }
+
+            var mirroredInstancesChecked = 0
+            for (instance, root) in zip(media.instances ?? [], scene.instanceEntities)
+            where instance.baseTransform.reflection == .x {
+                mirroredInstancesChecked += 1
+                let mirrored = try windingStats(in: root)
+                XCTAssertGreaterThan(mirrored.triangles, 0, boardID)
                 let sourceIndex = try XCTUnwrap(media.instances?.firstIndex {
                     $0.baseTransform.reflection == nil
                 })
-                try check(scene.instanceEntities[sourceIndex])
-                XCTAssertEqual(mirroredTriangles, trianglesChecked, boardID)
-                XCTAssertEqual(mirroredInwardTriangles, inwardTriangles,
-                               "\(boardID): reflection must preserve the source winding/normal agreement")
-                // Forge's retained source has a small number of pre-existing
-                // disagreements at thin facets. Reflection must not add any.
-                if boardID != "trango.rock-prodigy-forge" {
-                    XCTAssertEqual(inwardTriangles, 0, boardID)
+                guard scene.instanceEntities.indices.contains(sourceIndex) else {
+                    XCTFail("\(boardID): missing source instance")
+                    continue
                 }
+                let source = try windingStats(in: scene.instanceEntities[sourceIndex])
+                XCTAssertEqual(mirrored.triangles, source.triangles, boardID)
+                XCTAssertEqual(mirrored.inward, source.inward,
+                               "\(boardID): reflection must preserve the source winding/normal agreement")
+                XCTAssertEqual(source.inward, 0, boardID)
             }
             XCTAssertGreaterThan(mirroredInstancesChecked, 0, boardID)
         }
@@ -702,17 +783,73 @@ final class BoardModelRealityTests: XCTestCase {
         for boardID in ["trango.rock-prodigy-forge", "trango.rock-prodigy-natural",
                         "trango.rock-prodigy-training-center"] {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            guard case .model(let media) = board.defaultPresentation.media else {
+                return XCTFail("Expected model")
+            }
             let scene = try await BoardModelRealityLoader.load(board: board,
                                                               presentation: board.defaultPresentation)
-            XCTAssertEqual(scene.instanceEntities.count, 2, boardID)
-            let left = scene.instanceEntities[0].visualBounds(relativeTo: scene.root)
-            let right = scene.instanceEntities[1].visualBounds(relativeTo: scene.root)
-            XCTAssertLessThan(left.max.x, 0, boardID)
-            XCTAssertGreaterThan(right.min.x, 0, boardID)
-            XCTAssertEqual(left.min.x, -right.max.x, accuracy: 0.00001, boardID)
-            XCTAssertEqual(left.max.x, -right.min.x, accuracy: 0.00001, boardID)
-            XCTAssertEqual(left.center.y, right.center.y, accuracy: 0.00001, boardID)
-            XCTAssertEqual(left.center.z, right.center.z, accuracy: 0.00001, boardID)
+            if boardID == "trango.rock-prodigy-forge" {
+                XCTAssertEqual(media.descriptor.schemaVersion, 1)
+                XCTAssertNil(media.instances)
+                XCTAssertEqual(scene.instanceEntities.count, 1, boardID)
+                guard scene.instanceEntities.count == 1,
+                      let nativePair = scene.instanceEntities.first else {
+                    XCTFail("\(boardID): expected one full native paired model")
+                    continue
+                }
+                var points: [SIMD3<Float>] = []
+                func collectPoints(_ entity: Entity) throws {
+                    if let component = (entity as? ModelEntity)?.model {
+                        for instance in component.mesh.contents.instances {
+                            let model = try XCTUnwrap(component.mesh.contents.models[instance.model])
+                            let transform = entity.transformMatrix(relativeTo: scene.root) * instance.transform
+                            for part in model.parts {
+                                points += part.positions.map { point in
+                                    let world = transform * SIMD4(point, 1)
+                                    return SIMD3(world.x, world.y, world.z)
+                                }
+                            }
+                        }
+                    }
+                    for child in entity.children { try collectPoints(child) }
+                }
+                try collectPoints(nativePair)
+                let leftPoints = points.filter { $0.x < 0 }
+                let rightPoints = points.filter { $0.x > 0 }
+                XCTAssertEqual(leftPoints.count + rightPoints.count, points.count,
+                               "The full native pair must retain its open center gap")
+                let leftFirst = try XCTUnwrap(leftPoints.first)
+                let rightFirst = try XCTUnwrap(rightPoints.first)
+                let leftMin = leftPoints.dropFirst().reduce(leftFirst) { simd_min($0, $1) }
+                let leftMax = leftPoints.dropFirst().reduce(leftFirst) { simd_max($0, $1) }
+                let rightMin = rightPoints.dropFirst().reduce(rightFirst) { simd_min($0, $1) }
+                let rightMax = rightPoints.dropFirst().reduce(rightFirst) { simd_max($0, $1) }
+                XCTAssertLessThan(leftMax.x, 0, boardID)
+                XCTAssertGreaterThan(rightMin.x, 0, boardID)
+                XCTAssertGreaterThan(rightMin.x - leftMax.x, 0, boardID)
+                XCTAssertEqual(leftMin.x, -rightMax.x, accuracy: 0.00001, boardID)
+                XCTAssertEqual(leftMax.x, -rightMin.x, accuracy: 0.00001, boardID)
+                for axis in 1...2 {
+                    XCTAssertEqual(leftMin[axis], rightMin[axis], accuracy: 0.00001, boardID)
+                    XCTAssertEqual(leftMax[axis], rightMax[axis], accuracy: 0.00001, boardID)
+                }
+                XCTAssertEqual(board.contacts.count, 20)
+                XCTAssertEqual(media.descriptor.nodes.count, 21)
+            } else {
+                XCTAssertEqual(scene.instanceEntities.count, 2, boardID)
+                guard scene.instanceEntities.count == 2 else {
+                    XCTFail("\(boardID): expected two reusable model instances")
+                    continue
+                }
+                let left = scene.instanceEntities[0].visualBounds(relativeTo: scene.root)
+                let right = scene.instanceEntities[1].visualBounds(relativeTo: scene.root)
+                XCTAssertLessThan(left.max.x, 0, boardID)
+                XCTAssertGreaterThan(right.min.x, 0, boardID)
+                XCTAssertEqual(left.min.x, -right.max.x, accuracy: 0.00001, boardID)
+                XCTAssertEqual(left.max.x, -right.min.x, accuracy: 0.00001, boardID)
+                XCTAssertEqual(left.center.y, right.center.y, accuracy: 0.00001, boardID)
+                XCTAssertEqual(left.center.z, right.center.z, accuracy: 0.00001, boardID)
+            }
             XCTAssertEqual(Set(scene.contactEntities.keys), Set(board.contacts.map(\.id)), boardID)
             for contact in board.contacts where contact.id.hasSuffix("-left") {
                 let rightID = String(contact.id.dropLast(5)) + "-right"
@@ -722,6 +859,28 @@ final class BoardModelRealityTests: XCTestCase {
                 XCTAssertEqual(leftEntities.count, rightEntities.count, contact.id)
                 XCTAssertTrue(Set(leftEntities.map(ObjectIdentifier.init))
                     .isDisjoint(with: Set(rightEntities.map(ObjectIdentifier.init))), contact.id)
+                let leftBounds = leftEntities.map { $0.visualBounds(relativeTo: scene.root) }
+                let rightBounds = rightEntities.map { $0.visualBounds(relativeTo: scene.root) }
+                let leftMin = try XCTUnwrap(leftBounds.map(\.min).reduce(nil as SIMD3<Float>?) { accumulated, point in
+                    accumulated.map { simd_min($0, point) } ?? point
+                })
+                let leftMax = try XCTUnwrap(leftBounds.map(\.max).reduce(nil as SIMD3<Float>?) { accumulated, point in
+                    accumulated.map { simd_max($0, point) } ?? point
+                })
+                let rightMin = try XCTUnwrap(rightBounds.map(\.min).reduce(nil as SIMD3<Float>?) { accumulated, point in
+                    accumulated.map { simd_min($0, point) } ?? point
+                })
+                let rightMax = try XCTUnwrap(rightBounds.map(\.max).reduce(nil as SIMD3<Float>?) { accumulated, point in
+                    accumulated.map { simd_max($0, point) } ?? point
+                })
+                XCTAssertLessThan(leftMax.x, 0, contact.id)
+                XCTAssertGreaterThan(rightMin.x, 0, contact.id)
+                XCTAssertEqual(leftMin.x, -rightMax.x, accuracy: 0.00001, contact.id)
+                XCTAssertEqual(leftMax.x, -rightMin.x, accuracy: 0.00001, contact.id)
+                for axis in 1...2 {
+                    XCTAssertEqual(leftMin[axis], rightMin[axis], accuracy: 0.00001, contact.id)
+                    XCTAssertEqual(leftMax[axis], rightMax[axis], accuracy: 0.00001, contact.id)
+                }
             }
         }
     }
@@ -1274,17 +1433,27 @@ final class BoardModelRealityTests: XCTestCase {
         func roughness(_ entity: ModelEntity) throws -> Float {
             try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial).roughness.scale
         }
+        let baselines = try Dictionary(uniqueKeysWithValues: [shared, secondaryOnly].map { entity in
+            (entity, try XCTUnwrap(entity.model?.materials.first as? CustomMaterial))
+        })
+        func assertRestored(_ entity: ModelEntity) throws {
+            let baseline = try XCTUnwrap(baselines[entity])
+            let restored = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial)
+            XCTAssertEqual(restored.roughness.scale, baseline.roughness.scale, accuracy: 0.0001)
+            XCTAssertEqual(UIColor(cgColor: restored.baseColor.__tint), UIColor(cgColor: baseline.baseColor.__tint))
+            XCTAssertEqual(restored.faceCulling, baseline.faceCulling)
+        }
         scene.highlight([secondaryID], mode: .active)
         XCTAssertEqual(try roughness(shared), 0.8, accuracy: 0.0001)
         XCTAssertEqual(try roughness(secondaryOnly), 0.8, accuracy: 0.0001)
         scene.highlight([primaryID], mode: .active)
         XCTAssertEqual(try roughness(shared), 0.8, accuracy: 0.0001)
-        XCTAssertEqual(try roughness(secondaryOnly), 0.5, accuracy: 0.0001)
+        try assertRestored(secondaryOnly)
         scene.highlight([primaryID, secondaryID], mode: .active)
         XCTAssertEqual(try roughness(shared), 0.8, accuracy: 0.0001)
         scene.highlight([], mode: .active)
-        XCTAssertEqual(try roughness(shared), 0.5, accuracy: 0.0001)
-        XCTAssertEqual(try roughness(secondaryOnly), 0.5, accuracy: 0.0001)
+        try assertRestored(shared)
+        try assertRestored(secondaryOnly)
     }
 
     @MainActor
@@ -1302,6 +1471,18 @@ final class BoardModelRealityTests: XCTestCase {
         XCTAssertEqual(Set(pinch.map(ObjectIdentifier.init)).count, pinch.count)
         for entity in jug { XCTAssertEqual(scene.contactID(for: entity), "jug-40") }
         for entity in lower { XCTAssertEqual(scene.contactID(for: entity), "pinch-60") }
+        let baselines = try Dictionary(uniqueKeysWithValues: pinch.map { entity in
+            (entity, try XCTUnwrap(entity.model?.materials.first as? CustomMaterial))
+        })
+        func assertRestored(_ entities: [ModelEntity]) throws {
+            for entity in entities {
+                let baseline = try XCTUnwrap(baselines[entity])
+                let restored = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial)
+                XCTAssertEqual(restored.roughness.scale, baseline.roughness.scale, accuracy: 0.0001)
+                XCTAssertEqual(UIColor(cgColor: restored.baseColor.__tint), UIColor(cgColor: baseline.baseColor.__tint))
+                XCTAssertEqual(restored.faceCulling, baseline.faceCulling)
+            }
+        }
         func assertRoughness(_ entities: [ModelEntity], _ expected: Float) throws {
             for entity in entities {
                 let material = try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial)
@@ -1312,11 +1493,11 @@ final class BoardModelRealityTests: XCTestCase {
         try assertRoughness(pinch, 0.8)
         scene.highlight(["jug-40"], mode: .active)
         try assertRoughness(jug, 0.8)
-        try assertRoughness(lower, 0.5)
+        try assertRestored(lower)
         scene.highlight(["jug-40", "pinch-60"], mode: .active)
         try assertRoughness(pinch, 0.8)
         scene.highlight([], mode: .active)
-        try assertRoughness(pinch, 0.5)
+        try assertRestored(pinch)
     }
 
     @MainActor

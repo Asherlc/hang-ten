@@ -1,0 +1,174 @@
+{
+  "owner": "placid-badger",
+  "date": "2026-10-03",
+  "number": 12,
+  "boardID": "owl-climb.poker",
+  "package": "owl-climb-poker",
+  "status": "bounded appearance/pick/touch evidence; fresh app human acceptance pending",
+  "appWorkflowPassed": false,
+  "currentAppHumanAcceptance": "pending",
+  "acceptedGeometry": {
+    "humanReview": "Shown #12 CAD shape accepted; current app wood, picking, highlighting and workout appearance remain unverified",
+    "humanReviewRecord": "owl-climb-poker/human-review.json",
+    "reviewPage": "owl-climb-poker/review12-2026-10-02/index.html",
+    "unchangedAcceptedGeometry": true,
+    "newHumanAppAcceptance": "pending"
+  },
+  "immutablePackageSHA256": {
+    "Hangboards/owl-climb-poker/owl-climb-poker.FCStd": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+    "Hangboards/owl-climb-poker/assets/primary.usdz": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+    "Hangboards/owl-climb-poker/assets/primary.model.json": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
+  },
+  "installedAppProvenance": {
+    "path": "installed-app-provenance.json",
+    "sha256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+    "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca"
+  },
+  "representativeContactCoverage": "Four representative contacts, one from each face A\u2013D; not all 34 contacts.",
+  "selectedContactIDsCaptured": [
+    "face-a-left-outer-slot",
+    "face-b-left-deep-sloper",
+    "face-c-left-shallow-half-round",
+    "face-d-left-deep-rounded-recess"
+  ],
+  "wholeFrameVisualAudit": {
+    "status": "supplied audit complete",
+    "path": "visual-audits/12-visual-audit.json",
+    "sha256": "59c762fe63f896d824b9148c740aceab7085ffd0ae3dc69438093af2ee6d7627",
+    "findingStatuses": [
+      {
+        "check": "wood material and inactive appearance",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": "The three-frame addendum below now covers the supplied Face A outer-slot restoration sequence. Full deselection and restoration on other faces are not claimed.",
+        "frames": [
+          "app-captures/12-live-hold-face-a-left-outer-slot.png",
+          "app-captures/12-live-hold-face-b-left-deep-sloper.png",
+          "app-captures/12-live-hold-face-c-left-shallow-half-round.png",
+          "app-captures/12-live-hold-face-d-left-deep-rounded-recess.png",
+          "app-captures/12-live-unselected-train.png"
+        ]
+      },
+      {
+        "check": "four face contact samples",
+        "status": "PASS_FOUR_REPRESENTATIVE_CONTACTS",
+        "limitation": "One contact per face was inspected; this is not an individual visual pass for all 34 logical contacts.",
+        "frames": [
+          "app-captures/12-live-hold-face-a-left-outer-slot.png",
+          "app-captures/12-live-hold-face-b-left-deep-sloper.png",
+          "app-captures/12-live-hold-face-c-left-shallow-half-round.png",
+          "app-captures/12-live-hold-face-d-left-deep-rounded-recess.png"
+        ]
+      },
+      {
+        "check": "horizontal touch orbit",
+        "status": "PASS_SUPPLIED_SETTLED_VIEWS",
+        "limitation": "The end-on board is small in the complete frame; fine contact coverage is judged from the front/landscape samples, not this occluded view.",
+        "frames": [
+          "app-captures/12-live-horizontal-orbit-1.png",
+          "app-captures/12-live-horizontal-orbit-2.png",
+          "app-captures/12-live-horizontal-orbit-3.png"
+        ]
+      },
+      {
+        "check": "initial vertical top gesture",
+        "status": "FAIL_RETAINED",
+        "limitation": null,
+        "frames": [
+          "app-captures/12-top-touch-did-not-orbit.png"
+        ]
+      },
+      {
+        "check": "diagonal retry top-oblique view",
+        "status": "PASS_CAPTURE_AFTER_DIAGONAL_RETRY",
+        "limitation": "This successful retry does not reclassify the failed vertical gesture as passing.",
+        "frames": [
+          "app-captures/12-live-top-oblique.png"
+        ]
+      },
+      {
+        "check": "suspension applicability",
+        "status": "NOT_APPLICABLE_NO_SUSPENSION_PROFILE",
+        "limitation": null,
+        "frames": []
+      },
+      {
+        "check": "selected cards and contact map",
+        "status": "PASS_SUPPLIED_CARD_STATES",
+        "limitation": "The 34-entry grid extends below the viewport, and labels use ellipsis. One physical Face A slot pick is covered by the addendum; scrolling and chip input were not audited.",
+        "frames": [
+          "app-captures/12-live-hold-face-a-left-outer-slot.png",
+          "app-captures/12-live-hold-face-b-left-deep-sloper.png",
+          "app-captures/12-live-hold-face-c-left-shallow-half-round.png",
+          "app-captures/12-live-hold-face-d-left-deep-rounded-recess.png"
+        ]
+      },
+      {
+        "check": "landscape fit",
+        "status": "PASS_MODEL_AND_SELECTED_CARD",
+        "limitation": null,
+        "frames": [
+          "app-captures/12-live-landscape.png"
+        ]
+      },
+      {
+        "check": "normal lens and unselected Train",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": null,
+        "frames": [
+          "app-captures/12-live-normal-lens.png",
+          "app-captures/12-live-unselected-train.png"
+        ]
+      }
+    ]
+  },
+  "physicalMeshPick": {
+    "status": "pass one supplied physical mesh tap",
+    "pickedContactID": "face-a-left-outer-slot",
+    "receipt": "app-captures/12-slot-physical-mesh-pick-receipt.json",
+    "receiptSHA256": "3d33ca0ae0cb2a5377b58a6b2d7acff04fb55079372caf56bc9ee621c773596b",
+    "frame": "app-captures/12-slot-physical-mesh-pick.png",
+    "imageSHA256": "797888ac0ad525e9cc4ee6c6a49b2ca9ee774e548e4b3ac1aac9d58840c2f3ee",
+    "before": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-a-left-outer-slot;tapRevision=0;pickedContact=",
+    "after": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-a-left-outer-slot;tapRevision=1;pickedContact=face-a-left-outer-slot"
+  },
+  "representativeFrames": [
+    "app-captures/12-live-front.png",
+    "app-captures/12-slot-physical-mesh-pick.png",
+    "app-captures/12-live-hold-face-a-left-outer-slot.png",
+    "app-captures/12-live-hold-face-b-left-deep-sloper.png",
+    "app-captures/12-live-hold-face-c-left-shallow-half-round.png",
+    "app-captures/12-live-hold-face-d-left-deep-rounded-recess.png"
+  ],
+  "touchEvidence": {
+    "status": "settled ordinary touch capture sequence; scope limited to supplied states",
+    "frames": [
+      "app-captures/12-live-horizontal-orbit-1.png",
+      "app-captures/12-live-horizontal-orbit-2.png",
+      "app-captures/12-live-horizontal-orbit-3.png"
+    ],
+    "visualAuditPending": false
+  },
+  "limitations": [
+    "Initial vertical top gesture did not orbit; retained failure is followed by a successful diagonal retry.",
+    "Only four representative face contacts were checked; no suspension is authored."
+  ],
+  "workout": {
+    "passed": false,
+    "status": "not executed after common #10 workout gate failed",
+    "commonGateEvidence": "capture-traces/10-workout-observation.json",
+    "trace": "capture-traces/workout-multi.json",
+    "workFrame": "app-captures/10-workout-landscape-work-highlight.png",
+    "restFrame": "app-captures/10-workout-landscape-rest-preview.png"
+  },
+  "focusedVerification": {
+    "path": "validation/final-strong-summary.json",
+    "sha256": "6c5f8e87f5a23babe0dbf11b7150c5e1b0a24ce41a3bfeb5fb622aa03cf0d8be",
+    "passed": 455,
+    "failed": 0,
+    "skipped": 1,
+    "fullSuitePassed": false,
+    "refinement": "validation/final-test-refinement.json"
+  },
+  "productionGeometryChanged": false,
+  "newManufacturerFactsOrRoutineChanges": false
+}

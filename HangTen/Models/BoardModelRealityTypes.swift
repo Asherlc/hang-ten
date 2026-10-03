@@ -713,8 +713,10 @@ final class BoardModelRealityScene {
                         selectedFramings.append(solved.cameraFraming)
                         let cord = Self.makeCordEntity(for: solved)
                         cordGroup.addChild(cord)
-                        cordPoses.append(try makeGeometricCordPose(solved: solved, suspension: suspension, pose: pose,
-                            instance: index, boardTransform: renderTransform(transform, instance: instance).matrix))
+                        if let cordPose = try makeGeometricCordPose(solved: solved, suspension: suspension,
+                            instance: index, boardTransform: renderTransform(transform, instance: instance).matrix) {
+                            cordPoses.append(cordPose)
+                        }
                     } catch { return false }
                 } else {
                     guard instance.positionTransforms == nil || instance.positionTransforms?[positionID] != nil else {
@@ -818,10 +820,10 @@ final class BoardModelRealityScene {
                 let solved = try Self.solveSuspension(
                     pose: resolvedPose, suspension: suspension, bounds: descriptor.modelBounds)
                 let cord = Self.makeCordEntity(for: solved)
-                let cordPose = try makeGeometricCordPose(solved: solved, suspension: suspension, pose: resolvedPose,
+                let cordPose = try makeGeometricCordPose(solved: solved, suspension: suspension,
                     instance: 0, boardTransform: solved.boardTransform)
                 cancelGeometricTilt()
-                geometricCordPoses = [cordPose]
+                geometricCordPoses = cordPose.map { [$0] } ?? []
                 displayedCordAngles = .zero
                 targetCordAngles = nil
                 instanceEntities.first?.transform = Transform(matrix: solved.boardTransform)
@@ -1492,20 +1494,15 @@ final class BoardModelRealityScene {
 
     private func makeGeometricCordPose(solved: BoardModelSolvedSuspension,
                                       suspension: BoardModelSuspension,
-                                      pose: BoardModelCanonicalPose,
-                                      instance: Int, boardTransform: simd_float4x4) throws -> GeometricCordPose {
+                                      instance: Int, boardTransform: simd_float4x4) throws -> GeometricCordPose? {
         let localPoints: [[Double]]
         switch suspension {
-        case .cadRoutedCord(let profile):
-            guard let routes = pose.wrappedRoutes else { throw BoardModelRealityError.invalidSuspension }
-            // Native routes retain the body stations from CAD. Their terminals
-            // identify the support axis without reauthoring cord coordinates.
-            localPoints = try profile.strands.flatMap { strand -> [[Double]] in
-                guard let route = routes[strand.id], let first = route.first, let last = route.last else {
-                    throw BoardModelRealityError.invalidSuspension
-                }
-                return [first, last]
-            }
+        case .cadRoutedCord:
+            // Native clearance is certified for the solved body and its routes
+            // together. Distributed wrap bearings do not define a rigid hinge;
+            // moving the body alone would drive the fixed cord into the solid.
+            // Orbit the camera while retaining both source-solved transforms.
+            return nil
         case .singleCord(let profile): localPoints = [profile.attachment.pointInModel]
         case .pairedLeadCord(let profile): localPoints = profile.attachments.map(\.pointInModel)
         case .twoBranchCord(let profile):

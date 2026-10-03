@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "All shown CAD revisions assigned to this workspace (#1–15) accepted, including the corrected #10 Mini jug and #11 KARMA8A pinch finger-contact wraps. Current app appearance and interaction for #10–15 remain unverified. Reviews #16–21 belong to the separate second-half workspace.",
+  "reviewState": "All shown CAD revisions assigned to this workspace (#1–15) retain historical acceptance. Current #10–15 appearance, representative selections, one physical mesh pick each and ordinary touch views have bounded supplied-frame evidence. Fresh app human acceptance remains pending; appWorkflowPassed=false because #10 landscape rest remains red and portrait AX timed out, with #11–15 workouts not executed afterward. Flash screen-side naming explanation remains incomplete. Focused tests:455 passed/0 failed/1 pre-existing skip; full opt-in physics suite not passed. Reviews #16–21 remain outside this workspace scope.",
   "boards": [
     {
       "number": 1,
@@ -224,7 +224,7 @@
       "boardID": "metolius.simulator-3d",
       "name": "Metolius Simulator 3-D",
       "humanReview": "reviewed; corrected Simulator geometry and plastic display accepted",
-      "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+      "sourceSHA256": "ac957ebf25e5134ab2875e9b06d9c23831f35b0b8bcbc64730d6a626b7f8588e",
       "reviewPage": "metolius-simulator-3d/accepted-review.md",
       "sourceAudit": "metolius-simulator-3d/source-audit.md",
       "comparisons": [
@@ -257,7 +257,31 @@
       "runtimeRevision": "metolius-simulator-3d/opus-and-plastic-review/runtime-validation.json",
       "reviewAnswer": "lgtm",
       "acceptedDate": "2026-10-01",
-      "acceptedScope": "Displayed corrected Simulator 3-D, including its smooth front taper, forward center-jug crest and rear return, forward-reaching slopers, and existing plastic appearance."
+      "acceptedScope": "Displayed corrected Simulator 3-D, including its smooth front taper, forward center-jug crest and rear return, forward-reaching slopers, and existing plastic appearance.",
+      "acceptedGeometrySourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+      "metadataIntegrationEvents": [
+        {
+          "date": "2026-10-03",
+          "kind": "merged-main-metadata-restoration",
+          "field": "contacts[round-sloper-3-center].handCapacity",
+          "before": "absent",
+          "after": 2,
+          "upstreamPR": 516,
+          "upstreamMergeCommit": "781e64636eafb382f6ad49cbdf276be354117310",
+          "mainCommit": "d53c019c43319a70b32e6dc654814de29e87ab89",
+          "previousSourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+          "currentSourceSHA256": "ac957ebf25e5134ab2875e9b06d9c23831f35b0b8bcbc64730d6a626b7f8588e",
+          "geometryModelDescriptorUnchanged": true,
+          "historicalHumanReviewUnchanged": true,
+          "acceptedGeometryStillApplies": true,
+          "report": "runtime-final-2026-10-03/metadata/README.md",
+          "preservationProof": "runtime-final-2026-10-03/metadata/metadata-preservation.json",
+          "runtimeValidation": "Final focused rerun passed 455 tests, 0 failures and 1 pre-existing skip; not a full-suite or human/app acceptance claim.",
+          "runtimeValidationAtDocumentationHandoff": "Focused post-correction runtime tests not yet run at metadata documentation handoff; no new passing app-validation claim.",
+          "runtimeValidationReport": "runtime-final-2026-10-03/validation/final-strong-summary.json",
+          "runtimeValidationReportSHA256": "6c5f8e87f5a23babe0dbf11b7150c5e1b0a24ce41a3bfeb5fb622aa03cf0d8be"
+        }
+      ]
     },
     {
       "number": 9,
@@ -359,7 +383,7 @@
         "appReview": "nature-stone-hanger-mini/app-review/validation.json",
         "appReviewPage": "nature-stone-hanger-mini/app-review/index.html"
       },
-      "latestRuntimeAttempt": "nature-stone-hanger-mini/runtime-retry-2026-10-02/review.md",
+      "latestRuntimeAttempt": "runtime-final-2026-10-03/boards/10.json",
       "finalCADReviewQuestion": "Does this cover the Mini’s jug finger-contact area now?",
       "completionHumanAcceptance": "pending current app review",
       "cadReviewViews": [
@@ -398,7 +422,30 @@
       "acceptedGeometryDate": "2026-10-03",
       "geometryHumanAcceptance": "accepted",
       "acceptedJugHighlightDate": "2026-10-03",
-      "latestHumanAcceptance": "nature-stone-hanger-mini/finger-contact-acceptance-2026-10-03.json"
+      "latestHumanAcceptance": "nature-stone-hanger-mini/finger-contact-acceptance-2026-10-03.json",
+      "runtimeAttemptEvents": [
+        {
+          "date": "2026-10-03",
+          "event": "bounded-current-runtime-attempt",
+          "record": "runtime-final-2026-10-03/boards/10.json",
+          "reviewPage": "runtime-final-2026-10-03/boards/10.md",
+          "appearanceAndTouch": "bounded supplied-frame pass",
+          "physicalMeshPick": "one supplied physical tap passed",
+          "contactCoverage": "All 4 logical contacts: jug, wood edge, granite edge and pinch.",
+          "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+          "acceptedGeometryUnchanged": true,
+          "freshAppHumanAcceptance": "pending",
+          "appWorkflowPassed": false,
+          "workoutStatus": "landscape rest preview remains red; portrait attempt ended with bounded 40-second accessibility timeout",
+          "focusedVerification": "runtime-final-2026-10-03/validation/final-strong-summary.json",
+          "focusedPassed": 455,
+          "focusedFailed": 0,
+          "focusedExistingSkips": 1,
+          "fullSuitePassed": false
+        }
+      ],
+      "appWorkflowPassed": false,
+      "currentAppHumanAcceptance": "pending"
     },
     {
       "number": 11,
@@ -485,7 +532,31 @@
       "acceptedDate": "2026-10-03",
       "acceptedGeometryDate": "2026-10-03",
       "acceptedPinchHighlightDate": "2026-10-03",
-      "latestHumanAcceptance": "nature-stone-hanger-mini-karma8a/pinch-wrap-acceptance-2026-10-03.json"
+      "latestHumanAcceptance": "nature-stone-hanger-mini-karma8a/pinch-wrap-acceptance-2026-10-03.json",
+      "runtimeAttemptEvents": [
+        {
+          "date": "2026-10-03",
+          "event": "bounded-current-runtime-attempt",
+          "record": "runtime-final-2026-10-03/boards/11.json",
+          "reviewPage": "runtime-final-2026-10-03/boards/11.md",
+          "appearanceAndTouch": "bounded supplied-frame pass",
+          "physicalMeshPick": "one supplied physical tap passed",
+          "contactCoverage": "All 3 logical contacts: wood edge, granite edge and pinch.",
+          "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+          "acceptedGeometryUnchanged": true,
+          "freshAppHumanAcceptance": "pending",
+          "appWorkflowPassed": false,
+          "workoutStatus": "not executed after common #10 workout gate failed",
+          "focusedVerification": "runtime-final-2026-10-03/validation/final-strong-summary.json",
+          "focusedPassed": 455,
+          "focusedFailed": 0,
+          "focusedExistingSkips": 1,
+          "fullSuitePassed": false
+        }
+      ],
+      "appWorkflowPassed": false,
+      "currentAppHumanAcceptance": "pending",
+      "latestRuntimeAttempt": "runtime-final-2026-10-03/boards/11.json"
     },
     {
       "number": 12,
@@ -533,7 +604,31 @@
       "humanReviewRecord": "owl-climb-poker/human-review.json",
       "latestRevision": "owl-climb-poker/review12-2026-10-02/review.md",
       "runtimeRevision": "owl-climb-poker/review12-2026-10-02/runtime-validation.json",
-      "acceptedGeometryDate": "2026-10-02"
+      "acceptedGeometryDate": "2026-10-02",
+      "runtimeAttemptEvents": [
+        {
+          "date": "2026-10-03",
+          "event": "bounded-current-runtime-attempt",
+          "record": "runtime-final-2026-10-03/boards/12.json",
+          "reviewPage": "runtime-final-2026-10-03/boards/12.md",
+          "appearanceAndTouch": "bounded supplied-frame pass",
+          "physicalMeshPick": "one supplied physical tap passed",
+          "contactCoverage": "Four representative contacts, one from each face A–D; not all 34 contacts.",
+          "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+          "acceptedGeometryUnchanged": true,
+          "freshAppHumanAcceptance": "pending",
+          "appWorkflowPassed": false,
+          "workoutStatus": "not executed after common #10 workout gate failed",
+          "focusedVerification": "runtime-final-2026-10-03/validation/final-strong-summary.json",
+          "focusedPassed": 455,
+          "focusedFailed": 0,
+          "focusedExistingSkips": 1,
+          "fullSuitePassed": false
+        }
+      ],
+      "appWorkflowPassed": false,
+      "currentAppHumanAcceptance": "pending",
+      "latestRuntimeAttempt": "runtime-final-2026-10-03/boards/12.json"
     },
     {
       "number": 13,
@@ -606,7 +701,31 @@
       "humanReviewRecord": "plateau-lifting-edge/human-review.json",
       "latestRevision": "plateau-lifting-edge/review13-2026-10-02/review.md",
       "runtimeRevision": "plateau-lifting-edge/review13-2026-10-02/runtime-validation.json",
-      "acceptedGeometryDate": "2026-10-02"
+      "acceptedGeometryDate": "2026-10-02",
+      "runtimeAttemptEvents": [
+        {
+          "date": "2026-10-03",
+          "event": "bounded-current-runtime-attempt",
+          "record": "runtime-final-2026-10-03/boards/13.json",
+          "reviewPage": "runtime-final-2026-10-03/boards/13.md",
+          "appearanceAndTouch": "bounded supplied-frame pass",
+          "physicalMeshPick": "one supplied physical tap passed",
+          "contactCoverage": "One physical edge across the 18 → 15 → 10 → 18 mm authored presentation sequence.",
+          "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+          "acceptedGeometryUnchanged": true,
+          "freshAppHumanAcceptance": "pending",
+          "appWorkflowPassed": false,
+          "workoutStatus": "not executed after common #10 workout gate failed",
+          "focusedVerification": "runtime-final-2026-10-03/validation/final-strong-summary.json",
+          "focusedPassed": 455,
+          "focusedFailed": 0,
+          "focusedExistingSkips": 1,
+          "fullSuitePassed": false
+        }
+      ],
+      "appWorkflowPassed": false,
+      "currentAppHumanAcceptance": "pending",
+      "latestRuntimeAttempt": "runtime-final-2026-10-03/boards/13.json"
     },
     {
       "number": 14,
@@ -658,7 +777,31 @@
       "acceptedGeometryDate": "2026-10-02",
       "acceptedCordDate": "2026-10-02",
       "reviewAnswer": "Y",
-      "acceptedScope": "Shown #14 native CAD shape and corrected inferred barrel-wrap cord display on both faces, with whole prior/current front, side and top comparisons."
+      "acceptedScope": "Shown #14 native CAD shape and corrected inferred barrel-wrap cord display on both faces, with whole prior/current front, side and top comparisons.",
+      "runtimeAttemptEvents": [
+        {
+          "date": "2026-10-03",
+          "event": "bounded-current-runtime-attempt",
+          "record": "runtime-final-2026-10-03/boards/14.json",
+          "reviewPage": "runtime-final-2026-10-03/boards/14.md",
+          "appearanceAndTouch": "bounded supplied-frame pass",
+          "physicalMeshPick": "one supplied physical tap passed",
+          "contactCoverage": "All 7 logical contacts; left/right semantic naming remains unresolved.",
+          "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+          "acceptedGeometryUnchanged": true,
+          "freshAppHumanAcceptance": "pending",
+          "appWorkflowPassed": false,
+          "workoutStatus": "not executed after common #10 workout gate failed",
+          "focusedVerification": "runtime-final-2026-10-03/validation/final-strong-summary.json",
+          "focusedPassed": 455,
+          "focusedFailed": 0,
+          "focusedExistingSkips": 1,
+          "fullSuitePassed": false
+        }
+      ],
+      "appWorkflowPassed": false,
+      "currentAppHumanAcceptance": "pending",
+      "latestRuntimeAttempt": "runtime-final-2026-10-03/boards/14.json"
     },
     {
       "number": 15,
@@ -666,7 +809,7 @@
       "boardID": "trango.rock-prodigy-forge",
       "name": "Trango Rock Prodigy Forge",
       "humanReview": "Shown #15 Forge CAD shape accepted after Opus review; current app appearance, picking, highlights, orbit and workout behavior remain unverified",
-      "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+      "sourceSHA256": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124",
       "reviewPage": "trango-rock-prodigy-forge/review15-2026-10-02/index.html",
       "sourceAudit": "trango-rock-prodigy-forge/source-audit.md",
       "comparisons": [
@@ -688,7 +831,64 @@
       "humanReviewRecord": "trango-rock-prodigy-forge/human-review.json",
       "geometryHumanAcceptance": "accepted",
       "completionHumanAcceptance": "pending current app review",
-      "opusAdvisory": "trango-rock-prodigy-forge/review15-2026-10-02/opus-advisor/review.md"
+      "opusAdvisory": "trango-rock-prodigy-forge/review15-2026-10-02/opus-advisor/review.md",
+      "acceptedGeometrySourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+      "metadataIntegrationEvents": [
+        {
+          "date": "2026-10-03",
+          "kind": "merged-main-physical-equipment-identity-restoration",
+          "fields": [
+            "equipmentObjects",
+            "contacts[*].equipmentObjectID (20 existing contacts)"
+          ],
+          "beforeEquipmentObjectIDs": [
+            "primary"
+          ],
+          "afterEquipmentObjectIDs": [
+            "left-half",
+            "right-half"
+          ],
+          "mainCommit": "d53c019c43319a70b32e6dc654814de29e87ab89",
+          "upstreamCommit": "e85a42ee38073a2c4cb19f842ef02f88cdd52e11",
+          "previousSourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+          "currentSourceSHA256": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124",
+          "geometryModelDescriptorUnchanged": true,
+          "runtimeInstancesAdded": false,
+          "historicalHumanReviewUnchanged": true,
+          "acceptedGeometryStillApplies": true,
+          "report": "runtime-final-2026-10-03/metadata/forge-equipment-identity/README.md",
+          "preservationProof": "runtime-final-2026-10-03/metadata/forge-equipment-identity/metadata-preservation.json",
+          "runtimeValidation": "Final focused rerun passed 455 tests, 0 failures and 1 pre-existing skip; not a full-suite or human/app acceptance claim.",
+          "runtimeValidationAtDocumentationHandoff": "Focused post-correction rerun pending root validation at documentation handoff; no new passing app or workout claim.",
+          "runtimeValidationReport": "runtime-final-2026-10-03/validation/final-strong-summary.json",
+          "runtimeValidationReportSHA256": "6c5f8e87f5a23babe0dbf11b7150c5e1b0a24ce41a3bfeb5fb622aa03cf0d8be"
+        }
+      ],
+      "runtimeAttemptEvents": [
+        {
+          "date": "2026-10-03",
+          "event": "bounded-current-runtime-attempt",
+          "record": "runtime-final-2026-10-03/boards/15.json",
+          "reviewPage": "runtime-final-2026-10-03/boards/15.md",
+          "appearanceAndTouch": "bounded supplied-frame pass",
+          "physicalMeshPick": "one supplied physical tap passed",
+          "contactCoverage": "10 representative categories across the native pair; not all 20 left/right contacts.",
+          "sourceSHA256": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124",
+          "acceptedGeometryUnchanged": true,
+          "freshAppHumanAcceptance": "pending",
+          "appWorkflowPassed": false,
+          "workoutStatus": "not executed after common #10 workout gate failed",
+          "focusedVerification": "runtime-final-2026-10-03/validation/final-strong-summary.json",
+          "focusedPassed": 455,
+          "focusedFailed": 0,
+          "focusedExistingSkips": 1,
+          "fullSuitePassed": false,
+          "coverageLimitation": "Ten categories only; three upper contacts nearly edge-on, complete bearing-face coverage unproven."
+        }
+      ],
+      "appWorkflowPassed": false,
+      "currentAppHumanAcceptance": "pending",
+      "latestRuntimeAttempt": "runtime-final-2026-10-03/boards/15.json"
     },
     {
       "number": 16,

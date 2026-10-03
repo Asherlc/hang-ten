@@ -1,0 +1,154 @@
+1: import Foundation
+2: import simd
+3: 
+4: /// Display time never becomes unbounded simulation debt.
+5: struct LiveRopeSchedule {
+6:     private var remainder = 0.0
+7:     private var paused = false
+8:     private var stopped = false
+9:     private var sleeping = false
+10:     private var target = simd_quatd(angle: 0, axis: SIMD3(0,0,1))
+11:     mutating func steps(elapsed: Double) -> Int {
+12:         guard !paused, !stopped, !sleeping, elapsed.isFinite, elapsed > 0 else { return 0 }
+13:         remainder += min(elapsed, 1.0/30)
+14:         let count = min(8, Int((remainder + 1e-12) * 240))
+15:         remainder = max(0, remainder - Double(count)/240)
+16:         return count
+17:     }
+18:     mutating func setTarget(_ value: simd_quatd) {
+19:         if abs(simd_dot(target.vector, value.vector)) < 1-1e-12 { sleeping = false }
+20:         target = value
+21:     }
+22:     mutating func accept(settled: Bool) { sleeping = settled; if settled { remainder = 0 } }
+23:     mutating func pause() { paused = true; remainder = 0 }
+24:     mutating func resume() { paused = false; remainder = 0 }
+25:     mutating func stop() { stopped = true; remainder = 0 }
+26: }
+27: 
+28: struct LiveRopeDeliveryIdentity {
+29:     let sceneID: UUID
+30:     private(set) var token: UInt64 = 0
+31:     private var generation: UInt64 = 0
+32:     private var paused = false
+33:     private var stopped = false
+34: 
+35:     init(sceneID: UUID) {
+36:         self.sceneID = sceneID
+37:     }
+38: 
+39:     mutating func select(generation: UInt64) {
+40:         if generation != self.generation { token &+= 1; self.generation = generation }
+41:     }
+42:     mutating func invalidate() { token &+= 1 }
+43:     mutating func pause() { paused = true; token &+= 1 }
+44:     mutating func resume() { paused = false; token &+= 1 }
+45:     mutating func stop() { stopped = true; token &+= 1 }
+46:     func accepts(sceneID: UUID, token: UInt64) -> Bool {
+47:         !paused && !stopped && self.sceneID == sceneID && self.token == token
+48:     }
+49: }
+50: 
+51: /// The actor owns all mutable physical state. No frame runs on the main actor.
+52: actor LiveRopeWorker {
+53:     private var solver: RopeDynamicsSolver?
+54:     init(solver: RopeDynamicsSolver) { self.solver = solver }
+55:     func advance(steps: Int, target: simd_quatd, settleImmediately: Bool) throws -> RopeFrameSnapshot? {
+56:         try Task.checkCancellation()
+57:         guard var candidate = solver else { return nil }
+58:         var frame: RopeFrameSnapshot?
+59:         if settleImmediately {
+60:             frame = try candidate.settled(targetOrientation: target, maxDuration: 5)
+61:         } else {
+62:             guard (0...8).contains(steps) else { throw RopePhysicsError.invalid("Unbounded display step") }
+63:             for _ in 0..<steps {
+64:                 try Task.checkCancellation()
+65:                 frame = try candidate.step(dt: 1.0/240, targetOrientation: target)
+66:                 if frame?.settled == true { break }
+67:             }
+68:         }
+69:         try Task.checkCancellation()
+70:         solver = candidate
+71:         return frame
+72:     }
+73:     /// Clock-independent numerical interface for lifecycle and instance tests.
+74:     func advanceExactly(steps: Int, target: simd_quatd) throws -> [RopeFrameSnapshot] {
+75:         guard (0...1200).contains(steps), var candidate = solver else { return [] }
+76:         var frames: [RopeFrameSnapshot] = []
+77:         for _ in 0..<steps { frames.append(try candidate.step(dt: 1.0/240, targetOrientation: target)) }
+78:         solver = candidate
+79:         return frames
+80:     }
+81:     func stop() { solver = nil }
+82: }
+83: 
+84: @MainActor
+85: final class LiveRopeController {
+86:     typealias Delivery = @MainActor (UUID, UInt64, RopeFrameSnapshot) -> Void
+87:     private let worker: LiveRopeWorker
+88:     private var schedule = LiveRopeSchedule()
+89:     private var identity: LiveRopeDeliveryIdentity
+90:     private var target: simd_quatd
+91:     private var generation: UInt64 = 0
+92:     private var busy = false
+93:     private var task: Task<Void, Never>?
+94:     private var stopped = false
+95:     var settleImmediately = false {
+96:         didSet { if oldValue != settleImmediately { identity.invalidate() } }
+97:     }
+98:     private let delivery: Delivery
+99:     private let failure: @MainActor (Error) -> Void
+100: 
+101:     init(solver: RopeDynamicsSolver, sceneID: UUID, delivery: @escaping Delivery,
+102:          failure: @escaping @MainActor (Error) -> Void) {
+103:         worker = LiveRopeWorker(solver: solver)
+104:         identity = LiveRopeDeliveryIdentity(sceneID: sceneID)
+105:         target = solver.state.orientation
+106:         schedule.setTarget(target)
+107:         self.delivery = delivery; self.failure = failure
+108:     }
+109:     func setTarget(orientation: simd_quatd, generation: UInt64) {
+110:         guard !stopped else { return }
+111:         target = orientation; self.generation = generation
+112:         identity.select(generation: generation); schedule.setTarget(orientation)
+113:     }
+114:     func advance(elapsed: Double) {
+115:         guard !busy, !stopped else { return }
+116:         let steps = schedule.steps(elapsed: elapsed)
+117:         guard steps > 0 else { return }
+118:         busy = true
+119:         let worker = worker, sceneID = identity.sceneID, token = identity.token
+120:         let target = target, generation = generation, immediate = settleImmediately
+121:         task = Task { [weak self] in
+122:             do {
+123:                 let frame = try await worker.advance(steps: steps, target: target, settleImmediately: immediate)
+124:                 guard let self else { return }
+125:                 self.busy = false; self.task = nil
+126:                 guard !Task.isCancelled, self.identity.accepts(sceneID: sceneID, token: token), let frame else { return }
+127:                 guard frame.metrics.geometryAccepted else { throw RopePhysicsError.invalid("Rejected display geometry") }
+128:                 self.schedule.accept(settled: frame.settled)
+129:                 self.delivery(sceneID, generation, frame)
+130:             } catch is CancellationError {
+131:                 self?.busy = false
+132:                 self?.task = nil
+133:             } catch {
+134:                 guard let self else { return }
+135:                 self.busy = false; self.task = nil
+136:                 guard !Task.isCancelled, self.identity.accepts(sceneID: sceneID, token: token) else { return }
+137:                 self.stop(); self.failure(error)
+138:             }
+139:         }
+140:     }
+141:     func pause() { identity.pause(); schedule.pause() }
+142:     func resume() { guard !stopped else { return }; identity.resume(); schedule.resume() }
+143:     func stop() {
+144:         guard !stopped else { return }
+145:         stopped = true; identity.stop(); schedule.stop(); task?.cancel(); task = nil
+146:         let worker = worker
+147:         Task { await worker.stop() }
+148:     }
+149:     deinit {
+150:         task?.cancel()
+151:         let worker = worker
+152:         Task { await worker.stop() }
+153:     }
+154: }

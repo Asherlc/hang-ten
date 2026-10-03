@@ -896,7 +896,7 @@ final class BoardPackageStoreTests: XCTestCase {
             XCTAssertEqual(position.presentationID, "primary")
         }
 
-        // Four native through-bores retain the visible front leads and rear returns.
+        // Four native through-bores retain the inferred barrel wraps and four free leads.
         let presentation = try XCTUnwrap(board.presentations.first)
         guard case .model(let media) = presentation.media,
               case .cadRoutedCord(let suspension) = media.suspension else {
@@ -905,7 +905,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertNil(media.orientation)
         XCTAssertEqual(
             media.descriptor.modelSHA256,
-            "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97"
+            "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b"
         )
         XCTAssertEqual(suspension.strands.filter { $0.kind == "lead" }.count, 4)
         XCTAssertEqual(suspension.strands.filter { $0.kind == "segment" }.count, 2)
