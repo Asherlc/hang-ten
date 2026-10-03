@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 shown CAD shape and seated cord accepted, current app unverified; #14 corrected CAD shape and inferred barrel-wrap cord shown, human acceptance pending, current app unverified",
+  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 shown CAD shape and seated cord accepted, current app unverified; #14 shown CAD shape and inferred barrel-wrap cord accepted, current app unverified; #15 next for review",
   "boards": [
     {
       "number": 1,
@@ -542,7 +542,7 @@
       "package": "tension-flash-board",
       "boardID": "tension.flash-board",
       "name": "Tension Climbing Flash Board",
-      "humanReview": "Pending #14 human shape and corrected cord review; current app appearance, picking, highlights and workout behavior unverified",
+      "humanReview": "Shown #14 CAD shape and inferred barrel-wrap cord accepted; current app appearance, picking, highlights and workout behavior remain unverified",
       "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
       "reviewPage": "tension-flash-board/review14-2026-10-02/index.html",
       "sourceAudit": "tension-flash-board/README.md",
@@ -583,7 +583,11 @@
       "suspensionSHA256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
       "humanReviewRecord": "tension-flash-board/human-review.json",
       "latestRevision": "tension-flash-board/review14-2026-10-02/review.md",
-      "runtimeRevision": "tension-flash-board/review14-2026-10-02/runtime-validation.json"
+      "runtimeRevision": "tension-flash-board/review14-2026-10-02/runtime-validation.json",
+      "acceptedGeometryDate": "2026-10-02",
+      "acceptedCordDate": "2026-10-02",
+      "reviewAnswer": "Y",
+      "acceptedScope": "Shown #14 native CAD shape and corrected inferred barrel-wrap cord display on both faces, with whole prior/current front, side and top comparisons."
     },
     {
       "number": 15,

@@ -220,7 +220,7 @@
     "geometry/tension-flash-board-ref-top.png": "35a215796bdf58dd7feb4ca49dc2f39cc2796cd62659425e2453902de4a512f7",
     "geometry/tension-flash-board-side.png": "4f75588d8e8c5a7a10887bcd365789e5b92a8648decff6d84dc6f8069a365d93",
     "geometry/tension-flash-board-top.png": "a28edc8b96f0ede8d06adc782bfbeb25b93fb5040c697de7b00ade770561bcfe",
-    "human-acceptance.json": "250f77822797a5fa31ee246cd2d801de0a7c069639c21bc9473546329c8d1455",
+    "human-acceptance.json": "698b4279168cec8588a3751ccb644d524255c568b1c48cfcd346603150b358c5",
     "independent-shape/camera-interpretation.json": "6d3ee9b5788460883ffd2f7dedeef73b510c133d509931b78ce1a5de1df4bd72",
     "independent-shape/camera-interpretation.md": "0e4a652d5053df0df057fc771f5d154a0824da3112b55ef0abf56a39c8378c74",
     "independent-shape/final-binding-and-view-proof.json": "3f7c66b6f7278407d7dc8f1ff4bc77c0e86a522ddc0dedd4e98c84981c2632f8",
@@ -232,7 +232,7 @@
     "independent-shape/native-export-verdict.md": "7d50345b0e51c9a63ecf39a00b09cb0d966042634c215736c0acd36e09f9215c",
     "independent-shape/ownership.json": "ea3572aad5a643afd88b204d6f61056ce2cd41e8b6a57e09a147e2b9fdbeca94",
     "independent-shape/round1-hash-verification.json": "c069c8764b98e83cbe044244211d1aadd1b04a20c609e7e41510cd684bf067e0",
-    "index.html": "6bac97a6652a0cfd766d0fcd5f6501a97093434ffebfbc6c2186c4ccd02ca309",
+    "index.html": "59aa882e1af6750c8f769222d1fa2513e79251a03c1e83fbd38e477512aadd1a",
     "installation-proof.json": "1c0b14fc214c1e9135916a9cdc20adf64da7a9808c6bdf8ab5051d5538463451",
     "native-collider.json": "9b86911411ac2b8a6f7cfc093ea5be98655086d3cecf639ee60e224d2b2e9f15",
     "native-shape/author-job.json": "8f04ad60f14e1c4a75a70c1fe6e5f2b34b41f8f3fbb351d4b073b01724255b1f",
@@ -336,13 +336,18 @@
     "resource-lifecycle/nativeRunnerOwnership.json": "16dd80a78c43491c1cf7249b28f87951735dd38633a8358ddf9d2a99cd0184fd",
     "resource-lifecycle/previousJobCleanup.json": "8c989ba68a335787424914288cb9291db93e629b04ef719c683873d92174bb8d",
     "resource-lifecycle/previousViewCleanup.json": "c3f177463d593ad3b4cc0dbeb9d537dbb4c57f29bbd75fb27294fce1446054ef",
-    "review.md": "22053f357db90b61408800d9cea9d3a09b8105f6f0a5d05235650107dd5866ba",
+    "review.md": "35605b8b0300aa2108bc91a8594feb975af727df96898fb997f2d0d7a54c539c",
     "runtime-validation.json": "ed50e76fa1c5b00cc3b1edfc62d335e673e7a6f87c609d85630d62c65f9e0418",
-    "throwaway-script-provenance.json": "58d27fd4be3dc96698386c923bb650e7a5a1df7316547776aae1f184e4a35072",
+    "throwaway-script-provenance.json": "4b8e0c5b555e4512e1b0f2ceffbe1eff8d999087ee2a4bc57146b11586f24a58",
     "verification-authorization.json": "2700e5c07c27ec06879b776107745bba10024fdefdaa44bf0317f89723f5ba3c"
   },
-  "humanAcceptance": "pending",
+  "humanAcceptance": "shown-CAD-shape-and-inferred-cord-accepted",
   "currentAppFrames": 0,
   "unitCasesExecuted": 0,
-  "scriptsRetainedUnderContextOnly": true
+  "scriptsRetainedUnderContextOnly": true,
+  "acceptanceUpdate": {
+    "date": "2026-10-02",
+    "record": "human-acceptance.json",
+    "scope": "Shown CAD geometry and inferred cord accepted; raw technical/runtime reports unchanged"
+  }
 }

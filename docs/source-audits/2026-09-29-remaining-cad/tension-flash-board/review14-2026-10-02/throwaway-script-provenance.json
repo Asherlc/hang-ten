@@ -43,6 +43,7 @@
     ".context/placid-badger/flash-board-review14/shape-review/native-refinement/render_native.py": "0db203bc3e8844de9368ca990b4e2b7e0dabb124e796bb18a43d9bfbb4fa55b8",
     ".context/placid-badger/flash-board-review14/shape-review/native-refinement/run_owned_job.py": "93497fb30e8e3475a9e2907eaa85e14dca7a4fad7188adc4d2327b0296fe3090",
     ".context/placid-badger/flash-board-review14/shape-review/native-refinement/verify_native.py": "e60fb426ad67bb530de483e507159f84eaa316324b73f13cb074328f2bee2115",
-    ".context/placid-badger/flash-board-review14/root/close-review14.py": "d4a00769ceae2f69587e445563f57b1c5aabf8338edb799bdaa834d3200a6eae"
+    ".context/placid-badger/flash-board-review14/root/close-review14.py": "d4a00769ceae2f69587e445563f57b1c5aabf8338edb799bdaa834d3200a6eae",
+    ".context/placid-badger/flash-board-review14/root/record_acceptance.py": "7b44357ab2e7628140c6244112fcdf66e09258b15d09e091674378c714f8d849"
   }
 }

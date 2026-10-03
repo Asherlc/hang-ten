@@ -20,4 +20,4 @@ Fresh package validation covers 64 boards and 58 model deliveries. Both platform
 
 [Producer closeout](cord-feedback/final-native/final-artifact-index.json) pins the final inputs and cleanup. A [separate argv receipt correction](cord-feedback/final-native/command-argv-supplement.json) records a logging list-alias defect; raw receipts are preserved and the native results are unaffected.
 
-Human acceptance of #14 is pending. **Does the corrected shape and cord look right?**
+The user accepted the shown CAD shape and inferred barrel-wrap cord on October 2 with **“Y”** to “Does #14 look right now?” [The exact acceptance record](human-acceptance.json) binds the shown images and assets. Current app appearance and workflow remain unverified. Technical reports retain their pending-at-validation historical state.
