@@ -1,0 +1,26 @@
+{
+  "status": "PROSPECTIVE_HELPERS_NOT_EXECUTED",
+  "checks": {
+    "readinessLoopByteExact": true,
+    "captureLoopByteExact": true,
+    "CPUCheckerByteExact": true,
+    "frameCheckerByteExact": true
+  },
+  "helpers": {
+    "PROTOCOL.md": "5d05639c936fd3c4cc0cab0dc65a208c013cfb61ec96e61acae624e692f7f72b",
+    "capture.patch": "42eb779039c8033bbfce6159396034cde87738f5898ccaed24f162056174964a",
+    "check-constructors.py": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+    "check-cpu-semantics.py": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+    "check-frames.py": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+    "check-navigation.py": "eb2bbee21e47f0037e08353b47e4d0ca2d5f2ab09d9f8a77c6c57a9d388766ca",
+    "check-ownership.py": "a6847f8b75856693ebb3067b0528623c205952d3d070bac049174f77b99dc285",
+    "check-real-hands.py": "1e6f6eff3e113b183a6e7d3aad87c27ab464b8ca46153f2dfbbd18113cfe5863",
+    "check-weak-hand-census.py": "739b463ef6cbcf749f817c34ca1019729630ea91e1cd0d637f10397a33353223",
+    "compare-prior-real-hands.py": "d4c9dd66aec50f9c3bc9213b5280ee74f83c318aa39dc58ed31c9f27ece83b8b",
+    "visual-review-template.json": "731fddb338b0a2dde660260796a7c9cfec5998410b6bcd9e9c703694c46bea43",
+    "workout-weak-hand-census.py": "06f189db71461a114c8d06fd72b76b71d808067b0bdf62d8da3fa7c4fb966384"
+  },
+  "schemaBasisPatchSHA256": "1e861e0053311233d2a79670e1a3f48f6a54bf3555b0a1eaab3bd5dd62703aa5",
+  "newRuntimeAuthorizedByPreparation": false,
+  "actualRunCount": 0
+}

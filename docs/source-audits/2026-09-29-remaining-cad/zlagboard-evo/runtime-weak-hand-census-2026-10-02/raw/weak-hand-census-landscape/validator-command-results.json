@@ -1,0 +1,34 @@
+[
+  {
+    "helper": "check-cpu-semantics.py",
+    "exitStatus": 0
+  },
+  {
+    "helper": "check-frames.py",
+    "exitStatus": 0
+  },
+  {
+    "helper": "check-constructors.py",
+    "exitStatus": 0
+  },
+  {
+    "helper": "check-ownership.py",
+    "exitStatus": 0
+  },
+  {
+    "helper": "check-navigation.py",
+    "exitStatus": 0
+  },
+  {
+    "helper": "check-real-hands.py",
+    "exitStatus": 0
+  },
+  {
+    "helper": "check-weak-hand-census.py",
+    "exitStatus": 0
+  },
+  {
+    "helper": "compare-prior-real-hands.py",
+    "exitStatus": 0
+  }
+]
