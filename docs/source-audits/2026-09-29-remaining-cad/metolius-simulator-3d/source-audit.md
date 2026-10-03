@@ -62,3 +62,14 @@ Native checking passed validity for 1 solid(s), all 30 stable contact IDs, body-
 | Top | [Comparison](review/comparison-top.png) |
 
 All three final comparisons were visually inspected alongside the retained manufacturer imagery. The exact prior asset comes from commit `d0e4e95191e4a76822815bb4eeef3a32caa6fea0`. Renders use the shared `preview.py` renderer, including its corrected positive-X side and positive-Z top painter order. The CPU previews shade triangle face normals while runtime exports retain native CAD surface normals. Native-app appearance, selection and performance acceptance remain root integration work.
+
+
+## 2026-10-03 — merged-main capacity metadata restoration
+
+The current native source is `ac957ebf25e5134ab2875e9b06d9c23831f35b0b8bcbc64730d6a626b7f8588e` after restoring the existing `round-sloper-3-center.handCapacity = 2` from merged main PR #516 (merge `781e64636eafb382f6ad49cbdf276be354117310`, incoming main `d53c019c43319a70b32e6dc654814de29e87ab89`). The historical human-reviewed source `b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef` above remains the geometry approval identity; [human-review.json](human-review.json), its shown hash and the 2026-10-01 “lgtm” answer are unchanged.
+
+The [metadata integration packet](../runtime-final-2026-10-03/metadata/README.md) records the exact initial three-way audit across boards #1–15 and four existing paired round-sloper task mismatches: Entry minute 8, Intermediate minutes 4 and 10, and Advanced minute 10. This restores merged-main capacity for the existing shared contact; it does not add source facts, routines, contacts, grip prescriptions or geometry. All routine content is unchanged.
+
+The [native preservation proof](../runtime-final-2026-10-03/metadata/metadata-preservation.json) records 509 byte-identical BRep entries and every archive member except `Document.xml` unchanged. The only embedded manifest field changed is the restored capacity; model `f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b` and descriptor `147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb` remain identical. The accepted geometry and plastic display remain valid under their existing review limits.
+
+Queue #8 now distinguishes the current metadata source from that historical accepted source. Other queue entries and app-review statuses are unchanged. Focused post-correction runtime tests have not yet run at this documentation handoff; no new passing app-validation result is claimed.

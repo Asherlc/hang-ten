@@ -1,0 +1,17 @@
+{
+  "name": "placid-badger-karma8a-package-validation",
+  "command": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "hangboard_packages.cli",
+    "validate",
+    "--root",
+    "Hangboards",
+    "--final-inventory"
+  ],
+  "timeoutSeconds": 600,
+  "environment": {
+    "HANGTEN_FREECAD_CMD": "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+    "HANGTEN_CAD_PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311"
+  }
+}

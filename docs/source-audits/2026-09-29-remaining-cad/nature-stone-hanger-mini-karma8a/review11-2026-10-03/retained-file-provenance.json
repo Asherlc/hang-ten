@@ -1,0 +1,96 @@
+{
+  "owner": "placid-badger",
+  "files": [
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/karma11-granite-edge-15-granite-front-canonical.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-granite-edge-15-granite-front-canonical.png",
+      "sha256": "c52405e7239f0f8c7915dba71b2a0b8ffb86b8483c075bacddfc1e4a1d9e6920"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/karma11-granite-edge-15-granite-front-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-granite-edge-15-granite-front-oblique.png",
+      "sha256": "fa3a53633c99e65972058d969a9a88dfba304717ba3d58dfcd6743c595cb0262"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/karma11-wood-edge-15-wood-inverted-canonical.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-wood-edge-15-wood-inverted-canonical.png",
+      "sha256": "580380086c329f73c3ff2c3776c961c23b5a64b905168478ee7341d23259674a"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/karma11-wood-edge-15-wood-inverted-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-wood-edge-15-wood-inverted-oblique.png",
+      "sha256": "7cc8f25289a6292a7ba91f65ecd652d8a2c8dafb683f045d71edcad2f5d191c0"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/karma11-pinch-60-pinch-side-canonical.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-pinch-60-pinch-side-canonical.png",
+      "sha256": "39dad1a11b8b09a0fad0cd1d445f7e04786ce09b3508f87d76c7c73fb9c583f6"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/karma11-pinch-60-pinch-side-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-pinch-60-pinch-side-oblique.png",
+      "sha256": "2f6022da0bab7f85338e79264906a9eaf3905bf419b23daba337714947d37bbb"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/karma11-all-three-contacts-whole-selection.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-all-three-contacts-whole-selection.png",
+      "sha256": "a8b4538bd6db6528283947d6e47663d664faa76ae35ac8a01430fc2cedd85826"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/karma11-three-contacts-whole-oblique-selection.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/karma11-three-contacts-whole-oblique-selection.png",
+      "sha256": "f451504dcd8366af1be7dc075c6a387d5dea40c34b5ce7f93300536c0bb18aed"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/preview-provenance.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/preview-provenance.json",
+      "sha256": "765011022ad4f7f0bd6c2a2b0dca5ae5da1cf08783cb0433865a0d0f6898fe91"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/preflight-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/preflight-verification.json",
+      "sha256": "4b57d03f6133307269025c0c810d4a497f28aa887a1e6a09ae02d63d6f9120a6"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/final-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/final-verification.json",
+      "sha256": "91eb2b316048efe9cf6eeb33f55631ba957d0e2cd421537cce5c503300b1733f"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/resource-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/resource-cleanup.json",
+      "sha256": "4b9d3550eabb8a406cd3449edd91cdbe2bf14c26102fe1288bef08afdb76e9a5"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/visual-inspection.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/visual-inspection.json",
+      "sha256": "19490c40a61107d35f9d0439e61a88a66e7633d1f22d17bbc1f6163de7bcb3ea"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/runtime-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/runtime-ownership.json",
+      "sha256": "e7e3126a732e69b1995317208d864f1c6708aff958ee5df49ea662c7e9426869"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/ownership.json",
+      "sha256": "16ad2f3ab92ec9cf683d33fca035039d535ab44a79c4fe389e781b2275055129"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/helper-snapshots/per-pixel-depth-function.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/helper-snapshots/per-pixel-depth-function.py",
+      "sha256": "4813f62cecf013dda9b7e3345ac9747b01934bf751dfd6300a865ae3e22d2466"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/helper-snapshots/rotate-and-tube-functions.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/helper-snapshots/rotate-and-tube-functions.py",
+      "sha256": "33248f5cdc6a07d6018a262dc169b305a1e11540a3faa9dbc931f823d648a5e4"
+    },
+    {
+      "source": ".context/placid-badger/karma11-review-2026-10-03/helper-snapshots/rotate-inverse-function.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review11-2026-10-03/helper-snapshots/rotate-inverse-function.py",
+      "sha256": "bfb5280d7fa8616b48f6852706e21bb35c9bbf6159db0c0c96fc98423726b4cd"
+    }
+  ],
+  "newCanonicalAssets": false
+}

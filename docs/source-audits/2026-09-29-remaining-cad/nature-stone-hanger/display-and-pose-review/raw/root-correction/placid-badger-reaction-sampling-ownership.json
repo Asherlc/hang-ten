@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "placid-badger-reaction-sampling",
+  "script": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/check_reaction_sampling.py",
+  "timeoutSeconds": 120,
+  "startedUTC": "2026-10-01T23:23:30.515233+00:00",
+  "ownedProcessGroup": 15176,
+  "elapsedSeconds": 24.07357533299364,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

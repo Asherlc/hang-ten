@@ -1,0 +1,20 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-contact-order-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-contact-order-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-contact-order-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 8304,
+      "pgid": 8304,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/correct-contact-order.py"
+      ]
+    }
+  ]
+}

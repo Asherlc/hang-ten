@@ -1,0 +1,20 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-independent-candidate-check-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-independent-candidate-check-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-independent-candidate-check-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 41581,
+      "pgid": 41581,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/verify-candidate.py"
+      ]
+    }
+  ]
+}

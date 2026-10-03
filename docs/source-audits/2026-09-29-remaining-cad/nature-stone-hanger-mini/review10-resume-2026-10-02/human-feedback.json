@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger",
+  "dateUTC": "2026-10-03T03:32:26.588696+00:00",
+  "reviewNumber": 10,
+  "boardID": "nature.stone-hanger-mini",
+  "rawFeedback": [
+    "those cords dont look right",
+    "and the jug isnt the right part"
+  ],
+  "identityClarification": {
+    "question": "For the Stone Hanger Mini, is the pull-up jug the rounded outside top/back rail, or a lip inside the recess?",
+    "answer": "Rounded outside top/back rail"
+  },
+  "priorPreviewAccepted": false,
+  "physicalCorrectionAuthorized": true,
+  "priorOverallBodyApprovalPreserved": true,
+  "scope": "Jug contact ownership, usable upright pose, cord routing/seating; accepted overall body remains."
+}

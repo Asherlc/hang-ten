@@ -1,0 +1,6 @@
+{
+  "status": "fail",
+  "error": "native reaction requires unsupported force: nodal residual 0.210515949",
+  "sourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+  "pathReport": "offset-anchor-probe.json"
+}

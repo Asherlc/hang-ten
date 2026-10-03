@@ -1,0 +1,83 @@
+{
+  "owner": "placid-badger",
+  "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+  "task": "Poker #12 frozen-package validation preparation",
+  "createdAt": "2026-10-02",
+  "generatedDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02",
+  "status": "completed package/compile-only validation; owned resources deleted and freshly verified",
+  "externalResourcesCreated": [],
+  "simulatorsCreated": 0,
+  "finishedUTC": "2026-10-02T15:32:33.549532+00:00",
+  "ownedJobs": [
+    {
+      "jobName": "placid-badger-poker12-model-tools-pytest",
+      "processGroup": 34571,
+      "processGroupAbsent": true,
+      "resources": [
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-model-tools-pytest-TMP",
+          "absentNow": true
+        }
+      ]
+    },
+    {
+      "jobName": "placid-badger-poker12-manifest-package-pytest",
+      "processGroup": 34617,
+      "processGroupAbsent": true,
+      "resources": [
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-manifest-package-pytest-TMP",
+          "absentNow": true
+        }
+      ]
+    },
+    {
+      "jobName": "placid-badger-poker12-canonical-cli",
+      "processGroup": 34897,
+      "processGroupAbsent": true,
+      "resources": [
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-canonical-cli-TMP",
+          "absentNow": true
+        }
+      ]
+    },
+    {
+      "jobName": "placid-badger-poker12-android-staging",
+      "processGroup": 34903,
+      "processGroupAbsent": true,
+      "resources": [
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-android-staging-TMP",
+          "absentNow": true
+        },
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-android-stage",
+          "absentNow": true
+        }
+      ]
+    },
+    {
+      "jobName": "placid-badger-poker12-ios-build",
+      "processGroup": 34926,
+      "processGroupAbsent": true,
+      "resources": [
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-build-TMP",
+          "absentNow": true
+        },
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-DD",
+          "absentNow": true
+        }
+      ]
+    }
+  ],
+  "allOwnedResourcesAbsent": true,
+  "allOwnedProcessGroupsAbsent": true,
+  "simulatorsBooted": 0,
+  "appsInstalled": 0,
+  "appsLaunched": 0,
+  "currentAppFrames": 0,
+  "iosUnitTestCasesExecuted": 0
+}

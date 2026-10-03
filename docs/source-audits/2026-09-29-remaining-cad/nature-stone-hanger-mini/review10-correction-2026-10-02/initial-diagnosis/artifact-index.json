@@ -1,0 +1,46 @@
+{
+  "owner": "placid-badger",
+  "status": "read-only diagnosis complete; user-confirmed outside jug region and rejected prior cords retained; no corrective authoring",
+  "diagnosis": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/diagnostic-worker/jug-cord-diagnosis.json",
+    "sha256": "233f589c8f1c382817566e33c106c37b18c7ac2e71c8e86443729f2cea5a74bf"
+  },
+  "summary": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/diagnostic-worker/diagnosis.md",
+    "sha256": "3faf63c0833c0a35efb43cc0dce8bd10bd803db71ea3e5a37a3e598f17a11c34"
+  },
+  "scopeAndLifecycle": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/diagnostic-worker/scope-and-lifecycle.json",
+    "sha256": "cc38adffc32327b93d6a79ebae5b9c74786aee09bf9343bafc87d74cfcdca5ea"
+  },
+  "rawExecution": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/diagnostic-worker/read-only-execution.json",
+    "sha256": "2f6005ca728473ec66da617e235508836734bdd56fd552f30e9529793e9eb087"
+  },
+  "artifacts": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/diagnostic-worker/diagnosis.md",
+      "sha256": "3faf63c0833c0a35efb43cc0dce8bd10bd803db71ea3e5a37a3e598f17a11c34"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/diagnostic-worker/jug-cord-diagnosis.json",
+      "sha256": "233f589c8f1c382817566e33c106c37b18c7ac2e71c8e86443729f2cea5a74bf"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/diagnostic-worker/ownership.json",
+      "sha256": "cae600a1f701b78078a2ffb158dddc92615ffa8c2554b425a307ad90156e568d"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/diagnostic-worker/read-only-execution.json",
+      "sha256": "2f6005ca728473ec66da617e235508836734bdd56fd552f30e9529793e9eb087"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/diagnostic-worker/retain-diagnosis.py",
+      "sha256": "4b5a3e89b79df4ed2d779cc55e91d6e98e102b629e738a4d6b052793beabf291"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/diagnostic-worker/scope-and-lifecycle.json",
+      "sha256": "cc38adffc32327b93d6a79ebae5b9c74786aee09bf9343bafc87d74cfcdca5ea"
+    }
+  ]
+}

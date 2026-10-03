@@ -1,0 +1,28 @@
+{
+  "status": "pass",
+  "timestamp": "2026-10-02T00:09:38.277952+00:00",
+  "packageSHA256": {
+    "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+    "Hangboards/nature-stone-hanger/assets/primary.usdz": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+    "Hangboards/nature-stone-hanger/assets/primary.model.json": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+    "Hangboards/nature-stone-hanger/suspension.json": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae"
+  },
+  "changedFiles": [
+    "Hangboards/nature-stone-hanger/suspension.json",
+    "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd",
+    "Hangboards/nature-stone-hanger/assets/primary.usdz",
+    "Hangboards/nature-stone-hanger/assets/primary.model.json"
+  ],
+  "unchangedOtherPackageFiles": 202,
+  "allOtherPackageFilesUnchanged": true,
+  "independentAuditPath": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/sixteen-vertical-candidate-audit.json",
+  "independentAuditSHA256": "e5c09868c3352ea831792799f59db88c97bf0ccb772d029adad37b2cf90b85d2",
+  "codeFreezeSHA256": "cef46c7b031eba55bdbcde889fc27d505eedeba137dbee0abb1d3aa74a789012",
+  "colliderSHA256": "9f1c7afee52db277aaef76ea3c92fcc8ceae8223b95fd43847314a9545466d77",
+  "applyReportSHA256": "591083175d543a198cdfe2207e0bc81be7337934041349b2272fb11eeb23c3e7",
+  "checkReportSHA256": "591083175d543a198cdfe2207e0bc81be7337934041349b2272fb11eeb23c3e7",
+  "twoReportsAndSidecarsByteIdentical": true,
+  "humanAcceptance": "pending",
+  "rootRuntimeReview": "pending",
+  "noGitMutation": true
+}

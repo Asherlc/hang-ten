@@ -1,0 +1,27 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "Tools/HangboardCAD/run_freecad.py",
+    "Tools/HangboardCAD/compile_board.py",
+    "--package",
+    "nature-stone-hanger",
+    "--source",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/native-author/nature-stone-hanger.FCStd",
+    "--assets",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/repro-assets",
+    "--report",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/compile-repro.json"
+  ],
+  "startedUTC": "2026-10-02T01:38:38.765175+00:00",
+  "timeoutSeconds": 300,
+  "ownedTemporaryDirectory": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-compile-repro-tmp",
+  "status": "pass",
+  "ownedProcessGroup": 83148,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 72.8841820419766
+}

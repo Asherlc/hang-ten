@@ -1,0 +1,189 @@
+{
+  "owner": "placid-badger",
+  "verifiedUTC": "2026-10-02T19:37:34.283852+00:00",
+  "status": "pass",
+  "canonicalSHA256": {
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+    "Hangboards/plateau-lifting-edge/assets/primary.model.json": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+    "Hangboards/plateau-lifting-edge/assets/primary.usdz": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+    "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+    "Hangboards/plateau-lifting-edge/suspension.json": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80"
+  },
+  "generatedManifestSHA256": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4",
+  "otherPackageFilesUnchanged": 198,
+  "onlyReviewQueueBoardChanged": 13,
+  "allOtherReviewAndAcceptanceRecordsPreserved": true,
+  "priorPlateauQueueAndLockRecordsPreserved": true,
+  "historicalTestAndAppCountsPreserved": true,
+  "sharedRendererReservedAndUnchanged": true,
+  "sharedSolverAndCompilerUnchanged": true,
+  "completePrimarySourceFilesUnchanged": 6,
+  "lockedFiles": 135,
+  "onlyChangedLockedFiles": [
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json",
+    "Hangboards/plateau-lifting-edge/assets/primary.model.json",
+    "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+    "Hangboards/plateau-lifting-edge/suspension.json"
+  ],
+  "modelDescriptorSidecarBindingsPass": true,
+  "recordedProcessGroups": [
+    {
+      "processGroup": 35752,
+      "receiptPath": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-android-staging-ownership.json",
+      "members": []
+    },
+    {
+      "processGroup": 35744,
+      "receiptPath": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-canonical-cli-ownership.json",
+      "members": []
+    },
+    {
+      "processGroup": 35869,
+      "receiptPath": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-build-ownership.json",
+      "members": []
+    },
+    {
+      "processGroup": 35680,
+      "receiptPath": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-manifest-package-pytest-ownership.json",
+      "members": []
+    },
+    {
+      "processGroup": 35671,
+      "receiptPath": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-model-tools-pytest-ownership.json",
+      "members": []
+    },
+    {
+      "processGroup": 35738,
+      "receiptPath": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-native-routes-pytest-ownership.json",
+      "members": []
+    },
+    {
+      "processGroup": 17424,
+      "receiptPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-author-command.json",
+      "members": []
+    },
+    {
+      "processGroup": 25181,
+      "receiptPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-10mm-command.json",
+      "members": []
+    },
+    {
+      "processGroup": 25084,
+      "receiptPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-15mm-command.json",
+      "members": []
+    },
+    {
+      "processGroup": 22315,
+      "receiptPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-18mm-command.json",
+      "members": []
+    },
+    {
+      "processGroup": 22187,
+      "receiptPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-native-verify-command.json",
+      "members": []
+    },
+    {
+      "processGroup": 21007,
+      "receiptPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-preserve-finish-command.json",
+      "members": []
+    }
+  ],
+  "recordedTransientPaths": [
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-android-staging-TMP",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-android-stage",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-canonical-cli-TMP",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-build-TMP",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-DD",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-manifest-package-pytest-TMP",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-model-tools-pytest-TMP",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-native-routes-pytest-TMP",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-author-tmp",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-10mm-tmp",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-export-10mm-staging",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-15mm-tmp",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-export-15mm-staging",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-18mm-tmp",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-export-18mm-staging",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-native-verify-tmp",
+      "absent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-preserve-finish-tmp",
+      "absent": true
+    }
+  ],
+  "nativeAuthorKnownTransientPaths": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/config",
+      "absent": true
+    }
+  ],
+  "nativeExactScriptProcessesRemaining": [],
+  "allKnownOwnedTransientPathsDeleted": true,
+  "cleanupLimits": "Native-author historical numeric PID/PGID receipts were not retained, and early direct sessions lack retained trap receipts. No historical records are invented. Known native TMP/cache/config deletion and exact-script process absence are checked freshly; all material and host/build groups retain exact records.",
+  "parallelWorkspaceInspectedOrMerged": false,
+  "simulatorsStarted": 0,
+  "serversStarted": 0,
+  "currentAppFrames": 0,
+  "iOSUnitCasesExecuted": 0,
+  "appWorkflowPassed": false,
+  "humanAcceptance": "pending"
+}

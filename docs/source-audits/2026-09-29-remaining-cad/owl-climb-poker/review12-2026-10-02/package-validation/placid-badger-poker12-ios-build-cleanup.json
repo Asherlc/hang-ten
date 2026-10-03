@@ -1,0 +1,20 @@
+{
+  "owner": "placid-badger",
+  "jobName": "placid-badger-poker12-ios-build",
+  "resources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-build-TMP",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-DD",
+      "absent": true
+    }
+  ],
+  "errors": [],
+  "remainingProcesses": [],
+  "processGroupAbsent": true,
+  "allResourcesAbsent": true,
+  "passed": true,
+  "finishedUTC": "2026-10-02T15:31:02.382586+00:00"
+}

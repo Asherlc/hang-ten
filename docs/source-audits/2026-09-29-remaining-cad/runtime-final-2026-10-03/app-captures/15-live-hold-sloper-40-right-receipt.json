@@ -1,0 +1,29 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 15,
+    "boardID": "trango.rock-prodigy-forge",
+    "package": "trango-rock-prodigy-forge",
+    "contactID": "sloper-40-right",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "trango.rock-prodigy-forge",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "sloper-40-right",
+      "BOARD_TELEPHOTO": "1"
+    },
+    "launchedAt": 1791056392.368313
+  },
+  "image": "15-live-hold-sloper-40-right.png",
+  "imageSHA256": "b409a19938173941732ce9d4344239c4bd5446dc2b363f4ba0c0327444b0f108",
+  "accessibilitySHA256": "a1310e585067a538a61c8feb2a3675c7b4a9885dccf8e2387b6d6ee05a08a18f",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=sloper-40-right;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "rawFailureCapture": false
+}

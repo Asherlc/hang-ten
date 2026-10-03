@@ -1,0 +1,35 @@
+{
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "extractorSHA256": "dbf57a10bef757087ee263fef7b883ec660c5d2e45655dab1f98e40e8b4971c4",
+  "nativeTestSHA256": "50c360624c021da6b55001a8ac4aa5dca2cef801160e6265228201f020ea4743",
+  "nativeRed": {
+    "exitCode": 1,
+    "tests": "1 failed, 1 passed",
+    "failure": "ValueError: native bore Left has no actual exterior plane witness",
+    "actualNativeMergedCylinderFixture": true
+  },
+  "nativeGreen": {
+    "exitCode": 0,
+    "tests": "2 passed",
+    "elapsedSeconds": 1.31
+  },
+  "guideTests": {
+    "exitCode": 0,
+    "tests": "12 passed",
+    "elapsedSeconds": 0.69
+  },
+  "environment": {
+    "HANGTEN_FREECAD_CMD": "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+    "HANGTEN_CAD_PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311"
+  },
+  "colliderSHA256": "9f1c7afee52db277aaef76ea3c92fcc8ceae8223b95fd43847314a9545466d77",
+  "retainedRedReproduction": {
+    "log": "placid-badger-retained-red-v2.log",
+    "ownership": "placid-badger-retained-red-v2-ownership.json",
+    "module": "rejected-original-extractor/native_cord_features.py"
+  },
+  "retainedWrapperFailure": {
+    "log": "placid-badger-retained-red.log",
+    "disposition": "Historical failed attempt to recover uncommitted helper from HEAD; no geometry job ran. Correct staged original was then recovered and actual red case reproduced."
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+  "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+  "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+  "semanticNodes": [
+    "nature_body",
+    "nature_wood",
+    "nature_stone",
+    "nature_pinch"
+  ],
+  "beforeSourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
+  "beforeModelSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46",
+  "beforeDescriptorSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4",
+  "images": {
+    "before-front.png": "17db1ebd584e7f280c4d9b4e034ed01bbd02e598de3991dc8c3add2fc568e2b6",
+    "after-front.png": "ab8fddea3011beb22567c97566f1ba7b48cff5054a366eabb7f7bcf950358867",
+    "comparison-front.png": "2edfc62ebabf46dcffabc4d00aa2fe1869b4a4b37878659aa421fce11a73e0c2",
+    "before-side.png": "2ff9aeb6a333c2f20fed05101eaef8446a686e7d83dc1bf772461338a29b63e2",
+    "after-side.png": "2ff9aeb6a333c2f20fed05101eaef8446a686e7d83dc1bf772461338a29b63e2",
+    "comparison-side.png": "08b6ccb3090e3a95405f8129c31b3c9b7e3a95f5b94bdf83e84b1cd0fc8dfb90",
+    "before-top.png": "fc61ed13a1f1af92ee0d94aa762dc947cbd65322ce34b55a115d8c89cea6944e",
+    "after-top.png": "fc61ed13a1f1af92ee0d94aa762dc947cbd65322ce34b55a115d8c89cea6944e",
+    "comparison-top.png": "ad5c34bf1421033ede710dd8d029d38dff0379cb2e9857724f6d4f25ce8319bc",
+    "before-oblique.png": "3d0159d5f43ec8f3906c25a3acba75590219d7803345c13863e66277e42873e2",
+    "after-oblique.png": "3ce17d0ac31569ef2a7f4e3e207c56f9265c82816c6d500d9143d938ebdb6aff",
+    "comparison-oblique.png": "7aa8a95bf4465419c85772fa6c605acffe8eabaaafa396f8584f7a872c81ce58"
+  },
+  "method": "Whole exact semantic USDZ export at unchanged 0.15 mm, compared with exact prior committed USDZ. Technical CPU normals; no materials/cords. No pixel inference or source-photo processing.",
+  "visualGate": "Author reviewed all four whole exported comparisons against four approved whole manufacturer images; human acceptance remains pending"
+}

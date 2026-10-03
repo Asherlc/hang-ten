@@ -1,0 +1,30 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 10,
+    "boardID": "nature.stone-hanger-mini",
+    "package": "nature-stone-hanger-mini",
+    "contactID": "pull-up-jug",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "nature.stone-hanger-mini",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "pull-up-jug",
+      "MODEL_VIEW": "side",
+      "BOARD_TELEPHOTO": "1"
+    },
+    "launchedAt": 1791053848.336745
+  },
+  "image": "10-side-readiness-failure.png",
+  "imageSHA256": "c4dbca34a93bf9a26d295ee63b3a803795c5946891afd3a48d1c515796db3a72",
+  "accessibilitySHA256": "8b266648414e908d1159fea1e76bf797386d4ca687619327b55b1e25852afe95",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=1.5707963;elevation=0.0;cameraPitch=0.2914568;cameraSettled=false;selection=pull-up-jug;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "rawFailureCapture": true
+}

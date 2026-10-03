@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters-bootstrap.py", line 7, in <module>
+    exec(compile(open(path).read(),path,'exec'),{'__name__':'__main__','__file__':path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/inspect-parameters.py", line 7, in <module>
+    if hasattr(o,'Constraints'):r['constraints']=[{'index':i,'value':c.Value,'name':o.getConstraintName(i),'type':c.Type} for i,c in enumerate(o.Constraints)];r['geometry']=[str(g) for g in o.Geometry]
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/inspect-parameters.py", line 7, in <listcomp>
+    if hasattr(o,'Constraints'):r['constraints']=[{'index':i,'value':c.Value,'name':o.getConstraintName(i),'type':c.Type} for i,c in enumerate(o.Constraints)];r['geometry']=[str(g) for g in o.Geometry]
+                                                                                    ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Sketcher.SketchObject' object has no attribute 'getConstraintName'

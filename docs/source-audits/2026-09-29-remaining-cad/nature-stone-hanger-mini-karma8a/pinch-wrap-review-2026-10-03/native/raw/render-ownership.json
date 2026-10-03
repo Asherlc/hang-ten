@@ -1,0 +1,20 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-render-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-render-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-render-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 36732,
+      "pgid": 36732,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render-comparison.py"
+      ]
+    }
+  ]
+}

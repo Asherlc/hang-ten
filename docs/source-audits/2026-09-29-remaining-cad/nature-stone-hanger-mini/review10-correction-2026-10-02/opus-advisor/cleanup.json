@@ -1,0 +1,11 @@
+{
+  "owner": "placid-badger",
+  "agentId": "554686d2-3272-4603-8629-9761b8f6969a",
+  "agentArchived": true,
+  "verifiedStatus": "closed",
+  "verifiedArchivedAt": "2026-10-03T03:40:59.283Z",
+  "nativeProcesses": [],
+  "simulators": [],
+  "servers": [],
+  "toolCacheDisposition": "Advisor reported automatic Claude web-fetch image caching under its tool-results folder. No exact root-owned external path was declared; shared or unknown tool-owned caches were left alone. Primary photos independently retained under this workspace's root/research directory."
+}

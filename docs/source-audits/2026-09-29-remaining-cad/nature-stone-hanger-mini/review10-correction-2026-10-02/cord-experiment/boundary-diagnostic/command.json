@@ -1,0 +1,23 @@
+{
+  "owner": "placid-badger",
+  "argv": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/diagnose-boundary.py"
+  ],
+  "environmentOverrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/placid-badger-mini10-diagnostic-config",
+    "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/placid-badger-mini10-diagnostic-cache",
+    "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/placid-badger-mini10-diagnostic-tmp"
+  },
+  "resourcesBeforeLaunch": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/placid-badger-mini10-diagnostic-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/placid-badger-mini10-diagnostic-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/placid-badger-mini10-diagnostic-tmp"
+  ],
+  "atUTC": "2026-10-03T03:59:17.587456+00:00"
+}

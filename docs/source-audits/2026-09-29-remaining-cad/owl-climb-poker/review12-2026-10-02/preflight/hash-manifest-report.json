@@ -1,0 +1,934 @@
+{
+  "schemaVersion": 1,
+  "owner": "placid-badger",
+  "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+  "checkedDate": "2026-10-02",
+  "HEAD": "ad74a51e1c43991145721ab04ff8c0d3c6c51cca",
+  "package": "owl-climb-poker",
+  "scope": "Read-only package/evidence preflight. No geometry judgment, current runtime validation, native validation rerun, compile, test, or approval.",
+  "canonicalAssets": {
+    "FCStd": {
+      "path": "Hangboards/owl-climb-poker/owl-climb-poker.FCStd",
+      "bytes": 4122179,
+      "sha256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1"
+    },
+    "USDZ": {
+      "path": "Hangboards/owl-climb-poker/assets/primary.usdz",
+      "bytes": 2014725,
+      "sha256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874"
+    },
+    "descriptor": {
+      "path": "Hangboards/owl-climb-poker/assets/primary.model.json",
+      "bytes": 16813,
+      "sha256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac"
+    }
+  },
+  "generatedBoard": {
+    "path": ".context/placid-badger/poker-review12/preflight-2026-10-02/board.generated.json",
+    "bytes": 9984,
+    "sha256": "337c3f6fb5d23b2fc4b155c810d71c36712c8d0257eb63504de1b56b1871656a"
+  },
+  "nativeSource": {
+    "documentXMLSHA256": "90c9fb04edec9758b553e0ae3aa9d4e0e912b1926dc6f9d27a9dffd1d62f61b8",
+    "archiveMemberCount": 974,
+    "objectTypeCounts": {
+      "Part::Feature": 1,
+      "Sketcher::SketchObject": 187,
+      "Part::Extrusion": 13,
+      "Part::Loft": 56,
+      "Part::Face": 40,
+      "Part::Compound": 34,
+      "Part::Reverse": 28,
+      "Part::Cut": 34,
+      "Part::Common": 34
+    },
+    "documentProperties": {
+      "HangTenBoardID": "owl-climb.poker",
+      "HangTenCoordinateFrame": "freecad-mm-z-up-front-negative-y",
+      "HangTenCurvedRegionPartition": "true",
+      "HangTenPresentationID": "primary",
+      "HangTenSchemaVersion": "1",
+      "HangTenSourceKind": "native-parametric-measured-profile",
+      "HangTenTessellationDeflection": "0.1500000000000000"
+    },
+    "manifestPropertyUTF8SHA256": "796013435329399bb66df92381b0a01035c1131e1030e4dada75ffa878c54da2",
+    "manifestPropertyUTF8Bytes": 6851
+  },
+  "boardFacts": {
+    "schemaVersion": 3,
+    "id": "owl-climb.poker",
+    "manufacturer": "Owl Climb",
+    "name": "Poker",
+    "subtitle": "Four-face rotating wood hangboard.",
+    "productURL": "https://owlclimb.com/index.php/en/prds-2/poker/",
+    "dimensions": "660 × 100 × 100 mm",
+    "aspectRatio": 6.6,
+    "equipmentObjects": [
+      {
+        "id": "primary"
+      }
+    ],
+    "revisionID": "2026-09-contact-first"
+  },
+  "factualContacts": [
+    {
+      "id": "face-a-left-outer-slot",
+      "equipmentObjectID": "primary",
+      "name": "Face A left outer slot",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "face-a-left-single-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face A left single-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "face-a-left-dual-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face A left dual-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "gripTypes": []
+    },
+    {
+      "id": "face-a-center-pull-up-slot",
+      "equipmentObjectID": "primary",
+      "name": "Face A center pull-up slot",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "face-a-right-dual-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face A right dual-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "gripTypes": []
+    },
+    {
+      "id": "face-a-right-single-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face A right single-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "face-a-right-outer-slot",
+      "equipmentObjectID": "primary",
+      "name": "Face A right outer slot",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "face-b-left-outer-slot",
+      "equipmentObjectID": "primary",
+      "name": "Face B left outer slot",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "face-b-left-single-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face B left single-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "face-b-left-dual-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face B left dual-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "gripTypes": []
+    },
+    {
+      "id": "face-b-left-deep-sloper",
+      "equipmentObjectID": "primary",
+      "name": "Face B left deep sloper",
+      "kind": "sloper",
+      "gripTypes": []
+    },
+    {
+      "id": "face-b-center-pull-up-slot",
+      "equipmentObjectID": "primary",
+      "name": "Face B center pull-up slot",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "face-b-right-deep-sloper",
+      "equipmentObjectID": "primary",
+      "name": "Face B right deep sloper",
+      "kind": "sloper",
+      "gripTypes": []
+    },
+    {
+      "id": "face-b-right-dual-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face B right dual-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "gripTypes": []
+    },
+    {
+      "id": "face-b-right-single-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face B right single-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "face-b-right-outer-slot",
+      "equipmentObjectID": "primary",
+      "name": "Face B right outer slot",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "face-c-left-outer-slot",
+      "equipmentObjectID": "primary",
+      "name": "Face C left outer slot",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "face-c-left-single-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face C left single-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "face-c-left-dual-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face C left dual-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "gripTypes": []
+    },
+    {
+      "id": "face-c-left-shallow-half-round",
+      "equipmentObjectID": "primary",
+      "name": "Face C left shallow half-round",
+      "kind": "sloper",
+      "gripTypes": []
+    },
+    {
+      "id": "face-c-center-pull-up-slot",
+      "equipmentObjectID": "primary",
+      "name": "Face C center pull-up slot",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "face-c-right-shallow-half-round",
+      "equipmentObjectID": "primary",
+      "name": "Face C right shallow half-round",
+      "kind": "sloper",
+      "gripTypes": []
+    },
+    {
+      "id": "face-c-right-dual-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face C right dual-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "gripTypes": []
+    },
+    {
+      "id": "face-c-right-single-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face C right single-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "face-c-right-outer-slot",
+      "equipmentObjectID": "primary",
+      "name": "Face C right outer slot",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "face-d-left-outer-slot",
+      "equipmentObjectID": "primary",
+      "name": "Face D left outer slot",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "face-d-left-single-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face D left single-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "face-d-left-dual-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face D left dual-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "gripTypes": []
+    },
+    {
+      "id": "face-d-left-deep-rounded-recess",
+      "equipmentObjectID": "primary",
+      "name": "Face D left deep rounded recess",
+      "kind": "sloper",
+      "gripTypes": []
+    },
+    {
+      "id": "face-d-center-pull-up-slot",
+      "equipmentObjectID": "primary",
+      "name": "Face D center pull-up slot",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "face-d-right-deep-rounded-recess",
+      "equipmentObjectID": "primary",
+      "name": "Face D right deep rounded recess",
+      "kind": "sloper",
+      "gripTypes": []
+    },
+    {
+      "id": "face-d-right-dual-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face D right dual-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "gripTypes": []
+    },
+    {
+      "id": "face-d-right-single-pocket",
+      "equipmentObjectID": "primary",
+      "name": "Face D right single-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "face-d-right-outer-slot",
+      "equipmentObjectID": "primary",
+      "name": "Face D right outer slot",
+      "kind": "edge",
+      "gripTypes": []
+    }
+  ],
+  "positions": [
+    {
+      "id": "face-a",
+      "presentationID": "primary",
+      "contactIDs": [
+        "face-a-left-outer-slot",
+        "face-a-left-single-pocket",
+        "face-a-left-dual-pocket",
+        "face-a-center-pull-up-slot",
+        "face-a-right-dual-pocket",
+        "face-a-right-single-pocket",
+        "face-a-right-outer-slot"
+      ]
+    },
+    {
+      "id": "face-b",
+      "presentationID": "primary",
+      "contactIDs": [
+        "face-b-left-outer-slot",
+        "face-b-left-single-pocket",
+        "face-b-left-dual-pocket",
+        "face-b-left-deep-sloper",
+        "face-b-center-pull-up-slot",
+        "face-b-right-deep-sloper",
+        "face-b-right-dual-pocket",
+        "face-b-right-single-pocket",
+        "face-b-right-outer-slot"
+      ]
+    },
+    {
+      "id": "face-c",
+      "presentationID": "primary",
+      "contactIDs": [
+        "face-c-left-outer-slot",
+        "face-c-left-single-pocket",
+        "face-c-left-dual-pocket",
+        "face-c-left-shallow-half-round",
+        "face-c-center-pull-up-slot",
+        "face-c-right-shallow-half-round",
+        "face-c-right-dual-pocket",
+        "face-c-right-single-pocket",
+        "face-c-right-outer-slot"
+      ]
+    },
+    {
+      "id": "face-d",
+      "presentationID": "primary",
+      "contactIDs": [
+        "face-d-left-outer-slot",
+        "face-d-left-single-pocket",
+        "face-d-left-dual-pocket",
+        "face-d-left-deep-rounded-recess",
+        "face-d-center-pull-up-slot",
+        "face-d-right-deep-rounded-recess",
+        "face-d-right-dual-pocket",
+        "face-d-right-single-pocket",
+        "face-d-right-outer-slot"
+      ]
+    }
+  ],
+  "presentation": {
+    "id": "primary",
+    "name": "Four faces",
+    "aspectRatio": 6.6,
+    "isDefault": true,
+    "derivation": {
+      "type": "original"
+    },
+    "media": {
+      "type": "model",
+      "assetPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "display": {
+        "camera": {
+          "type": "orthographic",
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "up": [
+            0,
+            1,
+            0
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "orientation": {
+        "pivot": "modelBoundsCenter",
+        "rotations": {
+          "face-a": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "face-b": [
+            0.707106781,
+            0,
+            0,
+            0.707106781
+          ],
+          "face-c": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "face-d": [
+            -0.707106781,
+            0,
+            0,
+            0.707106781
+          ]
+        }
+      }
+    }
+  },
+  "identityChecks": {
+    "boardJSONPhysicallyAbsent": true,
+    "FCStdIsZipObject": true,
+    "suspensionSidecarAbsent": true,
+    "presentationSuspensionAbsent": true,
+    "contactCount": 34,
+    "uniqueContactCount": 34,
+    "positionsContactCount": 34,
+    "positionsPartitionEveryContactExactlyOnce": true,
+    "positionCounts": {
+      "face-a": 7,
+      "face-b": 9,
+      "face-c": 9,
+      "face-d": 9
+    },
+    "descriptorContactInventoryEqualsManifest": true,
+    "descriptorBoundContactIDsEqualManifest": true,
+    "positionsEqualRetainedMetadataDiff": true,
+    "descriptorModelHashMatchesAsset": true,
+    "compileFinalCheckHashMatchesClosure": true,
+    "priorAppSourceHashMatchesCurrent": true,
+    "priorAppModelHashMatchesCurrent": true,
+    "priorAppDescriptorHashMatchesCurrent": true
+  },
+  "descriptor": {
+    "schemaVersion": 1,
+    "coordinateFrame": "hang-ten-board-v1",
+    "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+    "nodeRoleCounts": {
+      "contact": 34,
+      "body": 1
+    },
+    "modelBounds": {
+      "min": [
+        -0.330000013,
+        -0.050000001,
+        -0.050000001
+      ],
+      "max": [
+        0.330000013,
+        0.050000001,
+        0.050000001
+      ]
+    },
+    "boundsStatus": "Read-only mesh-derived descriptor output; not source-backed factual metadata."
+  },
+  "materialAndFinish": {
+    "currentSurfaceFinish": null,
+    "surfaceFinishPresent": false,
+    "supportedMaterial": "wood",
+    "materialBasis": "Generated subtitle identifies wood; visually reviewed exact retained primary manufacturer face-A and face-B photos show exposed wood grain. No species inference.",
+    "recommendation": "Add the supported existing wood finish selector to presentation primary media.display.surfaceFinish through set_board_manifest.py; preserve geometry, USDZ, descriptor, and all contact facts.",
+    "modelMaterialPolicy": "Keep USDZ meshes unbound, without materials or textures. Runtime surfaceFinish metadata is separate from USDZ authoring.",
+    "historicalNoMaterialsClaim": "geometry-authoring-notes.md states no materials or textures. Fresh stage binding validation was not run."
+  },
+  "evidence": {
+    "approval": {
+      "state": "historical exact set reused",
+      "source": "docs/superpowers/specs/2026-09-20-hangboards-batch-04-3d-migration-design.md"
+    },
+    "observations": "Four exact approved 2019 manufacturer photos establish all four faces, repeated mono/duo end sequences and the two deep rounded Face D recesses. Preserve all 34 physical contacts. Mounting hardware is omitted; no suspension is documented.",
+    "sources": [
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/evidence/owl-climb-poker-face-a.jpg",
+        "bytes": 250368,
+        "sha256": "4bae58b408b3f3a82c524b1101079eafa01cd062c398cb203d4803fce9850eab",
+        "publisher": "Owl Climb",
+        "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_0.jpg",
+        "binaryURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_0.jpg",
+        "supports": "OP-PHOTO-0 exact manufacturer face A",
+        "approvalStatus": "approved exact set in batch-04 design",
+        "retention": "git 8f2bfcffd^:docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-a.jpg",
+        "matchesRegisteredBytesAndSHA256": true
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/evidence/owl-climb-poker-face-b.jpg",
+        "bytes": 256145,
+        "sha256": "0c1d54cb2bc4d8e7fa285f3053b927d7c1a1b3fbafdf0b5d7aface9c82d0dbad",
+        "publisher": "Owl Climb",
+        "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_1.jpg",
+        "binaryURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_1.jpg",
+        "supports": "OP-PHOTO-1 exact manufacturer face B",
+        "approvalStatus": "approved exact set in batch-04 design",
+        "retention": "git 8f2bfcffd^:docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-b.jpg",
+        "matchesRegisteredBytesAndSHA256": true
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/evidence/owl-climb-poker-face-c.jpg",
+        "bytes": 283594,
+        "sha256": "5fbff79f31db8e85d078a74eb629abd069fc276ac128b3d85a84fc15ad9f1c4e",
+        "publisher": "Owl Climb",
+        "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_2.jpg",
+        "binaryURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_2.jpg",
+        "supports": "OP-PHOTO-2 exact manufacturer face C",
+        "approvalStatus": "approved exact set in batch-04 design",
+        "retention": "git 8f2bfcffd^:docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-c.jpg",
+        "matchesRegisteredBytesAndSHA256": true
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/evidence/owl-climb-poker-face-d.jpg",
+        "bytes": 258695,
+        "sha256": "ae39598fbf75c0e4e4dfbb599c724ff1e2531ef12ecca84b3504805e7bc3af13",
+        "publisher": "Owl Climb",
+        "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_3.jpg",
+        "binaryURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_3.jpg",
+        "supports": "OP-PHOTO-3 exact manufacturer face D",
+        "approvalStatus": "approved exact set in batch-04 design",
+        "retention": "git 8f2bfcffd^:docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-d.jpg",
+        "matchesRegisteredBytesAndSHA256": true
+      }
+    ],
+    "newHumanApprovalRecorded": false
+  },
+  "historicalValidation": {
+    "records": [
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/native-validation.json",
+        "bytes": 379,
+        "sha256": "b7dcf633f0b75843435b78fa3ec81710330010d218a298cb67534705d89ae414",
+        "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+        "sourceIdentityMatchesCurrent": true,
+        "modelSHA256": null,
+        "modelIdentityMatchesCurrent": null
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/native-authoring-geometry.json",
+        "bytes": 5411,
+        "sha256": "49bcd1b15389923da46efed250ec6451490aa503d41d9adee22236117fdd6799",
+        "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+        "sourceIdentityMatchesCurrent": true,
+        "modelSHA256": null,
+        "modelIdentityMatchesCurrent": null
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/compile-validation.json",
+        "bytes": 4614,
+        "sha256": "56712128fcf9bbef25b3aa7a2b021a0e1399d3b7655400309fcd7488cc6d44cc",
+        "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+        "sourceIdentityMatchesCurrent": true,
+        "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+        "modelIdentityMatchesCurrent": true
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/compile-final-check.json",
+        "bytes": 4526,
+        "sha256": "00768402cbff04b1781204b013647fb5930da88ab1f715e50b8b521794e79ede",
+        "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+        "sourceIdentityMatchesCurrent": true,
+        "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+        "modelIdentityMatchesCurrent": true
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/final-hash-closure.json",
+        "bytes": 896,
+        "sha256": "bdc0a0ec00802a2e139700f0a125bd8239989851e91e817ba20eda6855bf29b0",
+        "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+        "sourceIdentityMatchesCurrent": true,
+        "modelSHA256": null,
+        "modelIdentityMatchesCurrent": null
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/metadata-preservation.json",
+        "bytes": 497,
+        "sha256": "9ace7edefef9692d223090701586d236533104ae471ece173181767cce36b4e4",
+        "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+        "sourceIdentityMatchesCurrent": true,
+        "modelSHA256": null,
+        "modelIdentityMatchesCurrent": null
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/metadata-diff.json",
+        "bytes": 4261,
+        "sha256": "b72ca0cc186ac5ba8a8544734ca8b80bc59fb13909490c31f945afb7a9222863",
+        "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+        "sourceIdentityMatchesCurrent": true,
+        "modelSHA256": null,
+        "modelIdentityMatchesCurrent": null
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/geometry-visual-review.json",
+        "bytes": 1348,
+        "sha256": "410c2f83ad266a2e7677a25f6b34f29dbc474a5046a2343cc0c411f40bd65637",
+        "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+        "sourceIdentityMatchesCurrent": true,
+        "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+        "modelIdentityMatchesCurrent": true
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/cd-native-final-regression.json",
+        "bytes": 3858,
+        "sha256": "710bd9a956576f94fccc1b85731ad091da37b2c262d54d01397dfc49edc958e5",
+        "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+        "sourceIdentityMatchesCurrent": true,
+        "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+        "modelIdentityMatchesCurrent": true
+      }
+    ],
+    "nativeValidation": {
+      "reopenRecompute": "passed",
+      "singleValidSolid": true,
+      "contacts": 34,
+      "fullyConstrainedSketches": true,
+      "meaningfulEdit": "PocketDepthScale 1 -> 1.04 reduces volume and increases all seven face-A depths by 4%; restoring recovers original volume",
+      "sourceBytesUnchanged": true,
+      "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1"
+    },
+    "compileFinalCheck": {
+      "assetBytes": 2014725,
+      "board": "Hangboards/owl-climb-poker/owl-climb-poker.FCStd#HangTenBoardManifest",
+      "contacts": [
+        "face-a-center-pull-up-slot",
+        "face-a-left-dual-pocket",
+        "face-a-left-outer-slot",
+        "face-a-left-single-pocket",
+        "face-a-right-dual-pocket",
+        "face-a-right-outer-slot",
+        "face-a-right-single-pocket",
+        "face-b-center-pull-up-slot",
+        "face-b-left-deep-sloper",
+        "face-b-left-dual-pocket",
+        "face-b-left-outer-slot",
+        "face-b-left-single-pocket",
+        "face-b-right-deep-sloper",
+        "face-b-right-dual-pocket",
+        "face-b-right-outer-slot",
+        "face-b-right-single-pocket",
+        "face-c-center-pull-up-slot",
+        "face-c-left-dual-pocket",
+        "face-c-left-outer-slot",
+        "face-c-left-shallow-half-round",
+        "face-c-left-single-pocket",
+        "face-c-right-dual-pocket",
+        "face-c-right-outer-slot",
+        "face-c-right-shallow-half-round",
+        "face-c-right-single-pocket",
+        "face-d-center-pull-up-slot",
+        "face-d-left-deep-rounded-recess",
+        "face-d-left-dual-pocket",
+        "face-d-left-outer-slot",
+        "face-d-left-single-pocket",
+        "face-d-right-deep-rounded-recess",
+        "face-d-right-dual-pocket",
+        "face-d-right-outer-slot",
+        "face-d-right-single-pocket"
+      ],
+      "measuredRegionDepthsMM": {
+        "face-a-center-pull-up-slot": 17.0,
+        "face-a-left-dual-pocket": 17.0,
+        "face-a-left-outer-slot": 22.0,
+        "face-a-left-single-pocket": 17.0,
+        "face-a-right-dual-pocket": 17.0,
+        "face-a-right-outer-slot": 22.0,
+        "face-a-right-single-pocket": 17.0,
+        "face-b-center-pull-up-slot": 25.0,
+        "face-b-left-deep-sloper": 86.0,
+        "face-b-left-dual-pocket": 24.0,
+        "face-b-left-outer-slot": 27.0,
+        "face-b-left-single-pocket": 23.993,
+        "face-b-right-deep-sloper": 86.0,
+        "face-b-right-dual-pocket": 24.0,
+        "face-b-right-outer-slot": 27.0,
+        "face-b-right-single-pocket": 23.993,
+        "face-c-center-pull-up-slot": 16.0,
+        "face-c-left-dual-pocket": 16.0,
+        "face-c-left-outer-slot": 14.0,
+        "face-c-left-shallow-half-round": 11.001,
+        "face-c-left-single-pocket": 16.0,
+        "face-c-right-dual-pocket": 16.0,
+        "face-c-right-outer-slot": 14.0,
+        "face-c-right-shallow-half-round": 11.001,
+        "face-c-right-single-pocket": 16.0,
+        "face-d-center-pull-up-slot": 25.0,
+        "face-d-left-deep-rounded-recess": 62.63,
+        "face-d-left-dual-pocket": 24.0,
+        "face-d-left-outer-slot": 27.0,
+        "face-d-left-single-pocket": 23.993,
+        "face-d-right-deep-rounded-recess": 62.63,
+        "face-d-right-dual-pocket": 24.0,
+        "face-d-right-outer-slot": 27.0,
+        "face-d-right-single-pocket": 23.993
+      },
+      "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+      "nodes": [
+        "face_a_center_pull_up_slot_001",
+        "face_a_left_dual_pocket_001",
+        "face_a_left_outer_slot_001",
+        "face_a_left_single_pocket_001",
+        "face_a_right_dual_pocket_001",
+        "face_a_right_outer_slot_001",
+        "face_a_right_single_pocket_001",
+        "face_b_center_pull_up_slot_001",
+        "face_b_left_deep_sloper_001",
+        "face_b_left_dual_pocket_001",
+        "face_b_left_outer_slot_001",
+        "face_b_left_single_pocket_001",
+        "face_b_right_deep_sloper_001",
+        "face_b_right_dual_pocket_001",
+        "face_b_right_outer_slot_001",
+        "face_b_right_single_pocket_001",
+        "face_c_center_pull_up_slot_001",
+        "face_c_left_dual_pocket_001",
+        "face_c_left_outer_slot_001",
+        "face_c_left_shallow_half_round_001",
+        "face_c_left_single_pocket_001",
+        "face_c_right_dual_pocket_001",
+        "face_c_right_outer_slot_001",
+        "face_c_right_shallow_half_round_001",
+        "face_c_right_single_pocket_001",
+        "face_d_center_pull_up_slot_001",
+        "face_d_left_deep_rounded_recess_001",
+        "face_d_left_dual_pocket_001",
+        "face_d_left_outer_slot_001",
+        "face_d_left_single_pocket_001",
+        "face_d_right_deep_rounded_recess_001",
+        "face_d_right_dual_pocket_001",
+        "face_d_right_outer_slot_001",
+        "face_d_right_single_pocket_001",
+        "poker_body_001"
+      ],
+      "package": "owl-climb-poker",
+      "presentationID": "primary",
+      "published": false,
+      "schemaVersion": 1,
+      "source": "Hangboards/owl-climb-poker/owl-climb-poker.FCStd",
+      "sourceKind": "native-parametric-measured-profile",
+      "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+      "sourceUnchanged": true,
+      "staging": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Hangboards/owl-climb-poker/assets/.hangten-build-vfy1vnux",
+      "tessellationDeflectionMM": 0.15,
+      "triangles": 90286
+    },
+    "hashClosure": {
+      "package": "owl-climb-poker",
+      "independentFreshCompileCheck": true,
+      "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+      "actualAssetSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+      "descriptorModelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+      "compilerReturnedModelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+      "compilerReport": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/compile-final-check.json",
+      "compilerReportSHA256": "00768402cbff04b1781204b013647fb5930da88ab1f715e50b8b521794e79ede",
+      "sourceUnchangedDuringRebuild": true,
+      "sourceBeforeSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+      "sourceAfterSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+      "closure": "passed"
+    },
+    "identityLimit": "Matching source bytes binds retained reports to the current source; no fresh reopen/recompute/edit/restore or reproducibility check was run.",
+    "docInconsistency": "geometry-authoring-notes.md retains an earlier 87,518-triangle / 1,958,488-byte statement; final hash-bound compile reports give 90,286 triangles / 2,014,725 bytes."
+  },
+  "priorAppCapture": {
+    "validationFile": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/app-review/validation.json",
+      "bytes": 1135,
+      "sha256": "476ed639476e03acbc34e8df704bb2844837e34e7adf5304bd1bd1d114fbb75b"
+    },
+    "provenance": {
+      "owner": "placid-badger",
+      "simulator": "D7168911-6A46-4FED-9019-968CCEFEB9DB",
+      "device": "iPhone 17 Pro",
+      "runtime": "iOS 26.5",
+      "boardID": "owl-climb.poker",
+      "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+      "presentations": {
+        "primary": {
+          "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+          "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac"
+        }
+      },
+      "checks": [
+        {
+          "contactID": "face-a-left-outer-slot",
+          "selection": "DEBUG initial hold",
+          "image": "default.png",
+          "accessibility": "default-accessibility.json"
+        },
+        {
+          "contactID": "face-d-left-outer-slot",
+          "selection": "DEBUG contact review route",
+          "image": "contact-selection.png",
+          "accessibility": "contact-selection-accessibility.json"
+        }
+      ],
+      "humanGeometryAcceptance": "pending one-by-one user review",
+      "limits": "DEBUG hold-review screenshots and accessibility selection checks supplement RealityKit contact/cord tests; they do not certify manufacturer geometric accuracy."
+    },
+    "checks": [
+      {
+        "contactID": "face-a-left-outer-slot",
+        "selection": "DEBUG initial hold",
+        "image": "default.png",
+        "accessibility": "default-accessibility.json",
+        "imageFile": {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/app-review/default.png",
+          "bytes": 546162,
+          "sha256": "f0a61608c20bbe7228ae88c0ec51bf5ec5beae8f444ec8c41322f6d4dbaee964"
+        },
+        "accessibilityFile": {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/app-review/default-accessibility.json",
+          "bytes": 33335,
+          "sha256": "dab6f3b34ec272a701a5b5f3dc5d7487738440c32092f21b6d4c67c6a8d39328"
+        },
+        "AXSelectedContactIDs": [
+          "face-a-left-outer-slot"
+        ],
+        "selectionMatchesValidation": true,
+        "AXBoardModelContactIDs": [],
+        "AXBoardModelContactCount": 0,
+        "AXInventoryEqualsCurrentManifest": null
+      },
+      {
+        "contactID": "face-d-left-outer-slot",
+        "selection": "DEBUG contact review route",
+        "image": "contact-selection.png",
+        "accessibility": "contact-selection-accessibility.json",
+        "imageFile": {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/app-review/contact-selection.png",
+          "bytes": 549386,
+          "sha256": "2bad2ae17f40c82b319f867b9a9a796f2b043e948b401d2421b0dadf30b51e7b"
+        },
+        "accessibilityFile": {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/app-review/contact-selection-accessibility.json",
+          "bytes": 42533,
+          "sha256": "6c2bf65968dad2326d0f6b874698b52467f9f99cf6009e34735d8dd0755734ff"
+        },
+        "AXSelectedContactIDs": [
+          "face-d-left-outer-slot"
+        ],
+        "selectionMatchesValidation": true,
+        "AXBoardModelContactIDs": [
+          "face-a-left-single-pocket",
+          "face-d-left-outer-slot",
+          "face-b-left-single-pocket",
+          "face-a-left-dual-pocket",
+          "face-a-left-outer-slot",
+          "face-a-center-pull-up-slot",
+          "face-a-right-single-pocket",
+          "face-a-right-outer-slot",
+          "face-a-right-dual-pocket",
+          "face-d-left-single-pocket",
+          "face-d-left-dual-pocket",
+          "face-c-left-single-pocket",
+          "face-b-left-outer-slot",
+          "face-b-left-dual-pocket",
+          "face-b-left-deep-sloper",
+          "face-b-center-pull-up-slot",
+          "face-c-left-outer-slot",
+          "face-c-left-dual-pocket",
+          "face-d-left-deep-rounded-recess",
+          "face-b-right-deep-sloper",
+          "face-b-right-single-pocket",
+          "face-b-right-outer-slot",
+          "face-b-right-dual-pocket",
+          "face-c-left-shallow-half-round",
+          "face-d-center-pull-up-slot",
+          "face-c-center-pull-up-slot",
+          "face-c-right-shallow-half-round",
+          "face-d-right-deep-rounded-recess",
+          "face-c-right-single-pocket",
+          "face-d-right-single-pocket",
+          "face-c-right-dual-pocket",
+          "face-c-right-outer-slot",
+          "face-d-right-outer-slot",
+          "face-d-right-dual-pocket"
+        ],
+        "AXBoardModelContactCount": 34,
+        "AXInventoryEqualsCurrentManifest": true
+      }
+    ],
+    "limit": "Captured asset identities match current assets; no capture date, app build commit, or app bundle hash is present in validation.json. This preflight does not claim current renderer/runtime behavior. Human geometry acceptance remains pending."
+  },
+  "usdzArchive": {
+    "members": [
+      {
+        "path": "stage.usdc",
+        "bytes": 2014559,
+        "sha256": "49791183144a7fd00de8ac2eeea9a264ae264ca4a471c42245bd3dd4dbb70992"
+      }
+    ],
+    "inspectionLimit": "ZIP membership only. Opaque stage.usdc material bindings were not revalidated in this preflight."
+  },
+  "resources": {
+    "externalResourcesCreated": [],
+    "nativeOrGUIProcessesStarted": [],
+    "HTTPServersStarted": [],
+    "simulatorsStarted": [],
+    "cleanup": "No external resources were created, so no resource deletion was required. Only workspace-owned report files were written."
+  }
+}

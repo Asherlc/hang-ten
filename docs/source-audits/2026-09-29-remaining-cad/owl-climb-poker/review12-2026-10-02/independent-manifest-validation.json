@@ -1,0 +1,41 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "priorSourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+  "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+  "manifestDiff": [
+    {
+      "path": "/presentations/0/media/display/surfaceFinish",
+      "oldKeyPresent": false,
+      "newValue": "wood"
+    }
+  ],
+  "allOtherManifestFieldsExactlyPreserved": true,
+  "contactCount": 34,
+  "positionIDs": [
+    "face-a",
+    "face-b",
+    "face-c",
+    "face-d"
+  ],
+  "positionContactCounts": {
+    "face-a": 7,
+    "face-b": 9,
+    "face-c": 9,
+    "face-d": 9
+  },
+  "noSuspensionAdded": true,
+  "surfaceFinishEvidence": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/evidence/owl-climb-poker-face-a.jpg",
+      "sha256": "4bae58b408b3f3a82c524b1101079eafa01cd062c398cb203d4803fce9850eab"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/evidence/owl-climb-poker-face-b.jpg",
+      "sha256": "0c1d54cb2bc4d8e7fa285f3053b927d7c1a1b3fbafdf0b5d7aface9c82d0dbad"
+    }
+  ],
+  "sourceFact": "Visible wood grain in retained exact manufacturer photos; species omitted",
+  "materialPolicy": "Wood selector is package metadata. Actual USDZ must remain unbound.",
+  "scope": "Logical metadata only; geometry change is recorded and independently checked separately"
+}

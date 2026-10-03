@@ -1,0 +1,52 @@
+{
+  "owner": "placid-badger",
+  "eventType": "human-CAD-contact-acceptance",
+  "reviewNumber": 10,
+  "boardID": "nature.stone-hanger-mini",
+  "reviewer": "asherlc",
+  "date": "2026-10-03",
+  "recordedUTC": "2026-10-03T13:24:55.439990+00:00",
+  "question": "Does this cover the finger-contact area now?",
+  "answer": "Lgtm",
+  "acceptedScope": "Corrected Mini jug highlight across the upper front and back finger-contact faces, rounded crown and upper sides, shown from both faces and in the linked front/side/top comparison.",
+  "shownAssetCommit": "9b0a371f72216ab7746d876c141f834f815ffc34",
+  "identity": {
+    "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+    "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+    "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+    "sidecarSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f"
+  },
+  "shownWholeImages": [
+    {
+      "sha256": "73be0efb5953455b6ddfd0ba9236b3afc4471f031c2846d4d833e403b854fc51",
+      "poseID": "front-upright",
+      "selectedContactID": "pull-up-jug",
+      "selectedNodeIDs": [
+        "nature_jug",
+        "nature_jug_ends",
+        "nature_jug_pressure"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-front.png"
+    },
+    {
+      "sha256": "dff6650db90723201e7ad883ec61277c1a38b17f8868d062aa8962896947e4c1",
+      "poseID": "front-upright",
+      "selectedContactID": "pull-up-jug",
+      "selectedNodeIDs": [
+        "nature_jug",
+        "nature_jug_ends",
+        "nature_jug_pressure"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-back.png"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/prior-current-jug-front-side-top.png",
+      "sha256": "a1cd9c5844d2ed5fdb23e3cb8a83e1c0fe11f876f24e83bb3294efad7a70cdfa"
+    }
+  ],
+  "earlierOverallBodyApprovalPreserved": true,
+  "runtimeVerified": false,
+  "usableAppFrames": 0,
+  "approvalLimit": "Earlier overall-body approval is preserved. This approval covers the shown corrected jug highlight. Current app finishes, picking, orbit, workout behavior and interaction remain unverified.",
+  "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/human-review.json"
+}

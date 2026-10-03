@@ -1,0 +1,70 @@
+{
+  "kind": "fresh empty-stage Mini USDZ reimport and descriptor gate",
+  "passed": true,
+  "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
+  "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
+  "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
+  "duplicateTriangleCount": 0,
+  "priorTriangleCount": 28842,
+  "wholeTrianglePositionMultisetExact": true,
+  "logicalPinchTriangleUnionExact": true,
+  "emptyStageCreatedBeforeReference": true,
+  "materials": [],
+  "shaders": [],
+  "boundMeshes": [],
+  "materialBindingRelationships": [],
+  "archiveMembers": [
+    "stage.usdc"
+  ],
+  "nodeCount": 6,
+  "contactCount": 4,
+  "triangleCount": 28842,
+  "modelBounds": {
+    "min": [
+      -0.050000001,
+      -0.029999999,
+      -0.0125
+    ],
+    "max": [
+      0.050000001,
+      0.029999999,
+      0.0125
+    ]
+  },
+  "completeDescriptorRebuiltExactly": true,
+  "modelHashBound": true,
+  "normalsInterpolation": "vertex",
+  "meshInventory": {
+    "nature_body": {
+      "vertices": 8322,
+      "triangles": 12673,
+      "unbound": true
+    },
+    "nature_wood": {
+      "vertices": 3603,
+      "triangles": 6991,
+      "unbound": true
+    },
+    "nature_stone": {
+      "vertices": 270,
+      "triangles": 266,
+      "unbound": true
+    },
+    "nature_pinch": {
+      "vertices": 132,
+      "triangles": 130,
+      "unbound": true
+    },
+    "nature_jug": {
+      "vertices": 132,
+      "triangles": 130,
+      "unbound": true
+    },
+    "nature_jug_ends": {
+      "vertices": 4716,
+      "triangles": 8652,
+      "unbound": true
+    }
+  },
+  "meshDataSHA256": "ca7a3a38744e181112abaa1293f1a6e0b6eed4665f5a102ae25acc762488d1ca"
+}

@@ -1,0 +1,83 @@
+Monitoring boot status for Hang Ten Paseo placid-badger Review Mini Runtime Retry (2397F02F-15E4-48C9-8E5C-37DE8CC995B2).
+[2026-10-02 13:42:46 +0000] Status=2, isTerminal=NO, Elapsed=02:09.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:07 seconds
+
+[2026-10-02 13:42:47 +0000] Status=2, isTerminal=NO, Elapsed=02:10.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:08 seconds
+
+[2026-10-02 13:42:48 +0000] Status=2, isTerminal=NO, Elapsed=02:11.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:09 seconds
+
+[2026-10-02 13:42:49 +0000] Status=2, isTerminal=NO, Elapsed=02:12.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:10 seconds
+
+[2026-10-02 13:42:50 +0000] Status=2, isTerminal=NO, Elapsed=02:13.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:11 seconds
+
+[2026-10-02 13:42:51 +0000] Status=2, isTerminal=NO, Elapsed=02:14.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:12 seconds
+
+[2026-10-02 13:42:52 +0000] Status=2, isTerminal=NO, Elapsed=02:15.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:13 seconds
+
+[2026-10-02 13:42:53 +0000] Status=2, isTerminal=NO, Elapsed=02:16.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:14 seconds
+
+[2026-10-02 13:42:54 +0000] Status=2, isTerminal=NO, Elapsed=02:17.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:15 seconds
+
+[2026-10-02 13:42:55 +0000] Status=2, isTerminal=NO, Elapsed=02:18.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:16 seconds
+
+[2026-10-02 13:42:56 +0000] Status=2, isTerminal=NO, Elapsed=02:19.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:17 seconds
+
+[2026-10-02 13:42:57 +0000] Status=2, isTerminal=NO, Elapsed=02:20.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:18 seconds
+
+[2026-10-02 13:42:58 +0000] Status=2, isTerminal=NO, Elapsed=02:21.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:19 seconds
+
+[2026-10-02 13:42:59 +0000] Status=2, isTerminal=NO, Elapsed=02:22.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:20 seconds
+
+[2026-10-02 13:43:00 +0000] Status=2, isTerminal=NO, Elapsed=02:23.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:21 seconds
+
+[2026-10-02 13:43:01 +0000] Status=2, isTerminal=NO, Elapsed=02:24.
+	Waiting on Data Migration
+		Reason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)
+		Migration Elapsed:02:22 seconds
+
+
+Timed out after 55 seconds

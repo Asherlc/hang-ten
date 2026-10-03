@@ -1,0 +1,20 @@
+{
+  "status": "scratch-native-and-package-checks-pass",
+  "frozenHashes": "frozen4hash.json",
+  "nativeAuthoring": "native-author-report.json",
+  "freshReopen": "final-native-check.json",
+  "nativeExportSurfaceCoverage": "independent-native-check.json",
+  "actualMeshPartition": "export-check.json",
+  "normalsAndTriangles": "normal-triangle-check.json",
+  "reproducibility": "reproducibility.json",
+  "packageValidator": "placid-badger-karma8a-package-validation.log",
+  "nativeCordApply": "cord-apply-report.json",
+  "nativeCordCheck": "cord-check-report.json",
+  "all12RoundedRuntimeStrandCertificates": "continuous-cached-route-certificate.json",
+  "shapeReview": "shape-review.json",
+  "sourceMapping": "source-mapping.json",
+  "cleanup": "cleanup.json",
+  "canonicalMutation": false,
+  "humanAccepted": false,
+  "runtimeReview": "not performed by this lane"
+}

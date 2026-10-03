@@ -1,0 +1,40 @@
+{
+  "owner": "placid-badger",
+  "commit": "f9554600c1e5d94d027346ca5d6ca7343d71a7e7",
+  "mutatedInputSHA256": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "dfb079b42c054c29f9c9719721c96face6f573db8e7c66792cc755d22ca5bfc4",
+    "HangTenTests/BoardModelRealityTests.swift": "63a8fbb748940862bad77c732ca353fe3d2c0a614d2e074a5c1e6b4ba5bbf6e6",
+    "HangTenTests/BoardPackageStoreTests.swift": "3926d9d37b0cd20dc1830a858387b8cdd5b6b095fbfd6609ea4c5eca86b4c9b2",
+    "Hangboards/metolius-simulator-3d/metolius-simulator-3d.FCStd": "ac957ebf25e5134ab2875e9b06d9c23831f35b0b8bcbc64730d6a626b7f8588e",
+    "Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124"
+  },
+  "geometryChanged": false,
+  "canonicalRootReviewPackageSHA256": {
+    "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.usdz": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.model.json": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+    "Hangboards/nature-stone-hanger-mini/suspension.json": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f",
+    "Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+    "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.usdz": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+    "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.model.json": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+    "Hangboards/nature-stone-hanger-mini-karma8a/suspension.json": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc",
+    "Hangboards/owl-climb-poker/owl-climb-poker.FCStd": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+    "Hangboards/owl-climb-poker/assets/primary.usdz": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+    "Hangboards/owl-climb-poker/assets/primary.model.json": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+    "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+    "Hangboards/plateau-lifting-edge/assets/primary.usdz": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+    "Hangboards/plateau-lifting-edge/assets/primary.model.json": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+    "Hangboards/plateau-lifting-edge/suspension.json": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80",
+    "Hangboards/tension-flash-board/tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+    "Hangboards/tension-flash-board/assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "Hangboards/tension-flash-board/assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "Hangboards/tension-flash-board/suspension.json": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
+    "Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124",
+    "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+    "Hangboards/trango-rock-prodigy-forge/assets/primary.model.json": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6"
+  }
+}

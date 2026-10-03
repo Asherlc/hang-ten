@@ -1,0 +1,120 @@
+{
+  "owner": "placid-badger",
+  "boardNumber": 10,
+  "boardID": "nature.stone-hanger-mini",
+  "scope": "Read-only whole-frame inspection of supplied current app captures; source geometry was already approved, current app visual acceptance remains pending.",
+  "inspectionMethod": "view_image with original detail; complete frames, no cropping or pixel measurement",
+  "skill": ".agents/skills/validate-hang-ten-ios/SKILL.md",
+  "provenance": {
+    "path": "installed-app-provenance.json",
+    "fileSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+    "commit": "f9554600c1e5d94d027346ca5d6ca7343d71a7e7",
+    "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+    "builtAndInstalledBinarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+    "receiptCount": 16,
+    "allReceiptBinaryHashesMatchInstalledProvenance": true,
+    "allReceiptProvenanceHashesMatchCurrentFile": true,
+    "nativeModelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+    "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d"
+  },
+  "contactIDs": ["pull-up-jug", "wood-edge-15-incut", "granite-edge-15", "pinch-60"],
+  "findings": [
+    {
+      "check": "wood and granite separation",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "Wood body and recess surfaces appear warm tan; the separate granite rail appears dark with a granular finish when inactive. Granite is visually distinct from wood in the jug, wood-selection, and unselected Train frames.",
+      "frames": ["10-live-hold-pull-up-jug.png", "10-live-hold-wood-edge-15-incut.png", "10-live-unselected-train.png"]
+    },
+    {
+      "check": "material restoration within the same scene",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "Selecting wood restores the granite rail to its dark granular finish. Reselecting granite restores wood surfaces to tan and moves red highlighting onto the granite rail. There is no visible retained red tint on the deselected surfaces.",
+      "frames": ["10-granite-restored-wood-selected-same-scene.png", "10-wood-restored-granite-reselected-same-scene.png"],
+      "receiptEvidence": "selection wood-edge-15-incut at revision 2 and granite-edge-15 at revision 3; sameScene=true and cameraSettled=true"
+    },
+    {
+      "check": "jug finger rail highlighting",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "Red highlighting extends continuously across the visible upper finger rail and its rounded front lip. Oblique views expose the highlighted broad rail surface while the surrounding wood and granite remain separate. The narrow wood-colored cord-guide strips at the ends remain visible.",
+      "frames": ["10-live-hold-pull-up-jug.png", "10-real-jug-orbit-a.png", "10-live-top-oblique.png", "10-live-horizontal-orbit-1.png", "10-live-horizontal-orbit-2.png", "10-live-horizontal-orbit-3.png"]
+    },
+    {
+      "check": "opposing pinch surfaces",
+      "status": "PASS_VISIBLE_OPPOSING_BANDS",
+      "observation": "Pinch selection highlights a central upper face band and a separate lower opposing band. The granite rail and broad front wood panel remain inactive.",
+      "limitation": "The lower band is mostly edge-on in the supplied pinch frame; full underside coverage is not exposed by this view.",
+      "frames": ["10-live-hold-pinch-60.png"]
+    },
+    {
+      "check": "wood edge highlighting",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "The wood-edge selection highlights the lower shelf and curved side returns of the recessed wood contact, while its inner panel remains tan and the granite rail remains dark.",
+      "frames": ["10-live-hold-wood-edge-15-incut.png", "10-granite-restored-wood-selected-same-scene.png"]
+    },
+    {
+      "check": "visible native cord and solid separation",
+      "status": "PASS_VISIBLE_ROUTE",
+      "observation": "Both exterior lead legs and their lower join are present. Oblique and end-on views show cord along the exterior end channels and below the board, with no apparent straight chord through the visible solid or floating route segment.",
+      "limitation": "A screenshot audit cannot recertify hidden native passage clearance or prove matrix invariance during motion.",
+      "frames": ["10-live-front.png", "10-real-jug-orbit-a.png", "10-live-horizontal-orbit-2.png", "10-live-horizontal-orbit-3.png", "10-live-landscape.png"]
+    },
+    {
+      "check": "front, top oblique, and ordinary touch end-on orbit",
+      "status": "PASS_SUPPLIED_SETTLED_VIEWS",
+      "observation": "The front view is centered; the jug top-oblique view exposes the rail; successive ordinary touch orbit frames expose the left end and reach an end-on side view. Selection remains visibly on the jug, with board and cord present throughout.",
+      "frames": ["10-live-front.png", "10-live-top-oblique.png", "10-real-jug-orbit-a.png", "10-live-horizontal-orbit-1.png", "10-live-horizontal-orbit-2.png", "10-live-horizontal-orbit-3.png"],
+      "receiptEvidence": "All these receipts report cameraSettled=true; touch azimuth progresses approximately -0.54, -1.08, -1.62 radians."
+    },
+    {
+      "check": "DEBUG side preset readiness",
+      "status": "FAIL_RETAINED",
+      "observation": "The failed side-preset frame remains visibly front-facing rather than an end-on side view. Its receipt records MODEL_VIEW=side and azimuth approximately pi/2, but cameraSettled=false and rawFailureCapture=true. This image is not counted as a successful side view.",
+      "frames": ["10-side-readiness-failure.png"]
+    },
+    {
+      "check": "selected hold UI",
+      "status": "PASS_SUPPLIED_PORTRAIT_CARDS",
+      "observation": "Visible selected cards match the rendered contact: Smooth pull-up jug / Jug; 15 mm incut wood edge / Edge / 15 mm; 15 mm granite edge / Edge / 15 mm; 60 mm pinch / Pinch / 60 mm. Each card shows hand capacity 1. Selected-card titles and values are readable without clipping.",
+      "limitation": "The hold-map list uses ellipsis and its lower rows are partially behind the floating tab bar in these viewport positions; list scrolling and direct physical picks were not audited here.",
+      "frames": ["10-live-hold-pull-up-jug.png", "10-live-hold-wood-edge-15-incut.png", "10-live-hold-granite-edge-15.png", "10-live-hold-pinch-60.png"]
+    },
+    {
+      "check": "board map fit in landscape",
+      "status": "PASS_BOARD_AND_CORD_FIT",
+      "observation": "The complete board, both cord legs, and lower join fit within the landscape map with clear margins. The title and navigation buttons are legible and the granite highlight remains visible.",
+      "limitation": "The selected hold card begins below the captured landscape viewport; its full landscape layout is not shown.",
+      "frames": ["10-live-landscape.png"]
+    },
+    {
+      "check": "unselected Train rendering and normal lens",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "The unselected Train thumbnail has no residual red highlight and retains tan wood, dark granite, and a complete cord. The normal-lens detail frame retains the selected granite rail, readable specs, and an unclipped model.",
+      "frames": ["10-live-unselected-train.png", "10-live-normal-lens.png"]
+    }
+  ],
+  "framesInspected": [
+    "10-live-front.png",
+    "10-live-hold-pull-up-jug.png",
+    "10-real-jug-orbit-a.png",
+    "10-live-top-oblique.png",
+    "10-live-hold-wood-edge-15-incut.png",
+    "10-live-hold-granite-edge-15.png",
+    "10-granite-restored-wood-selected-same-scene.png",
+    "10-wood-restored-granite-reselected-same-scene.png",
+    "10-live-hold-pinch-60.png",
+    "10-live-horizontal-orbit-1.png",
+    "10-live-horizontal-orbit-2.png",
+    "10-live-horizontal-orbit-3.png",
+    "10-live-landscape.png",
+    "10-live-normal-lens.png",
+    "10-live-unselected-train.png",
+    "10-side-readiness-failure.png"
+  ],
+  "sourceGeometryApproval": "Already accepted per root task context; no geometry approval changed by this audit.",
+  "currentAppUserAcceptance": "PENDING",
+  "physicalPickingAudit": "Not included; root is performing this separately.",
+  "realWorkoutAudit": "Not included; root is performing this separately.",
+  "productionOrCanonicalChanges": false,
+  "appOrSimulatorOperationsByThisAgent": false,
+  "recommendation": "Present the inspected current app frames for user acceptance with the DEBUG side preset retained as FAIL. No visible geometry or material correction is indicated by these supplied settled frames."
+}

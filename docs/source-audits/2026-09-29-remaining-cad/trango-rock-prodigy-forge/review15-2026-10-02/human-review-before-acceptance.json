@@ -1,0 +1,59 @@
+{
+  "owner": "placid-badger",
+  "package": "trango-rock-prodigy-forge",
+  "reviewNumber": 15,
+  "humanReview": "pending",
+  "geometryHumanAcceptance": "pending",
+  "currentAppAppearanceVerified": false,
+  "appWorkflowPassed": false,
+  "currentAppFrames": 0,
+  "iOSUnitCasesExecuted": 0,
+  "sourceAndExportIdentity": {
+    "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+    "modelSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+    "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+    "generatedManifestSHA256": "2a8d9e959dbc7f09544049d8523d2cf1ee1a37f1da8fdaea157a51b40c714d6a"
+  },
+  "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review15-2026-10-02",
+  "sourceSetApproval": "asherlc, 2026-09-29: those are fine, feel free to use more searches for individual boards as needed",
+  "shownScope": "Current native CAD/export shape with whole prior/current front, side, top and oblique comparisons",
+  "surfaceFinish": "plastic",
+  "surfaceFinishStatus": "Generic app appearance category inferred from approved molded textured maker photos; not polymer chemistry or exact maker color",
+  "normalTechnicalDisposition": "The original inverse-rounded-point normal probe flagged 28 vertices and is retained as a completed failure. Independent unique native facet ownership supplied 106 full-precision point/UV witnesses across 90 triangles, resolving every flag without changing the 5e-6 normal tolerance, source, compiler or asset. Maximum vector error was 3.026965410505641e-8; the flags came from rounded inverse parameterization/face-candidate selection. See preflight/full-precision-normal-witness and the final normal disposition.",
+  "geometryEstimates": {
+    "recessOpeningHeightMM": 25,
+    "recessBackRollMM": 6,
+    "recessInsetFromFrontMM": 46,
+    "mouthRollMM": 2.5,
+    "lowerLipSetbackFromUpperProjectionMM": 11.5,
+    "spanNativeXMM": [
+      310,
+      401
+    ]
+  },
+  "postIntegrationTests": {
+    "pythonPassed": 31,
+    "pythonFailed": 0,
+    "pythonErrors": 0,
+    "pythonSkipped": 0,
+    "canonicalPackagesValidated": 64,
+    "iOSBuildPassed": true,
+    "iOSUnitCasesExecuted": 0,
+    "iOSCurrentAppFrames": 0,
+    "iOSRuntimeStatus": "not run; current app appearance and workflow unverified",
+    "androidStagingByteParity": true,
+    "iOSStagingByteParity": true
+  },
+  "runtimeScope": "Generic build-for-testing compiles the current package and test bundles. No current installation, launch, Swift unit execution, tapping, orbit, workout or app screenshots.",
+  "historicalAppScope": "The sibling app-review directory binds only the prior 8376/4b70/9f5fc three-file asset revision and is not current evidence.",
+  "wholeComparisons": [
+    "views/comparison-front.png",
+    "views/comparison-side.png",
+    "views/comparison-top.png",
+    "views/comparison-oblique.png",
+    "views/comparison-front-side-top.png"
+  ],
+  "contactInventory": "All twenty original logical contact IDs and factual fields preserved; no pinch IDs added",
+  "sharedCodeChanged": false,
+  "parallelWorkspaceInspectedOrMerged": false
+}

@@ -113,7 +113,7 @@ final class SuspendedBoardPresentationTests: XCTestCase {
 
     }
 
-    func testSeatedExteriorCatalogRoutesSolveEveryCachedPose() throws {
+    func testSeatedCatalogRoutesSolveEveryCachedPose() throws {
         let boardIDs = ["captain-fingerfood.dual", "captain-fingerfood.unlevel",
                         "j-bryant.ftg-32", "metolius.light-rail-2", "yy.penta-evo"]
         for boardID in boardIDs {
@@ -125,42 +125,37 @@ final class SuspendedBoardPresentationTests: XCTestCase {
             let profiles = media.instances?.compactMap(\.suspension) ?? [media.suspension].compactMap { $0 }
             XCTAssertFalse(profiles.isEmpty, boardID)
             for suspension in profiles {
-                if case .cadRoutedCord(let profile) = suspension {
+                switch suspension {
+                case .cadRoutedCord(let profile):
                     for (positionID, pose) in profile.canonicalPoses {
+                        let routes = try XCTUnwrap(pose.wrappedRoutes, "\(boardID)/\(positionID)")
+                        XCTAssertEqual(Set(routes.keys), Set(profile.strands.map(\.id)))
                         let solved = try SuspendedBoardPresentation.solve(
                             pose: pose, suspension: profile, bounds: media.descriptor.modelBounds)
-                        XCTAssertEqual(solved.branches.count, profile.strands.count, "\(boardID)/\(positionID)")
-                        let anchor = SIMD3<Float>(profile.anchor.position.map(Float.init))
+                        XCTAssertEqual(solved.branches.count, profile.strands.count)
+                        XCTAssertEqual(solved.fixedAnchor, SIMD3<Float>(profile.anchor.position.map(Float.init)))
                         for (strand, branch) in zip(profile.strands, solved.branches) {
                             if strand.kind == "lead" || strand.kind == "loop" {
-                                XCTAssertEqual(branch.centerlineSamples.first, anchor)
+                                XCTAssertEqual(branch.centerlineSamples.first, solved.fixedAnchor)
+                            }
+                            if strand.kind == "loop" {
+                                XCTAssertEqual(branch.centerlineSamples.last, solved.fixedAnchor)
                             }
                             XCTAssertLessThanOrEqual(branch.arcLength, Float(strand.restLength) + 0.00002)
                         }
                     }
-                    continue
-                }
-                guard case .pairedLeadCord(let profile) = suspension else {
-                    XCTFail("expected exterior leads for \(boardID)")
-                    continue
-                }
-                for (positionID, pose) in profile.canonicalPoses {
-                    guard let routes = pose.cordContactPoints else {
-                        XCTFail("Missing cached contacts: \(boardID)/\(positionID)")
-                        continue
-                    }
-                    XCTAssertEqual(Set(routes.keys), Set(profile.attachments.map(\.id)))
-                    do {
+                case .pairedLeadCord(let profile):
+                    for (positionID, pose) in profile.canonicalPoses {
+                        let routes = try XCTUnwrap(pose.cordContactPoints, "\(boardID)/\(positionID)")
+                        XCTAssertEqual(Set(routes.keys), Set(profile.attachments.map(\.id)))
                         let solved = try SuspendedBoardPresentation.solve(
                             pose: pose, suspension: profile, bounds: media.descriptor.modelBounds)
                         XCTAssertEqual(solved.leads.count, 2, "\(boardID)/\(positionID)")
                         let anchor = SIMD3<Float>(profile.anchor.position.map(Float.init))
-                        for lead in solved.leads {
-                            XCTAssertEqual(lead.samples.first, anchor, "\(boardID)/\(positionID)")
-                        }
-                    } catch {
-                        XCTFail("\(boardID)/\(positionID): \(error)")
+                        for lead in solved.leads { XCTAssertEqual(lead.samples.first, anchor) }
                     }
+                default:
+                    XCTFail("expected seated CAD or paired leads for \(boardID)")
                 }
             }
         }

@@ -1,0 +1,40 @@
+{
+  "owner": "placid-badger",
+  "eventType": "human-CAD-contact-acceptance",
+  "reviewNumber": 11,
+  "boardID": "nature.stone-hanger-mini-karma8a",
+  "reviewer": "asherlc",
+  "date": "2026-10-03",
+  "recordedUTC": "2026-10-03T17:21:06.468167+00:00",
+  "question": "Does this wrap look right now?",
+  "answer": "Y",
+  "acceptedScope": "Corrected pinch-60 highlight across the upper and lower exterior wooden finger-contact rails, wrapping onto their front/back faces and rounded end shoulders, shown in the whole front/back preview and prior/current front/side/top comparison.",
+  "shownAssetCommit": "63f928cbf8cb7c6522721a4ebc15d2b9b30e5923",
+  "identity": {
+    "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+    "modelSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+    "descriptorSHA256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+    "sidecarSHA256": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc"
+  },
+  "generatedManifestSHA256": "024c2c5df652271ae699487abfc963c33761a18e0c3dbd5d43aff0ac3cfe16a4",
+  "shownWholeImages": [
+    {
+      "sha256": "b29dda4e02f2a28125e052e78d94eece9cc531062601ba467d5cc02d8ecad4da",
+      "poseID": null,
+      "selectedContactID": "pinch-60",
+      "selectedNodeIDs": [
+        "nature_pinch",
+        "nature_pinch_pressure"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-front-back.png"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/prior-current-pinch-front-side-top.png",
+      "sha256": "dd31f4d5c193f65cddef240db78d157e8677063143d26b094879018dcb1346e3"
+    }
+  ],
+  "runtimeVerified": false,
+  "usableAppFrames": 0,
+  "approvalLimit": "Acceptance covers the shown CAD shape and corrected existing pinch highlight. Current app finishes, picking, orbit, workout behavior and interaction remain unverified. The three factual contacts are preserved; this correction does not add a jug contact.",
+  "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/human-review.json"
+}

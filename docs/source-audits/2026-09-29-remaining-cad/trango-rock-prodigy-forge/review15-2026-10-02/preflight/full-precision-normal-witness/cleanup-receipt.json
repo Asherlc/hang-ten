@@ -1,0 +1,27 @@
+{
+  "owner": "placid-badger",
+  "processGroups": [
+    {
+      "pid": 53996,
+      "pgid": 53996,
+      "absent": true
+    }
+  ],
+  "temporaryPaths": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/placid-badger-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/placid-badger-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/placid-badger-tmp",
+      "absent": true
+    }
+  ],
+  "exitCode": 0,
+  "completedAt": "2026-10-03T02:08:55.491331+00:00",
+  "unknownOrSharedResourcesModified": false
+}

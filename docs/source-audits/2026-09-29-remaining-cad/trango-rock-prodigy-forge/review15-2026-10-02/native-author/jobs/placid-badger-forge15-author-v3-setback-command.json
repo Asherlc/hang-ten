@@ -1,0 +1,24 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "python3",
+    "Tools/HangboardCAD/run_freecad.py",
+    "--freecad",
+    ".context/placid-badger/forge-review15/native-author/placid-badger-freecadcmd",
+    ".context/placid-badger/forge-review15/native-author/setback-correction/author-wing-recess.py"
+  ],
+  "startedUTC": "2026-10-03T01:18:11.185385+00:00",
+  "timeoutSeconds": 300,
+  "ownedTemporaryDirectory": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v3-setback-tmp",
+  "ownedExtraDirectories": [],
+  "status": "pass",
+  "ownedProcessGroup": 2989,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "ownedExtraDirectoriesAbsent": [],
+  "exitCode": 0,
+  "elapsedSeconds": 70.50227570899006,
+  "logSHA256": "549f2768500b263444869d846251429b15160d6f2481b08b2f652a8f5fe26d74"
+}

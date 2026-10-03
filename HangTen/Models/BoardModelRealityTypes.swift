@@ -695,11 +695,11 @@ final class BoardModelRealityScene {
                                                        center: Self.boundsCenter(descriptor.modelBounds))
                         let instanceTransform: simd_float4x4
                         switch suspension {
-                        case .twoBranchCord, .cadRoutedCord:
-                            // These adapters compose the canonical pose themselves.
-                            // Supplying a posed base applies the hanging transform twice.
+                        case .cadRoutedCord, .twoBranchCord:
+                            // These adapters compose the cached pose with the base
+                            // themselves and retain their authored support points.
                             instanceTransform = base
-                        default:
+                        case .singleCord, .pairedLeadCord:
                             instanceTransform = try SuspendedBoardPresentation.boardTransform(for: pose) * base
                         }
                         let solved = try SuspendedBoardPresentation.solveInstance(
@@ -1498,8 +1498,10 @@ final class BoardModelRealityScene {
         let localPoints: [[Double]]
         switch suspension {
         case .cadRoutedCord:
-            // Native routes bind the exact solved body and cord placement. They
-            // do not author a generic rigid pivot; retain camera-only orbit.
+            // Native clearance is certified for the solved body and its routes
+            // together. Distributed wrap bearings do not define a rigid hinge;
+            // moving the body alone would drive the fixed cord into the solid.
+            // Orbit the camera while retaining both source-solved transforms.
             return nil
         case .singleCord(let profile): localPoints = [profile.attachment.pointInModel]
         case .pairedLeadCord(let profile): localPoints = profile.attachments.map(\.pointInModel)

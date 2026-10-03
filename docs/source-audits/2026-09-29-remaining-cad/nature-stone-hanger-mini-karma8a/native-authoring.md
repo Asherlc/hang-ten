@@ -27,3 +27,19 @@ The [continuous cord certificate](cord-continuous-clearance.json) checks the exa
 [Camera correction proof](camera-correction-proof.json) records local front/rear and inverted viewing directions. The correction changes camera metadata only; native assets, routes, heights and cord dimensions remain byte/value identical.
 
 Initial compile reports predate metadata-only edits and are superseded for final source identity. [Current-source fresh rebuild proof](reproducibility.json); [batch validation notes](../validation-notes.md).
+
+## October 2 KARMA8A revision
+
+The original migration reports and app captures above are historical. The [current #11 packet](completion-review/review.md) supersedes the source, export and cord identities for the local granite seat repair, full exposed granite-node coverage, metadata for the existing wood/granite renderer, compact freshly solved cords and corrected 60 mm native pinch-axis check. Three factual contacts, all three positions, the exterior, grooves and unchanged insert are preserved. No separate jug is added.
+
+Whole exact prior/current [front](completion-review/comparison-front.png), [side](completion-review/comparison-side.png) and [top](completion-review/comparison-top.png) previews show the changed geometry. Wood/stone solid and exposed planar mesh overlap are zero. Native, export, Python and package checks pass. Current iOS compile provenance is separate from app appearance; no current app frames or unit cases establish runtime acceptance. Human acceptance remains pending. Throwaway authoring and verification scripts remain under `.context`; [script hashes](completion-review/throwaway-script-provenance.json) record their provenance.
+
+## October 3 exterior pinch wrap correction
+
+The user reported “same jug wrapping issue” after #11 review. The [new review](pinch-wrap-review-2026-10-03/index.html) extends the existing pinch-60 selection over both exterior wooden rails, wrapping onto their front/back finger-contact faces and rounded end shoulders. The original top/bottom flats and rounds are retained. There are still exactly three factual contacts; no separate jug is sourced or added.
+
+The upper contact boundary follows the existing cavity-mouth lip at native z19.5 mm; the lower band ends at the fitted granite seat boundary z−18 mm. These are deliberately authored display-contact extents tied to actual native surfaces, not maker measurements of finger footprints. Granite, recess interior, groove walls and middle front/back panels are excluded. The source retains its wood default and granite-only exception, while the USDZ has no bound materials or textures.
+
+Ordinary whole-Shell1 binding, expression-driven masks and native surface Common/Cut/Compound operations create exterior contact seams. Native body/exterior area and volume differences in both directions are zero, with no caps or overlap; all original shapes and the exact collision mesh/features are preserved. Six original BRep cache members reserialize, recorded honestly. The native mouth-radius and groove-radius edit/restore probes pass. Toroidal analytic bounding boxes conservatively overestimate shoulder height before tessellation; physical contact has zero area outside the 60-mm slab and explicit on-surface endpoint witnesses at ±30 mm. Original pinch, wood and granite export triangles are exact, while new seams change body triangulation.
+
+Four actual USDZ probes at the front/back centers of the upper/lower rails now belong to pinch-60. All 67 focused tests, the 64-board catalog, both platform staging paths, delivery lock, deterministic exports, fresh USDZ reimport and three source-bound cached cord poses pass. Sidecar changes only modelSHA256; topology, stations, allowances, poses and paths stay exact. Current app finishes/interaction and final human acceptance remain pending; no new Simulator attempt was made.

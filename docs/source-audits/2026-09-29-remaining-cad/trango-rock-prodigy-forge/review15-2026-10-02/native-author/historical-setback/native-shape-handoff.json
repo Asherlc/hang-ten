@@ -1,0 +1,105 @@
+{
+  "status": "pass",
+  "scope": "Native author shape/contact gate; actual export gate pending independent preflight",
+  "source": {
+    "path": ".context/placid-badger/forge-review15/native-author/setback-correction/candidate-package/trango-rock-prodigy-forge.FCStd",
+    "sha256": "3befc7e58894d76f7f7f70bdab82c33f3bf9901bf61512b4aa555b495bf862a4"
+  },
+  "geometryOnlySourceSHA256": "1eb25f66189b4397f45d496eb46705e1e1b9e7e9295df462683db1450d093e00",
+  "metadataProof": {
+    "path": ".context/placid-badger/forge-review15/native-author/setback-correction/finish-metadata-proof.json",
+    "sha256": "d6c9a061af9506f754d11f33ece46c7d6bd68309806f40757be9fcbb3605b64e"
+  },
+  "nativeReport": {
+    "path": ".context/placid-badger/forge-review15/native-author/setback-correction/author-report.json",
+    "sha256": "5c452371d9c7b3b4a4a98f3e91b7b2fb962be87d3742eb13d4b4a5275003a5d9"
+  },
+  "authorScript": {
+    "path": ".context/placid-badger/forge-review15/native-author/setback-correction/author-wing-recess.py",
+    "sha256": "887b9e808294094fb4c47f220008b431e3289720ecf42db24cf376b57ec0da9b"
+  },
+  "viewedRenderFiles": [
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/setback-correction/native-whole-views/comparison-front.png",
+      "sha256": "9c6029be098330c4b51b652faf16179c73ef7284f2c4395dd61241a46157e4a5",
+      "view": "front",
+      "role": "prior/current"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/setback-correction/native-whole-views/comparison-side.png",
+      "sha256": "cfaed19cd025d76dab0e3c4696f55f93a24c53bc25ec202f019c87e2d6a46b42",
+      "view": "side",
+      "role": "prior/current"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/setback-correction/native-whole-views/comparison-top.png",
+      "sha256": "c63b08c67dba84c19a146c6a8c332fa1d086420d4a48e75304782bdac436d01a",
+      "view": "top",
+      "role": "prior/current"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/setback-correction/native-whole-views/comparison-oblique.png",
+      "sha256": "96aef82b2eb0f558b949e033797efd52c652e24d256ee9feb3a15d3af69545a0",
+      "view": "oblique",
+      "role": "prior/current"
+    }
+  ],
+  "sourceImages": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-01.jpg",
+      "sha256": "838e2a95316508157a6f85c12c665511e797ae5bfb21e9917e3ed67c92ed80c4"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-03.png",
+      "sha256": "a2a4e18e3fe3c716c171f2726fe0b3d9ef653cc77ad7c30b56e304476cec1914"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-04.png",
+      "sha256": "678688bbf11a66fc5d77961e80d5af6b5a35548548c69bbd25588389f6fba136"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-05.png",
+      "sha256": "ce64d24741944997302ad503882eeaee958cca57a5cf4f80b23a6436bad6487f"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-06.png",
+      "sha256": "de38abd8ebf79dda10a2f3e9f7f0a77a34f81a314d3e3afa02b69eb7e6bc80c2"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/hold-chart-page-1.png",
+      "sha256": "eb51572eee1034b774872e44ded8bd3bdf20a0e023e0dc0673f5c75afb263c66"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/depth-guide-page-1.png",
+      "sha256": "b3ba2fab2375f30d2f1c60cabcc30ce77241313d02824288adbf5301d64b2808"
+    }
+  ],
+  "resolvedBlockers": [
+    "outer-wing-recess-and-lower-lip"
+  ],
+  "blockers": [],
+  "displayEstimates": {
+    "recessOpeningHeightMM": 25,
+    "recessBackRollMM": 6,
+    "recessInsetFromFrontMM": 46,
+    "mouthRollMM": 2.5,
+    "lowerLipSetbackFromUpperProjectionMM": 11.5,
+    "spanNativeXMM": [
+      310,
+      401
+    ]
+  },
+  "contactSurfacesUnchanged": 20,
+  "newAppFrames": 0,
+  "humanAcceptance": "pending",
+  "canonicalMutation": false,
+  "historicalRejectedScratchSources": [
+    "a956c7d31ee8a6401e4322886b45d9df2d10af2182e8cdb07ee422c56ef35adc"
+  ],
+  "lifecycle": {
+    "authorCommandReceipt": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v3-setback-command.json",
+    "renderCommandReceipt": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-setback-whole-render-command.json",
+    "ownedProcessGroupsAbsent": true,
+    "ownedTemporaryDirectoriesAbsent": true
+  }
+}

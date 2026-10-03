@@ -1,0 +1,176 @@
+{
+  "owner": "placid-badger",
+  "reviewNumber": 10,
+  "boardID": "nature.stone-hanger-mini",
+  "preparedUTC": "2026-10-03T06:25:10.113937+00:00",
+  "status": "CAD contact/export/package checks pass; human review pending; current app appearance unverified",
+  "baselineCommit": "d3811417c4c2d7efd87e7b856399fd860124fbbc",
+  "identity": {
+    "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+    "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+    "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+    "sidecarSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f"
+  },
+  "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
+  "nativeClosedCollisionBodyUnchanged": true,
+  "fullExteriorSurfaceUnchanged": true,
+  "nativeExportFacePartitionChanged": true,
+  "actualUSDZTriangleCount": 29122,
+  "allExportedTrianglePositionsUnchanged": false,
+  "duplicateGeometricTriangles": 0,
+  "unboundMeshes": 7,
+  "factualContactCount": 4,
+  "jugSharedFaces": [
+    30,
+    43,
+    69
+  ],
+  "jugOnlyEndFaces": [
+    28,
+    29,
+    41,
+    42,
+    59,
+    65
+  ],
+  "jugOnlyPressureBandNativeZMinMM": 19.82417332780598,
+  "bandBoundary": "Existing native Face21 mouth-lip ZMax, expression-driven; display extent, not manufacturer finger-depth measurement",
+  "frontAndRearActualPadProbesCovered": true,
+  "pinchPrimaryFaces": [
+    23,
+    31,
+    44
+  ],
+  "pinchLogicalSixFaceUnionExactPrior": true,
+  "woodAndGraniteGeometryExactPrior": true,
+  "embeddedManifestExactPrior": true,
+  "publishedDepthsMM": [
+    15,
+    15,
+    60
+  ],
+  "nativeReopenRecomputeDimensionEditRestorePassed": true,
+  "twoDeterministicExportsPassed": true,
+  "freshUSDZReimportDescriptorRebuildPassed": true,
+  "cordSourceBoundCacheCheckPassed": true,
+  "nativePoseCount": 3,
+  "nativeRouteCount": 12,
+  "cordTopologyStationsDimensionsPosesAndCachesUnchanged": true,
+  "sidecarOnlyChangedField": "/modelSHA256",
+  "nativeClearanceToleranceMM": 0.01,
+  "priorContinuousCertificatesRemainApplicableBecauseSolidAndRoutesAreIdentical": true,
+  "pythonTests": {
+    "tests": 67,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "passed": 67
+  },
+  "catalogBoards": 64,
+  "platformStagingPassed": [
+    "xcode",
+    "android"
+  ],
+  "deliveryLockPassed": true,
+  "deliverySHA256": "4267990f05613cd2baf67f1d4604bf107ea081960c45c45a7c1faf0f81567fd1",
+  "preservation": {
+    "otherPackages": {
+      "fileCount": 202,
+      "allSHA256Unchanged": true
+    },
+    "reservedSharedPaths": {
+      "fileCount": 7,
+      "allSHA256Unchanged": true
+    },
+    "priorReviewPackets": {
+      "fileCount": 591,
+      "allSHA256Unchanged": true
+    },
+    "originalCompletionPacket": {
+      "fileCount": 222,
+      "allSHA256Unchanged": true
+    }
+  },
+  "allExactOwnedResourcesDeletedAndVerified": true,
+  "sharedCodeChanged": false,
+  "runtimeVerified": false,
+  "usableAppFrames": 0,
+  "newSimulatorAttempt": false,
+  "views": [
+    {
+      "sha256": "73be0efb5953455b6ddfd0ba9236b3afc4471f031c2846d4d833e403b854fc51",
+      "poseID": "front-upright",
+      "selectedContactID": "pull-up-jug",
+      "selectedNodeIDs": [
+        "nature_jug",
+        "nature_jug_ends",
+        "nature_jug_pressure"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-front.png"
+    },
+    {
+      "sha256": "dff6650db90723201e7ad883ec61277c1a38b17f8868d062aa8962896947e4c1",
+      "poseID": "front-upright",
+      "selectedContactID": "pull-up-jug",
+      "selectedNodeIDs": [
+        "nature_jug",
+        "nature_jug_ends",
+        "nature_jug_pressure"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-back.png"
+    },
+    {
+      "sha256": "251cfc66215c7de7d5c95a0416f4128cdcd409c85071639b93e1b6a95b3e49df",
+      "poseID": "front-upright",
+      "selectedContactID": "granite-edge-15",
+      "selectedNodeIDs": [
+        "nature_stone"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-granite-loaded.png"
+    },
+    {
+      "sha256": "a81cce6c395030c1e231ddea1758110d0670d74a64219488bb65313e1a077fc9",
+      "poseID": "wood-inverted",
+      "selectedContactID": "wood-edge-15-incut",
+      "selectedNodeIDs": [
+        "nature_wood"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-wood-loaded.png"
+    },
+    {
+      "sha256": "819635957620d826e7da6227cb8a8c2e4c9a3e8c1a0f26f9563812e2f042d9d5",
+      "poseID": "pinch-side",
+      "selectedContactID": "pinch-60",
+      "selectedNodeIDs": [
+        "nature_jug",
+        "nature_pinch"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-pinch-loaded.png"
+    }
+  ],
+  "wholePriorCurrentComparisons": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/prior-current-jug-front-side-top.png",
+      "sha256": "a1cd9c5844d2ed5fdb23e3cb8a83e1c0fe11f876f24e83bb3294efad7a70cdfa"
+    }
+  ],
+  "rootVisualReview": {
+    "croppedOrMeasuredPixels": false,
+    "wholeViewsInspected": [
+      "jug front",
+      "jug back",
+      "prior/current front-side-top",
+      "pinch reverse-oblique"
+    ],
+    "finding": "Red selection includes the flat upper front/back finger-pressure faces, joined continuously with the rounded crown and upper sides. Lower panels and groove walls remain ordinary body; pinch selection is preserved."
+  },
+  "attemptNotes": [
+    "Superseded native face-list binding failed the groove edit check; replaced with whole Shell1 binding with Refine=False. Final mouth/groove probes and exports pass. Raw failed attempts and exact compiler-stop cleanup receipts retained."
+  ],
+  "limits": [
+    "Existing display estimates and previously documented native edit fragility remain.",
+    "Neutral exact CAD previews are not runtime finish or interaction evidence.",
+    "Earlier overall-body Lgtm is preserved; it does not accept this latest jug correction."
+  ]
+}

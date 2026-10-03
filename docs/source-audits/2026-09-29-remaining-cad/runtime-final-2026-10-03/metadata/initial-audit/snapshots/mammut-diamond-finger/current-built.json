@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 3,
+  "id": "mammut.diamond-finger",
+  "manufacturer": "Mammut",
+  "name": "Diamond Finger Hangboard",
+  "subtitle": "Full-width fingerboard with 21 documented contact surfaces.",
+  "productURL": "https://www.mammut.com/us/en/products/2060-00020/diamond-finger-hangboard",
+  "dimensions": "33.5 in wide",
+  "aspectRatio": 4.0,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Front face",
+      "aspectRatio": 4.334468884342154,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          },
+          "surfaceFinish": "wood"
+        }
+      }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "mam-jug-l",
+      "equipmentObjectID": "primary",
+      "name": "Jug left",
+      "kind": "jug",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-jug-r",
+      "equipmentObjectID": "primary",
+      "name": "Jug right",
+      "kind": "jug",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-sloper-c",
+      "equipmentObjectID": "primary",
+      "name": "Sloper centre",
+      "kind": "sloper",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-mid-edge-c",
+      "equipmentObjectID": "primary",
+      "name": "Middle edge centre",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-mono-l",
+      "equipmentObjectID": "primary",
+      "name": "Mono pocket left",
+      "kind": "pocket",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-mono-r",
+      "equipmentObjectID": "primary",
+      "name": "Mono pocket right",
+      "kind": "pocket",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-upper-pocket-l",
+      "equipmentObjectID": "primary",
+      "name": "Upper pocket left",
+      "kind": "pocket",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-upper-pocket-r",
+      "equipmentObjectID": "primary",
+      "name": "Upper pocket right",
+      "kind": "pocket",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-lateral-ledge-l",
+      "equipmentObjectID": "primary",
+      "name": "Lateral ledge left",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-lateral-ledge-r",
+      "equipmentObjectID": "primary",
+      "name": "Lateral ledge right",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-upper-pocket-c",
+      "equipmentObjectID": "primary",
+      "name": "Upper pocket centre",
+      "kind": "pocket",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-lower-edge-c",
+      "equipmentObjectID": "primary",
+      "name": "Lower edge centre",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-upper-open-bay-l",
+      "equipmentObjectID": "primary",
+      "name": "Upper open bay left",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-upper-open-bay-r",
+      "equipmentObjectID": "primary",
+      "name": "Upper open bay right",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-upper-inset-l",
+      "equipmentObjectID": "primary",
+      "name": "Upper inset step left",
+      "kind": "pocket",
+      "gripTypes": []
+    },
+    {
+      "id": "mam-upper-inset-r",
+      "equipmentObjectID": "primary",
+      "name": "Upper inset step right",
+      "kind": "pocket",
+      "gripTypes": []
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "status": "not-run-environment",
+  "reviewer": "astra-native-author-and-physical-reviewer",
+  "recordedUTC": "2026-10-02T04:29:41.223251+00:00",
+  "canonicalSHA256": {
+    "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.usdz": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.model.json": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+    "Hangboards/nature-stone-hanger-mini/suspension.json": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+  },
+  "viewedAppFrames": [],
+  "blockingFindings": [
+    {
+      "scope": "final-app-review",
+      "finding": "Fresh app review unavailable: parent reports three guest/runtime attempts did not become usable and final iOS 26.4 ordinary raster/home launch timed out before content. No current Mini app screenshot, selection, drag, workout, or material review exists.",
+      "geometryDefectAsserted": false
+    }
+  ],
+  "nativeShapeGate": {
+    "status": "pass",
+    "actuallyViewedWholeImages": [
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/front-original.jpg",
+        "sha256": "3aae064c37d7eef11e7874acaabbaca0194a1caa357e2bff1bbfb83faf093ff7"
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/reverse-original.jpg",
+        "sha256": "09a4926269b291354b171fdac6e20365a6c9c66528bb4275b8cb56b20b8f1eae"
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/oblique-original.jpg",
+        "sha256": "383cdd3665f1e30a0dc8443959d7442e65780dbd27b71bc597efc9a1b924f685"
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/in-use-original.jpg",
+        "sha256": "f17ceb9007a1f00ad19859c6fdf4bbd0c8a48b5f8d1cdbf169c6de46ffeb076e"
+      },
+      {
+        "path": ".context/placid-badger/nature-stone-mini-review10/completion/export-previews/comparison-front.png",
+        "sha256": "8d6d682b5ec63f1eb1d0729d8e727c4ab8bdab2314cb05b1755cfea7e5a0155d"
+      },
+      {
+        "path": ".context/placid-badger/nature-stone-mini-review10/completion/export-previews/comparison-side.png",
+        "sha256": "63ba5a4914d1742e58aaef839a2ff0d51400e5e38b12174ba78638b93b8e6ddc"
+      },
+      {
+        "path": ".context/placid-badger/nature-stone-mini-review10/completion/export-previews/comparison-top.png",
+        "sha256": "4dfee3dbccb61a07db6691852332cd2e6f6b22caf287ae0669d6d74de59cbda6"
+      },
+      {
+        "path": ".context/placid-badger/nature-stone-mini-review10/completion/export-previews/comparison-oblique.png",
+        "sha256": "7a1821d6257ed8ceccf87771adf02092b34a42a35cb0b85b2ea90e3b3cf03cc5"
+      }
+    ],
+    "sectionAndNumericEvidence": [
+      {
+        "path": ".context/placid-badger/nature-stone-mini-review10/completion/native-sections.json",
+        "sha256": "3bd33e80fbd05398fe95bb4332343714894d987d1d68be3a030de45612288a95"
+      },
+      {
+        "path": ".context/placid-badger/nature-stone-mini-review10/completion/final-native-check.json",
+        "sha256": "0f367014815cf082630373a5cf4bf323b48f90657095f78f059211bb6899f4e9"
+      },
+      {
+        "path": ".context/placid-badger/nature-stone-mini-review10/completion/native-author-report.json",
+        "sha256": "e0e88354db174ea4b0b4112cad8a305004bc61497b5cde3532fd283bffbf0a6b"
+      },
+      {
+        "path": ".context/placid-badger/nature-stone-mini-review10/completion/export-check.json",
+        "sha256": "aa06c2554682f02863fb118a471f8205e09cdd30f728e82f36e615789381ceeb"
+      },
+      {
+        "path": ".context/placid-badger/nature-stone-mini-review10/completion/continuous-cached-route-certificate.json",
+        "sha256": "90b558bbe314862d5321da5a87bcf9c23128220ae63dc1fae357124f7d27f2fa"
+      }
+    ],
+    "judgment": "Whole manufacturer photos support a granite insert seated against the lower wood rail and two side grooves with a transverse exposed return. Prior/current whole model comparisons show the lower slit closed while the accepted outer silhouette and grooves remain unchanged. Native sections and exact geometry checks establish zero wood/stone volume or exposed-surface overlap, preserved other contact surfaces, full 15 mm granite/wood depths and 60 mm pinch span. Exported triangle partition has zero measured planar overlap and no materials. Native jug normal is upward with an existing 15 mm positive rim in the proposed pose; that angle is an operator-selected display adaptation, not a sourced hand placement. Compact 110 mm leads and their support offset are display estimates, with solver-derived routes independently certified against the native solid.",
+    "limits": [
+      "Whole images inspected without cropping, tracing, registration, or pixel measurement.",
+      "Native/export geometry and route gates do not establish rendered app texture coverage, selection restoration, drag behavior, workout behavior, or presentation quality.",
+      "The quarter-turn jug pose and compact cord length are documented display estimates. No hidden cord connection is asserted."
+    ]
+  },
+  "approvalState": {
+    "oldOverallShapeLgtm": "accepted; unchanged scope",
+    "finalFinish": "pending",
+    "finalCordPresentation": "pending",
+    "finalJugPresentation": "pending",
+    "appOrMaterialAcceptanceImplied": false
+  },
+  "mutations": "Only this workspace-owned review report written; canonical files and shared code unchanged; simulator not operated."
+}

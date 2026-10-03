@@ -1,0 +1,29 @@
+{
+  "owner": "placid-badger",
+  "label": "final-strong-build",
+  "command": [
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+    "-derivedDataPath",
+    ".context/DerivedData",
+    "-parallel-testing-enabled",
+    "NO",
+    "-collect-test-diagnostics",
+    "never",
+    "build-for-testing"
+  ],
+  "timeoutSeconds": 240.0,
+  "ownedProcessGroup": 76983,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 15.373387792002177
+}

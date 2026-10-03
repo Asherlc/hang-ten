@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger",
+  "promotedUTC": "2026-10-03T06:19:16.786706+00:00",
+  "baselineCommit": "d3811417c4c2d7efd87e7b856399fd860124fbbc",
+  "identity": {
+    "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+    "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+    "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+    "sidecarSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f"
+  },
+  "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
+  "sidecarOnlyChangedField": "/modelSHA256",
+  "cordCachesTopologyDimensionsAndPosesExactPrior": true,
+  "priorDeliverySHA256": "0fbef266b074158c46cca88817965c972406e3835414505b669c465fc1d18f8b",
+  "currentDeliverySHA256": "4267990f05613cd2baf67f1d4604bf107ea081960c45c45a7c1faf0f81567fd1",
+  "authorHandoffSHA256": "2bd5f15947f07de8d7b6023de19ce02e8a5a68d8c7d2ca45b5fe006c2c8e33aa",
+  "runtimeVerified": false
+}

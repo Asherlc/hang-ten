@@ -1,0 +1,86 @@
+[
+  {
+    "ref": "PL-1",
+    "url": "https://www.plateauclimbing.com/products/plateau-lifting-edge",
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/product-page-current.html",
+    "sha256": "8638b5d9ede3bc42bc06e693e2586674253c39a766f5a2213cde71f4b483a3a7",
+    "reviewedWholeImage": false,
+    "approvedVisualHash": false,
+    "authorization": {
+      "approved": false,
+      "researchAuthorized": true,
+      "authorizationDate": "2026-09-29",
+      "notes": "Exact September20 HTML bytes were unavailable; this current primary HTML snapshot differs from the approved historical SHA. User expressly authorized additional primary research on September29. Approval of the exact unchanged visual sources is separate."
+    }
+  },
+  {
+    "ref": "PL-2",
+    "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1171.png?v=1773212075&width=3840",
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/front.png",
+    "sha256": "7a854f73c876dffdff07251e4ab4cd5128014c3f51a3d31e14ecf00ac36fe7a7",
+    "reviewedWholeImage": true,
+    "approvedVisualHash": true,
+    "authorization": {
+      "approved": true,
+      "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+      "reviewedAt": "2026-09-20",
+      "notes": "Exact SHA matches approved Appendix A visual source."
+    }
+  },
+  {
+    "ref": "PL-3",
+    "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1166.png?v=1773212075&width=3840",
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/oblique.png",
+    "sha256": "bb12d65453f77a917e048eb7ed09582c0ee4d96d6cf265973748f99cfc39191d",
+    "reviewedWholeImage": true,
+    "approvedVisualHash": true,
+    "authorization": {
+      "approved": true,
+      "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+      "reviewedAt": "2026-09-20",
+      "notes": "Exact SHA matches approved Appendix A visual source."
+    }
+  },
+  {
+    "ref": "PL-4",
+    "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1168.png?v=1773212075&width=3840",
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/blocker-15.png",
+    "sha256": "4e666f921ffebdb287f383eb1330d5eb8aafab591cea5cfc488667368ee312b0",
+    "reviewedWholeImage": true,
+    "approvedVisualHash": true,
+    "authorization": {
+      "approved": true,
+      "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+      "reviewedAt": "2026-09-20",
+      "notes": "Exact SHA matches approved Appendix A visual source."
+    }
+  },
+  {
+    "ref": "PL-5",
+    "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1161.png?v=1773212075&width=3840",
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/blocker-10.png",
+    "sha256": "b2a474441847de209fa85307383d0822f462801650f1f188bd0b1d8d8d49e243",
+    "reviewedWholeImage": true,
+    "approvedVisualHash": true,
+    "authorization": {
+      "approved": true,
+      "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+      "reviewedAt": "2026-09-20",
+      "notes": "Exact SHA matches approved Appendix A visual source."
+    }
+  },
+  {
+    "ref": "PL-6",
+    "url": "https://www.plateauclimbing.com/cdn/shop/files/45_edited.jpg?v=1773212075&width=3840",
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/oak-blocker-in-use.jpg",
+    "sha256": "a4a037eccdd1de212333f3f4482fab309ff385720768bb60c61606a9fb209e75",
+    "reviewedWholeImage": true,
+    "approvedVisualHash": true,
+    "authorization": {
+      "approved": true,
+      "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+      "reviewedAt": "2026-09-20",
+      "notes": "Exact SHA matches approved Appendix A visual source."
+    }
+  }
+]

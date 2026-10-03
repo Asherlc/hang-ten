@@ -1,0 +1,244 @@
+{
+  "owner": "placid-badger",
+  "attempt": "one bounded fresh 26.4 retry on 2026-10-02",
+  "status": "environment-blocked",
+  "commit": "9105c89528463acd5b2d645e633164d182f03883",
+  "worktreeClean": true,
+  "canonicalSHA256": {
+    "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.usdz": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.model.json": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+    "Hangboards/nature-stone-hanger-mini/suspension.json": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+  },
+  "canonicalInputsUnchanged": true,
+  "simulatorUUID": "2397F02F-15E4-48C9-8E5C-37DE8CC995B2",
+  "runtime": "iOS 26.4 (23E244)",
+  "device": "iPhone 17 Pro",
+  "build": {
+    "command": [
+      "xcodebuild",
+      "-project",
+      "HangTen.xcodeproj",
+      "-scheme",
+      "HangTen",
+      "-configuration",
+      "Debug",
+      "-destination",
+      "platform=iOS Simulator,id=2397F02F-15E4-48C9-8E5C-37DE8CC995B2",
+      "-derivedDataPath",
+      ".context/DerivedData",
+      "build-for-testing"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 42.899022624998906,
+    "rawLog": "ios-build.log",
+    "processGroupAbsent": true
+  },
+  "installedProvenance": {
+    "owner": "placid-badger",
+    "simulator": "2397F02F-15E4-48C9-8E5C-37DE8CC995B2",
+    "builtApp": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/DerivedData/Build/Products/Debug-iphonesimulator/HangTen.app",
+    "installedApp": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/2397F02F-15E4-48C9-8E5C-37DE8CC995B2/data/Containers/Bundle/Application/510D12B6-27F7-4BF0-B748-B35CC2C114D3/HangTen.app",
+    "builtBinarySHA256": "c4e671fec7e035a2dec4f6ee50f848e6e992206166e002b8e0ccd25e75bc074f",
+    "installedBinarySHA256": "c4e671fec7e035a2dec4f6ee50f848e6e992206166e002b8e0ccd25e75bc074f",
+    "binaryBytesMatch": true,
+    "nativeSourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+    "generatedManifestSHA256": "2125d52a00ff55777505b3ca28777c5dc499955d05f6aaf441226a0d1275b76f",
+    "generatedManifestBytesMatchSource": true,
+    "sidecarSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
+    "packageSHA256": {
+      "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+      "Hangboards/nature-stone-hanger-mini/assets/primary.usdz": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+      "Hangboards/nature-stone-hanger-mini/assets/primary.model.json": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+      "Hangboards/nature-stone-hanger-mini/suspension.json": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+    },
+    "contactIDs": [
+      "pull-up-jug",
+      "wood-edge-15-incut",
+      "granite-edge-15",
+      "pinch-60"
+    ],
+    "positions": [
+      {
+        "id": "jug-open-up",
+        "presentationID": "primary",
+        "contactIDs": [
+          "pull-up-jug"
+        ]
+      },
+      {
+        "id": "front-upright",
+        "presentationID": "primary",
+        "contactIDs": [
+          "granite-edge-15"
+        ]
+      },
+      {
+        "id": "wood-inverted",
+        "presentationID": "primary",
+        "contactIDs": [
+          "wood-edge-15-incut"
+        ]
+      },
+      {
+        "id": "pinch-side",
+        "presentationID": "primary",
+        "contactIDs": [
+          "pinch-60"
+        ]
+      }
+    ],
+    "models": [
+      {
+        "presentationID": "primary",
+        "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+        "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+        "installedModelPaths": [
+          "/Users/asherlc/Library/Developer/CoreSimulator/Devices/2397F02F-15E4-48C9-8E5C-37DE8CC995B2/data/Containers/Bundle/Application/510D12B6-27F7-4BF0-B748-B35CC2C114D3/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-nature-stone-hanger-mini-4df27b9222ef66a518b063f8aa7e26c5.assetpack/Hangboards/nature-stone-hanger-mini/assets/primary.usdz"
+        ]
+      }
+    ],
+    "commit": "9105c89528463acd5b2d645e633164d182f03883",
+    "dirtyDiffSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "startup": {
+    "secondsFromLaunchServicesReadyToFinishSignal": 278.898521900177,
+    "usableHomeUI": false,
+    "usableAppUI": false,
+    "firstBootScreenshots": [
+      "boot-screen.png",
+      "home-screen.png"
+    ],
+    "bootstatus": "Waiting on Data Migration / Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)",
+    "initialAccessibility": "No translation object returned for simulator",
+    "appLaunchTimeoutSeconds": 30,
+    "appLaunchRecords": [
+      {
+        "command": [
+          "rtk",
+          "proxy",
+          "xcrun",
+          "simctl",
+          "launch",
+          "--terminate-running-process",
+          "2397F02F-15E4-48C9-8E5C-37DE8CC995B2",
+          "com.hangten.training"
+        ],
+        "reviewEnvironment": {
+          "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger-mini",
+          "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+          "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "pull-up-jug"
+        },
+        "startedMonotonic": 31656.507329208,
+        "errorType": "TimeoutExpired",
+        "error": "Command '['rtk', 'proxy', 'xcrun', 'simctl', 'launch', '--terminate-running-process', '2397F02F-15E4-48C9-8E5C-37DE8CC995B2', 'com.hangten.training']' timed out after 30 seconds",
+        "exitCode": null
+      }
+    ],
+    "laterScreenshotTimeoutSeconds": 15,
+    "finalReadinessHarnessFailure": "Timeout cleanup raised PermissionError; raw failure retained separately. Exact process group subsequently independently verified absent. No additional device or recovery attempt."
+  },
+  "tests": {
+    "status": "not run: guest never became usable",
+    "selectedSuites": [
+      "BoardModelTests",
+      "BoardModelRealityTests",
+      "BoardPackageStoreTests",
+      "SuspendedBoardPresentationTests"
+    ],
+    "executedCases": 0,
+    "passedCases": 0,
+    "failedCases": 0,
+    "nativeTestHarnessRuns": 0,
+    "readinessHarnessFailures": 1,
+    "compileDoesNotCountAsExecution": true
+  },
+  "coverage": {
+    "freshUsableAppFrameCount": 0,
+    "contactSelections": 0,
+    "canonicalPosesInspected": 0,
+    "actualOrbitDrags": 0,
+    "sameInstanceGraniteWoodRestoration": false,
+    "workoutJugPose": false,
+    "portrait": false,
+    "landscape": false,
+    "bootFramesPhysicallyViewed": 2
+  },
+  "appOpinion": {
+    "authoritativeShapeAcceptance": false,
+    "finding": "No current app judgment possible: neither frame shows Hang Ten, only boot progress. No justified new shape/contact/finish defect established.",
+    "priorHumanOverallShapeApproval": "Preserved; this attempt does not supersede or extend it.",
+    "pending": [
+      "finish",
+      "granite insert seating and no overlap",
+      "short cord inside side guides",
+      "opening-up jug physical contact",
+      "all four contacts/poses",
+      "orbit and selection retention",
+      "same-instance granite/wood finish restoration",
+      "actual workout jug pose"
+    ]
+  },
+  "limits": [
+    "Successful current-source build/install and frozen package byte checks are provenance only, not app acceptance.",
+    "No source, renderer, package, routine or committed documentation edits.",
+    "No HTTP server, global service repair, guest replacement, installers or updaters.",
+    "One simulator was created and deleted.",
+    "Native tests not attempted on unusable guest; source method counts are not reported as execution."
+  ],
+  "cleanup": {
+    "owner": "placid-badger",
+    "simulatorUUID": "2397F02F-15E4-48C9-8E5C-37DE8CC995B2",
+    "archiveExitCode": 0,
+    "simulatorAbsent": true,
+    "derivedDataAbsent": true,
+    "tmpAbsent": true,
+    "ownedManifestConsumed": true,
+    "pendingManifestConsumed": true,
+    "ownedProcessGroups": [
+      82966,
+      82977,
+      83057,
+      83566,
+      92820,
+      93907,
+      94035
+    ],
+    "ownedProcessGroupsAbsent": true,
+    "remainingOwnedProcesses": [],
+    "simulatorProcessesAbsent": true,
+    "remainingSimulatorProcesses": [],
+    "verifiedUTC": "2026-10-02T13:46:42.840691+00:00"
+  },
+  "evidenceSHA256": {
+    "boot-screen.png": "bb44679a0de7ecaeaac36aa63ab4cdb0cbf4a4f4fc3438547576313e699b7169",
+    "boot-screen.txt": "e0232ad8b846edd60ffbe7d62aa9207c30fb4f68d37e748718eec1d5c59eddc3",
+    "boot-ui.txt": "73c108094c35acfef08d0adcc6b86e4a3f369ce01bdd1aed88eeec6173f05c47",
+    "bootstatus.txt": "3af113dbf4665677abf91617d7dc1d4eee4f4aff52181d1ac312c9ef5b892bb9",
+    "build-dirty-diff.patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "capture_review.py": "a5381926c6b4b5de6d4beb2b91b664a3823887368b2468a2d65300583d9f4431",
+    "cleanup-receipt.json": "3ce6e842134303ceabe18f98dafd79bacaae1736819a0303bf1af34eca409d17",
+    "final-captures/command-records.json": "9f9f1d2261453f7687c9ef963172e2979ab6c84d402a678ffa8ea15f3477bc85",
+    "final-inputs.json": "a2f85f7059f83c8de1887c59f156eea3f6706d2f9c2453224fbc575e0ec143a8",
+    "final-readiness-harness-failure.json": "8d75c8a27272534bd574799d61e9d352759525600a61b6d73d2ed53ce43e6d2e",
+    "final-readiness.json": "99a6fac36307fecd21fa1d649f8a4cb662b60c2c0e7cf56dcfa3fec82e284e64",
+    "finish": "ec80066cf69b022f9c42af1d1736e414b789cd047ff66867dc30d50324f8a281",
+    "git-status.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "home-screen.png": "9cc73cd2236e432ab2a53e0aeac0b200f4dd6754ade5e3ba46b499ae790fcb08",
+    "home-screen.txt": "74a7e58f4873f846ef31f53353a0335afc2c4e4dd81188d221cf1e32c3ef9143",
+    "home-ui.txt": "73c108094c35acfef08d0adcc6b86e4a3f369ce01bdd1aed88eeec6173f05c47",
+    "install_app.py": "2d3558f5074dd673faa62d614b9ba1cf3c4ac970c41c8ffcdf8f5b6ce00b7cd8",
+    "installed-app-provenance.json": "607446268f46cc23acdb593e954e04b8415fac4539dd4f39d6348358a3af307c",
+    "ios-build-command.json": "9cb7031f1ff8d55bde0019acaf6d00595d0f862ba30a42020393e48991055903",
+    "ios-build.log": "6a0011962103c567c3b9764045e86676ea454adaf889661aee3c5ca22e341347",
+    "ownership.json": "e5768471d6e9f2048fde770c4aa0222d98f4610ddc3bed0df0e7dc00fb0e2ea6",
+    "process-groups.json": "b5cc7d77933f67a37c781e5263f7c59f1e0ec787a531310d4b643fdb8f8d266e",
+    "run_xcode.py": "579d9d440e8dbff502fb616688dd57fbfbfeaeaecddb991111236ccd824c115a",
+    "scoped-processes.txt": "c8d1433aed1f502272b93d34c080318d307b9ba0a79e0fea17d0b82dfb6f378f",
+    "session-commands.json": "74ed787403c0eafdc1dc64fa65c6fe374c5f4159ee4de560e509aa4e91acf1e6",
+    "session.py": "988404ba03a4519ec9a2813b1fbd556bc148c43d39a7ed4f9d55fa9ace1ea00a",
+    "simulator-ready": "c5b4a186f7293c3a2e055138cf00d6847b5630005a9e21188b7162a5eaf765e2",
+    "startup-screen.png": "7f8817a16db972678cf27f95b506187f793f4a961956db3c367997237185d7b0",
+    "verified-generated-board.json": "2125d52a00ff55777505b3ca28777c5dc499955d05f6aaf441226a0d1275b76f"
+  }
+}

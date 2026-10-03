@@ -1,0 +1,135 @@
+{
+  "owner": "placid-badger",
+  "boardNumber": 12,
+  "boardID": "owl-climb.poker",
+  "scope": "Read-only whole-frame current app review of four representative face contacts, camera states and layouts, extended by one physical Face A slot pick and a same-scene outer-slot restoration sequence. Source geometry approval is unchanged.",
+  "inspectionMethod": "view_image at original detail; complete frames without cropping or pixel measurement",
+  "skill": ".agents/skills/validate-hang-ten-ios/SKILL.md",
+  "provenance": {
+    "path": "installed-app-provenance.json",
+    "fileSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+    "commit": "f9554600c1e5d94d027346ca5d6ca7343d71a7e7",
+    "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+    "builtAndInstalledBinarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+    "nativeModelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+    "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+    "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1",
+    "receiptCount": 16,
+    "allScreenshotByteHashesMatchReceipts": true,
+    "allReceiptBinaryHashesMatchInstalledProvenance": true,
+    "allReceiptProvenanceHashesMatchCurrentFile": true
+  },
+  "logicalContactCount": 34,
+  "facePoseIDs": ["face-a", "face-b", "face-c", "face-d"],
+  "representativeContactsInspected": [
+    "face-a-left-outer-slot",
+    "face-b-left-deep-sloper",
+    "face-c-left-shallow-half-round",
+    "face-d-left-deep-rounded-recess",
+    "face-a-right-outer-slot"
+  ],
+  "findings": [
+    {
+      "check": "wood material and inactive appearance",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "The board, pockets, and inactive sloper surfaces remain warm tan with visible wood shading. Selected surfaces are red; adjacent and corresponding right-side contacts remain wood-colored. Unselected Train has no residual red highlighting.",
+      "frames": ["12-live-hold-face-a-left-outer-slot.png", "12-live-hold-face-b-left-deep-sloper.png", "12-live-hold-face-c-left-shallow-half-round.png", "12-live-hold-face-d-left-deep-rounded-recess.png", "12-live-unselected-train.png"],
+      "limitation": "The three-frame addendum below now covers the supplied Face A outer-slot restoration sequence. Full deselection and restoration on other faces are not claimed."
+    },
+    {
+      "check": "four face contact samples",
+      "status": "PASS_FOUR_REPRESENTATIVE_CONTACTS",
+      "observation": "Face A highlights the left outer slot's visible interior and rounded boundary; Face B highlights the broad deep left sloper; Face C shows a shallower half-round region; Face D shows a deeper rounded recess and its visible lower lip. Each has a corresponding inactive right-side form and surrounding inactive wood. All four appear attached to the board without an apparent displaced contact layer.",
+      "frames": ["12-live-hold-face-a-left-outer-slot.png", "12-live-hold-face-b-left-deep-sloper.png", "12-live-hold-face-c-left-shallow-half-round.png", "12-live-hold-face-d-left-deep-rounded-recess.png"],
+      "limitation": "One contact per face was inspected; this is not an individual visual pass for all 34 logical contacts."
+    },
+    {
+      "check": "horizontal touch orbit",
+      "status": "PASS_SUPPLIED_SETTLED_VIEWS",
+      "observation": "Orbit captures progress from an oblique front view through a strongly foreshortened view to a genuine end-on side view. The Face B selection remains in the card; its surface becomes occluded at the final angle. Body, end face, and exposed top contact geometry remain visible without clipping.",
+      "frames": ["12-live-horizontal-orbit-1.png", "12-live-horizontal-orbit-2.png", "12-live-horizontal-orbit-3.png"],
+      "receiptEvidence": "cameraSettled=true; azimuth approximately -0.54, -1.08, -1.62 radians and elevation approximately 0.098, 0.197, 0.295 radians",
+      "limitation": "The end-on board is small in the complete frame; fine contact coverage is judged from the front/landscape samples, not this occluded view."
+    },
+    {
+      "check": "initial vertical top gesture",
+      "status": "FAIL_RETAINED",
+      "observation": "The initial vertical gesture left the board visibly front-facing. Its retained receipt has revision 1, azimuth 0, elevation 0, and rawFailureCapture=true. The capture batch exited 1 because projected contact frames did not move. A settled camera flag alone does not make this a successful gesture.",
+      "frames": ["12-top-touch-did-not-orbit.png"],
+      "commandReceipt": "capture-normal-batch-12.json"
+    },
+    {
+      "check": "diagonal retry top-oblique view",
+      "status": "PASS_CAPTURE_AFTER_DIAGONAL_RETRY",
+      "observation": "The sequential diagonal retry visibly exposes an oblique top surface and changes projection. The resulting image retains the Face B highlight and inactive wood around it.",
+      "frames": ["12-live-top-oblique.png"],
+      "commandReceipt": "capture-tail12-commands-receipt.json",
+      "receiptEvidence": "retry exitCode=0; cameraSettled=true, revision 5, azimuth -0.54071856, elevation 0.3253892",
+      "limitation": "This successful retry does not reclassify the failed vertical gesture as passing."
+    },
+    {
+      "check": "suspension applicability",
+      "status": "NOT_APPLICABLE_NO_SUSPENSION_PROFILE",
+      "observation": "The established native metadata matrix has suspension=null and instances=null for Poker's primary presentation. The supplied frames have no cord, as expected for that package contract.",
+      "metadataEvidence": "read-only-plan/runtime-review-matrix.json, board 12, primary presentation"
+    },
+    {
+      "check": "selected cards and contact map",
+      "status": "PASS_SUPPLIED_CARD_STATES",
+      "observation": "Selected cards name the corresponding Face A edge and Face B/C/D slopers, with the expected Edge or Sloper kind. The long Face D title wraps cleanly. Face A and Face B's selected chips are visible in the provided viewport, and other chips remain inactive.",
+      "frames": ["12-live-hold-face-a-left-outer-slot.png", "12-live-hold-face-b-left-deep-sloper.png", "12-live-hold-face-c-left-shallow-half-round.png", "12-live-hold-face-d-left-deep-rounded-recess.png"],
+      "limitation": "The 34-entry grid extends below the viewport, and labels use ellipsis. One physical Face A slot pick is covered by the addendum; scrolling and chip input were not audited."
+    },
+    {
+      "check": "landscape fit",
+      "status": "PASS_MODEL_AND_SELECTED_CARD",
+      "observation": "The complete Face A model fits within the landscape map, and its selected slot is clearly visible. The full selected card and Edge kind fit within the captured viewport without text clipping.",
+      "frames": ["12-live-landscape.png"]
+    },
+    {
+      "check": "normal lens and unselected Train",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "The normal-lens detail retains an unclipped Face A model and matching selected card. Train shows the full inactive board and readable board controls.",
+      "frames": ["12-live-normal-lens.png", "12-live-unselected-train.png"]
+    }
+  ],
+  "framesInspected": [
+    "12-live-front.png",
+    "12-live-hold-face-a-left-outer-slot.png",
+    "12-live-hold-face-b-left-deep-sloper.png",
+    "12-live-hold-face-c-left-shallow-half-round.png",
+    "12-live-hold-face-d-left-deep-rounded-recess.png",
+    "12-live-horizontal-orbit-1.png",
+    "12-live-horizontal-orbit-2.png",
+    "12-live-horizontal-orbit-3.png",
+    "12-top-touch-did-not-orbit.png",
+    "12-live-top-oblique.png",
+    "12-live-landscape.png",
+    "12-live-normal-lens.png",
+    "12-live-unselected-train.png",
+    "12-slot-physical-mesh-pick.png",
+    "12-left-restored-right-selected-same-scene.png",
+    "12-right-restored-left-selected-same-scene.png"
+  ],
+  "interactionAddendum": {
+    "scope": "Three additional whole app frames with matching screenshot, binary and installed-provenance hashes; all three states are settled.",
+    "physicalPick": {
+      "status": "PASS_ONE_SUPPLIED_FACE_A_SLOT_PICK",
+      "frame": "12-slot-physical-mesh-pick.png",
+      "observation": "The viewer-left Face A outer slot is red and its card shows Face A left outer slot / Edge. The receipt records actualPhysicalMeshPick=true, tapRevision=1 and pickedContact=face-a-left-outer-slot after tapRevision=0."
+    },
+    "materialRestoration": {
+      "status": "PASS_SUPPLIED_SAME_SCENE_SEQUENCE",
+      "frames": ["12-left-restored-right-selected-same-scene.png", "12-right-restored-left-selected-same-scene.png"],
+      "observation": "Selecting face-a-right-outer-slot restores the left outer slot to wood and highlights the right. Switching back restores the right outer slot to wood and highlights only the left. Cards and chips follow the selected IDs. Receipts share the launch timestamp, sameScene=true and tapRevision=1; renderer revision remains 2 for these selection-only updates."
+    },
+    "remainingLimits": "The addendum covers a fifth contact visually and one physical pick. It does not provide a visual or picking pass for all 34 contacts, other-face restoration, full deselection, or real-workout phases. The original vertical gesture remains FAIL_RETAINED."
+  },
+  "sourceGeometryApproval": "Already accepted per root task context; unchanged by this audit.",
+  "currentAppUserAcceptance": "PENDING",
+  "physicalPickingAudit": "PASS_ONE_SUPPLIED_FACE_A_SLOT_PICK",
+  "realWorkoutAudit": "NOT_AUDITED",
+  "productionOrCanonicalChanges": false,
+  "appOrSimulatorOperationsByThisAgent": false,
+  "recommendation": "The supplied successful frames indicate no visible geometry or material correction for the four sampled contacts. Preserve the failed vertical gesture as FAIL and present the successful diagonal view separately for current app user acceptance."
+}

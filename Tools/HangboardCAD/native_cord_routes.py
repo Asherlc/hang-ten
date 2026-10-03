@@ -487,7 +487,7 @@ def native_mouth_collar(mesh, mouth, mouth_axis, radius, clearance):
     return exterior
 
 
-def solve_native_routes(mesh, data, descriptor):
+def solve_native_routes(mesh, data, descriptor, source_metadata=None):
     """Generate native seeds, optionally tighten them, then settle and certify.
 
     The optional method never reads authored wrappedRoutes as an initial guess.
@@ -510,8 +510,11 @@ def solve_native_routes(mesh, data, descriptor):
             one = {**data, "suspension": {**setup, "canonicalPoses": {pose_id: pose}},
                    "ropeSolver": {**base_solver, "terminalsByStrandID": overrides.get(
                        pose_id, solver["terminalsByStrandID"])}}
-            output.update(solve_native_routes(mesh, one, descriptor))
+            output.update(solve_native_routes(mesh, one, descriptor, source_metadata=source_metadata))
         return output
+    if "grooveGuides" in data["ropeSolver"]:
+        from native_cord_guides import solve_groove_guided_routes
+        return solve_groove_guided_routes(mesh,data,descriptor,source_metadata)
     if "pathSearch" in data["ropeSolver"] and data["ropeSolver"]["pathSearch"] != "aStar":
         raise ValueError("native pathSearch must be aStar when present")
     if data["ropeSolver"].get("pathSearch") == "aStar":

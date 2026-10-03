@@ -1,0 +1,46 @@
+{
+  "owner": "placid-badger",
+  "baselineCommit": "9399160729fcc418cedf47344b41163d244b5d96",
+  "otherPackageFileCount": 202,
+  "changedOtherPackageFiles": [],
+  "currentPackageSHA256": {
+    "nature-stone-hanger.FCStd": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+    "suspension.json": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae",
+    "assets/primary.usdz": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+    "assets/primary.model.json": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24"
+  },
+  "globalRecords": {
+    "model-delivery-lock.json": {
+      "path": "docs/model-delivery-lock.json",
+      "sha256": "3d78ba9da8df11cd3a5bc3bd8539099c8d2f7952e0e271e4bbf1c1ee2b4c85a1",
+      "unchangedSinceSimulatorAcceptance": true
+    },
+    "review-queue.json": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/review-queue.json",
+      "sha256": "e17ef4f51963ccad01a3fa714823de0c5f7283f8bed60090f210a7617a6050ce",
+      "unchangedSinceSimulatorAcceptance": true
+    },
+    "batch-validation.json": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/batch-validation.json",
+      "sha256": "8619093e12ee8b30324f875ece55487d1c35c826411c62b0ef7975e1da5730d9",
+      "unchangedSinceSimulatorAcceptance": true
+    },
+    "delivery-checksums.txt": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/delivery-checksums.txt",
+      "sha256": "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42",
+      "unchangedSinceSimulatorAcceptance": true
+    },
+    "delivery-validation.json": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/delivery-validation.json",
+      "sha256": "60ede16153821967ae5219954d41316f018bfa8bca7a2dac1697ed0b0835e457",
+      "unchangedSinceSimulatorAcceptance": true
+    },
+    "installed-delivery-validation.json": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/installed-delivery-validation.json",
+      "sha256": "fe6c089dcfe52939b27edad27f73675459e86e59d26d1b252cdf8402111a6bf8",
+      "unchangedSinceSimulatorAcceptance": true
+    }
+  },
+  "status": "pass",
+  "scope": "Unrelated package bytes only. Routing, global delivery digest and human review are separate gates."
+}

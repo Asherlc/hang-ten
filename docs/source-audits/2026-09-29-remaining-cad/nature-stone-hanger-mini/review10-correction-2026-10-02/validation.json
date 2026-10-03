@@ -1,0 +1,141 @@
+{
+  "owner": "placid-badger",
+  "checkedUTC": "2026-10-03T04:37:39.630864+00:00",
+  "identity": {
+    "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
+    "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+    "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
+    "sidecarSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1"
+  },
+  "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
+  "nativeGeometryAndPackagePassed": true,
+  "nativeBodyChanged": false,
+  "factualContactsChanged": false,
+  "contactCount": 4,
+  "nativeDepthsMM": [
+    15,
+    15,
+    60
+  ],
+  "unboundModelMeshCount": 5,
+  "nativeAuthorChecks": "Exact body equality, unchanged 28,842 triangle positions, native groove-radius edit/restore, double deterministic builds and empty-stage reimport retained under native; metadata-only proof links to final source.",
+  "freshFinalSourceRebuild": {
+    "modelByteIdentical": true,
+    "descriptorByteIdentical": true,
+    "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
+    "report": "root-verification/final-metadata/final-rebuild-report.json"
+  },
+  "freshNativeCollider": {
+    "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
+    "sha256": "740fac104041c482c4578669af536a007d507d3f19b166d4c6a9fe2bbe7ba124",
+    "vertices": 13990,
+    "triangles": 27976,
+    "geometryAndFeaturesExactMatchToAuthorExport": true,
+    "nativeGrooveCount": 6,
+    "nativeBoreCount": 0
+  },
+  "cord": {
+    "poses": 3,
+    "routes": 12,
+    "freshSourceBoundCheckPassed": true,
+    "unchangedSolver": true,
+    "handAuthoredRoutes": false,
+    "radiusM": 0.001,
+    "proposalMarginM": 2e-05,
+    "existingClearanceToleranceM": 1e-05,
+    "minimumConservativeContinuousCenterlineClearanceM": 0.000990581427477188,
+    "standardToleranceGatePassed": true,
+    "loadDirection": "below",
+    "crossReturnSolvedLengthM": 0.0125,
+    "crossReturnAllowanceM": 0.014,
+    "limit": "Conservative certificate within standard 10 µm tolerance; not exact zero-penetration, material reaction, equilibrium or live physics certification."
+  },
+  "finalPythonTests": {
+    "tests": 67,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "passed": 67
+  },
+  "priorNativeContractTests": {
+    "passed": 38,
+    "catalogWideDeselected": 2,
+    "scope": "Geometry-identical author source; the two formerly deselected catalog gates passed in the fresh 67-case final run."
+  },
+  "catalog": {
+    "boards": 64,
+    "drafts": 0,
+    "passed": true
+  },
+  "staging": {
+    "xcode": {
+      "passed": true,
+      "cli": [
+        "scripts/stage-board-packages.py",
+        "--repository-root",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+        "--destination",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-mini10-final-xcode-stage/build/placid-badger-mini10.app/Hangboards",
+        "--target",
+        "xcode"
+      ],
+      "stagedPackageCount": 64,
+      "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
+      "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
+      "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+      "cadAndSuspensionAuthoringExcluded": true,
+      "modelPlacement": "ODR only",
+      "runtimeAppVerified": false
+    },
+    "android": {
+      "passed": true,
+      "cli": [
+        "scripts/stage-board-packages.py",
+        "--repository-root",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+        "--destination",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-mini10-final-android-stage/Hangboards",
+        "--target",
+        "android"
+      ],
+      "stagedPackageCount": 64,
+      "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
+      "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
+      "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+      "cadAndSuspensionAuthoringExcluded": true,
+      "modelPlacement": "inline",
+      "runtimeAppVerified": false
+    }
+  },
+  "deliveryLockPassed": true,
+  "deliveryManifestSHA256": "205a0dee4db2b87087643f76abc6c2e75038231e4090d371186dd34d62795ec2",
+  "preservation": {
+    "allOtherQueueEntriesUnchanged": true,
+    "allOtherMigratedLockEntriesUnchanged": true,
+    "allOtherReviewRevisionsUnchanged": true,
+    "priorBodyApprovalPreserved": true,
+    "reservedRuntimeFilesContentsNotInspected": true,
+    "otherPackageFilesSHA256": {
+      "count": 202,
+      "allByteIdentical": true
+    },
+    "reservedPathSHA256": {
+      "count": 7,
+      "allByteIdentical": true
+    },
+    "immutableCompletionPacketSHA256": {
+      "count": 222,
+      "allByteIdentical": true
+    }
+  },
+  "cleanupPassed": true,
+  "humanAcceptance": "pending",
+  "runtimeVerified": false,
+  "appWorkflowPassed": false,
+  "freshFinalAppFrames": 0,
+  "freshFinalSwiftUnitCasesExecuted": 0,
+  "runtimeGate": "not-run-after-correction; prior isolated Simulator startup blocked in system migration",
+  "historicalRuntimeReport": "../runtime-retry-2026-10-02/runtime-validation.json",
+  "rawFailedAttempts": "Initial final-checks failed only canonical position order; repaired with supported metadata tool. Initial final-previews failed missing rotate_inverse helper; corrected final renders pass. Raw stderr/stdout retained."
+}

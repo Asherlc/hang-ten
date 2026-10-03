@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "originalIndependentAuditStatus": "pass-with-publication-fixes",
+  "supportingLinksFixed": [
+    "independent-shape/review.html",
+    "preflight/hashes.sha256"
+  ],
+  "supportingLinkProof": "supporting-link-fixes.json",
+  "rawBuildPatchRetainedAndHashVerified": true,
+  "buildPatchProof": "post-audit-retention-addendum.json",
+  "scriptHashesRefreshedAndVerified": 32,
+  "historicalAuditSnapshotPreserved": "independent-delivery-audited-artifact-index.json",
+  "scope": "Root completed the concrete publication fixes requested by the independent audit. Its original 31/33 result remains unchanged; this record verifies the completed fixes."
+}

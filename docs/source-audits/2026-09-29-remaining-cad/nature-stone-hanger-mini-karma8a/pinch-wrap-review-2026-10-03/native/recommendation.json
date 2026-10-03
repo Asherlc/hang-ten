@@ -1,0 +1,67 @@
+{
+  "scope": "KARMA8A pinch-60 coverage only; no new jug contact",
+  "sourceFacts": "105 x 60 x 30 mm; wood15,granite15,pinch60 unchanged",
+  "upperBoundary": {
+    "nativeZMm": 19.5,
+    "expression": "UpperRailMouthLipReference.Shape.BoundBox.ZMax",
+    "witness": "FinalSolid Face25 upper cavity-mouth roll"
+  },
+  "lowerBoundary": {
+    "nativeZMm": -18,
+    "expression": "GraniteInsert.Shape.BoundBox.ZMin - 50 (mask base with height50)",
+    "witness": "existing lower stone boundary / wood seat"
+  },
+  "pressureExteriorFaces": [
+    5,
+    6,
+    7,
+    17,
+    18,
+    34,
+    37,
+    38,
+    40,
+    48,
+    51,
+    53,
+    55,
+    60,
+    63,
+    66,
+    68,
+    70,
+    71,
+    74
+  ],
+  "existingPinchFaces": [
+    14,
+    21,
+    31,
+    43,
+    44,
+    69
+  ],
+  "addedEndShoulders": [
+    15,
+    16,
+    19,
+    20,
+    32,
+    33,
+    41,
+    42,
+    45,
+    52,
+    59,
+    65
+  ],
+  "exclusions": [
+    "all granite faces",
+    "wood recess interior and cavity back",
+    "all groove walls",
+    "middle front/back panels"
+  ],
+  "evidence": "Approved NK2\u20135 whole front/reverse/oblique/in-use photos reviewed; no pixels/crops/tracing. Existing native boundaries determine deliberately authored display bands; no claim of measured finger footprints.",
+  "authoring": "Ordinary native SubShapeBinder/Common/Cut/Compound; real tessellation seams on exterior body; unchanged FinalSolid collision authority",
+  "humanAcceptanceClaimed": false
+}

@@ -1,0 +1,11 @@
+{
+  "status": "pass-historical-packet-retained",
+  "atUTC": "2026-10-01T22:38:25.008491+00:00",
+  "reason": "User identified missing longitudinal cord groove; prior packet superseded before commit/global application.",
+  "from": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review",
+  "to": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet",
+  "fileCount": 891,
+  "allBytesPreserved": true,
+  "inventorySHA256": "3845bea0a7756714fca83efb6d9d7ccdcca06f3fa737ff78858d3dd5bc65772b",
+  "newHumanAcceptance": "pending"
+}

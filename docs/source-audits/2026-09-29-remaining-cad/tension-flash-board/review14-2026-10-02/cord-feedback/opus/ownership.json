@@ -1,0 +1,31 @@
+{
+  "owner": "placid-badger",
+  "recordedUTC": "2026-10-02T23:32:50.426Z",
+  "task": "flash14-Opus-threading-advice",
+  "agentId": "1b77b62e-f231-43a9-8879-c5cb701ac12f",
+  "workspaceId": "wks_d4a549643389e3ab",
+  "title": "[Advisor] placid-badger Flash Board threading",
+  "provider": "claude/claude-opus-5-5",
+  "mode": "plan",
+  "thinkingOptionId": "high",
+  "authorization": "User: idk, talk to opus",
+  "scope": "Analysis only; whole primary source images and retained video frames; no package or shared source changes",
+  "notifyOnFinish": true,
+  "rootOwnWorkspace": true,
+  "otherWorkspaceInspected": false,
+  "cleanupContract": "Archive this exact advisor after the requested assessment and necessary follow-up, then verify archived status. Do not archive other agents.",
+  "externalResources": [
+    {
+      "type": "Paseo advisor",
+      "id": "1b77b62e-f231-43a9-8879-c5cb701ac12f",
+      "name": "[Advisor] placid-badger Flash Board threading"
+    }
+  ],
+  "providerCreatedPlan": {
+    "path": "/Users/asherlc/.claude/plans/you-are-an-opus-prancy-lemur.md",
+    "sha256": "c28d58836fd473b4cd2ac853875106f5dbdb03dc8d537f75bdc8d23d593e156d",
+    "creationEvidence": "Exact planFilePath in this advisor ExitPlanMode request",
+    "retainedCopy": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/opus-advisor/initial-advisory-plan.md",
+    "cleanup": "After advisor stops, delete this exact file only if its hash still matches. Leave shared plans directory and unknown plans alone."
+  }
+}

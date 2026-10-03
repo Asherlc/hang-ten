@@ -1,0 +1,17 @@
+{
+  "assets": [
+    {
+      "tag": "prior",
+      "asset": "Hangboards/owl-climb-poker/assets/primary.usdz",
+      "sha256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874"
+    },
+    {
+      "tag": "candidate",
+      "asset": ".context/placid-badger/poker-review12/native-correction-2026-10-02/compile-1/assets/primary.usdz",
+      "sha256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675"
+    }
+  ],
+  "candidateNativeSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+  "noPhotoProcessing": true,
+  "renderMode": "whole actual USDZ and independently reopened native Cut33; CPU z-buffer, runtime finish unverified"
+}

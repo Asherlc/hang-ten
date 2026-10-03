@@ -1,0 +1,78 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "receipts": [
+    {
+      "path": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-compile-primary-command.json",
+      "status": "pass",
+      "ownedProcessGroupAbsent": true,
+      "ownedTemporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-compile-repro-command.json",
+      "status": "pass",
+      "ownedProcessGroupAbsent": true,
+      "ownedTemporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-export-collision-command.json",
+      "status": "pass",
+      "ownedProcessGroupAbsent": true,
+      "ownedTemporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-independent-export-actual-mesh-command.json",
+      "status": "pass",
+      "ownedProcessGroupAbsent": true,
+      "ownedTemporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-independent-export-command.json",
+      "status": "fail",
+      "ownedProcessGroupAbsent": true,
+      "ownedTemporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-independent-export-overlap-diagnostic-command.json",
+      "status": "fail",
+      "ownedProcessGroupAbsent": true,
+      "ownedTemporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-independent-export-vertex-api-command.json",
+      "status": "fail",
+      "ownedProcessGroupAbsent": true,
+      "ownedTemporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-independent-native-command.json",
+      "status": "fail",
+      "ownedProcessGroupAbsent": true,
+      "ownedTemporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-independent-native-envelope-diagnostic-command.json",
+      "status": "fail",
+      "ownedProcessGroupAbsent": true,
+      "ownedTemporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-independent-native-optimal-bounds-command.json",
+      "status": "pass",
+      "ownedProcessGroupAbsent": true,
+      "ownedTemporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-recertify-cord-command.json",
+      "status": "pass",
+      "ownedProcessGroupAbsent": true,
+      "ownedTemporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-render-export-command.json",
+      "status": "pass",
+      "ownedProcessGroupAbsent": true,
+      "ownedTemporaryDirectoryAbsent": true
+    }
+  ]
+}

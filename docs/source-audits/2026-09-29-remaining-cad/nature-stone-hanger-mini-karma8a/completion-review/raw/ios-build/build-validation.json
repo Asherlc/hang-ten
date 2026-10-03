@@ -1,0 +1,115 @@
+{
+  "owner": "placid-badger",
+  "status": "passed-compile-and-staging",
+  "command": [
+    "rtk",
+    "proxy",
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "generic/platform=iOS Simulator",
+    "-derivedDataPath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma8a-review11/refinement-2026-10-02/ios-build/DerivedData",
+    "build-for-testing"
+  ],
+  "frozenSHA256": {
+    "nature-stone-hanger-mini-karma8a.FCStd": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+    "assets/primary.usdz": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+    "assets/primary.model.json": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+    "suspension.json": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf"
+  },
+  "simulatorsCreated": 0,
+  "simulatorsBooted": 0,
+  "appsInstalled": 0,
+  "appsLaunched": 0,
+  "testsExecuted": 0,
+  "nativeVisualAcceptance": false,
+  "scope": "Generic Simulator compile and staged-package provenance only",
+  "startedUTC": "2026-10-02T14:10:07.779799+00:00",
+  "commit": "9105c89528463acd5b2d645e633164d182f03883",
+  "dirtyDiffSHA256": "73466a9bfbaa7cf5bcf4ae4ac53c86c15c368c13454c85ed68f39d86a8c2229e",
+  "processGroup": 37292,
+  "exitCode": 0,
+  "elapsedSeconds": 47.61717800000042,
+  "stagedGeneratedManifestSHA256": "024c2c5df652271ae699487abfc963c33761a18e0c3dbd5d43aff0ac3cfe16a4",
+  "stagedManifestMatchesCanonical": true,
+  "surfaceFinish": "wood",
+  "graniteNodeIDs": [
+    "nature_stone"
+  ],
+  "contactIDs": [
+    "wood-edge-15",
+    "granite-edge-15",
+    "pinch-60"
+  ],
+  "positions": [
+    {
+      "id": "granite-front",
+      "presentationID": "primary",
+      "contactIDs": [
+        "granite-edge-15"
+      ]
+    },
+    {
+      "id": "wood-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "wood-edge-15"
+      ]
+    },
+    {
+      "id": "pinch-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-60"
+      ]
+    }
+  ],
+  "canonicalPoseIDs": [
+    "granite-front",
+    "wood-inverted",
+    "pinch-side"
+  ],
+  "builtBinarySHA256": "042912c235504ac8f05f384f8dc0895c7ceed96d4aabee9a20e85b9ef366f4e3",
+  "stagedDescriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+  "odrModelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+  "odrModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma8a-review11/refinement-2026-10-02/ios-build/DerivedData/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-nature-stone-hanger-mini-karma8a-634de77f69b53955384db8187747f92e.assetpack/Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.usdz",
+  "ODRSeparatedFromMetadata": true,
+  "CADAuthoringFilesExcluded": true,
+  "frozenFilesUnchanged": true,
+  "testBundleBuilt": true,
+  "tests": "Compiled only; zero cases executed; no simulator guest was created or launched",
+  "cleanup": {
+    "owner": "placid-badger",
+    "simulatorsCreated": 0,
+    "processGroupAbsent": true,
+    "remainingProcesses": [],
+    "derivedDataAbsent": true,
+    "tmpAbsent": true
+  },
+  "finishedUTC": "2026-10-02T14:10:57.094173+00:00",
+  "rawLogSHA256": "977e388c9ea8d7e6371d65ec68274ae8fdf31d7e12ee9c78e9c5f1dcffa90804",
+  "unitCasesExecuted": 0,
+  "currentAppReviewFrames": 0,
+  "currentAppAcceptance": false,
+  "appInstalled": false,
+  "appLaunched": false,
+  "priorAttempt": {
+    "path": "attempt1-harness-failure",
+    "xcodebuildExitCode": 0,
+    "testBuildSucceeded": true,
+    "postBuildReportingFailure": "Harness incorrectly treated canonicalPoses keyed object as an array; fixed locally and repeated generic build.",
+    "unitCasesExecuted": 0
+  },
+  "bothAttemptGroupsAbsent": true,
+  "bothAttemptProcessGroups": [
+    37292,
+    34635
+  ],
+  "finalVerifiedUTC": "2026-10-02T14:12:00.720782+00:00"
+}

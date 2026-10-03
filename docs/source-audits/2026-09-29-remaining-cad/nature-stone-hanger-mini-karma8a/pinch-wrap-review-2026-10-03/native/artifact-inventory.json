@@ -1,0 +1,1116 @@
+{
+  "owner": "placid-badger",
+  "scope": "All retained worker artifacts including raw failed/stopped attempt logs and receipts; inventory excludes itself",
+  "files": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/actual-reimport-meshes.json",
+      "sha256": "824695a5ce5d0b95fca29ec0e396c5076b3f690314c2114f59435e905f961144",
+      "bytes": 3546528
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/archive-preservation.json",
+      "sha256": "02f85e2d9b30e1d52346f5826eb7d42167ccb7aeba52fafb0c52e276aac0de75",
+      "bytes": 8583
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author-probe.json",
+      "sha256": "4034352bbb439ca36a28814c1665faedc438b8794f5113110e512d363dea4e26",
+      "bytes": 12084
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author.py",
+      "sha256": "715f4af890c24630a0c1f1f2adfd0bc43521512fceb9715d2fdacbc0aa2a5449",
+      "bytes": 7003
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1-bootstrap.py",
+      "sha256": "e54581e1c38c351cdebfa22a05f5151b045e1bffb10a83996ab94fe817e6e6c3",
+      "bytes": 505
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1-cleanup.json",
+      "sha256": "cd73b0e0876aa77bc11fc40c5e5e0d8700f48d7a1a735e1338f09eeafb184499",
+      "bytes": 765
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1-command.json",
+      "sha256": "0188f55737fc61371ed776681fecd63a77e15cee1442644f5d0bf46122d5e120",
+      "bytes": 1749
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1-failed.py",
+      "sha256": "23c35ac646794bbe039efc5e14b3053b427a3a6680ec415ccc8d72c50ab5bea7",
+      "bytes": 6483
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1-ownership.json",
+      "sha256": "a8b73ea244616e418714ed58ced91e76476ee1d3eb48637b2e8168fbc31a5d14",
+      "bytes": 1299
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1.stderr.log",
+      "sha256": "1fecbcce25821238d49eab1ec1b5d3f4734a6e40a3e7c8a7ee608a841b0db303",
+      "bytes": 2366
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author2-bootstrap.py",
+      "sha256": "e54581e1c38c351cdebfa22a05f5151b045e1bffb10a83996ab94fe817e6e6c3",
+      "bytes": 505
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author2-cleanup.json",
+      "sha256": "37727651221b5674c6fb540228eb6bd0ccfe45430b01e6c847ca6c608714d3db",
+      "bytes": 765
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author2-command.json",
+      "sha256": "2d0369538b425baa8016cbb9d860368d8471a096406bab65ccc54638b3472194",
+      "bytes": 1749
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author2-ownership.json",
+      "sha256": "e2b2f1264359f6a41e3f32ed2dbc739575b15f4340c02e2e2790eb4bc03be995",
+      "bytes": 1299
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author3-bootstrap.py",
+      "sha256": "e54581e1c38c351cdebfa22a05f5151b045e1bffb10a83996ab94fe817e6e6c3",
+      "bytes": 505
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author3-cleanup.json",
+      "sha256": "49d465e9a903d3b944059746193f2c099a81d10d4a976a896316882a9a918322",
+      "bytes": 766
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author3-command.json",
+      "sha256": "4bf37a16a6c079d86c4bc27deb16884cffbc086846ecc52e539953bb583245a0",
+      "bytes": 1749
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author3-ownership.json",
+      "sha256": "c20c60bd6fcd5c8fc01534f77697a301fdc219afd9cdae427a32d2421aecaf06",
+      "bytes": 1301
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author3.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author3.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/authoring-notes.md",
+      "sha256": "6d2f40321d73f8f2c10fa9a9aa2cd916ef5fdcb592bd11020871e2ea44bf17b0",
+      "bytes": 4092
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/candidate/nature-stone-hanger-mini-karma8a.20261003-065850.FCBak",
+      "sha256": "6a74e3c0195ff903a1e935d528a395223791c2da74db29ab49be4d7217b34114",
+      "bytes": 1121233
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/candidate/nature-stone-hanger-mini-karma8a.FCStd",
+      "sha256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+      "bytes": 1121360
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/candidate-native-collider.json",
+      "sha256": "a41949a3f96f56fd0d5d0ea98caa61c28188481420bb0a9669a2060959c6b7d2",
+      "bytes": 1458429
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider-bootstrap.py",
+      "sha256": "395e1fab362e855d83852d458970ab016cae94ad571da21fc2d5e2a95f508be6",
+      "bytes": 524
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider-cleanup.json",
+      "sha256": "51b2a915bc5028bd3057bde34e99b2b5d562d94e19dc31d7812c9d2f525137cb",
+      "bytes": 768
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider-command.json",
+      "sha256": "ed15212afe5ad5f3f1d22177f53cf55735af08be7fdf7dbd696afc3c37decf61",
+      "bytes": 1775
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider-ownership.json",
+      "sha256": "6da7e0951dfd8372a5f6eb85654a9595134a4220009c3bdb8653c9eed304f206",
+      "bytes": 1305
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider-proof.json",
+      "sha256": "95fb1f3d787694f7f67628a54fcb79e735682a1509dfeeb67a25201a6b6b1a12",
+      "bytes": 582
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider-raw-comparison-attempt1.json",
+      "sha256": "d6fbf01e84b6b4e58d64fe09b62f733bb40c859ae7cf9faedc1272c6fa152b6f",
+      "bytes": 301
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider.stdout.log",
+      "sha256": "a142b7fb60d7b3d6c5afe02738d890d75ee27b379be14fcbc00537d58fbb48c9",
+      "bytes": 191
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider2-bootstrap.py",
+      "sha256": "395e1fab362e855d83852d458970ab016cae94ad571da21fc2d5e2a95f508be6",
+      "bytes": 524
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider2-cleanup.json",
+      "sha256": "29b6dd1625beee3643ec2ac31376b1aa299ef484d88ea050d92ad82cb833cf2b",
+      "bytes": 772
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider2-command.json",
+      "sha256": "5dcd2fc87687130396075a5492bdd14ace32ca431a1381c4b4ebe5e0221e5a7f",
+      "bytes": 1782
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider2-ownership.json",
+      "sha256": "518ca89d6c1d38151d58a9bfd1a84e0fa697bdabfb2c1a3a2bc8d9f5298a527a",
+      "bytes": 1313
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider2.stdout.log",
+      "sha256": "a142b7fb60d7b3d6c5afe02738d890d75ee27b379be14fcbc00537d58fbb48c9",
+      "bytes": 191
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-back.png",
+      "sha256": "2bde3ed16bd5f8e5692e76e12ecc533d3be50705478ce6e9f9918035df802612",
+      "bytes": 21090
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-front-oblique.png",
+      "sha256": "2830febc673c25a6b5cd740ecc33f874baae0329004990b7b37ce29ff9600dbd",
+      "bytes": 39461
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-front.png",
+      "sha256": "c1ab2bc0548386b2cfb3c379c2fa5685d1b22f978116895832af32c5639aa6c8",
+      "bytes": 26258
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-reverse-oblique.png",
+      "sha256": "69a65ee4d326f09f0b6d8fd49cfa9cc48d47fbcd71679453808ed7471ab2ad0e",
+      "bytes": 32123
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-side.png",
+      "sha256": "80707f92ed68b68016339ae972396d09bceb50c582a67c79127c2ff0936dedfa",
+      "bytes": 20332
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-top.png",
+      "sha256": "fe50daf37e65818171e65e9ec7b9907d175bb7b8668abf42c187ac228e106f63",
+      "bytes": 16556
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-back.png",
+      "sha256": "90d7ac9e7808f72a331205f40d8be2f1f7955f44b8477f5698d65dc8c932ed95",
+      "bytes": 20850
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-front-oblique.png",
+      "sha256": "38657a9d85de13d067f4531e00e24b2bd4d7a7d5549cdbd7bdd86dbef7c5630b",
+      "bytes": 38214
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-front.png",
+      "sha256": "d88b763473deb4a4a9922beee8a6a2a9dbf8448d10ee0c5d8cdc5c2b6ef1a855",
+      "bytes": 25696
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-reverse-oblique.png",
+      "sha256": "ad076481de6fc21285ef0ad694fd0aa8b274a4c4c160fb2baf61e0e1f6feca68",
+      "bytes": 31829
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-side.png",
+      "sha256": "aae8c366c7545f010382708d558098f409be3c9beecc22083ef9602113ebaf4f",
+      "bytes": 20085
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-top.png",
+      "sha256": "daf3a34ada5a7ea8d9b3401407f8c2cac8d2ca1862c0035668c96993066d0f10",
+      "bytes": 16298
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-back.png",
+      "sha256": "d22edaa15398bf24e260762df79b0ded14069f9cc41631cbf57a36f77bcb3d7b",
+      "bytes": 30632
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-front-oblique.png",
+      "sha256": "0305ac68fcb7953380c65a85cb235e5cbb0ccbf135061b8659f157ead680054f",
+      "bytes": 51412
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-front.png",
+      "sha256": "be194120328ebcb6fedbffed362a24dda56163381924c62d75a4604d97f4eff9",
+      "bytes": 35704
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-reverse-oblique.png",
+      "sha256": "6daaaf20a25a86bc48be0746c22d7df656b65548f0249d906f1707175b3ced7b",
+      "bytes": 46254
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-side.png",
+      "sha256": "823f79efe0e3c0c44e7815a5c5a357319914dd6b5dd476a6f497283843986e23",
+      "bytes": 26266
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-top.png",
+      "sha256": "a52ee172a2b195c85ddf59ed594b2a0651050738815d7240defb43f9aa5094bb",
+      "bytes": 21374
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-back.png",
+      "sha256": "152127170a10b05a07ef131328cd0ff9bf888ed214a30c6d09254f4813c6c43c",
+      "bytes": 21236
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-front-oblique.png",
+      "sha256": "d750ec1af38300bb00839f8333f6da87bda5873610d997f2803092584aaa0744",
+      "bytes": 39335
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-front.png",
+      "sha256": "34038f1525c02090d37d49a09144a429cd76c8f553fb5ac6883cad27300e172b",
+      "bytes": 26454
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-reverse-oblique.png",
+      "sha256": "290f70d11a5cbb399dbdf418dba1ed8c784122811c95bdb8f3b8ee404b58df22",
+      "bytes": 32240
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-side.png",
+      "sha256": "8b2bb5d859df95f6e6a963326f54464c1ef9cac8cfc68c5fdadffe785d2e4e47",
+      "bytes": 20468
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-top.png",
+      "sha256": "08e3a7daa867f1fba2721c4907b8cdec36382a80c8dd95c586da07bd1043757f",
+      "bytes": 16672
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile1-bootstrap.py",
+      "sha256": "860ad64da1b70fd0e04a03626c6a8f090f0679c6f5262eef760e84f0e43904af",
+      "bytes": 853
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile1-cleanup.json",
+      "sha256": "c76eea2b12e69206a835e26b0ad9688bc2339a8b69b3469a01b01f203003a97d",
+      "bytes": 769
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile1-command.json",
+      "sha256": "88adf64f8b770918539c1b2e9eec491788f2bae8431b814a461098d50324a4ac",
+      "bytes": 2140
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile1-ownership.json",
+      "sha256": "32313064e5b076379ec4dc17840368e5a3ce26f3b372133e455651da81551bb3",
+      "bytes": 1307
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile1.stderr.log",
+      "sha256": "3dad61be75ab2a07bab9a759fcb4eb6d2120f3e6ccd058ca0152edb20315f502",
+      "bytes": 184
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile1.stdout.log",
+      "sha256": "96892c395b4e13d6b12db01cd6dec32474404220c189cb2c203314fed513bc73",
+      "bytes": 522
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile12-stop-receipt.json",
+      "sha256": "a8e3ffb77ff6a65eb7ed02ff4374aa64d40cb60bb8ded682e4ff02754cb27b77",
+      "bytes": 339
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile2-bootstrap.py",
+      "sha256": "c65e9491b8a46a142ea45fa06b3c635cec6a2159a16ba24095ca0593591ea223",
+      "bytes": 853
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile2-cleanup.json",
+      "sha256": "71f9c41dcc23ebe4efcb5bb5e677ef4934bf2516c23f8dc9ca3e918b815eeef4",
+      "bytes": 769
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile2-command.json",
+      "sha256": "2f8a810b6d716166528c5c988f37cbf9010f27cabff60f49efed5426119120d0",
+      "bytes": 2140
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile2-ownership.json",
+      "sha256": "4c3ed8605defda145fc6a9be6c3fe24b6952ac95b81322c4768ab806248c5515",
+      "bytes": 1307
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile2.stderr.log",
+      "sha256": "3dad61be75ab2a07bab9a759fcb4eb6d2120f3e6ccd058ca0152edb20315f502",
+      "bytes": 184
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile2.stdout.log",
+      "sha256": "96892c395b4e13d6b12db01cd6dec32474404220c189cb2c203314fed513bc73",
+      "bytes": 522
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3/assets/primary.model.json",
+      "sha256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+      "bytes": 1784
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3/assets/primary.usdz",
+      "sha256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+      "bytes": 597494
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3-bootstrap.py",
+      "sha256": "7d5516dc39c173b334d356fa347575ad88f2163ebbcbe13c344b3bbb66e3033e",
+      "bytes": 853
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3-cleanup.json",
+      "sha256": "8679883688d9c7757b5c6b59fba496f53505c762221a2f8755a10b2e94a4f547",
+      "bytes": 769
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3-command.json",
+      "sha256": "64219d273872d8fa866fba6dc474d0416d6de126b90166708b4d8da833744f1b",
+      "bytes": 2140
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3-ownership.json",
+      "sha256": "5bc2ffddffa8c57083517fb2c8ae735beba2570f583b55221a5e05a4403ebb53",
+      "bytes": 1307
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3-report.json",
+      "sha256": "64d276ec9334d722a2d8c70e871a63243416a65a313ff18f840867e542da66bf",
+      "bytes": 1392
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3.stdout.log",
+      "sha256": "45b7c5466a4198a7c862114b726804844e7edf71763fe9fb1806257666373405",
+      "bytes": 2123
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4/assets/primary.model.json",
+      "sha256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+      "bytes": 1784
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4/assets/primary.usdz",
+      "sha256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+      "bytes": 597494
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4-bootstrap.py",
+      "sha256": "81d5dc911cea36bb600424fca5218bd90298143580ec17aa5e54587a29b8b062",
+      "bytes": 853
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4-cleanup.json",
+      "sha256": "58039a27da96088f3f2a616dc31630e6d1215d7dc7ff4d57158d5128a39f3c80",
+      "bytes": 769
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4-command.json",
+      "sha256": "a065fe9a522e7852be89c9baf68e13a0932c467ac254cec555792318c75566f5",
+      "bytes": 2140
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4-ownership.json",
+      "sha256": "7263c80eefd8ac16225efce904ff7b724c157e5a02b509dc8f148d02d6ca2871",
+      "bytes": 1307
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4-report.json",
+      "sha256": "98c97916f57de9d30a48336bd459e168883a480b106b3e3ff80bda5fd5c295c3",
+      "bytes": 1392
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4.stdout.log",
+      "sha256": "b0d3ea7e8d4cf32569bdd6fb6a436dda3fe61cc554916ffc51e8a763405b19bc",
+      "bytes": 2123
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compiler-toolchain-snapshot/Tools/HangboardCAD/compile_board.py",
+      "sha256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+      "bytes": 57110
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compiler-toolchain-snapshot/Tools/HangboardCAD/export_rope_collision_solid.py",
+      "sha256": "b0ccac8584d701c645befb8d049c8e0202326a43e906a603f0ddba8f0bda3152",
+      "bytes": 2025
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compiler-toolchain-snapshot/Tools/HangboardCAD/native_cord_features.py",
+      "sha256": "dbf57a10bef757087ee263fef7b883ec660c5d2e45655dab1f98e40e8b4971c4",
+      "bytes": 7285
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compiler-toolchain-snapshot/Tools/HangboardCAD/usdz_writer.py",
+      "sha256": "1d222c1b5483e94288587e4fbb13e8773b00cdaab715a39dac7cf6d69ee4f1af",
+      "bytes": 18145
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compiler-toolchain-snapshot/Tools/HangboardModels/contact_model_descriptor.py",
+      "sha256": "56d898f05b2eb0c60c7978f34d6d3e1c093d64e41fc7a8dac298bcc68f168c4a",
+      "bytes": 42190
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compiler-toolchain-snapshot/Tools/HangboardPackages/src/hangboard_packages/cad_source.py",
+      "sha256": "fe7b137ffd758f70240689ef2c260c30ac4db6174aa06c579263a79dcf370637",
+      "bytes": 29227
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compiler-toolchain-snapshot/per-pixel-depth-function.py",
+      "sha256": "4813f62cecf013dda9b7e3345ac9747b01934bf751dfd6300a865ae3e22d2466",
+      "bytes": 1226
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compiler-toolchain-snapshot.json",
+      "sha256": "1309d4e9ede5040960fda9acd7d8c159ed997ceec0a13409c35780885e835937",
+      "bytes": 2155
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/deterministic-export.json",
+      "sha256": "4cf8680d29976b7316bc0feefcc187a16e1619b699347d5c8d5b46ec295f8d6e",
+      "bytes": 431
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/export-candidate-collider.py",
+      "sha256": "18831e403e011524879b802fd179ee2b7c99cf29301044ef1135478f342c9c49",
+      "bytes": 2503
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/export-prior-collider.py",
+      "sha256": "75ed9fd97faf2d04ec414d62d084bf0a6bb808f5dcabb4eaf1c6c72c3719fd45",
+      "bytes": 2501
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/final-cleanup.json",
+      "sha256": "0d5fdd93d604d4dfe8adc1974e106f1c0de60ff385e492cb07414681b5a1f99e",
+      "bytes": 7292
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/finalize-handoff.py",
+      "sha256": "501b12500d57b373a55be907f8bbd48caa8789ab74bdbd7c7ca79873bbca05a5",
+      "bytes": 5524
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/fresh-prior-native-collider.json",
+      "sha256": "2f6e138a1cd751e64d754dadbcda85940b9ce761830e88a2f543717c5026febc",
+      "bytes": 1458429
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/handoff.json",
+      "sha256": "2cd98e8f5c0a4f5f72d1cf0bf685b154fcefa887859732408394ca18279fcf48",
+      "bytes": 33182
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspect-bootstrap.py",
+      "sha256": "2563f7b1e189202247be15ab26bacf18261eb880ff54bdab885b9379427dd10d",
+      "bytes": 513
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspect-cleanup.json",
+      "sha256": "add51e944c5d5c0d5ec04679ed38f908446d690683a1765271d3e8c9fd348667",
+      "bytes": 765
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspect-command.json",
+      "sha256": "07cff95880cf1e410f4f3ad24415202e2038d828a6f20c13c64310de8fb3bf36",
+      "bytes": 1757
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspect-native.py",
+      "sha256": "5d16eb2d2f0a5ee2686546b62ac7ea9e2c3c1c61849b3a2cf7dd7f3262f6d88e",
+      "bytes": 1579
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspect-ownership.json",
+      "sha256": "da313598bcf669be5077a2fd7b9702e9a754eb0a524c2e87b74c721345ae194f",
+      "bytes": 1299
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspect.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspect.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspection.json",
+      "sha256": "1633c03c6d65dabbbf6958f1bfd867b578514dc9697462d86ffd2a4e3a43b948",
+      "bytes": 154515
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-author-proof.json",
+      "sha256": "a31979f0cdb31da935d256b250a97a9f99ba4ece1714f8ef83344eeb8b5efc08",
+      "bytes": 12169
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-comparison-pinch-60-back.png",
+      "sha256": "8c500a82068a0abaa5b0e2a4f6ef535c0c015a8f6eef87227512f99bee8d562e",
+      "bytes": 29802
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-comparison-pinch-60-front-oblique.png",
+      "sha256": "9c8c675956b717d0cb080bd6ec5d00bfe389fe17a3520c05a0b2a729d2794f0b",
+      "bytes": 50869
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-comparison-pinch-60-front.png",
+      "sha256": "09761c9b4e896da1eeddf6cfebcdb233241b6ab6fd7655c156c220a16a0136d3",
+      "bytes": 34952
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-comparison-pinch-60-reverse-oblique.png",
+      "sha256": "87cdb6a675baf4923616252c551e18ca789f2f2900bf830e8b8467342cdd12c8",
+      "bytes": 45643
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-comparison-pinch-60-side.png",
+      "sha256": "d002a4a219a89732a102cc93c665bdb428f9a7e933795b6beb560018e195dd36",
+      "bytes": 25531
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-comparison-pinch-60-top.png",
+      "sha256": "2584f56409e510312f087d71bbe3fc1c18942d80c7d805a15f3867febd36f641",
+      "bytes": 20607
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-orientation-proof.json",
+      "sha256": "045a9e8aeb3b81e5b83c31055939f6f5823f5590ff93e795c1ca84ebeede984b",
+      "bytes": 9379
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-preview-export.py",
+      "sha256": "fee012d75f24eb5d4dd4924879d1d564b89d337367e51650360edc6a14beea68",
+      "bytes": 840
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-preview-meshes.json",
+      "sha256": "528da99008fcb2e2bc470d5066774e093fe602d1ba3cabb343170f54ab445233",
+      "bytes": 1527203
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-preview-provenance.json",
+      "sha256": "5de4ad53a893a82b5bf7615e96e001b0b110dab146a023ce1f39acbfe3548498",
+      "bytes": 5528
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-probe-progress.json",
+      "sha256": "885ab60d2b1130db3005a02da557e167ad88c72c0f762445595a8ed6c44c0ab0",
+      "bytes": 4349
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-reopen-proof.json",
+      "sha256": "187c2b6667e220c53febfa14033f21e4be27ab2d498079b2e31d423a83a4c0a5",
+      "bytes": 4906
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck1-bootstrap.py",
+      "sha256": "c2ceb242bc89885d8bf442d5a03851068e319fda67a2b4ee1c303b1dbc57989c",
+      "bytes": 512
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck1-cleanup.json",
+      "sha256": "3234e69a3474f4cd180b3bc55342d637c34f719620eca352615b0a8f3b0bf326",
+      "bytes": 780
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck1-command.json",
+      "sha256": "74317a816cd623c9337cc421a2f1033656fc13de80ff3398f47bac2e34193e40",
+      "bytes": 1791
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck1-ownership.json",
+      "sha256": "fb22c97291f9a9f5c55b4452279b980db25f95a6c91bfe774ebf2d82c9d4dfce",
+      "bytes": 1329
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck1.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck2-bootstrap.py",
+      "sha256": "c2ceb242bc89885d8bf442d5a03851068e319fda67a2b4ee1c303b1dbc57989c",
+      "bytes": 512
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck2-cleanup.json",
+      "sha256": "550c95967bfc8ae119a0eee94bfe45dbc66cb5756a0030a87493e17c32b31e97",
+      "bytes": 781
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck2-command.json",
+      "sha256": "ab238255b56d5dcb24d8688ebb2745c540108a7202fbd058acedaa71ed0cc7d9",
+      "bytes": 1791
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck2-ownership.json",
+      "sha256": "b52c5ff3acc68d273d4e6397f0195e4d5e8aa433d3fa2bfb0fe241fddc02f05d",
+      "bytes": 1331
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativepreview-bootstrap.py",
+      "sha256": "7e96d1313309a4a10d224a9f98a70f482c78d23522f8f893228925be7be5c7d8",
+      "bytes": 520
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativepreview-cleanup.json",
+      "sha256": "cc2e213cf6dc6e0b493c15689991502c3d399c333981fe4e998265b90c799eb4",
+      "bytes": 783
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativepreview-command.json",
+      "sha256": "17d26a709359b3691d868d3ed87be49c72f1c98f63e241eeb73fc83592b61627",
+      "bytes": 1806
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativepreview-ownership.json",
+      "sha256": "dc87e3e6825572e43dbe154f15cd9c48f30b4f08f4b1992270e1bd15dd11f1a2",
+      "bytes": 1335
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativepreview.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativepreview.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativerender-cleanup.json",
+      "sha256": "769fa6dea4af35daaeedd765031480f489446999012bb2dbd7d1227d8b44cf94",
+      "bytes": 780
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativerender-command.json",
+      "sha256": "c35dc89fc16bac24bc1fcc2144bdf3a6fba263a461cb13f623b198198e0ab0b2",
+      "bytes": 1422
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativerender-ownership.json",
+      "sha256": "d11b3150fc978a175e271e1ea46c0253af09dcb71f1d202b32ef7e55355415be",
+      "bytes": 944
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativerender.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativerender.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation-bootstrap.py",
+      "sha256": "afb55d481a100be9d7c1fefb49983c2944f7bf97fdad61d0d140ac21b552e41b",
+      "bytes": 522
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation-cleanup.json",
+      "sha256": "1c926a851db016e16f60bca5e1d0527c1427cc13a9cf9d175f205276c0388cce",
+      "bytes": 777
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation-command.json",
+      "sha256": "69945575d20cc186d0f1a750c07bd4604e7edce272697d8383097b498fbd73d5",
+      "bytes": 1794
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation-ownership.json",
+      "sha256": "8412911fd63511982654f9c052b8fc6bfed1d51f1cddabf33d7e37c3236c58e2",
+      "bytes": 1323
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation2-bootstrap.py",
+      "sha256": "afb55d481a100be9d7c1fefb49983c2944f7bf97fdad61d0d140ac21b552e41b",
+      "bytes": 522
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation2-cleanup.json",
+      "sha256": "11f72163b7d60a9452a9c79904c0b3f6e77d4ec2ae9beb671360419fe0d110c4",
+      "bytes": 781
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation2-command.json",
+      "sha256": "41fa18bdc0ef8e5b972ac633a0d86a0496c43f9ae660769eb6419b754506adf2",
+      "bytes": 1801
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation2-ownership.json",
+      "sha256": "e1b0d83160d7ac80ca73554d35525da187f722891e3d5df8b0c0daaf1f7c5115",
+      "bytes": 1331
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/original-shapes-proof.json",
+      "sha256": "495f5b79e4afa1595e95c263ffaa004d474ce2da4fcaf45cbddad2324207dc70",
+      "bytes": 3737
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes-bootstrap.py",
+      "sha256": "61da8300b9fc038d365ce4a7aaf0a96e5e54ff3669fb14b40a9d4efada5d388a",
+      "bytes": 521
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes-cleanup.json",
+      "sha256": "e21f542135ce108fe7ae5fd46cfcc1ca5b426918fbbc585b65a55a922da82ffd",
+      "bytes": 787
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes-command.json",
+      "sha256": "e186c0266f41a5f55305529b57c440b7a6567d6e8ed12986959d879b6824aeca",
+      "bytes": 1814
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes-ownership.json",
+      "sha256": "20ac8ba36c2f915f4b81fc3ad70f2d5a1afa81e4417e0699c2a739253a489da7",
+      "bytes": 1343
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes2-bootstrap.py",
+      "sha256": "61da8300b9fc038d365ce4a7aaf0a96e5e54ff3669fb14b40a9d4efada5d388a",
+      "bytes": 521
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes2-cleanup.json",
+      "sha256": "903ed17e20d87f021478ee594589fca466954fd1bc4ac357a95a600489bea2fc",
+      "bytes": 790
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes2-command.json",
+      "sha256": "577fb413185fc9e1a1272b5f93b3fcef46d4a9b623f674b1d2430f04df8dfa29",
+      "bytes": 1821
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes2-ownership.json",
+      "sha256": "66f824dc9cf2dbfa930be32b7446fc0995de5dbb7bfdac8e61ceab00eb8e6be5",
+      "bytes": 1349
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/ownership.json",
+      "sha256": "2d70d0daea58a6fa6e45aecc313ae5334dcd4ed6107ecd9b8551953f7cc5215e",
+      "bytes": 328
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/physical-span-proof.json",
+      "sha256": "6d236976e11cf344f2629fceb489ccbcccb10ab2af40f1b1ae94c1027a08ef44",
+      "bytes": 929
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/preview-provenance.json",
+      "sha256": "5bc19cf0e704bba82aab003466c5bb199d0757cf3300681ac277799d9bd2c3ea",
+      "bytes": 21389
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/prior/assets/primary.model.json",
+      "sha256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+      "bytes": 1658
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/prior/assets/primary.usdz",
+      "sha256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+      "bytes": 576779
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/prior/nature-stone-hanger-mini-karma8a.FCStd",
+      "sha256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+      "bytes": 559206
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/prior/suspension.json",
+      "sha256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf",
+      "bytes": 7071
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/priorcollider-bootstrap.py",
+      "sha256": "996cfb3dfedd8010ceb93cfb747daa89e7a2b221b8936e9a6c7b432daa5ec3b7",
+      "bytes": 520
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/priorcollider-cleanup.json",
+      "sha256": "ccaa2d259864852744f9280fa890f292d5e7cad526aff56ea2d308ab701cae7b",
+      "bytes": 784
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/priorcollider-command.json",
+      "sha256": "88e3da989b5ab3e0a18cafb3c07263f9d7ca354268de8727479f4d60774eaeb8",
+      "bytes": 1806
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/priorcollider-ownership.json",
+      "sha256": "cddd899f4d7b1fed23b6ca6fe3fe82e5e853ad56e9cf77c6940d79750daf827e",
+      "bytes": 1337
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/priorcollider.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/priorcollider.stdout.log",
+      "sha256": "1327060a088bd1a9c7b917274c23b61070e65aba6cf6367cade0c67632dff577",
+      "bytes": 193
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/recommendation.json",
+      "sha256": "b6f7fa08cf80fc39c181292d83990a7d12f373710440ed766010dc7061bef51a",
+      "bytes": 1466
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport-cleanup.json",
+      "sha256": "914281486c8c38ede3c0d394ea5aef7293b13f9997b5894b2c1dc73604d2244e",
+      "bytes": 769
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport-command.json",
+      "sha256": "dd5fd165516dce3a1bd8ce6eaa2ca73c3ee70c3ce416ee8f143411e396dfd91d",
+      "bytes": 2514
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport-ownership.json",
+      "sha256": "6053f8092956c0642501a3534baf4920201f4edc43580629f6a12a0d07f8133e",
+      "bytes": 1527
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport-proof.json",
+      "sha256": "95cfd414d0b35a1c5e2aeb976a5f964640d818da65d9ce5bdd2f83f5c9cab719",
+      "bytes": 1894
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport.stdout.log",
+      "sha256": "0c2f8b25a6f839908bb79ca58bf743c40a56f60d5e997d2a8c5ee71bbafb9ec6",
+      "bytes": 122
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render-cleanup.json",
+      "sha256": "a31dea2ef289e1508bf09612c5a586b91d41ee315c792038bc0c7e823b298133",
+      "bytes": 763
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render-command.json",
+      "sha256": "361fb117a1e7cf1a1e4fe3c0dc5189f8b99f8e319d38bb966d72a8e3871236e0",
+      "bytes": 1406
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render-comparison.py",
+      "sha256": "6feebd24d364a1de9b4d7d29cff3509492283d35adff8dbc37717f8cff70da4b",
+      "bytes": 2869
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render-native.py",
+      "sha256": "935c42dadbce718a71a861773fc0eb8ffb1cf39f23169458452b18359910058d",
+      "bytes": 2740
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render-ownership.json",
+      "sha256": "9b228dd55521e4eb262b0e27a11ac87f3e3c935aac7a6dc4ccfa0085f2ea90db",
+      "bytes": 932
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/run-owned.py",
+      "sha256": "456ce0fade9799d766e437acfcd115307eed64eeebaf258ef484bf2e6c00c734",
+      "bytes": 3262
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/superseded-before-depth-witness/archive-preservation.json",
+      "sha256": "43030c3bbd793a9265fa204e84a654e83737dfc40c6cc710f95cf9e12200e3b3",
+      "bytes": 8583
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/superseded-before-depth-witness/author.py",
+      "sha256": "1586bcc36dd163cb090fc2fa0fba0bc6567be15a4d5bd932a5988003a80b0986",
+      "bytes": 6644
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/superseded-before-depth-witness/candidate-native-collider.json",
+      "sha256": "cc4c7880944bc4856511f54fe71b338cc26f56839c04de3b585bcb29c7fd4d16",
+      "bytes": 1458429
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/superseded-before-depth-witness/collider-proof.json",
+      "sha256": "a3955d83b63969bf16c2512254e4fad1af8af8d83ab676463ba3434c450fd00a",
+      "bytes": 582
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/superseded-before-depth-witness/native-author-proof.json",
+      "sha256": "215194bd82f4a100c3761573bf9492e6aa4fb0b5d73bb61cab8ea808bf167f1f",
+      "bytes": 12169
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/superseded-before-depth-witness/native-orientation-proof.json",
+      "sha256": "9dd8311eda7c56f59bfbfd5cc25885156f34795878d034a2432b9aa7afc56544",
+      "bytes": 9379
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/superseded-before-depth-witness/native-reopen-proof.json",
+      "sha256": "53b29307f293fb394ddc239285e3df43841a28141e7df822589c4aa8b2bed276",
+      "bytes": 4058
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/superseded-before-depth-witness/nature-stone-hanger-mini-karma8a.FCStd",
+      "sha256": "6a74e3c0195ff903a1e935d528a395223791c2da74db29ab49be4d7217b34114",
+      "bytes": 1121233
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/superseded-before-depth-witness/original-shapes-proof.json",
+      "sha256": "600fd4861715bdb5e9624d995a35480e944c475fa5c633420819483161fd100a",
+      "bytes": 3737
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/verify-face-orientation.py",
+      "sha256": "e3db9707d56cb714eaaea7aa2c1973739f7fc77a8dc53033e8f17f708afa7fb3",
+      "bytes": 1112
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/verify-native.py",
+      "sha256": "a0e1461cbd02af8a4535bb195d6d2c79cdcb1f2b6a8ce17c31f1aa65367e42fc",
+      "bytes": 5227
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/verify-original-shapes.py",
+      "sha256": "8d6e14b680ecf4bed7f057e9bf1a3077c3c23bb0eba67d87b4211860a448ec8e",
+      "bytes": 1052
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/verify-reimport.py",
+      "sha256": "7b06ae9c1e8237d587bfa085eb33840a2c955720128129503e7fdb916c5fa0bb",
+      "bytes": 8243
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/worker-visual-review.json",
+      "sha256": "9cf623e0d2779718424374300e1b0d3ecae497a2805f83d218cb60a02198a8c9",
+      "bytes": 982
+    }
+  ]
+}

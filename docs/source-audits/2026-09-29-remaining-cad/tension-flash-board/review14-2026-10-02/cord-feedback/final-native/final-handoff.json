@@ -1,0 +1,30 @@
+{
+  "owner": "placid-badger",
+  "status": "conditional native A* apply/check and geometric diagnostics passed; independent whole-image review pending",
+  "package": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-final-package/Hangboards/tension-flash-board",
+  "packageSHA256": {
+    "tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+    "assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "suspension.json": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9"
+  },
+  "generatedBoard": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/generated-board.json",
+  "generatedBoardSHA256": "6b7e0262027dc8024b2869ce757595a8c3ba5399ab88376faceafaec4b28d743",
+  "nativeApply": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-native-apply.json",
+  "nativeApplySHA256": "0b929594a2c6d224f31da70028f2f1c37c01b9d15a995283de0e5a3747ccbf8b",
+  "nativeCheck": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-native-check.json",
+  "nativeCheckSHA256": "0b929594a2c6d224f31da70028f2f1c37c01b9d15a995283de0e5a3747ccbf8b",
+  "diagnostics": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/conditional-native-diagnostics.json",
+  "diagnosticsSHA256": "0b8e8fa5c02cbf8cff134b343151e57889195934ed4bd8dda2e48b3887191db2",
+  "lengthEstimate": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/tight-wrap-length-estimate.json",
+  "lengthEstimateSHA256": "f070df27973b5bcb6fa655dbb1d60ed0672661162668975c6b9931564ee877fb",
+  "sourceAndGraphProof": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/source-and-graph-proof.json",
+  "sourceAndGraphProofSHA256": "52e0df2ccef1f4749b397a5c05b9da99bf8e5e9a9a8e4d5de397c2b5bca032ee",
+  "defaultSearchApplyJob": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-20261002T234319",
+  "defaultApplySHA256": "eaed6fc73aef63762eee592d46d42f9c29ce3eac144d16d1afe398d85dbeae53",
+  "immutableRejectedCurrent": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-20261002T234319/placid-badger-rejected-current/Hangboards/tension-flash-board",
+  "conditionalReconstruction": true,
+  "hiddenContinuityAndContactOrderVerified": false,
+  "canonicalMutation": false,
+  "runtimeVerified": false
+}

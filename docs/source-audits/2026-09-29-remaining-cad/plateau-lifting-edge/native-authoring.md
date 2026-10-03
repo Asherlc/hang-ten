@@ -26,3 +26,11 @@ Source authorization: the first six boards inherit September20 approval only for
 The [continuous cord certificate](cord-continuous-clearance.json) checks the exact rounded runtime routes, including fixed-support legs and final terminals, against the native collision solid using adaptive signed-distance bounds. Every route passes the explicit 0.01 mm numerical tolerance; reported values are conservative lower bounds, not sampled minima.
 
 Initial compile reports predate metadata-only edits and are superseded for final source identity. [Current-source fresh rebuild proof](reproducibility.json); [batch validation notes](../validation-notes.md).
+
+## October 2 individual review
+
+The [current #13 review](review13-2026-10-02/review.md) supersedes the historical identities above for the native loop seating, sourced 6 mm cord and oak-only finish partitions. All original physical feature definitions/payloads and all three actual exported board/contact triangle unions preserve. Metal and reversible blocker use non-pickable neutral attachment partitions; only oak exterior and underside receive the wood selector. USDZs remain unbound.
+
+The original axis stations forced unsupported 90 degree bends roughly 4.5 mm from metal. Stations now derive from the native inner floor and existing native solver wraps the real end lips. All three final routes and hanging height pass unchanged continuous-clearance and tautness gates. The maker page explicitly states 6 mm cord; the 420 mm total loop length, support placement and geometric envelope remain display estimates.
+
+All five approved complete source photos remain byte-identical. Refreshed PL-1 HTML remains separately authorized research. Native/export/package/staging/compile checks and independent physical-shape review pass; current app appearance, picking/highlights/workout and human acceptance remain pending. Preview colors are diagnostic, not runtime texture proof. The native-author lane retains a limitation on historical PID records; known transient directories and exact-script process absence were verified. Throwaway scripts stay under .context with retained hashes.

@@ -1,0 +1,25 @@
+{
+  "owner": "placid-badger",
+  "reviewNumber": 9,
+  "humanAcceptance": "pending",
+  "feedback": [
+    "the stone hanger needs granite texture where appropriate",
+    "also cord is way too long",
+    "and its missing the notches",
+    "and the highlighted hold is in an impossible to weight position",
+    "the cord goes inside the side notches",
+    "there is 1 vertical groove on either side that the cord nestles into"
+  ],
+  "routingClarification": {
+    "question": "Enters center side holes with notch guides, or wraps around block in notch groove?",
+    "status": "answered",
+    "hiddenConnection": "No hidden route is inferred while awaiting mechanism clarification.",
+    "answer": "Enters side holes; notches guide it"
+  },
+  "priorFeedbackRecord": {
+    "path": ".context/placid-badger/nature-stone-review9/human-feedback.json",
+    "sha256": "247a052919759d78f238def5220b3b58b799b2cd6f117b7341118c59aa643684"
+  },
+  "newCorrection": "there is 1 vertical groove on either side that the cord nestles into",
+  "source": "Exact user correction relayed by root; retained root-supersession.json records the same quote."
+}

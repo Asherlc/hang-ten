@@ -1,0 +1,51 @@
+{
+  "owner": "placid-badger",
+  "jobName": "placid-badger-plateau13-manifest-package-pytest",
+  "status": "cleaned",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-manifest-package-pytest-TMP"
+  ],
+  "processGroup": 35680,
+  "registeredUTC": "2026-10-02T19:12:31.243329+00:00",
+  "simulatorsCreated": 0,
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-manifest-package-pytest-TMP/placid-badger-pytest",
+    "--junitxml",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-manifest-package-pytest-junit.xml",
+    "Tools/HangboardCAD/tests/test_board_manifest.py",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+    "Tools/HangboardPackages/tests/test_board_catalog.py",
+    "Tools/HangboardPackages/tests/test_pose_camera_facing.py"
+  ],
+  "timeoutSeconds": 300,
+  "logPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-manifest-package-pytest.log",
+  "startedUTC": "2026-10-02T19:12:31.245847+00:00",
+  "exitCode": 0,
+  "elapsedSeconds": 9.860383958999591,
+  "logSHA256": "6929e8582cf59403e6a79e0c7a0d700842145b21e7ddddeb18163e7a8e933472",
+  "cleanup": {
+    "owner": "placid-badger",
+    "jobName": "placid-badger-plateau13-manifest-package-pytest",
+    "resources": [
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-manifest-package-pytest-TMP",
+        "absent": true
+      }
+    ],
+    "errors": [],
+    "remainingProcesses": [],
+    "processGroupAbsent": true,
+    "allResourcesAbsent": true,
+    "passed": true,
+    "finishedUTC": "2026-10-02T19:12:41.297843+00:00"
+  }
+}

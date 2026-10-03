@@ -1,0 +1,141 @@
+{
+  "kind": "fresh empty-stage Forge USDZ reimport and descriptor gate",
+  "passed": true,
+  "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+  "modelSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+  "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+  "emptyStageCreatedBeforeReference": true,
+  "materials": [],
+  "shaders": [],
+  "boundMeshes": [],
+  "materialBindingRelationships": [],
+  "archiveMembers": [
+    "stage.usdc"
+  ],
+  "nodeCount": 21,
+  "contactCount": 20,
+  "triangleCount": 20748,
+  "modelBounds": {
+    "min": [
+      -0.400050014,
+      -0.066675,
+      -0.0
+    ],
+    "max": [
+      0.400050014,
+      0.066675,
+      0.089000002
+    ]
+  },
+  "completeDescriptorRebuiltExactly": true,
+  "modelHashBound": true,
+  "normalsInterpolation": "vertex",
+  "meshInventory": {
+    "body_board_001": {
+      "vertices": 7290,
+      "triangles": 8784,
+      "unbound": true
+    },
+    "contact_variable_edge_rail_right": {
+      "vertices": 1129,
+      "triangles": 1194,
+      "unbound": true
+    },
+    "contact_closed_crimp_right": {
+      "vertices": 1414,
+      "triangles": 1363,
+      "unbound": true
+    },
+    "contact_mr_deep_right": {
+      "vertices": 1092,
+      "triangles": 1162,
+      "unbound": true
+    },
+    "contact_mr_shallow_right": {
+      "vertices": 1090,
+      "triangles": 1158,
+      "unbound": true
+    },
+    "contact_im_shallow_right": {
+      "vertices": 331,
+      "triangles": 337,
+      "unbound": true
+    },
+    "contact_im_deep_right": {
+      "vertices": 561,
+      "triangles": 590,
+      "unbound": true
+    },
+    "contact_sloper_30_right": {
+      "vertices": 92,
+      "triangles": 98,
+      "unbound": true
+    },
+    "contact_sloper_40_right": {
+      "vertices": 32,
+      "triangles": 27,
+      "unbound": true
+    },
+    "contact_large_flat_edge_right": {
+      "vertices": 4,
+      "triangles": 2,
+      "unbound": true
+    },
+    "contact_slopey_crimper_right": {
+      "vertices": 47,
+      "triangles": 51,
+      "unbound": true
+    },
+    "contact_variable_edge_rail_left": {
+      "vertices": 1129,
+      "triangles": 1194,
+      "unbound": true
+    },
+    "contact_closed_crimp_left": {
+      "vertices": 1414,
+      "triangles": 1363,
+      "unbound": true
+    },
+    "contact_mr_deep_left": {
+      "vertices": 1092,
+      "triangles": 1162,
+      "unbound": true
+    },
+    "contact_mr_shallow_left": {
+      "vertices": 1090,
+      "triangles": 1158,
+      "unbound": true
+    },
+    "contact_im_shallow_left": {
+      "vertices": 331,
+      "triangles": 337,
+      "unbound": true
+    },
+    "contact_im_deep_left": {
+      "vertices": 561,
+      "triangles": 590,
+      "unbound": true
+    },
+    "contact_sloper_30_left": {
+      "vertices": 92,
+      "triangles": 98,
+      "unbound": true
+    },
+    "contact_sloper_40_left": {
+      "vertices": 32,
+      "triangles": 27,
+      "unbound": true
+    },
+    "contact_large_flat_edge_left": {
+      "vertices": 4,
+      "triangles": 2,
+      "unbound": true
+    },
+    "contact_slopey_crimper_left": {
+      "vertices": 47,
+      "triangles": 51,
+      "unbound": true
+    }
+  },
+  "meshDataSHA256": "22ab4af94efaca7f8b457fc0dc68f6c4363c76f84b7027f9d7450f411c83281b"
+}

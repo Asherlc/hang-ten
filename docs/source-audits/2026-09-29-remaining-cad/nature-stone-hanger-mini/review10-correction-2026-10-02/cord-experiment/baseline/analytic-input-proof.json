@@ -1,0 +1,77 @@
+{
+  "owner": "placid-badger",
+  "source": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+    "sha256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4"
+  },
+  "model": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+    "sha256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
+  },
+  "descriptor": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+    "sha256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+  },
+  "nativeCollider": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/cord-collider/native-collider.json",
+    "sha256": "b73af61a65e79ed989434bcb0ea734d4bcd10f9d33b289c33c3536b5dc48d62e"
+  },
+  "colliderVertexCount": 13990,
+  "colliderTriangleCount": 27976,
+  "sixExactNativeGrooveProperties": {
+    "LeftFrontOpenGroove": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"62.0000000000000000\" />\n                </Property>\n                ",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-6.2500000000000000\" Pz=\"-31.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>\n                ",
+      "Radius": "<Property name=\"Radius\" type=\"App::PropertyLength\">\n                    <Float value=\"1.7000000000000000\" />\n                </Property>\n                "
+    },
+    "LeftBackOpenGroove": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"62.0000000000000000\" />\n                </Property>\n                ",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"6.2500000000000000\" Pz=\"-31.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>\n                ",
+      "Radius": "<Property name=\"Radius\" type=\"App::PropertyLength\">\n                    <Float value=\"1.7000000000000000\" />\n                </Property>\n                "
+    },
+    "RightFrontOpenGroove": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"62.0000000000000000\" />\n                </Property>\n                ",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"50.0000000000000000\" Py=\"-6.2500000000000000\" Pz=\"-31.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>\n                ",
+      "Radius": "<Property name=\"Radius\" type=\"App::PropertyLength\">\n                    <Float value=\"1.7000000000000000\" />\n                </Property>\n                "
+    },
+    "RightBackOpenGroove": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"62.0000000000000000\" />\n                </Property>\n                ",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"50.0000000000000000\" Py=\"6.2500000000000000\" Pz=\"-31.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>\n                ",
+      "Radius": "<Property name=\"Radius\" type=\"App::PropertyLength\">\n                    <Float value=\"1.7000000000000000\" />\n                </Property>\n                "
+    },
+    "LeftTransverseOpenGroove": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"27.0000000000000000\" />\n                </Property>\n                ",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-13.5000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.7071067811865476\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"-0.7071067811865475\" A=\"-1.5707963267948966\" Ox=\"1.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"0.0000000000000000\" />\n                </Property>\n                ",
+      "Radius": "<Property name=\"Radius\" type=\"App::PropertyLength\">\n                    <Float value=\"1.7000000000000000\" />\n                </Property>\n                "
+    },
+    "RightTransverseOpenGroove": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"27.0000000000000000\" />\n                </Property>\n                ",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"50.0000000000000000\" Py=\"-13.5000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.7071067811865476\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"-0.7071067811865475\" A=\"-1.5707963267948966\" Ox=\"1.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"0.0000000000000000\" />\n                </Property>\n                ",
+      "Radius": "<Property name=\"Radius\" type=\"App::PropertyLength\">\n                    <Float value=\"1.7000000000000000\" />\n                </Property>\n                "
+    }
+  },
+  "grooveRadiusM": 0.0017,
+  "cordRadiusM": 0.001,
+  "grooveAxisAbsoluteXM": 0.05,
+  "nativeFloorAbsoluteXM": 0.0483,
+  "stationAbsoluteXM": 0.049300000000000004,
+  "numericalSeatingGapM": 0,
+  "availableInwardRadialIntervalM": [
+    0,
+    0.0006999999999999999
+  ],
+  "sectionRoutingMarginM": 0.0006,
+  "fullRadiusGateToleranceM": 1e-05,
+  "continuousSolidAndTubeGatesChanged": false,
+  "stationFormula": "absX=grooveAxisAbsX-(nativeGrooveRadius-cordRadius-numericalGap); native stations y=0,z=\u00b1.00625",
+  "baselineSectionMarginDisposition": "Preserved .0006 to expose actual offset-terminal boundary",
+  "transverseStationSpanM": 0.0125,
+  "provisionalSegmentAllowanceM": 0.014,
+  "allowanceRationale": "Analytic native groove-intersection span12.5mm, rounded up to next mm plus1mm; provisional display estimate; final native solution determines actual length.",
+  "leadRestLengthM": 0.11,
+  "anchorOffsetMagnitudeM": 0.015,
+  "removedPose": "jug-open-up",
+  "remainingRotationsPreserved": true,
+  "savedRouteCachesReadAsSeeds": false,
+  "sourceLimit": "Visible vertical-to-transverse groove only. Hidden continuation, complete tied loop and force-contact equilibrium unverified."
+}

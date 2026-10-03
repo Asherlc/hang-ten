@@ -1,0 +1,22 @@
+{
+  "status": "pass-exported-visual-scope-only",
+  "atUTC": "2026-10-01T22:57:54.056931+00:00",
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+  "descriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+  "previewProvenanceSHA256": "3765560b7de8e38d14c63cd51e014e9b8a728795c9a3582612797df964cdfdd3",
+  "wholeImagesViewed": {
+    "comparison-front.png": "ac68fb7687e4603f3d26329afcd93bb325d780b711f85d06db1c40ca9e1e8a7b",
+    "comparison-side.png": "598735bbdb7c0d35f2ea4d3dfd954efb8fd536044477f8cbc672d2c3ebce5db8",
+    "comparison-top.png": "19ce15b856a5ff74cfa779f34810eda13f8b456c6b59c2c410d2c78e22e1f423",
+    "comparison-oblique.png": "2f6dd7f4bf80cf60fd87af54ac69f3c357abf6eab7ba53944143657e8f122199"
+  },
+  "findings": [
+    "Exported full side/top/oblique views show the longitudinal side grooves and preserved transverse notches.",
+    "All contact pieces remain in the same front locations as the prior committed asset.",
+    "No new silhouette defect is visible in these four whole views."
+  ],
+  "blockingFindings": [],
+  "limits": "Unbound exported mesh in technical CPU renderer. Cord, runtime finishes and all poses are separate pending gates.",
+  "humanAcceptance": "pending"
+}

@@ -1,0 +1,63 @@
+{
+  "status": "pass",
+  "owner": "placid-badger",
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+  "descriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+  "sidecarSHA256": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae",
+  "builtBinarySHA256": "9e1dfb3a260c0492db0c37b8185eaa8cc42f364c65c39d1d002cc52799eba45a",
+  "generatedManifestSHA256": "946b91c96e6141f10035e01d6720d5a694d66084da41bae9af86726df58b59af",
+  "allEightContactsReviewed": true,
+  "sameInstanceGraniteRestorationReviewed": true,
+  "wholeImagesViewed": 17,
+  "actualDragChecks": 5,
+  "method": "Root physically viewed all17 original whole simulator frames. No crop, measurement, tracing, masks, alignment or pixel-derived geometry. Selection/orbit/binary assertions are separately retained in automation receipts.",
+  "findings": [
+    "The oak body uses the shared wood finish, while the isolated insert has a dark speckled granite finish. Only the selected contact turns red.",
+    "Granite returns to its speckled finish in the same live scene after the wood hold is selected, and remains correct after a real orbit.",
+    "Front and reverse side orbits show the cord following the longitudinal side seat and turning into the middle side opening; all three transverse adjustment notches on each visible side are retained.",
+    "The support loop is short relative to the board. Both exposed leads run taut to the apex and remain seated along the side.",
+    "All eight selected rims or granite floors appear below their cavity in the selected hanging orientation; the native proof separately verifies upward-bearing directions.",
+    "Five actual drag actions preserve the selection and change projected contact frames. No conspicuous mesh gaps, floating highlights or unstable cord departures appear in these still frames."
+  ],
+  "blockingFindings": [],
+  "cosmeticLimits": [
+    "Small polygonal shading bands remain at the tight cord bend where it meets the side seat; these are visible in the side frame and do not change the route.",
+    "Wood and granite are the app finishes. Exact groove sizes, cord dimensions/support height and hidden passage continuation are display estimates or unknown, as recorded in the native/source packet.",
+    "Still frames and the recorded drag states do not establish behavior at every continuous camera angle."
+  ],
+  "frameSHA256": {
+    "01-edge-front-15mm-incut.png": "0c8b2efc53f0ba4545695179dc4bfd6bfbfecb9cde92d5e7fd1a836138b568e1",
+    "02-edge-front-15mm-flat.png": "686330b7c639b34904326b71dfb88c4052e142e13be7335e0ee4c356c04d0fb5",
+    "03-edge-front-20mm-wood-flat.png": "8704dfe59077f83ed84e8eb4b55ac1c215935010b53166daecce2f625f55f869",
+    "04-edge-front-20mm-granite-orbit.png": "853046666529153b2cb7b566d9e4769e82a383a0d1928fb7bc7f634269b76bd4",
+    "04-edge-front-20mm-granite-side-orbit.png": "ad38f5a1db4cf7ae27df0eada0321474b5edd07a85a59873e65ff9c22eaba9ae",
+    "04-edge-front-20mm-granite.png": "874b19aad6fe6134caae856b3919ea2707d6f042b15f0b4d35f58ca4b472cd9d",
+    "05-edge-reverse-10mm-incut-orbit.png": "d5dc53cc4dc3fa2b42bf22bbdc32b9d09a7a6b8217a094895dced1bf6c26ee69",
+    "05-edge-reverse-10mm-incut-side-orbit.png": "5ba2e2ee21e53b08599a61bb18b217c8548af2698faf61f049c12487b0679b9b",
+    "05-edge-reverse-10mm-incut.png": "aef071a9115feca65f5db728d0c6bb7681115c40f315708dac6d27ffe1f96b18",
+    "06-edge-reverse-10mm-flat.png": "bf768214fa4dcfd39e5af1d5fdccd30cab1d96908212e2ed1167e7cef21c6471",
+    "07-edge-reverse-06mm-flat.png": "8d7209be07505b2f66093451cb71100dfc73ade9e9c813d2a39e0bb151c9744c",
+    "08-edge-reverse-06mm-incut.png": "b13d649e1a8bb111d9cd1affa09bc1053a3307e1eadf76f6ad6a429b4c3d3746",
+    "granite-deselected-same-instance-orbit.png": "c96ee453e8abe3f93504210fc899c572bfaa94bdd837cac7c224aa8b14619e84",
+    "granite-deselected-same-instance.png": "2aa6c85bccdf097902befd812a68ce26a6831a596030998fd9ccf46b0759f650",
+    "granite-reopened.png": "0c85f3c55af352a6305d94d1a7c7a2369fa21f26f801fabd9cf09f000c00484c",
+    "granite-selected-before-change.png": "22c57a226fb875f0fca65740d522e455b40188dcd80067a6fcb08895a976e075",
+    "unselected-train.png": "07a7bf98772061f395b10c4b81c6f3e43e01e0cda4efaa6e9d26e3d4d3f9de41"
+  },
+  "inputProofs": {
+    "nativeComparisons": {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/root-native-visual-review.json",
+      "sha256": "56af38bbbc11960fc4f935f917385de8e328f3f11429f5421b59f030cfeb6d40"
+    },
+    "exportComparisons": {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/root-export-visual-review.json",
+      "sha256": "3f1ed42dd7baf6ef2654a006c6303bccf92a38fb8de053414197d51ad93bb2a0"
+    },
+    "freshNativeBearing": {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/native-bearing/final-sidecar-native-bearing.json",
+      "sha256": "7ce9e1ff9d3d4c3a4546c249fce1c5e2197d42de3075b8c754aed4dbfc7c67d9"
+    }
+  },
+  "humanAcceptance": "pending one-by-one user review #9"
+}

@@ -25,7 +25,7 @@ from .board_catalog import (
 
 
 _DECISIONS = frozenset({"represented", "excluded"})
-_TOPOLOGIES = frozenset({"singleCord", "pairedLeadCord", "twoBranchCord", "threadedLoopCord", "cadRoutedCord"})
+_TOPOLOGIES = frozenset({"singleCord", "pairedLeadCord", "twoBranchCord", "cadRoutedCord", "threadedLoopCord"})
 _SOURCE_FACTS = frozenset({"documentedSuspension", "noDocumentedSuspension"})
 _SOURCE_TIERS = frozenset({"independent", "manufacturer", "manufacturer-instruction", "retailer"})
 _SHA256 = re.compile(r"^[0-9a-fA-F]{64}$")

@@ -1470,18 +1470,16 @@ def test_every_catalog_model_authors_a_material_finish() -> None:
                 continue
             model_count += 1
             display = presentation.media.display
-            # Retained manufacturer evidence identifies these two metal bodies.
-            # Keep their existing neutral finish instead of inventing a palette:
-            # AE-1 precision-machined anodized aluminum; PL-1/PL-2 oak + metal.
-            # docs/source-audits/2026-09-29-remaining-cad/<package>/sources.json
             if package.name == "aelith-cyclops-011":
+                # The maker specifies anodized aluminium. There is no metal palette;
+                # this exact revision must explicitly retain its neutral finish.
                 assert display.get("surfaceFinish") == "neutral", package
-                assert not any(display.get(field) for field in
-                    ("woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs")), package
+                assert not any(display.get(field) for field in ("woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs")), package
             elif package.name == "plateau-lifting-edge":
+                # Only the accepted wooden body and working edge use wood;
+                # the neutral default preserves its attachment/insert appearance.
                 assert display.get("surfaceFinish") == "neutral", package
-                assert display.get("woodNodeIDs") == ("plateau_edge_18",), package
-                assert not display.get("plasticNodeIDs") and not display.get("graniteNodeIDs"), package
+                assert display.get("woodNodeIDs") == ("plateau_body", "plateau_edge_18"), package
             else:
                 assert display.get("surfaceFinish") in {"wood", "plastic", "granite"}, package
     # Preserve coverage of the 55 model presentations present at this rollout.

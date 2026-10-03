@@ -1,0 +1,23 @@
+{
+  "status": "pass",
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "unchangedDeflectionMM": 0.15,
+  "twoIndependentExportsByteIdentical": true,
+  "independentCheckPassed": true,
+  "assets": {
+    "primary.usdz": {
+      "primary": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+      "independent": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba"
+    },
+    "primary.model.json": {
+      "primary": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+      "independent": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24"
+    }
+  },
+  "reports": {
+    "compile-primary.json": "109f946983576d14b5bda2cbaeb0a6021021a23b31d6446be0c8a5411cc591b5",
+    "compile-repro.json": "2b2831bbcac1b1b6fedc7223ac60301df45456c9d110a3344f913fd0e3eb95ad",
+    "compile-check.json": "74ec55a2cdd3b7cabf818f2d29a0f7d13a611050204eb947dc33e0a5fbe46ad7"
+  }
+}

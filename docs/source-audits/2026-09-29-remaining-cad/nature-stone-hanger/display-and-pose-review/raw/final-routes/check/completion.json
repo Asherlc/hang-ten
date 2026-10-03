@@ -1,0 +1,31 @@
+{
+  "status": "pass",
+  "mode": "check",
+  "counts": {
+    "outputPoses": 8,
+    "branches": 16,
+    "presentationFrames": 4,
+    "freshPhysicsFrames": 2
+  },
+  "loadedModules": {
+    "hangboard_packages.cord_paths": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/vertical-groove-correction/final-code-freeze/Tools/HangboardPackages/src/hangboard_packages/cord_paths.py",
+      "sha256": "d0c6dcacc8e1ad129e8d03580a43e9e20b547879a127bb912582b19c7a683250"
+    },
+    "native_cord_routes": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/vertical-groove-correction/final-code-freeze/Tools/HangboardCAD/native_cord_routes.py",
+      "sha256": "307a4db1b44c80396f2e42638f0fbc0ff6ea588d9b96829bebce9c014da45e5a"
+    },
+    "native_cord_guides": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/vertical-groove-correction/final-code-freeze/Tools/HangboardCAD/native_cord_guides.py",
+      "sha256": "2001cb8f4eb141d50146a2f426aa0cc086e729e0e737b4224e7f9dcf0a6fa191"
+    },
+    "solve_threaded_rope": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/vertical-groove-correction/final-code-freeze/Tools/HangboardCAD/solve_threaded_rope.py",
+      "sha256": "bcd7531950cc198ce8e5ad146d999dca3b11e7901076a8af2d08b5b1bf638f71"
+    }
+  },
+  "reportSHA256": "591083175d543a198cdfe2207e0bc81be7337934041349b2272fb11eeb23c3e7",
+  "sidecarSHA256": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae",
+  "freshIndependentRegenerationMatches": true
+}

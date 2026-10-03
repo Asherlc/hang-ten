@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger",
+  "task": "Mini jug and cord read-only second opinion",
+  "agentId": "554686d2-3272-4603-8629-9761b8f6969a",
+  "provider": "claude/claude-opus-5-5",
+  "workspaceId": "wks_d4a549643389e3ab",
+  "status": "running",
+  "externalResources": [
+    {
+      "kind": "paseo-advisor",
+      "id": "554686d2-3272-4603-8629-9761b8f6969a",
+      "owner": "placid-badger",
+      "cleanup": "archive after analysis and verify archived state"
+    }
+  ],
+  "noAdvisorFilesOrResourcesAuthorized": true,
+  "otherWorkspacesOutOfScope": true
+}

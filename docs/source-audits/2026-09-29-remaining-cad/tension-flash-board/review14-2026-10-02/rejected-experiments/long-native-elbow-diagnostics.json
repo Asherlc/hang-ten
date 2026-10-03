@@ -1,0 +1,1892 @@
+{
+  "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+  "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+  "sidecarSHA256": "39e071c3c905d729fff99a710345b7e6e2c081efb3885874249983388ec76ecd",
+  "colliderSHA256": "9b86911411ac2b8a6f7cfc093ea5be98655086d3cecf639ee60e224d2b2e9f15",
+  "method": "exact runtime cache + reconstructed support, closest full native-solid triangle at each interior centerline point",
+  "turnDiagnosticThresholdDegrees": 5,
+  "classification": "5 degrees is a reporting threshold only, not a physical acceptance gate",
+  "limit": "Native solver clearance/settling does not establish frictionless equilibrium. Collar bends may remain outside the material. No route is changed by this diagnostic.",
+  "poses": {
+    "three-edge-upright": {
+      "mouth-1-lead": {
+        "meaningfulBends": [
+          {
+            "index": 5,
+            "point": [
+              0.017,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 90.00298666503075,
+            "centerlineToWoodMM": 4.129873371344524,
+            "tubeSurfaceGapMM": 2.129873371344524,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.016993537790486773,
+              0.045000494511264935,
+              0.07534960611204809
+            ],
+            "nativeTriangle": 10270
+          }
+        ],
+        "maxTurnDegrees": 90.00298666503075,
+        "maxReportedTubeGapMM": 2.129873371344524
+      },
+      "mouth-2-lead": {
+        "meaningfulBends": [
+          {
+            "index": 5,
+            "point": [
+              0.031,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 90.00245289057416,
+            "centerlineToWoodMM": 4.129873371519087,
+            "tubeSurfaceGapMM": 2.1298733715190874,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.03099353787456918,
+              0.045000494510750014,
+              0.0753496061121468
+            ],
+            "nativeTriangle": 10256
+          }
+        ],
+        "maxTurnDegrees": 90.00245289057416,
+        "maxReportedTubeGapMM": 2.1298733715190874
+      },
+      "mouth-3-lead": {
+        "meaningfulBends": [
+          {
+            "index": 5,
+            "point": [
+              0.469,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 90.00245289057416,
+            "centerlineToWoodMM": 4.129873371519086,
+            "tubeSurfaceGapMM": 2.1298733715190856,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.46899353787455494,
+              0.045000494510750035,
+              0.07534960611214682
+            ],
+            "nativeTriangle": 10141
+          }
+        ],
+        "maxTurnDegrees": 90.00245289057416,
+        "maxReportedTubeGapMM": 2.1298733715190856
+      },
+      "mouth-4-lead": {
+        "meaningfulBends": [
+          {
+            "index": 5,
+            "point": [
+              0.483,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 90.00298666503075,
+            "centerlineToWoodMM": 4.129873371336852,
+            "tubeSurfaceGapMM": 2.129873371336852,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48299353785349985,
+              0.045000494511112724,
+              0.07534960611207664
+            ],
+            "nativeTriangle": 10105
+          }
+        ],
+        "maxTurnDegrees": 90.00298666503075,
+        "maxReportedTubeGapMM": 2.129873371336852
+      },
+      "left-rear-return": {
+        "meaningfulBends": [
+          {
+            "index": 1,
+            "point": [
+              0.018444369,
+              0.048,
+              -0.000216244
+            ],
+            "turnDegrees": 7.749260570704902,
+            "centerlineToWoodMM": 2.1307470740860777,
+            "tubeSurfaceGapMM": 0.1307470740860776,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019909654195114364,
+              0.04727164358795206,
+              0.0011484974875109793
+            ],
+            "nativeTriangle": 14000
+          },
+          {
+            "index": 2,
+            "point": [
+              0.018777751,
+              0.048,
+              -0.000489842
+            ],
+            "turnDegrees": 11.249949292404372,
+            "centerlineToWoodMM": 2.120069781324251,
+            "tubeSurfaceGapMM": 0.12006978132425095,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019924354976078962,
+              0.0473331077326597,
+              0.0011640170942053935
+            ],
+            "nativeTriangle": 9153
+          },
+          {
+            "index": 3,
+            "point": [
+              0.019158104,
+              0.048,
+              -0.000693144
+            ],
+            "turnDegrees": 11.250146706231341,
+            "centerlineToWoodMM": 2.1166314821459444,
+            "tubeSurfaceGapMM": 0.11663148214594454,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019930129665976324,
+              0.047360017225355995,
+              0.0011708643826110088
+            ],
+            "nativeTriangle": 9153
+          },
+          {
+            "index": 4,
+            "point": [
+              0.01957081,
+              0.048,
+              -0.000818335
+            ],
+            "turnDegrees": 11.24995889825417,
+            "centerlineToWoodMM": 2.1196008000795508,
+            "tubeSurfaceGapMM": 0.11960080007955087,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019941085489469698,
+              0.04741107029617313,
+              0.001183855155191619
+            ],
+            "nativeTriangle": 9153
+          },
+          {
+            "index": 5,
+            "point": [
+              0.020000011,
+              0.048,
+              -0.000860606
+            ],
+            "turnDegrees": 5.625066597994826,
+            "centerlineToWoodMM": 2.1268852599564436,
+            "tubeSurfaceGapMM": 0.12688525995644373,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.020000100545957567,
+              0.04743916509562397,
+              0.0011910043701812004
+            ],
+            "nativeTriangle": 9152
+          },
+          {
+            "index": 6,
+            "point": [
+              0.02800045,
+              0.048,
+              -0.000860567
+            ],
+            "turnDegrees": 5.6249567183460325,
+            "centerlineToWoodMM": 2.1266182178241517,
+            "tubeSurfaceGapMM": 0.12661821782415172,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.028000352700638425,
+              0.04746100322055578,
+              0.0011966125027812137
+            ],
+            "nativeTriangle": 9164
+          },
+          {
+            "index": 7,
+            "point": [
+              0.028429647,
+              0.048,
+              -0.000818293
+            ],
+            "turnDegrees": 11.250007263927783,
+            "centerlineToWoodMM": 2.119618187689972,
+            "tubeSurfaceGapMM": 0.11961818768997179,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.02805886379785223,
+              0.04741242413699648,
+              0.0011842193429848892
+            ],
+            "nativeTriangle": 9152
+          },
+          {
+            "index": 8,
+            "point": [
+              0.02884235,
+              0.048,
+              -0.000693099
+            ],
+            "turnDegrees": 11.249954659560672,
+            "centerlineToWoodMM": 2.116797165518955,
+            "tubeSurfaceGapMM": 0.11679716551895496,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.02806888019056811,
+              0.04736407595623221,
+              0.001171887676736459
+            ],
+            "nativeTriangle": 9152
+          },
+          {
+            "index": 9,
+            "point": [
+              0.0292227,
+              0.048,
+              -0.000489796
+            ],
+            "turnDegrees": 11.249981371824735,
+            "centerlineToWoodMM": 2.1203059017541253,
+            "tubeSurfaceGapMM": 0.12030590175412517,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.028084483618393604,
+              0.047295300514927974,
+              0.0011544543524084874
+            ],
+            "nativeTriangle": 9143
+          },
+          {
+            "index": 10,
+            "point": [
+              0.029556078,
+              0.048,
+              -0.000216198
+            ],
+            "turnDegrees": 7.7569214590745075,
+            "centerlineToWoodMM": 2.130875510142003,
+            "tubeSurfaceGapMM": 0.13087551014200277,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.02808828979608633,
+              0.047280453565757205,
+              0.0011507259763583438
+            ],
+            "nativeTriangle": 13839
+          }
+        ],
+        "maxTurnDegrees": 11.250146706231341,
+        "maxReportedTubeGapMM": 0.13087551014200277
+      },
+      "right-rear-return": {
+        "meaningfulBends": [
+          {
+            "index": 1,
+            "point": [
+              0.470444369,
+              0.048,
+              -0.000216244
+            ],
+            "turnDegrees": 7.749260570708958,
+            "centerlineToWoodMM": 2.130747074144985,
+            "tubeSurfaceGapMM": 0.13074707414498535,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.4719096541942846,
+              0.04727164358445346,
+              0.0011484974866266338
+            ],
+            "nativeTriangle": 11805
+          },
+          {
+            "index": 2,
+            "point": [
+              0.470777751,
+              0.048,
+              -0.000489842
+            ],
+            "turnDegrees": 11.249949292400295,
+            "centerlineToWoodMM": 2.120069781275228,
+            "tubeSurfaceGapMM": 0.1200697812752281,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.47192435497550794,
+              0.047333107730471474,
+              0.0011640170936560819
+            ],
+            "nativeTriangle": 8970
+          },
+          {
+            "index": 3,
+            "point": [
+              0.471158104,
+              0.048,
+              -0.000693144
+            ],
+            "turnDegrees": 11.250146706230655,
+            "centerlineToWoodMM": 2.1166314821346326,
+            "tubeSurfaceGapMM": 0.11663148213463242,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.47193012966565134,
+              0.04736001722401055,
+              0.0011708643822708313
+            ],
+            "nativeTriangle": 8970
+          },
+          {
+            "index": 4,
+            "point": [
+              0.47157081,
+              0.048,
+              -0.000818335
+            ],
+            "turnDegrees": 11.249958898254658,
+            "centerlineToWoodMM": 2.1196008000873543,
+            "tubeSurfaceGapMM": 0.1196008000873541,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.471941085489457,
+              0.047411070295706695,
+              0.001183855155065029
+            ],
+            "nativeTriangle": 8970
+          },
+          {
+            "index": 5,
+            "point": [
+              0.472000011,
+              0.048,
+              -0.000860606
+            ],
+            "turnDegrees": 5.62506659799489,
+            "centerlineToWoodMM": 2.1268852600540202,
+            "tubeSurfaceGapMM": 0.12688526005402018,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.47200010054606234,
+              0.04743916508958238,
+              0.0011910043686308032
+            ],
+            "nativeTriangle": 8969
+          },
+          {
+            "index": 6,
+            "point": [
+              0.48000045,
+              0.048,
+              -0.000860567
+            ],
+            "turnDegrees": 5.624956718346098,
+            "centerlineToWoodMM": 2.126618217753115,
+            "tubeSurfaceGapMM": 0.12661821775311524,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48000035270088753,
+              0.047461003235319536,
+              0.001196612506576009
+            ],
+            "nativeTriangle": 8972
+          },
+          {
+            "index": 7,
+            "point": [
+              0.480429647,
+              0.048,
+              -0.000818293
+            ],
+            "turnDegrees": 11.250007263929282,
+            "centerlineToWoodMM": 2.1196181876791296,
+            "tubeSurfaceGapMM": 0.11961818767912934,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.4800588637977567,
+              0.04741242413799717,
+              0.0011842193432493441
+            ],
+            "nativeTriangle": 8969
+          },
+          {
+            "index": 8,
+            "point": [
+              0.48084235,
+              0.048,
+              -0.000693099
+            ],
+            "turnDegrees": 11.249954659557249,
+            "centerlineToWoodMM": 2.1167971655605973,
+            "tubeSurfaceGapMM": 0.11679716556059744,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.4800688801898227,
+              0.04736407595914726,
+              0.0011718876774685593
+            ],
+            "nativeTriangle": 8969
+          },
+          {
+            "index": 9,
+            "point": [
+              0.4812227,
+              0.048,
+              -0.000489796
+            ],
+            "turnDegrees": 11.249981371826724,
+            "centerlineToWoodMM": 2.120305901652303,
+            "tubeSurfaceGapMM": 0.12030590165230297,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48008448361738687,
+              0.04729530051969062,
+              0.0011544543536214768
+            ],
+            "nativeTriangle": 8966
+          },
+          {
+            "index": 10,
+            "point": [
+              0.481556078,
+              0.048,
+              -0.000216198
+            ],
+            "turnDegrees": 7.7569214590745075,
+            "centerlineToWoodMM": 2.130875510055352,
+            "tubeSurfaceGapMM": 0.1308755100553516,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48008828979458423,
+              0.047280453572146545,
+              0.0011507259779736667
+            ],
+            "nativeTriangle": 11643
+          }
+        ],
+        "maxTurnDegrees": 11.250146706230655,
+        "maxReportedTubeGapMM": 0.1308755100553516
+      }
+    },
+    "three-edge-inverted": {
+      "mouth-1-lead": {
+        "meaningfulBends": [
+          {
+            "index": 5,
+            "point": [
+              0.017,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 90.002991584608,
+            "centerlineToWoodMM": 4.129873371344524,
+            "tubeSurfaceGapMM": 2.129873371344524,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.016993537790486773,
+              0.045000494511264935,
+              0.07534960611204809
+            ],
+            "nativeTriangle": 10270
+          }
+        ],
+        "maxTurnDegrees": 90.002991584608,
+        "maxReportedTubeGapMM": 2.129873371344524
+      },
+      "mouth-2-lead": {
+        "meaningfulBends": [
+          {
+            "index": 5,
+            "point": [
+              0.031,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 90.00245289010688,
+            "centerlineToWoodMM": 4.129873371519087,
+            "tubeSurfaceGapMM": 2.1298733715190874,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.03099353787456918,
+              0.045000494510750014,
+              0.0753496061121468
+            ],
+            "nativeTriangle": 10256
+          }
+        ],
+        "maxTurnDegrees": 90.00245289010688,
+        "maxReportedTubeGapMM": 2.1298733715190874
+      },
+      "mouth-3-lead": {
+        "meaningfulBends": [
+          {
+            "index": 5,
+            "point": [
+              0.469,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 90.00245289010688,
+            "centerlineToWoodMM": 4.129873371519086,
+            "tubeSurfaceGapMM": 2.1298733715190856,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.46899353787455494,
+              0.045000494510750035,
+              0.07534960611214682
+            ],
+            "nativeTriangle": 10141
+          }
+        ],
+        "maxTurnDegrees": 90.00245289010688,
+        "maxReportedTubeGapMM": 2.1298733715190856
+      },
+      "mouth-4-lead": {
+        "meaningfulBends": [
+          {
+            "index": 5,
+            "point": [
+              0.483,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 90.002991584608,
+            "centerlineToWoodMM": 4.129873371336852,
+            "tubeSurfaceGapMM": 2.129873371336852,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48299353785349985,
+              0.045000494511112724,
+              0.07534960611207664
+            ],
+            "nativeTriangle": 10105
+          }
+        ],
+        "maxTurnDegrees": 90.002991584608,
+        "maxReportedTubeGapMM": 2.129873371336852
+      },
+      "left-rear-return": {
+        "meaningfulBends": [
+          {
+            "index": 1,
+            "point": [
+              0.018444369,
+              0.048,
+              -0.000216244
+            ],
+            "turnDegrees": 7.749260570704902,
+            "centerlineToWoodMM": 2.1307470740860777,
+            "tubeSurfaceGapMM": 0.1307470740860776,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019909654195114364,
+              0.04727164358795206,
+              0.0011484974875109793
+            ],
+            "nativeTriangle": 14000
+          },
+          {
+            "index": 2,
+            "point": [
+              0.018777751,
+              0.048,
+              -0.000489842
+            ],
+            "turnDegrees": 11.249949292404372,
+            "centerlineToWoodMM": 2.120069781324251,
+            "tubeSurfaceGapMM": 0.12006978132425095,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019924354976078962,
+              0.0473331077326597,
+              0.0011640170942053935
+            ],
+            "nativeTriangle": 9153
+          },
+          {
+            "index": 3,
+            "point": [
+              0.019158104,
+              0.048,
+              -0.000693144
+            ],
+            "turnDegrees": 11.250146706231341,
+            "centerlineToWoodMM": 2.1166314821459444,
+            "tubeSurfaceGapMM": 0.11663148214594454,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019930129665976324,
+              0.047360017225355995,
+              0.0011708643826110088
+            ],
+            "nativeTriangle": 9153
+          },
+          {
+            "index": 4,
+            "point": [
+              0.01957081,
+              0.048,
+              -0.000818335
+            ],
+            "turnDegrees": 11.24995889825417,
+            "centerlineToWoodMM": 2.1196008000795508,
+            "tubeSurfaceGapMM": 0.11960080007955087,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019941085489469698,
+              0.04741107029617313,
+              0.001183855155191619
+            ],
+            "nativeTriangle": 9153
+          },
+          {
+            "index": 5,
+            "point": [
+              0.020000011,
+              0.048,
+              -0.000860606
+            ],
+            "turnDegrees": 5.625066597994826,
+            "centerlineToWoodMM": 2.1268852599564436,
+            "tubeSurfaceGapMM": 0.12688525995644373,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.020000100545957567,
+              0.04743916509562397,
+              0.0011910043701812004
+            ],
+            "nativeTriangle": 9152
+          },
+          {
+            "index": 6,
+            "point": [
+              0.02800045,
+              0.048,
+              -0.000860567
+            ],
+            "turnDegrees": 5.6249567183460325,
+            "centerlineToWoodMM": 2.1266182178241517,
+            "tubeSurfaceGapMM": 0.12661821782415172,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.028000352700638425,
+              0.04746100322055578,
+              0.0011966125027812137
+            ],
+            "nativeTriangle": 9164
+          },
+          {
+            "index": 7,
+            "point": [
+              0.028429647,
+              0.048,
+              -0.000818293
+            ],
+            "turnDegrees": 11.250007263927783,
+            "centerlineToWoodMM": 2.119618187689972,
+            "tubeSurfaceGapMM": 0.11961818768997179,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.02805886379785223,
+              0.04741242413699648,
+              0.0011842193429848892
+            ],
+            "nativeTriangle": 9152
+          },
+          {
+            "index": 8,
+            "point": [
+              0.02884235,
+              0.048,
+              -0.000693099
+            ],
+            "turnDegrees": 11.249954659560672,
+            "centerlineToWoodMM": 2.116797165518955,
+            "tubeSurfaceGapMM": 0.11679716551895496,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.02806888019056811,
+              0.04736407595623221,
+              0.001171887676736459
+            ],
+            "nativeTriangle": 9152
+          },
+          {
+            "index": 9,
+            "point": [
+              0.0292227,
+              0.048,
+              -0.000489796
+            ],
+            "turnDegrees": 11.249981371824735,
+            "centerlineToWoodMM": 2.1203059017541253,
+            "tubeSurfaceGapMM": 0.12030590175412517,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.028084483618393604,
+              0.047295300514927974,
+              0.0011544543524084874
+            ],
+            "nativeTriangle": 9143
+          },
+          {
+            "index": 10,
+            "point": [
+              0.029556078,
+              0.048,
+              -0.000216198
+            ],
+            "turnDegrees": 7.7569214590745075,
+            "centerlineToWoodMM": 2.130875510142003,
+            "tubeSurfaceGapMM": 0.13087551014200277,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.02808828979608633,
+              0.047280453565757205,
+              0.0011507259763583438
+            ],
+            "nativeTriangle": 13839
+          }
+        ],
+        "maxTurnDegrees": 11.250146706231341,
+        "maxReportedTubeGapMM": 0.13087551014200277
+      },
+      "right-rear-return": {
+        "meaningfulBends": [
+          {
+            "index": 1,
+            "point": [
+              0.470444369,
+              0.048,
+              -0.000216244
+            ],
+            "turnDegrees": 7.749260570708958,
+            "centerlineToWoodMM": 2.130747074144985,
+            "tubeSurfaceGapMM": 0.13074707414498535,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.4719096541942846,
+              0.04727164358445346,
+              0.0011484974866266338
+            ],
+            "nativeTriangle": 11805
+          },
+          {
+            "index": 2,
+            "point": [
+              0.470777751,
+              0.048,
+              -0.000489842
+            ],
+            "turnDegrees": 11.249949292400295,
+            "centerlineToWoodMM": 2.120069781275228,
+            "tubeSurfaceGapMM": 0.1200697812752281,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.47192435497550794,
+              0.047333107730471474,
+              0.0011640170936560819
+            ],
+            "nativeTriangle": 8970
+          },
+          {
+            "index": 3,
+            "point": [
+              0.471158104,
+              0.048,
+              -0.000693144
+            ],
+            "turnDegrees": 11.250146706230655,
+            "centerlineToWoodMM": 2.1166314821346326,
+            "tubeSurfaceGapMM": 0.11663148213463242,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.47193012966565134,
+              0.04736001722401055,
+              0.0011708643822708313
+            ],
+            "nativeTriangle": 8970
+          },
+          {
+            "index": 4,
+            "point": [
+              0.47157081,
+              0.048,
+              -0.000818335
+            ],
+            "turnDegrees": 11.249958898254658,
+            "centerlineToWoodMM": 2.1196008000873543,
+            "tubeSurfaceGapMM": 0.1196008000873541,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.471941085489457,
+              0.047411070295706695,
+              0.001183855155065029
+            ],
+            "nativeTriangle": 8970
+          },
+          {
+            "index": 5,
+            "point": [
+              0.472000011,
+              0.048,
+              -0.000860606
+            ],
+            "turnDegrees": 5.62506659799489,
+            "centerlineToWoodMM": 2.1268852600540202,
+            "tubeSurfaceGapMM": 0.12688526005402018,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.47200010054606234,
+              0.04743916508958238,
+              0.0011910043686308032
+            ],
+            "nativeTriangle": 8969
+          },
+          {
+            "index": 6,
+            "point": [
+              0.48000045,
+              0.048,
+              -0.000860567
+            ],
+            "turnDegrees": 5.624956718346098,
+            "centerlineToWoodMM": 2.126618217753115,
+            "tubeSurfaceGapMM": 0.12661821775311524,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48000035270088753,
+              0.047461003235319536,
+              0.001196612506576009
+            ],
+            "nativeTriangle": 8972
+          },
+          {
+            "index": 7,
+            "point": [
+              0.480429647,
+              0.048,
+              -0.000818293
+            ],
+            "turnDegrees": 11.250007263929282,
+            "centerlineToWoodMM": 2.1196181876791296,
+            "tubeSurfaceGapMM": 0.11961818767912934,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.4800588637977567,
+              0.04741242413799717,
+              0.0011842193432493441
+            ],
+            "nativeTriangle": 8969
+          },
+          {
+            "index": 8,
+            "point": [
+              0.48084235,
+              0.048,
+              -0.000693099
+            ],
+            "turnDegrees": 11.249954659557249,
+            "centerlineToWoodMM": 2.1167971655605973,
+            "tubeSurfaceGapMM": 0.11679716556059744,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.4800688801898227,
+              0.04736407595914726,
+              0.0011718876774685593
+            ],
+            "nativeTriangle": 8969
+          },
+          {
+            "index": 9,
+            "point": [
+              0.4812227,
+              0.048,
+              -0.000489796
+            ],
+            "turnDegrees": 11.249981371826724,
+            "centerlineToWoodMM": 2.120305901652303,
+            "tubeSurfaceGapMM": 0.12030590165230297,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48008448361738687,
+              0.04729530051969062,
+              0.0011544543536214768
+            ],
+            "nativeTriangle": 8966
+          },
+          {
+            "index": 10,
+            "point": [
+              0.481556078,
+              0.048,
+              -0.000216198
+            ],
+            "turnDegrees": 7.7569214590745075,
+            "centerlineToWoodMM": 2.130875510055352,
+            "tubeSurfaceGapMM": 0.1308755100553516,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48008828979458423,
+              0.047280453572146545,
+              0.0011507259779736667
+            ],
+            "nativeTriangle": 11643
+          }
+        ],
+        "maxTurnDegrees": 11.250146706230655,
+        "maxReportedTubeGapMM": 0.1308755100553516
+      }
+    },
+    "two-edge-upright": {
+      "mouth-1-lead": {
+        "meaningfulBends": [
+          {
+            "index": 2,
+            "point": [
+              0.017,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 93.34840215332171,
+            "centerlineToWoodMM": 4.129873371344524,
+            "tubeSurfaceGapMM": 2.129873371344524,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.016993537790486773,
+              0.045000494511264935,
+              0.07534960611204809
+            ],
+            "nativeTriangle": 10270
+          }
+        ],
+        "maxTurnDegrees": 93.34840215332171,
+        "maxReportedTubeGapMM": 2.129873371344524
+      },
+      "mouth-2-lead": {
+        "meaningfulBends": [
+          {
+            "index": 2,
+            "point": [
+              0.031,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 93.37102701301542,
+            "centerlineToWoodMM": 4.129873371519087,
+            "tubeSurfaceGapMM": 2.1298733715190874,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.03099353787456918,
+              0.045000494510750014,
+              0.0753496061121468
+            ],
+            "nativeTriangle": 10256
+          }
+        ],
+        "maxTurnDegrees": 93.37102701301542,
+        "maxReportedTubeGapMM": 2.1298733715190874
+      },
+      "mouth-3-lead": {
+        "meaningfulBends": [
+          {
+            "index": 2,
+            "point": [
+              0.469,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 93.37102701301542,
+            "centerlineToWoodMM": 4.129873371519086,
+            "tubeSurfaceGapMM": 2.1298733715190856,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.46899353787455494,
+              0.045000494510750035,
+              0.07534960611214682
+            ],
+            "nativeTriangle": 10141
+          }
+        ],
+        "maxTurnDegrees": 93.37102701301542,
+        "maxReportedTubeGapMM": 2.1298733715190856
+      },
+      "mouth-4-lead": {
+        "meaningfulBends": [
+          {
+            "index": 2,
+            "point": [
+              0.483,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 93.34840215332171,
+            "centerlineToWoodMM": 4.129873371336852,
+            "tubeSurfaceGapMM": 2.129873371336852,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48299353785349985,
+              0.045000494511112724,
+              0.07534960611207664
+            ],
+            "nativeTriangle": 10105
+          }
+        ],
+        "maxTurnDegrees": 93.34840215332171,
+        "maxReportedTubeGapMM": 2.129873371336852
+      },
+      "left-rear-return": {
+        "meaningfulBends": [
+          {
+            "index": 1,
+            "point": [
+              0.018444369,
+              0.048,
+              -0.000216244
+            ],
+            "turnDegrees": 7.749260570704902,
+            "centerlineToWoodMM": 2.1307470740860777,
+            "tubeSurfaceGapMM": 0.1307470740860776,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019909654195114364,
+              0.04727164358795206,
+              0.0011484974875109793
+            ],
+            "nativeTriangle": 14000
+          },
+          {
+            "index": 2,
+            "point": [
+              0.018777751,
+              0.048,
+              -0.000489842
+            ],
+            "turnDegrees": 11.249949292404372,
+            "centerlineToWoodMM": 2.120069781324251,
+            "tubeSurfaceGapMM": 0.12006978132425095,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019924354976078962,
+              0.0473331077326597,
+              0.0011640170942053935
+            ],
+            "nativeTriangle": 9153
+          },
+          {
+            "index": 3,
+            "point": [
+              0.019158104,
+              0.048,
+              -0.000693144
+            ],
+            "turnDegrees": 11.250146706231341,
+            "centerlineToWoodMM": 2.1166314821459444,
+            "tubeSurfaceGapMM": 0.11663148214594454,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019930129665976324,
+              0.047360017225355995,
+              0.0011708643826110088
+            ],
+            "nativeTriangle": 9153
+          },
+          {
+            "index": 4,
+            "point": [
+              0.01957081,
+              0.048,
+              -0.000818335
+            ],
+            "turnDegrees": 11.24995889825417,
+            "centerlineToWoodMM": 2.1196008000795508,
+            "tubeSurfaceGapMM": 0.11960080007955087,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019941085489469698,
+              0.04741107029617313,
+              0.001183855155191619
+            ],
+            "nativeTriangle": 9153
+          },
+          {
+            "index": 5,
+            "point": [
+              0.020000011,
+              0.048,
+              -0.000860606
+            ],
+            "turnDegrees": 5.625066597994826,
+            "centerlineToWoodMM": 2.1268852599564436,
+            "tubeSurfaceGapMM": 0.12688525995644373,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.020000100545957567,
+              0.04743916509562397,
+              0.0011910043701812004
+            ],
+            "nativeTriangle": 9152
+          },
+          {
+            "index": 6,
+            "point": [
+              0.02800045,
+              0.048,
+              -0.000860567
+            ],
+            "turnDegrees": 5.6249567183460325,
+            "centerlineToWoodMM": 2.1266182178241517,
+            "tubeSurfaceGapMM": 0.12661821782415172,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.028000352700638425,
+              0.04746100322055578,
+              0.0011966125027812137
+            ],
+            "nativeTriangle": 9164
+          },
+          {
+            "index": 7,
+            "point": [
+              0.028429647,
+              0.048,
+              -0.000818293
+            ],
+            "turnDegrees": 11.250007263927783,
+            "centerlineToWoodMM": 2.119618187689972,
+            "tubeSurfaceGapMM": 0.11961818768997179,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.02805886379785223,
+              0.04741242413699648,
+              0.0011842193429848892
+            ],
+            "nativeTriangle": 9152
+          },
+          {
+            "index": 8,
+            "point": [
+              0.02884235,
+              0.048,
+              -0.000693099
+            ],
+            "turnDegrees": 11.249954659560672,
+            "centerlineToWoodMM": 2.116797165518955,
+            "tubeSurfaceGapMM": 0.11679716551895496,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.02806888019056811,
+              0.04736407595623221,
+              0.001171887676736459
+            ],
+            "nativeTriangle": 9152
+          },
+          {
+            "index": 9,
+            "point": [
+              0.0292227,
+              0.048,
+              -0.000489796
+            ],
+            "turnDegrees": 11.249981371824735,
+            "centerlineToWoodMM": 2.1203059017541253,
+            "tubeSurfaceGapMM": 0.12030590175412517,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.028084483618393604,
+              0.047295300514927974,
+              0.0011544543524084874
+            ],
+            "nativeTriangle": 9143
+          },
+          {
+            "index": 10,
+            "point": [
+              0.029556078,
+              0.048,
+              -0.000216198
+            ],
+            "turnDegrees": 7.7569214590745075,
+            "centerlineToWoodMM": 2.130875510142003,
+            "tubeSurfaceGapMM": 0.13087551014200277,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.02808828979608633,
+              0.047280453565757205,
+              0.0011507259763583438
+            ],
+            "nativeTriangle": 13839
+          }
+        ],
+        "maxTurnDegrees": 11.250146706231341,
+        "maxReportedTubeGapMM": 0.13087551014200277
+      },
+      "right-rear-return": {
+        "meaningfulBends": [
+          {
+            "index": 1,
+            "point": [
+              0.470444369,
+              0.048,
+              -0.000216244
+            ],
+            "turnDegrees": 7.749260570708958,
+            "centerlineToWoodMM": 2.130747074144985,
+            "tubeSurfaceGapMM": 0.13074707414498535,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.4719096541942846,
+              0.04727164358445346,
+              0.0011484974866266338
+            ],
+            "nativeTriangle": 11805
+          },
+          {
+            "index": 2,
+            "point": [
+              0.470777751,
+              0.048,
+              -0.000489842
+            ],
+            "turnDegrees": 11.249949292400295,
+            "centerlineToWoodMM": 2.120069781275228,
+            "tubeSurfaceGapMM": 0.1200697812752281,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.47192435497550794,
+              0.047333107730471474,
+              0.0011640170936560819
+            ],
+            "nativeTriangle": 8970
+          },
+          {
+            "index": 3,
+            "point": [
+              0.471158104,
+              0.048,
+              -0.000693144
+            ],
+            "turnDegrees": 11.250146706230655,
+            "centerlineToWoodMM": 2.1166314821346326,
+            "tubeSurfaceGapMM": 0.11663148213463242,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.47193012966565134,
+              0.04736001722401055,
+              0.0011708643822708313
+            ],
+            "nativeTriangle": 8970
+          },
+          {
+            "index": 4,
+            "point": [
+              0.47157081,
+              0.048,
+              -0.000818335
+            ],
+            "turnDegrees": 11.249958898254658,
+            "centerlineToWoodMM": 2.1196008000873543,
+            "tubeSurfaceGapMM": 0.1196008000873541,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.471941085489457,
+              0.047411070295706695,
+              0.001183855155065029
+            ],
+            "nativeTriangle": 8970
+          },
+          {
+            "index": 5,
+            "point": [
+              0.472000011,
+              0.048,
+              -0.000860606
+            ],
+            "turnDegrees": 5.62506659799489,
+            "centerlineToWoodMM": 2.1268852600540202,
+            "tubeSurfaceGapMM": 0.12688526005402018,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.47200010054606234,
+              0.04743916508958238,
+              0.0011910043686308032
+            ],
+            "nativeTriangle": 8969
+          },
+          {
+            "index": 6,
+            "point": [
+              0.48000045,
+              0.048,
+              -0.000860567
+            ],
+            "turnDegrees": 5.624956718346098,
+            "centerlineToWoodMM": 2.126618217753115,
+            "tubeSurfaceGapMM": 0.12661821775311524,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48000035270088753,
+              0.047461003235319536,
+              0.001196612506576009
+            ],
+            "nativeTriangle": 8972
+          },
+          {
+            "index": 7,
+            "point": [
+              0.480429647,
+              0.048,
+              -0.000818293
+            ],
+            "turnDegrees": 11.250007263929282,
+            "centerlineToWoodMM": 2.1196181876791296,
+            "tubeSurfaceGapMM": 0.11961818767912934,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.4800588637977567,
+              0.04741242413799717,
+              0.0011842193432493441
+            ],
+            "nativeTriangle": 8969
+          },
+          {
+            "index": 8,
+            "point": [
+              0.48084235,
+              0.048,
+              -0.000693099
+            ],
+            "turnDegrees": 11.249954659557249,
+            "centerlineToWoodMM": 2.1167971655605973,
+            "tubeSurfaceGapMM": 0.11679716556059744,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.4800688801898227,
+              0.04736407595914726,
+              0.0011718876774685593
+            ],
+            "nativeTriangle": 8969
+          },
+          {
+            "index": 9,
+            "point": [
+              0.4812227,
+              0.048,
+              -0.000489796
+            ],
+            "turnDegrees": 11.249981371826724,
+            "centerlineToWoodMM": 2.120305901652303,
+            "tubeSurfaceGapMM": 0.12030590165230297,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48008448361738687,
+              0.04729530051969062,
+              0.0011544543536214768
+            ],
+            "nativeTriangle": 8966
+          },
+          {
+            "index": 10,
+            "point": [
+              0.481556078,
+              0.048,
+              -0.000216198
+            ],
+            "turnDegrees": 7.7569214590745075,
+            "centerlineToWoodMM": 2.130875510055352,
+            "tubeSurfaceGapMM": 0.1308755100553516,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48008828979458423,
+              0.047280453572146545,
+              0.0011507259779736667
+            ],
+            "nativeTriangle": 11643
+          }
+        ],
+        "maxTurnDegrees": 11.250146706230655,
+        "maxReportedTubeGapMM": 0.1308755100553516
+      }
+    },
+    "two-edge-inverted": {
+      "mouth-1-lead": {
+        "meaningfulBends": [
+          {
+            "index": 2,
+            "point": [
+              0.017,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 93.34761948088156,
+            "centerlineToWoodMM": 4.129873371344524,
+            "tubeSurfaceGapMM": 2.129873371344524,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.016993537790486773,
+              0.045000494511264935,
+              0.07534960611204809
+            ],
+            "nativeTriangle": 10270
+          }
+        ],
+        "maxTurnDegrees": 93.34761948088156,
+        "maxReportedTubeGapMM": 2.129873371344524
+      },
+      "mouth-2-lead": {
+        "meaningfulBends": [
+          {
+            "index": 2,
+            "point": [
+              0.031,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 93.3702390396704,
+            "centerlineToWoodMM": 4.129873371519087,
+            "tubeSurfaceGapMM": 2.1298733715190874,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.03099353787456918,
+              0.045000494510750014,
+              0.0753496061121468
+            ],
+            "nativeTriangle": 10256
+          }
+        ],
+        "maxTurnDegrees": 93.3702390396704,
+        "maxReportedTubeGapMM": 2.1298733715190874
+      },
+      "mouth-3-lead": {
+        "meaningfulBends": [
+          {
+            "index": 2,
+            "point": [
+              0.469,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 93.3702390396704,
+            "centerlineToWoodMM": 4.129873371519086,
+            "tubeSurfaceGapMM": 2.1298733715190856,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.46899353787455494,
+              0.045000494510750035,
+              0.07534960611214682
+            ],
+            "nativeTriangle": 10141
+          }
+        ],
+        "maxTurnDegrees": 93.3702390396704,
+        "maxReportedTubeGapMM": 2.1298733715190856
+      },
+      "mouth-4-lead": {
+        "meaningfulBends": [
+          {
+            "index": 2,
+            "point": [
+              0.483,
+              0.048,
+              0.078188405
+            ],
+            "turnDegrees": 93.34761948088156,
+            "centerlineToWoodMM": 4.129873371336852,
+            "tubeSurfaceGapMM": 2.129873371336852,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48299353785349985,
+              0.045000494511112724,
+              0.07534960611207664
+            ],
+            "nativeTriangle": 10105
+          }
+        ],
+        "maxTurnDegrees": 93.34761948088156,
+        "maxReportedTubeGapMM": 2.129873371336852
+      },
+      "left-rear-return": {
+        "meaningfulBends": [
+          {
+            "index": 1,
+            "point": [
+              0.018444369,
+              0.048,
+              -0.000216244
+            ],
+            "turnDegrees": 7.749260570704902,
+            "centerlineToWoodMM": 2.1307470740860777,
+            "tubeSurfaceGapMM": 0.1307470740860776,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019909654195114364,
+              0.04727164358795206,
+              0.0011484974875109793
+            ],
+            "nativeTriangle": 14000
+          },
+          {
+            "index": 2,
+            "point": [
+              0.018777751,
+              0.048,
+              -0.000489842
+            ],
+            "turnDegrees": 11.249949292404372,
+            "centerlineToWoodMM": 2.120069781324251,
+            "tubeSurfaceGapMM": 0.12006978132425095,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019924354976078962,
+              0.0473331077326597,
+              0.0011640170942053935
+            ],
+            "nativeTriangle": 9153
+          },
+          {
+            "index": 3,
+            "point": [
+              0.019158104,
+              0.048,
+              -0.000693144
+            ],
+            "turnDegrees": 11.250146706231341,
+            "centerlineToWoodMM": 2.1166314821459444,
+            "tubeSurfaceGapMM": 0.11663148214594454,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019930129665976324,
+              0.047360017225355995,
+              0.0011708643826110088
+            ],
+            "nativeTriangle": 9153
+          },
+          {
+            "index": 4,
+            "point": [
+              0.01957081,
+              0.048,
+              -0.000818335
+            ],
+            "turnDegrees": 11.24995889825417,
+            "centerlineToWoodMM": 2.1196008000795508,
+            "tubeSurfaceGapMM": 0.11960080007955087,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.019941085489469698,
+              0.04741107029617313,
+              0.001183855155191619
+            ],
+            "nativeTriangle": 9153
+          },
+          {
+            "index": 5,
+            "point": [
+              0.020000011,
+              0.048,
+              -0.000860606
+            ],
+            "turnDegrees": 5.625066597994826,
+            "centerlineToWoodMM": 2.1268852599564436,
+            "tubeSurfaceGapMM": 0.12688525995644373,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.020000100545957567,
+              0.04743916509562397,
+              0.0011910043701812004
+            ],
+            "nativeTriangle": 9152
+          },
+          {
+            "index": 6,
+            "point": [
+              0.02800045,
+              0.048,
+              -0.000860567
+            ],
+            "turnDegrees": 5.6249567183460325,
+            "centerlineToWoodMM": 2.1266182178241517,
+            "tubeSurfaceGapMM": 0.12661821782415172,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.028000352700638425,
+              0.04746100322055578,
+              0.0011966125027812137
+            ],
+            "nativeTriangle": 9164
+          },
+          {
+            "index": 7,
+            "point": [
+              0.028429647,
+              0.048,
+              -0.000818293
+            ],
+            "turnDegrees": 11.250007263927783,
+            "centerlineToWoodMM": 2.119618187689972,
+            "tubeSurfaceGapMM": 0.11961818768997179,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.02805886379785223,
+              0.04741242413699648,
+              0.0011842193429848892
+            ],
+            "nativeTriangle": 9152
+          },
+          {
+            "index": 8,
+            "point": [
+              0.02884235,
+              0.048,
+              -0.000693099
+            ],
+            "turnDegrees": 11.249954659560672,
+            "centerlineToWoodMM": 2.116797165518955,
+            "tubeSurfaceGapMM": 0.11679716551895496,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.02806888019056811,
+              0.04736407595623221,
+              0.001171887676736459
+            ],
+            "nativeTriangle": 9152
+          },
+          {
+            "index": 9,
+            "point": [
+              0.0292227,
+              0.048,
+              -0.000489796
+            ],
+            "turnDegrees": 11.249981371824735,
+            "centerlineToWoodMM": 2.1203059017541253,
+            "tubeSurfaceGapMM": 0.12030590175412517,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.028084483618393604,
+              0.047295300514927974,
+              0.0011544543524084874
+            ],
+            "nativeTriangle": 9143
+          },
+          {
+            "index": 10,
+            "point": [
+              0.029556078,
+              0.048,
+              -0.000216198
+            ],
+            "turnDegrees": 7.7569214590745075,
+            "centerlineToWoodMM": 2.130875510142003,
+            "tubeSurfaceGapMM": 0.13087551014200277,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.02808828979608633,
+              0.047280453565757205,
+              0.0011507259763583438
+            ],
+            "nativeTriangle": 13839
+          }
+        ],
+        "maxTurnDegrees": 11.250146706231341,
+        "maxReportedTubeGapMM": 0.13087551014200277
+      },
+      "right-rear-return": {
+        "meaningfulBends": [
+          {
+            "index": 1,
+            "point": [
+              0.470444369,
+              0.048,
+              -0.000216244
+            ],
+            "turnDegrees": 7.749260570708958,
+            "centerlineToWoodMM": 2.130747074144985,
+            "tubeSurfaceGapMM": 0.13074707414498535,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.4719096541942846,
+              0.04727164358445346,
+              0.0011484974866266338
+            ],
+            "nativeTriangle": 11805
+          },
+          {
+            "index": 2,
+            "point": [
+              0.470777751,
+              0.048,
+              -0.000489842
+            ],
+            "turnDegrees": 11.249949292400295,
+            "centerlineToWoodMM": 2.120069781275228,
+            "tubeSurfaceGapMM": 0.1200697812752281,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.47192435497550794,
+              0.047333107730471474,
+              0.0011640170936560819
+            ],
+            "nativeTriangle": 8970
+          },
+          {
+            "index": 3,
+            "point": [
+              0.471158104,
+              0.048,
+              -0.000693144
+            ],
+            "turnDegrees": 11.250146706230655,
+            "centerlineToWoodMM": 2.1166314821346326,
+            "tubeSurfaceGapMM": 0.11663148213463242,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.47193012966565134,
+              0.04736001722401055,
+              0.0011708643822708313
+            ],
+            "nativeTriangle": 8970
+          },
+          {
+            "index": 4,
+            "point": [
+              0.47157081,
+              0.048,
+              -0.000818335
+            ],
+            "turnDegrees": 11.249958898254658,
+            "centerlineToWoodMM": 2.1196008000873543,
+            "tubeSurfaceGapMM": 0.1196008000873541,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.471941085489457,
+              0.047411070295706695,
+              0.001183855155065029
+            ],
+            "nativeTriangle": 8970
+          },
+          {
+            "index": 5,
+            "point": [
+              0.472000011,
+              0.048,
+              -0.000860606
+            ],
+            "turnDegrees": 5.62506659799489,
+            "centerlineToWoodMM": 2.1268852600540202,
+            "tubeSurfaceGapMM": 0.12688526005402018,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.47200010054606234,
+              0.04743916508958238,
+              0.0011910043686308032
+            ],
+            "nativeTriangle": 8969
+          },
+          {
+            "index": 6,
+            "point": [
+              0.48000045,
+              0.048,
+              -0.000860567
+            ],
+            "turnDegrees": 5.624956718346098,
+            "centerlineToWoodMM": 2.126618217753115,
+            "tubeSurfaceGapMM": 0.12661821775311524,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48000035270088753,
+              0.047461003235319536,
+              0.001196612506576009
+            ],
+            "nativeTriangle": 8972
+          },
+          {
+            "index": 7,
+            "point": [
+              0.480429647,
+              0.048,
+              -0.000818293
+            ],
+            "turnDegrees": 11.250007263929282,
+            "centerlineToWoodMM": 2.1196181876791296,
+            "tubeSurfaceGapMM": 0.11961818767912934,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.4800588637977567,
+              0.04741242413799717,
+              0.0011842193432493441
+            ],
+            "nativeTriangle": 8969
+          },
+          {
+            "index": 8,
+            "point": [
+              0.48084235,
+              0.048,
+              -0.000693099
+            ],
+            "turnDegrees": 11.249954659557249,
+            "centerlineToWoodMM": 2.1167971655605973,
+            "tubeSurfaceGapMM": 0.11679716556059744,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.4800688801898227,
+              0.04736407595914726,
+              0.0011718876774685593
+            ],
+            "nativeTriangle": 8969
+          },
+          {
+            "index": 9,
+            "point": [
+              0.4812227,
+              0.048,
+              -0.000489796
+            ],
+            "turnDegrees": 11.249981371826724,
+            "centerlineToWoodMM": 2.120305901652303,
+            "tubeSurfaceGapMM": 0.12030590165230297,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48008448361738687,
+              0.04729530051969062,
+              0.0011544543536214768
+            ],
+            "nativeTriangle": 8966
+          },
+          {
+            "index": 10,
+            "point": [
+              0.481556078,
+              0.048,
+              -0.000216198
+            ],
+            "turnDegrees": 7.7569214590745075,
+            "centerlineToWoodMM": 2.130875510055352,
+            "tubeSurfaceGapMM": 0.1308755100553516,
+            "declaredSectionClearanceMM": 0.2,
+            "closestWoodPoint": [
+              0.48008828979458423,
+              0.047280453572146545,
+              0.0011507259779736667
+            ],
+            "nativeTriangle": 11643
+          }
+        ],
+        "maxTurnDegrees": 11.250146706230655,
+        "maxReportedTubeGapMM": 0.1308755100553516
+      }
+    }
+  }
+}

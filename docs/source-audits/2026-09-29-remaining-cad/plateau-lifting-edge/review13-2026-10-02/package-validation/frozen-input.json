@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "package": "plateau-lifting-edge",
+  "files": {
+    "assets/depth-10mm.model.json": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+    "assets/depth-10mm.usdz": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+    "assets/depth-15mm.model.json": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+    "assets/depth-15mm.usdz": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+    "assets/primary.model.json": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+    "assets/primary.usdz": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+    "plateau-lifting-edge.FCStd": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+    "suspension.json": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80"
+  },
+  "generatedManifestSHA256": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4"
+}

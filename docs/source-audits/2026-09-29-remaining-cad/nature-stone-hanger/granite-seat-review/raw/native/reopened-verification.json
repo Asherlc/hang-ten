@@ -1,0 +1,64 @@
+{
+  "status": "pass-reopened",
+  "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+  "rawManifestPreserved": true,
+  "graniteContactWoodCommonAreaMM2": 0.0,
+  "nativeReferencesExternal": [],
+  "cordInputAndSideVolumeChecks": {
+    "LeftAdjustment0": {
+      "beforeMinusAfterMM3": 0.0,
+      "afterMinusBeforeMM3": 0.0
+    },
+    "LeftAdjustment1": {
+      "beforeMinusAfterMM3": 0.0,
+      "afterMinusBeforeMM3": 0.0
+    },
+    "LeftAdjustment2": {
+      "beforeMinusAfterMM3": 0.0,
+      "afterMinusBeforeMM3": 0.0
+    },
+    "RightAdjustment0": {
+      "beforeMinusAfterMM3": 0.0,
+      "afterMinusBeforeMM3": 0.0
+    },
+    "RightAdjustment1": {
+      "beforeMinusAfterMM3": 0.0,
+      "afterMinusBeforeMM3": 0.0
+    },
+    "RightAdjustment2": {
+      "beforeMinusAfterMM3": 0.0,
+      "afterMinusBeforeMM3": 0.0
+    },
+    "LeftVisibleMouth": {
+      "beforeMinusAfterMM3": 0.0,
+      "afterMinusBeforeMM3": 0.0
+    },
+    "RightVisibleMouth": {
+      "beforeMinusAfterMM3": 0.0,
+      "afterMinusBeforeMM3": 0.0
+    },
+    "LeftVerticalCordGroove": {
+      "beforeMinusAfterMM3": 0.0,
+      "afterMinusBeforeMM3": 0.0
+    },
+    "RightVerticalCordGroove": {
+      "beforeMinusAfterMM3": 0.0,
+      "afterMinusBeforeMM3": 0.0
+    },
+    "leftSide": {
+      "beforeMinusAfterMM3": 0.0,
+      "afterMinusBeforeMM3": 0.0
+    },
+    "rightSide": {
+      "beforeMinusAfterMM3": 0.0,
+      "afterMinusBeforeMM3": 0.0
+    }
+  },
+  "nativeObjectTypes": {
+    "GraniteInsertSeat": "Part::Cut",
+    "StoneRoundover": "Part::Fillet",
+    "InsertUnion": "Part::Fuse",
+    "BodySkin": "PartDesign::SubShapeBinder",
+    "StoneSkin": "PartDesign::SubShapeBinder"
+  }
+}

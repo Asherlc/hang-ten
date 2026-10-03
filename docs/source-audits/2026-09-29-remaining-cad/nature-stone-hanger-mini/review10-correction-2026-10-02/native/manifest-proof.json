@@ -1,0 +1,81 @@
+{
+  "factualContactsExact": true,
+  "allMetadataExceptPositionsExact": true,
+  "priorPositions": [
+    {
+      "id": "jug-open-up",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pull-up-jug"
+      ]
+    },
+    {
+      "id": "front-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "granite-edge-15"
+      ]
+    },
+    {
+      "id": "wood-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "wood-edge-15-incut"
+      ]
+    },
+    {
+      "id": "pinch-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-60"
+      ]
+    }
+  ],
+  "newPositions": [
+    {
+      "id": "front-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "granite-edge-15",
+        "pull-up-jug"
+      ]
+    },
+    {
+      "id": "wood-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "wood-edge-15-incut"
+      ]
+    },
+    {
+      "id": "pinch-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-60"
+      ]
+    }
+  ],
+  "change": "Remove jug-open-up; add pull-up-jug to existing front-upright contactIDs. Other three original contact assignments retained. Sidecar quaternion/camera/cord untouched.",
+  "generatedSourceOnlyManifestSHA256": "e710bb084c4061f1c5c2bd53ba7a89160796d18c7bbbd032548a1333fa97677e",
+  "finishUnchanged": {
+    "camera": {
+      "type": "orthographic",
+      "viewDirection": [
+        0,
+        0,
+        -1
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ],
+      "fitPadding": 0.12
+    },
+    "surfaceFinish": "wood",
+    "graniteNodeIDs": [
+      "nature_stone"
+    ]
+  },
+  "suspensionMerged": false
+}

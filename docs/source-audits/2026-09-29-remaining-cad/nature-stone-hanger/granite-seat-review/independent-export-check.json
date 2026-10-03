@@ -1,0 +1,33 @@
+{
+  "status": "pass",
+  "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+  "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+  "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
+  "semanticNodes": 9,
+  "triangles": 28724,
+  "materials": 0,
+  "boundMeshMaterials": 0,
+  "archiveMembers": [
+    "stage.usdc"
+  ],
+  "duplicateTriangles": 0,
+  "planarBoundaryChecks": {
+    "front": {
+      "graniteTriangles": 66,
+      "otherPlanarTriangles": 400,
+      "graniteAreaMM2": 845.5241857822097,
+      "actualMeshOverlapMM2": 0.0
+    },
+    "top": {
+      "graniteTriangles": 6,
+      "otherPlanarTriangles": 0,
+      "graniteAreaMM2": 1407.9999981522553,
+      "actualMeshOverlapMM2": 0.0
+    }
+  },
+  "graniteVerticesOnNativeRegionMaximumErrorMM": 1.8192967398145897e-06,
+  "priorAnalyticBoundaryDiagnostic": {
+    "areaMM2": 0.0036467959693580435,
+    "explanation": "Analytic rounded CAD corners compared against polygonal mesh chords produced expected arc/chord slivers. This is not overlap between the exported material surfaces. The actual exported triangle footprints are checked directly above."
+  }
+}

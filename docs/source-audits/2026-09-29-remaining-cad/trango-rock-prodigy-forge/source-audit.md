@@ -1,3 +1,5 @@
+> Current review revision: [#15 outer-wing recess and set-back lower lip](review15-2026-10-02/index.html). Source/export hashes, current checks and human CAD shape acceptance are recorded there. The original migration construction/export reports and app captures below describe the prior revision.
+
 # trango-rock-prodigy-forge source audit
 
 Current Forge split unit revision. Manufacturer photo angles show tapered long wing, broad upper sloper with elevated block, distinct drafted pockets and narrow crimp ledges. Official depth guide and grip chart establish numeric depths and names; overall per-side dimensions are 5.25 x 12.75 in. Both left/right contact sets remain as currently modeled.
@@ -39,3 +41,18 @@ Native checking passed validity for 2 solid(s), all 20 stable contact IDs, body-
 | Top | [Comparison](review/comparison-top.png) |
 
 All three final comparisons were visually inspected alongside the retained manufacturer imagery. The exact prior asset comes from commit `d0e4e95191e4a76822815bb4eeef3a32caa6fea0`. Renders use the shared `preview.py` renderer, including its corrected positive-X side and positive-Z top painter order. The CPU previews shade triangle face normals while runtime exports retain native CAD surface normals. Native-app appearance, selection and performance acceptance remain root integration work.
+
+## 2026-10-02 individual correction
+
+The source-supported open outer-wing recess and set-back lower projection were restored with a constrained native section. The twenty original contact surfaces, identities, factual fields and published planes/depths remain unchanged. Unspecified cut dimensions and rolls are labeled display estimates. The sole embedded manifest edit is the generic plastic appearance selector, inferred from whole maker photos; no chemistry or exact-color claim is made. [Current evidence and whole comparisons](review15-2026-10-02/review.md) bind the final source and actual unbound export. Current app appearance is unverified; the shown CAD shape was accepted with `y` after [Opus reviewed the shape and native mirror](review15-2026-10-02/opus-advisor/review.md).
+
+
+## 2026-10-03 — merged-main physical-equipment identity restoration
+
+Current source `91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124` restores the two existing merged-main physical equipment identities, `left-half` and `right-half`, and maps the corresponding 20 contact equipment references to them. Historical accepted geometry source `4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e` remains the source shown for #15; [human-review.json](human-review.json), its answer and the accepted geometry scope are unchanged.
+
+The initial metadata audit's decision to retain `primary` because the native asset already contains both halves was insufficient. Actual workout validation reported that Forge resolved both sides to one equipment ID. Physical equipment identity is independent of asset instancing: the accepted paired native model retains both hardware IDs without adding `media.instances`, runtime clones or any geometry. This restores incoming main `d53c019c43319a70b32e6dc654814de29e87ab89`, not a new manufacturer fact or routine.
+
+The [appended correction and exact manifests](../runtime-final-2026-10-03/metadata/forge-equipment-identity/README.md) preserve the initial raw audit and explicitly supersede its earlier disposition. [Root preservation proof](../runtime-final-2026-10-03/metadata/forge-equipment-identity/metadata-preservation.json) and the independent recheck show all 128 BRep entries and every archive member except `Document.xml` byte-identical; all other manifest fields, the USDZ and descriptor remain unchanged. No hold IDs, depths, capacities, poses, finish or routine content changed.
+
+Queue #15 now separates the current metadata source from the historical accepted geometry identity. Existing app-review limitations remain in force. The observed regression predates this restoration; root's focused post-correction rerun is pending at this documentation handoff, so no passing runtime or workout claim is made here.

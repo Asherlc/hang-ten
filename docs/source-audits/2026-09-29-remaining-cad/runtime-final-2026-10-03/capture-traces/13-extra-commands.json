@@ -1,0 +1,31 @@
+[
+  [
+    "launch",
+    "13",
+    "edge-18",
+    "--telephoto"
+  ],
+  [
+    "mesh-tap",
+    "edge-18",
+    "13-edge-physical-mesh-pick"
+  ],
+  [
+    "tap",
+    "13-effective-depth-15",
+    "--label",
+    "15 mm configuration"
+  ],
+  [
+    "tap",
+    "13-effective-depth-10",
+    "--label",
+    "10 mm configuration"
+  ],
+  [
+    "tap",
+    "13-effective-depth-18-restored",
+    "--label",
+    "18 mm configuration"
+  ]
+]

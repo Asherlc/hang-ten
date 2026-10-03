@@ -1,0 +1,39 @@
+{
+  "owner": "placid-badger",
+  "recordedUTC": "2026-10-03T04:07:50.314633+00:00",
+  "operation": "Authoring metadata installed before standard solver --apply; no saved route copied",
+  "scratchInputSHA256": "bf4d24e0d2a72c1e94f718985450476231271198346fe28ea9be3dcc9574f60a",
+  "canonicalAuthoringInputSHA256": "ecc87caf5af306e6941d4209072b40a06690fa8dd910d3b5c1a12b59975f6129",
+  "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+  "topologyUnchanged": true,
+  "bodyUnchanged": true,
+  "radiusM": 0.001,
+  "leadLengthEstimateM": 0.11,
+  "segmentLengthAllowanceM": 0.014,
+  "nativeGrooveRadiusM": 0.0017,
+  "nativeGrooveSideAxisXM": 0.05,
+  "theoreticalSeatAbsXM": 0.0493,
+  "proposalMarginM": 2e-05,
+  "outwardSerializedAbsXM": 0.049320001,
+  "serializationGridM": 1e-09,
+  "stationDerivation": "Outward ceil(max(actual source-bound section floor plus cord radius plus20um margin, actual offset boundary)/1nm)*1nm, after retained sub-picometre boundary diagnosis. No route waypoint or adaptive station search.",
+  "displaySeatingGapM": 2.0001e-05,
+  "sourcePhotos": [
+    "NS-4",
+    "NS-6",
+    "NS-7",
+    "NS-8"
+  ],
+  "loadedReviewChoice": "support below per NS-6; packshot above preserved as source history",
+  "remainingCanonicalPoses": [
+    "front-upright",
+    "wood-inverted",
+    "pinch-side"
+  ],
+  "omitted": [
+    "unsupported hidden continuation",
+    "knot geometry"
+  ],
+  "physicalLimit": "native section route approximation; no material-reaction or live-equilibrium certificate",
+  "poseLimit": "Granite/wood rotations retained; below-load use of those specific edge contacts remains unverified."
+}

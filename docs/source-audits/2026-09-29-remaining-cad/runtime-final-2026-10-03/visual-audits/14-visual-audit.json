@@ -1,0 +1,91 @@
+{
+  "owner": "placid-badger",
+  "boardNumber": 14,
+  "boardID": "tension.flash-board",
+  "scope": "Read-only current app whole-frame audit of all seven supplied contact selections, ordinary touch orbit, layouts, one physical mesh pick and outer-well restoration. Left/right naming convention remains unresolved by this image-only audit. Source geometry approval is unchanged; real workouts and current app user acceptance remain separate.",
+  "inspectionMethod": "view_image at original detail on complete supplied frames, without cropping or pixel measurement",
+  "skill": ".agents/skills/validate-hang-ten-ios/SKILL.md",
+  "provenance": {
+    "path": "installed-app-provenance.json",
+    "fileSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+    "commit": "f9554600c1e5d94d027346ca5d6ca7343d71a7e7",
+    "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+    "builtAndInstalledBinarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+    "nativeModelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "generatedManifestSHA256": "6b7e0262027dc8024b2869ce757595a8c3ba5399ab88376faceafaec4b28d743",
+    "receiptCount": 18,
+    "allScreenshotByteHashesMatchReceipts": true,
+    "allReceiptBinaryHashesMatchInstalledProvenance": true,
+    "allReceiptProvenanceHashesMatchCurrentFile": true,
+    "allSuppliedCameraStatesSettled": true
+  },
+  "contactIDs": ["three-edge-left", "three-edge-center", "three-edge-right", "two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"],
+  "representation": {"presentationID": "primary", "reusableMediaInstances": false, "suspensionType": "cadRoutedCord", "savedPoseIDs": ["three-edge-upright", "three-edge-inverted", "two-edge-upright", "two-edge-inverted"], "explicitInvertedPoseVisualAudit": "NOT_CLAIMED_FROM_SUPPLIED_FRAMES"},
+  "findings": [
+    {
+      "check": "wood finish and inactive appearance",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "The cylindrical body, inactive rounded wells and narrow crimps remain warm brown wood with coherent grain/shading. Only the selected contact turns red. Train displays the complete inactive wood board and cord without residual red.",
+      "frames": ["14-live-hold-three-edge-center.png", "14-live-hold-two-edge-left.png", "14-live-hold-small-crimp-left.png", "14-live-unselected-train.png"],
+      "metadataContract": "All eight descriptor nodes use the runtime wood finish. No granite or neutral hardware finish is authored for these body/contact nodes."
+    },
+    {
+      "check": "seven individual contact highlights",
+      "status": "PASS_VISIBLE_CONTACT_COVERAGE",
+      "observation": "All three contacts on the three-edge face, both contacts on the two-edge face and both small crimps appear individually selected in their supplied frames. Large selections fill the rounded visible well interiors/lips while the surrounding flat panels and other contacts remain wood. Small-crimp selections form localized narrow red strips above the large two-edge wells. The oblique two-edge view exposes a continuous selected interior and lower lip.",
+      "frames": ["14-live-hold-three-edge-left.png", "14-live-hold-three-edge-center.png", "14-live-hold-three-edge-right.png", "14-live-hold-two-edge-left.png", "14-live-hold-two-edge-right.png", "14-live-hold-small-crimp-left.png", "14-live-hold-small-crimp-right.png", "14-live-horizontal-orbit-1.png"],
+      "limitation": "Coverage is judged on visible surfaces. The image-only audit does not resolve the left/right semantic naming convention or certify hidden surfaces at every saved pose."
+    },
+    {
+      "check": "left/right screen convention",
+      "status": "UNRESOLVED_SOURCE_CONVENTION",
+      "observation": "In both supplied front faces, left-named IDs highlight viewer-right contacts, and right-named IDs highlight viewer-left contacts. The center ID highlights the center well. Selected cards and chips accurately repeat the corresponding logical ID's current name.",
+      "frames": ["14-live-hold-three-edge-left.png", "14-live-hold-three-edge-right.png", "14-live-hold-two-edge-left.png", "14-live-hold-two-edge-right.png", "14-live-hold-small-crimp-left.png", "14-live-hold-small-crimp-right.png"],
+      "limitation": "Intrinsic model-side versus screen-side meaning cannot be decided from these frames alone. Root is conducting the source convention review; no correction is assumed and no side-label correctness pass is claimed here."
+    },
+    {
+      "check": "native cord and end seating",
+      "status": "PASS_VISIBLE_ROUTE",
+      "observation": "The external black leads reach the upper join, with end wraps/returns seated around the cylindrical ends and visible mouths. Oblique and end-on views separate the lead paths and show their relationship to the solid. No apparent visible solid penetration, detached route, or missing external section appears.",
+      "frames": ["14-live-front.png", "14-live-horizontal-orbit-1.png", "14-live-horizontal-orbit-2.png", "14-live-horizontal-orbit-3.png", "14-live-top-oblique.png"],
+      "limitation": "Projected line overlaps are not treated as penetration. Hidden bore clearance and source-solved body/cord transform preservation require their separate numerical/scene gates."
+    },
+    {
+      "check": "ordinary touch orbit",
+      "status": "PASS_SUPPLIED_SETTLED_VIEWS",
+      "observation": "The three touch-orbit states progress from oblique to a strongly foreshortened and then end-on cylindrical view. The cord stays visually coherent with the board. Receipts record azimuth approximately -0.54, -1.08 and -1.62 radians, all settled. The diagonal top-oblique frame also changes projection and is settled.",
+      "frames": ["14-live-horizontal-orbit-1.png", "14-live-horizontal-orbit-2.png", "14-live-horizontal-orbit-3.png", "14-live-top-oblique.png"],
+      "limitation": "The selected two-edge contact is occluded at the end-on angle, while the card retains its ID. Unseen animation frames and orbit-reset behavior are not audited."
+    },
+    {
+      "check": "physical contact pick",
+      "status": "PASS_ONE_SUPPLIED_LOGICAL_CONTACT_PICK",
+      "observation": "The physical-pick frame shows the highlighted outer three-edge well and matching selected card. Its receipt records actualPhysicalMeshPick=true, tapRevision=1 and pickedContact=three-edge-left after tapRevision=0. This proves the supplied mesh tap resolves that current logical ID beyond DEBUG preselection.",
+      "frames": ["14-edge-physical-mesh-pick.png"],
+      "limitation": "This confirms logical picking, not the still-unresolved left/right naming meaning. Picks of the other six contacts, cord/body rejection and deselection are not claimed."
+    },
+    {
+      "check": "same-scene outer-well material restoration",
+      "status": "PASS_SUPPLIED_SAME_SCENE_SEQUENCE",
+      "observation": "Changing selection from three-edge-left to three-edge-right restores the first well to wood and highlights the opposite well. Switching back restores the opposite well to wood and highlights only the initial well. Receipts share the launch timestamp, sameScene=true and tapRevision=1, with matching selection IDs; renderer revision remains 2 for these selection-only updates.",
+      "frames": ["14-edge-physical-mesh-pick.png", "14-left-restored-right-selected-same-scene.png", "14-right-restored-left-selected-same-scene.png"],
+      "limitation": "Restoration on the two-edge face and the small crimps is not claimed from this supplied sequence."
+    },
+    {
+      "check": "selected UI and landscape map fit",
+      "status": "PASS_ID_KIND_DISPLAY_AND_BOARD_FIT",
+      "observation": "Each selected card names its current three-edge/two-edge/crimp ID and shows Edge kind; the long names wrap legibly. No unsupported depth or capacity field is displayed in these cards. Landscape fits the full board, native cord and upper join with margins. Normal lens and Train also keep the complete board visible.",
+      "frames": ["14-live-hold-three-edge-left.png", "14-live-hold-two-edge-right.png", "14-live-hold-small-crimp-left.png", "14-live-landscape.png", "14-live-normal-lens.png", "14-live-unselected-train.png"],
+      "limitation": "The landscape selected card is below the captured viewport. Lower portrait map rows are partly behind the floating tab bar, and labels use ellipsis. Scrolling and chip input are not audited. Side-name interpretation remains unresolved."
+    }
+  ],
+  "framesInspected": ["14-live-front.png", "14-live-hold-three-edge-left.png", "14-live-hold-three-edge-center.png", "14-live-hold-three-edge-right.png", "14-live-hold-two-edge-left.png", "14-live-hold-two-edge-right.png", "14-live-hold-small-crimp-left.png", "14-live-hold-small-crimp-right.png", "14-live-horizontal-orbit-1.png", "14-live-horizontal-orbit-2.png", "14-live-horizontal-orbit-3.png", "14-live-top-oblique.png", "14-live-landscape.png", "14-live-normal-lens.png", "14-live-unselected-train.png", "14-edge-physical-mesh-pick.png", "14-left-restored-right-selected-same-scene.png", "14-right-restored-left-selected-same-scene.png"],
+  "sourceGeometryApproval": "Already accepted per root task context; unchanged by this audit.",
+  "currentAppUserAcceptance": "PENDING",
+  "physicalPickingAudit": "PASS_ONE_SUPPLIED_LOGICAL_CONTACT_PICK",
+  "realWorkoutAudit": "NOT_AUDITED_SEPARATE_ROOT_CHECK",
+  "productionOrCanonicalChanges": false,
+  "appOrSimulatorOperationsByThisAgent": false,
+  "recommendation": "Retain the current contact/material/cord evidence and the supplied physical-pick/restoration pass. Complete root's intrinsic-versus-screen side-name review before claiming left/right semantic correctness; do not infer a geometry or descriptor correction from this image-only observation."
+}

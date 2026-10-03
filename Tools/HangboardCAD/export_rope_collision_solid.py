@@ -61,9 +61,14 @@ def main():
             raise ValueError(f"missing wood feature {feature_name}")
         mesh = native_mesh(feature.Shape, canonical=False)
         destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_text(json.dumps({"sourcePackage": package,
-            "sourceFeature": feature_name,
-            "sourceSHA256": hashlib.sha256(source.read_bytes()).hexdigest(), **mesh}) + "\n")
+        payload = {"sourcePackage": package, "sourceFeature": feature_name,
+            "sourceSHA256": hashlib.sha256(source.read_bytes()).hexdigest(), **mesh}
+        grooves = [name for name in os.environ.get("HANGTEN_ROPE_GROOVE_FEATURES", "").split(",") if name]
+        bores = [name for name in os.environ.get("HANGTEN_ROPE_BORE_FEATURES", "").split(",") if name]
+        if grooves or bores:
+            from native_cord_features import extract_native_cord_features
+            payload["nativeCordFeatures"] = extract_native_cord_features(document, feature.Shape, grooves, bores)
+        destination.write_text(json.dumps(payload) + "\n")
         print(f"{destination}: {len(mesh['vertices'])} vertices, {len(mesh['triangles'])} triangles")
     finally:
         App.closeDocument(document.Name)

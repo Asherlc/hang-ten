@@ -1,0 +1,12 @@
+{
+  "owner": "placid-badger",
+  "simulator": "CEC83800-5035-404E-B5A2-E40B826FE00E",
+  "retiredSimulator": "E9D3D8B4-1440-4417-862B-3023AF3841FA",
+  "bothExactUUIDsVerifiedAbsent": true,
+  "cleanupStatus": 0,
+  "derivedDataRemoved": true,
+  "prebuiltDerivedDataRemoved": true,
+  "xcresultRemoved": true,
+  "ownedTmpRemoved": true,
+  "pendingAndOwnedRecordsConsumed": true
+}

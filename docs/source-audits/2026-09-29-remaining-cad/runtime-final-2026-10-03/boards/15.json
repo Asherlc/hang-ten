@@ -1,0 +1,164 @@
+{
+  "owner": "placid-badger",
+  "date": "2026-10-03",
+  "number": 15,
+  "boardID": "trango.rock-prodigy-forge",
+  "package": "trango-rock-prodigy-forge",
+  "status": "bounded appearance/pick/touch evidence; fresh app human acceptance pending",
+  "appWorkflowPassed": false,
+  "currentAppHumanAcceptance": "pending",
+  "acceptedGeometry": {
+    "humanReview": "Shown #15 Forge CAD shape accepted after Opus review; current app appearance, picking, highlights, orbit and workout behavior remain unverified",
+    "geometryHumanAcceptance": "accepted",
+    "humanReviewRecord": "trango-rock-prodigy-forge/human-review.json",
+    "acceptedGeometrySourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+    "reviewPage": "trango-rock-prodigy-forge/review15-2026-10-02/index.html",
+    "unchangedAcceptedGeometry": true,
+    "newHumanAppAcceptance": "pending"
+  },
+  "immutablePackageSHA256": {
+    "Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124",
+    "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+    "Hangboards/trango-rock-prodigy-forge/assets/primary.model.json": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6"
+  },
+  "installedAppProvenance": {
+    "path": "installed-app-provenance.json",
+    "sha256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+    "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca"
+  },
+  "representativeContactCoverage": "10 representative categories across the native pair; not all 20 left/right contacts.",
+  "selectedContactIDsCaptured": [
+    "closed-crimp-right",
+    "im-deep-left",
+    "im-shallow-right",
+    "large-flat-edge-left",
+    "mr-deep-left",
+    "mr-shallow-right",
+    "sloper-30-left",
+    "sloper-40-right",
+    "slopey-crimper-right",
+    "variable-edge-rail-left"
+  ],
+  "wholeFrameVisualAudit": {
+    "status": "supplied audit complete",
+    "path": "visual-audits/15-visual-audit.json",
+    "sha256": "2c2e4bcbb03e4b8e62269f61281452b01a2f1a6c5e32715b9d3721b16f70a85a",
+    "findingStatuses": [
+      {
+        "check": "runtime plastic finish and native paired display",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": "Screenshots do not numerically certify mirrored mesh bounds, triangle normals, body/contact topology, or independent per-hand workout resolution. Those require the separate strict scene and resolver gates. Wood, granite, neutral hardware and suspension are not authored for this model.",
+        "frames": [
+          "app-captures/15-live-front.png",
+          "app-captures/15-live-landscape.png",
+          "app-captures/15-live-normal-lens.png",
+          "app-captures/15-live-unselected-train.png",
+          "app-captures/15-live-horizontal-orbit-1.png"
+        ]
+      },
+      {
+        "check": "representative highlights and selected hold specifications",
+        "status": "PASS_TEN_VISIBLE_TARGETS_WITH_COVERAGE_LIMITS",
+        "limitation": "All 20 logical contacts are not app-audited. The 40-degree sloper, large flat edge and slopey crimper appear as thin edge-on highlights in their supplied views; their complete bearing-face highlight coverage is not established. Hidden surfaces, all mirror counterparts and all intermediate angles are not claimed.",
+        "frames": []
+      },
+      {
+        "check": "ordinary touch orbit and map fit",
+        "status": "PASS_SUPPLIED_SETTLED_VIEWS",
+        "limitation": "End-on projected overlap is not interpreted as loss of a half. No continuous-animation, hidden-surface, camera reset, zoom, or geometric transform-invariance pass is claimed. Landscape captures only the upper portion of the selected specifications card; lower portrait map rows remain behind the floating tab bar, and scrolling/chip input are not assessed.",
+        "frames": [
+          "app-captures/15-live-horizontal-orbit-1.png",
+          "app-captures/15-live-horizontal-orbit-2.png",
+          "app-captures/15-live-horizontal-orbit-3.png",
+          "app-captures/15-live-top-oblique.png",
+          "app-captures/15-live-landscape.png"
+        ]
+      },
+      {
+        "check": "physical sloper mesh pick",
+        "status": "PASS_ONE_SUPPLIED_CONTACT_PICK",
+        "limitation": "Physical mesh picks for the other 19 contacts, body rejection, full deselection and workout selection are not claimed.",
+        "frames": [
+          "app-captures/15-sloper-physical-mesh-pick.png"
+        ]
+      },
+      {
+        "check": "same-scene mirrored sloper restoration",
+        "status": "PASS_SUPPLIED_SAME_SCENE_SEQUENCE",
+        "limitation": "This is the complete native paired model, not a reusable half-instance test. Restoration on the other nine contact categories and independent per-hand workout targeting are not claimed.",
+        "frames": [
+          "app-captures/15-sloper-physical-mesh-pick.png",
+          "app-captures/15-left-restored-right-selected-same-scene.png",
+          "app-captures/15-right-restored-left-selected-same-scene.png"
+        ]
+      },
+      {
+        "check": "expected absence of suspension",
+        "status": "PASS_METADATA_AND_VISIBLE_RENDERING",
+        "limitation": null,
+        "frames": [
+          "app-captures/15-live-front.png",
+          "app-captures/15-live-horizontal-orbit-3.png",
+          "app-captures/15-live-unselected-train.png"
+        ]
+      }
+    ]
+  },
+  "physicalMeshPick": {
+    "status": "pass one supplied physical mesh tap",
+    "pickedContactID": "sloper-30-left",
+    "receipt": "app-captures/15-sloper-physical-mesh-pick-receipt.json",
+    "receiptSHA256": "9c58b578e6cee6a369eac2fe4328121430186fc5b66281d2916a0ba80675b5d4",
+    "frame": "app-captures/15-sloper-physical-mesh-pick.png",
+    "imageSHA256": "3c6e695e8c38a2db7491e2ad7a2c955581e61823b8d65b8ba02d466a0e274379",
+    "before": "revision=10;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.13962634;cameraPitch=0.13962635;cameraSettled=true;selection=sloper-30-left;tapRevision=0;pickedContact=",
+    "after": "revision=11;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.13962634;cameraPitch=0.13962635;cameraSettled=true;selection=sloper-30-left;tapRevision=1;pickedContact=sloper-30-left"
+  },
+  "representativeFrames": [
+    "app-captures/15-live-front.png",
+    "app-captures/15-sloper-physical-mesh-pick.png",
+    "app-captures/15-live-hold-closed-crimp-right.png",
+    "app-captures/15-live-hold-im-deep-left.png",
+    "app-captures/15-live-hold-im-shallow-right.png",
+    "app-captures/15-live-hold-large-flat-edge-left.png",
+    "app-captures/15-live-hold-mr-deep-left.png",
+    "app-captures/15-live-hold-mr-shallow-right.png",
+    "app-captures/15-live-hold-sloper-30-left.png",
+    "app-captures/15-live-hold-sloper-40-right.png",
+    "app-captures/15-live-hold-slopey-crimper-right.png",
+    "app-captures/15-live-hold-variable-edge-rail-left.png"
+  ],
+  "touchEvidence": {
+    "status": "settled ordinary touch capture sequence; scope limited to supplied states",
+    "frames": [
+      "app-captures/15-live-horizontal-orbit-1.png",
+      "app-captures/15-live-horizontal-orbit-2.png",
+      "app-captures/15-live-horizontal-orbit-3.png"
+    ],
+    "visualAuditPending": false
+  },
+  "limitations": [
+    "Ten representative categories, not all20 logical contacts.",
+    "40-degree sloper, large flat edge and slopey crimper are nearly edge-on; complete bearing-face highlight coverage is not established.",
+    "One sloper physical pick and mirrored sloper restoration only; no all-contact picking or workout pass."
+  ],
+  "workout": {
+    "passed": false,
+    "status": "not executed after common #10 workout gate failed",
+    "commonGateEvidence": "capture-traces/10-workout-observation.json",
+    "trace": "capture-traces/workout-multi.json",
+    "workFrame": "app-captures/10-workout-landscape-work-highlight.png",
+    "restFrame": "app-captures/10-workout-landscape-rest-preview.png"
+  },
+  "focusedVerification": {
+    "path": "validation/final-strong-summary.json",
+    "sha256": "6c5f8e87f5a23babe0dbf11b7150c5e1b0a24ce41a3bfeb5fb622aa03cf0d8be",
+    "passed": 455,
+    "failed": 0,
+    "skipped": 1,
+    "fullSuitePassed": false,
+    "refinement": "validation/final-test-refinement.json"
+  },
+  "productionGeometryChanged": false,
+  "newManufacturerFactsOrRoutineChanges": false
+}

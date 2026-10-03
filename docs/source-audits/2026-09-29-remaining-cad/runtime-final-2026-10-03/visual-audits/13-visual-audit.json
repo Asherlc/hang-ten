@@ -1,0 +1,88 @@
+{
+  "owner": "placid-badger",
+  "boardNumber": 13,
+  "boardID": "plateau.lifting-edge",
+  "scope": "Read-only current app whole-frame rendering, supplied mesh-pick evidence, and three effective-depth variants. Source geometry was already accepted. Real workout validation and current app user acceptance remain separate.",
+  "inspectionMethod": "view_image at original detail on complete supplied frames; no cropping or pixel measurement",
+  "skill": ".agents/skills/validate-hang-ten-ios/SKILL.md",
+  "provenance": {
+    "path": "installed-app-provenance.json",
+    "fileSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+    "commit": "f9554600c1e5d94d027346ca5d6ca7343d71a7e7",
+    "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+    "builtAndInstalledBinarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+    "generatedManifestSHA256": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4",
+    "models": [
+      {"presentationID": "depth-18mm", "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb", "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55"},
+      {"presentationID": "depth-15mm", "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad", "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b"},
+      {"presentationID": "depth-10mm", "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431", "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e"}
+    ],
+    "receiptCount": 13,
+    "allScreenshotByteHashesMatchReceipts": true,
+    "allReceiptBinaryHashesMatchInstalledProvenance": true,
+    "allReceiptProvenanceHashesMatchCurrentFile": true,
+    "allSuppliedCameraStatesSettled": true
+  },
+  "contactIDs": ["edge-18"],
+  "representation": {"presentationIDs": ["depth-18mm", "depth-15mm", "depth-10mm"], "reusableMediaInstances": false, "suspensionType": "cadRoutedCord", "savedPoseIDs": ["depth-18mm", "depth-15mm", "depth-10mm"]},
+  "findings": [
+    {
+      "check": "wood and neutral attachment materials",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "The upper body remains warm tan wood with visible shading; the backing plate and lower curl remain neutral gray during edge selection. In 15 and 10 mm variants, the visible blocker lines and faces also remain gray. Unselected Train retains wood, gray metal, and black cord with no red highlight.",
+      "frames": ["13-live-front.png", "13-effective-depth-15.png", "13-effective-depth-10.png", "13-live-top-oblique.png", "13-live-unselected-train.png"],
+      "metadataContract": "plateau_body and plateau_edge_18 use wood; plateau_metal_exterior and, when present, plateau_blocker_exterior use neutral. No granite finish is authored for this board."
+    },
+    {
+      "check": "selected edge coverage",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "Selection forms a continuous red rail along the lower finger-bearing edge. The first oblique orbit exposes its underside and lip. The wood block's upper and end surfaces, gray plate, curl, and cord remain inactive.",
+      "frames": ["13-live-hold-edge-18.png", "13-live-horizontal-orbit-1.png", "13-live-top-oblique.png", "13-live-normal-lens.png"],
+      "limitation": "The selected rail becomes occluded at the final end-on angle. Its card and receipt still identify edge-18; no highlight visibility claim is made for a hidden surface."
+    },
+    {
+      "check": "native curl cord seating",
+      "status": "PASS_VISIBLE_ROUTE",
+      "observation": "Both black cord legs emerge at the open curl ends and join below the board. Oblique and side views expose the open curled section and the cord seated through it. No apparent visible solid penetration, detached route, or missing external segment appears.",
+      "frames": ["13-live-front.png", "13-live-horizontal-orbit-1.png", "13-live-horizontal-orbit-2.png", "13-live-horizontal-orbit-3.png", "13-live-top-oblique.png"],
+      "limitation": "Whole-frame images do not recertify hidden bearing clearance or numerically prove source-solved transform invariance."
+    },
+    {
+      "check": "ordinary touch orbit and top-oblique view",
+      "status": "PASS_SUPPLIED_SETTLED_VIEWS",
+      "observation": "Three touch-orbit frames progress from oblique to end-on side; the upper wood block, gray open curl, and descending cord remain coherent. Receipts record azimuth approximately -0.54, -1.08, and -1.62 radians with cameraSettled=true. The separate top-oblique frame also has a changed projection and settled receipt.",
+      "frames": ["13-live-horizontal-orbit-1.png", "13-live-horizontal-orbit-2.png", "13-live-horizontal-orbit-3.png", "13-live-top-oblique.png"],
+      "limitation": "Captured states do not assess unseen animation frames, reset behavior, or mesh picking while orbiting."
+    },
+    {
+      "check": "physical mesh pick",
+      "status": "PASS_ONE_SUPPLIED_CONTACT_PICK",
+      "observation": "The selected card and visible red rail identify Wood edge / Edge / 18 mm / capacity 1. The receipt records actualPhysicalMeshPick=true, tapRevision=1 and pickedContact=edge-18; its before state had tapRevision=0. This supplies evidence of a physical mesh tap beyond the DEBUG preselection.",
+      "frames": ["13-edge-physical-mesh-pick.png"],
+      "limitation": "One front-view pick at 18 mm is audited. Picks of the other two media variants, taps on neutral parts, and deselection are not claimed."
+    },
+    {
+      "check": "position-effective depth and variant switching",
+      "status": "PASS_SUPPLIED_18_15_10_18_SEQUENCE",
+      "observation": "The segment control changes from 18 to 15 to 10 and back to 18 mm. The card follows those effective depths while keeping the same Wood edge name, Edge kind, contact ID edge-18, and capacity 1. The visible gray blocker changes with the 15/10 mm variants and disappears when 18 mm is restored; highlight remains confined to the edge.",
+      "frames": ["13-edge-physical-mesh-pick.png", "13-effective-depth-15.png", "13-effective-depth-10.png", "13-effective-depth-18-restored.png"],
+      "metadataContract": "The contact's baseline depth is 18 mm. All three positions reference edge-18 and explicitly override its effective depth to 18, 15, or 10 mm, using corresponding authored media. There are no reusable media instances.",
+      "limitation": "The launch timestamp is shared across the supplied sequence, but the renderer revision resets to 1 for each media variant. No retained entity identity or same-scene continuity claim is made across presentation replacement. Portrait segment labels are ellipsized while their distinct depth numbers remain readable."
+    },
+    {
+      "check": "landscape fit and selected UI",
+      "status": "PASS_BOARD_AND_CORD_FIT_PORTRAIT_CARD",
+      "observation": "The complete wood body, gray hardware, both cord legs, and lower join fit in the landscape map. All three segment labels are fully readable in landscape. Portrait cards fit the selected name, Edge kind, depth, and capacity cleanly, with the expected 18/15/10 mm values.",
+      "frames": ["13-live-landscape.png", "13-live-normal-lens.png", "13-effective-depth-15.png", "13-effective-depth-10.png"],
+      "limitation": "The landscape selected card falls below the captured viewport. The hold-map chip is partly behind the portrait tab bar at this scroll position; chip interaction and scrolling are not audited."
+    }
+  ],
+  "framesInspected": ["13-live-front.png", "13-live-hold-edge-18.png", "13-live-top-oblique.png", "13-live-horizontal-orbit-1.png", "13-live-horizontal-orbit-2.png", "13-live-horizontal-orbit-3.png", "13-live-landscape.png", "13-live-normal-lens.png", "13-live-unselected-train.png", "13-edge-physical-mesh-pick.png", "13-effective-depth-15.png", "13-effective-depth-10.png", "13-effective-depth-18-restored.png"],
+  "sourceGeometryApproval": "Already accepted per root task context; no geometry or approval changes by this audit.",
+  "currentAppUserAcceptance": "PENDING",
+  "physicalPickingAudit": "PASS_ONE_SUPPLIED_18MM_EDGE_PICK",
+  "realWorkoutAudit": "NOT_AUDITED_SEPARATE_ROOT_CHECK",
+  "productionOrCanonicalChanges": false,
+  "appOrSimulatorOperationsByThisAgent": false,
+  "recommendation": "The supplied frames support current wood/neutral finishes, edge highlight, curl cord seating, one physical pick and effective-depth switching. Present current app evidence for user acceptance; retain the separate workout and interaction scope limits."
+}

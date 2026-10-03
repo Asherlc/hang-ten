@@ -472,20 +472,26 @@ final class BoardSourceBoundaryTests: XCTestCase {
                     logicalHoldIDs,
                     "Original raster media must cover every logical hold exactly once."
                 )
-            case .model(let media):
+            case .model:
                 XCTAssertTrue(
                     migratedModelBoardIDs.contains(board.id),
                     "Only migrated boards may use model media."
                 )
-                let modelAssets = Set(board.presentations.flatMap { presentation -> [String] in
-                    guard case .model(let model) = presentation.media else { return [] }
-                    return [model.assetPath, model.descriptorPath] + [model.physicsDescriptorPath].compactMap { $0 }
-                })
-                if media.physicsDescriptorPath != nil {
-                    XCTAssertNotNil(try BoardCatalog.packageStore.presentationPhysicsInput(for: board))
+                var modelAssets = Set<String>()
+                for presentation in board.presentations {
+                    guard case .model(let model) = presentation.media else { continue }
+                    modelAssets.formUnion([model.assetPath, model.descriptorPath])
+                    if let physicsPath = model.physicsDescriptorPath {
+                        modelAssets.insert(physicsPath)
+                        XCTAssertNotNil(try BoardCatalog.packageStore.presentationPhysicsInput(
+                            for: board, presentationID: presentation.id))
+                    }
                 }
                 if packageEntries.contains("rope-physics.json") {
-                    XCTAssertNotNil(media.physicsDescriptorPath)
+                    XCTAssertTrue(board.presentations.contains { presentation in
+                        guard case .model(let model) = presentation.media else { return false }
+                        return model.physicsDescriptorPath != nil
+                    })
                 }
                 XCTAssertEqual(assetPaths, modelAssets)
                 XCTAssertTrue(

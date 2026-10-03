@@ -30,7 +30,7 @@ def test_reusable_rock_rings_discovers_documented_per_instance_topology() -> Non
     topologies = _model_package_topologies(inventory)
 
     assert topologies["metolius.rock-rings-3d"] == "threadedLoopCord"
-    # Penta Evo retains its per-instance native route graphs.
+    # Penta Evo keeps separate per-instance native route graphs.
     assert topologies["yy.penta-evo"] == "cadRoutedCord"
 
 

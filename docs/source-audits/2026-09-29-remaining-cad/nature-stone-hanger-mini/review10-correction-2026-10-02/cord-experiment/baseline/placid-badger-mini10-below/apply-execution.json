@@ -1,0 +1,22 @@
+{
+  "action": "apply",
+  "rawExitCode": 1,
+  "boundedTimeoutSeconds": 900,
+  "performanceIncomplete": false,
+  "durationSeconds": 0.661805750001804,
+  "inputSidecar": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/suspension.json",
+    "sha256": "da557918d474c84745cca063f1ddbd4b3b9f22ae7548684f48add6c897fadaf4"
+  },
+  "outputSidecar": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/suspension.json",
+    "sha256": "da557918d474c84745cca063f1ddbd4b3b9f22ae7548684f48add6c897fadaf4"
+  },
+  "rawLog": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/apply.log",
+    "sha256": "6ce4a95b8194391e5411cb0bffea949a23521f4c7dc0d862dd1eb828bbfe8f8b"
+  },
+  "report": null,
+  "processGroupAbsentAtReturn": true,
+  "strictGatePass": false
+}

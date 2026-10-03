@@ -1,0 +1,9 @@
+# Independent rounded candidate review
+
+The exact scratch sidecar `7c24835c38c36ad16805c605970e939f02fa40007ee12b219a4d9da1860746fb` passes this scoped review: eight pose IDs, sixteen rounded leads, and 576 positive reaction witnesses. Actual outward-facet forces give maximum nodal residual 3.00110109e-07; force-weighted normal approximation bound 3.00110109e-07; both are below unchanged 1e-5. Independent near-tie gaps remain at most 9.516177 micrometres against unchanged 10 micrometres.
+
+Every witness maps to its actual local segment/fraction and nonempty nonnegative incident-facet cone. The collider is closed and consistently outward. Groove stations, path order and the complete intermediate radial span were independently recomputed; final bore entry has a positive continuous eroded-cylinder interval, proper approach and terminal inset. All exact path caches match the candidate sidecar and settled support transforms; lead ratios satisfy the unchanged 120 mm display estimate gates.
+
+Exact source, collider, candidate, four solver outputs, retained loaded helper and six-file solver freeze hashes close. The loaded helper differs from the frozen helper only in an unused straight-force reporting branch. Retained whole-solid clearance bounds were checked for gate compliance; no new collision/solver job ran.
+
+This candidate remains separate from canonical `32c9…`, with fresh regeneration/check, final comparisons, actual-app review and acceptance pending. The proof remains numerical near-contact and discrete frictionless feasibility; it does not certify exact continuum cable behavior, global board equilibrium, sourced cord dimensions or safety. Configuration and every input remain byte-exact; `finalReady=false`. No resource, shared edit, canonical application or packet build occurred.

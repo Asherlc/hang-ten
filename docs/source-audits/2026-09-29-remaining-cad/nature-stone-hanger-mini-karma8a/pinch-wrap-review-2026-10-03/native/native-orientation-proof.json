@@ -1,0 +1,533 @@
+{
+  "passed": true,
+  "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+  "comparedExportFaces": 105,
+  "minimumNormalDot": 0.9999999999999998,
+  "faceChecks": [
+    {
+      "originalFace": 1,
+      "exportFace": 1,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 2,
+      "exportFace": 2,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 3,
+      "exportFace": 3,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 4,
+      "exportFace": 4,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 5,
+      "exportFace": 5,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 7,
+      "exportFace": 6,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 8,
+      "exportFace": 7,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 9,
+      "exportFace": 8,
+      "normalDot": 1.0000000000000002
+    },
+    {
+      "originalFace": 10,
+      "exportFace": 9,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 7,
+      "exportFace": 10,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 5,
+      "exportFace": 11,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 11,
+      "exportFace": 12,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 12,
+      "exportFace": 13,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 13,
+      "exportFace": 14,
+      "normalDot": 1.0000000000000002
+    },
+    {
+      "originalFace": 18,
+      "exportFace": 15,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 26,
+      "exportFace": 16,
+      "normalDot": 0.9999999999999998
+    },
+    {
+      "originalFace": 27,
+      "exportFace": 17,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 22,
+      "exportFace": 18,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 23,
+      "exportFace": 19,
+      "normalDot": 1.0000000000000002
+    },
+    {
+      "originalFace": 24,
+      "exportFace": 20,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 17,
+      "exportFace": 21,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 28,
+      "exportFace": 22,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 29,
+      "exportFace": 23,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 30,
+      "exportFace": 24,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 38,
+      "exportFace": 25,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 39,
+      "exportFace": 26,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 40,
+      "exportFace": 27,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 25,
+      "exportFace": 28,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 34,
+      "exportFace": 29,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 35,
+      "exportFace": 30,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 36,
+      "exportFace": 31,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 37,
+      "exportFace": 32,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 56,
+      "exportFace": 33,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 58,
+      "exportFace": 34,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 57,
+      "exportFace": 35,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 46,
+      "exportFace": 36,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 76,
+      "exportFace": 37,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 55,
+      "exportFace": 38,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 66,
+      "exportFace": 39,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 64,
+      "exportFace": 40,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 47,
+      "exportFace": 41,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 67,
+      "exportFace": 42,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 54,
+      "exportFace": 43,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 78,
+      "exportFace": 44,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 63,
+      "exportFace": 45,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 48,
+      "exportFace": 46,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 72,
+      "exportFace": 47,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 75,
+      "exportFace": 48,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 68,
+      "exportFace": 49,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 53,
+      "exportFace": 50,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 62,
+      "exportFace": 51,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 49,
+      "exportFace": 52,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 74,
+      "exportFace": 53,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 61,
+      "exportFace": 54,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 50,
+      "exportFace": 55,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 70,
+      "exportFace": 56,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 77,
+      "exportFace": 57,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 60,
+      "exportFace": 58,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 51,
+      "exportFace": 59,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 73,
+      "exportFace": 60,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 71,
+      "exportFace": 61,
+      "normalDot": 0.9999999999999999
+    },
+    {
+      "originalFace": 14,
+      "exportFace": 62,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 31,
+      "exportFace": 63,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 44,
+      "exportFace": 64,
+      "normalDot": 0.9999999999999999
+    },
+    {
+      "originalFace": 21,
+      "exportFace": 65,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 43,
+      "exportFace": 66,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 69,
+      "exportFace": 67,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 17,
+      "exportFace": 68,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 18,
+      "exportFace": 69,
+      "normalDot": 0.9999999999999999
+    },
+    {
+      "originalFace": 34,
+      "exportFace": 70,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 40,
+      "exportFace": 71,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 60,
+      "exportFace": 72,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 63,
+      "exportFace": 73,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 66,
+      "exportFace": 74,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 68,
+      "exportFace": 75,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 7,
+      "exportFace": 76,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 70,
+      "exportFace": 77,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 71,
+      "exportFace": 78,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 74,
+      "exportFace": 79,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 17,
+      "exportFace": 80,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 18,
+      "exportFace": 81,
+      "normalDot": 0.9999999999999999
+    },
+    {
+      "originalFace": 37,
+      "exportFace": 82,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 38,
+      "exportFace": 83,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 48,
+      "exportFace": 84,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 5,
+      "exportFace": 85,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 51,
+      "exportFace": 86,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 53,
+      "exportFace": 87,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 55,
+      "exportFace": 88,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 6,
+      "exportFace": 89,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 7,
+      "exportFace": 90,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 70,
+      "exportFace": 91,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 71,
+      "exportFace": 92,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 74,
+      "exportFace": 93,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 15,
+      "exportFace": 94,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 16,
+      "exportFace": 95,
+      "normalDot": 0.9999999999999998
+    },
+    {
+      "originalFace": 19,
+      "exportFace": 96,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 20,
+      "exportFace": 97,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 32,
+      "exportFace": 98,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 33,
+      "exportFace": 99,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 41,
+      "exportFace": 100,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 42,
+      "exportFace": 101,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 45,
+      "exportFace": 102,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 52,
+      "exportFace": 103,
+      "normalDot": 1.0
+    },
+    {
+      "originalFace": 59,
+      "exportFace": 104,
+      "normalDot": 0.9999999999999998
+    },
+    {
+      "originalFace": 65,
+      "exportFace": 105,
+      "normalDot": 0.9999999999999999
+    }
+  ]
+}

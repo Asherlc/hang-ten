@@ -1,0 +1,29 @@
+{
+  "argv": [
+    "rtk",
+    "proxy",
+    "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+    "--user-cfg",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/placid-badger-config/placid-badger-diagnostic-user.cfg",
+    "--system-cfg",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/placid-badger-config/placid-badger-diagnostic-system.cfg",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/placid-badger-tmp/placid-badger-diagnostic-bootstrap.py"
+  ],
+  "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+  "startedAt": "2026-10-03T02:08:54.186841+00:00",
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/placid-badger-config",
+    "FREECAD_USER_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/placid-badger-config",
+    "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/placid-badger-cache",
+    "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/placid-badger-tmp",
+    "QT_QPA_PLATFORM": "offscreen",
+    "HANGTEN_CAD_PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311"
+  },
+  "scriptSHA256": "b73514d8403d05c2353206df440db7be3f9ec663aa67fd37f5dfeeeffa86b40e",
+  "bootstrapSHA256": "8e2b831c00e2d14d1af7e9a0040b91017737a76deec3f1378b139c1f2f17e415",
+  "exitCode": 0,
+  "completedAt": "2026-10-03T02:08:55.482772+00:00",
+  "stdoutSHA256": "0630a9d7c61ec47b53478129ddae5dd51127e7052d54e204b77070f3b62c5691",
+  "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,1242 @@
+{
+  "before": {
+    "depth-18mm": {
+      "minimumExactNativeCenterlineDistanceMM": 2.189406603600933,
+      "radiusMM": 2.0,
+      "bends": [
+        {
+          "index": 1,
+          "pointMM": [
+            -52.032534999999996,
+            -12.0,
+            -40.841904
+          ],
+          "deflectionDegrees": 3.942232581476046,
+          "distanceToNativeSolidMM": 2.20000019805476,
+          "surfaceGapMM": 0.20000019805475988
+        },
+        {
+          "index": 2,
+          "pointMM": [
+            -52.157728,
+            -12.0,
+            -40.429199
+          ],
+          "deflectionDegrees": 11.25009347078149,
+          "distanceToNativeSolidMM": 2.20000043263291,
+          "surfaceGapMM": 0.20000043263291012
+        },
+        {
+          "index": 3,
+          "pointMM": [
+            -52.2,
+            -12.0,
+            -40.0
+          ],
+          "deflectionDegrees": 3.715793118140614,
+          "distanceToNativeSolidMM": 2.200000000000003,
+          "surfaceGapMM": 0.20000000000000284
+        },
+        {
+          "index": 4,
+          "pointMM": [
+            -52.5,
+            -12.0,
+            -31.0
+          ],
+          "deflectionDegrees": 91.90915243299635,
+          "distanceToNativeSolidMM": 6.5,
+          "surfaceGapMM": 4.5
+        },
+        {
+          "index": 5,
+          "pointMM": [
+            0.0,
+            -12.0,
+            -31.0
+          ],
+          "deflectionDegrees": 0.0,
+          "distanceToNativeSolidMM": 6.0,
+          "surfaceGapMM": 4.0
+        },
+        {
+          "index": 6,
+          "pointMM": [
+            52.5,
+            -12.0,
+            -31.0
+          ],
+          "deflectionDegrees": 91.90915243299635,
+          "distanceToNativeSolidMM": 6.4999999999999805,
+          "surfaceGapMM": 4.4999999999999805
+        },
+        {
+          "index": 7,
+          "pointMM": [
+            52.2,
+            -12.0,
+            -40.0
+          ],
+          "deflectionDegrees": 3.715793118140614,
+          "distanceToNativeSolidMM": 2.200000000000003,
+          "surfaceGapMM": 0.20000000000000284
+        },
+        {
+          "index": 8,
+          "pointMM": [
+            52.157728,
+            -12.0,
+            -40.429199
+          ],
+          "deflectionDegrees": 11.25009347078149,
+          "distanceToNativeSolidMM": 2.20000043263291,
+          "surfaceGapMM": 0.20000043263291012
+        },
+        {
+          "index": 9,
+          "pointMM": [
+            52.032534999999996,
+            -12.0,
+            -40.841904
+          ],
+          "deflectionDegrees": 3.9422325814759542,
+          "distanceToNativeSolidMM": 2.20000019805476,
+          "surfaceGapMM": 0.20000019805475988
+        }
+      ],
+      "pathLengthMM": 419.9999938274051,
+      "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f"
+    },
+    "depth-15mm": {
+      "minimumExactNativeCenterlineDistanceMM": 2.189406603600933,
+      "radiusMM": 2.0,
+      "bends": [
+        {
+          "index": 1,
+          "pointMM": [
+            -52.032534999999996,
+            -12.0,
+            -40.841904
+          ],
+          "deflectionDegrees": 3.942232581476046,
+          "distanceToNativeSolidMM": 2.20000019805476,
+          "surfaceGapMM": 0.20000019805475988
+        },
+        {
+          "index": 2,
+          "pointMM": [
+            -52.157728,
+            -12.0,
+            -40.429199
+          ],
+          "deflectionDegrees": 11.25009347078149,
+          "distanceToNativeSolidMM": 2.20000043263291,
+          "surfaceGapMM": 0.20000043263291012
+        },
+        {
+          "index": 3,
+          "pointMM": [
+            -52.2,
+            -12.0,
+            -40.0
+          ],
+          "deflectionDegrees": 3.715793118140614,
+          "distanceToNativeSolidMM": 2.200000000000003,
+          "surfaceGapMM": 0.20000000000000284
+        },
+        {
+          "index": 4,
+          "pointMM": [
+            -52.5,
+            -12.0,
+            -31.0
+          ],
+          "deflectionDegrees": 91.90915243299635,
+          "distanceToNativeSolidMM": 6.5,
+          "surfaceGapMM": 4.5
+        },
+        {
+          "index": 5,
+          "pointMM": [
+            0.0,
+            -12.0,
+            -31.0
+          ],
+          "deflectionDegrees": 0.0,
+          "distanceToNativeSolidMM": 6.0,
+          "surfaceGapMM": 4.0
+        },
+        {
+          "index": 6,
+          "pointMM": [
+            52.5,
+            -12.0,
+            -31.0
+          ],
+          "deflectionDegrees": 91.90915243299635,
+          "distanceToNativeSolidMM": 6.4999999999999805,
+          "surfaceGapMM": 4.4999999999999805
+        },
+        {
+          "index": 7,
+          "pointMM": [
+            52.2,
+            -12.0,
+            -40.0
+          ],
+          "deflectionDegrees": 3.715793118140614,
+          "distanceToNativeSolidMM": 2.200000000000003,
+          "surfaceGapMM": 0.20000000000000284
+        },
+        {
+          "index": 8,
+          "pointMM": [
+            52.157728,
+            -12.0,
+            -40.429199
+          ],
+          "deflectionDegrees": 11.25009347078149,
+          "distanceToNativeSolidMM": 2.20000043263291,
+          "surfaceGapMM": 0.20000043263291012
+        },
+        {
+          "index": 9,
+          "pointMM": [
+            52.032534999999996,
+            -12.0,
+            -40.841904
+          ],
+          "deflectionDegrees": 3.9422325814759542,
+          "distanceToNativeSolidMM": 2.20000019805476,
+          "surfaceGapMM": 0.20000019805475988
+        }
+      ],
+      "pathLengthMM": 419.9999938274051,
+      "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f"
+    },
+    "depth-10mm": {
+      "minimumExactNativeCenterlineDistanceMM": 2.189406603600933,
+      "radiusMM": 2.0,
+      "bends": [
+        {
+          "index": 1,
+          "pointMM": [
+            -52.032534999999996,
+            -12.0,
+            -40.841904
+          ],
+          "deflectionDegrees": 3.942232581476046,
+          "distanceToNativeSolidMM": 2.20000019805476,
+          "surfaceGapMM": 0.20000019805475988
+        },
+        {
+          "index": 2,
+          "pointMM": [
+            -52.157728,
+            -12.0,
+            -40.429199
+          ],
+          "deflectionDegrees": 11.25009347078149,
+          "distanceToNativeSolidMM": 2.20000043263291,
+          "surfaceGapMM": 0.20000043263291012
+        },
+        {
+          "index": 3,
+          "pointMM": [
+            -52.2,
+            -12.0,
+            -40.0
+          ],
+          "deflectionDegrees": 3.715793118140614,
+          "distanceToNativeSolidMM": 2.200000000000003,
+          "surfaceGapMM": 0.20000000000000284
+        },
+        {
+          "index": 4,
+          "pointMM": [
+            -52.5,
+            -12.0,
+            -31.0
+          ],
+          "deflectionDegrees": 91.90915243299635,
+          "distanceToNativeSolidMM": 6.5,
+          "surfaceGapMM": 4.5
+        },
+        {
+          "index": 5,
+          "pointMM": [
+            0.0,
+            -12.0,
+            -31.0
+          ],
+          "deflectionDegrees": 0.0,
+          "distanceToNativeSolidMM": 6.0,
+          "surfaceGapMM": 4.0
+        },
+        {
+          "index": 6,
+          "pointMM": [
+            52.5,
+            -12.0,
+            -31.0
+          ],
+          "deflectionDegrees": 91.90915243299635,
+          "distanceToNativeSolidMM": 6.4999999999999805,
+          "surfaceGapMM": 4.4999999999999805
+        },
+        {
+          "index": 7,
+          "pointMM": [
+            52.2,
+            -12.0,
+            -40.0
+          ],
+          "deflectionDegrees": 3.715793118140614,
+          "distanceToNativeSolidMM": 2.200000000000003,
+          "surfaceGapMM": 0.20000000000000284
+        },
+        {
+          "index": 8,
+          "pointMM": [
+            52.157728,
+            -12.0,
+            -40.429199
+          ],
+          "deflectionDegrees": 11.25009347078149,
+          "distanceToNativeSolidMM": 2.20000043263291,
+          "surfaceGapMM": 0.20000043263291012
+        },
+        {
+          "index": 9,
+          "pointMM": [
+            52.032534999999996,
+            -12.0,
+            -40.841904
+          ],
+          "deflectionDegrees": 3.9422325814759542,
+          "distanceToNativeSolidMM": 2.20000019805476,
+          "surfaceGapMM": 0.20000019805475988
+        }
+      ],
+      "pathLengthMM": 419.9999938274051,
+      "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f"
+    }
+  },
+  "seated": {
+    "depth-18mm": {
+      "minimumExactNativeCenterlineDistanceMM": 3.184591174966126,
+      "radiusMM": 3.0,
+      "bends": [
+        {
+          "index": 1,
+          "pointMM": [
+            -52.956415,
+            -12.0,
+            -41.224587
+          ],
+          "deflectionDegrees": 3.870369520546403,
+          "distanceToNativeSolidMM": 3.2000004644990283,
+          "surfaceGapMM": 0.2000004644990283
+        },
+        {
+          "index": 2,
+          "pointMM": [
+            -53.138512999999996,
+            -12.0,
+            -40.624289
+          ],
+          "deflectionDegrees": 11.249973448701502,
+          "distanceToNativeSolidMM": 3.2000000947953064,
+          "surfaceGapMM": 0.20000009479530645
+        },
+        {
+          "index": 3,
+          "pointMM": [
+            -53.199999999999996,
+            -12.0,
+            -40.0
+          ],
+          "deflectionDegrees": 5.624990936728373,
+          "distanceToNativeSolidMM": 3.1999999999999957,
+          "surfaceGapMM": 0.19999999999999574
+        },
+        {
+          "index": 4,
+          "pointMM": [
+            -53.199999999999996,
+            -12.0,
+            -37.0
+          ],
+          "deflectionDegrees": 5.624990936728307,
+          "distanceToNativeSolidMM": 3.1999999999999957,
+          "surfaceGapMM": 0.19999999999999574
+        },
+        {
+          "index": 5,
+          "pointMM": [
+            -53.138512999999996,
+            -12.0,
+            -36.375710999999995
+          ],
+          "deflectionDegrees": 11.249973448701795,
+          "distanceToNativeSolidMM": 3.2000000947953082,
+          "surfaceGapMM": 0.20000009479530823
+        },
+        {
+          "index": 6,
+          "pointMM": [
+            -52.956415,
+            -12.0,
+            -35.775413
+          ],
+          "deflectionDegrees": 11.25004593868187,
+          "distanceToNativeSolidMM": 3.2000004644990283,
+          "surfaceGapMM": 0.2000004644990283
+        },
+        {
+          "index": 7,
+          "pointMM": [
+            -52.660703000000005,
+            -12.0,
+            -35.222175
+          ],
+          "deflectionDegrees": 11.249982812365804,
+          "distanceToNativeSolidMM": 3.2000003413802984,
+          "surfaceGapMM": 0.20000034138029843
+        },
+        {
+          "index": 8,
+          "pointMM": [
+            -52.262742,
+            -12.0,
+            -34.737258
+          ],
+          "deflectionDegrees": 11.25001372704458,
+          "distanceToNativeSolidMM": 3.200000424551226,
+          "surfaceGapMM": 0.2000004245512259
+        },
+        {
+          "index": 9,
+          "pointMM": [
+            -51.777825,
+            -12.0,
+            -34.339296999999995
+          ],
+          "deflectionDegrees": 11.249982812365769,
+          "distanceToNativeSolidMM": 3.2000003413802984,
+          "surfaceGapMM": 0.20000034138029843
+        },
+        {
+          "index": 10,
+          "pointMM": [
+            -51.224587,
+            -12.0,
+            -34.043585
+          ],
+          "deflectionDegrees": 11.25004593868187,
+          "distanceToNativeSolidMM": 3.2000004644990283,
+          "surfaceGapMM": 0.2000004644990283
+        },
+        {
+          "index": 11,
+          "pointMM": [
+            -50.624289000000005,
+            -12.0,
+            -33.861487000000004
+          ],
+          "deflectionDegrees": 11.249973448701175,
+          "distanceToNativeSolidMM": 3.2000000947953082,
+          "surfaceGapMM": 0.20000009479530823
+        },
+        {
+          "index": 12,
+          "pointMM": [
+            -50.0,
+            -12.0,
+            -33.8
+          ],
+          "deflectionDegrees": 5.624973031797867,
+          "distanceToNativeSolidMM": 3.200000000000003,
+          "surfaceGapMM": 0.20000000000000284
+        },
+        {
+          "index": 13,
+          "pointMM": [
+            -46.800000000000004,
+            -12.0,
+            -33.799999
+          ],
+          "deflectionDegrees": 1.788854448343451e-05,
+          "distanceToNativeSolidMM": 3.2000010000000003,
+          "surfaceGapMM": 0.20000100000000032
+        },
+        {
+          "index": 14,
+          "pointMM": [
+            0.0,
+            -12.0,
+            -33.799999
+          ],
+          "deflectionDegrees": 0.0,
+          "distanceToNativeSolidMM": 3.2000010000000003,
+          "surfaceGapMM": 0.20000100000000032
+        },
+        {
+          "index": 15,
+          "pointMM": [
+            46.800000000000004,
+            -12.0,
+            -33.799999
+          ],
+          "deflectionDegrees": 1.7908907090463362e-05,
+          "distanceToNativeSolidMM": 3.2000010000000003,
+          "surfaceGapMM": 0.20000100000000032
+        },
+        {
+          "index": 16,
+          "pointMM": [
+            50.0,
+            -12.0,
+            -33.8
+          ],
+          "deflectionDegrees": 5.624973031797867,
+          "distanceToNativeSolidMM": 3.1999999999999815,
+          "surfaceGapMM": 0.19999999999998153
+        },
+        {
+          "index": 17,
+          "pointMM": [
+            50.624289000000005,
+            -12.0,
+            -33.861487000000004
+          ],
+          "deflectionDegrees": 11.249973448701141,
+          "distanceToNativeSolidMM": 3.2000000947952874,
+          "surfaceGapMM": 0.20000009479528735
+        },
+        {
+          "index": 18,
+          "pointMM": [
+            51.224587,
+            -12.0,
+            -34.043585
+          ],
+          "deflectionDegrees": 11.25004593868187,
+          "distanceToNativeSolidMM": 3.2000004644990088,
+          "surfaceGapMM": 0.20000046449900877
+        },
+        {
+          "index": 19,
+          "pointMM": [
+            51.777825,
+            -12.0,
+            -34.339296999999995
+          ],
+          "deflectionDegrees": 11.249982812365804,
+          "distanceToNativeSolidMM": 3.2000003413802807,
+          "surfaceGapMM": 0.20000034138028067
+        },
+        {
+          "index": 20,
+          "pointMM": [
+            52.262742,
+            -12.0,
+            -34.737258
+          ],
+          "deflectionDegrees": 11.25001372704458,
+          "distanceToNativeSolidMM": 3.200000424551211,
+          "surfaceGapMM": 0.2000004245512108
+        },
+        {
+          "index": 21,
+          "pointMM": [
+            52.660703000000005,
+            -12.0,
+            -35.222175
+          ],
+          "deflectionDegrees": 11.249982812365769,
+          "distanceToNativeSolidMM": 3.200000341380287,
+          "surfaceGapMM": 0.20000034138028688
+        },
+        {
+          "index": 22,
+          "pointMM": [
+            52.956415,
+            -12.0,
+            -35.775413
+          ],
+          "deflectionDegrees": 11.25004593868187,
+          "distanceToNativeSolidMM": 3.2000004644990203,
+          "surfaceGapMM": 0.20000046449902031
+        },
+        {
+          "index": 23,
+          "pointMM": [
+            53.138512999999996,
+            -12.0,
+            -36.375710999999995
+          ],
+          "deflectionDegrees": 11.249973448701795,
+          "distanceToNativeSolidMM": 3.200000094795304,
+          "surfaceGapMM": 0.20000009479530378
+        },
+        {
+          "index": 24,
+          "pointMM": [
+            53.199999999999996,
+            -12.0,
+            -37.0
+          ],
+          "deflectionDegrees": 5.624990936728243,
+          "distanceToNativeSolidMM": 3.1999999999999957,
+          "surfaceGapMM": 0.19999999999999574
+        },
+        {
+          "index": 25,
+          "pointMM": [
+            53.199999999999996,
+            -12.0,
+            -40.0
+          ],
+          "deflectionDegrees": 5.624990936728307,
+          "distanceToNativeSolidMM": 3.1999999999999957,
+          "surfaceGapMM": 0.19999999999999574
+        },
+        {
+          "index": 26,
+          "pointMM": [
+            53.138512999999996,
+            -12.0,
+            -40.624289
+          ],
+          "deflectionDegrees": 11.249973448701502,
+          "distanceToNativeSolidMM": 3.2000000947953064,
+          "surfaceGapMM": 0.20000009479530645
+        },
+        {
+          "index": 27,
+          "pointMM": [
+            52.956415,
+            -12.0,
+            -41.224587
+          ],
+          "deflectionDegrees": 3.870369520546309,
+          "distanceToNativeSolidMM": 3.2000004644990283,
+          "surfaceGapMM": 0.2000004644990283
+        }
+      ],
+      "pathLengthMM": 419.99999985181194,
+      "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f"
+    },
+    "depth-15mm": {
+      "minimumExactNativeCenterlineDistanceMM": 3.184591174966126,
+      "radiusMM": 3.0,
+      "bends": [
+        {
+          "index": 1,
+          "pointMM": [
+            -52.956415,
+            -12.0,
+            -41.224587
+          ],
+          "deflectionDegrees": 3.870369520546403,
+          "distanceToNativeSolidMM": 3.2000004644990283,
+          "surfaceGapMM": 0.2000004644990283
+        },
+        {
+          "index": 2,
+          "pointMM": [
+            -53.138512999999996,
+            -12.0,
+            -40.624289
+          ],
+          "deflectionDegrees": 11.249973448701502,
+          "distanceToNativeSolidMM": 3.2000000947953064,
+          "surfaceGapMM": 0.20000009479530645
+        },
+        {
+          "index": 3,
+          "pointMM": [
+            -53.199999999999996,
+            -12.0,
+            -40.0
+          ],
+          "deflectionDegrees": 5.624990936728373,
+          "distanceToNativeSolidMM": 3.1999999999999957,
+          "surfaceGapMM": 0.19999999999999574
+        },
+        {
+          "index": 4,
+          "pointMM": [
+            -53.199999999999996,
+            -12.0,
+            -37.0
+          ],
+          "deflectionDegrees": 5.624990936728307,
+          "distanceToNativeSolidMM": 3.1999999999999957,
+          "surfaceGapMM": 0.19999999999999574
+        },
+        {
+          "index": 5,
+          "pointMM": [
+            -53.138512999999996,
+            -12.0,
+            -36.375710999999995
+          ],
+          "deflectionDegrees": 11.249973448701795,
+          "distanceToNativeSolidMM": 3.2000000947953082,
+          "surfaceGapMM": 0.20000009479530823
+        },
+        {
+          "index": 6,
+          "pointMM": [
+            -52.956415,
+            -12.0,
+            -35.775413
+          ],
+          "deflectionDegrees": 11.25004593868187,
+          "distanceToNativeSolidMM": 3.2000004644990283,
+          "surfaceGapMM": 0.2000004644990283
+        },
+        {
+          "index": 7,
+          "pointMM": [
+            -52.660703000000005,
+            -12.0,
+            -35.222175
+          ],
+          "deflectionDegrees": 11.249982812365804,
+          "distanceToNativeSolidMM": 3.2000003413802984,
+          "surfaceGapMM": 0.20000034138029843
+        },
+        {
+          "index": 8,
+          "pointMM": [
+            -52.262742,
+            -12.0,
+            -34.737258
+          ],
+          "deflectionDegrees": 11.25001372704458,
+          "distanceToNativeSolidMM": 3.200000424551226,
+          "surfaceGapMM": 0.2000004245512259
+        },
+        {
+          "index": 9,
+          "pointMM": [
+            -51.777825,
+            -12.0,
+            -34.339296999999995
+          ],
+          "deflectionDegrees": 11.249982812365769,
+          "distanceToNativeSolidMM": 3.2000003413802984,
+          "surfaceGapMM": 0.20000034138029843
+        },
+        {
+          "index": 10,
+          "pointMM": [
+            -51.224587,
+            -12.0,
+            -34.043585
+          ],
+          "deflectionDegrees": 11.25004593868187,
+          "distanceToNativeSolidMM": 3.2000004644990283,
+          "surfaceGapMM": 0.2000004644990283
+        },
+        {
+          "index": 11,
+          "pointMM": [
+            -50.624289000000005,
+            -12.0,
+            -33.861487000000004
+          ],
+          "deflectionDegrees": 11.249973448701175,
+          "distanceToNativeSolidMM": 3.2000000947953082,
+          "surfaceGapMM": 0.20000009479530823
+        },
+        {
+          "index": 12,
+          "pointMM": [
+            -50.0,
+            -12.0,
+            -33.8
+          ],
+          "deflectionDegrees": 5.624973031797867,
+          "distanceToNativeSolidMM": 3.200000000000003,
+          "surfaceGapMM": 0.20000000000000284
+        },
+        {
+          "index": 13,
+          "pointMM": [
+            -46.800000000000004,
+            -12.0,
+            -33.799999
+          ],
+          "deflectionDegrees": 1.788854448343451e-05,
+          "distanceToNativeSolidMM": 3.2000010000000003,
+          "surfaceGapMM": 0.20000100000000032
+        },
+        {
+          "index": 14,
+          "pointMM": [
+            0.0,
+            -12.0,
+            -33.799999
+          ],
+          "deflectionDegrees": 0.0,
+          "distanceToNativeSolidMM": 3.2000010000000003,
+          "surfaceGapMM": 0.20000100000000032
+        },
+        {
+          "index": 15,
+          "pointMM": [
+            46.800000000000004,
+            -12.0,
+            -33.799999
+          ],
+          "deflectionDegrees": 1.7908907090463362e-05,
+          "distanceToNativeSolidMM": 3.2000010000000003,
+          "surfaceGapMM": 0.20000100000000032
+        },
+        {
+          "index": 16,
+          "pointMM": [
+            50.0,
+            -12.0,
+            -33.8
+          ],
+          "deflectionDegrees": 5.624973031797867,
+          "distanceToNativeSolidMM": 3.1999999999999815,
+          "surfaceGapMM": 0.19999999999998153
+        },
+        {
+          "index": 17,
+          "pointMM": [
+            50.624289000000005,
+            -12.0,
+            -33.861487000000004
+          ],
+          "deflectionDegrees": 11.249973448701141,
+          "distanceToNativeSolidMM": 3.2000000947952874,
+          "surfaceGapMM": 0.20000009479528735
+        },
+        {
+          "index": 18,
+          "pointMM": [
+            51.224587,
+            -12.0,
+            -34.043585
+          ],
+          "deflectionDegrees": 11.25004593868187,
+          "distanceToNativeSolidMM": 3.2000004644990088,
+          "surfaceGapMM": 0.20000046449900877
+        },
+        {
+          "index": 19,
+          "pointMM": [
+            51.777825,
+            -12.0,
+            -34.339296999999995
+          ],
+          "deflectionDegrees": 11.249982812365804,
+          "distanceToNativeSolidMM": 3.2000003413802807,
+          "surfaceGapMM": 0.20000034138028067
+        },
+        {
+          "index": 20,
+          "pointMM": [
+            52.262742,
+            -12.0,
+            -34.737258
+          ],
+          "deflectionDegrees": 11.25001372704458,
+          "distanceToNativeSolidMM": 3.200000424551211,
+          "surfaceGapMM": 0.2000004245512108
+        },
+        {
+          "index": 21,
+          "pointMM": [
+            52.660703000000005,
+            -12.0,
+            -35.222175
+          ],
+          "deflectionDegrees": 11.249982812365769,
+          "distanceToNativeSolidMM": 3.200000341380287,
+          "surfaceGapMM": 0.20000034138028688
+        },
+        {
+          "index": 22,
+          "pointMM": [
+            52.956415,
+            -12.0,
+            -35.775413
+          ],
+          "deflectionDegrees": 11.25004593868187,
+          "distanceToNativeSolidMM": 3.2000004644990203,
+          "surfaceGapMM": 0.20000046449902031
+        },
+        {
+          "index": 23,
+          "pointMM": [
+            53.138512999999996,
+            -12.0,
+            -36.375710999999995
+          ],
+          "deflectionDegrees": 11.249973448701795,
+          "distanceToNativeSolidMM": 3.200000094795304,
+          "surfaceGapMM": 0.20000009479530378
+        },
+        {
+          "index": 24,
+          "pointMM": [
+            53.199999999999996,
+            -12.0,
+            -37.0
+          ],
+          "deflectionDegrees": 5.624990936728243,
+          "distanceToNativeSolidMM": 3.1999999999999957,
+          "surfaceGapMM": 0.19999999999999574
+        },
+        {
+          "index": 25,
+          "pointMM": [
+            53.199999999999996,
+            -12.0,
+            -40.0
+          ],
+          "deflectionDegrees": 5.624990936728307,
+          "distanceToNativeSolidMM": 3.1999999999999957,
+          "surfaceGapMM": 0.19999999999999574
+        },
+        {
+          "index": 26,
+          "pointMM": [
+            53.138512999999996,
+            -12.0,
+            -40.624289
+          ],
+          "deflectionDegrees": 11.249973448701502,
+          "distanceToNativeSolidMM": 3.2000000947953064,
+          "surfaceGapMM": 0.20000009479530645
+        },
+        {
+          "index": 27,
+          "pointMM": [
+            52.956415,
+            -12.0,
+            -41.224587
+          ],
+          "deflectionDegrees": 3.870369520546309,
+          "distanceToNativeSolidMM": 3.2000004644990283,
+          "surfaceGapMM": 0.2000004644990283
+        }
+      ],
+      "pathLengthMM": 419.99999985181194,
+      "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f"
+    },
+    "depth-10mm": {
+      "minimumExactNativeCenterlineDistanceMM": 3.184591174966126,
+      "radiusMM": 3.0,
+      "bends": [
+        {
+          "index": 1,
+          "pointMM": [
+            -52.956415,
+            -12.0,
+            -41.224587
+          ],
+          "deflectionDegrees": 3.870369520546403,
+          "distanceToNativeSolidMM": 3.2000004644990283,
+          "surfaceGapMM": 0.2000004644990283
+        },
+        {
+          "index": 2,
+          "pointMM": [
+            -53.138512999999996,
+            -12.0,
+            -40.624289
+          ],
+          "deflectionDegrees": 11.249973448701502,
+          "distanceToNativeSolidMM": 3.2000000947953064,
+          "surfaceGapMM": 0.20000009479530645
+        },
+        {
+          "index": 3,
+          "pointMM": [
+            -53.199999999999996,
+            -12.0,
+            -40.0
+          ],
+          "deflectionDegrees": 5.624990936728373,
+          "distanceToNativeSolidMM": 3.1999999999999957,
+          "surfaceGapMM": 0.19999999999999574
+        },
+        {
+          "index": 4,
+          "pointMM": [
+            -53.199999999999996,
+            -12.0,
+            -37.0
+          ],
+          "deflectionDegrees": 5.624990936728307,
+          "distanceToNativeSolidMM": 3.1999999999999957,
+          "surfaceGapMM": 0.19999999999999574
+        },
+        {
+          "index": 5,
+          "pointMM": [
+            -53.138512999999996,
+            -12.0,
+            -36.375710999999995
+          ],
+          "deflectionDegrees": 11.249973448701795,
+          "distanceToNativeSolidMM": 3.2000000947953082,
+          "surfaceGapMM": 0.20000009479530823
+        },
+        {
+          "index": 6,
+          "pointMM": [
+            -52.956415,
+            -12.0,
+            -35.775413
+          ],
+          "deflectionDegrees": 11.25004593868187,
+          "distanceToNativeSolidMM": 3.2000004644990283,
+          "surfaceGapMM": 0.2000004644990283
+        },
+        {
+          "index": 7,
+          "pointMM": [
+            -52.660703000000005,
+            -12.0,
+            -35.222175
+          ],
+          "deflectionDegrees": 11.249982812365804,
+          "distanceToNativeSolidMM": 3.2000003413802984,
+          "surfaceGapMM": 0.20000034138029843
+        },
+        {
+          "index": 8,
+          "pointMM": [
+            -52.262742,
+            -12.0,
+            -34.737258
+          ],
+          "deflectionDegrees": 11.25001372704458,
+          "distanceToNativeSolidMM": 3.200000424551226,
+          "surfaceGapMM": 0.2000004245512259
+        },
+        {
+          "index": 9,
+          "pointMM": [
+            -51.777825,
+            -12.0,
+            -34.339296999999995
+          ],
+          "deflectionDegrees": 11.249982812365769,
+          "distanceToNativeSolidMM": 3.2000003413802984,
+          "surfaceGapMM": 0.20000034138029843
+        },
+        {
+          "index": 10,
+          "pointMM": [
+            -51.224587,
+            -12.0,
+            -34.043585
+          ],
+          "deflectionDegrees": 11.25004593868187,
+          "distanceToNativeSolidMM": 3.2000004644990283,
+          "surfaceGapMM": 0.2000004644990283
+        },
+        {
+          "index": 11,
+          "pointMM": [
+            -50.624289000000005,
+            -12.0,
+            -33.861487000000004
+          ],
+          "deflectionDegrees": 11.249973448701175,
+          "distanceToNativeSolidMM": 3.2000000947953082,
+          "surfaceGapMM": 0.20000009479530823
+        },
+        {
+          "index": 12,
+          "pointMM": [
+            -50.0,
+            -12.0,
+            -33.8
+          ],
+          "deflectionDegrees": 5.624973031797867,
+          "distanceToNativeSolidMM": 3.200000000000003,
+          "surfaceGapMM": 0.20000000000000284
+        },
+        {
+          "index": 13,
+          "pointMM": [
+            -46.800000000000004,
+            -12.0,
+            -33.799999
+          ],
+          "deflectionDegrees": 1.788854448343451e-05,
+          "distanceToNativeSolidMM": 3.2000010000000003,
+          "surfaceGapMM": 0.20000100000000032
+        },
+        {
+          "index": 14,
+          "pointMM": [
+            0.0,
+            -12.0,
+            -33.799999
+          ],
+          "deflectionDegrees": 0.0,
+          "distanceToNativeSolidMM": 3.2000010000000003,
+          "surfaceGapMM": 0.20000100000000032
+        },
+        {
+          "index": 15,
+          "pointMM": [
+            46.800000000000004,
+            -12.0,
+            -33.799999
+          ],
+          "deflectionDegrees": 1.7908907090463362e-05,
+          "distanceToNativeSolidMM": 3.2000010000000003,
+          "surfaceGapMM": 0.20000100000000032
+        },
+        {
+          "index": 16,
+          "pointMM": [
+            50.0,
+            -12.0,
+            -33.8
+          ],
+          "deflectionDegrees": 5.624973031797867,
+          "distanceToNativeSolidMM": 3.1999999999999815,
+          "surfaceGapMM": 0.19999999999998153
+        },
+        {
+          "index": 17,
+          "pointMM": [
+            50.624289000000005,
+            -12.0,
+            -33.861487000000004
+          ],
+          "deflectionDegrees": 11.249973448701141,
+          "distanceToNativeSolidMM": 3.2000000947952874,
+          "surfaceGapMM": 0.20000009479528735
+        },
+        {
+          "index": 18,
+          "pointMM": [
+            51.224587,
+            -12.0,
+            -34.043585
+          ],
+          "deflectionDegrees": 11.25004593868187,
+          "distanceToNativeSolidMM": 3.2000004644990088,
+          "surfaceGapMM": 0.20000046449900877
+        },
+        {
+          "index": 19,
+          "pointMM": [
+            51.777825,
+            -12.0,
+            -34.339296999999995
+          ],
+          "deflectionDegrees": 11.249982812365804,
+          "distanceToNativeSolidMM": 3.2000003413802807,
+          "surfaceGapMM": 0.20000034138028067
+        },
+        {
+          "index": 20,
+          "pointMM": [
+            52.262742,
+            -12.0,
+            -34.737258
+          ],
+          "deflectionDegrees": 11.25001372704458,
+          "distanceToNativeSolidMM": 3.200000424551211,
+          "surfaceGapMM": 0.2000004245512108
+        },
+        {
+          "index": 21,
+          "pointMM": [
+            52.660703000000005,
+            -12.0,
+            -35.222175
+          ],
+          "deflectionDegrees": 11.249982812365769,
+          "distanceToNativeSolidMM": 3.200000341380287,
+          "surfaceGapMM": 0.20000034138028688
+        },
+        {
+          "index": 22,
+          "pointMM": [
+            52.956415,
+            -12.0,
+            -35.775413
+          ],
+          "deflectionDegrees": 11.25004593868187,
+          "distanceToNativeSolidMM": 3.2000004644990203,
+          "surfaceGapMM": 0.20000046449902031
+        },
+        {
+          "index": 23,
+          "pointMM": [
+            53.138512999999996,
+            -12.0,
+            -36.375710999999995
+          ],
+          "deflectionDegrees": 11.249973448701795,
+          "distanceToNativeSolidMM": 3.200000094795304,
+          "surfaceGapMM": 0.20000009479530378
+        },
+        {
+          "index": 24,
+          "pointMM": [
+            53.199999999999996,
+            -12.0,
+            -37.0
+          ],
+          "deflectionDegrees": 5.624990936728243,
+          "distanceToNativeSolidMM": 3.1999999999999957,
+          "surfaceGapMM": 0.19999999999999574
+        },
+        {
+          "index": 25,
+          "pointMM": [
+            53.199999999999996,
+            -12.0,
+            -40.0
+          ],
+          "deflectionDegrees": 5.624990936728307,
+          "distanceToNativeSolidMM": 3.1999999999999957,
+          "surfaceGapMM": 0.19999999999999574
+        },
+        {
+          "index": 26,
+          "pointMM": [
+            53.138512999999996,
+            -12.0,
+            -40.624289
+          ],
+          "deflectionDegrees": 11.249973448701502,
+          "distanceToNativeSolidMM": 3.2000000947953064,
+          "surfaceGapMM": 0.20000009479530645
+        },
+        {
+          "index": 27,
+          "pointMM": [
+            52.956415,
+            -12.0,
+            -41.224587
+          ],
+          "deflectionDegrees": 3.870369520546309,
+          "distanceToNativeSolidMM": 3.2000004644990283,
+          "surfaceGapMM": 0.2000004644990283
+        }
+      ],
+      "pathLengthMM": 419.99999985181194,
+      "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f"
+    }
+  }
+}

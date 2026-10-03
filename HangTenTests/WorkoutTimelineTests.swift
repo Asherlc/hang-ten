@@ -63,6 +63,50 @@ final class WorkoutSpeechVoiceSelectorTests: XCTestCase {
 }
 
 final class WorkoutTimelineTests: XCTestCase {
+    func testCurrentTaskSelectsEffectiveDepthPresentationAndChosenHand() throws {
+        let contacts = ["left", "right"].map {
+            PhysicalContact(id: $0, name: $0, kind: .edge,
+                depth: .range(.init(minimum: 18, maximum: 18)))
+        }
+        let geometry = Dictionary(uniqueKeysWithValues: contacts.enumerated().map { index, contact in
+            (contact.id, [BoardContactPiece(id: "\(contact.id)-piece", contactID: contact.id,
+                frame: CGRect(x: index == 0 ? 0.1 : 0.8, y: 0, width: 0.1, height: 0.1),
+                shape: .roundedRect(cornerRadiusFraction: 0), treatment: .surface)])
+        })
+        let board = BoardRevision(id: "fixture.task-positions", revisionID: "fixture", manufacturer: "Fixture",
+            name: "Fixture", subtitle: "", dimensions: "", aspectRatio: 1, contacts: contacts,
+            productURL: URL(string: "https://example.com/fixture")!, photoAssetName: nil,
+            presentations: [18, 10].map { depth in
+                BoardPresentation(id: "depth-\(depth)", name: "Fixture", aspectRatio: 1, isDefault: depth == 18,
+                    media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry)))
+            },
+            positions: [18, 10].map { depth in
+                BoardPosition(id: "depth-\(depth)", presentationID: "depth-\(depth)", contactIDs: contacts.map(\.id),
+                    effectiveDepths: Dictionary(uniqueKeysWithValues: contacts.map {
+                        ($0.id, HoldDepth.range(.init(minimum: Double(depth), maximum: Double(depth))))
+                    }))
+            })
+        let step = WorkoutStep(id: "fixture-task-index", number: 1, title: "Fixture", instruction: "",
+            accessory: "", duration: 10, phase: .hang,
+            segments: [.init(kind: .work, target: .tasks([
+                [PlanHandTarget(target: .init(kind: .edge, depth: .measured(.init(minimum: 18, maximum: 18))), side: .left),
+                 PlanHandTarget(target: .init(kind: .edge, depth: .measured(.init(minimum: 18, maximum: 18))), side: .right)],
+                [PlanHandTarget(target: .init(kind: .edge, depth: .measured(.init(minimum: 10, maximum: 10))))]
+            ]), timing: .fixed, duration: 10)])
+
+        XCTAssertEqual(WorkoutHighlightResolver.presentationID(for: step, on: board), "depth-18")
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: step, on: board), ["left", "right"])
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: step, on: board, taskIndex: 1), [])
+        XCTAssertNil(WorkoutHighlightResolver.presentationID(for: step, on: board, taskIndex: 1))
+        XCTAssertEqual(WorkoutHighlightResolver.presentationID(for: step, on: board,
+            taskIndex: 1, selectedHandSide: .right), "depth-10")
+        let highlighted = WorkoutHighlightResolver.contacts(for: step, on: board,
+            taskIndex: 1, selectedHandSide: .right)
+        XCTAssertEqual(highlighted.map(\.id), ["right"])
+        XCTAssertEqual(highlighted.first?.depth, .range(.init(minimum: 10, maximum: 10)))
+        XCTAssertEqual(board.contacts.first?.depth, .range(.init(minimum: 18, maximum: 18)))
+    }
+
     func testAnyHoldTaskDoesNotHighlightAnInventedContact() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.contact"))
         let plan = try XCTUnwrap(PlanCatalog.plan(id: "metolius.contact.entry"))

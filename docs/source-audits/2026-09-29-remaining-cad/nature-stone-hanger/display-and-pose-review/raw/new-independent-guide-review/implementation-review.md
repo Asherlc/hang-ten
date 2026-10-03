@@ -1,0 +1,3 @@
+The reviewed helper `13975c3e…` has the correct unit-tension force/Jacobian sign and fixed-endpoint correction. It reruns full 3D clearance and actual material-facet reaction gates after each correction; final rounded seating, bore, tube and length gates remain separate. The one-route correction is diagnostic only.
+
+The 10 micrometre bound is per correction, with at most five steps. The reviewed helper records the weighted normal approximation bound without separately gating it; the independent final-16 audit retains that <= 1e-5 bound. Its dense settling branch also precedes the 128-vertex guard. These narrow implementation/search-policy notes were sent to the current solver owner. No test, solve, native resource, packet stage or canonical mutation was run.

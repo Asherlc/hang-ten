@@ -1,0 +1,21 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    ".context/placid-badger/venv/bin/python",
+    ".context/placid-badger/flash-board-review14/shape-review/native-refinement/render_native.py"
+  ],
+  "startedUTC": "2026-10-02T21:43:37.853657+00:00",
+  "timeoutSeconds": 240,
+  "ownedTemporaryDirectory": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/placid-badger-flash14-native-render-v1-tmp",
+  "ownedExtraDirectories": [],
+  "status": "pass",
+  "ownedProcessGroup": 74513,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "ownedExtraDirectoriesAbsent": [],
+  "exitCode": 0,
+  "elapsedSeconds": 44.12090929199621,
+  "logSHA256": "42e16b0ad21588f80f81663327f032b69445e9f2054ff6d5f199c049717ce4d6"
+}

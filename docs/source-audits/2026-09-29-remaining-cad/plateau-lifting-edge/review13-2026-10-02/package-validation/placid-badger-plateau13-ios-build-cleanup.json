@@ -1,0 +1,20 @@
+{
+  "owner": "placid-badger",
+  "jobName": "placid-badger-plateau13-ios-build",
+  "resources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-build-TMP",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-DD",
+      "absent": true
+    }
+  ],
+  "errors": [],
+  "remainingProcesses": [],
+  "processGroupAbsent": true,
+  "allResourcesAbsent": true,
+  "passed": true,
+  "finishedUTC": "2026-10-02T19:13:39.424452+00:00"
+}

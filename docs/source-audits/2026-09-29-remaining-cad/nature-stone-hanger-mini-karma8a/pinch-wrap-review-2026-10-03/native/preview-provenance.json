@@ -1,0 +1,927 @@
+{
+  "images": [
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-front.png",
+      "sha256": "d88b763473deb4a4a9922beee8a6a2a9dbf8448d10ee0c5d8cdc5c2b6ef1a855",
+      "selection": "neutral",
+      "selectedNodeIDs": [
+        [],
+        []
+      ],
+      "view": "front",
+      "cameraRows": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-back.png",
+      "sha256": "90d7ac9e7808f72a331205f40d8be2f1f7955f44b8477f5698d65dc8c932ed95",
+      "selection": "neutral",
+      "selectedNodeIDs": [
+        [],
+        []
+      ],
+      "view": "back",
+      "cameraRows": [
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-side.png",
+      "sha256": "aae8c366c7545f010382708d558098f409be3c9beecc22083ef9602113ebaf4f",
+      "selection": "neutral",
+      "selectedNodeIDs": [
+        [],
+        []
+      ],
+      "view": "side",
+      "cameraRows": [
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          -0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-top.png",
+      "sha256": "daf3a34ada5a7ea8d9b3401407f8c2cac8d2ca1862c0035668c96993066d0f10",
+      "selection": "neutral",
+      "selectedNodeIDs": [
+        [],
+        []
+      ],
+      "view": "top",
+      "cameraRows": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-front-oblique.png",
+      "sha256": "38657a9d85de13d067f4531e00e24b2bd4d7a7d5549cdbd7bdd86dbef7c5630b",
+      "selection": "neutral",
+      "selectedNodeIDs": [
+        [],
+        []
+      ],
+      "view": "front-oblique",
+      "cameraRows": [
+        [
+          0.8192319205190405,
+          0.0,
+          -0.5734623443633282
+        ],
+        [
+          -0.19835953471222845,
+          0.9382720848292712,
+          -0.28337076387461213
+        ],
+        [
+          0.5380637094168614,
+          0.34589809891083956,
+          0.7686624420240878
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-reverse-oblique.png",
+      "sha256": "ad076481de6fc21285ef0ad694fd0aa8b274a4c4c160fb2baf61e0e1f6feca68",
+      "selection": "neutral",
+      "selectedNodeIDs": [
+        [],
+        []
+      ],
+      "view": "reverse-oblique",
+      "cameraRows": [
+        [
+          -0.8192319205190405,
+          0.0,
+          -0.5734623443633283
+        ],
+        [
+          -0.2529707404776681,
+          0.8974438174088701,
+          0.3613867721109544
+        ],
+        [
+          0.5146502354656655,
+          0.44112877325628463,
+          -0.7352146220938078
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-front.png",
+      "sha256": "be194120328ebcb6fedbffed362a24dda56163381924c62d75a4604d97f4eff9",
+      "selection": "pinch-60",
+      "selectedNodeIDs": [
+        [
+          "nature_pinch"
+        ],
+        [
+          "nature_pinch",
+          "nature_pinch_pressure"
+        ]
+      ],
+      "view": "front",
+      "cameraRows": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-back.png",
+      "sha256": "d22edaa15398bf24e260762df79b0ded14069f9cc41631cbf57a36f77bcb3d7b",
+      "selection": "pinch-60",
+      "selectedNodeIDs": [
+        [
+          "nature_pinch"
+        ],
+        [
+          "nature_pinch",
+          "nature_pinch_pressure"
+        ]
+      ],
+      "view": "back",
+      "cameraRows": [
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-side.png",
+      "sha256": "823f79efe0e3c0c44e7815a5c5a357319914dd6b5dd476a6f497283843986e23",
+      "selection": "pinch-60",
+      "selectedNodeIDs": [
+        [
+          "nature_pinch"
+        ],
+        [
+          "nature_pinch",
+          "nature_pinch_pressure"
+        ]
+      ],
+      "view": "side",
+      "cameraRows": [
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          -0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-top.png",
+      "sha256": "a52ee172a2b195c85ddf59ed594b2a0651050738815d7240defb43f9aa5094bb",
+      "selection": "pinch-60",
+      "selectedNodeIDs": [
+        [
+          "nature_pinch"
+        ],
+        [
+          "nature_pinch",
+          "nature_pinch_pressure"
+        ]
+      ],
+      "view": "top",
+      "cameraRows": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-front-oblique.png",
+      "sha256": "0305ac68fcb7953380c65a85cb235e5cbb0ccbf135061b8659f157ead680054f",
+      "selection": "pinch-60",
+      "selectedNodeIDs": [
+        [
+          "nature_pinch"
+        ],
+        [
+          "nature_pinch",
+          "nature_pinch_pressure"
+        ]
+      ],
+      "view": "front-oblique",
+      "cameraRows": [
+        [
+          0.8192319205190405,
+          0.0,
+          -0.5734623443633282
+        ],
+        [
+          -0.19835953471222845,
+          0.9382720848292712,
+          -0.28337076387461213
+        ],
+        [
+          0.5380637094168614,
+          0.34589809891083956,
+          0.7686624420240878
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-reverse-oblique.png",
+      "sha256": "6daaaf20a25a86bc48be0746c22d7df656b65548f0249d906f1707175b3ced7b",
+      "selection": "pinch-60",
+      "selectedNodeIDs": [
+        [
+          "nature_pinch"
+        ],
+        [
+          "nature_pinch",
+          "nature_pinch_pressure"
+        ]
+      ],
+      "view": "reverse-oblique",
+      "cameraRows": [
+        [
+          -0.8192319205190405,
+          0.0,
+          -0.5734623443633283
+        ],
+        [
+          -0.2529707404776681,
+          0.8974438174088701,
+          0.3613867721109544
+        ],
+        [
+          0.5146502354656655,
+          0.44112877325628463,
+          -0.7352146220938078
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-front.png",
+      "sha256": "34038f1525c02090d37d49a09144a429cd76c8f553fb5ac6883cad27300e172b",
+      "selection": "wood-edge-15",
+      "selectedNodeIDs": [
+        [
+          "nature_wood"
+        ],
+        [
+          "nature_wood"
+        ]
+      ],
+      "view": "front",
+      "cameraRows": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-back.png",
+      "sha256": "152127170a10b05a07ef131328cd0ff9bf888ed214a30c6d09254f4813c6c43c",
+      "selection": "wood-edge-15",
+      "selectedNodeIDs": [
+        [
+          "nature_wood"
+        ],
+        [
+          "nature_wood"
+        ]
+      ],
+      "view": "back",
+      "cameraRows": [
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-side.png",
+      "sha256": "8b2bb5d859df95f6e6a963326f54464c1ef9cac8cfc68c5fdadffe785d2e4e47",
+      "selection": "wood-edge-15",
+      "selectedNodeIDs": [
+        [
+          "nature_wood"
+        ],
+        [
+          "nature_wood"
+        ]
+      ],
+      "view": "side",
+      "cameraRows": [
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          -0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-top.png",
+      "sha256": "08e3a7daa867f1fba2721c4907b8cdec36382a80c8dd95c586da07bd1043757f",
+      "selection": "wood-edge-15",
+      "selectedNodeIDs": [
+        [
+          "nature_wood"
+        ],
+        [
+          "nature_wood"
+        ]
+      ],
+      "view": "top",
+      "cameraRows": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-front-oblique.png",
+      "sha256": "d750ec1af38300bb00839f8333f6da87bda5873610d997f2803092584aaa0744",
+      "selection": "wood-edge-15",
+      "selectedNodeIDs": [
+        [
+          "nature_wood"
+        ],
+        [
+          "nature_wood"
+        ]
+      ],
+      "view": "front-oblique",
+      "cameraRows": [
+        [
+          0.8192319205190405,
+          0.0,
+          -0.5734623443633282
+        ],
+        [
+          -0.19835953471222845,
+          0.9382720848292712,
+          -0.28337076387461213
+        ],
+        [
+          0.5380637094168614,
+          0.34589809891083956,
+          0.7686624420240878
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-reverse-oblique.png",
+      "sha256": "290f70d11a5cbb399dbdf418dba1ed8c784122811c95bdb8f3b8ee404b58df22",
+      "selection": "wood-edge-15",
+      "selectedNodeIDs": [
+        [
+          "nature_wood"
+        ],
+        [
+          "nature_wood"
+        ]
+      ],
+      "view": "reverse-oblique",
+      "cameraRows": [
+        [
+          -0.8192319205190405,
+          0.0,
+          -0.5734623443633283
+        ],
+        [
+          -0.2529707404776681,
+          0.8974438174088701,
+          0.3613867721109544
+        ],
+        [
+          0.5146502354656655,
+          0.44112877325628463,
+          -0.7352146220938078
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-front.png",
+      "sha256": "c1ab2bc0548386b2cfb3c379c2fa5685d1b22f978116895832af32c5639aa6c8",
+      "selection": "granite-edge-15",
+      "selectedNodeIDs": [
+        [
+          "nature_stone"
+        ],
+        [
+          "nature_stone"
+        ]
+      ],
+      "view": "front",
+      "cameraRows": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-back.png",
+      "sha256": "2bde3ed16bd5f8e5692e76e12ecc533d3be50705478ce6e9f9918035df802612",
+      "selection": "granite-edge-15",
+      "selectedNodeIDs": [
+        [
+          "nature_stone"
+        ],
+        [
+          "nature_stone"
+        ]
+      ],
+      "view": "back",
+      "cameraRows": [
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-side.png",
+      "sha256": "80707f92ed68b68016339ae972396d09bceb50c582a67c79127c2ff0936dedfa",
+      "selection": "granite-edge-15",
+      "selectedNodeIDs": [
+        [
+          "nature_stone"
+        ],
+        [
+          "nature_stone"
+        ]
+      ],
+      "view": "side",
+      "cameraRows": [
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          -0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-top.png",
+      "sha256": "fe50daf37e65818171e65e9ec7b9907d175bb7b8668abf42c187ac228e106f63",
+      "selection": "granite-edge-15",
+      "selectedNodeIDs": [
+        [
+          "nature_stone"
+        ],
+        [
+          "nature_stone"
+        ]
+      ],
+      "view": "top",
+      "cameraRows": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-front-oblique.png",
+      "sha256": "2830febc673c25a6b5cd740ecc33f874baae0329004990b7b37ce29ff9600dbd",
+      "selection": "granite-edge-15",
+      "selectedNodeIDs": [
+        [
+          "nature_stone"
+        ],
+        [
+          "nature_stone"
+        ]
+      ],
+      "view": "front-oblique",
+      "cameraRows": [
+        [
+          0.8192319205190405,
+          0.0,
+          -0.5734623443633282
+        ],
+        [
+          -0.19835953471222845,
+          0.9382720848292712,
+          -0.28337076387461213
+        ],
+        [
+          0.5380637094168614,
+          0.34589809891083956,
+          0.7686624420240878
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-reverse-oblique.png",
+      "sha256": "69a65ee4d326f09f0b6d8fd49cfa9cc48d47fbcd71679453808ed7471ab2ad0e",
+      "selection": "granite-edge-15",
+      "selectedNodeIDs": [
+        [
+          "nature_stone"
+        ],
+        [
+          "nature_stone"
+        ]
+      ],
+      "view": "reverse-oblique",
+      "cameraRows": [
+        [
+          -0.8192319205190405,
+          0.0,
+          -0.5734623443633283
+        ],
+        [
+          -0.2529707404776681,
+          0.8974438174088701,
+          0.3613867721109544
+        ],
+        [
+          0.5146502354656655,
+          0.44112877325628463,
+          -0.7352146220938078
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    }
+  ],
+  "priorModelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+  "currentModelSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+  "rendererHelperSHA256": "4813f62cecf013dda9b7e3345ac9747b01934bf751dfd6300a865ae3e22d2466",
+  "scope": "Whole actual imported prior/current USDZ only, neutral diagnostic appearance, upright identity transform; no cord or app rendering",
+  "currentAppFrames": 0
+}

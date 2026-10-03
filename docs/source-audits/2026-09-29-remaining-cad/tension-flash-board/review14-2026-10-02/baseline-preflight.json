@@ -1,0 +1,1351 @@
+{
+  "schemaVersion": 1,
+  "owner": "placid-badger",
+  "task": "flash-board-review14/preflight",
+  "status": "read-only preflight complete; shape correction/native handoff and current runtime review remain outside this completed subtask",
+  "baselineHEAD": "d0a54fef261e1c0a7d6f70f1b0db5178d351f0f7",
+  "recordedAt": "2026-10-02T21:37:03.990487+00:00",
+  "canonicalInputs": [
+    {
+      "path": "Hangboards/tension-flash-board/assets/primary.model.json",
+      "bytes": 3577,
+      "sha256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e",
+      "lfs_pointer": false
+    },
+    {
+      "path": "Hangboards/tension-flash-board/assets/primary.usdz",
+      "bytes": 287093,
+      "sha256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+      "lfs_pointer": false
+    },
+    {
+      "path": "Hangboards/tension-flash-board/suspension.json",
+      "bytes": 22564,
+      "sha256": "25830bef1ac6409ec5f1d7ac5e13317de974f96f1fa1037947554d64cbf5fc0b",
+      "lfs_pointer": false
+    },
+    {
+      "path": "Hangboards/tension-flash-board/tension-flash-board.FCStd",
+      "bytes": 1240944,
+      "sha256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+      "lfs_pointer": false
+    }
+  ],
+  "canonicalInputsUnchanged": true,
+  "canonicalEditOrCommit": false,
+  "immutableBaselineReceipt": ".context/placid-badger/flash-board-review14/preflight/immutable-baseline-receipt.json",
+  "manifestGeneration": {
+    "retainedTool": "Tools/HangboardCAD/board_manifest.py",
+    "embeddedManifest": ".context/placid-badger/flash-board-review14/preflight/embedded-manifest.json",
+    "embeddedRawManifest": ".context/placid-badger/flash-board-review14/preflight/embedded-manifest-raw.json",
+    "toolDump": ".context/placid-badger/flash-board-review14/preflight/retained-tool-embedded-manifest.json",
+    "actualEmbeddedAndToolDumpEqual": true,
+    "mergedManifest": ".context/placid-badger/flash-board-review14/preflight/merged-board.json",
+    "generatedBoardSHA256": "ca407fa7e6c3bb33dfaa348e91c9543ca723190628505b08792b1151111b4804",
+    "embeddedRawManifestSHA256": "e97e45d09557692d0c7b07b6829ab8622f3ebd701f34822f02fdfd9699c295b5",
+    "sidecarSuspensionExactlyMerged": true,
+    "authoringRopeSolverAbsentFromGeneratedManifest": true,
+    "canonicalBoardJSONPhysicallyAbsent": true
+  },
+  "hashBinding": {
+    "usdSHA256MatchesDescriptor": true,
+    "usdSHA256MatchesSidecar": true,
+    "sourceMatchesRetainedFinalCompile": true,
+    "sourceModelMatchesRetainedNativeRouteReports": true,
+    "sourceModelSidecarMatchesRetainedContinuousCertificate": true,
+    "historicalAppReviewExactSourceModelDescriptorMatches": true
+  },
+  "contactAndFactualInventory": {
+    "contacts": [
+      {
+        "id": "three-edge-left",
+        "equipmentObjectID": "primary",
+        "name": "Left edge on three-edge surface",
+        "kind": "edge",
+        "gripTypes": []
+      },
+      {
+        "id": "three-edge-center",
+        "equipmentObjectID": "primary",
+        "name": "Center edge on three-edge surface",
+        "kind": "edge",
+        "gripTypes": []
+      },
+      {
+        "id": "three-edge-right",
+        "equipmentObjectID": "primary",
+        "name": "Right edge on three-edge surface",
+        "kind": "edge",
+        "gripTypes": []
+      },
+      {
+        "id": "two-edge-left",
+        "equipmentObjectID": "primary",
+        "name": "Left edge on two-edge surface",
+        "kind": "edge",
+        "gripTypes": []
+      },
+      {
+        "id": "two-edge-right",
+        "equipmentObjectID": "primary",
+        "name": "Right edge on two-edge surface",
+        "kind": "edge",
+        "gripTypes": []
+      },
+      {
+        "id": "small-crimp-left",
+        "equipmentObjectID": "primary",
+        "name": "Left small crimp",
+        "kind": "edge",
+        "gripTypes": []
+      },
+      {
+        "id": "small-crimp-right",
+        "equipmentObjectID": "primary",
+        "name": "Right small crimp",
+        "kind": "edge",
+        "gripTypes": []
+      }
+    ],
+    "contactCount": 7,
+    "positions": [
+      {
+        "id": "three-edge-upright",
+        "presentationID": "primary",
+        "contactIDs": [
+          "three-edge-left",
+          "three-edge-center",
+          "three-edge-right"
+        ]
+      },
+      {
+        "id": "three-edge-inverted",
+        "presentationID": "primary",
+        "contactIDs": [
+          "three-edge-left",
+          "three-edge-center",
+          "three-edge-right"
+        ]
+      },
+      {
+        "id": "two-edge-upright",
+        "presentationID": "primary",
+        "contactIDs": [
+          "two-edge-left",
+          "two-edge-right",
+          "small-crimp-left",
+          "small-crimp-right"
+        ]
+      },
+      {
+        "id": "two-edge-inverted",
+        "presentationID": "primary",
+        "contactIDs": [
+          "two-edge-left",
+          "two-edge-right",
+          "small-crimp-left",
+          "small-crimp-right"
+        ]
+      }
+    ],
+    "setupRequiredDirectedTransitions": 12,
+    "equipmentObjects": [
+      {
+        "id": "primary"
+      }
+    ],
+    "identity": {
+      "boardID": "tension.flash-board",
+      "schemaVersion": 3,
+      "revisionID": "2026-09-contact-first",
+      "manufacturer": "Tension Climbing",
+      "name": "Flash Board",
+      "subtitle": "Compact cylindrical portable board with small crimps and 8, 10, 15, and 20 mm edges.",
+      "productURL": "https://tensionclimbing.com/products/flash-board-2"
+    },
+    "presentations": [
+      {
+        "id": "primary",
+        "name": "Primary suspended model",
+        "aspectRatio": 1.5,
+        "isDefault": true,
+        "derivation": {
+          "type": "original"
+        },
+        "media": {
+          "type": "model",
+          "assetPath": "assets/primary.usdz",
+          "descriptorPath": "assets/primary.model.json",
+          "display": {
+            "camera": {
+              "type": "orthographic",
+              "viewDirection": [
+                0,
+                0,
+                -1
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "fitPadding": 0.08
+            }
+          }
+        }
+      }
+    ],
+    "publishedDepthPolicy": "The retained manufacturer product text establishes small crimps and 8/10/15/20 mm edges only. The current manifest assigns no per-contact published depth, finger count, or grip prescription. Keep omitted fields omitted; CAD region Y extents are measured display geometry, not training facts.",
+    "nativeMeasuredRegionDepthsMM": {
+      "small-crimp-left": 9.867,
+      "small-crimp-right": 9.867,
+      "three-edge-center": 21.998,
+      "three-edge-left": 21.998,
+      "three-edge-right": 21.998,
+      "two-edge-left": 24.0,
+      "two-edge-right": 24.0
+    },
+    "sourceContextArtifact": ".context/placid-badger/flash-board-review14/preflight/factual-source-contexts.json",
+    "metadataPreservationReport": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/metadata-preservation.json",
+    "metadataDiffReport": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/metadata-diff.json"
+  },
+  "nativeStructure": {
+    "objectCount": 80,
+    "typeCounts": {
+      "Part::Feature": 1,
+      "Part::Cylinder": 5,
+      "Sketcher::SketchObject": 28,
+      "Part::Loft": 14,
+      "Part::Face": 7,
+      "Part::Compound": 7,
+      "Part::Cut": 11,
+      "Part::Common": 7
+    },
+    "artifact": ".context/placid-badger/flash-board-review14/preflight/native-structure.json",
+    "rootDocumentProperties": {
+      "Comment": "",
+      "Company": "",
+      "CreatedBy": "",
+      "CreationDate": "2026-09-29T16:53:53-07:00",
+      "HangTenBoardID": "tension.flash-board",
+      "HangTenCoordinateFrame": "freecad-mm-z-up-front-negative-y",
+      "HangTenCurvedRegionPartition": "true",
+      "HangTenPresentationID": "primary",
+      "HangTenSchemaVersion": "1",
+      "HangTenSourceKind": "native-parametric-measured-profile",
+      "HangTenTessellationDeflection": "0.1500000000000000",
+      "Id": "",
+      "Label": "tension-flash-board",
+      "LastModifiedBy": "",
+      "LastModifiedDate": "2026-09-29T16:53:58-07:00",
+      "License": "All rights reserved",
+      "LicenseURL": "https://en.wikipedia.org/wiki/All_rights_reserved",
+      "Material": {
+        "xml": "<Property name=\"Material\" type=\"App::PropertyMap\">\n            <Map count=\"0\">\n            </Map>\n        </Property>"
+      },
+      "Meta": {
+        "xml": "<Property name=\"Meta\" type=\"App::PropertyMap\">\n            <Map count=\"0\">\n            </Map>\n        </Property>"
+      },
+      "ShowHidden": "false",
+      "TipName": "",
+      "Uid": "eaae3601-62a6-41f8-a237-6992d976a194",
+      "UnitSystem": {
+        "xml": "<Property name=\"UnitSystem\" type=\"App::PropertyEnumeration\" status=\"1\">\n            <Integer value=\"0\" CustomEnum=\"true\" />\n            <CustomEnumList count=\"10\">\n                <Enum value=\"Standard (mm, kg, s, \u00b0)\" />\n                <Enum value=\"MKS (m, kg, s, \u00b0)\" />\n                <Enum value=\"US customary (in, lb)\" />\n                <Enum value=\"Imperial decimal (in, lb)\" />\n                <Enum value=\"Building Euro (cm, m\u00b2, m\u00b3)\" />\n                <Enum value=\"Building US (ft-in, sqft, cft)\" />\n                <Enum value=\"Metric small parts &amp; CNC (mm, mm/min)\" />\n                <Enum value=\"Imperial for Civil Eng (ft, lb, mph)\" />\n                <Enum value=\"FEM (mm, N, s)\" />\n                <Enum value=\"Meter decimal (m, m\u00b2, m\u00b3)\" />\n            </CustomEnumList>\n        </Property>"
+      },
+      "UseHasher": "true"
+    },
+    "parameterValuesMM": {
+      "BeamLength": 500,
+      "BeamRadius": 38,
+      "PocketDepthScale": 1
+    },
+    "parameterValueClassification": "carried native display geometry; no new manufacturer dimension claim",
+    "semanticContacts": [
+      {
+        "name": "Cut10",
+        "type": "Part::Cut",
+        "properties": {
+          "NodeID": "flash_board_body_008",
+          "NodeRole": "body"
+        }
+      },
+      {
+        "name": "Contact_three_edge_left",
+        "type": "Part::Common",
+        "properties": {
+          "ContactID": "three-edge-left",
+          "NodeID": "flash_board_body_012",
+          "NodeRole": "contact"
+        }
+      },
+      {
+        "name": "Contact_three_edge_center",
+        "type": "Part::Common",
+        "properties": {
+          "ContactID": "three-edge-center",
+          "NodeID": "flash_board_body_011",
+          "NodeRole": "contact"
+        }
+      },
+      {
+        "name": "Contact_three_edge_right",
+        "type": "Part::Common",
+        "properties": {
+          "ContactID": "three-edge-right",
+          "NodeID": "flash_board_body_013",
+          "NodeRole": "contact"
+        }
+      },
+      {
+        "name": "Contact_two_edge_left",
+        "type": "Part::Common",
+        "properties": {
+          "ContactID": "two-edge-left",
+          "NodeID": "flash_board_body_014",
+          "NodeRole": "contact"
+        }
+      },
+      {
+        "name": "Contact_two_edge_right",
+        "type": "Part::Common",
+        "properties": {
+          "ContactID": "two-edge-right",
+          "NodeID": "flash_board_body_015",
+          "NodeRole": "contact"
+        }
+      },
+      {
+        "name": "Contact_small_crimp_left",
+        "type": "Part::Common",
+        "properties": {
+          "ContactID": "small-crimp-left",
+          "NodeID": "flash_board_body_009",
+          "NodeRole": "contact"
+        }
+      },
+      {
+        "name": "Contact_small_crimp_right",
+        "type": "Part::Common",
+        "properties": {
+          "ContactID": "small-crimp-right",
+          "NodeID": "flash_board_body_010",
+          "NodeRole": "contact"
+        }
+      }
+    ],
+    "bores": {
+      "features": [
+        "LeftOuterBore",
+        "LeftInnerBore",
+        "RightInnerBore",
+        "RightOuterBore"
+      ],
+      "nativeXMm": [
+        17,
+        31,
+        469,
+        483
+      ],
+      "axis": "native +Y",
+      "estimatedRadiusMM": 3,
+      "actualBodyMouthNativeYMM": [
+        -74.6606055596,
+        -1.3393944404
+      ],
+      "measuredInsideAxisLengthMM": 73.3212111192,
+      "noHiddenUConnection": true,
+      "retainedMeasurementReport": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/native-channel-measurements.json",
+      "nativeZMM": 48
+    },
+    "historicalValidation": {
+      "reopenRecompute": "passed",
+      "singleValidSolid": true,
+      "contacts": 7,
+      "fullyConstrainedSketches": true,
+      "meaningfulEdit": "PocketDepthScale 1 -> 1.04 reduces volume and increases all three front pocket depths; restoring recovers original volume",
+      "restoredVolumeDifferenceMM3": -6.984919309616089e-10,
+      "restoredContactDepthToleranceMM": 1e-06,
+      "sourceBytesUnchanged": true
+    },
+    "meaningfulEditIsHistoricalReadOnlyEvidence": true
+  },
+  "runtimeFinishAndActualUSDZ": {
+    "runtimeFinishMetadataPresent": false,
+    "manifestDisplayMetadata": {
+      "camera": {
+        "type": "orthographic",
+        "viewDirection": [
+          0,
+          0,
+          -1
+        ],
+        "up": [
+          0,
+          1,
+          0
+        ],
+        "fitPadding": 0.08
+      }
+    },
+    "sourceObjectMaterialNameProperties": [],
+    "freshImport": {
+      "status": "passed",
+      "method": "fresh OpenUSD stage + retained usdz_writer.read_usdz + retained compile_descriptor",
+      "emptyStagePrimCount": 0,
+      "python": "3.12.3",
+      "openUSDVersion": [
+        0,
+        26,
+        8
+      ],
+      "assetSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+      "descriptorSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e",
+      "defaultPrim": "root",
+      "upAxis": "Y",
+      "metersPerUnit": 1.0,
+      "nodes": [
+        {
+          "nodeID": "flash_board_body_008",
+          "role": "body",
+          "path": "/root/flash_board_body_008",
+          "vertices": 4016,
+          "triangles": 4042,
+          "material": null,
+          "normalCount": 4016,
+          "uvCount": 4016
+        },
+        {
+          "nodeID": "flash_board_body_009",
+          "role": "contact",
+          "contactID": "small-crimp-left",
+          "path": "/root/flash_board_body_009",
+          "vertices": 421,
+          "triangles": 419,
+          "material": null,
+          "normalCount": 421,
+          "uvCount": 421
+        },
+        {
+          "nodeID": "flash_board_body_010",
+          "role": "contact",
+          "contactID": "small-crimp-right",
+          "path": "/root/flash_board_body_010",
+          "vertices": 422,
+          "triangles": 420,
+          "material": null,
+          "normalCount": 422,
+          "uvCount": 422
+        },
+        {
+          "nodeID": "flash_board_body_011",
+          "role": "contact",
+          "contactID": "three-edge-center",
+          "path": "/root/flash_board_body_011",
+          "vertices": 713,
+          "triangles": 719,
+          "material": null,
+          "normalCount": 713,
+          "uvCount": 713
+        },
+        {
+          "nodeID": "flash_board_body_012",
+          "role": "contact",
+          "contactID": "three-edge-left",
+          "path": "/root/flash_board_body_012",
+          "vertices": 713,
+          "triangles": 719,
+          "material": null,
+          "normalCount": 713,
+          "uvCount": 713
+        },
+        {
+          "nodeID": "flash_board_body_013",
+          "role": "contact",
+          "contactID": "three-edge-right",
+          "path": "/root/flash_board_body_013",
+          "vertices": 714,
+          "triangles": 721,
+          "material": null,
+          "normalCount": 714,
+          "uvCount": 714
+        },
+        {
+          "nodeID": "flash_board_body_014",
+          "role": "contact",
+          "contactID": "two-edge-left",
+          "path": "/root/flash_board_body_014",
+          "vertices": 683,
+          "triangles": 687,
+          "material": null,
+          "normalCount": 683,
+          "uvCount": 683
+        },
+        {
+          "nodeID": "flash_board_body_015",
+          "role": "contact",
+          "contactID": "two-edge-right",
+          "path": "/root/flash_board_body_015",
+          "vertices": 685,
+          "triangles": 691,
+          "material": null,
+          "normalCount": 685,
+          "uvCount": 685
+        }
+      ],
+      "materialPrims": [],
+      "shaderPrims": [],
+      "materialBindingRelationships": [],
+      "retainedReaderMaterials": {},
+      "archiveMembers": [
+        "stage.usdc"
+      ],
+      "triangles": 8418,
+      "uniqueExactTriangleCount": 8418,
+      "duplicateTriangleOwners": [],
+      "descriptorMatchesRegeneratedJSON": true,
+      "bodyContactNodeInventoryMatches": true,
+      "logicalContactIDs": [
+        "small-crimp-left",
+        "small-crimp-right",
+        "three-edge-center",
+        "three-edge-left",
+        "three-edge-right",
+        "two-edge-left",
+        "two-edge-right"
+      ],
+      "environment": {
+        "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/preflight/placid-badger-openusd-config",
+        "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/preflight/placid-badger-openusd-cache",
+        "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/preflight/placid-badger-openusd-tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      }
+    },
+    "supportedFinishNextStep": "Use only generic source-supported wood appearance as runtime metadata, through set_board_manifest.py after immutable native handoff. Retained page text does not independently establish species or coating; do not add such claims.",
+    "usdMustStayMaterialFree": true
+  },
+  "suspension": {
+    "schemaVersion": 1,
+    "presentationID": "primary",
+    "modelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+    "type": "cadRoutedCord",
+    "bodyNodeID": "flash_board_body_008",
+    "strands": [
+      {
+        "id": "mouth-1-lead",
+        "kind": "lead",
+        "restLength": 0.6916787888808,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+      },
+      {
+        "id": "mouth-2-lead",
+        "kind": "lead",
+        "restLength": 0.6916787888808,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+      },
+      {
+        "id": "mouth-3-lead",
+        "kind": "lead",
+        "restLength": 0.6916787888808,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+      },
+      {
+        "id": "mouth-4-lead",
+        "kind": "lead",
+        "restLength": 0.6916787888808,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+      },
+      {
+        "id": "left-rear-return",
+        "kind": "segment",
+        "restLength": 0.03,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Retained manufacturer source register: visible segment only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+      },
+      {
+        "id": "right-rear-return",
+        "kind": "segment",
+        "restLength": 0.03,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Retained manufacturer source register: visible segment only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+      }
+    ],
+    "anchor": {
+      "offsetFromBoardBounds": [
+        0,
+        0.5,
+        0
+      ],
+      "visibility": "invisible",
+      "provenance": "display estimate; invisible overhead convergence selected for free-span clearance"
+    },
+    "authoringRopeSolver": {
+      "method": "nativeRoutes",
+      "clearance": 0.0002,
+      "supportDirection": 1,
+      "terminalsByStrandID": {
+        "mouth-1-lead": {
+          "points": [
+            [
+              0.017,
+              0.048,
+              0.0746606055596
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ]
+        },
+        "mouth-2-lead": {
+          "points": [
+            [
+              0.031,
+              0.048,
+              0.0746606055596
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ]
+        },
+        "mouth-3-lead": {
+          "points": [
+            [
+              0.469,
+              0.048,
+              0.0746606055596
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ]
+        },
+        "mouth-4-lead": {
+          "points": [
+            [
+              0.483,
+              0.048,
+              0.0746606055596
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ]
+        },
+        "left-rear-return": {
+          "points": [
+            [
+              0.017,
+              0.048,
+              0.0013393944404
+            ],
+            [
+              0.031,
+              0.048,
+              0.0013393944404
+            ]
+          ],
+          "planeNormal": [
+            0,
+            1,
+            0
+          ]
+        },
+        "right-rear-return": {
+          "points": [
+            [
+              0.469,
+              0.048,
+              0.0013393944404
+            ],
+            [
+              0.483,
+              0.048,
+              0.0013393944404
+            ]
+          ],
+          "planeNormal": [
+            0,
+            1,
+            0
+          ]
+        }
+      }
+    },
+    "canonicalPoses": {
+      "three-edge-upright": {
+        "position": {
+          "id": "three-edge-upright",
+          "presentationID": "primary",
+          "contactIDs": [
+            "three-edge-left",
+            "three-edge-center",
+            "three-edge-right"
+          ]
+        },
+        "rotation": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          -0.023623982,
+          0.075999998
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "fitPadding": 0.1
+        },
+        "quaternionNorm": 1.0,
+        "routePointCounts": {
+          "mouth-1-lead": 29,
+          "mouth-2-lead": 27,
+          "mouth-3-lead": 27,
+          "mouth-4-lead": 29,
+          "left-rear-return": 12,
+          "right-rear-return": 12
+        },
+        "routesExactlyMatchRetainedNativeCheck": true,
+        "heightExactlyMatchesRetainedNativeCheck": true,
+        "lengthRatios": {
+          "mouth-1-lead": 0.9999994066878958,
+          "mouth-2-lead": 0.9932290673428781,
+          "mouth-3-lead": 0.9932287533524256,
+          "mouth-4-lead": 0.9999999988086924,
+          "left-rear-return": 0.5231957810587154,
+          "right-rear-return": 0.5231957810609066
+        },
+        "sampledMinimumClearanceM": {
+          "mouth-1-lead": 0.002199118153997232,
+          "mouth-2-lead": 0.0021999941066570532,
+          "mouth-3-lead": 0.002199533083694086,
+          "mouth-4-lead": 0.0021999960635876816,
+          "left-rear-return": 0.0021166311818088864,
+          "right-rear-return": 0.0021166311817976177
+        },
+        "continuousCertificateMinimumClearanceM": {
+          "mouth-1-lead": 0.0020125431610703817,
+          "mouth-2-lead": 0.0019942758997149954,
+          "mouth-3-lead": 0.0019942758997149946,
+          "mouth-4-lead": 0.0020125431610703865,
+          "left-rear-return": 0.0020016042176746684,
+          "right-rear-return": 0.002001604217644798
+        }
+      },
+      "three-edge-inverted": {
+        "position": {
+          "id": "three-edge-inverted",
+          "presentationID": "primary",
+          "contactIDs": [
+            "three-edge-left",
+            "three-edge-center",
+            "three-edge-right"
+          ]
+        },
+        "rotation": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "translation": [
+          0.5,
+          -0.023623848,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "fitPadding": 0.1
+        },
+        "quaternionNorm": 1.0,
+        "routePointCounts": {
+          "mouth-1-lead": 29,
+          "mouth-2-lead": 27,
+          "mouth-3-lead": 27,
+          "mouth-4-lead": 29,
+          "left-rear-return": 12,
+          "right-rear-return": 12
+        },
+        "routesExactlyMatchRetainedNativeCheck": true,
+        "heightExactlyMatchesRetainedNativeCheck": true,
+        "lengthRatios": {
+          "mouth-1-lead": 0.9999994023874759,
+          "mouth-2-lead": 0.9932290630048595,
+          "mouth-3-lead": 0.993228749014407,
+          "mouth-4-lead": 0.9999999945082724,
+          "left-rear-return": 0.5231957810587154,
+          "right-rear-return": 0.5231957810609066
+        },
+        "sampledMinimumClearanceM": {
+          "mouth-1-lead": 0.002199118153997232,
+          "mouth-2-lead": 0.0021999941066570532,
+          "mouth-3-lead": 0.002199533083694086,
+          "mouth-4-lead": 0.0021999960635876816,
+          "left-rear-return": 0.0021166311818088864,
+          "right-rear-return": 0.0021166311817976177
+        },
+        "continuousCertificateMinimumClearanceM": {
+          "mouth-1-lead": 0.002012525153347661,
+          "mouth-2-lead": 0.0019942758997149954,
+          "mouth-3-lead": 0.0019942758997149946,
+          "mouth-4-lead": 0.0020125251533476616,
+          "left-rear-return": 0.0020016042176746684,
+          "right-rear-return": 0.002001604217644798
+        }
+      },
+      "two-edge-upright": {
+        "position": {
+          "id": "two-edge-upright",
+          "presentationID": "primary",
+          "contactIDs": [
+            "two-edge-left",
+            "two-edge-right",
+            "small-crimp-left",
+            "small-crimp-right"
+          ]
+        },
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [
+          0,
+          -0.121666498,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            1
+          ],
+          "fitPadding": 0.1
+        },
+        "quaternionNorm": 1.0,
+        "routePointCounts": {
+          "mouth-1-lead": 4,
+          "mouth-2-lead": 4,
+          "mouth-3-lead": 4,
+          "mouth-4-lead": 4,
+          "left-rear-return": 12,
+          "right-rear-return": 12
+        },
+        "routesExactlyMatchRetainedNativeCheck": true,
+        "heightExactlyMatchesRetainedNativeCheck": true,
+        "lengthRatios": {
+          "mouth-1-lead": 0.999999994743417,
+          "mouth-2-lead": 0.9933321186218483,
+          "mouth-3-lead": 0.9933319514270186,
+          "mouth-4-lead": 0.9999997756230339,
+          "left-rear-return": 0.5231957810587154,
+          "right-rear-return": 0.5231957810609066
+        },
+        "sampledMinimumClearanceM": {
+          "mouth-1-lead": 0.0021999999659676806,
+          "mouth-2-lead": 0.0021999999655733108,
+          "mouth-3-lead": 0.002199636867832923,
+          "mouth-4-lead": 0.0021995131651520003,
+          "left-rear-return": 0.0021166311818088864,
+          "right-rear-return": 0.0021166311817976177
+        },
+        "continuousCertificateMinimumClearanceM": {
+          "mouth-1-lead": 0.0020296518916209975,
+          "mouth-2-lead": 0.0020297099908277616,
+          "mouth-3-lead": 0.0020295510306624818,
+          "mouth-4-lead": 0.002029441667839361,
+          "left-rear-return": 0.0020016042176746684,
+          "right-rear-return": 0.002001604217644798
+        }
+      },
+      "two-edge-inverted": {
+        "position": {
+          "id": "two-edge-inverted",
+          "presentationID": "primary",
+          "contactIDs": [
+            "two-edge-left",
+            "two-edge-right",
+            "small-crimp-left",
+            "small-crimp-right"
+          ]
+        },
+        "rotation": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "translation": [
+          0.5,
+          -0.121666622,
+          0.075999998
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            1
+          ],
+          "fitPadding": 0.1
+        },
+        "quaternionNorm": 1.0,
+        "routePointCounts": {
+          "mouth-1-lead": 4,
+          "mouth-2-lead": 4,
+          "mouth-3-lead": 4,
+          "mouth-4-lead": 4,
+          "left-rear-return": 12,
+          "right-rear-return": 12
+        },
+        "routesExactlyMatchRetainedNativeCheck": true,
+        "heightExactlyMatchesRetainedNativeCheck": true,
+        "lengthRatios": {
+          "mouth-1-lead": 0.9999999978581833,
+          "mouth-2-lead": 0.993332121763474,
+          "mouth-3-lead": 0.9933319545693025,
+          "mouth-4-lead": 0.9999997787386856,
+          "left-rear-return": 0.5231957810587154,
+          "right-rear-return": 0.5231957810609066
+        },
+        "sampledMinimumClearanceM": {
+          "mouth-1-lead": 0.0021999999659676806,
+          "mouth-2-lead": 0.0021999999655733108,
+          "mouth-3-lead": 0.002199636867832923,
+          "mouth-4-lead": 0.0021995131651520003,
+          "left-rear-return": 0.0021166311818088864,
+          "right-rear-return": 0.0021166311817976177
+        },
+        "continuousCertificateMinimumClearanceM": {
+          "mouth-1-lead": 0.002029652396602793,
+          "mouth-2-lead": 0.002029710496002451,
+          "mouth-3-lead": 0.002029551535830022,
+          "mouth-4-lead": 0.002029442172810622,
+          "left-rear-return": 0.0020016042176746684,
+          "right-rear-return": 0.002001604217644798
+        }
+      }
+    },
+    "nativeCacheExactlyEqualsReportAndCheck": true,
+    "sourceGeometryProvenance": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/cord-authoring-review.json",
+    "sourceFact": "four independent bores with exterior rear returns retained in manufacturer views; do not fabricate a hidden U channel",
+    "fixedXLimit": {
+      "condition": "ropeSolver has fixed planeNormal [1,0,0] for all four free leads and no sectionPlane anchor option. Wrapped lead cache points keep x equal to the mouth x.",
+      "limit": "Existing sampled and continuous clearance certificates prove native-solid clearance and tube checks, not sideways equilibrium at a bend created by projected support in a fixed-X section. They cannot justify a smooth unsupported lateral turn.",
+      "nextHandoffInstructionFromRoot": "For corrected source, use existing ropeSolver.sectionPlane anchor and allowed documented settings as appropriate for each free lead; root reviews exact authoring diff. Preserve native bore terminals, four independent passages, rear returns, and old rest lengths initially. No hand routes, solver/compiler/shared edits, or new routing guesses.",
+      "doc": "docs/HANGBOARD_CORD_AUTHORING.md, anchor section and actual-support discussion"
+    },
+    "continuousClearanceHistorical": {
+      "package": "tension-flash-board",
+      "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+      "modelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+      "sidecarSHA256": "25830bef1ac6409ec5f1d7ac5e13317de974f96f1fa1037947554d64cbf5fc0b",
+      "validatorSHA256": "309cffb89d3955298aefab71bc1e57098fbc7beb14596aef1b8064cf83b77171",
+      "method": "continuous-distance certificate on exact rounded runtime cache, including world support endpoints",
+      "fullPathSelfAndInterstrandTubeGate": "passed",
+      "entries": [
+        {
+          "presentationID": "primary",
+          "equipmentObjectID": null,
+          "poses": {
+            "three-edge-upright": {
+              "mouth-1-lead": 0.0020125431610703817,
+              "mouth-2-lead": 0.0019942758997149954,
+              "mouth-3-lead": 0.0019942758997149946,
+              "mouth-4-lead": 0.0020125431610703865,
+              "left-rear-return": 0.0020016042176746684,
+              "right-rear-return": 0.002001604217644798
+            },
+            "three-edge-inverted": {
+              "mouth-1-lead": 0.002012525153347661,
+              "mouth-2-lead": 0.0019942758997149954,
+              "mouth-3-lead": 0.0019942758997149946,
+              "mouth-4-lead": 0.0020125251533476616,
+              "left-rear-return": 0.0020016042176746684,
+              "right-rear-return": 0.002001604217644798
+            },
+            "two-edge-upright": {
+              "mouth-1-lead": 0.0020296518916209975,
+              "mouth-2-lead": 0.0020297099908277616,
+              "mouth-3-lead": 0.0020295510306624818,
+              "mouth-4-lead": 0.002029441667839361,
+              "left-rear-return": 0.0020016042176746684,
+              "right-rear-return": 0.002001604217644798
+            },
+            "two-edge-inverted": {
+              "mouth-1-lead": 0.002029652396602793,
+              "mouth-2-lead": 0.002029710496002451,
+              "mouth-3-lead": 0.002029551535830022,
+              "mouth-4-lead": 0.002029442172810622,
+              "left-rear-return": 0.0020016042176746684,
+              "right-rear-return": 0.002001604217644798
+            }
+          }
+        }
+      ]
+    },
+    "nativeSolverClaimsLimit": "deterministic native-section route and settled-height approximation, not dynamic physics or proven frictionless equilibrium",
+    "modelChangeInvalidatesHistoricalNativeCacheAndClearance": true
+  },
+  "sourceProvenance": {
+    "approval": {
+      "state": "approved",
+      "reviewer": "user",
+      "date": "2026-09-29",
+      "quote": "those are fine, feel free to use more searches for individual boards as needed",
+      "scope": "Exact retained visual set and further individual manufacturer source research."
+    },
+    "sources": [
+      {
+        "path": "evidence/tension-flash-product.html",
+        "publisher": "Tension Climbing",
+        "sourceURL": "https://tensionclimbing.com/products/flash-board-2",
+        "binaryURL": "https://tensionclimbing.com/products/flash-board-2",
+        "sha256": "f2e1c2474d7c29b069a6061b04524a2b7df61e33dedbbcb0cd8111b0b7bafca1",
+        "bytes": 386560,
+        "supports": "exact-revision manufacturer",
+        "retention": "git 8f2bfcffd^:docs/source-audits/2026-09-13-model-cord-snapshots/tension-flash-product.html",
+        "approvalStatus": "approved by user 2026-09-29",
+        "actualSHA256": "f2e1c2474d7c29b069a6061b04524a2b7df61e33dedbbcb0cd8111b0b7bafca1",
+        "actualBytes": 386560,
+        "matches": true
+      },
+      {
+        "path": "evidence/tension-flash-training-blog.html",
+        "publisher": "Tension Climbing",
+        "sourceURL": "https://tensionclimbing.com/blogs/training-tools/hangboard-overview-the-flash-board",
+        "binaryURL": "https://tensionclimbing.com/blogs/training-tools/hangboard-overview-the-flash-board",
+        "sha256": "c9692ca8f898ae65449aa2340d82e9040ed77d643b618217bd7c287ac737ff28",
+        "bytes": 331037,
+        "supports": "exact-revision training article",
+        "retention": "git 8f2bfcffd^:docs/source-audits/2026-09-13-model-cord-snapshots/tension-flash-training-blog.html",
+        "approvalStatus": "approved by user 2026-09-29",
+        "actualSHA256": "c9692ca8f898ae65449aa2340d82e9040ed77d643b618217bd7c287ac737ff28",
+        "actualBytes": 331037,
+        "matches": true
+      },
+      {
+        "path": "evidence/FlashBoard1.png",
+        "publisher": "Tension Climbing",
+        "sourceURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard1.png?v=1726542491",
+        "binaryURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard1.png?v=1726542491",
+        "sha256": "aa00ab77e04c685acc4dee0e0704d25fd3165810387649a4e924bf3f7bfff148",
+        "bytes": 1469015,
+        "supports": "Four product views show the three-well and two-well faces, cylindrical body, shallow long ledges and four cord bores (two per end). Exterior return spans are visible. Existing seven contact IDs remain authoritative; photographs do not establish new training contacts. A graph of two bores plus exterior return at each end differs from a hidden U channel.",
+        "retention": "downloaded 2026-09-29 from exact URL discovered in retained manufacturer page",
+        "approvalStatus": "approved by user 2026-09-29",
+        "actualSHA256": "aa00ab77e04c685acc4dee0e0704d25fd3165810387649a4e924bf3f7bfff148",
+        "actualBytes": 1469015,
+        "matches": true
+      },
+      {
+        "path": "evidence/FlashBoard2.png",
+        "publisher": "Tension Climbing",
+        "sourceURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard2.png?v=1726542491",
+        "binaryURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard2.png?v=1726542491",
+        "sha256": "ae84f7d58def1c2f4e3b14c2e98ddf8e332b7f48e6c774312744b792d4ab97b4",
+        "bytes": 685328,
+        "supports": "Four product views show the three-well and two-well faces, cylindrical body, shallow long ledges and four cord bores (two per end). Exterior return spans are visible. Existing seven contact IDs remain authoritative; photographs do not establish new training contacts. A graph of two bores plus exterior return at each end differs from a hidden U channel.",
+        "retention": "downloaded 2026-09-29 from exact URL discovered in retained manufacturer page",
+        "approvalStatus": "approved by user 2026-09-29",
+        "actualSHA256": "ae84f7d58def1c2f4e3b14c2e98ddf8e332b7f48e6c774312744b792d4ab97b4",
+        "actualBytes": 685328,
+        "matches": true
+      },
+      {
+        "path": "evidence/FlashBoard3.png",
+        "publisher": "Tension Climbing",
+        "sourceURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard3.png?v=1726542491",
+        "binaryURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard3.png?v=1726542491",
+        "sha256": "5753461d938adb19655556e8070f7361a0f9a1697752a861bacde4d240f0f63d",
+        "bytes": 2197828,
+        "supports": "Four product views show the three-well and two-well faces, cylindrical body, shallow long ledges and four cord bores (two per end). Exterior return spans are visible. Existing seven contact IDs remain authoritative; photographs do not establish new training contacts. A graph of two bores plus exterior return at each end differs from a hidden U channel.",
+        "retention": "downloaded 2026-09-29 from exact URL discovered in retained manufacturer page",
+        "approvalStatus": "approved by user 2026-09-29",
+        "actualSHA256": "5753461d938adb19655556e8070f7361a0f9a1697752a861bacde4d240f0f63d",
+        "actualBytes": 2197828,
+        "matches": true
+      },
+      {
+        "path": "evidence/FlashBoard4.png",
+        "publisher": "Tension Climbing",
+        "sourceURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard4.png?v=1726542491",
+        "binaryURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard4.png?v=1726542491",
+        "sha256": "7c078225890ae6d6975bff865e706e8858e7a56c3edc8df572637241ca6df200",
+        "bytes": 2088678,
+        "supports": "Four product views show the three-well and two-well faces, cylindrical body, shallow long ledges and four cord bores (two per end). Exterior return spans are visible. Existing seven contact IDs remain authoritative; photographs do not establish new training contacts. A graph of two bores plus exterior return at each end differs from a hidden U channel.",
+        "retention": "downloaded 2026-09-29 from exact URL discovered in retained manufacturer page",
+        "approvalStatus": "approved by user 2026-09-29",
+        "actualSHA256": "7c078225890ae6d6975bff865e706e8858e7a56c3edc8df572637241ca6df200",
+        "actualBytes": 2088678,
+        "matches": true
+      }
+    ]
+  },
+  "visualProvenance": {
+    "artifacts": [
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/app-review/contact-selection.png",
+        "bytes": 488298,
+        "sha256": "8f190ad2d719fee1262cf92fbe646e0fb574578a0bdc7431cc02920d3352d8bd",
+        "width": 1206,
+        "height": 2622
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/app-review/default.png",
+        "bytes": 503859,
+        "sha256": "d00e23042cc52be3eff3a76987dda233b9f72316c709658b6d43dd3c1a48244c",
+        "width": 1206,
+        "height": 2622
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/comparison-sheet.png",
+        "bytes": 31814,
+        "sha256": "8c5d7894ba9f422e4556f23f9a5b2e63ac7b2f00924ddf5eaf4c0e793b43b024",
+        "width": 1040,
+        "height": 1020
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard1.png",
+        "bytes": 1469015,
+        "sha256": "aa00ab77e04c685acc4dee0e0704d25fd3165810387649a4e924bf3f7bfff148",
+        "width": 2048,
+        "height": 2048
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard2.png",
+        "bytes": 685328,
+        "sha256": "ae84f7d58def1c2f4e3b14c2e98ddf8e332b7f48e6c774312744b792d4ab97b4",
+        "width": 2048,
+        "height": 2048
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard3.png",
+        "bytes": 2197828,
+        "sha256": "5753461d938adb19655556e8070f7361a0f9a1697752a861bacde4d240f0f63d",
+        "width": 2048,
+        "height": 2048
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard4.png",
+        "bytes": 2088678,
+        "sha256": "7c078225890ae6d6975bff865e706e8858e7a56c3edc8df572637241ca6df200",
+        "width": 2048,
+        "height": 2048
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/tension-flash-board-front.png",
+        "bytes": 4505,
+        "sha256": "5843fc5912dd8be3b4e0b1811ddea465b52cce68659cfb36747a32fdc3264f79",
+        "width": 520,
+        "height": 680
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/tension-flash-board-ref-front.png",
+        "bytes": 7457,
+        "sha256": "719e5bd31c8e2021da3aca056071b1279082c155a22e2f576ee5fa17a37f9c00",
+        "width": 520,
+        "height": 680
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/tension-flash-board-ref-side.png",
+        "bytes": 12125,
+        "sha256": "12aee04bf46517b53cbb458d18a90d294cafadd8ba24e5b74609ced59ba3c110",
+        "width": 520,
+        "height": 680
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/tension-flash-board-ref-top.png",
+        "bytes": 3884,
+        "sha256": "3c1ce7e23524a5a8fb3ed18cb03e77dd66f8bcc6a5ec57865fc4867f99e4b4a4",
+        "width": 520,
+        "height": 680
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/tension-flash-board-side.png",
+        "bytes": 4800,
+        "sha256": "77273f5127b4e2b4e7b55d61b498d86e1d0cdc2a5e94560cd506e6c3ce12a0c2",
+        "width": 520,
+        "height": 680
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/tension-flash-board-top.png",
+        "bytes": 3467,
+        "sha256": "35a215796bdf58dd7feb4ca49dc2f39cc2796cd62659425e2453902de4a512f7",
+        "width": 520,
+        "height": 680
+      }
+    ],
+    "frontSideTopComparison": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/geometry-review.html",
+    "historicalGeometryReport": {
+      "reviewer": "CAD authoring agent",
+      "reviewDate": "2026-09-29",
+      "views": [
+        "front",
+        "side",
+        "top"
+      ],
+      "artifact": "geometry-review.html",
+      "referenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+      "observations": [
+        "Same cylindrical envelope, seven grips and four independent through-bores.",
+        "Native analytic cavity lips replace densely faceted prior transitions.",
+        "Front/side/top reviewed with corrected viewing-depth order."
+      ],
+      "humanFinalAppReview": "pending root coordination"
+    },
+    "referenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+    "fullWholeViewsExist": true,
+    "limits": "Historical 520x680 raster front/side/top previews and comparison HTML exist; their report does not name rendering command, exact exported asset hash or capture commit. Re-render changed geometry next to the immutable baseline before shape completion.",
+    "historicalAppReview": {
+      "owner": "placid-badger",
+      "simulator": "D7168911-6A46-4FED-9019-968CCEFEB9DB",
+      "device": "iPhone 17 Pro",
+      "runtime": "iOS 26.5",
+      "boardID": "tension.flash-board",
+      "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+      "presentations": {
+        "primary": {
+          "modelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+          "descriptorSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e"
+        }
+      },
+      "checks": [
+        {
+          "contactID": "three-edge-left",
+          "selection": "DEBUG initial hold",
+          "image": "default.png",
+          "accessibility": "default-accessibility.json"
+        },
+        {
+          "contactID": "two-edge-left",
+          "selection": "DEBUG contact review route",
+          "image": "contact-selection.png",
+          "accessibility": "contact-selection-accessibility.json"
+        }
+      ],
+      "humanGeometryAcceptance": "pending one-by-one user review",
+      "limits": "DEBUG hold-review screenshots and accessibility selection checks supplement RealityKit contact/cord tests; they do not certify manufacturer geometric accuracy."
+    },
+    "firstRetainedAppReviewCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
+    "currentRuntimeVerified": false,
+    "appScreenshotLimits": "Two DEBUG contact-review screenshots cover three-edge-left and two-edge-left; no current-source build commit or sidecar hash is recorded in app validation. They do not prove all 4 canonical poses, current renderer integration or current runtime. Root reports current Simulator startup failures; no Simulator was started by this preflight."
+  },
+  "technicalBlockersAndOutstandingGates": [
+    {
+      "gate": "native shape correction",
+      "status": "root/Astra identified missing broad relief shelves and tall scalloped end walls; independent shape worker preparing correction in scratch",
+      "authority": "root message; this preflight makes no native shape decision"
+    },
+    {
+      "gate": "runtime finish metadata",
+      "status": "absent at baseline; wood finish metadata can be added only after immutable native handoff"
+    },
+    {
+      "gate": "cord re-solve on corrected solid",
+      "status": "new descriptor hash binding and native routes/height/clearance for every 4 canonical poses needed; anchor sections must address old fixed-X limit"
+    },
+    {
+      "gate": "human shape acceptance",
+      "status": "pending in historical geometry/metadata/app records; retained source-set approval is separate"
+    },
+    {
+      "gate": "current iOS visual runtime",
+      "status": "unverified due root-retained Simulator startup failures; old contact screenshots provide historical evidence only"
+    }
+  ],
+  "preservationRequirements": [
+    "Seven logical contacts and names/kind/equipment/gripTypes stay exact; unsupported depth/finger/grip fields remain omitted.",
+    "Single primary presentation and equipment object, four position memberships, all 12 setupRequired transitions, identity/revision/product facts stay exact.",
+    "Native cylindrical envelope and four bore features/actual terminals remain source-governed; preserve independent-bore + visible-return graph.",
+    "Keep baseline USDZ/descriptor hashes unless approved geometry promotion explicitly changes them. Bind every regenerated descriptor and sidecar to promoted actual USDZ.",
+    "All USDZ meshes remain unbound with no materials/textures, including cord. Cord stays metadata-driven and transient.",
+    "No canonical board.json is written; manifest changes use retained set_board_manifest.py, and staging regenerates from FCStd + sidecar.",
+    "Routes and height derive solely from existing native solver; preserve old lengths initially and record any supported estimate changes.",
+    "New front/side/top comparisons and explicit human review are required for changed geometry; historical agent observations are not human acceptance."
+  ],
+  "reusableValidatedEvidence": [
+    {
+      "item": "six retained exact manufacturer sources and explicit source-set approval",
+      "match": "all actual hashes/bytes equal source register; four distinct full product images exist"
+    },
+    {
+      "item": "current export material/node/triangle/descriptor boundary",
+      "match": "fresh read-only OpenUSD reimport and regenerated descriptor equal shipped JSON; 8418 unique triangles; no material/shader/binding/texture assets"
+    },
+    {
+      "item": "compile reproducibility and native edit reports",
+      "match": "retained final compile and hash closure match baseline source/model/descriptor; historical recompute/edit restoration valid for unchanged baseline only"
+    },
+    {
+      "item": "native routes/channel measurements/continuous tube clearance",
+      "match": "exact source/model/sidecar hashes and cache match; usable as baseline provenance, invalidated by solid/pose/solver input changes; no sideways-equilibrium claim"
+    },
+    {
+      "item": "historical front/side/top and 2 app contact captures",
+      "match": "hashes recorded; comparison reference commit known; runtime capture commit/sidecar provenance incomplete"
+    }
+  ],
+  "validationPolicy": {
+    "newTestsOrBuildsRun": false,
+    "readOnlyFreshUSDZInspectionRun": true,
+    "full64PackageAndGenericIOSCompile": "root-provided reusable evidence at initial HEAD; not rerun",
+    "runtimeOrHTTPServersStarted": false,
+    "detachedWorkspacesInspected": false,
+    "sharedReservedPathsAccessed": false,
+    "scratchVerifierCorrection": ".context/placid-badger/flash-board-review14/preflight/verifier-correction.json"
+  },
+  "cleanup": {
+    "owner": "placid-badger",
+    "task": "flash-board-review14/preflight",
+    "exitTrapRan": true,
+    "removed": [
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/preflight/placid-badger-openusd-config",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/preflight/placid-badger-openusd-cache",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/preflight/placid-badger-openusd-tmp"
+    ],
+    "absenceVerified": true,
+    "cleanupAt": "2026-10-02T21:33:56.980848+00:00"
+  },
+  "auditHashes": ".context/placid-badger/flash-board-review14/preflight/audit-file-hashes.json",
+  "downstreamCompactCordInstruction": {
+    "authority": "root message relaying repeated user compact-display-cord preference",
+    "beginOnlyAfter": "immutable native corrected source handoff",
+    "baseline": "0.5 m anchor offset; four 0.6916787888808 m visible lead allowances on 0.5 m board",
+    "procedure": "First solve corrected solid with actual anchor sections and retained lengths. Then propose a coherent shorter display support offset plus four per-lead length estimates together, around 0.18\u20130.20 m overhead if strict certification permits. Existing native solver derives routes and height. Do not shorten restLength alone.",
+    "preserve": [
+      "two rear-return allowances and topology",
+      "four native bore terminals",
+      "cord radius facts/estimates unless evidence requires a change",
+      "no knots or unseen connections"
+    ],
+    "comparison": "Retain old and new complete cord views and exact source/model/sidecar hashes; document overhead support and lengths as display estimates."
+  }
+}

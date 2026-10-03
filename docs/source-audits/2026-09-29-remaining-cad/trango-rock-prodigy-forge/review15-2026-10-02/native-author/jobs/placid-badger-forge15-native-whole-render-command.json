@@ -1,0 +1,23 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    ".context/placid-badger/venv/bin/python",
+    ".context/placid-badger/forge-review15/native-author/whole-depth-render.py",
+    "--out",
+    ".context/placid-badger/forge-review15/native-author/native-whole-views"
+  ],
+  "startedUTC": "2026-10-03T01:16:24.547291+00:00",
+  "timeoutSeconds": 300,
+  "ownedTemporaryDirectory": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-native-whole-render-tmp",
+  "ownedExtraDirectories": [],
+  "status": "pass",
+  "ownedProcessGroup": 97385,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "ownedExtraDirectoriesAbsent": [],
+  "exitCode": 0,
+  "elapsedSeconds": 6.210692291002488,
+  "logSHA256": "b6cab707aa8e4d424c0bb743b1fe52ab8be689b7dbc2e806e682072caf1f6d57"
+}

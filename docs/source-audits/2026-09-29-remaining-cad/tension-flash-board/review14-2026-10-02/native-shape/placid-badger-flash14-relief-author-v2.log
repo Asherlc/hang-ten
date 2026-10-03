@@ -1,0 +1,30 @@
+Selected relief/lip edge count 40
+Fillet state ['Up-to-date'] null False
+
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/shape-review/native-refinement/placid-badger-flash14-relief-author-v2-tmp/hangten-freecad-thuewr72/run.py", line 5, in <module>
+    exec(compile(open(path).read(), path, 'exec'), {'__name__': '__main__', '__file__': path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/shape-review/native-refinement/author_relief_v2.py", line 69, in <module>
+    if hasattr(o,'ViewObject'):o.ViewObject.Visibility=(o==current)
+                               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'Visibility'
+

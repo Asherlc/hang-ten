@@ -1,0 +1,92 @@
+{
+  "status": "pass-author-probe",
+  "bodyFeature": "CordSeat_Right",
+  "sourceBeforeSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+  "manifestRawPreserved": true,
+  "nativeBodyValid": true,
+  "solidCount": 1,
+  "volume": 299887.52229181246,
+  "removedVolume": 808.6533293992738,
+  "addedVolume": 0.0,
+  "envelopeMM": [
+    105.0000002,
+    35.000000200000045,
+    105.0000002
+  ],
+  "contacts": {
+    "edge-front-15mm-incut": {
+      "area": 1576.9854096792426,
+      "areaDelta": 0.0,
+      "oldMinusNewArea": 0.0,
+      "newMinusOldArea": 0.0
+    },
+    "edge-front-15mm-flat": {
+      "area": 1579.0272289811758,
+      "areaDelta": 0.0,
+      "oldMinusNewArea": 0.0,
+      "newMinusOldArea": 0.0
+    },
+    "edge-reverse-10mm-incut": {
+      "area": 1101.876119262868,
+      "areaDelta": 0.0,
+      "oldMinusNewArea": 0.0,
+      "newMinusOldArea": 0.0
+    },
+    "edge-reverse-10mm-flat": {
+      "area": 1105.6849440428584,
+      "areaDelta": 0.0,
+      "oldMinusNewArea": 0.0,
+      "newMinusOldArea": 0.0
+    },
+    "edge-reverse-06mm-flat": {
+      "area": 671.3059239625056,
+      "areaDelta": 0.0,
+      "oldMinusNewArea": 0.0,
+      "newMinusOldArea": 0.0
+    },
+    "edge-reverse-06mm-incut": {
+      "area": 665.4460045322277,
+      "areaDelta": 0.0,
+      "oldMinusNewArea": 0.0,
+      "newMinusOldArea": 0.0
+    },
+    "edge-front-20mm-wood-flat": {
+      "area": 2144.3440540053684,
+      "areaDelta": 0.0,
+      "oldMinusNewArea": 0.0,
+      "newMinusOldArea": 0.0
+    },
+    "edge-front-20mm-granite": {
+      "area": 2371.0352227826147,
+      "areaDelta": 0.0,
+      "oldMinusNewArea": 0.0,
+      "newMinusOldArea": 0.0
+    }
+  },
+  "verticalGrooves": {
+    "count": 2,
+    "nativeAxis": [
+      0,
+      0,
+      1
+    ],
+    "centerYMM": 0,
+    "centerAbsXMM": 52.5,
+    "radiusMM": 1.75,
+    "cutNativeZMM": [
+      -55,
+      55
+    ],
+    "numericProvenance": "Operator display estimates; one vertical groove per side is owner/source-supported; not measured from pixels."
+  },
+  "transverseNotchesPreserved": 6,
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6"
+}
+
+								
+								
+								
+								
+								
+								
+								

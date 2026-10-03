@@ -340,6 +340,57 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertThrowsError(try ContactResolver.resolveSelection(task, step: step(targets: []), board: configured))
     }
 
+    func testConfiguredTaskRecordsHandTargetsAndEffectivePositionTogether() throws {
+        let configured = configuredBoard(positionOrder: [10, 18])
+        let task: [PlanHandTarget] = [WorkoutSide.left, .right].map { side in
+            PlanHandTarget(target: PlanContactPredicate(kind: .edge,
+                depth: .measured(.init(minimum: 10, maximum: 10))), side: side)
+        }
+        let workoutStep = WorkoutStep(id: "configured-task", number: 1, title: "Fixture", instruction: "",
+            accessory: "", duration: 10, phase: .hang,
+            segments: [.init(kind: .work, target: .tasks([task]), timing: .fixed, duration: 10)])
+        let workout = TrainingPlan(id: "configured-task", title: "Fixture", subtitle: "", level: "",
+            sourceLabel: "Fixture", sourceURL: nil, provenance: .custom,
+            boardID: configured.id, steps: [workoutStep])
+        let selection = try ContactResolver.resolveSelection(task, step: workoutStep, board: configured)
+        let record = try XCTUnwrap(WorkoutActivityRecorder().segments(for: workout, on: configured).first)
+        let snapshot = try XCTUnwrap(record.target?.resolvedContactSnapshot)
+
+        XCTAssertEqual(selection.positionID, "depth-10mm")
+        XCTAssertEqual(selection.contacts.map(\.id), ["edge-a", "edge-b"])
+        XCTAssertEqual(selection.contacts.map(\.depth), [
+            .range(.init(minimum: 10, maximum: 10)), .range(.init(minimum: 10, maximum: 10))
+        ])
+        XCTAssertEqual(snapshot.positionID, selection.positionID)
+        XCTAssertEqual(snapshot.modelSHA256, String(repeating: "b", count: 64))
+        XCTAssertEqual(snapshot.contactIDs, ["edge-a", "edge-b"])
+        XCTAssertEqual(snapshot.handTargets, task)
+        XCTAssertEqual(try JSONDecoder().decode(RecordedActivitySegment.self,
+            from: JSONEncoder().encode(record)), record)
+    }
+
+    func testConfiguredSimultaneousTaskRejectsHandsWithoutACommonPosition() {
+        let task = [
+            PlanHandTarget(target: PlanContactPredicate(kind: .edge,
+                depth: .measured(.init(minimum: 18, maximum: 18))), side: .left),
+            PlanHandTarget(target: PlanContactPredicate(kind: .edge,
+                depth: .measured(.init(minimum: 10, maximum: 10))), side: .right)
+        ]
+        let configured = configuredBoard()
+        let workoutStep = WorkoutStep(id: "incompatible-task", number: 1, title: "Fixture", instruction: "",
+            accessory: "", duration: 10, phase: .hang,
+            segments: [.init(kind: .work, target: .tasks([task]), timing: .fixed, duration: 10)])
+        let workout = TrainingPlan(id: "incompatible-task", title: "Fixture", subtitle: "", level: "",
+            sourceLabel: "Fixture", sourceURL: nil, provenance: .custom,
+            boardID: configured.id, steps: [workoutStep])
+
+        XCTAssertThrowsError(try ContactResolver.resolveSelection(task, step: workoutStep, board: configured))
+        XCTAssertThrowsError(try WorkoutActivityRecorder().segments(for: workout, on: configured)) { error in
+            XCTAssertEqual(error as? WorkoutActivityRecordingError,
+                           .unresolvedTarget(stepID: "incompatible-task", segmentIndex: 0))
+        }
+    }
+
     private func configuredBoard(
         positionOrder: [Int] = [18, 10],
         defaultBounds: [String: HoldFrame]? = nil,
@@ -2462,4 +2513,6 @@ private final class BlockingWorkoutActivityFileManager: FileManager {
             attributes: attributes
         )
     }
+
+
 }

@@ -483,6 +483,10 @@ def main():
         data = selected[0]
     else:
         data = document
+        if arguments.presentation is not None and arguments.presentation != data.get("presentationID"):
+            raise ValueError("--presentation does not match the sidecar presentation")
+        if arguments.equipment_object is not None and "instanceSuspensions" not in data:
+            raise ValueError("--equipment-object requires an instance sidecar")
     import use_hangboard_packages
     from hangboard_packages import cad_source as source_metadata
     board = source_metadata.load_board(cad_source)
@@ -494,49 +498,60 @@ def main():
     mesh = trimesh.Trimesh(
         vertices=source["vertices"], faces=source["triangles"], process=False
     )
-    setups = data.get("instanceSuspensions", {"single": data.get("suspension")})
-    if any(setup["type"] == "threadedLoopCord" for setup in setups.values()):
-        try:
-            import FreeCAD as App
-        except ImportError as error:
-            raise ValueError("run the single-loop solve with FreeCAD Python for exact native-solid clearance") from error
-        cad_document = App.openDocument(str(cad_source.resolve()))
-        native_solid = cad_document.getObject(source["sourceFeature"]).Shape
-        if not native_solid.isValid() or len(native_solid.Solids) != 1:
-            raise ValueError("collision source is not one valid native CAD solid")
-        mesh.metadata["nativeSolid"] = native_solid
     native_routes = data.get("ropeSolver", {}).get("method") == "nativeRoutes"
-    solutions = {}
-    for equipment_id, setup in setups.items():
-        import copy
-        local_data = {**data, "suspension": copy.deepcopy(setup)}
-        if native_routes:
-            from native_cord_routes import solve_native_routes
-            solved = solve_native_routes(mesh, local_data, model)
-        else:
-            solved = solve_package(arguments.package, mesh, local_data, model)
-        solutions[equipment_id] = solved
-        for pose_id, result in solved.items():
-            pose = setup["canonicalPoses"][pose_id]
-            route_key = "wrappedRoutes" if native_routes else "cordContactPoints"
-            routes = result["routes" if native_routes else "contacts"]
-            if arguments.check:
-                if abs(pose["translation"][1] - result["height"]) > 1e-8 or pose.get(route_key) != routes:
-                    raise ValueError(f"{equipment_id}/{pose_id}: generated route cache is stale")
+    setups = data.get("instanceSuspensions", {"single": data.get("suspension")})
+    if "instanceSuspensions" in data and arguments.equipment_object is not None:
+        if arguments.equipment_object not in setups:
+            raise ValueError("--equipment-object must identify a sidecar instance")
+        setups = {arguments.equipment_object: setups[arguments.equipment_object]}
+    native_document = None
+    results = {}
+    try:
+        if any(setup["type"] == "threadedLoopCord" for setup in setups.values()):
+            try:
+                import FreeCAD as App
+            except ImportError as error:
+                raise ValueError("run the single-loop solve with FreeCAD Python for exact native-solid clearance") from error
+            native_document = App.openDocument(str(cad_source.resolve()))
+            feature = native_document.getObject(source["sourceFeature"])
+            if feature is None or not feature.Shape.isValid() or len(feature.Shape.Solids) != 1:
+                raise ValueError("collision source is not one valid native CAD solid")
+            mesh.metadata["nativeSolid"] = feature.Shape
+        for equipment_id, setup in setups.items():
+            import copy
+            local_data = dict(data, suspension=copy.deepcopy(setup))
+            if native_routes:
+                from native_cord_routes import solve_native_routes
+                solved = solve_native_routes(mesh, local_data, model, source_metadata=source)
             else:
-                pose["translation"][1] = result["height"]
-                pose[route_key] = routes
+                solved = solve_package(arguments.package, mesh, local_data, model)
+            results[equipment_id] = solved
+            cache_key = "wrappedRoutes" if native_routes else "cordContactPoints"
+            result_key = "routes" if native_routes else "contacts"
+            for pose_id, result in solved.items():
+                pose = setup["canonicalPoses"][pose_id]
+                if arguments.check:
+                    if (abs(pose["translation"][1] - result["height"]) > 1e-8
+                            or pose.get(cache_key) != result[result_key]):
+                        raise ValueError(f"{equipment_id}/{pose_id}: generated route cache is stale")
+                else:
+                    pose["translation"][1] = result["height"]
+                    pose[cache_key] = result[result_key]
+    finally:
+        if native_document is not None:
+            App.closeDocument(native_document.Name)
     if arguments.report:
         arguments.report.parent.mkdir(parents=True, exist_ok=True)
         report = {"package": arguments.package, "presentationID": data["presentationID"],
             "modelSHA256": model["modelSHA256"], "sourceSHA256": source["sourceSHA256"],
             "method": "nativeRoutes" if native_routes else "internalLoop"}
-        if set(solutions) == {"single"}:
-            report["poses"] = solutions["single"]
+        if "instanceSuspensions" in data:
+            report["instances"] = results
         else:
-            report["instances"] = solutions
-        arguments.report.write_text(json.dumps(report, indent=2)+"\n")
-
+            report["poses"] = results["single"]
+        if data.get("ropeSolver", {}).get("grooveGuides"):
+            report["collisionSolidSHA256"] = hashlib.sha256(arguments.solid.read_bytes()).hexdigest()
+        arguments.report.write_text(json.dumps(report, indent=2) + "\n")
     if arguments.apply:
         formatted = json.dumps(document, indent=2)
         number = r"-?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?"

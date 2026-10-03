@@ -1,0 +1,12 @@
+{
+  "primary.usdz": {
+    "first": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+    "second": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+    "bytesEqual": true
+  },
+  "primary.model.json": {
+    "first": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+    "second": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+    "bytesEqual": true
+  }
+}

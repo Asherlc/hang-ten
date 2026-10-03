@@ -1,0 +1,66 @@
+{
+  "nativeSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+  "files": {
+    "primary.usdz": {
+      "sha256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+      "bytes": 2044005,
+      "identicalBothBuilds": true
+    },
+    "primary.model.json": {
+      "sha256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+      "bytes": 16823,
+      "identicalBothBuilds": true
+    }
+  },
+  "cleanBuildsIdentical": true,
+  "actualUSDZMeshes": 35,
+  "descriptorNodes": 35,
+  "contactCount": 34,
+  "identityBindingsEqualPrior": true,
+  "materials": [],
+  "materialBindings": [],
+  "textureMembers": [],
+  "measuredRegionDepthsMM": {
+    "face-a-center-pull-up-slot": 17.0,
+    "face-a-left-dual-pocket": 17.0,
+    "face-a-left-outer-slot": 22.0,
+    "face-a-left-single-pocket": 17.0,
+    "face-a-right-dual-pocket": 17.0,
+    "face-a-right-outer-slot": 22.0,
+    "face-a-right-single-pocket": 17.0,
+    "face-b-center-pull-up-slot": 25.0,
+    "face-b-left-deep-sloper": 86.0,
+    "face-b-left-dual-pocket": 24.0,
+    "face-b-left-outer-slot": 27.0,
+    "face-b-left-single-pocket": 23.993,
+    "face-b-right-deep-sloper": 86.0,
+    "face-b-right-dual-pocket": 24.0,
+    "face-b-right-outer-slot": 27.0,
+    "face-b-right-single-pocket": 23.993,
+    "face-c-center-pull-up-slot": 16.0,
+    "face-c-left-dual-pocket": 16.0,
+    "face-c-left-outer-slot": 14.0,
+    "face-c-left-shallow-half-round": 11.001,
+    "face-c-left-single-pocket": 16.0,
+    "face-c-right-dual-pocket": 16.0,
+    "face-c-right-outer-slot": 14.0,
+    "face-c-right-shallow-half-round": 11.001,
+    "face-c-right-single-pocket": 16.0,
+    "face-d-center-pull-up-slot": 25.0,
+    "face-d-left-deep-rounded-recess": 62.63,
+    "face-d-left-dual-pocket": 24.0,
+    "face-d-left-outer-slot": 27.0,
+    "face-d-left-single-pocket": 23.993,
+    "face-d-right-deep-rounded-recess": 62.63,
+    "face-d-right-dual-pocket": 24.0,
+    "face-d-right-outer-slot": 27.0,
+    "face-d-right-single-pocket": 23.993
+  },
+  "maximumMeasuredDepthDeltaFromPriorMM": 0.0,
+  "cdVerifierPassed": true,
+  "cdSeamAnglesDegrees": [
+    2.7528456839127657,
+    2.7528456839127657
+  ],
+  "sourceBytesUnchangedByBothCompiles": true
+}

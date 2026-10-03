@@ -1,0 +1,32 @@
+{
+  "owner": "placid-badger",
+  "baselineHEAD": "d0a54fef261e1c0a7d6f70f1b0db5178d351f0f7",
+  "retainedAt": "2026-10-02T21:34:36.657418+00:00",
+  "files": [
+    {
+      "canonicalPath": "Hangboards/tension-flash-board/assets/primary.model.json",
+      "snapshotPath": ".context/placid-badger/flash-board-review14/preflight/placid-badger-baseline-package/assets/primary.model.json",
+      "sha256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e",
+      "bytes": 3577
+    },
+    {
+      "canonicalPath": "Hangboards/tension-flash-board/assets/primary.usdz",
+      "snapshotPath": ".context/placid-badger/flash-board-review14/preflight/placid-badger-baseline-package/assets/primary.usdz",
+      "sha256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+      "bytes": 287093
+    },
+    {
+      "canonicalPath": "Hangboards/tension-flash-board/suspension.json",
+      "snapshotPath": ".context/placid-badger/flash-board-review14/preflight/placid-badger-baseline-package/suspension.json",
+      "sha256": "25830bef1ac6409ec5f1d7ac5e13317de974f96f1fa1037947554d64cbf5fc0b",
+      "bytes": 22564
+    },
+    {
+      "canonicalPath": "Hangboards/tension-flash-board/tension-flash-board.FCStd",
+      "snapshotPath": ".context/placid-badger/flash-board-review14/preflight/placid-badger-baseline-package/tension-flash-board.FCStd",
+      "sha256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+      "bytes": 1240944
+    }
+  ],
+  "purpose": "read-only initial preflight preservation before native handoff; copies are not canonical inputs"
+}

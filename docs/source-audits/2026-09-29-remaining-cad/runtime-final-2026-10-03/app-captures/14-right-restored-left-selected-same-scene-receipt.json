@@ -1,0 +1,30 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 14,
+    "boardID": "tension.flash-board",
+    "package": "tension-flash-board",
+    "contactID": "three-edge-left",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "tension.flash-board",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "three-edge-left",
+      "BOARD_TELEPHOTO": "1"
+    },
+    "launchedAt": 1791056295.043752
+  },
+  "image": "14-right-restored-left-selected-same-scene.png",
+  "imageSHA256": "f3bf7590afeaa045b8709ed76d5d8530e362e8b2606ad416246835b5d758da6d",
+  "accessibilitySHA256": "6f20952f51dc8207b63bb5e93817648e09f465748b9ee798f85e15e631da3165",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-left;tapRevision=1;pickedContact=three-edge-left",
+  "visualInspection": "Pending whole-frame inspection",
+  "sameSceneLegendSelection": true,
+  "contactID": "three-edge-left"
+}

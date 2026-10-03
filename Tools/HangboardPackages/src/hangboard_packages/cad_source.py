@@ -387,17 +387,7 @@ def merge_suspension_sidecar(board: dict, package_root: Path) -> dict:
     return _merge_suspension_entry(board, package_root, document)
 
 
-def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> dict:
-    instance_setup = isinstance(document, dict) and document.get("schemaVersion") == 2
-    payload_key = "instanceSuspensions" if instance_setup else "suspension"
-    required = {"schemaVersion", "presentationID", "modelSHA256", payload_key}
-    optional = {"ropeSolver"} if instance_setup else {"ropeSolver", "equipmentObjectID"}
-    if not isinstance(document, dict) or not required <= set(document) \
-            or set(document) - required - optional or document["schemaVersion"] not in (1, 2):
-        raise ManifestError("suspension.json has invalid schema or members")
-    # Authoring-only settings for Tools/HangboardCAD/solve_threaded_rope.py;
-    # never merged into board.json.
-    solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
+def _validate_suspension_solver(solver: dict, document: dict) -> None:
     if isinstance(solver, dict) and solver.get("method") == "nativeRoutes" and "terminalsByPoseID" in solver:
         overrides = solver["terminalsByPoseID"]
         suspension = document.get("suspension")
@@ -407,15 +397,14 @@ def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> 
             raise ManifestError("nativeRoutes terminalsByPoseID must identify existing canonical poses")
         if "grooveGuides" in solver:
             raise ManifestError("nativeRoutes pose terminals cannot be combined with grooveGuides")
-        # Reuse the complete existing station/topology validator on each
-        # effective map. Merging returns a new board; the input stays untouched.
+        # Validate each effective station map against this instance's topology.
+        # These authoring-only settings never enter the generated board.
         base_solver = {key: value for key, value in solver.items() if key != "terminalsByPoseID"}
         for terminals in overrides.values():
-            _merge_suspension_entry(board, package_root, {
-                **document, "ropeSolver": {**base_solver, "terminalsByStrandID": terminals}})
+            _validate_suspension_solver({**base_solver, "terminalsByStrandID": terminals}, document)
         solver = base_solver
     if isinstance(solver, dict) and solver.get("method") == "nativeRoutes":
-        if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane", "tightening", "pathSearch"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
+        if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane", "tightening", "pathSearch", "grooveGuides"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
                 or isinstance(solver["clearance"], bool) \
                 or not isinstance(solver["clearance"], (int,float)) or not math.isfinite(solver["clearance"]) \
                 or not 0 < solver["clearance"] <= .01 \
@@ -456,6 +445,25 @@ def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> 
         if any(len(solver["terminalsByStrandID"][strand["id"]]["points"]) != (1 if strand["kind"] == "lead" else 2)
                for strand in strands):
             raise ManifestError("nativeRoutes needs one terminal per lead and two stations per loop or segment")
+        if "grooveGuides" in solver:
+            guides=solver["grooveGuides"]
+            poses=suspension.get("canonicalPoses",{})
+            if not isinstance(guides,dict) or set(guides)!={"sourceSHA256","byPoseID"} \
+                    or not isinstance(guides.get("sourceSHA256"),str) or not re.fullmatch(r"[0-9a-f]{64}",guides["sourceSHA256"]) \
+                    or not isinstance(guides.get("byPoseID"),dict) or set(guides["byPoseID"])!=set(poses) \
+                    or solver.get("sectionPlane")!="anchor" or solver.get("supportDirection",1)!=1 \
+                    or "tightening" in solver or any(x["kind"]!="lead" for x in strands):
+                raise ManifestError("native grooveGuides requires exact source/pose bindings and independent anchor-plane leads")
+            identifiers={x["id"] for x in strands}
+            for selections in guides["byPoseID"].values():
+                if not isinstance(selections,dict) or set(selections)!=identifiers:
+                    raise ManifestError("native grooveGuides must select every strand in every pose")
+                for identifier,selection in selections.items():
+                    if not isinstance(selection,dict) or set(selection)!={"feature","boreFeature","exitSign"} \
+                            or any(not isinstance(selection.get(key),str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*",selection[key]) for key in ("feature","boreFeature")) \
+                            or isinstance(selection.get("exitSign"),bool) or selection.get("exitSign") not in (-1,1) \
+                            or "mouthAxis" not in solver["terminalsByStrandID"][identifier]:
+                        raise ManifestError("native grooveGuides requires native feature names, finite exit choice and mouth axes")
         if "tightening" in solver and (solver.get("sectionPlane", "fixed") != "anchor" or any(
                 strand["kind"] != "lead" or "mouthAxis" not in solver["terminalsByStrandID"][strand["id"]]
                 for strand in strands)):
@@ -468,6 +476,24 @@ def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> 
             or solver["sectionPlane"] not in ("mouth-x", "anchor") \
             or ("channelProfile" in solver and (solver["channelProfile"] != "rectangular" or solver["sectionPlane"] != "mouth-x")):
         raise ManifestError("suspension.json ropeSolver requires mouth-x or anchor; rectangular channelProfile requires mouth-x")
+
+
+def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> dict:
+    instance_setup = isinstance(document, dict) and document.get("schemaVersion") == 2
+    payload_key = "instanceSuspensions" if instance_setup else "suspension"
+    required = {"schemaVersion", "presentationID", "modelSHA256", payload_key}
+    optional = {"ropeSolver"} if instance_setup else {"ropeSolver", "equipmentObjectID"}
+    if not isinstance(document, dict) or not required <= set(document) \
+            or set(document) - required - optional or document["schemaVersion"] not in (1, 2):
+        raise ManifestError("suspension.json has invalid schema or members")
+    # Authoring-only settings for Tools/HangboardCAD/solve_threaded_rope.py;
+    # never merged into board.json.
+    solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
+    if not isinstance(document[payload_key], dict):
+        raise ManifestError("suspension.json suspension payload must be an object")
+    setups = document[payload_key].values() if instance_setup else [document["suspension"]]
+    for setup in setups:
+        _validate_suspension_solver(solver, {"suspension": setup})
     presentation_id = document["presentationID"]
     model_hash = document["modelSHA256"]
     if not isinstance(presentation_id, str) or not isinstance(model_hash, str) \

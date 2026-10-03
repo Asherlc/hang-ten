@@ -816,9 +816,41 @@ enum WorkoutLiftCompletionPolicy {
 }
 
 enum WorkoutHighlightResolver {
+    static func presentationID(
+        for step: WorkoutStep?,
+        on board: BoardRevision,
+        taskIndex: Int = 0,
+        selectedHandSide: WorkoutSide? = nil
+    ) -> String? {
+        guard let step,
+              let selection = selection(for: step, on: board, taskIndex: taskIndex, selectedHandSide: selectedHandSide),
+              let position = board.position(id: selection.positionID) else { return nil }
+        return position.presentationID
+    }
+
+    static func contacts(
+        for step: WorkoutStep,
+        on board: BoardRevision,
+        taskIndex: Int = 0,
+        selectedHandSide: WorkoutSide? = nil
+    ) -> [PhysicalContact] {
+        selection(for: step, on: board, taskIndex: taskIndex, selectedHandSide: selectedHandSide)?.contacts ?? []
+    }
+
+    static func contactIDs(
+        for step: WorkoutStep,
+        on board: BoardRevision,
+        taskIndex: Int = 0,
+        selectedHandSide: WorkoutSide? = nil
+    ) -> [String] {
+        contacts(for: step, on: board, taskIndex: taskIndex, selectedHandSide: selectedHandSide).map(\.id)
+    }
+
     private static func selection(
-        for step: WorkoutStep, on board: BoardRevision,
-        taskIndex: Int, selectedHandSide: WorkoutSide?
+        for step: WorkoutStep,
+        on board: BoardRevision,
+        taskIndex: Int,
+        selectedHandSide: WorkoutSide?
     ) -> ContactResolver.Selection? {
         if let tasks = step.segments.lazy.compactMap({ $0.target?.planTasks }).first,
            tasks.indices.contains(taskIndex) {
@@ -831,37 +863,14 @@ enum WorkoutHighlightResolver {
             guard let resolved = try? ContactResolver.resolveSelection(task, step: step, board: board) else {
                 return nil
             }
-            return ContactResolver.Selection(contacts: zip(task, resolved.contacts).compactMap { hand, contact in
-                hand.target == nil ? nil : contact
-            }, positionID: resolved.positionID)
+            return ContactResolver.Selection(
+                contacts: zip(task, resolved.contacts).compactMap { hand, contact in
+                    hand.target == nil ? nil : contact
+                },
+                positionID: resolved.positionID
+            )
         }
         return try? ContactResolver.resolveSelection(step.workRequirements, step: step, board: board)
-    }
-
-    static func presentationID(
-        for step: WorkoutStep?, on board: BoardRevision,
-        taskIndex: Int = 0, selectedHandSide: WorkoutSide? = nil
-    ) -> String? {
-        guard let step, let resolved = selection(for: step, on: board,
-            taskIndex: taskIndex, selectedHandSide: selectedHandSide),
-              let position = board.position(id: resolved.positionID) else { return nil }
-        return position.presentationID
-    }
-
-    static func contacts(
-        for step: WorkoutStep, on board: BoardRevision,
-        taskIndex: Int = 0, selectedHandSide: WorkoutSide? = nil
-    ) -> [PhysicalContact] {
-        selection(for: step, on: board, taskIndex: taskIndex,
-                  selectedHandSide: selectedHandSide)?.contacts ?? []
-    }
-
-    static func contactIDs(
-        for step: WorkoutStep, on board: BoardRevision,
-        taskIndex: Int = 0, selectedHandSide: WorkoutSide? = nil
-    ) -> [String] {
-        contacts(for: step, on: board, taskIndex: taskIndex,
-                 selectedHandSide: selectedHandSide).map(\.id)
     }
 }
 

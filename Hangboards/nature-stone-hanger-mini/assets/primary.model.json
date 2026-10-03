@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
-  "modelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+  "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
   "modelBounds": {
     "min": [
       -0.050000001,
@@ -21,6 +21,19 @@
     },
     {
       "nodeID": "nature_jug",
+      "role": "contact",
+      "contactID": "pull-up-jug",
+      "additionalContactIDs": [
+        "pinch-60"
+      ]
+    },
+    {
+      "nodeID": "nature_jug_ends",
+      "role": "contact",
+      "contactID": "pull-up-jug"
+    },
+    {
+      "nodeID": "nature_jug_pressure",
       "role": "contact",
       "contactID": "pull-up-jug"
     },
@@ -47,21 +60,22 @@
       ],
       "facePlaneAABB": {
         "min": [
-          0.130000001,
-          0.366666657
+          0.109999998,
+          0.200000006
         ],
         "max": [
-          0.869999999,
+          0.890000002,
           0.366666657
         ]
       },
       "center": [
         0.5,
-        0.366666657
+        0.283333332
       ]
     },
     "pinch-60": {
       "nodeIDs": [
+        "nature_jug",
         "nature_pinch"
       ],
       "facePlaneAABB": {
@@ -81,21 +95,23 @@
     },
     "pull-up-jug": {
       "nodeIDs": [
-        "nature_jug"
+        "nature_jug",
+        "nature_jug_ends",
+        "nature_jug_pressure"
       ],
       "facePlaneAABB": {
         "min": [
-          0.109999998,
-          0.333333333
+          0.0,
+          0.830402896
         ],
         "max": [
-          0.890000002,
-          0.833333333
+          1.0,
+          1.0
         ]
       },
       "center": [
         0.5,
-        0.583333333
+        0.915201448
       ]
     },
     "wood-edge-15-incut": {

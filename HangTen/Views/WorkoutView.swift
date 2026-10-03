@@ -143,7 +143,13 @@ struct WorkoutView: View {
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
-				let activeHold = board.contacts.first { highlightedHoldIDs.contains($0.id) }
+				let activeHold = resolvedHighlightedStep.flatMap {
+					WorkoutHighlightResolver.contacts(for: $0, on: board,
+						taskIndex: highlightedTaskIndex,
+						selectedHandSide: highlightedSelectedHandSide).first {
+							highlightedHoldIDs.contains($0.id)
+						}
+				}
 				let holdCue = WorkoutHoldCuePolicy.resolve(
 					step: resolvedHighlightedStep,
 					hold: activeHold,

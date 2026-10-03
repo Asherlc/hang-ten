@@ -1,0 +1,12 @@
+[
+  {
+    "file": "primary.usdz",
+    "sha256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "exactRebuildEqual": true
+  },
+  {
+    "file": "primary.model.json",
+    "sha256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "exactRebuildEqual": true
+  }
+]

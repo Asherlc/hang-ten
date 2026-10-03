@@ -1,0 +1,103 @@
+{
+  "package": "Hangboards/tension-flash-board",
+  "filesBefore": {
+    "tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+    "assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17"
+  },
+  "filesAfter": {
+    "tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+    "assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17"
+  },
+  "scriptSHA256": "1b95a26cb886d92b1afde46ebd5f1dc504c12a485b5922bf1dda4b09d135b557",
+  "originalSceneScriptSHA256": "48d44cbee7d98156866e2602c6193145584b6b638b8b0c6b4ec2a7fb940888b4",
+  "method": "whole actual USDZ mesh + unchanged cached cord tube; barycentric per-pixel orthographic depth; larger projected Z wins; no source photo processing",
+  "camera": {
+    "inlineMatched": "same original reverse-oblique projection, bounds, scale, 1000x636 render, pasted at y64 on 1000x700",
+    "worldEyeDirection": [
+      0.5,
+      0,
+      -0.8660254037844386
+    ],
+    "highContext": "same yaw plus 30 degree elevation; whole-scene auto-fit"
+  },
+  "images": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/three-edge-upright-reverse-oblique-matched-depth.png",
+      "sha256": "4fcc304aef5c102757bc2fa9ac2948f43b8bdb3af7e82dc185889cd7f76595fb",
+      "pose": "three-edge-upright",
+      "view": "reverse-oblique",
+      "sameCameraFramingAsInline": true,
+      "projectedBoundsM": [
+        [
+          -0.5,
+          -0.142
+        ],
+        [
+          0.03,
+          0.306
+        ]
+      ],
+      "wholeBoardAndCord": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/three-edge-upright-high-reverse-oblique-matched-depth.png",
+      "sha256": "3addf97da4ae4d72d884a90715e30555c459b5c3a0508d6c562b3ca419dcd606",
+      "pose": "three-edge-upright",
+      "view": "high-reverse-oblique",
+      "sameCameraFramingAsInline": false,
+      "projectedBoundsM": [
+        [
+          -0.47100679535030787,
+          -0.19677332823385077
+        ],
+        [
+          -5.904807018272672e-06,
+          0.1945473698836379
+        ]
+      ],
+      "wholeBoardAndCord": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/two-edge-upright-reverse-oblique-matched-depth.png",
+      "sha256": "7749e06d287fa4027421c9c063d5cde463530b104893145489cb91d1ed44e9c1",
+      "pose": "two-edge-upright",
+      "view": "reverse-oblique",
+      "sameCameraFramingAsInline": true,
+      "projectedBoundsM": [
+        [
+          -0.5,
+          -0.142
+        ],
+        [
+          0.03,
+          0.306
+        ]
+      ],
+      "wholeBoardAndCord": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/two-edge-upright-high-reverse-oblique-matched-depth.png",
+      "sha256": "432f65390c79b95df8b78e3c3cdcc20563ec955e4573fc839afc97a7bd93a11e",
+      "pose": "two-edge-upright",
+      "view": "high-reverse-oblique",
+      "sameCameraFramingAsInline": false,
+      "projectedBoundsM": [
+        [
+          -0.4710067960852011,
+          -0.21540010457178765
+        ],
+        [
+          -5.905541911492512e-06,
+          0.19465568964192367
+        ]
+      ],
+      "wholeBoardAndCord": true
+    }
+  ],
+  "packageUnchanged": true,
+  "appFrames": 0
+}

@@ -1,0 +1,65 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 10,
+    "boardID": "nature.stone-hanger-mini",
+    "package": "nature-stone-hanger-mini",
+    "contactID": "pull-up-jug",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "nature.stone-hanger-mini",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "pull-up-jug",
+      "BOARD_TELEPHOTO": "1"
+    },
+    "launchedAt": 1791054307.88516
+  },
+  "image": "10-live-top-oblique.png",
+  "imageSHA256": "4f239598ffea28696388e3e52e04be09e5ce3aaa32676fc4fb18cbbc832659c1",
+  "accessibilitySHA256": "6183f8a511be066c11d88bfca8656843683cca1f0a0cddf6466067faef4b36fa",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=13;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.55;cameraPitch=0.84145665;cameraSettled=true;selection=pull-up-jug;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "actualPhysicalOrbit": true,
+  "projectedBefore": {
+    "boardModel.contact.pull-up-jug": [
+      0.5,
+      0.17664670658682635
+    ],
+    "boardModel.contact.wood-edge-15-incut": [
+      0.5,
+      0.31636726546906174
+    ],
+    "boardModel.contact.pinch-60": [
+      0.5,
+      0.3243512974051896
+    ],
+    "boardModel.contact.granite-edge-15": [
+      0.5,
+      0.4161676646706587
+    ]
+  },
+  "projectedAfter": {
+    "boardModel.contact.pull-up-jug": [
+      0.5,
+      0.1956087824351297
+    ],
+    "boardModel.contact.pinch-60": [
+      0.5,
+      0.3303393213572854
+    ],
+    "boardModel.contact.wood-edge-15-incut": [
+      0.5,
+      0.3323353293413174
+    ],
+    "boardModel.contact.granite-edge-15": [
+      0.5,
+      0.4231536926147704
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "owner": "placid-badger",
+  "processGroups": [
+    {
+      "pgid": 41581,
+      "absent": true
+    }
+  ],
+  "resources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-independent-candidate-check-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-independent-candidate-check-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-independent-candidate-check-tmp",
+      "absent": true
+    }
+  ],
+  "exitCode": 0
+}

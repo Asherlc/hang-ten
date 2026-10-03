@@ -1,0 +1,144 @@
+ mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+
+fresh-forced-recompute closed-crimp-left {"areaMM2": 4909.902822998254, "baselineAreaMM2": 4909.902822998254, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute closed-crimp-right {"areaMM2": 4909.902822998254, "baselineAreaMM2": 4909.902822998254, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute im-deep-left {"areaMM2": 3177.4484092202065, "baselineAreaMM2": 3177.448409220211, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute im-deep-right {"areaMM2": 3177.4484092202056, "baselineAreaMM2": 3177.4484092202047, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute im-shallow-left {"areaMM2": 2240.5925323074366, "baselineAreaMM2": 2240.592532307436, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute im-shallow-right {"areaMM2": 2240.5925323074366, "baselineAreaMM2": 2240.592532307437, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute large-flat-edge-left {"areaMM2": 910.3999999999992, "baselineAreaMM2": 910.4, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute large-flat-edge-right {"areaMM2": 910.3999999999992, "baselineAreaMM2": 910.4, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute mr-deep-left {"areaMM2": 3962.459432387895, "baselineAreaMM2": 3962.4594323878946, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute mr-deep-right {"areaMM2": 3962.459432387895, "baselineAreaMM2": 3962.4594323878946, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute mr-shallow-left {"areaMM2": 2779.804607813528, "baselineAreaMM2": 2779.804607813528, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute mr-shallow-right {"areaMM2": 2779.804607813528, "baselineAreaMM2": 2779.804607813528, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute sloper-30-left {"areaMM2": 8410.45988393196, "baselineAreaMM2": 8410.459883932454, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute sloper-30-right {"areaMM2": 8410.459883931957, "baselineAreaMM2": 8410.459883932454, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute sloper-40-left {"areaMM2": 3190.4987705233857, "baselineAreaMM2": 3190.4987705233907, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute sloper-40-right {"areaMM2": 3190.498770523385, "baselineAreaMM2": 3190.4987705233902, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute slopey-crimper-left {"areaMM2": 382.0047624099453, "baselineAreaMM2": 382.0047624099453, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute slopey-crimper-right {"areaMM2": 382.0047624099453, "baselineAreaMM2": 382.0047624099453, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute variable-edge-rail-left {"areaMM2": 8777.961859387264, "baselineAreaMM2": 8777.961859387264, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-forced-recompute variable-edge-rail-right {"areaMM2": 8777.961859387262, "baselineAreaMM2": 8777.961859387264, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored closed-crimp-left {"areaMM2": 4909.902822998254, "baselineAreaMM2": 4909.902822998254, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored closed-crimp-right {"areaMM2": 4909.902822998254, "baselineAreaMM2": 4909.902822998254, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored im-deep-left {"areaMM2": 3177.4484092202065, "baselineAreaMM2": 3177.448409220211, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored im-deep-right {"areaMM2": 3177.4484092202056, "baselineAreaMM2": 3177.4484092202047, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored im-shallow-left {"areaMM2": 2240.5925323074366, "baselineAreaMM2": 2240.592532307436, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored im-shallow-right {"areaMM2": 2240.5925323074366, "baselineAreaMM2": 2240.592532307437, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored large-flat-edge-left {"areaMM2": 910.3999999999992, "baselineAreaMM2": 910.4, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored large-flat-edge-right {"areaMM2": 910.3999999999992, "baselineAreaMM2": 910.4, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored mr-deep-left {"areaMM2": 3962.459432387895, "baselineAreaMM2": 3962.4594323878946, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored mr-deep-right {"areaMM2": 3962.459432387895, "baselineAreaMM2": 3962.4594323878946, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored mr-shallow-left {"areaMM2": 2779.804607813528, "baselineAreaMM2": 2779.804607813528, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored mr-shallow-right {"areaMM2": 2779.804607813528, "baselineAreaMM2": 2779.804607813528, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored sloper-30-left {"areaMM2": 8410.45988393196, "baselineAreaMM2": 8410.459883932454, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored sloper-30-right {"areaMM2": 8410.459883931957, "baselineAreaMM2": 8410.459883932454, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored sloper-40-left {"areaMM2": 3190.4987705233857, "baselineAreaMM2": 3190.4987705233907, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored sloper-40-right {"areaMM2": 3190.498770523385, "baselineAreaMM2": 3190.4987705233902, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored slopey-crimper-left {"areaMM2": 382.0047624099453, "baselineAreaMM2": 382.0047624099453, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored slopey-crimper-right {"areaMM2": 382.0047624099453, "baselineAreaMM2": 382.0047624099453, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored variable-edge-rail-left {"areaMM2": 8777.961859387264, "baselineAreaMM2": 8777.961859387264, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-recess-edit-restored variable-edge-rail-right {"areaMM2": 8777.961859387262, "baselineAreaMM2": 8777.961859387264, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored closed-crimp-left {"areaMM2": 4909.902822998254, "baselineAreaMM2": 4909.902822998254, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored closed-crimp-right {"areaMM2": 4909.902822998254, "baselineAreaMM2": 4909.902822998254, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored im-deep-left {"areaMM2": 3177.4484092202065, "baselineAreaMM2": 3177.448409220211, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored im-deep-right {"areaMM2": 3177.4484092202056, "baselineAreaMM2": 3177.4484092202047, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored im-shallow-left {"areaMM2": 2240.5925323074366, "baselineAreaMM2": 2240.592532307436, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored im-shallow-right {"areaMM2": 2240.5925323074366, "baselineAreaMM2": 2240.592532307437, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored large-flat-edge-left {"areaMM2": 910.3999999999992, "baselineAreaMM2": 910.4, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored large-flat-edge-right {"areaMM2": 910.3999999999992, "baselineAreaMM2": 910.4, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored mr-deep-left {"areaMM2": 3962.459432387895, "baselineAreaMM2": 3962.4594323878946, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored mr-deep-right {"areaMM2": 3962.459432387895, "baselineAreaMM2": 3962.4594323878946, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored mr-shallow-left {"areaMM2": 2779.804607813528, "baselineAreaMM2": 2779.804607813528, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored mr-shallow-right {"areaMM2": 2779.804607813528, "baselineAreaMM2": 2779.804607813528, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored sloper-30-left {"areaMM2": 8410.45988393196, "baselineAreaMM2": 8410.459883932454, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored sloper-30-right {"areaMM2": 8410.459883931957, "baselineAreaMM2": 8410.459883932454, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored sloper-40-left {"areaMM2": 3190.4987705233857, "baselineAreaMM2": 3190.4987705233907, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored sloper-40-right {"areaMM2": 3190.498770523385, "baselineAreaMM2": 3190.4987705233902, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored slopey-crimper-left {"areaMM2": 382.0047624099453, "baselineAreaMM2": 382.0047624099453, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored slopey-crimper-right {"areaMM2": 382.0047624099453, "baselineAreaMM2": 382.0047624099453, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored variable-edge-rail-left {"areaMM2": 8777.961859387264, "baselineAreaMM2": 8777.961859387264, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+fresh-depth-edit-restored variable-edge-rail-right {"areaMM2": 8777.961859387262, "baselineAreaMM2": 8777.961859387264, "missingFinalBodyAreaMM2": 0.0, "extraVsBaselineAreaMM2": 0.0, "missingVsBaselineAreaMM2": 0.0}
+PASS 4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e
+
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								

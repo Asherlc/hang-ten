@@ -1,0 +1,254 @@
+{
+  "status": "proposed-display-pose-before-final-cord-gates",
+  "sourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+  "inputSHA256": "518a3dcad2228e3792c970594b3307bfe007b2a5218ad344fc3d20bf40fe60a8",
+  "nativeBearingEvidence": ".context/placid-badger/nature-stone-review9/pose-review/per-contact-pose-plan.json",
+  "nativeBearingEvidenceSHA256": "e04935e33b54a5dd36b632ded41d64a4c04ee8088fcd41fd9a12e941f69c4152",
+  "archiveEquivalence": ".context/placid-badger/nature-stone-review9/pose-review/source-geometry-equivalence.json",
+  "pitchAdaptationDegrees": 30,
+  "anchorDepthOffsetEstimateMM": 50,
+  "poses": [
+    {
+      "contactID": "edge-front-15mm-incut",
+      "bearingFaceIndex": 8,
+      "nativeOutwardBearingNormal": [
+        -0.0,
+        0.11400851658283058,
+        -0.9934797723892432
+      ],
+      "rotation": [
+        0.0,
+        0.25881904510252074,
+        0.9659258262890683,
+        0.0
+      ],
+      "worldBearingNormal": [
+        0.0,
+        0.8033744627436514,
+        -0.5954741578031324
+      ],
+      "worldUpDot": 0.8033744627436514,
+      "bearingTiltFromHorizontalDegrees": 36.54644111843624,
+      "camera": {
+        "viewDirection": [
+          0,
+          0,
+          -1
+        ],
+        "fitPadding": 0.1
+      }
+    },
+    {
+      "contactID": "edge-front-15mm-flat",
+      "bearingFaceIndex": 8,
+      "nativeOutwardBearingNormal": [
+        -0.0,
+        -0.0,
+        1.0
+      ],
+      "rotation": [
+        -0.25881904510252074,
+        0.0,
+        0.0,
+        0.9659258262890683
+      ],
+      "worldBearingNormal": [
+        0.0,
+        0.8660254037844387,
+        -0.49999999999999994
+      ],
+      "worldUpDot": 0.8660254037844387,
+      "bearingTiltFromHorizontalDegrees": 29.999999999999996,
+      "camera": {
+        "viewDirection": [
+          0,
+          0,
+          -1
+        ],
+        "fitPadding": 0.1
+      }
+    },
+    {
+      "contactID": "edge-reverse-10mm-incut",
+      "bearingFaceIndex": 8,
+      "nativeOutwardBearingNormal": [
+        0.0,
+        -0.19086793623442683,
+        -0.9816157246690839
+      ],
+      "rotation": [
+        0.9659258262890683,
+        0.0,
+        0.0,
+        0.25881904510252074
+      ],
+      "worldBearingNormal": [
+        0.0,
+        0.7546701862004843,
+        -0.656104343881464
+      ],
+      "worldUpDot": 0.7546701862004843,
+      "bearingTiltFromHorizontalDegrees": 41.003440289922914,
+      "camera": {
+        "viewDirection": [
+          0,
+          0,
+          1
+        ],
+        "fitPadding": 0.1
+      }
+    },
+    {
+      "contactID": "edge-reverse-10mm-flat",
+      "bearingFaceIndex": 8,
+      "nativeOutwardBearingNormal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "rotation": [
+        0.0,
+        0.9659258262890683,
+        -0.25881904510252074,
+        0.0
+      ],
+      "worldBearingNormal": [
+        0.0,
+        0.8660254037844387,
+        -0.49999999999999994
+      ],
+      "worldUpDot": 0.8660254037844387,
+      "bearingTiltFromHorizontalDegrees": 29.999999999999996,
+      "camera": {
+        "viewDirection": [
+          0,
+          0,
+          1
+        ],
+        "fitPadding": 0.1
+      }
+    },
+    {
+      "contactID": "edge-reverse-06mm-flat",
+      "bearingFaceIndex": 8,
+      "nativeOutwardBearingNormal": [
+        0.0,
+        -0.0,
+        -1.0
+      ],
+      "rotation": [
+        0.9659258262890683,
+        0.0,
+        0.0,
+        0.25881904510252074
+      ],
+      "worldBearingNormal": [
+        0.0,
+        0.8660254037844388,
+        -0.49999999999999994
+      ],
+      "worldUpDot": 0.8660254037844388,
+      "bearingTiltFromHorizontalDegrees": 29.99999999999998,
+      "camera": {
+        "viewDirection": [
+          0,
+          0,
+          1
+        ],
+        "fitPadding": 0.1
+      }
+    },
+    {
+      "contactID": "edge-reverse-06mm-incut",
+      "bearingFaceIndex": 8,
+      "nativeOutwardBearingNormal": [
+        0.0,
+        -0.16067289164705412,
+        0.9870077111602391
+      ],
+      "rotation": [
+        0.0,
+        0.9659258262890683,
+        -0.25881904510252074,
+        0.0
+      ],
+      "worldBearingNormal": [
+        0.0,
+        0.7744373057723737,
+        -0.6326506614459729
+      ],
+      "worldUpDot": 0.7744373057723737,
+      "bearingTiltFromHorizontalDegrees": 39.24595540484601,
+      "camera": {
+        "viewDirection": [
+          0,
+          0,
+          1
+        ],
+        "fitPadding": 0.1
+      }
+    },
+    {
+      "contactID": "edge-front-20mm-wood-flat",
+      "bearingFaceIndex": 8,
+      "nativeOutwardBearingNormal": [
+        -0.0,
+        -0.0,
+        -1.0
+      ],
+      "rotation": [
+        0.0,
+        0.25881904510252074,
+        0.9659258262890683,
+        0.0
+      ],
+      "worldBearingNormal": [
+        0.0,
+        0.8660254037844388,
+        -0.49999999999999994
+      ],
+      "worldUpDot": 0.8660254037844388,
+      "bearingTiltFromHorizontalDegrees": 29.99999999999998,
+      "camera": {
+        "viewDirection": [
+          0,
+          0,
+          -1
+        ],
+        "fitPadding": 0.1
+      }
+    },
+    {
+      "contactID": "edge-front-20mm-granite",
+      "bearingFaceIndex": 5,
+      "nativeOutwardBearingNormal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "rotation": [
+        -0.25881904510252074,
+        0.0,
+        0.0,
+        0.9659258262890683
+      ],
+      "worldBearingNormal": [
+        0.0,
+        0.8660254037844387,
+        -0.49999999999999994
+      ],
+      "worldUpDot": 0.8660254037844387,
+      "bearingTiltFromHorizontalDegrees": 29.999999999999996,
+      "camera": {
+        "viewDirection": [
+          0,
+          0,
+          -1
+        ],
+        "fitPadding": 0.1
+      }
+    }
+  ],
+  "minimumWorldUpDot": 0.7546701862004843,
+  "visualUsabilityReviewPending": true
+}

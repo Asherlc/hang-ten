@@ -1,0 +1,24 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-corrected-finger-probes-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-corrected-finger-probes-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-corrected-finger-probes-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 97338,
+      "pgid": 97338,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/check-finger-probes.py",
+        ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3/assets/primary.usdz",
+        ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3/assets/primary.model.json",
+        ".context/placid-badger/mini-finger-contact-2026-10-02/root/corrected-finger-probes.json",
+        "corrected"
+      ]
+    }
+  ]
+}
