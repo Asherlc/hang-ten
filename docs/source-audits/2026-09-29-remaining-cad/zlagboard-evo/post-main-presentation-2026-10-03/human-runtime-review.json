@@ -1,0 +1,39 @@
+{
+  "package": "zlagboard-evo",
+  "number": 20,
+  "reviewAnswer": "Y",
+  "question": "Does #20 look right now?",
+  "acceptedDate": "2026-10-03",
+  "reviewedCommit": "c42815f8cf4ac09d0d409e53e466d0e3ade92cb8",
+  "acceptedScope": "Displayed clean Zlagboard.Evo workout views: red selected contacts during Hang, blue Rest preview, red contacts during following Hang, with both hands and native wood board visible. Existing native/static acceptance remains unchanged.",
+  "humanRuntimeAccepted": true,
+  "appWorkflowPassed": true,
+  "workflowScope": "Captured normal-route landscape Hang\u2192Rest\u2192following Hang sequence only; not every app interaction, physical-device behavior or combined integration.",
+  "sourceSHA256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+  "presentations": {
+    "primary": {
+      "descriptorSHA256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+      "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee"
+    }
+  },
+  "displayedImages": [
+    {
+      "path": "raw/clean-evo/elapsed-006s.png",
+      "sha256": "b660b8a00a0a561bc02dd8b82b2a3252a0ac13ebb731f57aa1e04b9863778ed1"
+    },
+    {
+      "path": "raw/clean-evo/elapsed-015s.png",
+      "sha256": "8dbeac2286e8ad1c0f530f4af626d359ec7dbbb55eea0e99091d7183552616bc"
+    },
+    {
+      "path": "raw/clean-evo/elapsed-195s.png",
+      "sha256": "419aa9438e4cea25663411749d33efb06ce7a9443d58e25bac2eb8981ebfe42d"
+    }
+  ],
+  "wholeImageReport": {
+    "path": "raw/clean-evo-whole-visual-review.json",
+    "sha256": "720c1d8def343c2b1746fca3507bc5d2bea482d5c3ba4b7a041c93b2a50976c0"
+  },
+  "previousGeometryReview": "../human-review.json",
+  "historicalFailuresUnchanged": true
+}

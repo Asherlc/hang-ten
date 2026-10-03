@@ -583,7 +583,7 @@
       "package": "zlagboard-evo",
       "boardID": "zlagboard.evo",
       "name": "Zlagboard Zlagboard.Evo",
-      "humanReview": "reviewed; rounded native geometry, wood finish and all 21 static contact selections accepted; workout highlight refresh remains unresolved",
+      "humanReview": "reviewed; native geometry, wood finish, all21 static contacts and displayed corrected workout highlight sequence accepted",
       "sourceSHA256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
       "reviewPage": "zlagboard-evo/app-review-2026-10-02/review.md",
       "sourceAudit": "zlagboard-evo/source-audit.md",
@@ -616,7 +616,13 @@
       "reviewAnswer": "Y",
       "acceptedDate": "2026-10-02",
       "acceptedScope": "Displayed Zlagboard.Evo geometry at b60f41c59: native top rounds, full jug crest/corner selection coverage, wood finish and all 21 static selections. Display-estimate limits remain. This reply does not accept or resolve the documented workout red/blue refresh failure.",
-      "acceptedRevisionCommit": "b60f41c5933a53059814f3f375a82beddedca609"
+      "acceptedRevisionCommit": "b60f41c5933a53059814f3f375a82beddedca609",
+      "runtimeHumanReviewRecord": "zlagboard-evo/post-main-presentation-2026-10-03/human-runtime-review.json",
+      "runtimeReviewAnswer": "Y",
+      "runtimeAcceptedDate": "2026-10-03",
+      "runtimeAcceptedRevisionCommit": "c42815f8cf4ac09d0d409e53e466d0e3ade92cb8",
+      "runtimeAcceptedScope": "Displayed clean Zlagboard.Evo workout views: red selected contacts during Hang, blue Rest preview, red contacts during following Hang, with both hands and native wood board visible. Existing native/static acceptance remains unchanged.",
+      "runtimeReview": "zlagboard-evo/post-main-presentation-2026-10-03/accepted-runtime-review.md"
     },
     {
       "number": 21,
