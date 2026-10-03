@@ -312,7 +312,7 @@
       "package": "nature-stone-hanger-mini",
       "boardID": "nature.stone-hanger-mini",
       "name": "Nature Climbing Stone Hanger Mini",
-      "humanReview": "Jug covers upper front/back finger-pressure faces and rounded crown; ready for human CAD review; current app appearance and interaction unverified.",
+      "humanReview": "Shown #10 CAD body and corrected jug finger-contact highlight accepted; current app finishes and interaction remain unverified.",
       "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
       "reviewPage": "nature-stone-hanger-mini/finger-contact-review-2026-10-02/index.html",
       "sourceAudit": "nature-stone-hanger-mini/native-authoring.md",
@@ -331,7 +331,7 @@
       "humanReviewRecord": "nature-stone-hanger-mini/human-review.json",
       "latestRevision": "nature-stone-hanger-mini/finger-contact-review-2026-10-02/review.md",
       "runtimeRevision": "nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
-      "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views.",
+      "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views. Corrected Mini jug highlight across the upper front and back finger-contact faces, rounded crown and upper sides, shown from both faces and in the linked front/side/top comparison.",
       "reviewAnswer": "Lgtm",
       "historicalMigrationReview": {
         "number": 10,
@@ -361,7 +361,7 @@
       },
       "latestRuntimeAttempt": "nature-stone-hanger-mini/runtime-retry-2026-10-02/review.md",
       "finalCADReviewQuestion": "Does this cover the Mini’s jug finger-contact area now?",
-      "completionHumanAcceptance": "pending",
+      "completionHumanAcceptance": "pending current app review",
       "cadReviewViews": [
         "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-front.png",
         "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-back.png",
@@ -388,9 +388,17 @@
           "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
           "sidecarSHA256": "b7dbc671085b07eb071403df86dec17fcc52e7c1652437923f0786b2afcf15f6"
         },
-        "currentHumanAcceptance": "pending",
-        "earlierOverallBodyApprovalPreserved": true
-      }
+        "currentHumanAcceptance": "accepted",
+        "earlierOverallBodyApprovalPreserved": true,
+        "acceptanceAnswer": "Lgtm",
+        "acceptanceDate": "2026-10-03",
+        "acceptanceRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-acceptance-2026-10-03.json"
+      },
+      "acceptedDate": "2026-10-03",
+      "acceptedGeometryDate": "2026-10-03",
+      "geometryHumanAcceptance": "accepted",
+      "acceptedJugHighlightDate": "2026-10-03",
+      "latestHumanAcceptance": "nature-stone-hanger-mini/finger-contact-acceptance-2026-10-03.json"
     },
     {
       "number": 11,

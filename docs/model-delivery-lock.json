@@ -862,7 +862,7 @@
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/independent-candidate-verification.json",
       "nativeValidation": "Upper exterior finger-contact band and rounded crown; exact native collision body and exterior surface partition, preserved pinch/wood/granite surfaces, deterministic exports; source-bound cord cache check in new packet.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/runtime-validation.json",
-      "geometryAcceptance": "Jug finger-contact band ready for human CAD review; overall body approval preserved; current app appearance and interaction unverified.",
+      "geometryAcceptance": "Shown #10 CAD body and corrected jug finger-contact highlight accepted; current app finishes and interaction remain unverified.",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
       "suspensionSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f",
       "historicalMigrationReview": {
@@ -876,7 +876,10 @@
       },
       "cadReview": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/index.html",
       "currentValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/validation.json",
-      "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d"
+      "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
+      "humanGeometryAcceptance": "accepted",
+      "acceptedJugHighlightDate": "2026-10-03",
+      "humanAcceptanceRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-acceptance-2026-10-03.json"
     },
     "nature-stone-hanger-mini-karma8a": {
       "source": "Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd",
@@ -2239,6 +2242,27 @@
       "factualContactsChanged": false,
       "pinchCoverageChanged": false,
       "pythonPassed": 67
+    },
+    {
+      "owner": "placid-badger",
+      "date": "2026-10-03",
+      "recordedUTC": "2026-10-03T13:24:55.439990+00:00",
+      "package": "nature-stone-hanger-mini",
+      "reviewNumber": 10,
+      "kind": "Human acceptance of corrected jug finger-contact coverage",
+      "identity": {
+        "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+        "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+        "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+        "sidecarSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f"
+      },
+      "shownAssetCommit": "9b0a371f72216ab7746d876c141f834f815ffc34",
+      "answer": "Lgtm",
+      "humanAcceptance": "accepted shown CAD contact coverage",
+      "acceptedScope": "Corrected Mini jug highlight across the upper front and back finger-contact faces, rounded crown and upper sides, shown from both faces and in the linked front/side/top comparison.",
+      "acceptanceRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-acceptance-2026-10-03.json",
+      "runtimeVerified": false,
+      "assetsChanged": false
     }
   ]
 }
