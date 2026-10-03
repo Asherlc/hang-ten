@@ -1,0 +1,20 @@
+{
+  "status": "APPLIED_FOR_ONE_ORTHOGRAPHIC_OBSERVATIONAL_REPRODUCTION",
+  "PFinalAuditPassed": true,
+  "PVisualResult": "FAIL",
+  "PFreezeSHA256": "c28f39a336000fb76156af64e5d5af9fef7c196ccb004b93af645abaa984a113",
+  "patchSHA256": "735b6cbd4ecb07e2347822e5af2c3bb5fc1eacb572330108e8a186d4a9ae568a",
+  "files": [
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "beforeSHA256": "90f5c896efd321e31560f54e1b6aab0880bd51cfb4301a4f9db3aca9757b0292",
+      "proposedSHA256": "d74f4fbb2bd260cdd777e3fd15c0d0fc92f9b7b2a9f9b5cd9daa9bdf54748426"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "beforeSHA256": "08aaaa6032cdf782f9d4659d3f0105655df282cc156f7c147597cd0f8aeeb0c9",
+      "proposedSHA256": "72ffe2a766a128688510fa02c2c1a1cbcc56c0aa28b6202f74f59a567ed42f67"
+    }
+  ],
+  "review": "Nonobservable scalar counters/times only; unchanged cache guard and source assignment order, balanced defer, no extra event or sampler. Counts do not measure GPU/presentation."
+}

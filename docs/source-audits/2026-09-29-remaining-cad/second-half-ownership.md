@@ -273,3 +273,5 @@ plus `HangTen/Views/GripHandModelView.swift` and `HangTen/Views/TrainView.swift`
 Temporary diagnostics remain uncommitted; owned validation resources remain
 registered under the existing cleanup controller. Exact final integration and
 cleanup verification are still required before readiness is claimed.
+
+The [sync-delivery counter observation](zlagboard-evo/runtime-sync-delivery-counter-2026-10-02/README.md) still fails Rest visually, despite correct phase assignments and no repeated board synchronization in the sampled Rest interval. The next Hang is correct in this run; that difference does not establish repair. No iPhone is available, so conclusions remain Simulator-only. Seven shared-path reservations remain active for temporary diagnostics; canonical packages and human acceptance are unchanged.

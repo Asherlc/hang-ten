@@ -1,0 +1,35 @@
+{
+  "files": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "72ffe2a766a128688510fa02c2c1a1cbcc56c0aa28b6202f74f59a567ed42f67"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "d74f4fbb2bd260cdd777e3fd15c0d0fc92f9b7b2a9f9b5cd9daa9bdf54748426"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "sha256": "3d8ffd568e1f99e33652eb77bfe4e0d2ce4c014889bfee3a166fe9601d7e136e"
+    }
+  ],
+  "priorManifests": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-frozen-manifest.json",
+      "sha256": "69e302ed00b3b09759799547a95a316b8fc053b616cc964e99b4a77d332b7cb9"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-frozen-manifest.json",
+      "sha256": "c28f39a336000fb76156af64e5d5af9fef7c196ccb004b93af645abaa984a113"
+    }
+  ],
+  "head": "64df77690afdb81a9bab5a1157080c33069a5e69"
+}
