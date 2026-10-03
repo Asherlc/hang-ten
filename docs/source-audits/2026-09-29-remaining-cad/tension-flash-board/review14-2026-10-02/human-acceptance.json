@@ -1,0 +1,26 @@
+{
+  "reviewNumber": 14,
+  "boardID": "tension.flash-board",
+  "status": "pending",
+  "question": "Does the corrected shape and cord look right?",
+  "answer": null,
+  "scope": "Shown corrected native CAD geometry and static cord display only; hidden threading and current app appearance unverified",
+  "canonicalSHA256": {
+    "Hangboards/tension-flash-board/assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "Hangboards/tension-flash-board/assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "Hangboards/tension-flash-board/suspension.json": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
+    "Hangboards/tension-flash-board/tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53"
+  },
+  "shownWholeImages": [
+    {
+      "path": "corrected-views/three-edge-upright-current-inline.png",
+      "sha256": "434698306c42b0c4509d9873ae98f51e87bc6abbcd0e4d91761744211b90f8e5",
+      "caption": "Three-well face"
+    },
+    {
+      "path": "corrected-views/two-edge-upright-current-inline.png",
+      "sha256": "2eadaee78638a6a5135060fb0fc5dbb249c3f1dda40c21d65a1e4bd2c8184fd8",
+      "caption": "Two-well and small-crimp face"
+    }
+  ]
+}

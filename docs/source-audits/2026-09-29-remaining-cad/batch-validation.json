@@ -42,7 +42,7 @@
   "metadataAudit": "metadata-audit.json",
   "historicalReportNotes": "validation-notes.md",
   "appCaptures": "All 21 current-source packages; representative DEBUG contact review routes, plus physical selector taps for all three Plateau depths. RealityKit tests cover all authored presentation positions and transient non-pickable cords.",
-  "geometryAcceptance": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 shown CAD shape and seated cord accepted, current app unverified; #14 next for review",
+  "geometryAcceptance": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 shown CAD shape and seated cord accepted, current app unverified; #14 corrected CAD shape and compact cord shown, human acceptance pending, current app unverified",
   "testArtifactSHA256": {
     "test-results/ios-summary.json": "6d38d38ec0659f98565df7ec135a99648db9f4964945c9fb58bdbda699a3febe",
     "test-results/ios-tests.log": "47c5b2b6d584d6df47cbf8e84e5bf2391f4ff3b4c82aa2fe6f8ad883f877e681",
@@ -550,6 +550,103 @@
       "iOSUnitCasesExecuted": 0,
       "approvalLimit": "Approval covers the shown CAD shape and display cord. Current runtime finishes, cord appearance, picking, selection and workout behavior remain unverified; display estimates remain labeled.",
       "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/human-review.json"
+    },
+    {
+      "package": "tension-flash-board",
+      "date": "2026-10-02",
+      "revision": "native-shelves-mouth-rounds-wood-and-compact-cords",
+      "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+      "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+      "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+      "suspensionSHA256": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+      "generatedManifestSHA256": "9285d4a38d703c80e9109553e688ea3e94095021207f02ef26001471cb98bc7e",
+      "presentations": {
+        "primary": {
+          "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+          "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755"
+        }
+      },
+      "report": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/runtime-validation.json",
+      "postIntegrationTests": {
+        "pythonPassed": 9,
+        "pythonFailed": 0,
+        "pythonErrors": 0,
+        "pythonSkipped": 0,
+        "canonicalPackagesValidated": 64,
+        "iOSBuildPassed": true,
+        "iOSUnitCasesExecuted": 0,
+        "iOSCurrentAppFrames": 0,
+        "iOSRuntimeStatus": "not run; current app appearance unverified",
+        "androidStagingByteParity": true,
+        "iOSStagingByteParity": true
+      },
+      "nativePhysicalShapeChanged": true,
+      "sevenContactIDsAndFactsPreserved": true,
+      "positionsAndSetupTransitionsPreserved": true,
+      "fourIndependentBoresPreserved": true,
+      "otherPackageFilesUnchanged": 202,
+      "sharedCodeChanged": false,
+      "supportOffsetFromUnposedBoundsM": 0.2,
+      "freeLeadAllowanceM": 0.42,
+      "rearReturnAllowanceM": 0.03,
+      "solvedSupportToPosedBoardTopGapRangeM": [
+        0.297395,
+        0.318905
+      ],
+      "cordRadiusM": 0.002,
+      "cordDimensionsStatus": "display estimates",
+      "surfaceFinish": "wood",
+      "surfaceFinishStatus": "generic app finish category from approved maker photographs; no species or coating claim",
+      "geometryAcceptance": "Pending #14 human shape and cord review; current app appearance, picking, highlights and workout behavior unverified",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/human-review.json",
+      "limits": "Native/export/package/staging/compile checks passed; current app behavior and iOS unit execution remain unverified. Diagnostic previews are not app screenshots. No physical-equilibrium or manufacturing-accuracy claim. Historical results retained separately.",
+      "cordSourceFidelity": "rejected same-face stitches; maker video supports circumferential wraps",
+      "supersededBy": "inferred-exterior-barrel-wraps-with-native-aStar-search"
+    },
+    {
+      "package": "tension-flash-board",
+      "date": "2026-10-02",
+      "revision": "inferred-exterior-barrel-wraps-with-native-aStar-search",
+      "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+      "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+      "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+      "suspensionSHA256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
+      "generatedManifestSHA256": "6b7e0262027dc8024b2869ce757595a8c3ba5399ab88376faceafaec4b28d743",
+      "presentations": {
+        "primary": {
+          "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+          "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755"
+        }
+      },
+      "report": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/runtime-validation.json",
+      "postIntegrationTests": {
+        "pythonPassed": 9,
+        "pythonFailed": 0,
+        "pythonErrors": 0,
+        "pythonSkipped": 0,
+        "canonicalPackagesValidated": 64,
+        "iOSBuildPassed": true,
+        "iOSUnitCasesExecuted": 0,
+        "iOSCurrentAppFrames": 0,
+        "iOSRuntimeStatus": "not run; current app appearance unverified",
+        "androidStagingByteParity": true,
+        "iOSStagingByteParity": true
+      },
+      "sourceModelAndDescriptorUnchangedDuringCordFollowup": true,
+      "sevenContactIDsAndFactsPreserved": true,
+      "positionsAndSetupTransitionsPreserved": true,
+      "otherPackageFilesUnchanged": 202,
+      "sharedCodeChanged": false,
+      "supportOffsetFromUnposedBoundsM": 0.2,
+      "freeLeadAllowanceM": 0.42,
+      "barrelWrapAllowanceM": 0.109,
+      "cordRadiusM": 0.002,
+      "cordDimensionsStatus": "display estimates",
+      "threadingStatus": "Conditional inferred display adaptation; hidden passage, continuity and contact order unobserved",
+      "surfaceFinish": "wood",
+      "geometryAcceptance": "Pending #14 human shape and corrected cord review; current app appearance, picking, highlights and workout behavior unverified",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/human-review.json",
+      "limits": "Current-source native and package evidence plus generic iOS compilation; no current app or Swift unit execution. Hidden continuity and contact order unobserved. CAD previews use per-pixel depth; they are not app screenshots. No manufacturing accuracy, global optimum or physical equilibrium claim."
     }
   ],
   "historicalBaselineScope": {

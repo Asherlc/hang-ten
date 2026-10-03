@@ -1010,5 +1010,26 @@
     "unitCasesExecuted": 0,
     "currentAppFrames": 0,
     "humanAcceptance": "pending"
+  },
+  "tensionFlashBoardReview14": {
+    "date": "2026-10-02",
+    "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+    "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "suspensionSHA256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
+    "generatedManifestSHA256": "6b7e0262027dc8024b2869ce757595a8c3ba5399ab88376faceafaec4b28d743",
+    "presentations": {
+      "primary": {
+        "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+        "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755"
+      }
+    },
+    "report": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/runtime-validation.json",
+    "scope": "Corrected cord: native, package, staging and compilation only; current app unverified",
+    "buildPassed": true,
+    "currentRevisionInstalled": false,
+    "unitCasesExecuted": 0,
+    "currentAppFrames": 0,
+    "humanAcceptance": "pending"
   }
 }

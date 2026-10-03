@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger",
+  "task": "flash-board-review14/applied-compact-review-views",
+  "recordedAt": "2026-10-02T22:40:07.283073+00:00",
+  "temporaryResources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-early-views-job/placid-badger-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-early-views-job/placid-badger-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-early-views-job/placid-badger-tmp"
+  ],
+  "externalResources": [],
+  "canonicalMutation": false,
+  "runtimeVerified": false
+}

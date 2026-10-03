@@ -82,5 +82,15 @@
     "Images are visual evidence only; no tracing, segmentation, alignment, masking, cropping, or pixel-derived geometry.",
     "CAD remains a display approximation with native analytic feature history.",
     "Cord connectivity must be supported before geometry or topology is changed."
-  ]
+  ],
+  "currentCordDisposition": "Prior same-face stitches rejected by supplemental maker video. Visible crossed barrel wraps are a conditional inferred display adaptation under inherited authored bore estimates; hidden continuity and contact order unobserved.",
+  "supplementalCordEvidence": {
+    "publisher": "Tension Climbing",
+    "productURL": "https://tensionclimbing.com/products/flash-board-2",
+    "provenance": "review14-2026-10-02/cord-feedback/maker/source-provenance.json",
+    "retainedWholeVideo": "review14-2026-10-02/cord-feedback/maker/placid-badger-flash14-maker-overview.mp4",
+    "sha256": "c3805a162b8a11f9f4c0e29b39a5927145ee617e8e536a611ad9c16a30730190",
+    "authorization": "User authorized additional individual-board searches; source use is distinct from geometry/threading acceptance",
+    "supports": "Four free legs and circumferential wraps; not hidden continuity or exact internal bores"
+  }
 }

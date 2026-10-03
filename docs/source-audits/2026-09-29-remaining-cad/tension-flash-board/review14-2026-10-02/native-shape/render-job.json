@@ -1,0 +1,8 @@
+{
+  "name": "placid-badger-flash14-native-render-v1",
+  "command": [
+    ".context/placid-badger/venv/bin/python",
+    ".context/placid-badger/flash-board-review14/shape-review/native-refinement/render_native.py"
+  ],
+  "timeoutSeconds": 240
+}

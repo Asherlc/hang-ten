@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 shown CAD shape and seated cord accepted, current app unverified; #14 next for review",
+  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 shown CAD shape and seated cord accepted, current app unverified; #14 corrected CAD shape and inferred barrel-wrap cord shown, human acceptance pending, current app unverified",
   "boards": [
     {
       "number": 1,
@@ -542,21 +542,48 @@
       "package": "tension-flash-board",
       "boardID": "tension.flash-board",
       "name": "Tension Climbing Flash Board",
-      "humanReview": "pending",
-      "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
-      "reviewPage": "tension-flash-board/geometry-review.html",
+      "humanReview": "Pending #14 human shape and corrected cord review; current app appearance, picking, highlights and workout behavior unverified",
+      "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+      "reviewPage": "tension-flash-board/review14-2026-10-02/index.html",
       "sourceAudit": "tension-flash-board/README.md",
       "comparisons": [
-        "tension-flash-board/comparison-sheet.png"
+        "tension-flash-board/review14-2026-10-02/corrected-views/two-edge-upright-front-prior-current.png",
+        "tension-flash-board/review14-2026-10-02/corrected-views/two-edge-upright-side-prior-current.png",
+        "tension-flash-board/review14-2026-10-02/corrected-views/two-edge-upright-top-prior-current.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e",
-          "modelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97"
+          "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+          "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755"
         }
       },
-      "appReview": "tension-flash-board/app-review/validation.json",
-      "appReviewPage": "tension-flash-board/app-review/index.html"
+      "appReview": "tension-flash-board/review14-2026-10-02/runtime-validation.json",
+      "appReviewPage": "tension-flash-board/review14-2026-10-02/index.html",
+      "historicalMigrationReview": {
+        "number": 14,
+        "package": "tension-flash-board",
+        "boardID": "tension.flash-board",
+        "name": "Tension Climbing Flash Board",
+        "humanReview": "pending",
+        "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+        "reviewPage": "tension-flash-board/geometry-review.html",
+        "sourceAudit": "tension-flash-board/README.md",
+        "comparisons": [
+          "tension-flash-board/comparison-sheet.png"
+        ],
+        "presentations": {
+          "primary": {
+            "descriptorSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e",
+            "modelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97"
+          }
+        },
+        "appReview": "tension-flash-board/app-review/validation.json",
+        "appReviewPage": "tension-flash-board/app-review/index.html"
+      },
+      "suspensionSHA256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
+      "humanReviewRecord": "tension-flash-board/human-review.json",
+      "latestRevision": "tension-flash-board/review14-2026-10-02/review.md",
+      "runtimeRevision": "tension-flash-board/review14-2026-10-02/runtime-validation.json"
     },
     {
       "number": 15,

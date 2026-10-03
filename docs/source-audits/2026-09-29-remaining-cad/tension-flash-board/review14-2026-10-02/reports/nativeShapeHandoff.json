@@ -1,0 +1,133 @@
+{
+  "owner": "placid-badger",
+  "dateUTC": "2026-10-02T21:47:48.840818+00:00",
+  "stage": "immutable native shape handoff; not compiled/published",
+  "nativeSource": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/tension-flash-board-refined.FCStd",
+  "nativeSourceSHA256": "003741b6be2c5631bb271880e184da0bff91028b0e9c56c8f478d3273979b450",
+  "priorNativeSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+  "bodyFeature": "ReliefAndPocketLipRounds",
+  "manifestExactlyPreserved": true,
+  "sevenContactIDsPreserved": true,
+  "fourBoresUnchanged": true,
+  "materialAssignment": "No new MaterialName or USDZ work in native shape refinement",
+  "sourceEvidence": "approved whole FlashBoard1\u20134 photographs in docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence; reviewed by eye only",
+  "shapeDecision": "Broad relief shelves and tall rounded/scalloped end walls restored; native cavity mouth rounds and actual floor/wall contact surfaces retained",
+  "displayEstimates": {
+    "frontReliefDepthMM": 8,
+    "reverseReliefDepthMM": 10,
+    "frontXRangeMM": [
+      48,
+      452
+    ],
+    "reverseXRangesMM": [
+      [
+        49,
+        215
+      ],
+      [
+        285,
+        451
+      ]
+    ],
+    "reverseReliefTopZMM": 56,
+    "endWallBlendRadiusMM": 3,
+    "mainPocketLipRadiusMM": 1.5
+  },
+  "depthLimit": "Current manufacturer text gives 8/10/15/20 mm and Small Crimps without per-contact/orientation mapping. No mapping or numerical training depth was invented. Native region depth extents are display geometry, not sourced lip-depth claims.",
+  "checks": {
+    "nativeReopenRecompute": "passed",
+    "validSingleSolid": "passed",
+    "nativeContactPhysicalSurfaceMembership": "passed",
+    "mainCavityFloorAndUpDownLedgeArea": "passed",
+    "PocketDepthScaleEditRestore": "passed",
+    "FrontReliefDepthEditRestore": "passed",
+    "sourceBytesUnchangedDuringVerification": true,
+    "wholePriorCurrentAndContactViews": "reviewed by author"
+  },
+  "nextStepsOwnedByRoot": [
+    "independent Astra shape review",
+    "supported final material metadata decision",
+    "compile/reimport/descriptor/partition checks",
+    "source/model-bound native cord solve and current continuous certification",
+    "current-source app review",
+    "human geometry acceptance"
+  ],
+  "artifacts": {
+    "tension-flash-board-refined.FCStd": "003741b6be2c5631bb271880e184da0bff91028b0e9c56c8f478d3273979b450",
+    "candidate-native-mesh.json": "7d2ba99c2bad1ca5d46ba17f0651222f81795ae0e0c05ebc197c974dcccc11cb",
+    "prior-native-mesh.json": "2913a37194197d91b431ae3a0d9043899554fcee3145ef9dfd1e8f4e067fd78d",
+    "native-edit-validation.json": "76564f52734eed9e8dd3a63642be02d0a9f8c6f13f3227b4bbf9d2d6b7440b8d",
+    "candidate-authoring.json": "0c07d3d1375ea6f9b5a7695d008c4f130a50a27d1d9d95a7d858de455b0fbd26",
+    "envelope-check.json": "194477fff0b8b1672270dd0c73f0bdc0776131b5310cc0ae473dd92c7a5f692f",
+    "review.html": "d081b2157dd4b339c1a2f0977d68f25abc2774c9ea6c66073dd2b7a4c852dfd3",
+    "render_native.py": "0db203bc3e8844de9368ca990b4e2b7e0dabb124e796bb18a43d9bfbb4fa55b8",
+    "author_relief_v3.py": "7fb39ed8e8d4083e565f1030019a5b71ac986757f343249a66d520cfc3d576ff",
+    "candidate-front.png": "099613ba200ca718009fa7ca1b5b2afb0c3e484b46f65add7ea70efb9f78c099",
+    "candidate-oblique.png": "ec3bf66267bcec7e0304f5525b031705f1f3adf3e01e6a4b1e992473ece90dad",
+    "candidate-reverse-oblique.png": "93431d2a950375dc7ebd8f2d4e82e04370ecf155f03f59afbc88b170f4e5380c",
+    "candidate-reverse.png": "5c8f0d9866c69947842f5830ac4355b7003713724b4f122243f37071efb0312e",
+    "candidate-side.png": "05e320bec7f976b8d95de277d4da5582e676d6015a7fe853c23beebe53b5da81",
+    "candidate-top.png": "3db9f07aa84ddd2c78fbc83f0b61c75178f107459c54ed1ccd6fcd726527ca6d",
+    "candidate-under-oblique.png": "cccabaab887406a267c85f36e8341f62d98296a3eaa8041b876e1e11bc97d07d",
+    "contact-small-crimp-left.png": "078056c17a0f3d913df0632946ea91b1ca6cdfaf02aae0f6c9fb67a97973bcec",
+    "contact-small-crimp-right.png": "018a622aed4cef8325ec69e047718249c9e1477ab83322a18c7b983528a2825c",
+    "contact-three-edge-center.png": "2e7863f5cb0bfed25fcbf1980ce8850a1931912206f872d729af1c2a2d611775",
+    "contact-three-edge-left.png": "f017d2b5d0e5d1a486dee26e482383dae87fc38b9707b514b38346519752fb83",
+    "contact-three-edge-right.png": "01f97a447ba1023ddf401bc693f9123e3e5ef04856b077e377dd6a7408103f32",
+    "contact-two-edge-left.png": "8014f63de06ff56415ca202aa67dd8d5e413c4c8d4be583f39a9b5d8c57ebc41",
+    "contact-two-edge-right.png": "e44f0af8c8cd29c91b3f359f72ae45043b11e167f93d807754b7d35b02f07e7d",
+    "prior-front.png": "29d0120edb4d2dfa860daef2c2014cc6024836ecf7494acbad8883c2158a6c16",
+    "prior-oblique.png": "c3cbdfb2b36201d506d904bab80133a02c886e74e2ba3d1082dd02ad11a7de41",
+    "prior-reverse-oblique.png": "13f8f0525e4152a0fad490eaa561cf472a6d84caff53cc935d6842462ce8a29e",
+    "prior-reverse.png": "ca4430673192f3873c2350e221b293a3a450fc00840c112d1b7b1133fa846c43",
+    "prior-side.png": "8dc630fa6a7658e5a76618e689d1f9d6196f38fd9abc015d0cebf29872195b06",
+    "prior-top.png": "01471e0fe8b185b2edb87cc65548ce55051e35f6fe34875d58ccc71de1a802d4",
+    "prior-under-oblique.png": "2d5d50fe375effd4469e94cd2daa3a98bbf0310109b7dd897747a4df157362a1"
+  },
+  "ownedJobCleanup": [
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/placid-badger-flash14-native-render-v1-command.json",
+      "exitCode": 0,
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/placid-badger-flash14-relief-author-v2-command.json",
+      "exitCode": 3,
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/placid-badger-flash14-fillet-diagnosis-command.json",
+      "exitCode": 0,
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/placid-badger-flash14-relief-author-v3-command.json",
+      "exitCode": 0,
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/placid-badger-flash14-relief-author-v1-command.json",
+      "exitCode": 3,
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/placid-badger-flash14-native-edit-check-v1-command.json",
+      "exitCode": 0,
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/placid-badger-flash14-envelope-check-command.json",
+      "exitCode": 0,
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    }
+  ],
+  "humanAcceptance": "not claimed",
+  "appAcceptance": "not claimed"
+}
