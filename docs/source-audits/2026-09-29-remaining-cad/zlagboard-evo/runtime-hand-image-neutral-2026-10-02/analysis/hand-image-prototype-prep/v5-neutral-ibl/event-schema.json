@@ -1,0 +1,105 @@
+{
+  "event": "hand-image",
+  "baseFields": {
+    "imageEvent": "String",
+    "sessionID": "UUID String",
+    "revision": "Int",
+    "sequence": "Int global contiguous recorder",
+    "epoch": "Double row write wall time",
+    "uptime": "Double row write monotonic",
+    "handLifecycleCounts": "existing recorder counts"
+  },
+  "events": {
+    "requested": {
+      "requestedViewport": "[String(width), String(height)]; actual scalar description including nonfinite",
+      "requestedDisplayScale": "String(scale); actual scalar description including nonfinite"
+    },
+    "submitted": {
+      "kind": "single|pair",
+      "rootID": "ObjectIdentifier String",
+      "cameraID": "ObjectIdentifier String",
+      "orthographic": "Bool",
+      "perspective": "Bool",
+      "viewport": "[width,height] logical points",
+      "displayScale": "Double",
+      "textureWidth": "Int",
+      "textureHeight": "Int",
+      "textureFormat": "bgra8Unorm_srgb",
+      "toneMappingEnabled": "actual default Bool",
+      "orientationConversion": "CIImage.downMirrored; UIImage.up",
+      "inputColorSpace": "sRGB",
+      "environmentLightingResourcePresent": "Bool; actual renderer.lighting.resource != nil, read-only",
+      "environmentLightingIntensityExponent": "Float; actual renderer.lighting.intensityExponent, read-only",
+      "environmentLightingMode": "fixed-neutral-white-adaptation",
+      "environmentResourceName": "placid-badger-cad-second-half-hand-image-neutral-<sessionID>"
+    },
+    "gpu-completion-callback": {
+      "callbackUptime": "Double observed at callback before MainActor hop",
+      "callbackEpoch": "Double observed at callback before MainActor hop",
+      "metalCommandBufferStatusAvailable": false
+    },
+    "conversion-complete": {
+      "cgAlphaInfo": "CGImageAlphaInfo raw UInt",
+      "cgBitsPerComponent": "Int",
+      "cgColorSpace": "name String",
+      "cgWidth": "Int",
+      "cgHeight": "Int",
+      "orientation": "up",
+      "eagerMaterialization": true,
+      "ciOrientationConversion": "downMirrored"
+    },
+    "published": {
+      "currentRevision": "equals revision",
+      "pngPath": "absolute app Documents/HighlightDiagnostic-<sanitized registered runID>/hand-image-prototype/<sessionID>/revision-<revision>.png",
+      "pngSHA256": "64 lowercase hex",
+      "pngByteCount": "Int",
+      "applicationCensus": "existing read-only UIKit/window census"
+    },
+    "stale-completion-discarded": {},
+    "disappear": {},
+    "failed": {
+      "error": "String"
+    },
+    "waiting-for-viewport": {
+      "meaning": "requested viewport has zero width or height; finite nonnegative dimensions/positive finite scale within4096pixelbound; no scene construction/render submission for this revision",
+      "nextRequest": "only existing normal input onChange/onAppear; no timer/forced rendering"
+    },
+    "environment-preparation-begun": {
+      "resourceName": "placid-badger-cad-second-half-hand-image-neutral-<sessionID>",
+      "environmentMode": "fixed-neutral-white-adaptation",
+      "sourceRGB": [
+        1,
+        1,
+        1
+      ],
+      "sourceAlpha": 1,
+      "sourceColorSpace": "sRGB",
+      "sourceWidth": 32,
+      "sourceHeight": 16,
+      "sourceBitsPerComponent": 8,
+      "intensityExponent": 0
+    },
+    "environment-preparation-completed": {
+      "resourceName": "placid-badger-cad-second-half-hand-image-neutral-<sessionID>",
+      "environmentMode": "fixed-neutral-white-adaptation",
+      "sourceRGB": [
+        1,
+        1,
+        1
+      ],
+      "sourceAlpha": 1,
+      "sourceColorSpace": "sRGB",
+      "sourceWidth": 32,
+      "sourceHeight": 16,
+      "sourceBitsPerComponent": 8,
+      "intensityExponent": 0,
+      "currentRevision": "latest request revision at completion",
+      "active": "Bool"
+    },
+    "environment-preparation-discarded": {
+      "meaning": "completion while inactive/failed; no scene/render/publication from this completion"
+    }
+  },
+  "readiness": "published matching last requested session/revision, preceded by matching submitted/callback/conversion; not GPU callback alone",
+  "failure": "any failed event; missing current publication at external bound; unsupported output or invalid metadata is not a fallback success"
+}

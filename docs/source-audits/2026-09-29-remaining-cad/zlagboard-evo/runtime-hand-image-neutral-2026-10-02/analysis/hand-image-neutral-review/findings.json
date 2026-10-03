@@ -1,0 +1,126 @@
+{
+  "scope": "Independent full-image static neutral IBL feasibility review only",
+  "directWholeImagesViewed": [
+    "hand-image-static-live-d/whole-app.png",
+    "hand-image-static-image-d/whole-app.png",
+    "hand-image-static-image-d/generated-hand.png",
+    "hand-image-static-image-c/whole-app.png",
+    "hand-image-static-image-c/generated-hand.png"
+  ],
+  "imageProcessingPerformed": false,
+  "visualJudgment": {
+    "neutralStaticPairCueReadability": "PASS scoped to this half-crimp/four-finger static view",
+    "orientation": "Upright wrists below/fingers above; left/right ordering preserved.",
+    "selectedFingers": "Four red selected fingers are readable on each hand; thumbs remain distinct and unhighlighted.",
+    "geometry": "Both complete hand silhouettes and wrists are visible without obvious clipping; overall pose/framing visually corresponds to live reference. This is not a pixel-geometry equivalence claim.",
+    "appearance": "Neutral image is visibly darker/warmer and somewhat flatter than live reference. Not appearance-equivalent; acceptable only as explicitly labeled prototype adaptation.",
+    "historicalV4": "Orientation-only image-c is upright but has near-black left-hand/finger surfaces and obscured selected-finger detail. Its visual failure remains unchanged despite technical completion.",
+    "systemArtifact": "Live-d contains a black rounded status-area capsule; this does not overlap hand cues. No inference about user input or app cause."
+  },
+  "technicalEvidence": {
+    "hand-image-static-live-d": {
+      "completion.json": {
+        "passed": true,
+        "failedChecks": []
+      },
+      "app-cleanup.json": {
+        "passed": true,
+        "failedChecks": []
+      },
+      "retained-trace-validation.json": {
+        "passed": true,
+        "failedChecks": []
+      },
+      "idle-observation.json": {
+        "passed": null,
+        "failedChecks": []
+      },
+      "binarySHA256": "d6d6eccdd693a54094056197cc1e47f62f0e661c6354cf8028bf6499e90af575"
+    },
+    "hand-image-static-image-d": {
+      "completion.json": {
+        "passed": true,
+        "failedChecks": []
+      },
+      "app-cleanup.json": {
+        "passed": true,
+        "failedChecks": []
+      },
+      "retained-trace-validation.json": {
+        "passed": true,
+        "failedChecks": []
+      },
+      "idle-observation.json": {
+        "passed": null,
+        "failedChecks": []
+      },
+      "binarySHA256": "d6d6eccdd693a54094056197cc1e47f62f0e661c6354cf8028bf6499e90af575"
+    },
+    "hand-image-static-image-c": {
+      "completion.json": {
+        "passed": true,
+        "failedChecks": []
+      },
+      "app-cleanup.json": {
+        "passed": true,
+        "failedChecks": []
+      },
+      "retained-trace-validation.json": {
+        "passed": true,
+        "failedChecks": []
+      },
+      "idle-observation.json": {
+        "passed": null,
+        "failedChecks": []
+      },
+      "binarySHA256": "aa9b77b58f01853d0e4964b7d58642a51e9cdc5d573e4512384b7edc7c7184f0"
+    }
+  },
+  "compactTraceAudit": {
+    "records": 14,
+    "oneSetup": true,
+    "oneSubmissionAndPublication": true,
+    "setupBeforeConstructor": true,
+    "resourcePresent": true,
+    "exponent": 0,
+    "resourceName": "placid-badger-cad-second-half-hand-image-neutral-2E62510D-F822-4294-8D5E-D848731DCF82",
+    "mode": "fixed-neutral-white-adaptation",
+    "sourceRGB": [
+      1,
+      1,
+      1
+    ],
+    "sourceColorSpace": "sRGB",
+    "setupDurationSeconds": 1.5530089166713879,
+    "submittedToCallbackSeconds": 0.11249616666464135,
+    "alphaInfo": 1,
+    "colorSpace": "kCGColorSpaceSRGB",
+    "orientation": "up",
+    "conversion": "downMirrored",
+    "liveHandMakes": 0,
+    "rendererPlacementsAtPublication": [],
+    "cameraMatchesLive": {
+      "cameraTransform": true,
+      "orthographicScale": true,
+      "near": true,
+      "far": true,
+      "orthographicPresent": true,
+      "perspectivePresent": true
+    },
+    "v4ResourceAbsent": true
+  },
+  "gateAssessment": {
+    "creamStaticVisualBlocker": false,
+    "pendingBeforeBroaderAcceptance": [
+      "Whole dark-backing composite check remains pending in separate authorized run; raw PNG viewer background is not that test.",
+      "Actual workout-size hand visibility, semantic updates and board active/rest colors have not been tested with this prototype.",
+      "Single-hand route, other poses/finger sets, gesture/reset behavior, rapid revision coalescing and energy costs are not established by this one static pair."
+    ],
+    "boundedWorkoutComparison": "No new static orientation/readability blocker found; after planned dark-composite gate, a separately authorized bounded workout comparison can test transfer. This report does not authorize a run or declare a remedy."
+  },
+  "productionReady": false,
+  "workoutPassed": false,
+  "humanAccepted": false,
+  "sourceEdited": false,
+  "runtimeTouched": false
+}

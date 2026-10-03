@@ -1,0 +1,6 @@
+{
+  "generate": "https://developer.apple.com/documentation/realitykit/environmentresource/init(equirectangular:withname:).md",
+  "intensity": "https://developer.apple.com/documentation/realitykit/realityrenderer/imagebasedlight/intensityexponent.md",
+  "component": "https://developer.apple.com/documentation/realitykit/imagebasedlightcomponent.md",
+  "receiver": "https://developer.apple.com/documentation/realitykit/imagebasedlightreceivercomponent.md"
+}

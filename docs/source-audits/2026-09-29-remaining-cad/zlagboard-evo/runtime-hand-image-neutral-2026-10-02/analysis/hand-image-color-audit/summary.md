@@ -1,0 +1,3 @@
+Apple documents .bgra8Unorm_srgb as converting between sRGB and linear space. CIImage.colorSpace declares the source encoding; CIContext then converts source→linear working→destination. Declaring sRGB input and output is consistent with that model and does not by itself prove a duplicate gamma decode. The documented Metal-to-CI bridge does not settle the implementation-level interaction, so duplicate decoding is unproven.
+
+Darkness could still involve renderer lighting/tone mapping or compositing; no cause was isolated. Vertical inversion is a separate coordinate issue. No brightness/gamma tuning, color-space relabeling or source/runtime change is recommended by this audit.

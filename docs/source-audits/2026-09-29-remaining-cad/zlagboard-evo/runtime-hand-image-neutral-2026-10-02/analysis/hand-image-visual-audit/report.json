@@ -1,0 +1,97 @@
+{
+  "scope": "Independent whole-image visual and primary-source API review; read-only",
+  "visualResult": "FAIL",
+  "directlyViewedWholeFiles": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-live-b/whole-app.png",
+      "sha256": "f8ba6fd64fc37c44d443f7794c1089ea44bec46911f66c275cbb0cb865e4b6d5"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-b/whole-app.png",
+      "sha256": "32a2946e4c563673ff8792282f339a12c3bec63fc5d40ea9b5fd794fcdfa90cf"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-b/generated-hand.png",
+      "sha256": "5659af63210e11ac8f3e51c90b69b86e85a3771677254dac6357da129911d995"
+    }
+  ],
+  "observations": [
+    "Live reference shows upright hands; image app and raw generated PNG show wrists above and fingertips below, with left/right ordering preserved.",
+    "Image hands are substantially darker; dark shadow regions obscure detail compared with live.",
+    "No crop, pixel measurement, segmentation, image transformation or color sampling performed."
+  ],
+  "traceFiles": {
+    "live": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-live-b/events-5B48F274-C30A-4B32-AC6A-FDED6F8E7817.jsonl",
+      "sha256": "8f1f067f3b03df1edca2477844a7d6dccd889d495f7b909e3e8dab571a8504d0"
+    },
+    "image": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-b/events-43890D60-0872-4EF2-B2B5-C3EEA2BC2A34.jsonl",
+      "sha256": "9aced359b2884283e59fe3551837ac1425484ec61ca97efe6d797a4bec4f6a8c"
+    }
+  },
+  "cameraCorrespondence": {
+    "cameraTransform": true,
+    "orthographicScale": true,
+    "orthographicPresent": true,
+    "perspectivePresent": true,
+    "near": true,
+    "far": true
+  },
+  "coordinateConclusion": {
+    "status": "supported coordinate-conversion correction, not yet implemented/validated",
+    "facts": [
+      "Apple Metal texture sample describes top-left origin.",
+      "Apple Core Image context documentation states bottom-left coordinate origin.",
+      "Current code feeds MTLTexture directly to CIImage then eager CGImage and UIImage.up without a conversion.",
+      "Whole images show a vertical reversal only."
+    ],
+    "narrowRecommendation": "A fixed vertical orientation conversion at CIImage before eager CGImage, keeping normalized UIImage.up/PNG, is justified by coordinate contracts and observed failure; no camera/light/geometry edits. Root independently identified CIImage.oriented(.downMirrored)."
+  },
+  "lightingConclusion": {
+    "status": "environment/default mismatch plausible but unproven",
+    "facts": [
+      "Same authored directional light and material construction is reused by both paths.",
+      "RealityViewCameraContent.environment explicitly owns default lighting.",
+      "RealityRenderer.lighting is a separate image-based environment property with optional EnvironmentResource and intensityExponent.",
+      "Reviewed official pages do not state the actual default resource/intensity for each renderer, nor promise equality."
+    ],
+    "limits": [
+      "Current trace records tone-mapping mode and color interpretation but not actual IBL resource/intensity, so missing IBL is not demonstrated.",
+      "Tone mapping, environment and color conversion remain separate potential contributors; dark appearance alone does not isolate any one.",
+      "VisionOS immersive default-IBL documentation cannot establish iOS RealityView versus RealityRenderer defaults."
+    ],
+    "narrowNextEvidence": "If root chooses further diagnostics, record public renderer lighting resource-presence/intensity and live public ARView environment lighting values without mutation; do not guess a light boost or tune materials to match screenshot."
+  },
+  "sources": [
+    {
+      "url": "https://developer.apple.com/documentation/metal/creating-and-sampling-textures",
+      "supports": "Metal top-left texture origin"
+    },
+    {
+      "url": "https://developer.apple.com/documentation/coreimage/cicontext/init(cglcontext:pixelformat:colorspace:options:)-6rp6d",
+      "supports": "Core Image bottom-left coordinate convention; this page is specifically CGL context documentation"
+    },
+    {
+      "url": "https://developer.apple.com/documentation/realitykit/realityviewcameracontent/environment",
+      "supports": "view background/default lighting ownership"
+    },
+    {
+      "url": "https://developer.apple.com/documentation/realitykit/realityviewenvironment",
+      "supports": "view default lighting description; not default intensity value"
+    },
+    {
+      "url": "https://developer.apple.com/documentation/realitykit/realityrenderer/lighting",
+      "supports": "renderer environment lighting API"
+    },
+    {
+      "url": "https://developer.apple.com/documentation/realitykit/realityrenderer/imagebasedlight",
+      "supports": "resource and intensity API; no explicit default equivalence"
+    }
+  ],
+  "rawAppleMarkdown": "scratch-only research; do not publish full downloaded documentation",
+  "sourceChanged": false,
+  "runtimeTouched": false,
+  "prototypeFeasible": false,
+  "workoutReady": false
+}

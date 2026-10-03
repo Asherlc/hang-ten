@@ -1,0 +1,17 @@
+[
+  {
+    "published": {
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/1C890239-B0DF-4482-9BB3-B26748084A11/Documents/HighlightDiagnostic-placid-badger-cad-second-half-hand-image-static-image-c/hand-image-prototype/76E04D71-1874-4E01-874F-E385FD9E7C9C/revision-2.png",
+      "sha256": "39a7c47c37955c768abfd83e2c023804434ed9416c57c8d730543bdf67823c61",
+      "bytes": 476976,
+      "sessionID": "76E04D71-1874-4E01-874F-E385FD9E7C9C",
+      "revision": 2,
+      "sequence": 12
+    },
+    "copied": true,
+    "destination": "published-artifacts/76E04D71-1874-4E01-874F-E385FD9E7C9C/revision-2.png",
+    "actualSHA256": "39a7c47c37955c768abfd83e2c023804434ed9416c57c8d730543bdf67823c61",
+    "actualBytes": 476976,
+    "matchesPublishedMetadata": true
+  }
+]
