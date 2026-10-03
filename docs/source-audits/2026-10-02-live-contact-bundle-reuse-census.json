@@ -1,0 +1,232 @@
+{
+  "adopted": false,
+  "cleanup": {
+    "groups": [
+      19151,
+      23480,
+      24223
+    ],
+    "independentlyVerifiedAbsent": true,
+    "owner": "strong-owl-live-physics"
+  },
+  "generousRemainderSeconds": 0.00756750006985385,
+  "generousRemovableSeconds": 0.00354545826849062,
+  "initialCompileFailure": "timer statements require explicit return; no physics run",
+  "instrumentationOnly": true,
+  "owner": "strong-owl-live-physics",
+  "productSourceChanged": false,
+  "records": {
+    "candidate": {
+      "QPs": 3,
+      "bitIdentity": true,
+      "buckets": {
+        "advance": {
+          "calls": 1,
+          "exclusiveSeconds": 0.0006724166742060333,
+          "inclusiveSeconds": 0.011110124993138015
+        },
+        "backbone": {
+          "calls": 3,
+          "exclusiveSeconds": 0.0013813333353027701,
+          "inclusiveSeconds": 0.0013813333353027701
+        },
+        "configuration": {
+          "calls": 13,
+          "exclusiveSeconds": 0.0005277499294606969,
+          "inclusiveSeconds": 0.006391458286088891
+        },
+        "contact": {
+          "calls": 3,
+          "exclusiveSeconds": 0.0020158749975962564,
+          "inclusiveSeconds": 0.0033972083328990266
+        },
+        "correction": {
+          "calls": 3,
+          "exclusiveSeconds": 0.0005707500095013529,
+          "inclusiveSeconds": 0.009616833325708285
+        },
+        "merit": {
+          "calls": 6,
+          "exclusiveSeconds": 7.829169044271111e-05,
+          "inclusiveSeconds": 0.0028676666697720066
+        },
+        "self-pairs": {
+          "calls": 7,
+          "exclusiveSeconds": 0.0010277083347318694,
+          "inclusiveSeconds": 0.0010277083347318694
+        },
+        "wood-bundle": {
+          "calls": 7,
+          "exclusiveSeconds": 0.004836000021896325,
+          "inclusiveSeconds": 0.004836000021896325
+        }
+      },
+      "bundle": {
+        "admissions": 18,
+        "contactRows": [
+          115,
+          133,
+          135
+        ],
+        "fallbacks": 0,
+        "merits": 6,
+        "repairs": 1,
+        "retainedFeatures": 31
+      },
+      "distinctGeometryKeys": 4,
+      "events": [
+        {
+          "caller": "advance/correction/configuration",
+          "epoch": 1,
+          "key": 0,
+          "reason": "changed geometry",
+          "repeated": false,
+          "woodSeconds": 0.0007602916739415377
+        },
+        {
+          "caller": "advance/correction/merit/configuration",
+          "epoch": 1,
+          "key": 1,
+          "reason": "changed geometry",
+          "repeated": false,
+          "woodSeconds": 0.0007006250089034438
+        },
+        {
+          "caller": "advance/correction/configuration",
+          "epoch": 2,
+          "key": 0,
+          "reason": "repair",
+          "repeated": true,
+          "woodSeconds": 0.0007155000057537109
+        },
+        {
+          "caller": "advance/correction/merit/configuration",
+          "epoch": 2,
+          "key": 2,
+          "reason": "changed geometry",
+          "repeated": false,
+          "woodSeconds": 0.0007170833414420485
+        },
+        {
+          "caller": "advance/correction/configuration",
+          "epoch": 3,
+          "key": 2,
+          "reason": "accepted-feature retention",
+          "repeated": true,
+          "woodSeconds": 0.000639041667454876
+        },
+        {
+          "caller": "advance/correction/merit/configuration",
+          "epoch": 3,
+          "key": 3,
+          "reason": "changed geometry",
+          "repeated": false,
+          "woodSeconds": 0.0006679999933112413
+        },
+        {
+          "caller": "advance/configuration",
+          "epoch": 4,
+          "key": 3,
+          "reason": "accepted-feature retention",
+          "repeated": true,
+          "woodSeconds": 0.0006354583310894668
+        }
+      ],
+      "seconds": 0.01111295833834447
+    },
+    "original": {
+      "QPs": 2,
+      "bitIdentity": true,
+      "buckets": {
+        "advance": {
+          "calls": 1,
+          "exclusiveSeconds": 0.0006812916690250859,
+          "inclusiveSeconds": 0.007362125004874542
+        },
+        "backbone": {
+          "calls": 2,
+          "exclusiveSeconds": 0.0008780416683293879,
+          "inclusiveSeconds": 0.0008780416683293879
+        },
+        "configuration": {
+          "calls": 7,
+          "exclusiveSeconds": 0.00026591666392050683,
+          "inclusiveSeconds": 0.004412833339301869
+        },
+        "contact": {
+          "calls": 2,
+          "exclusiveSeconds": 0.00111516666947864,
+          "inclusiveSeconds": 0.001993208337808028
+        },
+        "correction": {
+          "calls": 2,
+          "exclusiveSeconds": 0.0002214583510067314,
+          "inclusiveSeconds": 0.006671333336271346
+        },
+        "merit": {
+          "calls": 4,
+          "exclusiveSeconds": 5.333330773282796e-05,
+          "inclusiveSeconds": 0.0029446249827742577
+        },
+        "self-pairs": {
+          "calls": 3,
+          "exclusiveSeconds": 0.0004335000121500343,
+          "inclusiveSeconds": 0.0004335000121500343
+        },
+        "wood-original": {
+          "calls": 3,
+          "exclusiveSeconds": 0.003713416663231328,
+          "inclusiveSeconds": 0.003713416663231328
+        }
+      },
+      "distinctGeometryKeys": 3,
+      "events": [
+        {
+          "caller": "advance/correction/configuration",
+          "epoch": 0,
+          "key": 0,
+          "reason": "changed geometry",
+          "repeated": false,
+          "woodSeconds": 0.0012414166558301076
+        },
+        {
+          "caller": "advance/correction/merit/configuration",
+          "epoch": 0,
+          "key": 1,
+          "reason": "changed geometry",
+          "repeated": false,
+          "woodSeconds": 0.0012090416712453589
+        },
+        {
+          "caller": "advance/correction/merit/configuration",
+          "epoch": 0,
+          "key": 2,
+          "reason": "changed geometry",
+          "repeated": false,
+          "woodSeconds": 0.0012629583361558616
+        }
+      ],
+      "seconds": 0.007363583325059153
+    }
+  },
+  "removableDuplicateWoodSeconds": 0.0019900000042980537,
+  "requiredSavingSeconds": 0.005222091678297147,
+  "scope": "one fixed native step, original and failed bundle; unchanged arithmetic/decisions; not a performance acceptance rerun",
+  "sha256": {
+    ".context/strong-owl-live-physics-contact-bundle-reuse-census-744f7f2bb-returnfix/native/cleanup-independent.json": "ea8fd77824ea41b7202d890efe21e7dbf7607b80e2a41112ec02b373e41e45ec",
+    ".context/strong-owl-live-physics-contact-bundle-reuse-census-744f7f2bb-returnfix/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-contact-bundle-reuse-census-744f7f2bb-returnfix/native/profile.json": "b3269a7456c0f9169684cf0b4ab9869bbbbb8423c89eddfce14f804df370600b",
+    ".context/strong-owl-live-physics-contact-bundle-reuse-census-744f7f2bb-returnfix/native/provenance.json": "ce3957ec76f6653cc02668929ed7f1d7ac375abd43a0b1112d95e99496c3db68",
+    ".context/strong-owl-live-physics-contact-bundle-reuse-census-744f7f2bb-returnfix/native/resources.jsonl": "b36905cd3591fec67bb756493dca4eb137c411750969708d6f48fa30b0007812",
+    ".context/strong-owl-live-physics-contact-bundle-reuse-census-744f7f2bb-returnfix/native/run.log": "e5da71a2e2dcb43eb60c2d356cdab90f3aa92eee45c178f2e1c2db8ad763dbd3",
+    ".context/strong-owl-live-physics-contact-bundle-reuse-census-744f7f2bb/native/compile.log": "13450ca22df314464e83e80e17bcf4106227634106dee712c67e9b519145657d",
+    ".context/strong-owl-live-physics-contact-bundle-reuse-census-744f7f2bb/native/provenance.json": "467d9e41425f8e3153834472b918c41c1cfd326add71913000491c4ed4e8bd43",
+    ".context/strong-owl-live-physics-contact-bundle-reuse-census-744f7f2bb/native/resources.jsonl": "2159988fea844d17f7b9478032932fa80c13774a2b13c17347bf50cf72c7c1e5",
+    "Tools/HangboardRopePrototype/contact_bundle/Profile.swift": "8bd49e7041f070828af54dc0c123553165f4dcd88faec34d5fc50bff3581a3a8",
+    "Tools/HangboardRopePrototype/contact_bundle/ProfileMain.swift": "0bcb685d4942bc49753af05cbd1f1fb91efc7c025ec5ad7a8d001642ef4b983d",
+    "Tools/HangboardRopePrototype/contact_bundle/profile_snapshot.py": "2b30840394cdfbcfba50388b2098acb9b515cbc1be4939c08f14148a0bb774b5",
+    "Tools/HangboardRopePrototype/run_contact_bundle_checkpoint.py": "28fd08e681a9ec3161cd377032ff83afe27c65119609c38aa6c31d8ba44731b2"
+  },
+  "successorClosedBeforeImplementation": true,
+  "zeroConfigurationRemainderSeconds": 0.004721500052255578
+}
