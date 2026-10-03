@@ -1,0 +1,85 @@
+{
+  "captures": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-0-active-plus-0.25.png",
+      "sha256": "b5206a4643503d7da66d237d0b741f625e361c20407dd7792698e67548dfa383",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:07",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-0-active-plus-1.png",
+      "sha256": "3ebc76fccb367c2b0417e45ffbd0851b6bb00298aac38e37a01ab458d53d4009",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:06",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-0-active-plus-3.png",
+      "sha256": "974413ab6526e2f5bbd730579558d0824393f901862832fa2675a8406876e9c0",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:04",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-0-active-plus-5.png",
+      "sha256": "52b9a9e2151038354cd3153d5e789046af6bbafdcea4556d7dcab3f07ac18d31",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:02",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-1-preview-plus-0.25.png",
+      "sha256": "7e40a0f82915efc9b097dd98193cac7deff8a72fc0a0af5b1ac40a44c787c28c",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "timer": "03:00",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-1-preview-plus-1.png",
+      "sha256": "c61072f3f3a75ab2644df7dd9c20620ff404c59802422f3a444d448c0a868e3c",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "timer": "02:59",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-1-preview-plus-3.png",
+      "sha256": "47e559046945bff41c617e65610227aa84d3faba58074a9e2a1670c3f7e3f0f7",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "timer": "02:57",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-1-preview-plus-5.png",
+      "sha256": "4e91cc52f76a15cd0684cd1a2a4b6899c98efd34bd8eabcade907520b0fa0176",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "timer": "02:55",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    }
+  ],
+  "scope": "First eight whole originals directly viewed; no crop/pixel measurements. Next Hang pending."
+}

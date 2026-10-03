@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "rawFiles": 224,
+  "rawBytes": 13236144,
+  "originalFrozenFilesVerified": 222,
+  "previousPacketFilesUnchanged": 7573,
+  "wholePhaseImages": {
+    "control": 12,
+    "detach": 12
+  },
+  "retentionManifestSHA256": "c743112c2f7b7a8590d46692053fd88a207acc964418135d3e239b0648556703",
+  "sourceOrRuntimeChanged": false,
+  "stagedOrCommitted": false
+}
