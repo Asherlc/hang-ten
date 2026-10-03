@@ -6,11 +6,23 @@ from pathlib import Path
 sys.dont_write_bytecode=True
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from run_native_contact_screen import OwnedCommands,REPO
-p=argparse.ArgumentParser();p.add_argument('--label',required=True);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--label',required=True);p.add_argument('--free-balls',action='store_true');a=p.parse_args()
 assert a.label and all(c in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in a.label)
 root=REPO/'.context'/f'{REPO.name}-clearance-bounds-proof-{a.label}';root.mkdir()
 for name in ['Math.swift','Axis.swift','Proof.swift']:
     (root/('main.swift' if name=='Proof.swift' else name)).write_bytes(Path(__file__).with_name(name).read_bytes())
+if a.free_balls:
+    (root/'FreeBall.swift').write_bytes(Path(__file__).resolve().parents[1].joinpath('free_balls/Math.swift').read_bytes())
+    main=root/'main.swift';text=main.read_text()
+    text=text.replace('try clearanceBoundFixtures();','try freeBallFixtures();try clearanceBoundFixtures();')
+    text=text.replace('try JSONSerialization.data(withJSONObject:records', '''for _ in 0..<10000 {
+    let center=point(),p=center+point()*0.008,radius=RopeCertifiedClearance(lowerBound:0.0036)
+    let ball=RopePointFreeBall(center:center,radius:radius,outsideKnown:true)!
+    records.append(["kind":"ball","center":bits(center),"start":bits(p),"end":bits(p),
+        "upper":bits(ball.distanceUpper(p)!),"radius":bits(radius.lowerBound),"insideBall":ball.contains(p)])
+}
+try JSONSerialization.data(withJSONObject:records''')
+    main.write_text(text)
 sources=sorted(root.glob('*.swift'));binary=root/f'{REPO.name}-proof'
 common=['xcrun','swiftc','-O','-whole-module-optimization','-module-cache-path',str(root/'module-cache'),*map(str,sources)]
 c=OwnedCommands(REPO.name,root)
@@ -25,7 +37,7 @@ try:
     execute('proof-compile',[*common,'-o',str(binary)])
     execute('proof-export',[str(binary),str(root/'cases.json')])
     execute('proof-ir',[*common,'-emit-ir','-o',str(root/'bounds.ll')])
-    rows=json.loads((root/'cases.json').read_text());counts={'support':0,'axis':0,'bvh':0};positive=0;pruned=0
+    rows=json.loads((root/'cases.json').read_text());counts={'support':0,'axis':0,'bvh':0,'ball':0};positive=0;pruned=0
     for row in rows:
         k=row['kind'];counts[k]+=1;start=vector(row['start']);end=vector(row['end'])
         if k=='support':
@@ -38,6 +50,11 @@ try:
         elif k=='axis':
             axis=row['axis'];plane=number(row['coordinate']);exact=max(F(0),min(start[axis],end[axis])-plane,plane-max(start[axis],end[axis]))
             assert 0<=number(row['bound'])<=exact,row
+        elif k=='ball':
+            center=vector(row['center']);delta=[p-c for p,c in zip(start,center)]
+            upper=number(row['upper']);square=dot(delta,delta)
+            assert upper>=0 and upper**2>=square,row
+            if row['insideBall']:assert square<number(row['radius'])**2,row
         elif row['pruned']:
             low=vector(row['low']);high=vector(row['high']);gaps=[max(F(0),low[i]-max(start[i],end[i]),min(start[i],end[i])-high[i]) for i in range(3)]
             assert dot(gaps,gaps)>=number(row['floor'])**2,row

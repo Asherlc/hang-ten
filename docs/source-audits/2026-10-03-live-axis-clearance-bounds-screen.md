@@ -36,7 +36,7 @@ Pair variability is large (ratios 0.779–1.833); this supplies no stable speed 
 The version closes without additional sampling, threshold tuning, trajectory,
 simulator adoption or video claim.
 
-All seven newly owned fixture/proof/checkpoint compiler/run groups were cleaned
+All nine newly owned fixture/proof/checkpoint compiler/run groups were cleaned
 and independently verified absent. Source and result hashes, exact-rational audit,
 LLVM and lifecycle receipts are retained in the companion JSON. The pre-registered
 successor plan is `.context/strong-owl-live-physics-clearance-bounds-proposal/AXIS_PLAN.md`.
