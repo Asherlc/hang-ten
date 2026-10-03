@@ -21,6 +21,15 @@ struct RopeTriangleSupport:Sendable {
         normUpper=sqrt(max(0,Self.interval(n,n).1)).nextUp
         guard lower.isFinite,upper.isFinite,normUpper.isFinite,normUpper>0 else {return nil}
     }
+    init?(unionDirection n:SIMD3<Double>,vertices:[SIMD3<Double>]) {
+        guard !vertices.isEmpty,n != .zero,n.x.isFinite,n.y.isFinite,n.z.isFinite,
+              vertices.allSatisfy({$0.x.isFinite && $0.y.isFinite && $0.z.isFinite}) else {return nil}
+        direction=n
+        var lo=Double.infinity,hi = -Double.infinity
+        for p in vertices {let interval=Self.interval(p,n);lo=min(lo,interval.0);hi=max(hi,interval.1)}
+        lower=lo;upper=hi;normUpper=sqrt(max(0,Self.interval(n,n).1)).nextUp
+        guard lower.isFinite,upper.isFinite,normUpper.isFinite,normUpper>0 else {return nil}
+    }
     func bound(_ start:SIMD3<Double>,_ end:SIMD3<Double>)->RopeCertifiedClearance? {
         guard [start,end].allSatisfy({$0.x.isFinite && $0.y.isFinite && $0.z.isFinite}) else {return nil}
         let x=Self.interval(start,direction),y=Self.interval(end,direction)
@@ -29,6 +38,17 @@ struct RopeTriangleSupport:Sendable {
         guard value.isFinite else {return nil}
         return RopeCertifiedClearance(lowerBound:value)
     }
+}
+func unionSupportFixtures()throws {
+    let vertices=[SIMD3<Double>(0,0,0),SIMD3<Double>(1,0,0),SIMD3<Double>(0,1,0),SIMD3<Double>(2,2,0.01)]
+    guard let union=RopeTriangleSupport(unionDirection:SIMD3(0,0,1),vertices:vertices),
+          let bound=union.bound(SIMD3(0.1,0.1,0.1),SIMD3(0.9,0.1,0.1)),
+          bound.lowerBound<=0.09,bound.lowerBound>0.089999999,
+          union.bound(SIMD3(0,0,0.005),SIMD3(0,0,0.005))?.lowerBound==0,
+          RopeTriangleSupport(unionDirection:SIMD3(0,0,1),vertices:[])==nil else {
+        throw RopePhysicsError.invalid("union support fixtures")
+    }
+    print("PASS union supports include every vertex, interior slab and empty fallback")
 }
 func clearanceBoundFixtures()throws {
     let a=SIMD3<Double>(0,0,0),b=SIMD3<Double>(1,0,0),c=SIMD3<Double>(0,1,0)

@@ -20,6 +20,7 @@ parser.add_argument('--clearance-bounds',action='store_true')
 parser.add_argument('--bounds-profile',action='store_true')
 parser.add_argument('--axis-bounds',action='store_true')
 parser.add_argument('--free-balls',action='store_true')
+parser.add_argument('--plane-reuse',action='store_true')
 parser.add_argument('--geometry-profile',action='store_true')
 parser.add_argument('--spectral-trajectory',action='store_true')
 parser.add_argument('--spectral-checkpoint',type=int,choices=[109,140],default=109)
@@ -27,6 +28,7 @@ parser.add_argument('--preflight',action='store_true');args=parser.parse_args()
 if args.bounds_profile and not args.clearance_bounds:parser.error('--bounds-profile requires --clearance-bounds')
 if args.axis_bounds and not args.clearance_bounds:parser.error('--axis-bounds requires --clearance-bounds')
 if args.free_balls and (not args.clearance_bounds or args.axis_bounds or args.bounds_profile):parser.error('--free-balls requires isolated --clearance-bounds')
+if args.plane_reuse and not args.free_balls:parser.error('--plane-reuse requires --free-balls')
 if args.clearance_bounds and (args.geometry_hints or args.geometry_profile or args.spectral_step or args.scaled_merit or args.full_merit or args.trajectory or args.step_rate or args.composed_step):parser.error('--clearance-bounds is an isolated checkpoint')
 if args.geometry_profile and not args.geometry_hints:parser.error('--geometry-profile requires --geometry-hints')
 if args.geometry_hints and (args.spectral_step or args.scaled_merit or args.full_merit or args.trajectory or args.step_rate or args.composed_step):parser.error('--geometry-hints is an isolated checkpoint')
@@ -59,6 +61,9 @@ for name in NAMES:
         if args.free_balls and name=='RopeTriangleCollider.swift':
             from free_balls.snapshot import collider_source as free_collider
             text=free_collider(text)
+        if args.plane_reuse and name=='RopeTriangleCollider.swift':
+            from plane_reuse.snapshot import collider_source as plane_collider
+            text=plane_collider(text)
     if name=='RopeDynamicsSolver.swift':
         text=solver_source(text).replace('private extension SIMD4','extension SIMD4')
         text+='\n'+(tool/'stock_chain/CheckpointAdapter.swift').read_text()+'\n'+(tool/'contact_bundle/CheckpointExtras.swift').read_text()
@@ -71,6 +76,9 @@ for name in NAMES:
             if args.free_balls:
                 from free_balls.snapshot import solver_source as free_solver
                 text=free_solver(text)
+            if args.plane_reuse:
+                from plane_reuse.snapshot import solver_source as plane_solver
+                text=plane_solver(text)
             if args.bounds_profile:
                 from clearance_bounds.snapshot import profile_solver
                 text=profile_solver(text)
@@ -107,6 +115,9 @@ for name in ['Math.swift','Trace.swift','main.swift']:
         else:
             from clearance_bounds.snapshot import driver_source as bound_driver
         text=bound_driver(text)
+        if args.plane_reuse:
+            from plane_reuse.snapshot import driver_source as plane_driver
+            text=plane_driver(text)
         if args.axis_bounds:
             from clearance_bounds.axis_snapshot import driver_source as axis_driver
             text=axis_driver(text)
@@ -139,6 +150,12 @@ if args.geometry_hints:(sources/'GeometryHintMath.swift').write_bytes((tool/'geo
 if args.clearance_bounds:(sources/'ClearanceBoundMath.swift').write_bytes((tool/'clearance_bounds/Math.swift').read_bytes())
 if args.axis_bounds:(sources/'AxisBoundMath.swift').write_bytes((tool/'clearance_bounds/Axis.swift').read_bytes())
 if args.free_balls:(sources/'FreeBallMath.swift').write_bytes((tool/'free_balls/Math.swift').read_bytes())
+if args.plane_reuse:
+    from plane_reuse.atlas import generate
+    atlas,metadata=generate(REPO/'Hangboards/clavellium-training-block/assets/primary.physics.json')
+    (sources/'PlaneAtlas.swift').write_text(atlas)
+    (sources/'PlaneCacheMath.swift').write_bytes((tool/'plane_reuse/Math.swift').read_bytes())
+    (stage/'atlas.json').write_text(json.dumps(metadata,indent=2)+'\n')
 if args.spectral_step:(sources/'SpectralStepMath.swift').write_bytes((tool/'spectral_step/Math.swift').read_bytes())
 if args.scaled_merit:(sources/'ScaledMeritMath.swift').write_bytes((tool/'scaled_merit/Math.swift').read_bytes())
 if args.full_merit:(sources/'AmbiguityFixtures.swift').write_bytes((tool/'armijo/AmbiguityFixtures.swift').read_bytes())
@@ -155,6 +172,7 @@ inputs=[*files,*(REPO/'HangTen/Models'/n for n in NAMES),Path(__file__),*list((t
 if args.geometry_hints:inputs += list((tool/'geometry_hints').glob('*.*'))
 if args.clearance_bounds:inputs += list((tool/'clearance_bounds').glob('*.*'))
 if args.free_balls:inputs += list((tool/'free_balls').glob('*.*'))
+if args.plane_reuse:inputs += [*list((tool/'plane_reuse').glob('*.*')),stage/'atlas.json']
 if args.spectral_step:inputs += list((tool/'spectral_step').glob('*.*'))
 if args.scaled_merit:inputs += list((tool/'scaled_merit').glob('*.*'))
 if args.composed_step:inputs += list((tool/'composed_step').glob('*.*'))
@@ -167,5 +185,8 @@ try:
     status=owner.run('compile',['perl','-e','alarm 150;exec @ARGV',*command],stage/'compile.log',env)
     if not status:status=owner.run('run',['perl','-e','alarm 300;exec @ARGV' if not args.trajectory else 'alarm 600;exec @ARGV',str(binary),str(stage),str(prior),*(['--fixtures-only'] if args.fixtures_only else []),*(['--candidate-hz',str(args.step_rate or 240)] if args.step_rate or args.spectral_trajectory else []),*(['--preflight'] if args.preflight else [])],stage/'run.log',env)
     print((stage/('run.log' if (stage/'run.log').exists() else 'compile.log')).read_text())
+    if args.plane_reuse and (stage/'plane-unions.json').exists():
+        from plane_reuse.proof import validate
+        validate(stage/'plane-unions.json',stage/'plane-union-proof.json')
 finally:owner.cleanup()
 raise SystemExit(status)

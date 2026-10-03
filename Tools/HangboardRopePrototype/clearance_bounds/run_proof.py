@@ -6,7 +6,7 @@ from pathlib import Path
 sys.dont_write_bytecode=True
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from run_native_contact_screen import OwnedCommands,REPO
-p=argparse.ArgumentParser();p.add_argument('--label',required=True);p.add_argument('--free-balls',action='store_true');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--label',required=True);p.add_argument('--free-balls',action='store_true');p.add_argument('--union',action='store_true');a=p.parse_args()
 assert a.label and all(c in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in a.label)
 root=REPO/'.context'/f'{REPO.name}-clearance-bounds-proof-{a.label}';root.mkdir()
 for name in ['Math.swift','Axis.swift','Proof.swift']:
@@ -20,6 +20,18 @@ if a.free_balls:
     let ball=RopePointFreeBall(center:center,radius:radius,outsideKnown:true)!
     records.append(["kind":"ball","center":bits(center),"start":bits(p),"end":bits(p),
         "upper":bits(ball.distanceUpper(p)!),"radius":bits(radius.lowerBound),"insideBall":ball.contains(p)])
+}
+try JSONSerialization.data(withJSONObject:records''')
+    main.write_text(text)
+if a.union:
+    (root/'PlaneCache.swift').write_bytes(Path(__file__).resolve().parents[1].joinpath('plane_reuse/Math.swift').read_bytes())
+    main=root/'main.swift';text=main.read_text()
+    text=text.replace('try clearanceBoundFixtures();','try unionSupportFixtures();try planeCacheFixtures();try clearanceBoundFixtures();')
+    text=text.replace('try JSONSerialization.data(withJSONObject:records', '''for _ in 0..<10000 {
+    let vertices=(0..<10).map{_ in point()},n=point(),p=point(),q=point()
+    let support=RopeTriangleSupport(unionDirection:n,vertices:vertices)!,bound=support.bound(p,q)!
+    records.append(["kind":"union","vertices":vertices.map{bits($0)},"n":bits(n),"start":bits(p),"end":bits(q),
+        "lower":bits(support.lower),"upper":bits(support.upper),"normUpper":bits(support.normUpper),"bound":bits(bound.lowerBound)])
 }
 try JSONSerialization.data(withJSONObject:records''')
     main.write_text(text)
@@ -37,10 +49,10 @@ try:
     execute('proof-compile',[*common,'-o',str(binary)])
     execute('proof-export',[str(binary),str(root/'cases.json')])
     execute('proof-ir',[*common,'-emit-ir','-o',str(root/'bounds.ll')])
-    rows=json.loads((root/'cases.json').read_text());counts={'support':0,'axis':0,'bvh':0,'ball':0};positive=0;pruned=0
+    rows=json.loads((root/'cases.json').read_text());counts={'support':0,'axis':0,'bvh':0,'ball':0,'union':0};positive=0;pruned=0
     for row in rows:
         k=row['kind'];counts[k]+=1;start=vector(row['start']);end=vector(row['end'])
-        if k=='support':
+        if k in ('support','union'):
             n=vector(row['n']);vertices=list(map(vector,row['vertices']));lo=min(dot(v,n) for v in vertices);hi=max(dot(v,n) for v in vertices)
             assert number(row['lower'])<=lo and number(row['upper'])>=hi
             square=dot(n,n);assert number(row['normUpper'])**2>=square

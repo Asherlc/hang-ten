@@ -1,0 +1,4244 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "closed": true,
+  "speedGatePassed": false,
+  "window": {
+    "adopted": false,
+    "candidateQPs": 75,
+    "candidateWindow": [
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.992184911312941e-05,
+          "geometryAccepted": true,
+          "lengthError": 1.1284233558672696e-07,
+          "speed": 0.00023202009854562394,
+          "strain": 2.1337540801580346e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004924333334201947,
+        "step": 121,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015962534300291754,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.0002135959651827779
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.785282585305912e-06,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 2.1337540801580346e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 2520,
+        "metrics": {
+          "clearanceMargin": 9.999960909382218e-05,
+          "geometryAccepted": true,
+          "lengthError": 4.0094616515773396e-10,
+          "speed": 0.00042766041273979726,
+          "strain": 1.0085096224798917e-07
+        },
+        "parityConflicts": 0,
+        "qps": 7,
+        "seconds": 0.01253408333286643,
+        "step": 122,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016068537758965145,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002135257843471905
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.438130010026159e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 4.6346671519925664e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.1942539421703345e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 4.825653285589482e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.340013844594965e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 5.051070946837655e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.518293611401131e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 5.3638398902045026e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 5.776499159900431e-06,
+            "originalRejected": 1,
+            "rows": 445,
+            "slope": null,
+            "strain": 4.13151204761153e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.145197816862931e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.0085096224798917e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.992653231514093e-05,
+          "geometryAccepted": true,
+          "lengthError": 9.903706577052418e-08,
+          "speed": 0.0004503089958524898,
+          "strain": 2.379349093772909e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004412250011228025,
+        "step": 123,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016058075196043198,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.00021253580788815896
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.7058671680897756e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 2.379349093772909e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.999808614232723e-05,
+          "geometryAccepted": true,
+          "lengthError": 1.0228872193707161e-09,
+          "speed": 0.00041336982217251504,
+          "strain": 4.926883721001474e-07
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.009025208331877366,
+        "step": 124,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016423794239863474,
+            "originalRejected": 0,
+            "rows": 443,
+            "slope": null,
+            "strain": 0.00021370923956998134
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 7.420379023869652e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 0.00010479833433874042
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 8.52956087518704e-06,
+            "originalRejected": 1,
+            "rows": 444,
+            "slope": null,
+            "strain": 8.283558293609161e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.749758237855518e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.926883721001474e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.994386145275105e-05,
+          "geometryAccepted": true,
+          "lengthError": 8.08992576262213e-08,
+          "speed": 0.0004088392547316668,
+          "strain": 1.5038040253489982e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004316208331147209,
+        "step": 125,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015920064366080168,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021256405566116854
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.213150320224276e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.5038040253489982e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.999971080251226e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.740509013638871e-10,
+          "speed": 0.0003545703234763642,
+          "strain": 8.037368837143788e-08
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.008719541670870967,
+        "step": 126,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016136976717891,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002136727282737727
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.438043702771142e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 6.512384153989359e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 6.289429100809864e-06,
+            "originalRejected": 1,
+            "rows": 448,
+            "slope": null,
+            "strain": 4.997704731568575e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.803282865403887e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 8.037368837143788e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.99565427635251e-05,
+          "geometryAccepted": true,
+          "lengthError": 6.936377994204435e-08,
+          "speed": 0.00036185821147193643,
+          "strain": 1.1086911185342885e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.0044126666616648436,
+        "step": 127,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001592848745068512,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021269876221174933
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.9757980596050824e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.1086911185342885e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 2800,
+        "metrics": {
+          "clearanceMargin": 9.99997518583381e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.232307754785779e-10,
+          "speed": 0.0003364255913923901,
+          "strain": 6.701071630921263e-08
+        },
+        "parityConflicts": 0,
+        "qps": 8,
+        "seconds": 0.015934625000227243,
+        "step": 128,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001608938417967573,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.00021357311280900682
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.639846657863307e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.095530602366004e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.685994346692543e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 4.0531736545057484e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.766647336388938e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.9839414171627396e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.857858912602551e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 3.91763827853886e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.986409615146477e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.909004369440083e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 6.1382518372502235e-06,
+            "originalRejected": 1,
+            "rows": 445,
+            "slope": null,
+            "strain": 2.930558714675513e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.686116970951598e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 6.701071630921263e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.996032054343648e-05,
+          "geometryAccepted": true,
+          "lengthError": 5.957167348302761e-08,
+          "speed": 0.00032604863546533444,
+          "strain": 1.0542320392659121e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004667333341785707,
+        "step": 129,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001589126744482126,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021277015678577982
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.74624903257138e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.0542320392659121e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 4200,
+        "metrics": {
+          "clearanceMargin": 9.999969591574509e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.9755010394770807e-10,
+          "speed": 0.00030055587304562227,
+          "strain": 7.847029936947081e-08
+        },
+        "parityConflicts": 0,
+        "qps": 13,
+        "seconds": 0.02308587500010617,
+        "step": 130,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016015799746131923,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.0002136107460397607
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.890095728462695e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 3.816580221616128e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.821882917514971e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.8523014332936256e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.789042015025257e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 3.8747154372353876e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.02051946724899e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.908641621075404e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.295940914549419e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 3.9564039827189035e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.5560841308594994e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 4.024005658487262e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.813665349325149e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 4.1166111116153203e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.060235950535961e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 4.2452984029495155e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.311639435624491e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 4.4217481736330555e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.5559640833225745e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 4.6672547743265014e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 6.815412137038166e-06,
+            "originalRejected": 1,
+            "rows": 444,
+            "slope": null,
+            "strain": 3.585834582131575e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.842425005503811e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 7.847029936947081e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.996241080123276e-05,
+          "geometryAccepted": true,
+          "lengthError": 5.284367332603068e-08,
+          "speed": 0.00033935037455490704,
+          "strain": 1.1839543112568407e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.0043916249996982515,
+        "step": 131,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015967141374324028,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.0002128595394417232
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.7527712105957815e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.1839543112568407e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.999922562915937e-05,
+          "geometryAccepted": true,
+          "lengthError": 6.100356886307168e-10,
+          "speed": 0.00029318507352472136,
+          "strain": 2.0035854397804087e-07
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.00863345833204221,
+        "step": 132,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001621260652223971,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 0.00021359448793556446
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.230106960876705e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 5.046102132477692e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 5.844114329686714e-06,
+            "originalRejected": 1,
+            "rows": 443,
+            "slope": null,
+            "strain": 3.966686922485252e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.5654088048366445e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 2.0035854397804087e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.997101405796217e-05,
+          "geometryAccepted": true,
+          "lengthError": 4.3756504530811924e-08,
+          "speed": 0.00030733247055058526,
+          "strain": 7.782254091814877e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.0044367083319230005,
+        "step": 133,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015875189506024697,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021289643735022956
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.757841936187417e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 7.782254091814877e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1960,
+        "metrics": {
+          "clearanceMargin": 9.999972012618083e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.728957143067646e-10,
+          "speed": 0.0002613415167357697,
+          "strain": 7.263103962706907e-08
+        },
+        "parityConflicts": 0,
+        "qps": 5,
+        "seconds": 0.010026749994722195,
+        "step": 134,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001602856068204976,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002136065875815163
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.718201490843905e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 3.3462650503413016e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.5068247669359266e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 3.578761529499097e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 4.725110983328282e-06,
+            "originalRejected": 1,
+            "rows": 444,
+            "slope": null,
+            "strain": 2.7592828233391486e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.451749992298573e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 7.263103962706907e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.99720029353818e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.984830621028834e-08,
+          "speed": 0.0003003044398909656,
+          "strain": 9.327975593942384e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004476833346416242,
+        "step": 135,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015948174240423813,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.00021297899661121278
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.7640751155490383e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 9.327975593942384e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.99991256321023e-05,
+          "geometryAccepted": true,
+          "lengthError": 6.609495173393043e-10,
+          "speed": 0.00025603466890861885,
+          "strain": 2.270762977651941e-07
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.008222999997087754,
+        "step": 136,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016179470767765862,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 0.00021358392686354755
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.76601471920646e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 4.1555634970880106e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 5.43034117976342e-06,
+            "originalRejected": 1,
+            "rows": 443,
+            "slope": null,
+            "strain": 3.306156327953502e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.4514966611700076e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 2.270762977651941e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.997898041221552e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.245473167989843e-08,
+          "speed": 0.0002768910413438284,
+          "strain": 5.670481527664251e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004891916672931984,
+        "step": 137,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001585861028903323,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021299637107197178
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.767275656899333e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 5.670481527664251e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.999983308388565e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.173765694697295e-10,
+          "speed": 0.00021192797210382115,
+          "strain": 4.5606471044123964e-08
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.00869512501230929,
+        "step": 138,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015997437055085452,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002135990725400383
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.1812301657097144e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 2.5399332670872354e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 4.009479496892928e-06,
+            "originalRejected": 1,
+            "rows": 448,
+            "slope": null,
+            "strain": 1.9601385848222463e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.2529739219372774e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.5606471044123964e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.998389829538653e-05,
+          "geometryAccepted": true,
+          "lengthError": 2.829579770491364e-08,
+          "speed": 0.00022083383624483039,
+          "strain": 4.107759154159396e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004251874997862615,
+        "step": 139,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015861152466172774,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.0002130554914776539
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.771247321184128e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.107759154159396e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.994055532242755e-05,
+          "geometryAccepted": true,
+          "lengthError": 9.326733274583887e-08,
+          "speed": 0.00029439116791770906,
+          "strain": 1.516625981801134e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004471791660762392,
+        "step": 140,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015958302990769517,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021355221966246063
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.4480377384391393e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.516625981801134e-05
+          }
+        ]
+      }
+    ],
+    "certifiedParities": 28280,
+    "failure": "invalid(\"fixed twenty-step total <=0.80 and incremental <=0.90 speed gates\")",
+    "freeBallControlWindow": [
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.992184911312941e-05,
+          "geometryAccepted": true,
+          "lengthError": 1.1284233558672696e-07,
+          "speed": 0.00023202009854562394,
+          "strain": 2.1337540801580346e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.005328791667125188,
+        "step": 121,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015962534300291754,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.0002135959651827779
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.785282585305912e-06,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 2.1337540801580346e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 2520,
+        "metrics": {
+          "clearanceMargin": 9.999960909382218e-05,
+          "geometryAccepted": true,
+          "lengthError": 4.0094616515773396e-10,
+          "speed": 0.00042766041273979726,
+          "strain": 1.0085096224798917e-07
+        },
+        "parityConflicts": 0,
+        "qps": 7,
+        "seconds": 0.014125541667453945,
+        "step": 122,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016068537758965145,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002135257843471905
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.438130010026159e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 4.6346671519925664e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.1942539421703345e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 4.825653285589482e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.340013844594965e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 5.051070946837655e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.518293611401131e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 5.3638398902045026e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 5.776499159900431e-06,
+            "originalRejected": 1,
+            "rows": 445,
+            "slope": null,
+            "strain": 4.13151204761153e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.145197816862931e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.0085096224798917e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.992653231514093e-05,
+          "geometryAccepted": true,
+          "lengthError": 9.903706577052418e-08,
+          "speed": 0.0004503089958524898,
+          "strain": 2.379349093772909e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.005247541674179956,
+        "step": 123,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016058075196043198,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.00021253580788815896
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.7058671680897756e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 2.379349093772909e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.999808614232723e-05,
+          "geometryAccepted": true,
+          "lengthError": 1.0228872193707161e-09,
+          "speed": 0.00041336982217251504,
+          "strain": 4.926883721001474e-07
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.009175291663268581,
+        "step": 124,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016423794239863474,
+            "originalRejected": 0,
+            "rows": 443,
+            "slope": null,
+            "strain": 0.00021370923956998134
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 7.420379023869652e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 0.00010479833433874042
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 8.52956087518704e-06,
+            "originalRejected": 1,
+            "rows": 444,
+            "slope": null,
+            "strain": 8.283558293609161e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.749758237855518e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.926883721001474e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.994386145275105e-05,
+          "geometryAccepted": true,
+          "lengthError": 8.08992576262213e-08,
+          "speed": 0.0004088392547316668,
+          "strain": 1.5038040253489982e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.0053063333325553685,
+        "step": 125,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015920064366080168,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021256405566116854
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.213150320224276e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.5038040253489982e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.999971080251226e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.740509013638871e-10,
+          "speed": 0.0003545703234763642,
+          "strain": 8.037368837143788e-08
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.008328625001013279,
+        "step": 126,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016136976717891,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002136727282737727
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.438043702771142e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 6.512384153989359e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 6.289429100809864e-06,
+            "originalRejected": 1,
+            "rows": 448,
+            "slope": null,
+            "strain": 4.997704731568575e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.803282865403887e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 8.037368837143788e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.99565427635251e-05,
+          "geometryAccepted": true,
+          "lengthError": 6.936377994204435e-08,
+          "speed": 0.00036185821147193643,
+          "strain": 1.1086911185342885e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004769083330756985,
+        "step": 127,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001592848745068512,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021269876221174933
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.9757980596050824e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.1086911185342885e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 2800,
+        "metrics": {
+          "clearanceMargin": 9.99997518583381e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.232307754785779e-10,
+          "speed": 0.0003364255913923901,
+          "strain": 6.701071630921263e-08
+        },
+        "parityConflicts": 0,
+        "qps": 8,
+        "seconds": 0.014721208339324221,
+        "step": 128,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001608938417967573,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.00021357311280900682
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.639846657863307e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.095530602366004e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.685994346692543e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 4.0531736545057484e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.766647336388938e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.9839414171627396e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.857858912602551e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 3.91763827853886e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.986409615146477e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.909004369440083e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 6.1382518372502235e-06,
+            "originalRejected": 1,
+            "rows": 445,
+            "slope": null,
+            "strain": 2.930558714675513e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.686116970951598e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 6.701071630921263e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.996032054343648e-05,
+          "geometryAccepted": true,
+          "lengthError": 5.957167348302761e-08,
+          "speed": 0.00032604863546533444,
+          "strain": 1.0542320392659121e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004688291664933786,
+        "step": 129,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001589126744482126,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021277015678577982
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.74624903257138e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.0542320392659121e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 4200,
+        "metrics": {
+          "clearanceMargin": 9.999969591574509e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.9755010394770807e-10,
+          "speed": 0.00030055587304562227,
+          "strain": 7.847029936947081e-08
+        },
+        "parityConflicts": 0,
+        "qps": 13,
+        "seconds": 0.02357487499830313,
+        "step": 130,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016015799746131923,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.0002136107460397607
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.890095728462695e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 3.816580221616128e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.821882917514971e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.8523014332936256e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.789042015025257e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 3.8747154372353876e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.02051946724899e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.908641621075404e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.295940914549419e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 3.9564039827189035e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.5560841308594994e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 4.024005658487262e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.813665349325149e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 4.1166111116153203e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.060235950535961e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 4.2452984029495155e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.311639435624491e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 4.4217481736330555e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.5559640833225745e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 4.6672547743265014e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 6.815412137038166e-06,
+            "originalRejected": 1,
+            "rows": 444,
+            "slope": null,
+            "strain": 3.585834582131575e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.842425005503811e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 7.847029936947081e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.996241080123276e-05,
+          "geometryAccepted": true,
+          "lengthError": 5.284367332603068e-08,
+          "speed": 0.00033935037455490704,
+          "strain": 1.1839543112568407e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004266000003553927,
+        "step": 131,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015967141374324028,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.0002128595394417232
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.7527712105957815e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.1839543112568407e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.999922562915937e-05,
+          "geometryAccepted": true,
+          "lengthError": 6.100356886307168e-10,
+          "speed": 0.00029318507352472136,
+          "strain": 2.0035854397804087e-07
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.007965416662045754,
+        "step": 132,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001621260652223971,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 0.00021359448793556446
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.230106960876705e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 5.046102132477692e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 5.844114329686714e-06,
+            "originalRejected": 1,
+            "rows": 443,
+            "slope": null,
+            "strain": 3.966686922485252e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.5654088048366445e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 2.0035854397804087e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.997101405796217e-05,
+          "geometryAccepted": true,
+          "lengthError": 4.3756504530811924e-08,
+          "speed": 0.00030733247055058526,
+          "strain": 7.782254091814877e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.0048066250019473955,
+        "step": 133,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015875189506024697,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021289643735022956
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.757841936187417e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 7.782254091814877e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1960,
+        "metrics": {
+          "clearanceMargin": 9.999972012618083e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.728957143067646e-10,
+          "speed": 0.0002613415167357697,
+          "strain": 7.263103962706907e-08
+        },
+        "parityConflicts": 0,
+        "qps": 5,
+        "seconds": 0.009944083343725652,
+        "step": 134,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001602856068204976,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002136065875815163
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.718201490843905e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 3.3462650503413016e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.5068247669359266e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 3.578761529499097e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 4.725110983328282e-06,
+            "originalRejected": 1,
+            "rows": 444,
+            "slope": null,
+            "strain": 2.7592828233391486e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.451749992298573e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 7.263103962706907e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.99720029353818e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.984830621028834e-08,
+          "speed": 0.0003003044398909656,
+          "strain": 9.327975593942384e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004872333345701918,
+        "step": 135,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015948174240423813,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.00021297899661121278
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.7640751155490383e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 9.327975593942384e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.99991256321023e-05,
+          "geometryAccepted": true,
+          "lengthError": 6.609495173393043e-10,
+          "speed": 0.00025603466890861885,
+          "strain": 2.270762977651941e-07
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.008145541665726341,
+        "step": 136,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016179470767765862,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 0.00021358392686354755
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.76601471920646e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 4.1555634970880106e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 5.43034117976342e-06,
+            "originalRejected": 1,
+            "rows": 443,
+            "slope": null,
+            "strain": 3.306156327953502e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.4514966611700076e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 2.270762977651941e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.997898041221552e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.245473167989843e-08,
+          "speed": 0.0002768910413438284,
+          "strain": 5.670481527664251e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004366916677099653,
+        "step": 137,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001585861028903323,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021299637107197178
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.767275656899333e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 5.670481527664251e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.999983308388565e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.173765694697295e-10,
+          "speed": 0.00021192797210382115,
+          "strain": 4.5606471044123964e-08
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.008452458321698941,
+        "step": 138,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015997437055085452,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002135990725400383
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.1812301657097144e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 2.5399332670872354e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 4.009479496892928e-06,
+            "originalRejected": 1,
+            "rows": 448,
+            "slope": null,
+            "strain": 1.9601385848222463e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.2529739219372774e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.5606471044123964e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.998389829538653e-05,
+          "geometryAccepted": true,
+          "lengthError": 2.829579770491364e-08,
+          "speed": 0.00022083383624483039,
+          "strain": 4.107759154159396e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004430416665854864,
+        "step": 139,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015861152466172774,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.0002130554914776539
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.771247321184128e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.107759154159396e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.994055532242755e-05,
+          "geometryAccepted": true,
+          "lengthError": 9.326733274583887e-08,
+          "speed": 0.00029439116791770906,
+          "strain": 1.516625981801134e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.0043592083238763735,
+        "step": 140,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015958302990769517,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021355221966246063
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.4480377384391393e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.516625981801134e-05
+          }
+        ]
+      }
+    ],
+    "freeBalls": true,
+    "invalidDtRollbackIdentity": true,
+    "maximumPropagatedDifferenceMeters": 0,
+    "medianFreeBallRatio": 0.9626300598962642,
+    "medianRatio": 0.8061631997625202,
+    "originalQPs": 75,
+    "originalWindow": [
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.992184911312941e-05,
+          "geometryAccepted": true,
+          "lengthError": 1.1284233558672696e-07,
+          "speed": 0.00023202009854562394,
+          "strain": 2.1337540801580346e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.005360791663406417,
+        "step": 121,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015962534300291754,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.0002135959651827779
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.785282585305912e-06,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 2.1337540801580346e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.999960909382218e-05,
+          "geometryAccepted": true,
+          "lengthError": 4.0094616515773396e-10,
+          "speed": 0.00042766041273979726,
+          "strain": 1.0085096224798917e-07
+        },
+        "parityConflicts": 0,
+        "qps": 7,
+        "seconds": 0.015333041665144265,
+        "step": 122,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016068537758965145,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002135257843471905
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.438130010026159e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 4.6346671519925664e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.1942539421703345e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 4.825653285589482e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.340013844594965e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 5.051070946837655e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.518293611401131e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 5.3638398902045026e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 5.776499159900431e-06,
+            "originalRejected": 1,
+            "rows": 445,
+            "slope": null,
+            "strain": 4.13151204761153e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.145197816862931e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.0085096224798917e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.992653231514093e-05,
+          "geometryAccepted": true,
+          "lengthError": 9.903706577052418e-08,
+          "speed": 0.0004503089958524898,
+          "strain": 2.379349093772909e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.0052387916657608,
+        "step": 123,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016058075196043198,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.00021253580788815896
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.7058671680897756e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 2.379349093772909e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.999808614232723e-05,
+          "geometryAccepted": true,
+          "lengthError": 1.0228872193707161e-09,
+          "speed": 0.00041336982217251504,
+          "strain": 4.926883721001474e-07
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.010246083329548128,
+        "step": 124,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016423794239863474,
+            "originalRejected": 0,
+            "rows": 443,
+            "slope": null,
+            "strain": 0.00021370923956998134
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 7.420379023869652e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 0.00010479833433874042
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 8.52956087518704e-06,
+            "originalRejected": 1,
+            "rows": 444,
+            "slope": null,
+            "strain": 8.283558293609161e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.749758237855518e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.926883721001474e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.994386145275105e-05,
+          "geometryAccepted": true,
+          "lengthError": 8.08992576262213e-08,
+          "speed": 0.0004088392547316668,
+          "strain": 1.5038040253489982e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.005239333331701346,
+        "step": 125,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015920064366080168,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021256405566116854
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.213150320224276e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.5038040253489982e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.999971080251226e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.740509013638871e-10,
+          "speed": 0.0003545703234763642,
+          "strain": 8.037368837143788e-08
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.009898124990286306,
+        "step": 126,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016136976717891,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002136727282737727
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.438043702771142e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 6.512384153989359e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 6.289429100809864e-06,
+            "originalRejected": 1,
+            "rows": 448,
+            "slope": null,
+            "strain": 4.997704731568575e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.803282865403887e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 8.037368837143788e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.99565427635251e-05,
+          "geometryAccepted": true,
+          "lengthError": 6.936377994204435e-08,
+          "speed": 0.00036185821147193643,
+          "strain": 1.1086911185342885e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.005244125000899658,
+        "step": 127,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001592848745068512,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021269876221174933
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.9757980596050824e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.1086911185342885e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.99997518583381e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.232307754785779e-10,
+          "speed": 0.0003364255913923901,
+          "strain": 6.701071630921263e-08
+        },
+        "parityConflicts": 0,
+        "qps": 8,
+        "seconds": 0.017734291672240943,
+        "step": 128,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001608938417967573,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.00021357311280900682
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.639846657863307e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.095530602366004e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.685994346692543e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 4.0531736545057484e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.766647336388938e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.9839414171627396e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.857858912602551e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 3.91763827853886e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.986409615146477e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.909004369440083e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 6.1382518372502235e-06,
+            "originalRejected": 1,
+            "rows": 445,
+            "slope": null,
+            "strain": 2.930558714675513e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.686116970951598e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 6.701071630921263e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.996032054343648e-05,
+          "geometryAccepted": true,
+          "lengthError": 5.957167348302761e-08,
+          "speed": 0.00032604863546533444,
+          "strain": 1.0542320392659121e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.005134958337293938,
+        "step": 129,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001589126744482126,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021277015678577982
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.74624903257138e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.0542320392659121e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.999969591574509e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.9755010394770807e-10,
+          "speed": 0.00030055587304562227,
+          "strain": 7.847029936947081e-08
+        },
+        "parityConflicts": 0,
+        "qps": 13,
+        "seconds": 0.025842624992947094,
+        "step": 130,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016015799746131923,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.0002136107460397607
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.890095728462695e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 3.816580221616128e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.821882917514971e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.8523014332936256e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.789042015025257e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 3.8747154372353876e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.02051946724899e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.908641621075404e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.295940914549419e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 3.9564039827189035e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.5560841308594994e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 4.024005658487262e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.813665349325149e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 4.1166111116153203e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.060235950535961e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 4.2452984029495155e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.311639435624491e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 4.4217481736330555e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.5559640833225745e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 4.6672547743265014e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 6.815412137038166e-06,
+            "originalRejected": 1,
+            "rows": 444,
+            "slope": null,
+            "strain": 3.585834582131575e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.842425005503811e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 7.847029936947081e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.996241080123276e-05,
+          "geometryAccepted": true,
+          "lengthError": 5.284367332603068e-08,
+          "speed": 0.00033935037455490704,
+          "strain": 1.1839543112568407e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.00526329166314099,
+        "step": 131,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015967141374324028,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.0002128595394417232
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.7527712105957815e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.1839543112568407e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.999922562915937e-05,
+          "geometryAccepted": true,
+          "lengthError": 6.100356886307168e-10,
+          "speed": 0.00029318507352472136,
+          "strain": 2.0035854397804087e-07
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.009979624999687076,
+        "step": 132,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001621260652223971,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 0.00021359448793556446
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.230106960876705e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 5.046102132477692e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 5.844114329686714e-06,
+            "originalRejected": 1,
+            "rows": 443,
+            "slope": null,
+            "strain": 3.966686922485252e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.5654088048366445e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 2.0035854397804087e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.997101405796217e-05,
+          "geometryAccepted": true,
+          "lengthError": 4.3756504530811924e-08,
+          "speed": 0.00030733247055058526,
+          "strain": 7.782254091814877e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.00518516666488722,
+        "step": 133,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015875189506024697,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021289643735022956
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.757841936187417e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 7.782254091814877e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.999972012618083e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.728957143067646e-10,
+          "speed": 0.0002613415167357697,
+          "strain": 7.263103962706907e-08
+        },
+        "parityConflicts": 0,
+        "qps": 5,
+        "seconds": 0.012031000005663373,
+        "step": 134,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001602856068204976,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002136065875815163
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.718201490843905e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 3.3462650503413016e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.5068247669359266e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 3.578761529499097e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 4.725110983328282e-06,
+            "originalRejected": 1,
+            "rows": 444,
+            "slope": null,
+            "strain": 2.7592828233391486e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.451749992298573e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 7.263103962706907e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.99720029353818e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.984830621028834e-08,
+          "speed": 0.0003003044398909656,
+          "strain": 9.327975593942384e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.005268958339001983,
+        "step": 135,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015948174240423813,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.00021297899661121278
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.7640751155490383e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 9.327975593942384e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.99991256321023e-05,
+          "geometryAccepted": true,
+          "lengthError": 6.609495173393043e-10,
+          "speed": 0.00025603466890861885,
+          "strain": 2.270762977651941e-07
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.00985591666540131,
+        "step": 136,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016179470767765862,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 0.00021358392686354755
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.76601471920646e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 4.1555634970880106e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 5.43034117976342e-06,
+            "originalRejected": 1,
+            "rows": 443,
+            "slope": null,
+            "strain": 3.306156327953502e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.4514966611700076e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 2.270762977651941e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.997898041221552e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.245473167989843e-08,
+          "speed": 0.0002768910413438284,
+          "strain": 5.670481527664251e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.005393541665398516,
+        "step": 137,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001585861028903323,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021299637107197178
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.767275656899333e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 5.670481527664251e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.999983308388565e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.173765694697295e-10,
+          "speed": 0.00021192797210382115,
+          "strain": 4.5606471044123964e-08
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.010306708325515501,
+        "step": 138,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015997437055085452,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002135990725400383
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.1812301657097144e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 2.5399332670872354e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 4.009479496892928e-06,
+            "originalRejected": 1,
+            "rows": 448,
+            "slope": null,
+            "strain": 1.9601385848222463e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.2529739219372774e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.5606471044123964e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.998389829538653e-05,
+          "geometryAccepted": true,
+          "lengthError": 2.829579770491364e-08,
+          "speed": 0.00022083383624483039,
+          "strain": 4.107759154159396e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.005402624999987893,
+        "step": 139,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015861152466172774,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.0002130554914776539
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.771247321184128e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.107759154159396e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.994055532242755e-05,
+          "geometryAccepted": true,
+          "lengthError": 9.326733274583887e-08,
+          "speed": 0.00029439116791770906,
+          "strain": 1.516625981801134e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.005278666663798504,
+        "step": 140,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015958302990769517,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021355221966246063
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.4480377384391393e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.516625981801134e-05
+          }
+        ]
+      }
+    ],
+    "owner": "strong-owl-live-physics",
+    "pairs": [
+      {
+        "candidateSeconds": 0.1521884999674512,
+        "freeBallRatio": 0.9906718786240319,
+        "freeBallSeconds": 0.15362149996508379,
+        "originalSeconds": 0.18420450000849087,
+        "ratio": 0.8261931709618175
+      },
+      {
+        "candidateSeconds": 0.14597254164982587,
+        "freeBallRatio": 0.9367903225193329,
+        "freeBallSeconds": 0.15582200001517776,
+        "originalSeconds": 0.18107070837868378,
+        "ratio": 0.8061631997625202
+      },
+      {
+        "candidateSeconds": 0.14712349996261764,
+        "freeBallRatio": 0.8952984558827521,
+        "freeBallSeconds": 0.16432900000654627,
+        "originalSeconds": 0.1911592499964172,
+        "ratio": 0.7696384034012222
+      },
+      {
+        "candidateSeconds": 0.1497233749978477,
+        "freeBallRatio": 0.9774299735943234,
+        "freeBallSeconds": 0.1531806666898774,
+        "originalSeconds": 0.18363341665826738,
+        "ratio": 0.8153383938636585
+      },
+      {
+        "candidateSeconds": 0.14786704162543174,
+        "freeBallRatio": 0.9676603009019685,
+        "freeBallSeconds": 0.1528088333143387,
+        "originalSeconds": 0.18161637500452343,
+        "ratio": 0.8141724094082865
+      },
+      {
+        "candidateSeconds": 0.1485527499607997,
+        "freeBallRatio": 0.9626300598962642,
+        "freeBallSeconds": 0.15431966666074004,
+        "originalSeconds": 0.19862333331548143,
+        "ratio": 0.7479118766215014
+      },
+      {
+        "candidateSeconds": 0.1482021666597575,
+        "freeBallRatio": 0.9573172685629202,
+        "freeBallSeconds": 0.154809874977218,
+        "originalSeconds": 0.18700537498807535,
+        "ratio": 0.7925021763102147
+      }
+    ],
+    "parityConflicts": 0,
+    "planeReuse": true,
+    "prefixDecisionIdentitySteps": 120,
+    "strictDifferenceMeters": 1.7280166712871417e-06,
+    "strictTrace": [
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 0.00015958302990775008,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 0.0002135522196657913
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.448037738241142e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.5166259817567251e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.466445713636594e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.4996362600161461e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 3.5217012527756437e-06,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.473593636491799e-05
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 3.5859014644920644e-06,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.0991293032169835e-05
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 1.497525329787497e-07,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.3411536103902222e-08
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 1.1064717749923536e-07,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.182311293312921e-08
+      },
+      {
+        "alpha": 1,
+        "armijoRejected": 0,
+        "movement": 2.180336056319867e-08,
+        "originalRejected": 0,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.065580956804979e-09
+      },
+      {
+        "alpha": 0.5,
+        "armijoRejected": 0,
+        "movement": 1.6062026799372495e-08,
+        "originalRejected": 1,
+        "rows": 447,
+        "slope": null,
+        "strain": 1.0359288982186854e-09
+      }
+    ],
+    "verifiedParities": 28280,
+    "verifiedWindow": [
+      {
+        "certifiedParities": 0,
+        "metrics": {
+          "clearanceMargin": 9.992184911312941e-05,
+          "geometryAccepted": true,
+          "lengthError": 1.1284233558672696e-07,
+          "speed": 0.00023202009854562394,
+          "strain": 2.1337540801580346e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004728958330815658,
+        "step": 121,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015962534300291754,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.0002135959651827779
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.785282585305912e-06,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 2.1337540801580346e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 2520,
+        "metrics": {
+          "clearanceMargin": 9.999960909382218e-05,
+          "geometryAccepted": true,
+          "lengthError": 4.0094616515773396e-10,
+          "speed": 0.00042766041273979726,
+          "strain": 1.0085096224798917e-07
+        },
+        "parityConflicts": 0,
+        "qps": 7,
+        "seconds": 0.014027541663381271,
+        "step": 122,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016068537758965145,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002135257843471905
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.438130010026159e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 4.6346671519925664e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.1942539421703345e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 4.825653285589482e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.340013844594965e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 5.051070946837655e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.518293611401131e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 5.3638398902045026e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 5.776499159900431e-06,
+            "originalRejected": 1,
+            "rows": 445,
+            "slope": null,
+            "strain": 4.13151204761153e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.145197816862931e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.0085096224798917e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.992653231514093e-05,
+          "geometryAccepted": true,
+          "lengthError": 9.903706577052418e-08,
+          "speed": 0.0004503089958524898,
+          "strain": 2.379349093772909e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004505791672272608,
+        "step": 123,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016058075196043198,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.00021253580788815896
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.7058671680897756e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 2.379349093772909e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.999808614232723e-05,
+          "geometryAccepted": true,
+          "lengthError": 1.0228872193707161e-09,
+          "speed": 0.00041336982217251504,
+          "strain": 4.926883721001474e-07
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.008845666670822538,
+        "step": 124,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016423794239863474,
+            "originalRejected": 0,
+            "rows": 443,
+            "slope": null,
+            "strain": 0.00021370923956998134
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 7.420379023869652e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 0.00010479833433874042
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 8.52956087518704e-06,
+            "originalRejected": 1,
+            "rows": 444,
+            "slope": null,
+            "strain": 8.283558293609161e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.749758237855518e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.926883721001474e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.994386145275105e-05,
+          "geometryAccepted": true,
+          "lengthError": 8.08992576262213e-08,
+          "speed": 0.0004088392547316668,
+          "strain": 1.5038040253489982e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.0046567499957745895,
+        "step": 125,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015920064366080168,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021256405566116854
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.213150320224276e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.5038040253489982e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.999971080251226e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.740509013638871e-10,
+          "speed": 0.0003545703234763642,
+          "strain": 8.037368837143788e-08
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.008596333325840533,
+        "step": 126,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016136976717891,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002136727282737727
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.438043702771142e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 6.512384153989359e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 6.289429100809864e-06,
+            "originalRejected": 1,
+            "rows": 448,
+            "slope": null,
+            "strain": 4.997704731568575e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.803282865403887e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 8.037368837143788e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.99565427635251e-05,
+          "geometryAccepted": true,
+          "lengthError": 6.936377994204435e-08,
+          "speed": 0.00036185821147193643,
+          "strain": 1.1086911185342885e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004526874996372499,
+        "step": 127,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001592848745068512,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021269876221174933
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.9757980596050824e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.1086911185342885e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 2800,
+        "metrics": {
+          "clearanceMargin": 9.99997518583381e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.232307754785779e-10,
+          "speed": 0.0003364255913923901,
+          "strain": 6.701071630921263e-08
+        },
+        "parityConflicts": 0,
+        "qps": 8,
+        "seconds": 0.015488791672396474,
+        "step": 128,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001608938417967573,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.00021357311280900682
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.639846657863307e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.095530602366004e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.685994346692543e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 4.0531736545057484e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.766647336388938e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.9839414171627396e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.857858912602551e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 3.91763827853886e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.986409615146477e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.909004369440083e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 6.1382518372502235e-06,
+            "originalRejected": 1,
+            "rows": 445,
+            "slope": null,
+            "strain": 2.930558714675513e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.686116970951598e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 6.701071630921263e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.996032054343648e-05,
+          "geometryAccepted": true,
+          "lengthError": 5.957167348302761e-08,
+          "speed": 0.00032604863546533444,
+          "strain": 1.0542320392659121e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004711625006166287,
+        "step": 129,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001589126744482126,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021277015678577982
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.74624903257138e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.0542320392659121e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 4200,
+        "metrics": {
+          "clearanceMargin": 9.999969591574509e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.9755010394770807e-10,
+          "speed": 0.00030055587304562227,
+          "strain": 7.847029936947081e-08
+        },
+        "parityConflicts": 0,
+        "qps": 13,
+        "seconds": 0.02413970834459178,
+        "step": 130,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016015799746131923,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.0002136107460397607
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.890095728462695e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 3.816580221616128e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.821882917514971e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.8523014332936256e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.789042015025257e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 3.8747154372353876e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.02051946724899e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 3.908641621075404e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.295940914549419e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 3.9564039827189035e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.5560841308594994e-06,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 4.024005658487262e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.813665349325149e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 4.1166111116153203e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.060235950535961e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 4.2452984029495155e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.311639435624491e-06,
+            "originalRejected": 0,
+            "rows": 444,
+            "slope": null,
+            "strain": 4.4217481736330555e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 6.5559640833225745e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 4.6672547743265014e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 6.815412137038166e-06,
+            "originalRejected": 1,
+            "rows": 444,
+            "slope": null,
+            "strain": 3.585834582131575e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.842425005503811e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 7.847029936947081e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.996241080123276e-05,
+          "geometryAccepted": true,
+          "lengthError": 5.284367332603068e-08,
+          "speed": 0.00033935037455490704,
+          "strain": 1.1839543112568407e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004880416672676802,
+        "step": 131,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015967141374324028,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.0002128595394417232
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.7527712105957815e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.1839543112568407e-05
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.999922562915937e-05,
+          "geometryAccepted": true,
+          "lengthError": 6.100356886307168e-10,
+          "speed": 0.00029318507352472136,
+          "strain": 2.0035854397804087e-07
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.0089401666627964,
+        "step": 132,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001621260652223971,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 0.00021359448793556446
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 5.230106960876705e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 5.046102132477692e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 5.844114329686714e-06,
+            "originalRejected": 1,
+            "rows": 443,
+            "slope": null,
+            "strain": 3.966686922485252e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.5654088048366445e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 2.0035854397804087e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.997101405796217e-05,
+          "geometryAccepted": true,
+          "lengthError": 4.3756504530811924e-08,
+          "speed": 0.00030733247055058526,
+          "strain": 7.782254091814877e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004692875008913688,
+        "step": 133,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015875189506024697,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021289643735022956
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.757841936187417e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 7.782254091814877e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1960,
+        "metrics": {
+          "clearanceMargin": 9.999972012618083e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.728957143067646e-10,
+          "speed": 0.0002613415167357697,
+          "strain": 7.263103962706907e-08
+        },
+        "parityConflicts": 0,
+        "qps": 5,
+        "seconds": 0.01013254166173283,
+        "step": 134,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001602856068204976,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002136065875815163
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.718201490843905e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 3.3462650503413016e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.5068247669359266e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 3.578761529499097e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 4.725110983328282e-06,
+            "originalRejected": 1,
+            "rows": 444,
+            "slope": null,
+            "strain": 2.7592828233391486e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.451749992298573e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 7.263103962706907e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.99720029353818e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.984830621028834e-08,
+          "speed": 0.0003003044398909656,
+          "strain": 9.327975593942384e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.00457504166115541,
+        "step": 135,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015948174240423813,
+            "originalRejected": 0,
+            "rows": 446,
+            "slope": null,
+            "strain": 0.00021297899661121278
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.7640751155490383e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 9.327975593942384e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.99991256321023e-05,
+          "geometryAccepted": true,
+          "lengthError": 6.609495173393043e-10,
+          "speed": 0.00025603466890861885,
+          "strain": 2.270762977651941e-07
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.00904445833293721,
+        "step": 136,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00016179470767765862,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 0.00021358392686354755
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.76601471920646e-06,
+            "originalRejected": 0,
+            "rows": 449,
+            "slope": null,
+            "strain": 4.1555634970880106e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 5.43034117976342e-06,
+            "originalRejected": 1,
+            "rows": 443,
+            "slope": null,
+            "strain": 3.306156327953502e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.4514966611700076e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 2.270762977651941e-07
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.997898041221552e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.245473167989843e-08,
+          "speed": 0.0002768910413438284,
+          "strain": 5.670481527664251e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004687291671871208,
+        "step": 137,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.0001585861028903323,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021299637107197178
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.767275656899333e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 5.670481527664251e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 1680,
+        "metrics": {
+          "clearanceMargin": 9.999983308388565e-05,
+          "geometryAccepted": true,
+          "lengthError": 3.173765694697295e-10,
+          "speed": 0.00021192797210382115,
+          "strain": 4.5606471044123964e-08
+        },
+        "parityConflicts": 0,
+        "qps": 4,
+        "seconds": 0.008811333333142102,
+        "step": 138,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015997437055085452,
+            "originalRejected": 0,
+            "rows": 448,
+            "slope": null,
+            "strain": 0.0002135990725400383
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 4.1812301657097144e-06,
+            "originalRejected": 0,
+            "rows": 445,
+            "slope": null,
+            "strain": 2.5399332670872354e-05
+          },
+          {
+            "alpha": 0.5,
+            "armijoRejected": 0,
+            "movement": 4.009479496892928e-06,
+            "originalRejected": 1,
+            "rows": 448,
+            "slope": null,
+            "strain": 1.9601385848222463e-05
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.2529739219372774e-07,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.5606471044123964e-08
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.998389829538653e-05,
+          "geometryAccepted": true,
+          "lengthError": 2.829579770491364e-08,
+          "speed": 0.00022083383624483039,
+          "strain": 4.107759154159396e-06
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.00463616666093003,
+        "step": 139,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015861152466172774,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.0002130554914776539
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 2.771247321184128e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 4.107759154159396e-06
+          }
+        ]
+      },
+      {
+        "certifiedParities": 840,
+        "metrics": {
+          "clearanceMargin": 9.994055532242755e-05,
+          "geometryAccepted": true,
+          "lengthError": 9.326733274583887e-08,
+          "speed": 0.00029439116791770906,
+          "strain": 1.516625981801134e-05
+        },
+        "parityConflicts": 0,
+        "qps": 2,
+        "seconds": 0.004875583341345191,
+        "step": 140,
+        "trace": [
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 0.00015958302990769517,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 0.00021355221966246063
+          },
+          {
+            "alpha": 1,
+            "armijoRejected": 0,
+            "movement": 3.4480377384391393e-06,
+            "originalRejected": 0,
+            "rows": 447,
+            "slope": null,
+            "strain": 1.516625981801134e-05
+          }
+        ]
+      }
+    ],
+    "window": [
+      121,
+      140
+    ],
+    "workAndAccuracyPass": true
+  },
+  "scalarProof": {
+    "owner": "strong-owl-live-physics",
+    "adopted": false,
+    "counts": {
+      "support": 10000,
+      "axis": 10000,
+      "bvh": 10000,
+      "ball": 10000,
+      "union": 10000
+    },
+    "positiveSupportBounds": 4291,
+    "prunedBVHCases": 6916,
+    "exactRationalChecksPass": true,
+    "scalarOptimizedIRNoFastFlags": true,
+    "scope": "bounded deterministic native scalar corpus; operation-level BVH argument is separate; not generic rounded narrow-phase equivalence",
+    "hashes": {
+      ".context/strong-owl-live-physics-clearance-bounds-proof-plane-reuse/Axis.swift": "79863f08bb423be04f4c2f61450ceb7c5aaa6aa98efa6e4d679db7bc4f00fde1",
+      ".context/strong-owl-live-physics-clearance-bounds-proof-plane-reuse/FreeBall.swift": "581fa63b869683872fd9231504442ac2ec9821c3c79530334fe2ec9d769433c4",
+      ".context/strong-owl-live-physics-clearance-bounds-proof-plane-reuse/Math.swift": "94a1bc7e26a512076d69512dc8adfd748a98777d234aa2ff8d20fe774cd3a251",
+      ".context/strong-owl-live-physics-clearance-bounds-proof-plane-reuse/PlaneCache.swift": "99d21a445f41a4f4570addcb0d8df60aee89cb96dba6c8fac0b0d16ba9b0c9be",
+      ".context/strong-owl-live-physics-clearance-bounds-proof-plane-reuse/main.swift": "9dc96d49eb80aa8abc8979dc50c42284c64fee90809e5a5076b80715cbac13c2",
+      "Tools/HangboardRopePrototype/clearance_bounds/run_proof.py": "2666a844d2921869580510b604568e5eb853c1dc6a3ed42bfa361bcd0c43d30a",
+      ".context/strong-owl-live-physics-clearance-bounds-proof-plane-reuse/cases.json": "bc52ceac5b72a752189b2aa4eeb667edf3859eff215bc13cfc9015d76afb3325",
+      ".context/strong-owl-live-physics-clearance-bounds-proof-plane-reuse/bounds.ll": "d297afa329ff99d1763679757db27c632f3f221761beac1a7ba03e71530da136"
+    }
+  },
+  "actualUnionProof": {
+    "owner": "strong-owl-live-physics",
+    "adopted": false,
+    "checkedGroups": 9233,
+    "checkedVertices": 28680,
+    "unknownGroups": 0,
+    "exactUnionSupportsPass": true,
+    "inputSHA256": "9f2ddb7b5f3683cc3c92c49e48dfd684f2120ebb0db6a12cf453c5ca749eac9b"
+  },
+  "absentGroups": [
+    56483,
+    56612,
+    58855,
+    58884,
+    63873,
+    64783,
+    64920,
+    66973,
+    67106,
+    66975,
+    67118,
+    67125,
+    66977,
+    67195
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-clearance-bounds-union-red/resources.jsonl": "08633d0aa5b516ca02e203a2cd57a5a6920f0cc72b0c18544b603d398d71933d",
+    ".context/strong-owl-live-physics-clearance-bounds-union-red/run.log": "f4f252966c15d53bdeba5e09e8d1f63b195ce4df9cf2efca1853dc3b9531c75d",
+    ".context/strong-owl-live-physics-clearance-bounds-union-red/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-clearance-bounds-union-green/resources.jsonl": "23ff69ef6be98bd704b5201626ad5b27e31872c6bb4a03bddb2180f58e5e2c65",
+    ".context/strong-owl-live-physics-clearance-bounds-union-green/compile.log": "1ad191a05a798dc791f9a38c6b2bfe220a05d23cbf85e40506fd6083aaa2db4f",
+    ".context/strong-owl-live-physics-clearance-bounds-plane-cache-red/resources.jsonl": "c6057f69496f2911c7e7ed0ef0637dfd4c6cfed498766a1cfe61dd4fb24edf48",
+    ".context/strong-owl-live-physics-clearance-bounds-plane-cache-red/compile.log": "a592b2e0ee7acb421df2c096bd03d55ad02d005494ebd587faabe2c2e71f59fb",
+    ".context/strong-owl-live-physics-clearance-bounds-plane-cache-green/resources.jsonl": "b5461822ca0677143b85e0de81aaff1bee56be5179d402a629f3ed7f30873413",
+    ".context/strong-owl-live-physics-clearance-bounds-plane-cache-green/compile.log": "3bc42f0268762bf76d5f6a2c9300a912cce11796d35573315b03c44044a9a82b",
+    ".context/strong-owl-live-physics-clearance-bounds-plane-cache-red-v2/resources.jsonl": "1837a3e3c6cc37d8ba553658e9a1784b12532a5a9d21a2d0a5f3775b44146261",
+    ".context/strong-owl-live-physics-clearance-bounds-plane-cache-red-v2/run.log": "0ab2286f9f559bd3fd97db8a603c13c831f3f6fada875b79611b451f3913bca1",
+    ".context/strong-owl-live-physics-clearance-bounds-plane-cache-red-v2/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-clearance-bounds-plane-cache-green-v2/resources.jsonl": "644e8aa45da83a2b3f56f44a4675d18625216fd587fed9401ee060ecdcd1f35a",
+    ".context/strong-owl-live-physics-clearance-bounds-plane-cache-green-v2/run.log": "9bfa7b020775eb2b6ad7c33847b495dd4ffb8f67893d88cd04cca2620e12436b",
+    ".context/strong-owl-live-physics-clearance-bounds-plane-cache-green-v2/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-clearance-bounds-proof-plane-reuse/resources.jsonl": "b645ccfa5a74fa62bedfefdd7f851f5f366ede0a535bdce708812d6ce49b7c78",
+    ".context/strong-owl-live-physics-clearance-bounds-proof-plane-reuse/result.json": "285f36ecb7209d2996f4e8537b870b692876cf89c72ccb5e09677ab2d9237c76",
+    ".context/strong-owl-live-physics-clearance-bounds-proof-plane-reuse/proof-export.log": "8173e064aaa4cdc56e3e60295c799a56320cc1595569b307a4b417aca2f28510",
+    ".context/strong-owl-live-physics-clearance-bounds-proof-plane-reuse/bounds.ll": "d297afa329ff99d1763679757db27c632f3f221761beac1a7ba03e71530da136",
+    ".context/strong-owl-live-physics-clearance-bounds-proof-plane-reuse/cases.json": "bc52ceac5b72a752189b2aa4eeb667edf3859eff215bc13cfc9015d76afb3325",
+    ".context/strong-owl-live-physics-armijo-f66d37e8f-plane-reuse-window/native/resources.jsonl": "4e08ee08b6d98cb4933f3a5b196e5a50ae0d03c1cc9618371ef90273c858fa17",
+    ".context/strong-owl-live-physics-armijo-f66d37e8f-plane-reuse-window/native/result.json": "9f23e94bc24f9708d93bf9974e066e5650c73f37d5cf8cdbcf82ec6064bdea8a",
+    ".context/strong-owl-live-physics-armijo-f66d37e8f-plane-reuse-window/native/provenance.json": "a0bda2417dbb76239ed13dbc65cd694300b54b4bcc3a67503d76e1701ed9f48a",
+    ".context/strong-owl-live-physics-armijo-f66d37e8f-plane-reuse-window/native/run.log": "70a2ddc2ef8d2dd8f2fb9382d56d56199c98ec04b7b5c6fb3744a72a9ae63cdb",
+    ".context/strong-owl-live-physics-armijo-f66d37e8f-plane-reuse-window/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-armijo-f66d37e8f-plane-reuse-window/native/plane-unions.json": "9f2ddb7b5f3683cc3c92c49e48dfd684f2120ebb0db6a12cf453c5ca749eac9b",
+    ".context/strong-owl-live-physics-armijo-f66d37e8f-plane-reuse-window/native/plane-union-proof.json": "eca14ac399411180f493002cbde0c6bacf46507dedf9d10ff36b564d1c942194",
+    ".context/strong-owl-live-physics-armijo-f66d37e8f-plane-reuse-window/native/atlas.json": "0e9e86c7858fc9c816652b1cb77f7647185caf636e28f65a69a1fe1878fb47fc",
+    "Tools/HangboardRopePrototype/plane_reuse/Math.swift": "99d21a445f41a4f4570addcb0d8df60aee89cb96dba6c8fac0b0d16ba9b0c9be",
+    "Tools/HangboardRopePrototype/plane_reuse/proof.py": "da3701237e4cdc8291335fccee281572e35a3bb2b2b44430281d5fe4fd7a9e22",
+    "Tools/HangboardRopePrototype/plane_reuse/atlas.py": "c7bce1c7c21f3af6a07b37d2c3b05055296514aa1ff4aef7337b97cf5bb575fc",
+    "Tools/HangboardRopePrototype/plane_reuse/snapshot.py": "3ed41c40dbc0a24a83224719909892f53c94df91109c783cf6f61ed242451b33",
+    "Tools/HangboardRopePrototype/clearance_bounds/Math.swift": "94a1bc7e26a512076d69512dc8adfd748a98777d234aa2ff8d20fe774cd3a251",
+    "Tools/HangboardRopePrototype/clearance_bounds/run_proof.py": "2666a844d2921869580510b604568e5eb853c1dc6a3ed42bfa361bcd0c43d30a",
+    "Tools/HangboardRopePrototype/clearance_bounds/Axis.swift": "79863f08bb423be04f4c2f61450ceb7c5aaa6aa98efa6e4d679db7bc4f00fde1",
+    "Tools/HangboardRopePrototype/clearance_bounds/Proof.swift": "fb26d631ff629b40634920b046fda3b9e9d8dfcb006e02ffa92b5e5de6796588",
+    "Tools/HangboardRopePrototype/clearance_bounds/run_fixtures.py": "227e9bff8d5bf5b7db1e66a0602ba419b44f0b6c2a7f84c6e5eba1aebee7fd55",
+    "Tools/HangboardRopePrototype/clearance_bounds/axis_snapshot.py": "b2ba55eaf27de808528b48e9c6612eaad22638c1935e08a79afbae4963e1235b",
+    "Tools/HangboardRopePrototype/clearance_bounds/snapshot.py": "10abdafa8f5f07a3973f479cdd255746f8ccaab50840996a42c211dd67d1bebb",
+    ".context/strong-owl-live-physics-plane-reuse-proposal/PLAN.md": "9ded32c54b53dc894be90b6a254b28fad0b25ec9828e4ef209e34e37395951ba"
+  }
+}
