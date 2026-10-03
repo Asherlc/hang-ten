@@ -1,0 +1,1848 @@
+--- a/Tools/HangboardCAD/native_cord_routes.py
++++ b/Tools/HangboardCAD/native_cord_routes.py
+@@ -487,7 +487,7 @@
+     return exterior
+ 
+ 
+-def solve_native_routes(mesh, data, descriptor):
++def solve_native_routes(mesh, data, descriptor, source_metadata=None):
+     """Generate native seeds, optionally tighten them, then settle and certify.
+ 
+     The optional method never reads authored wrappedRoutes as an initial guess.
+@@ -510,8 +510,11 @@
+             one = {**data, "suspension": {**setup, "canonicalPoses": {pose_id: pose}},
+                    "ropeSolver": {**base_solver, "terminalsByStrandID": overrides.get(
+                        pose_id, solver["terminalsByStrandID"])}}
+-            output.update(solve_native_routes(mesh, one, descriptor))
++            output.update(solve_native_routes(mesh, one, descriptor, source_metadata=source_metadata))
+         return output
++    if "grooveGuides" in data["ropeSolver"]:
++        from native_cord_guides import solve_groove_guided_routes
++        return solve_groove_guided_routes(mesh,data,descriptor,source_metadata)
+     if "pathSearch" in data["ropeSolver"] and data["ropeSolver"]["pathSearch"] != "aStar":
+         raise ValueError("native pathSearch must be aStar when present")
+     if data["ropeSolver"].get("pathSearch") == "aStar":
+--- a/Tools/HangboardPackages/src/hangboard_packages/cad_source.py
++++ b/Tools/HangboardPackages/src/hangboard_packages/cad_source.py
+@@ -412,7 +412,7 @@
+                 **document, "ropeSolver": {**base_solver, "terminalsByStrandID": terminals}})
+         solver = base_solver
+     if isinstance(solver, dict) and solver.get("method") == "nativeRoutes":
+-        if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane", "tightening", "pathSearch"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
++        if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane", "tightening", "pathSearch", "grooveGuides"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
+                 or isinstance(solver["clearance"], bool) \
+                 or not isinstance(solver["clearance"], (int,float)) or not math.isfinite(solver["clearance"]) \
+                 or not 0 < solver["clearance"] <= .01 \
+@@ -453,6 +453,25 @@
+         if any(len(solver["terminalsByStrandID"][strand["id"]]["points"]) != (1 if strand["kind"] == "lead" else 2)
+                for strand in strands):
+             raise ManifestError("nativeRoutes needs one terminal per lead and two stations per loop or segment")
++        if "grooveGuides" in solver:
++            guides=solver["grooveGuides"]
++            poses=suspension.get("canonicalPoses",{})
++            if not isinstance(guides,dict) or set(guides)!={"sourceSHA256","byPoseID"} \
++                    or not isinstance(guides.get("sourceSHA256"),str) or not re.fullmatch(r"[0-9a-f]{64}",guides["sourceSHA256"]) \
++                    or not isinstance(guides.get("byPoseID"),dict) or set(guides["byPoseID"])!=set(poses) \
++                    or solver.get("sectionPlane")!="anchor" or solver.get("supportDirection",1)!=1 \
++                    or "tightening" in solver or any(x["kind"]!="lead" for x in strands):
++                raise ManifestError("native grooveGuides requires exact source/pose bindings and independent anchor-plane leads")
++            identifiers={x["id"] for x in strands}
++            for selections in guides["byPoseID"].values():
++                if not isinstance(selections,dict) or set(selections)!=identifiers:
++                    raise ManifestError("native grooveGuides must select every strand in every pose")
++                for identifier,selection in selections.items():
++                    if not isinstance(selection,dict) or set(selection)!={"feature","boreFeature","exitSign"} \
++                            or any(not isinstance(selection.get(key),str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*",selection[key]) for key in ("feature","boreFeature")) \
++                            or isinstance(selection.get("exitSign"),bool) or selection.get("exitSign") not in (-1,1) \
++                            or "mouthAxis" not in solver["terminalsByStrandID"][identifier]:
++                        raise ManifestError("native grooveGuides requires native feature names, finite exit choice and mouth axes")
+         if "tightening" in solver and (solver.get("sectionPlane", "fixed") != "anchor" or any(
+                 strand["kind"] != "lead" or "mouthAxis" not in solver["terminalsByStrandID"][strand["id"]]
+                 for strand in strands)):
+--- a/docs/HANGBOARD_CORD_AUTHORING.md
++++ b/docs/HANGBOARD_CORD_AUTHORING.md
+@@ -352,8 +352,88 @@
+ solve. The setting is authoring-only, accepts only this value and topology, and
+ its omission preserves the existing section solver exactly.
+ 
+-The default `"fixed"` uses the selected section plane. Both modes certify every
+-visible segment against the full closed CAD solid using adaptive signed-distance
++For an evidenced open adjustment groove that guides a lead into a separate
++visible bore, the optional `ropeSolver.grooveGuides` contract selects existing
++native cylinder features, never route points. It is restricted to independent
++leads in anchor sections and cannot be combined with `tightening`. Its
++`sourceSHA256` must match the actual collider/CAD source. `byPoseID` must name
++every canonical pose and every strand; each selection contains only `feature`
++(the groove), `boreFeature`, and `exitSign` (`-1` or `1` along the native groove
++axis). Different native groove choices, pose pitches and anchor offsets require
++an explicit evidence/estimate disposition; they are not manufacturer facts.
++
++Export that offline collider with `HANGTEN_ROPE_GROOVE_FEATURES` and
++`HANGTEN_ROPE_BORE_FEATURES` set to comma-separated existing cylinder names.
++The exporter records finite final-solid wall faces, exact geometry-only axial
++bounds and the actual local bore aperture plane. A cutting cylinder's overshoot
++is not an exterior mouth. The plane must meet that bore's finite outer wall
++boundary, and its finite face must be adjacent to the aperture circle. Opposite
++coaxial bores remain separate. With neither variable set, the exporter keeps
++its original output exactly. Unsupported cylinder orientations fail explicitly.
++
++When a selected longitudinal guide merges with a transverse notch and bore,
++the circular rim may end inward from the exterior side plane. The extractor
++then requires intersecting perpendicular native tools, shared final bore/guide
++wall edges, a connected native void, an outward exterior face adjacent to the
++guide, and zero-material aperture-disk and finite axis-crossing witnesses.
++The recorded exterior mouth remains that actual side plane; the separately
++recorded cylindrical-wall extent is not substituted for it. Missing or opposite
++guides and remote parallel planes cannot certify this merged opening.
++
++When the selected guide and bore axes, terminal and fixed support are
++analytically coplanar, the bounded search retains that native axis-aligned
++plane for its first search phase to avoid numerical drift in an unnecessary
++degree of freedom. The plane is then always released and the native-derived
++seed is checked and settled in full 3D. A bounded unit-tension chain Jacobian
++step can correct small residuals from the independently reconstructed actual
++facet forces:
++endpoints stay fixed, at most five corrections of at most 10 micrometres are
++allowed, and every trial recomputes full 3D clearance and material support.
++These are numerical search bounds, not relaxed acceptance tolerances. Parallel,
++inconsistent and noncoplanar cases retain the full 3D search from the start.
++This search constraint is not a physical certificate: the final full 3D
++solid/tube, seating, entry and actual-facet force gates still apply unchanged.
++
++The guide solver generates section seeds through the selected native groove,
++then releases those seed stations during bounded three-dimensional shortening
++and hanging-height settling. It never reads an existing route cache as a seed.
++The final nine-decimal cache must pass the unchanged full-radius continuous
++solid and tube checks, finite groove traversal, finite bore/end-cap entry,
++settled length and an active-material reaction check. An endpoint touch or a
++clear route outside the groove is insufficient. If evidence authorizes entry
++into an existing visible bore, a terminal may be inset only within its audited
++finite clearance interval; no connection beyond its native display cutoff is
++implied.
++
++Different presentation rotations can resolve to exactly the same native
++support origin and height direction. The solver may reuse that calculation
++within one fresh invocation when the guide selections also match, but it
++independently recertifies every output pose. It never uses a saved route cache
++for this calculation. Reports distinguish presentation rotations from the
++distinct native physics frames.
++
++The reaction check is discrete frictionless feasibility at the numerical cord
++offset, not an exact continuous rope model, global minimum, friction model or
++safety claim. Its force scale is unit tension. Contacts contribute only to their
++own segment endpoints with barycentric weights. The contact envelope is the
++actual radius plus the existing 20 micrometre proposal margin and 10 micrometre
++numerical allowance. A separate 10 micrometre closest-feature tie allowance
++accounts for opposing triangulated junction features. Every direction needs a
++nonempty cone of actual incident outward facet normals; nearby triangle radial
++vectors alone are not material normals. The solver independently recomputes
++both cone and nodal residuals and rejects unsupported forces. It additionally
++recomposes the fitted forces from actual incident-facet cone coefficients,
++checks that nodal residual at the same limit, and records the force-weighted
++cone-error bound. Both the reconstructed nodal residual and the weighted bound
++must be at most 1e-5; cancelling direction errors cannot hide amplified force
++errors. Reports retain facet IDs, closest-distance gaps, cone coefficients and active contact forces
++so those claims can be checked against the exact retained collision mesh.
++All guide metadata remains authoring-only and is removed from generated
++`board.json`; runtime still reads ordinary `cadRoutedCord`/`wrappedRoutes`.
++
++Without groove guidance, the default `tightening: "fixed"` uses the selected
++section plane. Every route mode certifies visible segments against the full
++closed CAD solid using adaptive signed-distance
+ Lipschitz bounds, with a 10 micrometre numerical tolerance and bounded work.
+ Uncertifiable intervals fail. The same check covers the rounded runtime cache,
+ its actual terminal and reconstructed fixed support. Self-crossings, retracing
+--- a/docs/model-delivery-lock.json
++++ b/docs/model-delivery-lock.json
+@@ -62,7 +62,7 @@
+     "zlagboard-evo",
+     "zlagboard-pro"
+   ],
+-  "sha256Manifest": "070bc9922def7dca1e7b42c9c668f8461b124ee14780ef0379568584cff395a4",
++  "sha256Manifest": "2061b24381bc1d193d9eb90aa04bdc20ac045325024426b2006b605d00ce1527",
+   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
+   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
+   "nativeValidationRequired": true,
+@@ -817,172 +817,300 @@
+     },
+     "nature-stone-hanger": {
+       "source": "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd",
+-      "sourceSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
++      "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
+-      "assetSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+-      "descriptorSHA256": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c",
++      "assetSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
++      "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
+       "assets": {
+         "assets/primary.usdz": {
+-          "modelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
++          "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+           "descriptorPath": "assets/primary.model.json",
+-          "descriptorSHA256": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c"
++          "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851"
+         }
+       },
+       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
+       "provenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/README.md",
+-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/geometry-review.html",
++      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/index.html",
+       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/metadata-diff.json",
+-      "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
+-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/app-review/validation.json",
+-      "geometryAcceptance": "pending requested one-by-one user review",
++      "nativeValidation": "Fitted native wood seat and exposed granite-only contact. Native interpenetration and exported material overlap are zero. All eight contact depths checked; seven other native surfaces and factual metadata preserved. Existing routes re-certified against the updated native solid for all eight poses and 16 branches; no new route authoring. Fresh exact-asset export and app proofs retained in granite-seat-review.",
++      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/runtime-validation.json",
++      "geometryAcceptance": "reviewed; corrected Stone Hanger geometry, finishes and cord display accepted",
+       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+-      "suspensionSHA256": "4e9bea938cafe3f4a7f100ff53bf58daa133a1b80926b106672d432e3a70d1a8"
++      "suspensionSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
++      "latestRevision": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/review.md",
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/human-review.json",
++      "humanReviewAnswer": "Y",
++      "acceptedDate": "2026-10-01",
++      "acceptedReview": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/accepted-review.md"
+     },
+     "nature-stone-hanger-mini": {
+       "source": "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+-      "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
++      "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
+-      "assetSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+-      "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
++      "assetSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
++      "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+       "assets": {
+         "assets/primary.usdz": {
+-          "modelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
++          "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+           "descriptorPath": "assets/primary.model.json",
+-          "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35"
++          "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95"
+         }
+       },
+       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
+       "provenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/native-authoring.md",
+-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review/index.html",
+-      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/metadata-diff.json",
+-      "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
+-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/app-review/validation.json",
+-      "geometryAcceptance": "pending requested one-by-one user review",
++      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/index.html",
++      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/independent-candidate-verification.json",
++      "nativeValidation": "Upper exterior finger-contact band and rounded crown; exact native collision body and exterior surface partition, preserved pinch/wood/granite surfaces, deterministic exports; source-bound cord cache check in new packet.",
++      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/runtime-validation.json",
++      "geometryAcceptance": "Jug finger-contact band ready for human CAD review; overall body approval preserved; current app appearance and interaction unverified.",
+       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+-      "suspensionSHA256": "3ededde32246c2b90cbf89dbb28ec26f362f387ae60f5f3f22dff2c76f115325"
++      "suspensionSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f",
++      "historicalMigrationReview": {
++        "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review/index.html",
++        "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/metadata-diff.json",
++        "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/app-review/validation.json",
++        "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
++        "assetSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
++        "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
++        "suspensionSHA256": "3ededde32246c2b90cbf89dbb28ec26f362f387ae60f5f3f22dff2c76f115325"
++      },
++      "cadReview": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/index.html",
++      "currentValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/validation.json",
++      "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d"
+     },
+     "nature-stone-hanger-mini-karma8a": {
+       "source": "Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd",
+-      "sourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
++      "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
+-      "assetSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46",
+-      "descriptorSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4",
++      "assetSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
++      "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+       "assets": {
+         "assets/primary.usdz": {
+-          "modelSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46",
++          "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+           "descriptorPath": "assets/primary.model.json",
+-          "descriptorSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4"
++          "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c"
+         }
+       },
+       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
+       "provenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/native-authoring.md",
+-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review/index.html",
+-      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/metadata-diff.json",
+-      "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
+-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/app-review/validation.json",
+-      "geometryAcceptance": "pending requested one-by-one user review",
++      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/index.html",
++      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/manifest-preservation.json",
++      "nativeValidation": "Current-source reopen/edit/restore, two identical fresh compiles, root independent actual geometry/export checks, all three native cord solves and twelve continuous route certificates; reports in completion-review.",
++      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
++      "geometryAcceptance": "Pending #11 geometry review; current app finishes, contacts and workout appearance unverified",
+       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+-      "suspensionSHA256": "8f3b0cefd2f926409e8311d7a5c333d0ef17272c062233c32d7f695fccc6717e"
++      "suspensionSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf",
++      "historicalMigrationReview": {
++        "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review/index.html",
++        "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/metadata-diff.json",
++        "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/app-review/validation.json",
++        "sourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
++        "assetSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46",
++        "descriptorSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4",
++        "suspensionSHA256": "8f3b0cefd2f926409e8311d7a5c333d0ef17272c062233c32d7f695fccc6717e"
++      }
+     },
+     "owl-climb-poker": {
+       "source": "Hangboards/owl-climb-poker/owl-climb-poker.FCStd",
+-      "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
++      "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
+-      "assetSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+-      "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac",
++      "assetSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
++      "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+       "assets": {
+         "assets/primary.usdz": {
+-          "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
++          "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+           "descriptorPath": "assets/primary.model.json",
+-          "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac"
++          "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
+         }
+       },
+       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
+       "provenance": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/README.md",
+-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/geometry-review.html",
+-      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/metadata-diff.json",
+-      "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
+-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/app-review/validation.json",
+-      "geometryAcceptance": "pending requested one-by-one user review",
+-      "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0"
++      "comparison": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/index.html",
++      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/independent-manifest-validation.json",
++      "nativeValidation": "Current-source reopen/recompute, native 32-contact preservation, constrained sketches and meaningful depth edit/restore; two identical clean exports, independent exact descriptor/material/mesh checks, unchanged C/D regression and independent Astra physical-shape/contact-extent pass. Reports in review12-2026-10-02.",
++      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/runtime-validation.json",
++      "geometryAcceptance": "Shown #12 CAD shape accepted; current app wood, picking, highlighting and workout appearance remain unverified",
++      "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
++      "historicalMigrationReview": {
++        "source": "Hangboards/owl-climb-poker/owl-climb-poker.FCStd",
++        "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
++        "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
++        "assetSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
++        "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac",
++        "assets": {
++          "assets/primary.usdz": {
++            "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
++            "descriptorPath": "assets/primary.model.json",
++            "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac"
++          }
++        },
++        "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
++        "provenance": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/README.md",
++        "comparison": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/geometry-review.html",
++        "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/metadata-diff.json",
++        "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
++        "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/app-review/validation.json",
++        "geometryAcceptance": "pending requested one-by-one user review",
++        "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0"
++      }
+     },
+     "plateau-lifting-edge": {
+       "source": "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+-      "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
++      "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
+-      "assetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+-      "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
++      "assetSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
++      "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+       "assets": {
+-        "assets/depth-10mm.usdz": {
+-          "modelSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+-          "descriptorPath": "assets/depth-10mm.model.json",
+-          "descriptorSHA256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e"
++        "assets/primary.usdz": {
++          "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
++          "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
++          "descriptorPath": "assets/primary.model.json"
+         },
+         "assets/depth-15mm.usdz": {
+-          "modelSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+-          "descriptorPath": "assets/depth-15mm.model.json",
+-          "descriptorSHA256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477"
++          "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
++          "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
++          "descriptorPath": "assets/depth-15mm.model.json"
+         },
+-        "assets/primary.usdz": {
+-          "modelSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+-          "descriptorPath": "assets/primary.model.json",
+-          "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee"
++        "assets/depth-10mm.usdz": {
++          "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
++          "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
++          "descriptorPath": "assets/depth-10mm.model.json"
+         }
+       },
+       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
+       "provenance": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/native-authoring.md",
+-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/index.html",
+-      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/metadata-diff.json",
+-      "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
+-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/app-review/validation.json",
+-      "geometryAcceptance": "pending requested one-by-one user review",
++      "comparison": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review13-2026-10-02/index.html",
++      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review13-2026-10-02/independent-export-validation.json",
++      "nativeValidation": "All 47 original native feature BReps/XML definitions and 75 non-Document payloads preserved; fresh native dimension edit/restore, exact three-export physical/contact triangle preservation, full-radius native seated-cord caches and independent Astra physical-shape gate pass. Current reports in review13-2026-10-02.",
++      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review13-2026-10-02/runtime-validation.json",
++      "geometryAcceptance": "Shown #13 CAD shape and seated cord accepted; current app wood, neutral components, cord, picking, highlights and workout appearance remain unverified",
+       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+-      "suspensionSHA256": "accd4b12ac09f4de1213c06b783de736117fd44e94b12918b38c86467dd2aa9f"
++      "suspensionSHA256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80",
++      "historicalMigrationReview": {
++        "source": "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
++        "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
++        "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
++        "assetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
++        "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
++        "assets": {
++          "assets/depth-10mm.usdz": {
++            "modelSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
++            "descriptorPath": "assets/depth-10mm.model.json",
++            "descriptorSHA256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e"
++          },
++          "assets/depth-15mm.usdz": {
++            "modelSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
++            "descriptorPath": "assets/depth-15mm.model.json",
++            "descriptorSHA256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477"
++          },
++          "assets/primary.usdz": {
++            "modelSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
++            "descriptorPath": "assets/primary.model.json",
++            "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee"
++          }
++        },
++        "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
++        "provenance": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/native-authoring.md",
++        "comparison": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review/index.html",
++        "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/metadata-diff.json",
++        "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
++        "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/app-review/validation.json",
++        "geometryAcceptance": "pending requested one-by-one user review",
++        "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
++        "suspensionSHA256": "accd4b12ac09f4de1213c06b783de736117fd44e94b12918b38c86467dd2aa9f"
++      }
+     },
+     "tension-flash-board": {
+       "source": "Hangboards/tension-flash-board/tension-flash-board.FCStd",
+-      "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
++      "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
+-      "assetSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+-      "descriptorSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e",
++      "assetSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
++      "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+       "assets": {
+         "assets/primary.usdz": {
+-          "modelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
++          "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+           "descriptorPath": "assets/primary.model.json",
+-          "descriptorSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e"
++          "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755"
+         }
+       },
+       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
+       "provenance": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/README.md",
+-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/geometry-review.html",
+-      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/metadata-diff.json",
+-      "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
+-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/app-review/validation.json",
+-      "geometryAcceptance": "pending requested one-by-one user review",
++      "comparison": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/index.html",
++      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/finish-preservation.json",
++      "nativeValidation": "Broad native shelves and rounded mouths preserve seven contact identities and four poses. Whole maker video contradicts the prior tiny same-face links. Conditional crossed exterior barrel wraps are generated by the existing native solver and labeled as inferred display adaptation; hidden passage, continuity and contact order remain unobserved. Current app appearance unverified; see review14-2026-10-02.",
++      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/runtime-validation.json",
++      "geometryAcceptance": "Shown #14 CAD shape and inferred barrel-wrap cord accepted; current app appearance, picking, highlights and workout behavior remain unverified",
+       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+-      "suspensionSHA256": "25830bef1ac6409ec5f1d7ac5e13317de974f96f1fa1037947554d64cbf5fc0b"
++      "suspensionSHA256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
++      "historicalMigrationReview": {
++        "source": "Hangboards/tension-flash-board/tension-flash-board.FCStd",
++        "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
++        "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
++        "assetSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
++        "descriptorSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e",
++        "assets": {
++          "assets/primary.usdz": {
++            "modelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
++            "descriptorPath": "assets/primary.model.json",
++            "descriptorSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e"
++          }
++        },
++        "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
++        "provenance": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/README.md",
++        "comparison": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/geometry-review.html",
++        "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/metadata-diff.json",
++        "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
++        "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/app-review/validation.json",
++        "geometryAcceptance": "pending requested one-by-one user review",
++        "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
++        "suspensionSHA256": "25830bef1ac6409ec5f1d7ac5e13317de974f96f1fa1037947554d64cbf5fc0b"
++      }
+     },
+     "trango-rock-prodigy-forge": {
+       "source": "Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd",
+-      "sourceSHA256": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
++      "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
+-      "assetSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+-      "descriptorSHA256": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef",
++      "assetSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
++      "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+       "assets": {
+         "assets/primary.usdz": {
+-          "modelSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
++          "modelSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+           "descriptorPath": "assets/primary.model.json",
+-          "descriptorSHA256": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef"
++          "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6"
+         }
+       },
+       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
+       "provenance": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/source-audit.md",
+-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/source-audit.md",
+-      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/metadata-diff.json",
+-      "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
+-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/app-review/validation.json",
+-      "geometryAcceptance": "pending requested one-by-one user review",
+-      "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0"
++      "comparison": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review15-2026-10-02/index.html",
++      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review15-2026-10-02/installation-proof.json",
++      "nativeValidation": "Open outer-wing recess and set-back lower pinch return restored from approved whole maker photos and diagrams. All 20 contact identities, factual fields and native contact surfaces preserved. Reversible native edits, independent depth/angle checks, unbound USDZ reimport, deterministic export and final whole export comparisons pass; see review15-2026-10-02.",
++      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review15-2026-10-02/runtime-validation.json",
++      "geometryAcceptance": "Shown #15 Forge CAD shape accepted after Opus review; current app appearance, picking, highlights, orbit and workout behavior remain unverified",
++      "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
++      "historicalMigrationReview": {
++        "source": "Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd",
++        "sourceSHA256": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
++        "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
++        "assetSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
++        "descriptorSHA256": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef",
++        "assets": {
++          "assets/primary.usdz": {
++            "modelSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
++            "descriptorPath": "assets/primary.model.json",
++            "descriptorSHA256": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef"
++          }
++        },
++        "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
++        "provenance": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/source-audit.md",
++        "comparison": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/source-audit.md",
++        "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/metadata-diff.json",
++        "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
++        "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/app-review/validation.json",
++        "geometryAcceptance": "pending requested one-by-one user review",
++        "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0"
++      },
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/human-review.json",
++      "opusAdvisory": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review15-2026-10-02/opus-advisor/review.md"
+     },
+     "yy-baguette": {
+       "source": "Hangboards/yy-baguette/yy-baguette.FCStd",
+@@ -1251,7 +1379,86 @@
+     "5bfbef360d57f377e9ea2fb43c7bc539d32c3ff8a376381f0319ea1fc28982a7",
+     "2605aaf099621f8012b6ab9d932cac6aa0b8567e6763622a915b47d39fe248bc",
+     "8c127d5a7f531a1bd5bf8a960cff601e36d9a3e83be09cca6193db9f8947d921",
+-    "d2beafcf87c322aeb86a5cbfdefebacad0a78f3c717bbc8a40723873c08d4c38"
++    "d2beafcf87c322aeb86a5cbfdefebacad0a78f3c717bbc8a40723873c08d4c38",
++    {
++      "sha256Manifest": "2e59a40776c140376c707d72803fdad70868380e7c79ea47aecfe900fcdb51fb",
++      "date": "2026-10-02",
++      "reason": "Nature Stone Hanger fitted granite seat; prior manifest preserved",
++      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/prior-delivery-checksums.txt"
++    },
++    {
++      "sha256Manifest": "c147798fd57e30d093fcd2ca868690064d48f35aa2be16bfe2b5b36fed906232",
++      "date": "2026-10-01",
++      "reason": "Mini completion: fitted granite seat, finishes, compact cord poses and opening-up jug; prior manifest preserved",
++      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/prior-delivery-checksums.txt"
++    },
++    {
++      "sha256Manifest": "44e1f436175582271d914849d8a5555dea2ecc4e86ef6920d46db27c2c8a49ba",
++      "date": "2026-10-02",
++      "reason": "KARMA8A fitted granite seat, exposed stone ownership and compact cord revision; prior manifest preserved",
++      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/prior-delivery-checksums.txt"
++    },
++    {
++      "sha256Manifest": "eef283106fd1636a2bc036d9b64268fa41cbf2bf2286304607513662b86850e8",
++      "date": "2026-10-02",
++      "reason": "Poker paired broad-relief entry correction and manufacturer-supported wood finish; prior manifest preserved",
++      "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/prior-delivery-checksums.txt"
++    },
++    {
++      "sha256Manifest": "fa6fcdde53a95fef8561af7baf12d363372c2a7d9571230ddc3ea600e908fa23",
++      "date": "2026-10-02",
++      "reason": "Plateau native loop seating, sourced 6 mm cord diameter and oak-only finish partitions; prior manifest retained",
++      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review13-2026-10-02/prior-delivery-checksums.txt"
++    },
++    {
++      "sha256Manifest": "44758ac3a2b242182833edb770b0b715c0be703b958f513061830c0e606127d7",
++      "date": "2026-10-02",
++      "reason": "Flash broad shelves, rounded mouth surfaces, wood display metadata and compact native-routed cords",
++      "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/prior-delivery-checksums.txt"
++    },
++    {
++      "sha256Manifest": "5d9950bab01d9004754a96f4130b10403509306618b4d65c6e8757f5499f91d1",
++      "date": "2026-10-02",
++      "reason": "Rejected Flash same-face stitches; replace with conditional inferred exterior barrel wraps",
++      "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/cord-feedback/rejected-delivery-checksums.txt"
++    },
++    {
++      "sha256Manifest": "b3b0b9bc93b07f3bed5df3888a3b106f30fededbad25d37743bcb37f97814bb9",
++      "date": "2026-10-02",
++      "reason": "Forge outer-wing recess, set-back lower lip and generic plastic display selector",
++      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review15-2026-10-02/prior-delivery-checksums.txt"
++    },
++    {
++      "sha256Manifest": "c2963fa7e5e8a39c7f1011c24ed5bac2b887d11ad48ab2f9f822ba66a0b593c8",
++      "date": "2026-10-02",
++      "recordedUTC": "2026-10-03T04:23:41.655488+00:00",
++      "reason": "Mini outside top/back jug, shared pinch membership and seated native cord correction",
++      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/prior-delivery-checksums.txt"
++    },
++    {
++      "sha256Manifest": "205a0dee4db2b87087643f76abc6c2e75038231e4090d371186dd34d62795ec2",
++      "date": "2026-10-02",
++      "recordedUTC": "2026-10-03T05:34:13.299788+00:00",
++      "reason": "Mini jug highlight wraps around existing upper crown and rounded ends",
++      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/prior-delivery-checksums.txt"
++    },
++    {
++      "sha256Manifest": "0fbef266b074158c46cca88817965c972406e3835414505b669c465fc1d18f8b",
++      "date": "2026-10-02",
++      "recordedUTC": "2026-10-03T06:19:16.786706+00:00",
++      "reason": "Mini jug highlight includes broad exterior finger-contact surfaces of the upper rail",
++      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/prior-delivery-checksums.txt"
++    },
++    {
++      "sha256Manifest": "070bc9922def7dca1e7b42c9c668f8461b124ee14780ef0379568584cff395a4",
++      "reason": "Exact snapshot before combined integration preview",
++      "commit": "405a4530ab3a26496cf4e44fb59917e5befd7af8"
++    },
++    {
++      "sha256Manifest": "4267990f05613cd2baf67f1d4604bf107ea081960c45c45a7c1faf0f81567fd1",
++      "reason": "Exact snapshot before combined integration preview",
++      "commit": "9b0a371f72216ab7746d876c141f834f815ffc34"
++    }
+   ],
+   "individualReviewRevisions": [
+     {
+@@ -1449,6 +1656,670 @@
+       "answer": "lgtm",
+       "acceptedDate": "2026-10-01",
+       "acceptedScope": "Displayed corrected Simulator 3-D, including its smooth front taper, forward center-jug crest and rear return, forward-reaching slopers, and existing plastic appearance."
++    },
++    {
++      "package": "nature-stone-hanger",
++      "date": "2026-10-02",
++      "revision": "vertical-cord-seats-granite-short-cord-and-weightable-poses",
++      "feedback": [
++        "the stone hanger needs granite texture where appropriate",
++        "also cord is way too long",
++        "and its missing the notches",
++        "and the highlighted hold is in an impossible to weight position",
++        "the cord goes inside the side notches",
++        "there is 1 vertical groove on either side that the cord nestles into"
++      ],
++      "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
++      "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
++      "descriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
++      "suspensionSHA256": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae",
++      "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review/runtime-validation.json",
++      "postIntegrationTests": {
++        "pythonPassed": 260,
++        "pythonSkipped": 0,
++        "iOSPassed": 259,
++        "iOSSkipped": 0,
++        "failures": 0
++      },
++      "allOtherPackageFilesUnchanged": 202,
++      "boardFactsAndContactIDsUnchanged": true,
++      "nativeBodyGeometryChanged": true,
++      "surfaceFinish": "wood",
++      "graniteNodeIDs": [
++        "edge_front_20mm_granite_mesh_001"
++      ],
++      "positions": 8,
++      "certifiedCordBranches": 16,
++      "verticalGrooves": 2,
++      "transverseNotchesPreserved": 6,
++      "geometryAcceptance": "pending one-by-one user review",
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/human-review.json",
++      "limits": "One vertical seat each side and existing three transverse adjustment notches per side are separate source-supported features; preserve both. Groove radius, depth, numeric span/entry placement, cord dimensions, support and loaded poses remain deliberate display estimates. The concealed connection remains unspecified beyond visible side-hole entry. All four corrected package identities require fresh native/export/cord/runtime proof. Prior 1b/7c passes are preserved as history without carrying them to the new shape. Raw images remain whole; no crop, registration, tracing or pixel-derived dimensions. Generic runtime wood/granite shaders depict materials; USDZ stays unbound with no baked material/texture. Material-facet frictionless discrete balance and numerical near-contact policy do not certify continuum cable or global board equilibrium or real load safety. Maker video sheets include multiple variants. All 10 original sheets retained; this independent evidence review physically viewed sheets 4 and 5 and four exact-revision primary images. Fresh checks: 260 Python tests, 259 focused iOS tests, all 64 packages. Installed byte parity covers Nature Stone Hanger only; overlapping historical suites are not added. The prior 30 degree pitch and 50 mm forward support offset are superseded adaptations. Current poses use identity or exact axis half-turn rotations, with a centered support and 25 mm initial display offset; solved hanging translations remain estimates. Small polygonal shading bands remain at the tight cord bend beside the seat without changing the route. Whole still frames and recorded drags do not cover every continuous camera angle. The before model/descriptor are exact committed HEAD939916 geometry; the before native source contains later metadata corrections. Earlier app frames are retained historical captures, not a fresh prior-binary run.",
++      "priorDeliveryManifestSHA256": "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42"
++    },
++    {
++      "package": "nature-stone-hanger",
++      "date": "2026-10-02",
++      "revision": "granite-insert-fitted-into-wood-seat",
++      "feedback": [
++        "The granite is overlapping with wood, look at photos"
++      ],
++      "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
++      "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
++      "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
++      "suspensionSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
++      "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/runtime-validation.json",
++      "postIntegrationTests": {
++        "pythonPassed": 260,
++        "pythonSkipped": 0,
++        "iOSPassed": 259,
++        "iOSSkipped": 0,
++        "failures": 0
++      },
++      "boardFactsAndContactIDsUnchanged": true,
++      "otherPackageFilesUnchanged": 202,
++      "nativeWoodStoneOverlapMM3": 0,
++      "exportedGraniteWoodPlanarOverlapMM2": 0,
++      "otherSevenNativeContactSurfacesUnchanged": true,
++      "graniteContactDepthMM": 20,
++      "surfaceFinish": "wood",
++      "graniteNodeIDs": [
++        "edge_front_20mm_granite_mesh_001"
++      ],
++      "positions": 8,
++      "recertifiedCordBranches": 16,
++      "cordRoutesAndTranslationsPreserved": true,
++      "onlySidecarChangedFields": [
++        "modelSHA256",
++        "ropeSolver/grooveGuides/sourceSHA256"
++      ],
++      "geometryAcceptance": "pending one-by-one user review",
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/human-review.json",
++      "limits": "Primary photos establish a seated insert and lower opening shape. Precise insert dimensions, local rounds, pocket shape and runtime texture remain display estimates. The existing solver-generated routes were freshly re-certified against the corrected native solid; they were not regenerated. No hidden construction or real load safety claim. Twenty-five whole app frames and nine drags cover representative views, not every continuous camera angle. Prior revision proofs remain historical and are not carried forward or added to fresh test counts.",
++      "priorDeliveryManifestSHA256": "2e59a40776c140376c707d72803fdad70868380e7c79ea47aecfe900fcdb51fb"
++    },
++    {
++      "eventType": "human-acceptance",
++      "package": "nature-stone-hanger",
++      "reviewNumber": 9,
++      "date": "2026-10-01",
++      "reviewer": "asherlc",
++      "answer": "Y",
++      "acceptedScope": "Displayed corrected Stone Hanger: fitted granite insert and clean wood seam, runtime wood and granite finishes, shortened cords entering side holes within the notch guides, and the shown hold positions.",
++      "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
++      "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
++      "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
++      "suspensionSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
++      "shownAssetCommit": "395589ff62b78dd1f9a78498f5c497cfc6cd5802",
++      "shownImages": {
++        "granite-seat-review/app/02-edge-front-15mm-flat.png": "d3a8b436b111e3ff2173d5e5456b3add3fe40048898bd6bf3b6195c542401c72",
++        "granite-seat-review/native-front-side-top.png": "74de3f56c4d1516e20a971efef603d351bfbe600ff0389e9169a882fb45b025f"
++      },
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/human-review.json"
++    },
++    {
++      "package": "nature-stone-hanger-mini",
++      "date": "2026-10-01",
++      "revision": "fitted-granite-seat-runtime-finishes-compact-cords-opening-up-jug",
++      "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
++      "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
++      "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
++      "sidecarSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
++      "suspensionSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
++      "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/runtime-validation.json",
++      "postIntegrationTests": {
++        "pythonPassed": 284,
++        "pythonSkipped": 0,
++        "iOSPassed": 0,
++        "iOSSkipped": 0,
++        "failures": 1,
++        "iOSRuntimeStatus": "not run; simulator startup blocked",
++        "iOSLauncherFailures": 1,
++        "iOSFailed": 1,
++        "iOSUnitCasesExecuted": 0,
++        "iOSExecutedCaseFailures": 0
++      },
++      "boardFactsAndContactIDsUnchanged": true,
++      "otherPackageFilesUnchanged": 202,
++      "nativeWoodStoneOverlapMM3": 0,
++      "actualMeshPlanarOverlapMM2": 0,
++      "nativeEnvelopeMM": [
++        100,
++        25,
++        60
++      ],
++      "fourPoseCordSolveAndFreshCheck": true,
++      "continuousCachedStrandRoutes": 16,
++      "geometryAcceptance": "Overall Mini shape accepted with Lgtm; final seat, finishes, shorter cords and jug pose review pending; app appearance unverified due simulator startup failure",
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/human-review.json",
++      "priorDeliveryManifestSHA256": "c147798fd57e30d093fcd2ca868690064d48f35aa2be16bfe2b5b36fed906232",
++      "limits": "Existing jug floor is rotated upward in an estimated display pose. Cord lead lengths and seat details are estimates. Only lead strands have a taut-length target; cross-return allowances are preserved. No current app frames, orbits, finish, contact or workout review; runtime validation is environment-blocked. Historical tests are retained separately and are not added to fresh counts."
++    },
++    {
++      "package": "nature-stone-hanger-mini-karma8a",
++      "date": "2026-10-02",
++      "revision": "fitted-granite-seat-full-exposed-granite-compact-cords-correct-pinch-axis",
++      "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
++      "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
++      "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
++      "sidecarSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf",
++      "suspensionSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf",
++      "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
++      "postIntegrationTests": {
++        "pythonPassed": 284,
++        "pythonFailed": 0,
++        "pythonSkipped": 0,
++        "canonicalPackagesValidated": 64,
++        "iOSBuildPassed": true,
++        "iOSUnitCasesExecuted": 0,
++        "iOSCurrentAppFrames": 0,
++        "iOSRuntimeStatus": "unverified; no usable owned guest"
++      },
++      "boardFactsAndContactIDsUnchanged": true,
++      "allThreePositionsUnchanged": true,
++      "otherPackageFilesUnchanged": 202,
++      "nativeWoodStoneOverlapMM3": 0,
++      "actualMeshPlanarOverlapMM2": 0,
++      "nativeEnvelopeMM": [
++        105,
++        30,
++        60
++      ],
++      "threePoseCordSolveAndFreshCheck": true,
++      "continuousCachedStrandRoutes": 12,
++      "geometryAcceptance": "Pending #11 geometry review; current app finishes, contacts and workout appearance unverified",
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/human-review.json",
++      "priorDeliveryManifestSHA256": "44e1f436175582271d914849d8a5555dea2ecc4e86ef6920d46db27c2c8a49ba",
++      "limits": "Only the free leads have a taut-length target; old cross-return allowances remain. No current app frames or unit cases. Neutral CAD previews and compile-only provenance do not establish runtime appearance. Historical tests/captures stay separate."
++    },
++    {
++      "package": "owl-climb-poker",
++      "date": "2026-10-02",
++      "revision": "paired-a-b-relief-entry-and-wood-finish",
++      "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
++      "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
++      "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
++      "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1",
++      "report": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/review12-2026-10-02/runtime-validation.json",
++      "postIntegrationTests": {
++        "pythonPassed": 195,
++        "pythonFailed": 0,
++        "pythonErrors": 0,
++        "pythonSkipped": 0,
++        "canonicalPackagesValidated": 64,
++        "iOSBuildPassed": true,
++        "iOSUnitCasesExecuted": 0,
++        "iOSCurrentAppFrames": 0,
++        "iOSRuntimeStatus": "not run; current app appearance unverified",
++        "androidStagingByteParity": true,
++        "iOSStagingByteParity": true
++      },
++      "boardFactsAndContactIDsUnchanged": true,
++      "allFourPositionsAndRotationsUnchanged": true,
++      "otherPackageFilesUnchanged": 203,
++      "changedNativeSketches": 6,
++      "unchangedNativeContactSurfaces": 32,
++      "cleanCompilesByteIdentical": true,
++      "nativeEnvelopeMM": [
++        660,
++        100,
++        100
++      ],
++      "actualExportTriangles": 91612,
++      "actualExportBytes": 2044005,
++      "sourceBackedWoodFinish": true,
++      "geometryAcceptance": "Pending #12 human geometry review; current app wood, picking, highlighting and workout appearance unverified",
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/human-review.json",
++      "priorDeliveryManifestSHA256": "eef283106fd1636a2bc036d9b64268fa41cbf2bf2286304607513662b86850e8",
++      "limits": "All profile/radius/cavity-depth values are display estimates; no per-contact depth facts. No current app frames, guest operations or iOS unit cases. Historical captures and results remain separate."
++    },
++    {
++      "eventType": "human-shape-acceptance",
++      "package": "owl-climb-poker",
++      "reviewNumber": 12,
++      "reviewer": "asherlc",
++      "date": "2026-10-02",
++      "recordedUTC": "2026-10-02T18:39:21.784156+00:00",
++      "question": "Does this shape look right?",
++      "answer": "Y",
++      "acceptedScope": "Shown four-face CAD shape, including the paired reliefs extending beside the mono/duo row and whole prior/current front, side and top comparisons.",
++      "identity": {
++        "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
++        "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
++        "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
++        "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1"
++      },
++      "shownAssetCommit": "40c16ae850bf5de26c1ebc2e167de4ef2958941c",
++      "shownImages": {
++        "four-faces.png": "67338dede9f39d4da1652e42531edd8a1d0f072e5c44f7de9460ab0957a1862b",
++        "front-side-top-comparison.png": "2fa85ca40a1da75933871f55a143f490013e98272f9d29e0c52eb1e1eaca7382"
++      },
++      "currentAppAppearanceVerified": false,
++      "appWorkflowPassed": false,
++      "currentAppFrames": 0,
++      "iOSUnitCasesExecuted": 0,
++      "approvalLimit": "Shape approval does not establish current runtime wood appearance, picking, selection or workout behavior, manufacturing accuracy, or training claims.",
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/human-review.json"
++    },
++    {
++      "package": "plateau-lifting-edge",
++      "date": "2026-10-02",
++      "revision": "native-curl-seating-and-oak-only-finish",
++      "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
++      "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
++      "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
++      "suspensionSHA256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80",
++      "generatedManifestSHA256": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4",
++      "presentations": {
++        "depth-18mm": {
++          "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
++          "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55"
++        },
++        "depth-15mm": {
++          "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
++          "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b"
++        },
++        "depth-10mm": {
++          "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
++          "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e"
++        }
++      },
++      "report": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/review13-2026-10-02/runtime-validation.json",
++      "postIntegrationTests": {
++        "pythonPassed": 191,
++        "pythonFailed": 0,
++        "pythonErrors": 0,
++        "pythonSkipped": 0,
++        "canonicalPackagesValidated": 64,
++        "iOSBuildPassed": true,
++        "iOSUnitCasesExecuted": 0,
++        "iOSCurrentAppFrames": 0,
++        "iOSRuntimeStatus": "not run; current app appearance unverified",
++        "androidStagingByteParity": true,
++        "iOSStagingByteParity": true
++      },
++      "physicalBoardShapeAndAllContactTrianglesUnchanged": true,
++      "allFactualContactAndPositionFieldsUnchanged": true,
++      "otherPackageFilesUnchanged": 198,
++      "cordDiameterMM": 6,
++      "cordDiameterStatus": "Maker-stated primary fact; authorized refreshed PL-1 HTML",
++      "loopRestLengthMM": 420,
++      "loopRestLengthStatus": "display estimate",
++      "woodOnlyNodeIDs": [
++        "plateau_body",
++        "plateau_edge_18"
++      ],
++      "metalAndBlockerNonPickableNeutral": true,
++      "geometryAcceptance": "Pending #13 human shape review; current app wood, neutral components, cord, picking, highlights and workout appearance unverified",
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/human-review.json",
++      "priorDeliveryManifestSHA256": "fa6fcdde53a95fef8561af7baf12d363372c2a7d9571230ddc3ea600e908fa23",
++      "limits": "Current app/guest operations and iOS unit cases remain unverified; diagnostic previews are not runtime screenshots. Geometry/support/seating estimates are not manufacturing dimensions. Historical results remain separate."
++    },
++    {
++      "eventType": "human-shape-and-cord-acceptance",
++      "package": "plateau-lifting-edge",
++      "reviewNumber": 13,
++      "reviewer": "asherlc",
++      "date": "2026-10-02",
++      "recordedUTC": "2026-10-02T21:31:24.748570+00:00",
++      "question": "Does the shape and cord look right?",
++      "answer": "Y",
++      "acceptedScope": "Shown native CAD shape in the 18/15/10 mm configurations and seated cord routing in the whole prior/current front, side and top comparison.",
++      "identity": {
++        "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
++        "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
++        "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
++        "suspensionSHA256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80",
++        "generatedManifestSHA256": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4",
++        "presentations": {
++          "depth-18mm": {
++            "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
++            "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55"
++          },
++          "depth-15mm": {
++            "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
++            "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b"
++          },
++          "depth-10mm": {
++            "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
++            "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e"
++          }
++        }
++      },
++      "shownAssetCommit": "d0a54fef261e1c0a7d6f70f1b0db5178d351f0f7",
++      "shownImages": {
++        "three-configurations.png": "b06d29985920a18520360245c491c08bd146dfc40353959229b49e1b64557a77",
++        "front-side-top-comparison.png": "570e785ec8601905f7afa4ea5bdac1d4447687d96bf6d754ca1ccefee2c667c3"
++      },
++      "currentAppAppearanceVerified": false,
++      "appWorkflowPassed": false,
++      "currentAppFrames": 0,
++      "iOSUnitCasesExecuted": 0,
++      "approvalLimit": "Approval covers the shown CAD shape and display cord. Current runtime finishes, cord appearance, picking, selection and workout behavior remain unverified; display estimates remain labeled.",
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/human-review.json"
++    },
++    {
++      "package": "tension-flash-board",
++      "date": "2026-10-02",
++      "revision": "native-shelves-mouth-rounds-wood-and-compact-cords",
++      "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
++      "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
++      "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
++      "suspensionSHA256": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
++      "generatedManifestSHA256": "9285d4a38d703c80e9109553e688ea3e94095021207f02ef26001471cb98bc7e",
++      "presentations": {
++        "primary": {
++          "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
++          "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755"
++        }
++      },
++      "report": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/runtime-validation.json",
++      "postIntegrationTests": {
++        "pythonPassed": 9,
++        "pythonFailed": 0,
++        "pythonErrors": 0,
++        "pythonSkipped": 0,
++        "canonicalPackagesValidated": 64,
++        "iOSBuildPassed": true,
++        "iOSUnitCasesExecuted": 0,
++        "iOSCurrentAppFrames": 0,
++        "iOSRuntimeStatus": "not run; current app appearance unverified",
++        "androidStagingByteParity": true,
++        "iOSStagingByteParity": true
++      },
++      "nativePhysicalShapeChanged": true,
++      "sevenContactIDsAndFactsPreserved": true,
++      "positionsAndSetupTransitionsPreserved": true,
++      "fourIndependentBoresPreserved": true,
++      "otherPackageFilesUnchanged": 202,
++      "sharedCodeChanged": false,
++      "supportOffsetFromUnposedBoundsM": 0.2,
++      "freeLeadAllowanceM": 0.42,
++      "rearReturnAllowanceM": 0.03,
++      "solvedSupportToPosedBoardTopGapRangeM": [
++        0.297395,
++        0.318905
++      ],
++      "cordRadiusM": 0.002,
++      "cordDimensionsStatus": "display estimates",
++      "surfaceFinish": "wood",
++      "surfaceFinishStatus": "generic app finish category from approved maker photographs; no species or coating claim",
++      "geometryAcceptance": "Pending #14 human shape and cord review; current app appearance, picking, highlights and workout behavior unverified",
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/human-review.json",
++      "limits": "Native/export/package/staging/compile checks passed; current app behavior and iOS unit execution remain unverified. Diagnostic previews are not app screenshots. No physical-equilibrium or manufacturing-accuracy claim. Historical results retained separately.",
++      "cordSourceFidelity": "rejected same-face stitches; maker video supports circumferential wraps",
++      "supersededBy": "inferred-exterior-barrel-wraps-with-native-aStar-search"
++    },
++    {
++      "package": "tension-flash-board",
++      "date": "2026-10-02",
++      "revision": "inferred-exterior-barrel-wraps-with-native-aStar-search",
++      "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
++      "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
++      "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
++      "suspensionSHA256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
++      "generatedManifestSHA256": "6b7e0262027dc8024b2869ce757595a8c3ba5399ab88376faceafaec4b28d743",
++      "presentations": {
++        "primary": {
++          "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
++          "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755"
++        }
++      },
++      "report": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/runtime-validation.json",
++      "postIntegrationTests": {
++        "pythonPassed": 9,
++        "pythonFailed": 0,
++        "pythonErrors": 0,
++        "pythonSkipped": 0,
++        "canonicalPackagesValidated": 64,
++        "iOSBuildPassed": true,
++        "iOSUnitCasesExecuted": 0,
++        "iOSCurrentAppFrames": 0,
++        "iOSRuntimeStatus": "not run; current app appearance unverified",
++        "androidStagingByteParity": true,
++        "iOSStagingByteParity": true
++      },
++      "sourceModelAndDescriptorUnchangedDuringCordFollowup": true,
++      "sevenContactIDsAndFactsPreserved": true,
++      "positionsAndSetupTransitionsPreserved": true,
++      "otherPackageFilesUnchanged": 202,
++      "sharedCodeChanged": false,
++      "supportOffsetFromUnposedBoundsM": 0.2,
++      "freeLeadAllowanceM": 0.42,
++      "barrelWrapAllowanceM": 0.109,
++      "cordRadiusM": 0.002,
++      "cordDimensionsStatus": "display estimates",
++      "threadingStatus": "Conditional inferred display adaptation; hidden passage, continuity and contact order unobserved",
++      "surfaceFinish": "wood",
++      "geometryAcceptance": "Pending #14 human shape and corrected cord review; current app appearance, picking, highlights and workout behavior unverified",
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/human-review.json",
++      "limits": "Current-source native and package evidence plus generic iOS compilation; no current app or Swift unit execution. Hidden continuity and contact order unobserved. CAD previews use per-pixel depth; they are not app screenshots. No manufacturing accuracy, global optimum or physical equilibrium claim."
++    },
++    {
++      "eventType": "human-shape-and-cord-acceptance",
++      "package": "tension-flash-board",
++      "reviewNumber": 14,
++      "reviewer": "asherlc",
++      "date": "2026-10-02",
++      "recordedUTC": "2026-10-03T01:03:12.898449+00:00",
++      "question": "Does #14 look right now?",
++      "answer": "Y",
++      "acceptedScope": "Shown #14 native CAD shape and corrected inferred barrel-wrap cord display on both faces, with whole prior/current front, side and top comparisons.",
++      "identity": {
++        "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
++        "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
++        "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
++        "suspensionSHA256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
++        "generatedManifestSHA256": "6b7e0262027dc8024b2869ce757595a8c3ba5399ab88376faceafaec4b28d743",
++        "presentations": {
++          "primary": {
++            "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
++            "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755"
++          }
++        }
++      },
++      "shownAssetCommit": "1bfbf1aacdcf7fbdf9399304989c89a728e552ea",
++      "shownWholeImages": [
++        {
++          "path": "corrected-views/three-edge-upright-current-inline.png",
++          "sha256": "434698306c42b0c4509d9873ae98f51e87bc6abbcd0e4d91761744211b90f8e5",
++          "caption": "Three-well face"
++        },
++        {
++          "path": "corrected-views/two-edge-upright-current-inline.png",
++          "sha256": "2eadaee78638a6a5135060fb0fc5dbb249c3f1dda40c21d65a1e4bd2c8184fd8",
++          "caption": "Two-well and small-crimp face"
++        }
++      ],
++      "geometryHumanAcceptance": "accepted",
++      "cordHumanAcceptance": "accepted",
++      "currentAppAppearanceVerified": false,
++      "appWorkflowPassed": false,
++      "currentAppFrames": 0,
++      "iOSUnitCasesExecuted": 0,
++      "approvalLimit": "Approval covers the shown CAD shape and inferred display cord. Hidden passage, continuity and contact order remain unobserved; display estimates and current runtime limits remain unchanged.",
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/human-review.json"
++    },
++    {
++      "package": "trango-rock-prodigy-forge",
++      "date": "2026-10-02",
++      "revision": "open-outer-wing-recess-and-set-back-lower-return",
++      "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
++      "modelSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
++      "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
++      "generatedManifestSHA256": "2a8d9e959dbc7f09544049d8523d2cf1ee1a37f1da8fdaea157a51b40c714d6a",
++      "report": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review15-2026-10-02/runtime-validation.json",
++      "postIntegrationTests": {
++        "pythonPassed": 31,
++        "pythonFailed": 0,
++        "pythonErrors": 0,
++        "pythonSkipped": 0,
++        "canonicalPackagesValidated": 64,
++        "iOSBuildPassed": true,
++        "iOSUnitCasesExecuted": 0,
++        "iOSCurrentAppFrames": 0,
++        "iOSRuntimeStatus": "not run; current app appearance and workflow unverified",
++        "androidStagingByteParity": true,
++        "iOSStagingByteParity": true
++      },
++      "otherPackageFilesUnchanged": 203,
++      "sharedReservedFilesUnchanged": 7,
++      "sharedCodeChanged": false,
++      "surfaceFinish": "plastic",
++      "geometryAcceptance": "Pending #15 human CAD shape review; current app appearance and workflow unverified",
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/human-review.json",
++      "limits": "New recess, setback and blend dimensions are display estimates. Twenty original contacts/facts preserved; no pinch inventory added. Generic appearance category is inferred. No current runtime or manufacturing accuracy claim."
++    },
++    {
++      "owner": "placid-badger",
++      "eventType": "human-CAD-shape-acceptance",
++      "package": "trango-rock-prodigy-forge",
++      "reviewNumber": 15,
++      "reviewer": "asherlc",
++      "date": "2026-10-02",
++      "recordedUTC": "2026-10-03T02:36:51.174990+00:00",
++      "question": "Does #15 Forge look right?",
++      "answer": "y",
++      "followupRequest": "consult with opus tho",
++      "acceptedScope": "Shown #15 native Forge CAD shape with restored open outer-wing recess and set-back lower pinch return, paired native mirror, and whole prior/current front, side, top and oblique comparisons.",
++      "identity": {
++        "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
++        "modelSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
++        "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
++        "generatedManifestSHA256": "2a8d9e959dbc7f09544049d8523d2cf1ee1a37f1da8fdaea157a51b40c714d6a"
++      },
++      "shownAssetCommit": "d236fb655406763d44875f49404107aba3591791",
++      "shownWholeImages": [
++        {
++          "path": "views/comparison-oblique.png",
++          "sha256": "3e03057919a1adcbdc3e47a089ad82a0a4c8ccace12d1b58c7ec9717eeba0cdb"
++        },
++        {
++          "path": "views/comparison-front-side-top.png",
++          "sha256": "5825f930e0e1d19b490effbbf4e1ac4ce7157e8d080a5c4d8a819f22a1f94499"
++        }
++      ],
++      "geometryHumanAcceptance": "accepted",
++      "currentAppAppearanceVerified": false,
++      "appWorkflowPassed": false,
++      "currentAppFrames": 0,
++      "iOSUnitCasesExecuted": 0,
++      "approvalLimit": "Human approval covers the shown CAD shape. New recess and roll dimensions remain display estimates; current app appearance, picking, highlighting, orbit and workout behavior remain unverified. Plastic is a generic appearance inference.",
++      "opusAdvisoryStatus": "pass for shown CAD geometry; no source-backed blocker",
++      "opusAdvisory": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review15-2026-10-02/opus-advisor/review.md",
++      "opusAdvisorySHA256": "a830ae0380a7aea1c8ee254c473599ea9e83db104938c47e37940fb22b624e5a",
++      "opusAdvisoryCompletedUTC": "2026-10-03T02:41:03.160038+00:00",
++      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/human-review.json",
++      "recordingScript": {
++        "path": ".context/placid-badger/forge-review15/opus-advisor/record-acceptance.py",
++        "sha256": "e039834a4be18f1af3662308fa41ab0bef277961b847575fd34fbce651b55bab",
++        "committed": false
++      }
++    },
++    {
++      "date": "2026-10-02",
++      "owner": "placid-badger",
++      "package": "nature-stone-hanger-mini",
++      "reviewNumber": 10,
++      "kind": "final CAD preview presentation only",
++      "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-resume-2026-10-02/index.html",
++      "identity": {
++        "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
++        "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
++        "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
++        "sidecarSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
++      },
++      "humanAcceptance": "rejected-corrections-requested",
++      "runtimeVerified": false,
++      "packageChanged": false,
++      "feedback": [
++        "those cords dont look right",
++        "and the jug isnt the right part"
++      ],
++      "identityClarification": {
++        "question": "For the Stone Hanger Mini, is the pull-up jug the rounded outside top/back rail, or a lip inside the recess?",
++        "answer": "Rounded outside top/back rail"
++      }
++    },
++    {
++      "date": "2026-10-02",
++      "preparedUTC": "2026-10-03T04:23:41.655488+00:00",
++      "owner": "placid-badger",
++      "package": "nature-stone-hanger-mini",
++      "reviewNumber": 10,
++      "kind": "Native contact ownership, pose and cord-seating correction",
++      "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/index.html",
++      "identity": {
++        "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
++        "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
++        "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
++        "sidecarSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1"
++      },
++      "humanAcceptance": "pending",
++      "runtimeVerified": false,
++      "packageChanged": true,
++      "nativeBodyChanged": false,
++      "factualContactsChanged": false,
++      "validation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review10-correction-2026-10-02/validation.json",
++      "metadataOrderCorrection": "Final catalog gate rejected front-upright contactIDs order; supported metadata tool restored canonical ordering only. All archive geometry members byte-identical; fresh native export/rebuild/check retained separately.",
++      "finalChecks": {
++        "pythonPassed": 67,
++        "catalogBoards": 64,
++        "platformStaging": [
++          "xcode",
++          "android"
++        ],
++        "nativePoses": 3,
++        "nativeRoutes": 12,
++        "freshFinalSourceByteIdenticalRebuild": true,
++        "runtimeVerified": false
++      }
++    },
++    {
++      "owner": "placid-badger",
++      "date": "2026-10-02",
++      "recordedUTC": "2026-10-03T05:39:07.158951+00:00",
++      "package": "nature-stone-hanger-mini",
++      "reviewNumber": 10,
++      "kind": "Existing crown-face jug wrap extension",
++      "identity": {
++        "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
++        "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
++        "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
++        "sidecarSHA256": "b7dbc671085b07eb071403df86dec17fcc52e7c1652437923f0786b2afcf15f6"
++      },
++      "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
++      "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/index.html",
++      "validation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/validation.json",
++      "humanAcceptance": "pending",
++      "runtimeVerified": false,
++      "bodyAndCordGeometryChanged": false,
++      "factualContactsChanged": false,
++      "pinchCoverageChanged": false,
++      "pythonPassed": 67
++    },
++    {
++      "owner": "placid-badger",
++      "date": "2026-10-02",
++      "recordedUTC": "2026-10-03T06:25:10.113937+00:00",
++      "package": "nature-stone-hanger-mini",
++      "reviewNumber": 10,
++      "kind": "Upper rail finger-contact band correction",
++      "identity": {
++        "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
++        "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
++        "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
++        "sidecarSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f"
++      },
++      "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
++      "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/index.html",
++      "validation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/validation.json",
++      "humanAcceptance": "pending",
++      "runtimeVerified": false,
++      "bodyAndCordGeometryChanged": false,
++      "factualContactsChanged": false,
++      "pinchCoverageChanged": false,
++      "pythonPassed": 67
+     }
+   ]
+ }
+--- a/docs/source-audits/2026-09-29-remaining-cad/review-queue.json
++++ b/docs/source-audits/2026-09-29-remaining-cad/review-queue.json
+@@ -2,7 +2,7 @@
+   "schemaVersion": 1,
+   "owner": "placid-badger",
+   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+-  "reviewState": "one-by-one review in progress: first eight shown revisions accepted; Nature Climbing Stone Hanger is review #9",
++  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 shown CAD shape and seated cord accepted, current app unverified; #14 shown CAD shape and inferred barrel-wrap cord accepted, current app unverified; #15 shown Forge CAD shape accepted after Opus review, current app unverified",
+   "boards": [
+     {
+       "number": 1,
+@@ -56,7 +56,7 @@
+       "appReviewPage": "captain-fingerfood-dual/vertical-tightening-review/app-review/index.html",
+       "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+       "reviewFeedback": [
+-        "Cord doesn\u2019t go through holes",
++        "Cord doesn’t go through holes",
+         "the 90 degree position tho, why does the bottom cord jut out to the side?"
+       ],
+       "latestRevision": "captain-fingerfood-dual/vertical-tightening-review/review.md",
+@@ -211,7 +211,7 @@
+       "runtimeRevision": "metolius-contact/pinch-rails-review/runtime-validation.json",
+       "revisionBaseCommit": "5cfd5b6386b283b2eb8daefc054a42823fdf852b",
+       "reviewFeedback": [
+-        "The pinch rails need to extend forward otherwise there\u2019s nothing to pinch"
++        "The pinch rails need to extend forward otherwise there’s nothing to pinch"
+       ],
+       "priorIndividualReview": "metolius-contact/individual-review/index.html",
+       "reviewAnswer": "Y",
+@@ -264,174 +264,388 @@
+       "package": "nature-stone-hanger",
+       "boardID": "nature.stone-hanger",
+       "name": "Nature Climbing Stone Hanger",
+-      "humanReview": "pending",
+-      "sourceSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+-      "reviewPage": "nature-stone-hanger/geometry-review.html",
++      "humanReview": "reviewed; corrected Stone Hanger geometry, finishes and cord display accepted",
++      "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
++      "reviewPage": "nature-stone-hanger/accepted-review.md",
+       "sourceAudit": "nature-stone-hanger/README.md",
+       "comparisons": [
+-        "nature-stone-hanger/comparison-sheet.png"
+-      ],
+-      "presentations": {
+-        "primary": {
+-          "descriptorSHA256": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c",
+-          "modelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf"
+-        }
+-      },
+-      "appReview": "nature-stone-hanger/app-review/validation.json",
+-      "appReviewPage": "nature-stone-hanger/app-review/index.html"
++        "nature-stone-hanger/granite-seat-review/native-front-side-top.png",
++        "nature-stone-hanger/granite-seat-review/export-front.png",
++        "nature-stone-hanger/granite-seat-review/export-side.png",
++        "nature-stone-hanger/granite-seat-review/export-top.png",
++        "nature-stone-hanger/granite-seat-review/export-oblique.png"
++      ],
++      "presentations": {
++        "primary": {
++          "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
++          "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851"
++        }
++      },
++      "appReview": "nature-stone-hanger/granite-seat-review/runtime-validation.json",
++      "appReviewPage": "nature-stone-hanger/granite-seat-review/index.html",
++      "suspensionSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
++      "humanReviewRecord": "nature-stone-hanger/human-review.json",
++      "reviewFeedback": [
++        "the stone hanger needs granite texture where appropriate",
++        "also cord is way too long",
++        "and its missing the notches",
++        "and the highlighted hold is in an impossible to weight position",
++        "the cord goes inside the side notches",
++        "there is 1 vertical groove on either side that the cord nestles into",
++        "The granite is overlapping with wood, look at photos"
++      ],
++      "routingClarification": {
++        "question": "Enters center side holes with notch guides, or wraps around block in notch groove?",
++        "status": "answered",
++        "answer": "Enters side holes; notches guide it",
++        "source": "Exact user answer retained in human-feedback.json",
++        "hiddenConnection": "Visible side-hole entry and exterior notch guidance are established; the concealed connection remains unspecified."
++      },
++      "latestRevision": "nature-stone-hanger/granite-seat-review/review.md",
++      "runtimeRevision": "nature-stone-hanger/granite-seat-review/runtime-validation.json",
++      "reviewAnswer": "Y",
++      "acceptedDate": "2026-10-01",
++      "acceptedScope": "Displayed corrected Stone Hanger: fitted granite insert and clean wood seam, runtime wood and granite finishes, shortened cords entering side holes within the notch guides, and the shown hold positions."
+     },
+     {
+       "number": 10,
+       "package": "nature-stone-hanger-mini",
+       "boardID": "nature.stone-hanger-mini",
+       "name": "Nature Climbing Stone Hanger Mini",
+-      "humanReview": "pending",
+-      "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+-      "reviewPage": "nature-stone-hanger-mini/review/index.html",
++      "humanReview": "Jug covers upper front/back finger-pressure faces and rounded crown; ready for human CAD review; current app appearance and interaction unverified.",
++      "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
++      "reviewPage": "nature-stone-hanger-mini/finger-contact-review-2026-10-02/index.html",
+       "sourceAudit": "nature-stone-hanger-mini/native-authoring.md",
+       "comparisons": [
+-        "nature-stone-hanger-mini/review/prior-side.png",
+-        "nature-stone-hanger-mini/review/prior-primary.png",
+-        "nature-stone-hanger-mini/review/primary-front.png",
+-        "nature-stone-hanger-mini/review/prior-side.png",
+-        "nature-stone-hanger-mini/review/primary-side.png",
+-        "nature-stone-hanger-mini/review/primary-top.png"
+-      ],
+-      "presentations": {
+-        "primary": {
+-          "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
+-          "modelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30"
+-        }
+-      },
+-      "appReview": "nature-stone-hanger-mini/app-review/validation.json",
+-      "appReviewPage": "nature-stone-hanger-mini/app-review/index.html"
++        "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/prior-current-jug-front-side-top.png"
++      ],
++      "presentations": {
++        "primary": {
++          "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
++          "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360"
++        }
++      },
++      "appReview": "nature-stone-hanger-mini/completion-review/runtime-validation.json",
++      "appReviewPage": "nature-stone-hanger-mini/completion-review/index.html",
++      "suspensionSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f",
++      "humanReviewRecord": "nature-stone-hanger-mini/human-review.json",
++      "latestRevision": "nature-stone-hanger-mini/finger-contact-review-2026-10-02/review.md",
++      "runtimeRevision": "nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
++      "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views.",
++      "reviewAnswer": "Lgtm",
++      "historicalMigrationReview": {
++        "number": 10,
++        "package": "nature-stone-hanger-mini",
++        "boardID": "nature.stone-hanger-mini",
++        "name": "Nature Climbing Stone Hanger Mini",
++        "humanReview": "pending",
++        "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
++        "reviewPage": "nature-stone-hanger-mini/review/index.html",
++        "sourceAudit": "nature-stone-hanger-mini/native-authoring.md",
++        "comparisons": [
++          "nature-stone-hanger-mini/review/prior-side.png",
++          "nature-stone-hanger-mini/review/prior-primary.png",
++          "nature-stone-hanger-mini/review/primary-front.png",
++          "nature-stone-hanger-mini/review/prior-side.png",
++          "nature-stone-hanger-mini/review/primary-side.png",
++          "nature-stone-hanger-mini/review/primary-top.png"
++        ],
++        "presentations": {
++          "primary": {
++            "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
++            "modelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30"
++          }
++        },
++        "appReview": "nature-stone-hanger-mini/app-review/validation.json",
++        "appReviewPage": "nature-stone-hanger-mini/app-review/index.html"
++      },
++      "latestRuntimeAttempt": "nature-stone-hanger-mini/runtime-retry-2026-10-02/review.md",
++      "finalCADReviewQuestion": "Does this cover the Mini’s jug finger-contact area now?",
++      "completionHumanAcceptance": "pending",
++      "cadReviewViews": [
++        "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-front.png",
++        "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-back.png",
++        "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-granite-loaded.png",
++        "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-wood-loaded.png",
++        "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-pinch-loaded.png"
++      ],
++      "completionValidationPage": "nature-stone-hanger-mini/completion-review/index.html",
++      "latestHumanFeedback": {
++        "owner": "placid-badger",
++        "reviewNumber": 10,
++        "boardID": "nature.stone-hanger-mini",
++        "recordedUTC": "2026-10-03T06:25:10.113937+00:00",
++        "rawFeedback": "That's not covering the actual area where the fingers are pinching. That's what needs to be highlighted.",
++        "clarification": {
++          "question": "By “Jokes should wrap all the way around,” do you mean the jug highlight should wrap around the top rail onto its front and back?",
++          "answer": "Yes, the jug highlight"
++        },
++        "interpretation": "Include the broad upper front/back finger-pressure surfaces and continuous upper side band, down to the existing rail opening boundary.",
++        "priorShownCommit": "d3811417c4c2d7efd87e7b856399fd860124fbbc",
++        "priorShownIdentity": {
++          "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
++          "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
++          "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
++          "sidecarSHA256": "b7dbc671085b07eb071403df86dec17fcc52e7c1652437923f0786b2afcf15f6"
++        },
++        "currentHumanAcceptance": "pending",
++        "earlierOverallBodyApprovalPreserved": true
++      }
+     },
+     {
+       "number": 11,
+       "package": "nature-stone-hanger-mini-karma8a",
+       "boardID": "nature.stone-hanger-mini-karma8a",
+       "name": "Nature Climbing Stone Hanger Mini x KARMA8A",
+-      "humanReview": "pending",
+-      "sourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
+-      "reviewPage": "nature-stone-hanger-mini-karma8a/review/index.html",
++      "humanReview": "Pending #11 geometry review; current app finishes, contacts and workout appearance unverified",
++      "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
++      "reviewPage": "nature-stone-hanger-mini-karma8a/completion-review/index.html",
+       "sourceAudit": "nature-stone-hanger-mini-karma8a/native-authoring.md",
+       "comparisons": [
+-        "nature-stone-hanger-mini-karma8a/review/prior-primary.png",
+-        "nature-stone-hanger-mini-karma8a/review/primary-front.png",
+-        "nature-stone-hanger-mini-karma8a/review/primary-side.png",
+-        "nature-stone-hanger-mini-karma8a/review/primary-top.png"
+-      ],
+-      "presentations": {
+-        "primary": {
+-          "descriptorSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4",
+-          "modelSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46"
+-        }
+-      },
+-      "appReview": "nature-stone-hanger-mini-karma8a/app-review/validation.json",
+-      "appReviewPage": "nature-stone-hanger-mini-karma8a/app-review/index.html"
++        "nature-stone-hanger-mini-karma8a/completion-review/comparison-front.png",
++        "nature-stone-hanger-mini-karma8a/completion-review/comparison-side.png",
++        "nature-stone-hanger-mini-karma8a/completion-review/comparison-top.png",
++        "nature-stone-hanger-mini-karma8a/completion-review/comparison-oblique.png"
++      ],
++      "presentations": {
++        "primary": {
++          "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
++          "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d"
++        }
++      },
++      "appReview": "nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
++      "appReviewPage": "nature-stone-hanger-mini-karma8a/completion-review/index.html",
++      "suspensionSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf",
++      "humanReviewRecord": "nature-stone-hanger-mini-karma8a/human-review.json",
++      "latestRevision": "nature-stone-hanger-mini-karma8a/completion-review/review.md",
++      "runtimeRevision": "nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
++      "historicalMigrationReview": {
++        "number": 11,
++        "package": "nature-stone-hanger-mini-karma8a",
++        "boardID": "nature.stone-hanger-mini-karma8a",
++        "name": "Nature Climbing Stone Hanger Mini x KARMA8A",
++        "humanReview": "pending",
++        "sourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
++        "reviewPage": "nature-stone-hanger-mini-karma8a/review/index.html",
++        "sourceAudit": "nature-stone-hanger-mini-karma8a/native-authoring.md",
++        "comparisons": [
++          "nature-stone-hanger-mini-karma8a/review/prior-primary.png",
++          "nature-stone-hanger-mini-karma8a/review/primary-front.png",
++          "nature-stone-hanger-mini-karma8a/review/primary-side.png",
++          "nature-stone-hanger-mini-karma8a/review/primary-top.png"
++        ],
++        "presentations": {
++          "primary": {
++            "descriptorSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4",
++            "modelSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46"
++          }
++        },
++        "appReview": "nature-stone-hanger-mini-karma8a/app-review/validation.json",
++        "appReviewPage": "nature-stone-hanger-mini-karma8a/app-review/index.html"
++      }
+     },
+     {
+       "number": 12,
+       "package": "owl-climb-poker",
+       "boardID": "owl-climb.poker",
+       "name": "Owl Climb Poker",
+-      "humanReview": "pending",
+-      "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+-      "reviewPage": "owl-climb-poker/geometry-review.html",
++      "humanReview": "Shown #12 CAD shape accepted; current app wood, picking, highlighting and workout appearance remain unverified",
++      "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
++      "reviewPage": "owl-climb-poker/review12-2026-10-02/index.html",
+       "sourceAudit": "owl-climb-poker/README.md",
+       "comparisons": [
+-        "owl-climb-poker/comparison-sheet.png"
+-      ],
+-      "presentations": {
+-        "primary": {
+-          "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac",
+-          "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874"
+-        }
+-      },
+-      "appReview": "owl-climb-poker/app-review/validation.json",
+-      "appReviewPage": "owl-climb-poker/app-review/index.html"
++        "owl-climb-poker/review12-2026-10-02/native/comparison-front.png",
++        "owl-climb-poker/review12-2026-10-02/native/comparison-side.png",
++        "owl-climb-poker/review12-2026-10-02/native/comparison-top.png"
++      ],
++      "presentations": {
++        "primary": {
++          "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
++          "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
++        }
++      },
++      "appReview": "owl-climb-poker/review12-2026-10-02/runtime-validation.json",
++      "appReviewPage": "owl-climb-poker/review12-2026-10-02/index.html",
++      "historicalMigrationReview": {
++        "number": 12,
++        "package": "owl-climb-poker",
++        "boardID": "owl-climb.poker",
++        "name": "Owl Climb Poker",
++        "humanReview": "pending",
++        "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
++        "reviewPage": "owl-climb-poker/geometry-review.html",
++        "sourceAudit": "owl-climb-poker/README.md",
++        "comparisons": [
++          "owl-climb-poker/comparison-sheet.png"
++        ],
++        "presentations": {
++          "primary": {
++            "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac",
++            "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874"
++          }
++        },
++        "appReview": "owl-climb-poker/app-review/validation.json",
++        "appReviewPage": "owl-climb-poker/app-review/index.html"
++      },
++      "humanReviewRecord": "owl-climb-poker/human-review.json",
++      "latestRevision": "owl-climb-poker/review12-2026-10-02/review.md",
++      "runtimeRevision": "owl-climb-poker/review12-2026-10-02/runtime-validation.json",
++      "acceptedGeometryDate": "2026-10-02"
+     },
+     {
+       "number": 13,
+       "package": "plateau-lifting-edge",
+       "boardID": "plateau.lifting-edge",
+       "name": "Plateau Climbing Lifting Edge",
+-      "humanReview": "pending",
+-      "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+-      "reviewPage": "plateau-lifting-edge/review/index.html",
++      "humanReview": "Shown #13 CAD shape and seated cord accepted; current app wood, neutral components, cord, picking, highlights and workout appearance remain unverified",
++      "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
++      "reviewPage": "plateau-lifting-edge/review13-2026-10-02/index.html",
+       "sourceAudit": "plateau-lifting-edge/native-authoring.md",
+       "comparisons": [
+-        "plateau-lifting-edge/review/prior-primary.png",
+-        "plateau-lifting-edge/review/depth-15mm-front.png",
+-        "plateau-lifting-edge/review/depth-10mm-front.png",
+-        "plateau-lifting-edge/review/primary-front.png",
+-        "plateau-lifting-edge/review/depth-10mm-side.png",
+-        "plateau-lifting-edge/review/depth-15mm-side.png",
+-        "plateau-lifting-edge/review/primary-side.png",
+-        "plateau-lifting-edge/review/depth-15mm-top.png",
+-        "plateau-lifting-edge/review/depth-10mm-top.png",
+-        "plateau-lifting-edge/review/primary-top.png"
++        "plateau-lifting-edge/review13-2026-10-02/three-configurations.png",
++        "plateau-lifting-edge/review13-2026-10-02/front-side-top-comparison.png",
++        "plateau-lifting-edge/review13-2026-10-02/three-configurations-with-cord.png"
+       ],
+       "presentations": {
+         "depth-18mm": {
+-          "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
+-          "modelSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854"
++          "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
++          "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55"
+         },
+         "depth-15mm": {
+-          "descriptorSHA256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477",
+-          "modelSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53"
++          "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
++          "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b"
+         },
+         "depth-10mm": {
+-          "descriptorSHA256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e",
+-          "modelSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41"
+-        }
+-      },
+-      "appReview": "plateau-lifting-edge/app-review/validation.json",
+-      "appReviewPage": "plateau-lifting-edge/app-review/index.html"
++          "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
++          "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e"
++        }
++      },
++      "appReview": "plateau-lifting-edge/review13-2026-10-02/runtime-validation.json",
++      "appReviewPage": "plateau-lifting-edge/review13-2026-10-02/index.html",
++      "historicalMigrationReview": {
++        "number": 13,
++        "package": "plateau-lifting-edge",
++        "boardID": "plateau.lifting-edge",
++        "name": "Plateau Climbing Lifting Edge",
++        "humanReview": "pending",
++        "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
++        "reviewPage": "plateau-lifting-edge/review/index.html",
++        "sourceAudit": "plateau-lifting-edge/native-authoring.md",
++        "comparisons": [
++          "plateau-lifting-edge/review/prior-primary.png",
++          "plateau-lifting-edge/review/depth-15mm-front.png",
++          "plateau-lifting-edge/review/depth-10mm-front.png",
++          "plateau-lifting-edge/review/primary-front.png",
++          "plateau-lifting-edge/review/depth-10mm-side.png",
++          "plateau-lifting-edge/review/depth-15mm-side.png",
++          "plateau-lifting-edge/review/primary-side.png",
++          "plateau-lifting-edge/review/depth-15mm-top.png",
++          "plateau-lifting-edge/review/depth-10mm-top.png",
++          "plateau-lifting-edge/review/primary-top.png"
++        ],
++        "presentations": {
++          "depth-18mm": {
++            "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
++            "modelSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854"
++          },
++          "depth-15mm": {
++            "descriptorSHA256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477",
++            "modelSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53"
++          },
++          "depth-10mm": {
++            "descriptorSHA256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e",
++            "modelSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41"
++          }
++        },
++        "appReview": "plateau-lifting-edge/app-review/validation.json",
++        "appReviewPage": "plateau-lifting-edge/app-review/index.html"
++      },
++      "humanReviewRecord": "plateau-lifting-edge/human-review.json",
++      "latestRevision": "plateau-lifting-edge/review13-2026-10-02/review.md",
++      "runtimeRevision": "plateau-lifting-edge/review13-2026-10-02/runtime-validation.json",
++      "acceptedGeometryDate": "2026-10-02"
+     },
+     {
+       "number": 14,
+       "package": "tension-flash-board",
+       "boardID": "tension.flash-board",
+       "name": "Tension Climbing Flash Board",
+-      "humanReview": "pending",
+-      "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+-      "reviewPage": "tension-flash-board/geometry-review.html",
++      "humanReview": "Shown #14 CAD shape and inferred barrel-wrap cord accepted; current app appearance, picking, highlights and workout behavior remain unverified",
++      "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
++      "reviewPage": "tension-flash-board/review14-2026-10-02/index.html",
+       "sourceAudit": "tension-flash-board/README.md",
+       "comparisons": [
+-        "tension-flash-board/comparison-sheet.png"
+-      ],
+-      "presentations": {
+-        "primary": {
+-          "descriptorSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e",
+-          "modelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97"
+-        }
+-      },
+-      "appReview": "tension-flash-board/app-review/validation.json",
+-      "appReviewPage": "tension-flash-board/app-review/index.html"
++        "tension-flash-board/review14-2026-10-02/corrected-views/two-edge-upright-front-prior-current.png",
++        "tension-flash-board/review14-2026-10-02/corrected-views/two-edge-upright-side-prior-current.png",
++        "tension-flash-board/review14-2026-10-02/corrected-views/two-edge-upright-top-prior-current.png"
++      ],
++      "presentations": {
++        "primary": {
++          "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
++          "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755"
++        }
++      },
++      "appReview": "tension-flash-board/review14-2026-10-02/runtime-validation.json",
++      "appReviewPage": "tension-flash-board/review14-2026-10-02/index.html",
++      "historicalMigrationReview": {
++        "number": 14,
++        "package": "tension-flash-board",
++        "boardID": "tension.flash-board",
++        "name": "Tension Climbing Flash Board",
++        "humanReview": "pending",
++        "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
++        "reviewPage": "tension-flash-board/geometry-review.html",
++        "sourceAudit": "tension-flash-board/README.md",
++        "comparisons": [
++          "tension-flash-board/comparison-sheet.png"
++        ],
++        "presentations": {
++          "primary": {
++            "descriptorSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e",
++            "modelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97"
++          }
++        },
++        "appReview": "tension-flash-board/app-review/validation.json",
++        "appReviewPage": "tension-flash-board/app-review/index.html"
++      },
++      "suspensionSHA256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
++      "humanReviewRecord": "tension-flash-board/human-review.json",
++      "latestRevision": "tension-flash-board/review14-2026-10-02/review.md",
++      "runtimeRevision": "tension-flash-board/review14-2026-10-02/runtime-validation.json",
++      "acceptedGeometryDate": "2026-10-02",
++      "acceptedCordDate": "2026-10-02",
++      "reviewAnswer": "Y",
++      "acceptedScope": "Shown #14 native CAD shape and corrected inferred barrel-wrap cord display on both faces, with whole prior/current front, side and top comparisons."
+     },
+     {
+       "number": 15,
+       "package": "trango-rock-prodigy-forge",
+       "boardID": "trango.rock-prodigy-forge",
+       "name": "Trango Rock Prodigy Forge",
+-      "humanReview": "pending",
+-      "sourceSHA256": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+-      "reviewPage": "trango-rock-prodigy-forge/source-audit.md",
++      "humanReview": "Shown #15 Forge CAD shape accepted after Opus review; current app appearance, picking, highlights, orbit and workout behavior remain unverified",
++      "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
++      "reviewPage": "trango-rock-prodigy-forge/review15-2026-10-02/index.html",
+       "sourceAudit": "trango-rock-prodigy-forge/source-audit.md",
+       "comparisons": [
+-        "trango-rock-prodigy-forge/review/comparison-side.png",
+-        "trango-rock-prodigy-forge/review/comparison-top.png",
+-        "trango-rock-prodigy-forge/review/comparison-front.png"
+-      ],
+-      "presentations": {
+-        "primary": {
+-          "descriptorSHA256": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef",
+-          "modelSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4"
+-        }
+-      },
+-      "appReview": "trango-rock-prodigy-forge/app-review/validation.json",
+-      "appReviewPage": "trango-rock-prodigy-forge/app-review/index.html"
++        "trango-rock-prodigy-forge/review15-2026-10-02/views/comparison-front.png",
++        "trango-rock-prodigy-forge/review15-2026-10-02/views/comparison-side.png",
++        "trango-rock-prodigy-forge/review15-2026-10-02/views/comparison-top.png",
++        "trango-rock-prodigy-forge/review15-2026-10-02/views/comparison-oblique.png"
++      ],
++      "presentations": {
++        "primary": {
++          "modelSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
++          "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6"
++        }
++      },
++      "appReview": "trango-rock-prodigy-forge/review15-2026-10-02/runtime-validation.json",
++      "appReviewPage": "trango-rock-prodigy-forge/review15-2026-10-02/index.html",
++      "appReviewStatus": "Current app appearance and workflow unverified; generic compilation only",
++      "historicalAppReview": "trango-rock-prodigy-forge/app-review/validation.json",
++      "humanReviewRecord": "trango-rock-prodigy-forge/human-review.json",
++      "geometryHumanAcceptance": "accepted",
++      "completionHumanAcceptance": "pending current app review",
++      "opusAdvisory": "trango-rock-prodigy-forge/review15-2026-10-02/opus-advisor/review.md"
+     },
+     {
+       "number": 16,
+@@ -656,7 +870,7 @@
+     }
+   ],
+   "reviewScope": {
+-    "userInstruction": "I only want to review the ones we\u2019re migrating",
++    "userInstruction": "I only want to review the ones we’re migrating",
+     "eligibility": "Only packages first given a native CAD source by this task; existing CAD packages and externally claimed migrations are excluded.",
+     "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+     "migrationCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
