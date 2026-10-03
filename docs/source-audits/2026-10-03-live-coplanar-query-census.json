@@ -1,0 +1,92 @@
+{
+  "adopted": false,
+  "fixedNecessaryRemovedFraction": 0.5,
+  "identicalSteps": 493,
+  "necessaryScreenPassed": true,
+  "owner": "strong-owl-live-physics",
+  "scope": "instrumentation-only exact supporting-plane query census; no arithmetic skipped; timings invalid",
+  "steps": [
+    {
+      "caps": 0,
+      "census": {
+        "faceVisits": 24439,
+        "optimisticRemovedFraction": 0.56409836736364,
+        "queries": 1395,
+        "repeatedQueries": 287,
+        "uniquePlaneVisits": 10653
+      },
+      "corrections": 4,
+      "persistedPhysicsCheckpointBitIdentity": true,
+      "retries": 0,
+      "step": 1
+    },
+    {
+      "caps": 0,
+      "census": {
+        "faceVisits": 110068,
+        "optimisticRemovedFraction": 0.5673401897009122,
+        "queries": 5301,
+        "repeatedQueries": 1433,
+        "uniquePlaneVisits": 47622
+      },
+      "corrections": 11,
+      "persistedPhysicsCheckpointBitIdentity": true,
+      "retries": 0,
+      "step": 6
+    },
+    {
+      "caps": 0,
+      "census": {
+        "faceVisits": 64704,
+        "optimisticRemovedFraction": 0.5673219584569733,
+        "queries": 3627,
+        "repeatedQueries": 793,
+        "uniquePlaneVisits": 27996
+      },
+      "corrections": 11,
+      "persistedPhysicsCheckpointBitIdentity": true,
+      "retries": 0,
+      "step": 109
+    },
+    {
+      "caps": 0,
+      "census": {
+        "faceVisits": 14934,
+        "optimisticRemovedFraction": 0.5672961028525513,
+        "queries": 837,
+        "repeatedQueries": 183,
+        "uniquePlaneVisits": 6462
+      },
+      "corrections": 2,
+      "persistedPhysicsCheckpointBitIdentity": true,
+      "retries": 0,
+      "step": 140
+    },
+    {
+      "caps": 0,
+      "census": {
+        "faceVisits": 34244,
+        "optimisticRemovedFraction": 0.5687419693960986,
+        "queries": 1674,
+        "repeatedQueries": 450,
+        "uniquePlaneVisits": 14768
+      },
+      "corrections": 4,
+      "persistedPhysicsCheckpointBitIdentity": true,
+      "retries": 0,
+      "step": 493
+    }
+  ],
+  "independentlyAbsentGroups": [
+    79999,
+    80179,
+    80402
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-coplanar-query-baa4ea32e-fixed-checkpoints-v2/native/PLAN.md": "779ef82bbfb74a33cc4e7cdbc63772639c21917f2b3785b335431f4c1b496400",
+    ".context/strong-owl-live-physics-coplanar-query-baa4ea32e-fixed-checkpoints-v2/native/planes.json": "16b4b370a4ea3e3ae62060507ac233f62180db578cc23cd38b7a63553fc143e6",
+    ".context/strong-owl-live-physics-coplanar-query-baa4ea32e-fixed-checkpoints-v2/native/result.json": "69d3e7372f0454c2c6fd3a7ebf8e1265571c3b4e29beb3ba5244dc27c4a0e029",
+    ".context/strong-owl-live-physics-coplanar-query-baa4ea32e-fixed-checkpoints-v2/native/provenance.json": "1cec1f861fa51881f28fac3203b0d9204ff2404b8dc0c80c2ea2cad85b1ac748",
+    ".context/strong-owl-live-physics-coplanar-query-baa4ea32e-fixed-checkpoints-v2/native/resources.jsonl": "efbb546308f07dde601b3b570f075b0651cbb529ab20a4de97e223a092ac9d93"
+  }
+}
