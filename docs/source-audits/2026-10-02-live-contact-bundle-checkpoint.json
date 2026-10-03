@@ -1,0 +1,268 @@
+{
+  "adopted": false,
+  "batchFixtures": {
+    "actualMeshLinkComparisons": 1116,
+    "clearanceReceiptBitIdentity": true,
+    "heldEndpointRetained": true,
+    "meritDepthBitIdentity": true,
+    "originalSignedFallbackExecuted": true,
+    "owner": "strong-owl-live-physics",
+    "scope": "actual Clav seed plus three fixed displacements, including channels and mouths; no dynamics/speed claim"
+  },
+  "cleanup": {
+    "groups": [
+      2720,
+      3996,
+      91744,
+      93460,
+      96402,
+      97005
+    ],
+    "independentlyVerifiedAbsent": true,
+    "owner": "strong-owl-live-physics"
+  },
+  "closed": true,
+  "failure": "invalid(\"fixed complete-step ratio 2.210263868567186 exceeds0.8\")",
+  "fixedMaximumRatio": 0.8,
+  "initialBuildFailures": [
+    "missing try, no physics run",
+    "compile watchdog, no physics run"
+  ],
+  "medianRatio": 2.210263868567186,
+  "owner": "strong-owl-live-physics",
+  "pairedRuns": [
+    {
+      "bundle": {
+        "admissions": 18,
+        "contactRows": [
+          115,
+          133,
+          135
+        ],
+        "fallbacks": 0,
+        "merits": 6,
+        "repairs": 1,
+        "retainedFeatures": 31
+      },
+      "candidateCaps": 0,
+      "candidateQPs": 3,
+      "candidateRetries": 0,
+      "candidateSeconds": 0.07363475000602193,
+      "controlQPs": 2,
+      "controlSeconds": 0.0297032083326485,
+      "independentMeshAccepted": true,
+      "lengthError": 9.326733263481657e-08,
+      "meshClearanceMargin": 9.994055532293496e-05,
+      "originalDifferenceMeters": 6.535704870679298e-16,
+      "ratio": 2.479016717028704,
+      "run": 0,
+      "strain": 1.5166259810683869e-05,
+      "strictDifferenceMeters": 1.7280166714452651e-06
+    },
+    {
+      "bundle": {
+        "admissions": 18,
+        "contactRows": [
+          115,
+          133,
+          135
+        ],
+        "fallbacks": 0,
+        "merits": 6,
+        "repairs": 1,
+        "retainedFeatures": 31
+      },
+      "candidateCaps": 0,
+      "candidateQPs": 3,
+      "candidateRetries": 0,
+      "candidateSeconds": 0.084993750002468,
+      "controlQPs": 2,
+      "controlSeconds": 0.027854500003741123,
+      "independentMeshAccepted": true,
+      "lengthError": 9.326733263481657e-08,
+      "meshClearanceMargin": 9.994055532293496e-05,
+      "originalDifferenceMeters": 6.535704870679298e-16,
+      "ratio": 3.0513471787701283,
+      "run": 1,
+      "strain": 1.5166259810683869e-05,
+      "strictDifferenceMeters": 1.7280166714452651e-06
+    },
+    {
+      "bundle": {
+        "admissions": 18,
+        "contactRows": [
+          115,
+          133,
+          135
+        ],
+        "fallbacks": 0,
+        "merits": 6,
+        "repairs": 1,
+        "retainedFeatures": 31
+      },
+      "candidateCaps": 0,
+      "candidateQPs": 3,
+      "candidateRetries": 0,
+      "candidateSeconds": 0.05141699999512639,
+      "controlQPs": 2,
+      "controlSeconds": 0.023262833332410082,
+      "independentMeshAccepted": true,
+      "lengthError": 9.326733263481657e-08,
+      "meshClearanceMargin": 9.994055532293496e-05,
+      "originalDifferenceMeters": 6.535704870679298e-16,
+      "ratio": 2.210263868567186,
+      "run": 2,
+      "strain": 1.5166259810683869e-05,
+      "strictDifferenceMeters": 1.7280166714452651e-06
+    },
+    {
+      "bundle": {
+        "admissions": 18,
+        "contactRows": [
+          115,
+          133,
+          135
+        ],
+        "fallbacks": 0,
+        "merits": 6,
+        "repairs": 1,
+        "retainedFeatures": 31
+      },
+      "candidateCaps": 0,
+      "candidateQPs": 3,
+      "candidateRetries": 0,
+      "candidateSeconds": 0.08601170833571814,
+      "controlQPs": 2,
+      "controlSeconds": 0.06172037500073202,
+      "independentMeshAccepted": true,
+      "lengthError": 9.326733263481657e-08,
+      "meshClearanceMargin": 9.994055532293496e-05,
+      "originalDifferenceMeters": 6.535704870679298e-16,
+      "ratio": 1.3935707346998139,
+      "run": 3,
+      "strain": 1.5166259810683869e-05,
+      "strictDifferenceMeters": 1.7280166714452651e-06
+    },
+    {
+      "bundle": {
+        "admissions": 18,
+        "contactRows": [
+          115,
+          133,
+          135
+        ],
+        "fallbacks": 0,
+        "merits": 6,
+        "repairs": 1,
+        "retainedFeatures": 31
+      },
+      "candidateCaps": 0,
+      "candidateQPs": 3,
+      "candidateRetries": 0,
+      "candidateSeconds": 0.08636612500413321,
+      "controlQPs": 2,
+      "controlSeconds": 0.03391691666911356,
+      "independentMeshAccepted": true,
+      "lengthError": 9.326733263481657e-08,
+      "meshClearanceMargin": 9.994055532293496e-05,
+      "originalDifferenceMeters": 6.535704870679298e-16,
+      "ratio": 2.5464026063071503,
+      "run": 4,
+      "strain": 1.5166259810683869e-05,
+      "strictDifferenceMeters": 1.7280166714452651e-06
+    },
+    {
+      "bundle": {
+        "admissions": 18,
+        "contactRows": [
+          115,
+          133,
+          135
+        ],
+        "fallbacks": 0,
+        "merits": 6,
+        "repairs": 1,
+        "retainedFeatures": 31
+      },
+      "candidateCaps": 0,
+      "candidateQPs": 3,
+      "candidateRetries": 0,
+      "candidateSeconds": 0.04589045833563432,
+      "controlQPs": 2,
+      "controlSeconds": 0.03286620833387133,
+      "independentMeshAccepted": true,
+      "lengthError": 9.326733263481657e-08,
+      "meshClearanceMargin": 9.994055532293496e-05,
+      "originalDifferenceMeters": 6.535704870679298e-16,
+      "ratio": 1.3962808812460559,
+      "run": 5,
+      "strain": 1.5166259810683869e-05,
+      "strictDifferenceMeters": 1.7280166714452651e-06
+    },
+    {
+      "bundle": {
+        "admissions": 18,
+        "contactRows": [
+          115,
+          133,
+          135
+        ],
+        "fallbacks": 0,
+        "merits": 6,
+        "repairs": 1,
+        "retainedFeatures": 31
+      },
+      "candidateCaps": 0,
+      "candidateQPs": 3,
+      "candidateRetries": 0,
+      "candidateSeconds": 0.07033454166958109,
+      "controlQPs": 2,
+      "controlSeconds": 0.04833416666951962,
+      "independentMeshAccepted": true,
+      "lengthError": 9.326733263481657e-08,
+      "meshClearanceMargin": 9.994055532293496e-05,
+      "originalDifferenceMeters": 6.535704870679298e-16,
+      "ratio": 1.4551723245894979,
+      "run": 6,
+      "strain": 1.5166259810683869e-05,
+      "strictDifferenceMeters": 1.7280166714452651e-06
+    }
+  ],
+  "performancePassed": false,
+  "prefixSteps": 139,
+  "productSourceChanged": false,
+  "scope": "native step140, original cold-per-step nearest discovery plus held/repaired faces; physical convergence; host-only",
+  "sha256": {
+    ".context/strong-owl-live-physics-contact-bundle-batch-673e3a3bc/batch-fixtures.json": "6b7f8adfb0d741b74216632c62779e78ec5a1e945c3aa7254cfd29ac9c78df27",
+    ".context/strong-owl-live-physics-contact-bundle-batch-673e3a3bc/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-contact-bundle-batch-673e3a3bc/fixtures.json": "7f782335c9bec6e246871e8c1446acfbaee1f454c78f6d96610dc3a840cab718",
+    ".context/strong-owl-live-physics-contact-bundle-batch-673e3a3bc/provenance.json": "b59369ce19a3adc9e1af8acd415e8089fb46c78ecead5059d4b07ad367fb9ebb",
+    ".context/strong-owl-live-physics-contact-bundle-batch-673e3a3bc/resources.jsonl": "033a7981c4195b709e870a2c8ba2fea08cc7132b43f75c04c0a37033adc26d6e",
+    ".context/strong-owl-live-physics-contact-bundle-batch-673e3a3bc/run.log": "778dbaa5ce2a55d2bf671ad405e08998e30d4e43b4e66676125eb067e9cdcdd6",
+    ".context/strong-owl-live-physics-contact-bundle-checkpoint-673e3a3bc-buildfix/native/compile.log": "a82316237db4951e98caab5acfc4b834575bb87f26a70d77fbd8cf3579c6228b",
+    ".context/strong-owl-live-physics-contact-bundle-checkpoint-673e3a3bc-buildfix/native/provenance.json": "b6e4835971a524b7f65457a42d76f54e140970599b1c3ae6c9812e1d25b227e0",
+    ".context/strong-owl-live-physics-contact-bundle-checkpoint-673e3a3bc-buildfix/native/resources.jsonl": "247699000fc6bcd577abf9f10ccb5de2304e7393f15b8131bbe2bf0562a4110e",
+    ".context/strong-owl-live-physics-contact-bundle-checkpoint-673e3a3bc-common-kernels/native/before.json": "ba3817aa7748e112343c870bd880b647d81d548fcc19f3de5046cbedb55b8754",
+    ".context/strong-owl-live-physics-contact-bundle-checkpoint-673e3a3bc-common-kernels/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-contact-bundle-checkpoint-673e3a3bc-common-kernels/native/provenance.json": "f3b11b2aa983bea14af7f9c40bec5b7ecfd314f44f57e5a97299ec4ea60aa155",
+    ".context/strong-owl-live-physics-contact-bundle-checkpoint-673e3a3bc-common-kernels/native/resources.jsonl": "38c3b1d43b177951934fe94ac963e63223cfc6123c31d92e1b415790a5968b46",
+    ".context/strong-owl-live-physics-contact-bundle-checkpoint-673e3a3bc-common-kernels/native/result.json": "b58bf8680e82a332381eb2940d3cc367a9da1d1fb01a7502093a73d7619a1f0a",
+    ".context/strong-owl-live-physics-contact-bundle-checkpoint-673e3a3bc-common-kernels/native/run.log": "380da9ce6989030511d5fcf54118e34b8e6c1799a606dd679c5ce3bd46398539",
+    ".context/strong-owl-live-physics-contact-bundle-checkpoint-673e3a3bc/native/compile.log": "92ac4f11ab5a97516c9673a9ab4c3aee0d5045a9380862f7f589f62241ee0dde",
+    ".context/strong-owl-live-physics-contact-bundle-checkpoint-673e3a3bc/native/provenance.json": "87cab34a458c6a5cff9e0c34f4cdba911cc256df1bbc43f278710e0293d3098e",
+    ".context/strong-owl-live-physics-contact-bundle-checkpoint-673e3a3bc/native/resources.jsonl": "da5afcc7511f2cac1a1fd3a0476d5f43553c812180099241ac242152e7070f3c",
+    ".context/strong-owl-live-physics-contact-bundle-proposal/PLAN.md": "33cdddcb35f24ac3e26cd14e0a3b13f7187596968bd2f697c5302cf577b799ec",
+    "Tools/HangboardRopePrototype/contact_bundle/BatchFixtures.swift": "7a103acf6b2c9ca1d6bfdfece2b7bdada6a213a9776280516049642ab6f8889f",
+    "Tools/HangboardRopePrototype/contact_bundle/Bundle.swift": "f8271eaad2806e32f6f75f67b368b1d3f88d78fe00301b947d080c7a72e9f1d8",
+    "Tools/HangboardRopePrototype/contact_bundle/CheckpointExtras.swift": "7d36983f820c802d058d11043371f81c074c90acdb817f722d44e6577736c42e",
+    "Tools/HangboardRopePrototype/contact_bundle/CheckpointMain.swift": "37ccd650b136f887034be9af0e579b2c43c30f5561a57f2fd44c2101d862cd18",
+    "Tools/HangboardRopePrototype/contact_bundle/Control.swift": "37dd95093f7153b335a57c4fb19f96b15bb624ebd49b61dc57accbcfabfc66d1",
+    "Tools/HangboardRopePrototype/contact_bundle/FeatureBatch.swift": "c9e8eb3030689eb5d99e32f3e00b29210d07b488f37d14d2d0721d246e7d7b16",
+    "Tools/HangboardRopePrototype/contact_bundle/Fixtures.swift": "6688a091519dec9d150a320f64084c4e444d032ce0f63dbb203b4485e6a602f0",
+    "Tools/HangboardRopePrototype/contact_bundle/snapshot.py": "f77c92573eb4b20fa37dcbdddf6a3746101beba6e1ea48ede486e0d59664e311",
+    "Tools/HangboardRopePrototype/run_contact_bundle_checkpoint.py": "8d52b9529067399be1abe87deab06acbe3bfb2bad01e4399d63a364ca9855c1b",
+    "Tools/HangboardRopePrototype/run_contact_bundle_fixtures.py": "cc9dc6579e98aed6dbcce48e40bdcbf1e7c43b2e415d23f12c0e87c914e55362"
+  },
+  "strictReferenceDifferenceMeters": 1.7280166714452651e-06,
+  "trajectoryExecuted": false
+}

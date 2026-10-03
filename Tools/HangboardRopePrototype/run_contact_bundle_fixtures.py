@@ -12,16 +12,18 @@ root=repo/'.context'/(repo.name+'-contact-bundle-'+args.label);root.mkdir()
 source=root/'sources';source.mkdir()
 inputs=[repo/'HangTen/Models'/name for name in NAMES]
 bundle=tool/'contact_bundle/Bundle.swift'
+batch=tool/'contact_bundle/FeatureBatch.swift'
 for path in inputs:
     text=path.read_text()
-    if path.name=='RopeTriangleCollider.swift':text+='\n'+bundle.read_text()
+    if path.name=='RopeTriangleCollider.swift':text+='\n'+bundle.read_text()+'\n'+batch.read_text()
     (source/path.name).write_text(text)
 control=tool/'contact_bundle/Control.swift'
 fixture=tool/'contact_bundle/Fixtures.swift'
-(source/'main.swift').write_text(control.read_text()+'\n'+fixture.read_text())
+batch_fixture=tool/'contact_bundle/BatchFixtures.swift'
+(source/'main.swift').write_text(control.read_text()+'\n'+fixture.read_text()+'\n'+batch_fixture.read_text())
 files=sorted(source.glob('*.swift'));binary=root/(repo.name+'-contact-bundle-fixtures')
 cmd=['xcrun','swiftc','-O','-D','DEBUG','-whole-module-optimization','-Xcc','-DACCELERATE_NEW_LAPACK','-module-cache-path',str(root/'module-cache'),*map(str,files),'-o',str(binary)]
-inputs += [*files,bundle,control,fixture,pathlib.Path(__file__)]
+inputs += [*files,bundle,batch,control,fixture,batch_fixture,pathlib.Path(__file__)]
 (root/'provenance.json').write_text(json.dumps({'owner':repo.name,'command':cmd,'sha256':{str(x.relative_to(repo)):hashlib.sha256(x.read_bytes()).hexdigest() for x in inputs}},indent=2))
 c=OwnedCommands(repo.name,root)
 for sig in [signal.SIGINT,signal.SIGTERM]:signal.signal(sig,c.interrupted)
