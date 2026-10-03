@@ -1,0 +1,17 @@
+{
+  "owner": "placid-badger",
+  "reviewNumber": 11,
+  "rawFeedback": "same jug wrapping issue",
+  "previousAcceptedCorrection": "#10 jug highlight covers broad exterior front/back finger-pressure faces; accepted by user Lgtm.",
+  "interpretation": "Extend the existing #11 pinch-60 selection around upper/lower exterior finger-contact rails onto front/back faces. No new contact identity or factual jug is added.",
+  "humanAcceptance": "pending",
+  "recordedUTC": "2026-10-03T14:28:17.073132+00:00",
+  "priorShownCommit": "f6c3e2299734f141a19187924ad9e0fed7eab8d0",
+  "priorShownIdentity": {
+    "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+    "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+    "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+    "sidecarSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf"
+  },
+  "currentHumanAcceptance": "pending"
+}

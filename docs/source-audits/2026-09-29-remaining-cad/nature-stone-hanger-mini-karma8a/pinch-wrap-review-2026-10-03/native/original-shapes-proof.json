@@ -1,0 +1,158 @@
+{
+  "passed": true,
+  "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+  "allOriginalNativeShapesGeometricallyIdentical": true,
+  "shapes": {
+    "BodyExtrusion": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "OuterRimRound": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "RecessDepth15": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "WoodRecess": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "CavityMouthRound": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "LeftFrontOpenGroove": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "LeftFrontGrooveCut": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "LeftBackOpenGroove": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "LeftBackGrooveCut": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "LeftTransverseOpenGroove": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "LeftCrossGrooveCut": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "RightFrontOpenGroove": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "RightFrontGrooveCut": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "RightBackOpenGroove": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "RightBackGrooveCut": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "RightTransverseOpenGroove": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "RightCrossGrooveCut": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "GraniteInsert": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "FinalSolid": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "nature_wood": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "nature_stone": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "nature_pinch": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "GraniteSeatLowerRailFill": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "WoodWithGraniteLowerRail": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    },
+    "GraniteFittedSeat": {
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0,
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0
+    }
+  },
+  "woodStoneOverlapVolume": 0.0
+}

@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-karma11-fingercontact-xcode-stage",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-karma11-fingercontact-android-stage",
+      "absent": true
+    }
+  ]
+}

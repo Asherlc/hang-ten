@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
-  "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+  "modelSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
   "modelBounds": {
     "min": [
       -0.052499998,
@@ -21,6 +21,11 @@
     },
     {
       "nodeID": "nature_pinch",
+      "role": "contact",
+      "contactID": "pinch-60"
+    },
+    {
+      "nodeID": "nature_pinch_pressure",
       "role": "contact",
       "contactID": "pinch-60"
     },
@@ -57,15 +62,16 @@
     },
     "pinch-60": {
       "nodeIDs": [
-        "nature_pinch"
+        "nature_pinch",
+        "nature_pinch_pressure"
       ],
       "facePlaneAABB": {
         "min": [
-          0.076190456,
+          0.0,
           0.0
         ],
         "max": [
-          0.923809544,
+          1.0,
           1.0
         ]
       },

@@ -62,7 +62,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "4267990f05613cd2baf67f1d4604bf107ea081960c45c45a7c1faf0f81567fd1",
+  "sha256Manifest": "fb4b7c7fcfa2fd1041ed1f97faad0f001c09866935834568d74af87ae573d845",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -883,26 +883,26 @@
     },
     "nature-stone-hanger-mini-karma8a": {
       "source": "Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd",
-      "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+      "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
       "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
-      "assetSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
-      "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+      "assetSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+      "descriptorSHA256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
       "assets": {
         "assets/primary.usdz": {
-          "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+          "modelSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
           "descriptorPath": "assets/primary.model.json",
-          "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c"
+          "descriptorSHA256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460"
         }
       },
       "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
       "provenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/native-authoring.md",
-      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/index.html",
-      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/manifest-preservation.json",
-      "nativeValidation": "Current-source reopen/edit/restore, two identical fresh compiles, root independent actual geometry/export checks, all three native cord solves and twelve continuous route certificates; reports in completion-review.",
+      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/index.html",
+      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/independent-candidate-verification.json",
+      "nativeValidation": "Upper/lower exterior pinch finger-contact bands and rounded end shoulders; exact native closed body and exterior, original pinch/wood/granite surfaces, deterministic exports and fresh source-bound cord-cache check.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
-      "geometryAcceptance": "Pending #11 geometry review; current app finishes, contacts and workout appearance unverified",
+      "geometryAcceptance": "Pinch wrap ready for human CAD review; current app appearance and interaction remain unverified.",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-      "suspensionSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf",
+      "suspensionSHA256": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc",
       "historicalMigrationReview": {
         "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/review/index.html",
         "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/metadata-diff.json",
@@ -911,7 +911,10 @@
         "assetSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46",
         "descriptorSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4",
         "suspensionSHA256": "8f3b0cefd2f926409e8311d7a5c333d0ef17272c062233c32d7f695fccc6717e"
-      }
+      },
+      "cadReview": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/index.html",
+      "currentValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/validation.json",
+      "generatedManifestSHA256": "024c2c5df652271ae699487abfc963c33761a18e0c3dbd5d43aff0ac3cfe16a4"
     },
     "owl-climb-poker": {
       "source": "Hangboards/owl-climb-poker/owl-climb-poker.FCStd",
@@ -1380,6 +1383,13 @@
       "recordedUTC": "2026-10-03T06:19:16.786706+00:00",
       "reason": "Mini jug highlight includes broad exterior finger-contact surfaces of the upper rail",
       "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/prior-delivery-checksums.txt"
+    },
+    {
+      "sha256Manifest": "4267990f05613cd2baf67f1d4604bf107ea081960c45c45a7c1faf0f81567fd1",
+      "date": "2026-10-03",
+      "recordedUTC": "2026-10-03T14:24:34.545318+00:00",
+      "reason": "KARMA8A pinch highlight wraps upper/lower exterior front/back finger-contact rails and end shoulders",
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/prior-delivery-checksums.txt"
     }
   ],
   "individualReviewRevisions": [
@@ -2263,6 +2273,29 @@
       "acceptanceRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-acceptance-2026-10-03.json",
       "runtimeVerified": false,
       "assetsChanged": false
+    },
+    {
+      "owner": "placid-badger",
+      "date": "2026-10-03",
+      "recordedUTC": "2026-10-03T14:28:17.073132+00:00",
+      "package": "nature-stone-hanger-mini-karma8a",
+      "reviewNumber": 11,
+      "kind": "Upper/lower pinch finger-contact wrap correction",
+      "identity": {
+        "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+        "modelSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+        "descriptorSHA256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+        "sidecarSHA256": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc"
+      },
+      "generatedManifestSHA256": "024c2c5df652271ae699487abfc963c33761a18e0c3dbd5d43aff0ac3cfe16a4",
+      "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/index.html",
+      "validation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/validation.json",
+      "humanAcceptance": "pending",
+      "runtimeVerified": false,
+      "bodyAndCordGeometryChanged": false,
+      "factualContactsChanged": false,
+      "pinchCoverageChanged": true,
+      "pythonPassed": 67
     }
   ]
 }
