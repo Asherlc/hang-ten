@@ -1,0 +1,68 @@
+{
+  "adopted": false,
+  "failure": "invalid(\"fixed two-fresh-QP terminal discriminator changed\")",
+  "fixedMaximumRatio": 0.8,
+  "owner": "strong-owl-live-physics",
+  "pairedRuns": [],
+  "poseGateMeters": 5e-05,
+  "scope": "complete actual-seed step140 after independently propagated current-source prefix; isolated changed convergence semantics; host-only",
+  "closed": true,
+  "performanceGateReached": false,
+  "timedPairsCompleted": 0,
+  "productSourceChanged": false,
+  "prefixMaximumDifferenceMeters": 1.35578455694202e-05,
+  "prefixStops": 8,
+  "diagnostic": {
+    "candidateCorrections": 2,
+    "candidatePhysical": true,
+    "closedScreenDiagnosticOnly": true,
+    "controlCorrections": 2,
+    "controlPhysical": true,
+    "differenceMeters": 1.2571160136591278e-06,
+    "owner": "strong-owl-live-physics",
+    "proposals": [
+      {
+        "limit": -1,
+        "norm": 0.00015879907638656225,
+        "previousFull": false,
+        "strain": 0.07678285589083256,
+        "trust": 1
+      },
+      {
+        "limit": 4.166666666666667e-06,
+        "norm": 2.773701786349679e-06,
+        "previousFull": true,
+        "strain": 0.00021307832117178904,
+        "trust": 1
+      }
+    ],
+    "terminalStops": 0,
+    "timersEnabled": false
+  },
+  "cleanupGroups": [
+    63567,
+    65068,
+    69806,
+    70158
+  ],
+  "cleanupVerifiedByCurrentProcessListing": true,
+  "sha256": {
+    ".context/strong-owl-live-physics-terminal-stop-current-1d337409c/native/provenance.json": "fdc2c9b2a2354f7a2b6a057ed6578108e7a37687460b270eadab34adb8241555",
+    ".context/strong-owl-live-physics-terminal-stop-current-1d337409c/native/result.json": "27a6ee626301b39fa6078d07b7fb243b77ec81ca4822440d5197483a0c4c5590",
+    ".context/strong-owl-live-physics-terminal-stop-current-1d337409c/native/run.log": "063e51b4dca4c4616754cf0e62c1eca3d21147bd0117fb2696ea91f4952f1752",
+    ".context/strong-owl-live-physics-terminal-stop-current-1d337409c/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-terminal-stop-current-1d337409c/native/resources.jsonl": "4b05b34fd75a9e6c8905906bda77b009bcf4d3f6fef188d68e95b6276a1fc698",
+    ".context/strong-owl-live-physics-terminal-stop-schedule-diagnostic-1d337409c/native/provenance.json": "409fd6b341cbc57a31e288771d76435c63f874dc1e3b36be9c6000f94251ecec",
+    ".context/strong-owl-live-physics-terminal-stop-schedule-diagnostic-1d337409c/native/result.json": "547f36cd4158ffe4eb858193cdd260357c57b10d3754b6ce616e939b0eaed62d",
+    ".context/strong-owl-live-physics-terminal-stop-schedule-diagnostic-1d337409c/native/run.log": "4ef42d9eebaa422cd2b9cb42470b058a081dd15679ae6bcdd957deecafab18b7",
+    ".context/strong-owl-live-physics-terminal-stop-schedule-diagnostic-1d337409c/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-terminal-stop-schedule-diagnostic-1d337409c/native/diagnostic.json": "3c279aedf768a989860e294b0fed027446ef7514f2be7fd9a8c88c267df03fbf",
+    ".context/strong-owl-live-physics-terminal-stop-schedule-diagnostic-1d337409c/native/resources.jsonl": "c8ec75594f56b7b869da66e529b546feebd14063e56336622cac157901c348c9",
+    ".context/strong-owl-live-physics-terminal-stop-plan/PLAN.md": "6ba67af32cb9cf36ffd52177eb17555709fbeaf922093255a6fb11c0e5565610",
+    "Tools/HangboardRopePrototype/run_terminal_stop_screen.py": "39be5f5c270ec51aa42215a735dbc656a8bd73d71d3ce01243d6c75869d3e8d9",
+    "Tools/HangboardRopePrototype/terminal_stop/Eligibility.swift": "a23cec1263ff56c628f38101ba134042ceb66bbe26c927b9f5020de62f47f94d",
+    "Tools/HangboardRopePrototype/terminal_stop/main.swift": "5dc5bc97cd2b1fec3b07cbd2119af02ee6fb25ac9c7e50b7cfa527b11578b01b",
+    "Tools/HangboardRopePrototype/terminal_stop/Fixtures.swift": "97f76bdb031f74d96c212cb27b1782a13e44ed798a82d670b87d1dc22d0db301",
+    "Tools/HangboardRopePrototype/terminal_stop/snapshot.py": "8bc41a7c50f640c36e2373e82d3fafa2f3a966960ba6e3e75ce0f395ebf4fe8e"
+  }
+}
