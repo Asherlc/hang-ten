@@ -1,0 +1,58 @@
+{
+  "event": "hand-image",
+  "baseFields": {
+    "imageEvent": "String",
+    "sessionID": "UUID String",
+    "revision": "Int",
+    "sequence": "Int global contiguous recorder",
+    "epoch": "Double row write wall time",
+    "uptime": "Double row write monotonic",
+    "handLifecycleCounts": "existing recorder counts"
+  },
+  "events": {
+    "requested": {},
+    "submitted": {
+      "kind": "single|pair",
+      "rootID": "ObjectIdentifier String",
+      "cameraID": "ObjectIdentifier String",
+      "orthographic": "Bool",
+      "perspective": "Bool",
+      "viewport": "[width,height] logical points",
+      "displayScale": "Double",
+      "textureWidth": "Int",
+      "textureHeight": "Int",
+      "textureFormat": "bgra8Unorm_srgb",
+      "toneMappingEnabled": "actual default Bool",
+      "orientationConversion": "none; UIImage.up",
+      "inputColorSpace": "sRGB"
+    },
+    "gpu-completion-callback": {
+      "callbackUptime": "Double observed at callback before MainActor hop",
+      "callbackEpoch": "Double observed at callback before MainActor hop",
+      "metalCommandBufferStatusAvailable": false
+    },
+    "conversion-complete": {
+      "cgAlphaInfo": "CGImageAlphaInfo raw UInt",
+      "cgBitsPerComponent": "Int",
+      "cgColorSpace": "name String",
+      "cgWidth": "Int",
+      "cgHeight": "Int",
+      "orientation": "up",
+      "eagerMaterialization": true
+    },
+    "published": {
+      "currentRevision": "equals revision",
+      "pngPath": "absolute app Documents/hand-image-prototype/<sessionID>/revision-<revision>.png",
+      "pngSHA256": "64 lowercase hex",
+      "pngByteCount": "Int",
+      "applicationCensus": "existing read-only UIKit/window census"
+    },
+    "stale-completion-discarded": {},
+    "disappear": {},
+    "failed": {
+      "error": "String"
+    }
+  },
+  "readiness": "published matching last requested session/revision, preceded by matching submitted/callback/conversion; not GPU callback alone",
+  "failure": "any failed event; missing current publication at external bound; unsupported output or invalid metadata is not a fallback success"
+}

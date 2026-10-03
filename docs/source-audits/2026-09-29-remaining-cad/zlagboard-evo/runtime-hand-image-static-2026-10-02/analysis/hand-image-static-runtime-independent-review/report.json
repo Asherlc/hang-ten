@@ -1,0 +1,25 @@
+{
+  "status": "read-only-static-review-pass",
+  "reviewedFiles": {
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-static-runtime-prep/v5/capture.py": "3351ba3cc9e05f360779f766e17f9bbf62dd4a102cfdf6e2711f79ce663ee6e4",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-static-runtime-prep/v5/prototype_schema.py": "154513954694a42a81ac008c549b46978b65f9479483117f51337f06614ce75b"
+  },
+  "scope": [
+    "Exact event names checked against current source handLifecycle,handCamera,handImage",
+    "Image stages bind one in-flight frame, current revision and successful eager conversion before publication",
+    "No live hand make rows and zero public RealityKit.ARView at publication census",
+    "PNG ownership constrained to exact registered diagnostic folder; every published PNG copied on success or later observation failure with actual byte hashes",
+    "Full raw JSONL retained before final validation, contiguous complete rows and screenshot hashes checked",
+    "Cleanup requires recorded PID absent with ps exit1 plus empty output; installed debug dylib hash recorded"
+  ],
+  "resolvedBlocker": "V3 copied only latest PNG on success. V5 finally preserves all complete published-row artifacts, including earlier publications and failed observations. Original versions retained.",
+  "limitations": [
+    "No runtime or build executed by this reviewer",
+    "Current publication and sparse census do not prove continuous GPU inactivity or continuous host absence",
+    "Callback does not expose actual command-buffer status",
+    "Visual pose, clipping, orientation and whole-composite alpha judgment remain human/model whole-image checks",
+    "Private/public subclass host coverage not expanded beyond current exact public ARView census class; source has no image UIView host"
+  ],
+  "sourceMutated": false,
+  "runtimeTouched": false
+}

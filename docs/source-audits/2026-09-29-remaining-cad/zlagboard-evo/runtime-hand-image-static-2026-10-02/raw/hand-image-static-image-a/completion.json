@@ -1,0 +1,7 @@
+{
+  "observationFailed": true,
+  "postflightErrors": [
+    "Retained trace/hash validation raised; raw bytes retained"
+  ],
+  "passed": false
+}

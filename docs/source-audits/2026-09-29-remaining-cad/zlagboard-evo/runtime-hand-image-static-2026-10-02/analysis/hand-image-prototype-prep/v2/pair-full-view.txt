@@ -1,0 +1,135 @@
+struct GripHandPairModelView: View {
+    let posture: GripType?
+    let fingerConfiguration: FingerConfiguration?
+    let resetToken: Int
+    @State private var sceneStorage: GripHandPairSceneStorage
+    @State private var isUnavailable: Bool
+    @State private var dragState = GripHandDragState()
+    @State private var lastMagnification: CGFloat = 1
+    @State private var cameraRevision = 0
+    #if DEBUG
+    @State private var diagnosticHandViewToken = UUID()
+    @Environment(\.workoutDiagnosticIsPrestart) private var diagnosticIsPrestart
+    #endif
+
+    private var scene: GripHandRealityPairScene { sceneStorage.scene }
+
+    init(posture: GripType?, fingerConfiguration: FingerConfiguration?, resetToken: Int = 0) {
+        self.posture = posture
+        self.fingerConfiguration = fingerConfiguration
+        self.resetToken = resetToken
+        _sceneStorage = State(initialValue: GripHandPairSceneStorage())
+        _isUnavailable = State(initialValue: false)
+    }
+
+    init(posture: GripType?, fingerConfiguration: FingerConfiguration?, resetToken: Int = 0,
+         scene: GripHandRealityPairScene) {
+        self.posture = posture
+        self.fingerConfiguration = fingerConfiguration
+        self.resetToken = resetToken
+        _sceneStorage = State(initialValue: GripHandPairSceneStorage(makeScene: { scene }))
+        _isUnavailable = State(initialValue: !scene.isAvailable)
+    }
+
+    var body: some View {
+        #if DEBUG
+        if BoardHighlightDiagnostic.suppressesAllHandHosts
+            || (WorkoutPrestartHandDiagnostic.isEnabled && diagnosticIsPrestart) {
+            Color.clear
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .allowsHitTesting(false)
+                .accessibilityHidden(true)
+        } else if HandImagePrototype.enabled {
+            HandImagePrototypeView(pose: GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration),
+                                   reset: resetToken,
+                                   makeScene: { [sceneStorage] in .pair(sceneStorage.scene) })
+        } else {
+            handContent
+        }
+        #else
+        handContent
+        #endif
+    }
+
+    private var handContent: some View {
+        let _ = cameraRevision
+        return GeometryReader { proxy in
+            let size = proxy.size
+            RealityView { content in
+                #if DEBUG
+                if BoardHighlightDiagnostic.isEnabled {
+                    BoardHighlightDiagnostic.shared.handLifecycle(kind: "pair",
+                        event: "make-entry", root: scene.root, camera: scene.camera,
+                        lifetime: scene.diagnosticHandLifetimeToken, view: diagnosticHandViewToken)
+                }
+                #endif
+                content.camera = .virtual
+                content.add(scene.root)
+                syncScene(in: size)
+                updateUnavailableState()
+            } update: { _ in
+                syncScene(in: size)
+                updateUnavailableState()
+            }
+            .simultaneousGesture(orbitGesture(size: size))
+            .simultaneousGesture(magnifyGesture)
+            .overlay {
+                if isUnavailable {
+                    Text("3D hands unavailable")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .accessibilityHidden(true)
+                }
+            }
+            #if DEBUG
+            .onAppear { [viewToken = diagnosticHandViewToken] in
+                if BoardHighlightDiagnostic.recordsHandLifetimes {
+                    BoardHighlightDiagnostic.shared.handViewLifecycle(view: viewToken, event: "appeared")
+                }
+            }
+            .onDisappear { [viewToken = diagnosticHandViewToken] in
+                if BoardHighlightDiagnostic.recordsHandLifetimes {
+                    BoardHighlightDiagnostic.shared.handViewLifecycle(view: viewToken, event: "disappeared")
+                }
+            }
+            #endif
+            .accessibilityHidden(true)
+        }
+    }
+
+    func syncScene(in size: CGSize) {
+        scene.update(pose: GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration),
+                     viewportSize: size, resetToken: resetToken)
+    }
+
+    private func updateUnavailableState() {
+        let unavailable = !scene.isAvailable
+        guard unavailable != isUnavailable else { return }
+        Task { @MainActor in isUnavailable = unavailable }
+    }
+
+    private func orbitGesture(size: CGSize) -> some Gesture {
+        DragGesture(minimumDistance: OrbitPanArbitration.activationDistance)
+            .onChanged { value in
+                guard let delta = dragState.advance(translation: value.translation,
+                                                    velocity: value.velocity) else { return }
+                scene.orbit(azimuthDelta: Float(-delta.width / max(size.width, 1)) * 0.9,
+                            elevationDelta: Float(-delta.height / max(size.height, 1)) * 0.65)
+                cameraRevision &+= 1
+            }
+            .onEnded { _ in dragState.reset() }
+    }
+
+    private var magnifyGesture: some Gesture {
+        MagnificationGesture()
+            .onChanged { value in
+                let ratio = value / max(lastMagnification, 0.001)
+                lastMagnification = value
+                scene.orbit(azimuthDelta: 0, elevationDelta: 0, zoomScale: Float(ratio))
+                cameraRevision &+= 1
+            }
+            .onEnded { _ in lastMagnification = 1 }
+    }
+}

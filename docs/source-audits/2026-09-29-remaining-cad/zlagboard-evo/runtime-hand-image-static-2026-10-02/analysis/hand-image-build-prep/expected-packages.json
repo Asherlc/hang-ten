@@ -1,0 +1,36 @@
+{
+  "provenance": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-observation-applied/package-parity.json",
+  "provenanceSHA256": "9e67ad37d5e4c45be07e0c777ff932d61da70555659c8ac542d9741077dcae31",
+  "packages": [
+    {
+      "slug": "zlagboard-evo",
+      "name": "board.json",
+      "sha256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f"
+    },
+    {
+      "slug": "zlagboard-evo",
+      "name": "primary.model.json",
+      "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe"
+    },
+    {
+      "slug": "zlagboard-evo",
+      "name": "primary.usdz",
+      "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee"
+    },
+    {
+      "slug": "zlagboard-pro",
+      "name": "board.json",
+      "sha256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8"
+    },
+    {
+      "slug": "zlagboard-pro",
+      "name": "primary.model.json",
+      "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f"
+    },
+    {
+      "slug": "zlagboard-pro",
+      "name": "primary.usdz",
+      "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684"
+    }
+  ]
+}

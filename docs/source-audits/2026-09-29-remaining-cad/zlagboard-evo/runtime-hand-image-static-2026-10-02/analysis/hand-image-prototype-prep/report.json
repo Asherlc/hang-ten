@@ -1,0 +1,33 @@
+{
+  "status": "unapplied-review-ready",
+  "scope": "DEBUG static pair RealityRenderer feasibility only",
+  "patch": "hand-image-prototype.patch",
+  "patchSHA256": "ad66364c11e903e56cac88f342dae8cc5a00ce1feae3a2f94ae7a8d3c219ace8",
+  "sourceProvenance": "source-provenance.json",
+  "staticChecks": "static-check.json",
+  "eventSchema": "event-schema.json",
+  "design": "design.md",
+  "sourceUnchanged": true,
+  "runtimeResourcesTouched": false,
+  "publicSources": [
+    "https://developer.apple.com/documentation/realitykit/realityrenderer",
+    "https://developer.apple.com/documentation/realitykit/realityrenderer/updateandrender(deltatime:cameraoutput:whenscheduled:oncomplete:actionsbeforerender:actionsafterrender:)",
+    "https://developer.apple.com/documentation/coreimage/ciimage/init(mtltexture:options:)",
+    "https://developer.apple.com/documentation/coreimage/cicontext/createcgimage(_:from:format:colorspace:deferred:)"
+  ],
+  "retainedSDK": "../reality-renderer-feasibility/sdk-excerpts.txt",
+  "runtimeGates": [
+    "SDK typecheck/link",
+    "CustomMaterial support and actual visible geometry",
+    "render-target support",
+    "orientation parity",
+    "alpha metadata and whole contrasting composites",
+    "bounded completion/current output publication"
+  ],
+  "limits": [
+    "MainActor eager conversion and PNG I/O",
+    "no command-buffer status from public callback",
+    "static pair first; single and gestures not runtime validated",
+    "no production fix claim"
+  ]
+}
