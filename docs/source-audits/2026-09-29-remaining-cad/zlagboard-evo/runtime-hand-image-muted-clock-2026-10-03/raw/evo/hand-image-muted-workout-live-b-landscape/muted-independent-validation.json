@@ -1,0 +1,494 @@
+{
+  "checks": {
+    "audio": true,
+    "startup": true,
+    "branch": true,
+    "exact12": true,
+    "deadlines": true,
+    "noMissedSequence": true,
+    "tail": true,
+    "cleanup": true,
+    "exactMutedLaunch": true,
+    "allHelpers": false,
+    "imageHash:phase-0-active-plus-0.25.png": true,
+    "imageHash:phase-0-active-plus-1.png": true,
+    "imageHash:phase-0-active-plus-3.png": true,
+    "imageHash:phase-0-active-plus-5.png": true,
+    "imageHash:phase-1-preview-plus-0.25.png": true,
+    "imageHash:phase-1-preview-plus-1.png": true,
+    "imageHash:phase-1-preview-plus-3.png": true,
+    "imageHash:phase-1-preview-plus-5.png": true,
+    "imageHash:phase-2-active-plus-0.25.png": true,
+    "imageHash:phase-2-active-plus-1.png": true,
+    "imageHash:phase-2-active-plus-3.png": true,
+    "imageHash:phase-2-active-plus-5.png": true
+  },
+  "reports": {
+    "audio": {
+      "audioMuted": true,
+      "snapshots": [
+        {
+          "sequence": 18,
+          "event": "startup-request-entry",
+          "audioEnabled": false
+        },
+        {
+          "sequence": 19,
+          "event": "startup-visible-countdown-before",
+          "audioEnabled": false
+        },
+        {
+          "sequence": 20,
+          "event": "startup-visible-countdown-after",
+          "audioEnabled": false
+        }
+      ],
+      "noPrepareEvents": true,
+      "finalRequirementsChecked": true,
+      "limitation": "Sampled scalar settings and call boundaries; not proof of all framework audio inactivity."
+    },
+    "startup": {
+      "errors": [],
+      "markers": [
+        {
+          "boardID": "zlagboard.evo",
+          "complete": true,
+          "epoch": 1791013109.019515,
+          "event": "startup-board-load-call",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "CF602C16-A52A-4914-8ABE-1C8E7BCE66CA",
+          "presentationID": "primary",
+          "sequence": 3,
+          "taskCancelled": false,
+          "uptime": 91646.741354625
+        },
+        {
+          "complete": true,
+          "epoch": 1791013109.663165,
+          "event": "startup-board-load-return",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "CF602C16-A52A-4914-8ABE-1C8E7BCE66CA",
+          "sceneLifecycleToken": "FC585195-AC80-444E-912E-EC97653235F5",
+          "sequence": 5,
+          "taskCancelled": false,
+          "uptime": 91647.38500875
+        },
+        {
+          "complete": true,
+          "epoch": 1791013109.663352,
+          "event": "startup-board-ready-published",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "CF602C16-A52A-4914-8ABE-1C8E7BCE66CA",
+          "sceneLifecycleToken": "FC585195-AC80-444E-912E-EC97653235F5",
+          "sequence": 6,
+          "uptime": 91647.38519508333
+        },
+        {
+          "appearanceCount": 1,
+          "complete": true,
+          "contextID": "ObjectIdentifier(0x0000000101d20200)|research.max-hangs",
+          "epoch": 1791013110.258644,
+          "event": "startup-context-appear",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "sequence": 16,
+          "uptime": 91647.98048979168
+        },
+        {
+          "activeStartUptime": null,
+          "armTaskPresent": false,
+          "armUptime": null,
+          "associationValid": true,
+          "attemptID": "D75BD5F4-0A1A-4F2E-B7DE-C9674DB924E1",
+          "audioEnabled": false,
+          "audioPreparation": "idle",
+          "complete": true,
+          "contextID": "ObjectIdentifier(0x0000000101d20200)|research.max-hangs",
+          "countdown": "initial",
+          "countdownKind": "nil",
+          "epoch": 1791013110.2685518,
+          "event": "startup-request-entry",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "parentAttemptID": null,
+          "pausedElapsed": 0,
+          "pendingRequestPresent": false,
+          "planID": "research.max-hangs",
+          "routineStartedIsNil": true,
+          "sequence": 18,
+          "taskCancelled": false,
+          "uptime": 91647.990399125
+        },
+        {
+          "activeStartUptime": null,
+          "armTaskPresent": false,
+          "armUptime": 91647.990530875,
+          "associationValid": true,
+          "attemptID": "D75BD5F4-0A1A-4F2E-B7DE-C9674DB924E1",
+          "audioEnabled": false,
+          "audioPreparation": "idle",
+          "complete": true,
+          "contextID": "ObjectIdentifier(0x0000000101d20200)|research.max-hangs",
+          "countdown": "initial",
+          "countdownKind": "nil",
+          "epoch": 1791013110.268714,
+          "event": "startup-visible-countdown-before",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "parentAttemptID": null,
+          "pausedElapsed": 0,
+          "pendingRequestPresent": false,
+          "planID": "research.max-hangs",
+          "routineStartedIsNil": true,
+          "sequence": 19,
+          "taskCancelled": false,
+          "uptime": 91647.99055945834
+        },
+        {
+          "activeStartUptime": 91650.990530875,
+          "armTaskPresent": false,
+          "armUptime": 91647.990530875,
+          "associationValid": true,
+          "attemptID": "D75BD5F4-0A1A-4F2E-B7DE-C9674DB924E1",
+          "audioEnabled": false,
+          "audioPreparation": "idle",
+          "complete": true,
+          "contextID": "ObjectIdentifier(0x0000000101d20200)|research.max-hangs",
+          "countdown": "initial",
+          "countdownKind": "initial",
+          "epoch": 1791013110.2726688,
+          "event": "startup-visible-countdown-after",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "parentAttemptID": null,
+          "pausedElapsed": 0,
+          "pendingRequestPresent": false,
+          "planID": "research.max-hangs",
+          "routineStartedIsNil": false,
+          "sequence": 20,
+          "taskCancelled": false,
+          "uptime": 91647.99451633333
+        },
+        {
+          "boardID": "zlagboard.evo",
+          "complete": true,
+          "epoch": 1791013110.2728271,
+          "event": "startup-board-load-call",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "8A201C44-6C07-4317-A402-71426B727813",
+          "presentationID": "primary",
+          "sequence": 21,
+          "taskCancelled": false,
+          "uptime": 91647.99467241667
+        },
+        {
+          "complete": true,
+          "epoch": 1791013111.27345,
+          "event": "startup-board-load-return",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 1,
+            "pair.make-entry": 1,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "8A201C44-6C07-4317-A402-71426B727813",
+          "sceneLifecycleToken": "F80F1102-B610-462E-BF93-5E8A28737CD5",
+          "sequence": 30,
+          "taskCancelled": false,
+          "uptime": 91648.99530033334
+        },
+        {
+          "complete": true,
+          "epoch": 1791013111.2736459,
+          "event": "startup-board-ready-published",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 1,
+            "pair.make-entry": 1,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "8A201C44-6C07-4317-A402-71426B727813",
+          "sceneLifecycleToken": "F80F1102-B610-462E-BF93-5E8A28737CD5",
+          "sequence": 31,
+          "uptime": 91648.99549670833
+        }
+      ],
+      "contexts": {
+        "ObjectIdentifier(0x0000000101d20200)|research.max-hangs": {
+          "appearanceCount": 1,
+          "complete": true,
+          "contextID": "ObjectIdentifier(0x0000000101d20200)|research.max-hangs",
+          "epoch": 1791013110.258644,
+          "event": "startup-context-appear",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "sequence": 16,
+          "uptime": 91647.98048979168
+        }
+      },
+      "attempts": {
+        "D75BD5F4-0A1A-4F2E-B7DE-C9674DB924E1": {
+          "activeStartUptime": null,
+          "armTaskPresent": false,
+          "armUptime": null,
+          "associationValid": true,
+          "attemptID": "D75BD5F4-0A1A-4F2E-B7DE-C9674DB924E1",
+          "audioEnabled": false,
+          "audioPreparation": "idle",
+          "complete": true,
+          "contextID": "ObjectIdentifier(0x0000000101d20200)|research.max-hangs",
+          "countdown": "initial",
+          "countdownKind": "nil",
+          "epoch": 1791013110.2685518,
+          "event": "startup-request-entry",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "parentAttemptID": null,
+          "pausedElapsed": 0,
+          "pendingRequestPresent": false,
+          "planID": "research.max-hangs",
+          "routineStartedIsNil": true,
+          "sequence": 18,
+          "taskCancelled": false,
+          "uptime": 91647.990399125
+        }
+      },
+      "loads": {
+        "CF602C16-A52A-4914-8ABE-1C8E7BCE66CA": {
+          "boardID": "zlagboard.evo",
+          "complete": true,
+          "epoch": 1791013109.019515,
+          "event": "startup-board-load-call",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "CF602C16-A52A-4914-8ABE-1C8E7BCE66CA",
+          "presentationID": "primary",
+          "sequence": 3,
+          "taskCancelled": false,
+          "uptime": 91646.741354625
+        },
+        "8A201C44-6C07-4317-A402-71426B727813": {
+          "boardID": "zlagboard.evo",
+          "complete": true,
+          "epoch": 1791013110.2728271,
+          "event": "startup-board-load-call",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "8A201C44-6C07-4317-A402-71426B727813",
+          "presentationID": "primary",
+          "sequence": 21,
+          "taskCancelled": false,
+          "uptime": 91647.99467241667
+        }
+      },
+      "spans": [
+        {
+          "name": "load",
+          "identity": [
+            "CF602C16-A52A-4914-8ABE-1C8E7BCE66CA"
+          ],
+          "begin": {
+            "boardID": "zlagboard.evo",
+            "complete": true,
+            "epoch": 1791013109.019515,
+            "event": "startup-board-load-call",
+            "handLifecycleCounts": {
+              "pair.constructor-entry": 0,
+              "pair.make-entry": 0,
+              "single.constructor-entry": 0,
+              "single.make-entry": 0
+            },
+            "loadAttempt": "CF602C16-A52A-4914-8ABE-1C8E7BCE66CA",
+            "presentationID": "primary",
+            "sequence": 3,
+            "taskCancelled": false,
+            "uptime": 91646.741354625
+          },
+          "end": {
+            "complete": true,
+            "epoch": 1791013109.663165,
+            "event": "startup-board-load-return",
+            "handLifecycleCounts": {
+              "pair.constructor-entry": 0,
+              "pair.make-entry": 0,
+              "single.constructor-entry": 0,
+              "single.make-entry": 0
+            },
+            "loadAttempt": "CF602C16-A52A-4914-8ABE-1C8E7BCE66CA",
+            "sceneLifecycleToken": "FC585195-AC80-444E-912E-EC97653235F5",
+            "sequence": 5,
+            "taskCancelled": false,
+            "uptime": 91647.38500875
+          },
+          "rightCensored": false
+        },
+        {
+          "name": "visibleCountdown",
+          "identity": [
+            "D75BD5F4-0A1A-4F2E-B7DE-C9674DB924E1"
+          ],
+          "begin": {
+            "activeStartUptime": null,
+            "armTaskPresent": false,
+            "armUptime": 91647.990530875,
+            "associationValid": true,
+            "attemptID": "D75BD5F4-0A1A-4F2E-B7DE-C9674DB924E1",
+            "audioEnabled": false,
+            "audioPreparation": "idle",
+            "complete": true,
+            "contextID": "ObjectIdentifier(0x0000000101d20200)|research.max-hangs",
+            "countdown": "initial",
+            "countdownKind": "nil",
+            "epoch": 1791013110.268714,
+            "event": "startup-visible-countdown-before",
+            "handLifecycleCounts": {
+              "pair.constructor-entry": 0,
+              "pair.make-entry": 0,
+              "single.constructor-entry": 0,
+              "single.make-entry": 0
+            },
+            "parentAttemptID": null,
+            "pausedElapsed": 0,
+            "pendingRequestPresent": false,
+            "planID": "research.max-hangs",
+            "routineStartedIsNil": true,
+            "sequence": 19,
+            "taskCancelled": false,
+            "uptime": 91647.99055945834
+          },
+          "end": {
+            "activeStartUptime": 91650.990530875,
+            "armTaskPresent": false,
+            "armUptime": 91647.990530875,
+            "associationValid": true,
+            "attemptID": "D75BD5F4-0A1A-4F2E-B7DE-C9674DB924E1",
+            "audioEnabled": false,
+            "audioPreparation": "idle",
+            "complete": true,
+            "contextID": "ObjectIdentifier(0x0000000101d20200)|research.max-hangs",
+            "countdown": "initial",
+            "countdownKind": "initial",
+            "epoch": 1791013110.2726688,
+            "event": "startup-visible-countdown-after",
+            "handLifecycleCounts": {
+              "pair.constructor-entry": 0,
+              "pair.make-entry": 0,
+              "single.constructor-entry": 0,
+              "single.make-entry": 0
+            },
+            "parentAttemptID": null,
+            "pausedElapsed": 0,
+            "pendingRequestPresent": false,
+            "planID": "research.max-hangs",
+            "routineStartedIsNil": false,
+            "sequence": 20,
+            "taskCancelled": false,
+            "uptime": 91647.99451633333
+          },
+          "rightCensored": false
+        },
+        {
+          "name": "load",
+          "identity": [
+            "8A201C44-6C07-4317-A402-71426B727813"
+          ],
+          "begin": {
+            "boardID": "zlagboard.evo",
+            "complete": true,
+            "epoch": 1791013110.2728271,
+            "event": "startup-board-load-call",
+            "handLifecycleCounts": {
+              "pair.constructor-entry": 0,
+              "pair.make-entry": 0,
+              "single.constructor-entry": 0,
+              "single.make-entry": 0
+            },
+            "loadAttempt": "8A201C44-6C07-4317-A402-71426B727813",
+            "presentationID": "primary",
+            "sequence": 21,
+            "taskCancelled": false,
+            "uptime": 91647.99467241667
+          },
+          "end": {
+            "complete": true,
+            "epoch": 1791013111.27345,
+            "event": "startup-board-load-return",
+            "handLifecycleCounts": {
+              "pair.constructor-entry": 1,
+              "pair.make-entry": 1,
+              "single.constructor-entry": 0,
+              "single.make-entry": 0
+            },
+            "loadAttempt": "8A201C44-6C07-4317-A402-71426B727813",
+            "sceneLifecycleToken": "F80F1102-B610-462E-BF93-5E8A28737CD5",
+            "sequence": 30,
+            "taskCancelled": false,
+            "uptime": 91648.99530033334
+          },
+          "rightCensored": false
+        }
+      ]
+    },
+    "branch": {
+      "current": [],
+      "sessions": {},
+      "events": 0
+    }
+  },
+  "passed": false,
+  "visualResult": "REQUIRES_SEPARATE_WHOLE_IMAGE_REVIEW",
+  "oldPrestartAndSupplemental": "NOT_APPLICABLE_AS_MUTED_GATE; ORIGINAL_BYTES_RETAINED",
+  "limit": "Technical proof only, no repair/acceptance or IMAGE authorization"
+}
