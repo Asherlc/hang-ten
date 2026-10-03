@@ -1,0 +1,28 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "status": "Accuracy passed; complete-speed screen failed",
+  "steps": 540,
+  "maximumPropagatedDifference": 2.7150919660112112e-05,
+  "maximumStrictDifference": 5.936259623263494e-06,
+  "strictComparisons": 72,
+  "candidateQPs": 1603,
+  "controlQPs": 1657,
+  "caps": 0,
+  "retries": 0,
+  "candidateTotalSeconds": 8.681361625102,
+  "controlTotalSeconds": 9.6146659997612,
+  "candidateP95Seconds": 0.038072708339313976,
+  "controlP95Seconds": 0.04796783332130872,
+  "medianPairedRatio": 1.001264179053847,
+  "environment": "Mac load42.33, CPU100% busy in immediate post-run observation. Absolute timings are contention-confounded; correction counts and paired ratios show no broadly sufficient improvement. No rerun to rescue threshold.",
+  "independentlyAbsentGroups": [
+    36223,
+    37926
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-77a8fab55-spectral-trajectory/native/result.json": "1808f4a532a5e38556d34a7ef759cee606f62aa15420f0bf4c976629e22561e5",
+    ".context/strong-owl-live-physics-armijo-77a8fab55-spectral-trajectory/native/provenance.json": "8b679fce7ca09efb93995a05d58a92cb7838aacc9a911adede44dfde9762758c",
+    ".context/strong-owl-live-physics-armijo-77a8fab55-spectral-trajectory/native/resources.jsonl": "ae3dbd2c28bb95423744d77d8cd171dcf7b19e1b370c2420dc698fbcd71e3f6e"
+  }
+}

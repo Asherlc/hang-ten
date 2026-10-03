@@ -37,3 +37,7 @@ Astra validated formula/units, history and attachment coordinate requirements.
 140 timing, register overhead ratio<=1.10, candidate<=2QP, exact state/control
 decisions (activationfrom3 guaranteesnoarithmeticpathchange at2 corrections).
 Full540 usesfirst20/every10 strict references and unchangedreference50um/physical.
+
+Full540accuracyPASS,maxprop27.151um/strict5.936um,caps/retries0,tailsPASS.
+StandalonecostFAIL1603vs1657QP,medianpaired1.00126,p9538.073ms under
+CPUcontention. Noapp/videoadoption; trajectoryauditretained.
