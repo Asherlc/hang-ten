@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "presentationID": "primary",
-  "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+  "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
   "suspension": {
     "type": "cadRoutedCord",
     "bodyNodeID": "nature_body",

@@ -1,0 +1,74 @@
+{
+  "passed": true,
+  "bodyEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "pinchLogicalEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "woodEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "stoneEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "sharedJugFaces": [
+    30,
+    43,
+    69
+  ],
+  "jugOnlyFaces": [
+    28,
+    29,
+    41,
+    42,
+    59,
+    65
+  ],
+  "pinchPrimaryFaces": [
+    23,
+    31,
+    44
+  ],
+  "jugAreaMm2": 2954.4300695553457,
+  "logicalPinchAreaMm2": 4679.468914507713,
+  "nodeOverlapAreas": {
+    "nature_wood / nature_stone": 0.0,
+    "nature_wood / nature_pinch": 0.0,
+    "nature_wood / nature_jug": 0.0,
+    "nature_wood / nature_jug_ends": 0.0,
+    "nature_stone / nature_pinch": 0.0,
+    "nature_stone / nature_jug": 0.0,
+    "nature_stone / nature_jug_ends": 0.0,
+    "nature_pinch / nature_jug": 0.0,
+    "nature_pinch / nature_jug_ends": 0.0,
+    "nature_jug / nature_jug_ends": 0.0
+  },
+  "offBodyAreas": {
+    "nature_wood": 0.0,
+    "nature_stone": 0.0,
+    "nature_pinch": 0.0,
+    "nature_jug": 0.0,
+    "nature_jug_ends": 0.0
+  },
+  "depthsMm": {
+    "wood": 15.000000000000096,
+    "stone": 15.000000000000002,
+    "pinch": 60.0
+  },
+  "manifestIdentical": true,
+  "badStates": {},
+  "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38"
+}

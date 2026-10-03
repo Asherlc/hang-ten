@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
-  "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+  "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
   "modelBounds": {
     "min": [
       -0.050000001,
@@ -26,6 +26,11 @@
       "additionalContactIDs": [
         "pinch-60"
       ]
+    },
+    {
+      "nodeID": "nature_jug_ends",
+      "role": "contact",
+      "contactID": "pull-up-jug"
     },
     {
       "nodeID": "nature_pinch",
@@ -85,21 +90,22 @@
     },
     "pull-up-jug": {
       "nodeIDs": [
-        "nature_jug"
+        "nature_jug",
+        "nature_jug_ends"
       ],
       "facePlaneAABB": {
         "min": [
-          0.080000012,
-          0.958333341
+          0.0,
+          0.866666673
         ],
         "max": [
-          0.919999988,
+          1.0,
           1.0
         ]
       },
       "center": [
         0.5,
-        0.97916667
+        0.933333337
       ]
     },
     "wood-edge-15-incut": {

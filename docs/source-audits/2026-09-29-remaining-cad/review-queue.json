@@ -312,25 +312,24 @@
       "package": "nature-stone-hanger-mini",
       "boardID": "nature.stone-hanger-mini",
       "name": "Nature Climbing Stone Hanger Mini",
-      "humanReview": "Corrected outside top/back jug and seated compact cords ready for CAD review; human acceptance pending; current app appearance and interaction unverified.",
-      "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
-      "reviewPage": "nature-stone-hanger-mini/review10-correction-2026-10-02/index.html",
+      "humanReview": "Jug wraps around existing front/top/back crown and rounded ends; ready for human CAD review; current app appearance and interaction unverified.",
+      "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
+      "reviewPage": "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/index.html",
       "sourceAudit": "nature-stone-hanger-mini/native-authoring.md",
       "comparisons": [
-        "nature-stone-hanger-mini/review10-correction-2026-10-02/views/prior-current-jug-front-side-top.png",
-        "nature-stone-hanger-mini/review10-correction-2026-10-02/views/prior-current-cord-front-side-top.png"
+        "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/prior-current-jug-front-side-top.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
-          "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
+          "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
+          "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83"
         }
       },
       "appReview": "nature-stone-hanger-mini/completion-review/runtime-validation.json",
       "appReviewPage": "nature-stone-hanger-mini/completion-review/index.html",
-      "suspensionSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1",
+      "suspensionSHA256": "b7dbc671085b07eb071403df86dec17fcc52e7c1652437923f0786b2afcf15f6",
       "humanReviewRecord": "nature-stone-hanger-mini/human-review.json",
-      "latestRevision": "nature-stone-hanger-mini/review10-correction-2026-10-02/review.md",
+      "latestRevision": "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/review.md",
       "runtimeRevision": "nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
       "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views.",
       "reviewAnswer": "Lgtm",
@@ -361,33 +360,36 @@
         "appReviewPage": "nature-stone-hanger-mini/app-review/index.html"
       },
       "latestRuntimeAttempt": "nature-stone-hanger-mini/runtime-retry-2026-10-02/review.md",
-      "finalCADReviewQuestion": "Does the Mini’s jug and cord look right now?",
+      "finalCADReviewQuestion": "Does the Mini’s wrapped jug highlight look right now?",
       "completionHumanAcceptance": "pending",
       "cadReviewViews": [
-        "nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-jug-loaded-front.png",
-        "nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-jug-loaded-back.png",
-        "nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-granite-loaded.png",
-        "nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-wood-loaded.png",
-        "nature-stone-hanger-mini/review10-correction-2026-10-02/views/mini-corrected-pinch-loaded.png"
+        "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-jug-loaded-front.png",
+        "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-jug-loaded-back.png",
+        "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-granite-loaded.png",
+        "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-wood-loaded.png",
+        "nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-pinch-loaded.png"
       ],
       "completionValidationPage": "nature-stone-hanger-mini/completion-review/index.html",
       "latestHumanFeedback": {
         "owner": "placid-badger",
-        "dateUTC": "2026-10-03T03:32:26.588696+00:00",
         "reviewNumber": 10,
         "boardID": "nature.stone-hanger-mini",
-        "rawFeedback": [
-          "those cords dont look right",
-          "and the jug isnt the right part"
-        ],
-        "identityClarification": {
-          "question": "For the Stone Hanger Mini, is the pull-up jug the rounded outside top/back rail, or a lip inside the recess?",
-          "answer": "Rounded outside top/back rail"
+        "recordedUTC": "2026-10-03T05:39:07.158951+00:00",
+        "rawFeedback": "Jokes should wrap all the way around like other ones do.",
+        "clarification": {
+          "question": "By “Jokes should wrap all the way around,” do you mean the jug highlight should wrap around the top rail onto its front and back?",
+          "answer": "Yes, the jug highlight"
         },
-        "priorPreviewAccepted": false,
-        "physicalCorrectionAuthorized": true,
-        "priorOverallBodyApprovalPreserved": true,
-        "scope": "Jug contact ownership, usable upright pose, cord routing/seating; accepted overall body remains."
+        "interpretation": "Extend existing upper-rail jug contact continuously over the front and back rolls and rounded ends.",
+        "priorShownCommit": "1acbb5ba98a2246d5ba31efe8ff5dea7a754f242",
+        "priorShownIdentity": {
+          "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
+          "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+          "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
+          "sidecarSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1"
+        },
+        "currentHumanAcceptance": "pending",
+        "earlierOverallBodyApprovalPreserved": true
       }
     },
     {
