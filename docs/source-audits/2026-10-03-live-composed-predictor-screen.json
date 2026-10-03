@@ -1,0 +1,74 @@
+{
+  "owner": "strong-owl-live-physics",
+  "status": "CLOSED: accuracy failure, unadopted",
+  "evidence": {
+    ".context/strong-owl-live-physics-armijo-b56ab390d-composed-authorized/native/result.json": "e28c37fd1c129f1eec4e5f445aa4e518cae40f69c420665bcef3b00a44039de1",
+    ".context/strong-owl-live-physics-armijo-b56ab390d-composed-authorized/native/provenance.json": "4df8e04e254187417912b8455b128e39f79821456867c8115304a23b40f713e0",
+    ".context/strong-owl-live-physics-armijo-b56ab390d-composed-authorized/native/resources.jsonl": "12b84eb8875fe04adab6cac5d7e666c690457dac22521a7381c72792cf8e519b"
+  },
+  "steps": [
+    {
+      "boardHeightDifference": 1.9424140074164598e-10,
+      "boardVelocityDifference": 4.3651189136906243e-07,
+      "candidateCaps": 0,
+      "candidateQPs": 6,
+      "candidateRetries": 0,
+      "candidateSeconds": 0.013921666657552123,
+      "controlCaps": 0,
+      "controlQPs": 7,
+      "controlRetries": 0,
+      "controlSeconds": 0.017614416661672294,
+      "controlStep": 2,
+      "difference": 2.440272461474977e-05,
+      "maximumVelocityDifference": 0.028514230093800535,
+      "metrics": {
+        "boardDisplacement": 0.00046260670855510777,
+        "clearanceMargin": 9.999344533918614e-05,
+        "geometryAccepted": true,
+        "lengthError": 3.3865462212290254e-08,
+        "speed": 0.0738123690765312,
+        "strain": 7.151114940207037e-06
+      },
+      "phase": 0,
+      "settled": false,
+      "step": 1,
+      "strictDifference": 2.4387365784533887e-05
+    },
+    {
+      "boardHeightDifference": 1.3124762851535188e-06,
+      "boardVelocityDifference": 0.028975086138101805,
+      "candidateCaps": 0,
+      "candidateQPs": 12,
+      "candidateRetries": 0,
+      "candidateSeconds": 0.05355229167616926,
+      "controlCaps": 0,
+      "controlQPs": 20,
+      "controlRetries": 0,
+      "controlSeconds": 0.08213987499766517,
+      "controlStep": 4,
+      "difference": 0.00017390138175263473,
+      "maximumVelocityDifference": 0.20801715349278968,
+      "metrics": {
+        "boardDisplacement": 0.0009271901810045113,
+        "clearanceMargin": 9.952820634899539e-05,
+        "geometryAccepted": true,
+        "lengthError": 1.3699281462553614e-06,
+        "speed": 0.6367023592976218,
+        "strain": 0.0001251637471209044
+      },
+      "phase": 0,
+      "settled": false,
+      "step": 2
+    }
+  ],
+  "failure": "invalid(\"matched-time pose/cap/retry step 2\")",
+  "physicalGatePassedBothSteps": true,
+  "referencePoseLimitMetres": 5e-05,
+  "groupsIndependentlyAbsent": [
+    83462,
+    84195
+  ],
+  "activeContactDiagnostic": "QP-local row IDs, particle incidence and full affine geometry; no stable triangle-feature ID claim",
+  "checkpointFixture": "nonempty contact-hint multiplier scaling and all other persisted fields preservation passed",
+  "limits": "Only two attempted host steps. No complete trajectory, settled tail, p95, simulator, video or adoption."
+}

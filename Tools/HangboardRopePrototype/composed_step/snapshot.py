@@ -72,6 +72,15 @@ def solver_source(source):
             state.boardVerticalVelocity=(state.boardHeight-old.boardHeight)/dt
         }''')
     source=once(source,'        lastStepDuration=dt','        lastStepDuration=dt\n        composedResponseSquare=currentResponseSquare')
+    # IDs are local to this QP. Particle incidence and complete affine geometry
+    # are diagnostic signatures, not stable triangle-feature identities.
+    source=once(source,'"strain":maximumStrain(),"rows":rows.count,"slope":armijoSlope as Any? ?? NSNull(),', '''"strain":maximumStrain(),"rows":rows.count,
+                        "activeContacts":solved.ids.filter{rows[$0].contact}.map { id -> [String:Any] in
+                            let row=rows[id]
+                            return ["qpRow":id,"rope":row.rope,"secondRope":row.secondRope as Any? ?? NSNull(),
+                                "particles":row.particles,"gradients":row.gradients.map{[$0.x,$0.y,$0.z]},
+                                "boardGradient":row.boardGradient,"residual":row.residual]
+                        },"slope":armijoSlope as Any? ?? NSNull(),''')
     return source+'\n'+(Path(__file__).parent/'Checkpoint.swift').read_text()
 
 

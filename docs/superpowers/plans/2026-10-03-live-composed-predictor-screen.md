@@ -1,4 +1,4 @@
-# Proposed composed-predictor 120 Hz screen (user-authorized isolated experiment)
+# Composed-predictor 120 Hz screen (CLOSED: accuracy failure)
 
 The authorized unchanged-integrator 120 Hz screen is CLOSED. Its first height
 error is 123.756 µm; 123.755 µm is explained by one coarse versus two fine gravity
@@ -66,3 +66,7 @@ required validation remain fixed. No redundant experiment permission is needed.
 Native preflight at240Hz must preserve20 complete persisted checkpoints and prior
 control decisions before the120Hz screen starts. Curvature tension and carried
 contact multiplier hints are both converted consistently for strict references.
+
+Result: first comparison24.403µm; second173.901µm >50µm. Original-mesh physical
+gates pass, caps/retries0. Closed without trajectory/simulator/adoption. See
+docs/source-audits/2026-10-03-live-composed-predictor-screen.md.

@@ -24,9 +24,21 @@ func composedFixtures(initial:RopeDynamicsSolver,input:RopePhysicsInput,collider
     checkpoint["composedResponseSquare"]=RopeComposedStep.responseSquare
     checkpoint["lastStepDuration"]=2*h
     checkpoint["distanceTension"]=initial.state.ropes.map{Array(repeating:2+D,count:$0.restLengths.count)}
+    checkpoint["extraHints"]=[["indices":[0],"coefficients":[1.0],"border":[0.0],"residual":0.01,"lambda":2+D]]
     let restored=try RopeDynamicsSolver.restoreComposedReference(input:input,collider:collider,data:JSONSerialization.data(withJSONObject:checkpoint,options:[.sortedKeys]),strict:true)
     let values=restored.composedCheckpoint()
     guard (values["distanceTension"] as! [[Double]]).flatMap({$0}).allSatisfy({abs($0-1)<1e-14}),
           values["lastStepDuration"] as! Double==h else {throw RopePhysicsError.invalid("strict-reference tension conversion fixture")}
+    var expected=checkpoint
+    let factor=h*h/RopeComposedStep.responseSquare
+    expected["distanceTension"]=(checkpoint["distanceTension"] as! [[Double]]).map{$0.map{$0*factor}}
+    expected["extraHints"]=(checkpoint["extraHints"] as! [[String:Any]]).map {hint in
+        var converted=hint;converted["lambda"]=(hint["lambda"] as! Double)*factor;return converted
+    }
+    expected["lastStepDuration"]=h
+    expected["composedResponseSquare"]=h*h
+    guard try JSONSerialization.data(withJSONObject:values,options:[.sortedKeys]) == JSONSerialization.data(withJSONObject:expected,options:[.sortedKeys]) else {
+        throw RopePhysicsError.invalid("strict-reference changed another persisted field or missed contact hint conversion")
+    }
     print("PASS composed fixtures",cases,"old gravity RED, constant-force GREEN, changing-force defect, arrival and reference scales")
 }
