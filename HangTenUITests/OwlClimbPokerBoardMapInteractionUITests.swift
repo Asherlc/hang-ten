@@ -220,10 +220,10 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
-    func testLandscapeMultiPresentationSquareBoardDetailKeepsMapInViewport() throws {
+    func testLandscapeMultiPresentationBoardDetailKeepsMapInViewport() throws {
         let (app, map) = try launchLandscapeBoardDetail(
-            boardID: "nature.stone-hanger-mini",
-            expectedBoardName: "Stone Hanger Mini"
+            boardID: "plateau.lifting-edge",
+            expectedBoardName: "Lifting Edge"
         )
         assertMap(map, isInside: app)
 
