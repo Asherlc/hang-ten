@@ -1,0 +1,43 @@
+{
+  "reviewDate": "2026-09-29",
+  "owner": "slim-sheep",
+  "approval": "User approved the exact four retained visual sources and both physical revisions in the active 2026-09-29 session before CAD authoring.",
+  "sources": [
+    {
+      "revision": "2011 polyester",
+      "publisher": "Eva López (product designer)",
+      "pageURL": "https://en-eva-lopez.blogspot.com/2012/04/transgression-fingerboard-for-high.html",
+      "imageURL": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh6_9GIr5pvh5xAdrfosmmHkjqEqCH2ADKUJ7ju7lhziAgLARDXQxgb7j_s8sWz2RqhBIznpqJgF9LOor_V9K5d3NYdMCwK14ZZ66B1Pf70xNRgTLln7IDMbRmcGUx4tDGR0PUn2b2zhhk/s1600/04+transgression.JPG",
+      "file": "designer-2.jpg",
+      "sha256": "f4f92138bedcdbd8483a8d64c8e0a096dfa0b172fb486e6913674bddf0128732",
+      "supports": "original front detail; eight engraved edge depths"
+    },
+    {
+      "revision": "2011 polyester",
+      "publisher": "Eva López (product designer)",
+      "pageURL": "https://en-eva-lopez.blogspot.com/2012/04/transgression-fingerboard-for-high.html",
+      "imageURL": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiQBFChbiNnbhkVMGaxklKMI3GdnopbVyAEVIghcK_U2ZjrsAMmYUjEx5ewdOrtXHimyJCndMXnotbVcUk3VY2rH5-GeIEDHYOI1H52a6ifAUlbxWQUnT7sgEth5Xn5rTzJrBkonUcsq60/s1600/03+transgression+and+poster.jpg",
+      "file": "designer-1.jpg",
+      "sha256": "f2d5bb71347829ac8d49aae68eb1e5e27bb932eae37344800094177cfb7715d5",
+      "supports": "original oblique side; stepped shell and top jug"
+    },
+    {
+      "revision": "2013 polyurethane",
+      "publisher": "Kris Hampton / Power Company Climbing (secondary product review)",
+      "pageURL": "https://www.powercompanyclimbing.com/blog/2014/06/review-transgression-hangboard-and.html",
+      "imageURL": "https://static1.squarespace.com/static/56a45e4b42f552687683ee04/t/56b61311b4ed3bb630368e56/1454773009541/1000w/",
+      "file": "pu-review-1.jpg",
+      "sha256": "001cff4219a0c8635e18dde7cd4f885abee0c1cd6dc35811d48f50c9a36dc069",
+      "supports": "polyurethane full front; Transgression lettering, eight edges and jug"
+    },
+    {
+      "revision": "2013 polyurethane",
+      "publisher": "Kris Hampton / Power Company Climbing (secondary product review)",
+      "pageURL": "https://www.powercompanyclimbing.com/blog/2014/06/review-transgression-hangboard-and.html",
+      "imageURL": "https://static1.squarespace.com/static/56a45e4b42f552687683ee04/t/56b61311b4ed3bb630368e54/1454773009541/1000w/",
+      "file": "pu-review-0.jpg",
+      "sha256": "34639e7899c42e897b7499a4cd0b271108703d1e60f7f711e1684f6e6817b3a2",
+      "supports": "polyurethane oblique contact detail; edge rounding"
+    }
+  ]
+}

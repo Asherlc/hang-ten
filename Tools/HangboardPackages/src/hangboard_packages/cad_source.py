@@ -367,7 +367,7 @@ def merge_suspension_sidecar(board: dict, package_root: Path) -> dict:
         document = loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as error:
         raise ManifestError(f"suspension.json is unreadable or invalid: {error}") from error
-    if isinstance(document, dict) and document.get("schemaVersion") == 2:
+    if isinstance(document, dict) and document.get("schemaVersion") == 2 and "entries" in document:
         if set(document) != {"schemaVersion", "entries"} or not isinstance(document["entries"], list) or not document["entries"]:
             raise ManifestError("suspension.json schema 2 requires a nonempty entries array")
         seen = set()
@@ -387,14 +387,7 @@ def merge_suspension_sidecar(board: dict, package_root: Path) -> dict:
     return _merge_suspension_entry(board, package_root, document)
 
 
-def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> dict:
-    required = {"schemaVersion", "presentationID", "modelSHA256", "suspension"}
-    if not isinstance(document, dict) or not required <= set(document) \
-            or set(document) - required - {"ropeSolver", "equipmentObjectID"} or document["schemaVersion"] != 1:
-        raise ManifestError("suspension.json has invalid schema or members")
-    # Authoring-only settings for Tools/HangboardCAD/solve_threaded_rope.py;
-    # never merged into board.json.
-    solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
+def _validate_suspension_solver(solver: dict, document: dict) -> None:
     if isinstance(solver, dict) and solver.get("method") == "nativeRoutes":
         if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane", "tightening", "pathSearch", "grooveGuides"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
                 or isinstance(solver["clearance"], bool) \
@@ -463,14 +456,34 @@ def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> 
         if any("mouthAxis" in solver["terminalsByStrandID"][strand["id"]]
                and (strand["kind"] != "lead" or solver.get("sectionPlane", "fixed") != "anchor") for strand in strands):
             raise ManifestError("nativeRoutes mouthAxis requires a lead in an anchor section plane")
-    elif not isinstance(solver, dict) or set(solver) != {"sectionPlane"} \
-            or solver["sectionPlane"] not in ("mouth-x", "anchor"):
-        raise ManifestError("suspension.json ropeSolver must be {\"sectionPlane\": \"mouth-x\" | \"anchor\"}")
+    elif not isinstance(solver, dict) or "sectionPlane" not in solver \
+            or set(solver) - {"sectionPlane", "channelProfile"} \
+            or solver["sectionPlane"] not in ("mouth-x", "anchor") \
+            or ("channelProfile" in solver and (solver["channelProfile"] != "rectangular" or solver["sectionPlane"] != "mouth-x")):
+        raise ManifestError("suspension.json ropeSolver requires mouth-x or anchor; rectangular channelProfile requires mouth-x")
+
+
+def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> dict:
+    instance_setup = isinstance(document, dict) and document.get("schemaVersion") == 2
+    payload_key = "instanceSuspensions" if instance_setup else "suspension"
+    required = {"schemaVersion", "presentationID", "modelSHA256", payload_key}
+    optional = {"ropeSolver"} if instance_setup else {"ropeSolver", "equipmentObjectID"}
+    if not isinstance(document, dict) or not required <= set(document) \
+            or set(document) - required - optional or document["schemaVersion"] not in (1, 2):
+        raise ManifestError("suspension.json has invalid schema or members")
+    # Authoring-only settings for Tools/HangboardCAD/solve_threaded_rope.py;
+    # never merged into board.json.
+    solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
+    if not isinstance(document[payload_key], dict):
+        raise ManifestError("suspension.json suspension payload must be an object")
+    setups = document[payload_key].values() if instance_setup else [document["suspension"]]
+    for setup in setups:
+        _validate_suspension_solver(solver, {"suspension": setup})
     presentation_id = document["presentationID"]
     model_hash = document["modelSHA256"]
     if not isinstance(presentation_id, str) or not isinstance(model_hash, str) \
             or not re.fullmatch(r"[0-9a-f]{64}", model_hash) \
-            or not isinstance(document["suspension"], dict):
+            or not isinstance(document[payload_key], dict):
         raise ManifestError("suspension.json has invalid presentationID, modelSHA256, or suspension")
     presentations = board.get("presentations")
     if not isinstance(presentations, list):
@@ -504,6 +517,24 @@ def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> 
         raise ManifestError(f"suspension.json descriptor is unreadable or invalid: {error}") from error
     if not isinstance(descriptor, dict) or descriptor.get("modelSHA256") != model_hash:
         raise ManifestError("suspension.json modelSHA256 does not match its descriptor")
+    if instance_setup:
+        import copy
+        instances = media.get("instances")
+        setups = document["instanceSuspensions"]
+        if not isinstance(instances, list) or len(instances) != 2 or not all(
+            isinstance(item, dict) and isinstance(item.get("equipmentObjectID"), str)
+            and item["equipmentObjectID"] for item in instances
+        ):
+            raise ManifestError("instanceSuspensions requires exactly two reusable instances with valid equipment IDs")
+        if len(setups) != len(instances) or set(setups) != {item["equipmentObjectID"] for item in instances}:
+            raise ManifestError("instanceSuspensions must identify every reusable instance exactly once")
+        if any("suspension" in item for item in instances) or not all(isinstance(value, dict) for value in setups.values()):
+            raise ManifestError("instanceSuspensions cannot replace embedded suspension")
+        merged = copy.deepcopy(board)
+        target = next(item for item in merged["presentations"] if item["id"] == presentation_id)
+        for instance in target["media"]["instances"]:
+            instance["suspension"] = copy.deepcopy(setups[instance["equipmentObjectID"]])
+        return merged
     merged = dict(board)
     merged_presentations = []
     for presentation in presentations:

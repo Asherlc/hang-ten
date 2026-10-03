@@ -206,6 +206,16 @@ Every seek stops the active audio utterance and re-anchors audio to the new
 elapsed position. The normal cue for the selected step can therefore play once
 without a stale cue continuing from the prior step.
 
+## Grip finger display default
+
+When a plan step omits `fingerConfiguration`, inline hand cues assume index,
+middle, ring, and pinky and label the
+fallback `4 fingers (assumed)`. Explicit selections always override that
+display default, including reduced-finger configurations. The default is a
+product behavior requested by the operator, not a claim from a training-plan
+source. Source plan fields and recorded activity metadata retain their
+original unspecified value.
+
 ## Completed activity recording
 
 The completion handoff records the exact `TrainingBoard` selected for the

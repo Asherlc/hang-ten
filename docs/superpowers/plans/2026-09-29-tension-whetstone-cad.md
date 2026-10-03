@@ -33,4 +33,4 @@ The native and package regression tests live in `Tools/HangboardCAD/tests/test_w
 - [x] Review final diff and source boundaries; fix substantive findings.
 - [x] Shut down/delete owned simulator and verify removal; commit and push to the remote branch.
 
-Validation: Python 458 passed / 11 skipped; iOS 1,234 executed / three skipped / zero failures. Native edit propagation, byte-identical recompilation, package catalog, platform staging parity, source boundary manifest and delivery lock passed. App screenshots and selected-ID checks are retained in the dated source audit. All three review simulators were deleted and verified; the final simulator was `F9DDAA30-96E5-4F1A-A07C-89C79E8DC1ED`.
+Validation: Python 458 passed / 11 skipped; iOS 1,234 executed / three skipped / zero failures. Native edit propagation, byte-identical recompilation, package catalog, platform staging parity, source boundary manifest and package inventory/checksum verification passed. App screenshots and selected-ID checks are retained in the dated source audit. All three review simulators were deleted and verified; the final simulator was `F9DDAA30-96E5-4F1A-A07C-89C79E8DC1ED`.

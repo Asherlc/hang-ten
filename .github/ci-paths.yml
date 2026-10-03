@@ -23,14 +23,13 @@ cad:
   - 'Hangboards/**/assets/primary.usdz'
   - 'Hangboards/**/assets/primary.model.json'
   - 'scripts/hangboard-packages.sh'
-  - 'scripts/verify-model-delivery.py'
-  - 'docs/model-delivery-lock.json'
 metadata:
   - 'metadata/**'
   - 'scripts/validate-app-store-metadata.sh'
   - 'HangTen.xcodeproj/**'
   - 'HangTen/Resources/Assets.xcassets/AppIcon.appiconset/**'
 workflow:
+  - 'scripts/ci-run-xctest.sh'
   - '.github/workflows/**'
   - '.github/ci-paths.yml'
   - '.github/actions/**'

@@ -29,8 +29,8 @@ def test_reusable_rock_rings_discovers_documented_per_instance_topology() -> Non
 
     topologies = _model_package_topologies(inventory)
 
-    assert topologies["metolius.rock-rings-3d"] == "pairedLeadCord"
-    # Penta Evo's CAD package uses separate per-instance native route graphs.
+    assert topologies["metolius.rock-rings-3d"] == "threadedLoopCord"
+    # Penta Evo keeps separate per-instance native route graphs.
     assert topologies["yy.penta-evo"] == "cadRoutedCord"
 
 

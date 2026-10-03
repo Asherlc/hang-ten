@@ -50,6 +50,15 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
     _cord_spec.loader.exec_module(_cord_module)
     validate_cord_paths = _cord_module.validate_cord_paths
 
+try:
+    from .rope_physics import load_rope_physics
+except ImportError:  # direct-file staging consumers
+    _physics_spec = importlib.util.spec_from_file_location("hangboard_rope_physics", Path(__file__).with_name("rope_physics.py"))
+    assert _physics_spec and _physics_spec.loader
+    _physics_module = importlib.util.module_from_spec(_physics_spec)
+    _physics_spec.loader.exec_module(_physics_module)
+    load_rope_physics = _physics_module.load_rope_physics
+
 
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
@@ -535,6 +544,7 @@ class PresentationMediaModel:
     suspension: "BoardModelSuspension | None" = None
     orientation: "BoardModelOrientation | None" = None
     instances: "tuple[BoardModelInstance, BoardModelInstance] | None" = None
+    physics_descriptor_path: str | None = None
 
 
 PresentationMedia = PresentationMediaRaster | PresentationMediaModel
@@ -637,7 +647,7 @@ class BoardModelPassage:
 @dataclass(frozen=True)
 class BoardModelPassagePairs:
     left: tuple[BoardModelPassage, BoardModelPassage]
-    right: tuple[BoardModelPassage, BoardModelPassage]
+    right: tuple[BoardModelPassage, ...]
 
 
 @dataclass(frozen=True)
@@ -656,13 +666,14 @@ class BoardModelCordBranch:
 @dataclass(frozen=True)
 class BoardModelTwoBranchSuspension:
     passages: BoardModelPassagePairs
-    branches: tuple[BoardModelCordBranch, BoardModelCordBranch]
+    branches: tuple[BoardModelCordBranch, ...]
     anchor: BoardModelInvisibleAnchor
     canonical_poses: Mapping[str, BoardModelCanonicalPose]
     mesh_wrap_clearance: float | None = None
     internal_loop_clearance: float | None = None
     internal_loop_winding_by_passage_id: Mapping[str, str] | None = None
     internal_loop_channel_length_by_branch_id: Mapping[str, float] | None = None
+    internal_loop_channel_points_by_branch_id: Mapping[str, tuple] | None = None
 
 
 @dataclass(frozen=True)
@@ -849,7 +860,8 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
                 raise ValueError("cadRoutedCord requires an exact native-generated wrappedRoutes cache for every strand")
         return BoardModelCADRoutedCord(_string(payload["bodyNodeID"], source), tuple(strands),
             _load_model_anchor(payload["anchor"], f"{source}.anchor"), poses)
-    if suspension_type == "twoBranchCord":
+    if suspension_type in ("twoBranchCord", "threadedLoopCord"):
+        threaded_loop = suspension_type == "threadedLoopCord"
         _closed(payload, {"type", "passages", "branches", "anchor", "canonicalPoses"}, source,
                 optional={"meshWrap", "internalLoop"})
         _canonical_member_order(
@@ -860,13 +872,19 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         passages_payload = _mapping(payload["passages"], passages_source)
         _closed(passages_payload, {"left", "right"}, passages_source)
         _canonical_member_order(passages_payload, ("left", "right"), passages_source)
-        parsed_pairs: dict[str, tuple[BoardModelPassage, BoardModelPassage]] = {}
+        # One sling through one CAD channel has two visible legs, not two
+        # separate loops. Retain the wire type and restrict its one-loop form
+        # to connected mouths with a complete native-solid route cache.
+        single_loop = threaded_loop or ("internalLoop" in payload and passages_payload["right"] == [])
+        parsed_pairs: dict[str, tuple[BoardModelPassage, ...]] = {}
         all_passage_ids: set[str] = set()
         for side in ("left", "right"):
             side_source = f"{passages_source}.{side}"
             raw_passages = passages_payload[side]
-            if not isinstance(raw_passages, list) or len(raw_passages) != 2:
-                raise ValueError(f"{side_source} must contain exactly two passages")
+            expected_count = 0 if single_loop and side == "right" else 2
+            if not isinstance(raw_passages, list) or len(raw_passages) != expected_count:
+                count_label = "zero" if expected_count == 0 else "two"
+                raise ValueError(f"{side_source} must contain exactly {count_label} passages")
             passages: list[BoardModelPassage] = []
             for index, raw_passage in enumerate(raw_passages):
                 passage_source = f"{side_source}[{index}]"
@@ -902,7 +920,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
                     _string(passage_payload["provenance"], f"{passage_source}.provenance"),
                     through_bore,
                 ))
-            parsed_pairs[side] = (passages[0], passages[1])
+            parsed_pairs[side] = tuple(passages)
         passage_pairs = BoardModelPassagePairs(parsed_pairs["left"], parsed_pairs["right"])
         all_passages = passage_pairs.left + passage_pairs.right
         if len({passage.is_through_bore for passage in all_passages}) != 1:
@@ -919,13 +937,14 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         internal_loop_clearance = None
         internal_loop_winding_by_passage_id = None
         internal_loop_channel_length_by_branch_id = None
+        channel_points = None
         if "internalLoop" in payload:
             if through_bore or mesh_wrap_clearance is not None:
                 raise ValueError("internalLoop requires paired point mouths and no exterior meshWrap")
             loop_source = f"{source}.internalLoop"
             loop = _mapping(payload["internalLoop"], loop_source)
-            _closed(loop, {"clearance", "windingByPassageID", "channelLengthByBranchID"}, loop_source)
-            _canonical_member_order(loop, ("clearance", "windingByPassageID", "channelLengthByBranchID"), loop_source)
+            _closed(loop, {"clearance", "windingByPassageID", "channelLengthByBranchID"}, loop_source, optional={"channelPointsByBranchID"})
+            _canonical_member_order(loop, tuple(key for key in ("clearance", "windingByPassageID", "channelLengthByBranchID", "channelPointsByBranchID") if key in loop), loop_source)
             internal_loop_clearance = _positive_number(loop["clearance"], f"{loop_source}.clearance")
             winding = _mapping(loop["windingByPassageID"], f"{loop_source}.windingByPassageID")
             if set(winding) != all_passage_ids:
@@ -940,13 +959,34 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
                 key: _positive_number(value, f"{loop_source}.channelLengthByBranchID.{key}")
                 for key, value in lengths.items()
             }
+        if threaded_loop:
+            if internal_loop_clearance is None or "channelPointsByBranchID" not in loop:
+                raise ValueError("threadedLoopCord requires a measured connected channel")
+            routes = _mapping(loop["channelPointsByBranchID"], f"{loop_source}.channelPointsByBranchID")
+            if set(routes) != set(internal_loop_channel_length_by_branch_id):
+                raise ValueError("channel points must cover every branch")
+            channel_points = {}
+            for key, route in routes.items():
+                if not isinstance(route, list) or len(route) < 2:
+                    raise ValueError("channel must have at least two points")
+                points = tuple(_finite_vector3(point, f"{loop_source}.{key}") for point in route)
+                if points[0] != all_passages[0].point_in_model or points[-1] != all_passages[-1].point_in_model:
+                    raise ValueError("channel must join its two mouths")
+                length = sum(math.dist(a, b) for a, b in zip(points, points[1:]))
+                if any(math.dist(a, b) < 1e-7 for a,b in zip(points, points[1:])) or abs(length - internal_loop_channel_length_by_branch_id[key]) > 1e-6:
+                    raise ValueError("channel length must match its CAD spine")
+                channel_points[key] = points
+        elif internal_loop_clearance is not None and "channelPointsByBranchID" in loop:
+            raise ValueError("channel points require threadedLoopCord")
         # Exterior contacts may share one continuous body node. Their passage
         # IDs and coordinates, rather than node IDs, distinguish the routes.
 
         branches_source = f"{source}.branches"
         raw_branches = payload["branches"]
-        if not isinstance(raw_branches, list) or len(raw_branches) != 2:
-            raise ValueError(f"{branches_source} must contain exactly two branches")
+        expected_count = 1 if single_loop else 2
+        if not isinstance(raw_branches, list) or len(raw_branches) != expected_count:
+            count_label = "one branch" if single_loop else "two branches"
+            raise ValueError(f"{branches_source} must contain exactly {count_label}")
         branches: list[BoardModelCordBranch] = []
         expected_pairs = (
             tuple(passage.id for passage in passage_pairs.left),
@@ -1013,22 +1053,25 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         poses = _load_model_poses(
             payload["canonicalPoses"], f"{source}.canonicalPoses", canonical_order=True
         )
+        if single_loop and any(pose.cord_contact_points is None for pose in poses.values()):
+            raise ValueError("threadedLoopCord requires solved exterior routes")
         if internal_loop_clearance is not None:
             cached_count = sum(pose.cord_contact_points is not None for pose in poses.values())
-            if cached_count not in (0, len(poses)) or any(
+            if (single_loop and (not poses or cached_count != len(poses))) or cached_count not in (0, len(poses)) or any(
                 pose.cord_contact_points is not None and set(pose.cord_contact_points) != all_passage_ids
                 for pose in poses.values()
             ):
                 raise ValueError("internalLoop derived routes must cover every passage and pose")
         return BoardModelTwoBranchSuspension(
             passage_pairs,
-            (branches[0], branches[1]),
+            tuple(branches),
             _load_model_anchor(anchor_payload, anchor_source),
             poses,
             mesh_wrap_clearance,
             internal_loop_clearance,
             internal_loop_winding_by_passage_id,
             internal_loop_channel_length_by_branch_id,
+            channel_points,
         )
 
     if suspension_type == "pairedLeadCord":
@@ -1340,7 +1383,7 @@ def _load_media(value: Any, source: str) -> PresentationMedia:
             payload,
             {"type", "assetPath", "descriptorPath", "display"},
             source,
-            optional={"suspension", "orientation", "instances"},
+            optional={"suspension", "orientation", "instances", "physicsDescriptorPath"},
         )
         has_instances = "instances" in payload
         raw_instances = payload.get("instances")
@@ -1374,6 +1417,8 @@ def _load_media(value: Any, source: str) -> PresentationMedia:
             )
             if has_instances
             else None,
+            _typed_asset_path(payload["physicsDescriptorPath"], f"{source}.physicsDescriptorPath", ".physics.json", "a physics descriptor")
+            if "physicsDescriptorPath" in payload else None,
         )
     raise ValueError(f"{source}.type must be raster or model")
 
@@ -2214,8 +2259,13 @@ def _validate_model_suspension(
             for side in (suspension.passages.left, suspension.passages.right)
             for passage in side
         )
-        if len(passages) != 4 or len({passage.id for passage in passages}) != 4:
-            raise ValueError("twoBranchCord suspension requires four distinct passages")
+        expected_count = 2 * len(suspension.branches)
+        if len(passages) != expected_count or len({passage.id for passage in passages}) != expected_count:
+            raise ValueError("twoBranchCord suspension requires distinct paired passages")
+        if suspension.internal_loop_channel_points_by_branch_id is not None:
+            for route in suspension.internal_loop_channel_points_by_branch_id.values():
+                if any(point[axis] < minimum[axis] or point[axis] > maximum[axis] for point in route for axis in range(3)):
+                    raise ValueError("connected channel points must stay inside model bounds")
         if suspension.mesh_wrap_clearance is not None and any(
             side[0].point_in_model[0] == side[1].point_in_model[0]
             for side in (suspension.passages.left, suspension.passages.right)
@@ -2294,10 +2344,7 @@ def _validate_model_suspension(
                 ((attachment,), suspension.cord) for attachment in suspension.attachments
             )
             if isinstance(suspension, BoardModelPairedLeadCord)
-            else (
-                (suspension.passages.left, suspension.branches[0]),
-                (suspension.passages.right, suspension.branches[1]),
-            )
+            else tuple(zip((suspension.passages.left, suspension.passages.right), suspension.branches))
         )
         for branch_endpoints, branch_data in endpoints_by_branch:
             if isinstance(branch_data, BoardModelCord):
@@ -2778,6 +2825,11 @@ def _validate_finished_shape(
     allowed = set(required | {cad_source_name})
     if cad_source.is_cad_package(root) and "suspension.json" in entries:
         allowed.add("suspension.json")
+    if cad_source.is_cad_package(root) and any(
+        isinstance(p.media, PresentationMediaModel) and p.media.physics_descriptor_path
+        for p in board.presentations
+    ):
+        allowed.add("rope-physics.json")
     unknown = entries - allowed
     missing = required - entries
     if unknown:
@@ -2795,6 +2847,8 @@ def _validate_finished_shape(
         expected_assets.add(presentation.asset_path)
         if isinstance(presentation.media, PresentationMediaModel):
             expected_assets.add(presentation.media.descriptor_path)
+            if presentation.media.physics_descriptor_path:
+                expected_assets.add(presentation.media.physics_descriptor_path)
     actual_assets = {
         item.relative_to(root).as_posix() for item in assets.rglob("*") if item.is_file()
     }
@@ -2848,6 +2902,17 @@ def _validate_finished_shape(
         local_position_ids = {position.id for position in board.positions if position.presentation_id == presentation.id}
         if not local_position_ids:
             raise ValueError("every model presentation must own at least one position")
+        if presentation.media.physics_descriptor_path:
+            model_document = _load_json(root / presentation.media.descriptor_path, "model descriptor")
+            physics = load_rope_physics(root / presentation.media.physics_descriptor_path, model_document["modelSHA256"])
+            selected_profiles = [p for p in physics["profiles"] if p["presentationID"] == presentation.id]
+            expected_instances = ({i.equipment_object_id for i in presentation.media.instances}
+                                  if presentation.media.instances else {None})
+            if {p.get("instanceID") for p in selected_profiles} != expected_instances:
+                raise ValueError("physics profiles must cover the presentation instances exactly")
+            if cad_source.is_cad_package(root):
+                if physics["sourceSHA256"] != hashlib.sha256(cad_source.package_source_path(root).read_bytes()).hexdigest():
+                    raise ValueError("rope physics CAD source hash mismatch")
         frames = _load_model_descriptor(
             root / presentation.media.descriptor_path,
             root / presentation.media.asset_path,

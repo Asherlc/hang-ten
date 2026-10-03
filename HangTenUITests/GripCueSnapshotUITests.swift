@@ -1,5 +1,38 @@
 import XCTest
 
+final class DefaultGripFingersUITests: XCTestCase {
+    func testUnspecifiedFingersRenderAssumedFourFingerHands() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_GRIP_MODEL": "1",
+            "HANGTEN_REVIEW_GRIP_POSE": "fourFingerPocket",
+            "HANGTEN_REVIEW_GRIP_FINGERS": "",
+        ]
+        defer {
+            app.terminate()
+            XCUIDevice.shared.orientation = .portrait
+        }
+        app.launch()
+        XCTAssertTrue(app.staticTexts["4 fingers (assumed)"].waitForExistence(timeout: 20))
+        XCTAssertFalse(app.staticTexts["Fingers not specified"].exists)
+        for orientation in [UIDeviceOrientation.portrait, .landscapeLeft] {
+            XCUIDevice.shared.orientation = orientation
+            let summary = app.staticTexts["gripModel.review.fingerSummary"]
+            let expectedLayout = orientation == .portrait ? "portrait" : "landscape"
+            let rotated = XCTNSPredicateExpectation(
+                predicate: NSPredicate(format: "value == %@ AND hittable == true", expectedLayout),
+                object: summary
+            )
+            XCTAssertEqual(XCTWaiter.wait(for: [rotated], timeout: 10), .completed)
+            XCTAssertTrue(app.staticTexts["4 fingers (assumed)"].isHittable)
+            let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+            attachment.name = "Assumed four fingers \(orientation.rawValue)"
+            attachment.lifetime = .keepAlways
+            add(attachment)
+        }
+    }
+}
+
 final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     private let app = XCUIApplication()
     private let workoutDeepLink = URL(string: "hangten://plan/research.max-hangs/workout")!
@@ -11,10 +44,70 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
             "HANGTEN_REVIEW_STEP": "1",
             "HANGTEN_REVIEW_LANDSCAPE": "1",
             // Keep this integration test independent from the board persisted
-            // by earlier cases; this raster fixture needs no ODR download.
+            // by earlier cases; DEBUG simulator builds bundle this native model.
             "HANGTEN_REVIEW_BOARD_ID": "tension.honestone",
         ]
         app.launch()
+    }
+
+    func testContactOffsetTaskCanAdvanceWithoutSkippingMinute() throws {
+        app.terminate()
+        app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "9"
+        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
+        app.launch()
+        waitForTrainShellReady(timeout: 20)
+        app.open(URL(string: "hangten://plan/metolius.contact.entry/workout")!)
+        if app.buttons["Start"].waitForExistence(timeout: 5) {
+            app.buttons["Start"].tap()
+        }
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
+        let next = app.buttons["workout.nextHold"]
+        XCTAssertTrue(next.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Hold 1 of 3"].exists)
+        next.tap()
+        XCTAssertTrue(app.staticTexts["Hold 2 of 3"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Pause"].exists)
+
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "Contact offset task two, same running minute"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    func testTwoHandTaskOnMiniBarExplainsTwoBoards() throws {
+        app.terminate()
+        app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = "lattice.mini-bar"
+        app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "2"
+        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
+        app.launch()
+        waitForTrainShellReady(timeout: 20)
+        app.open(workoutDeepLink)
+        XCTAssertTrue(
+            app.staticTexts["Use two boards, one hand on each."].waitForExistence(timeout: 20)
+        )
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "Two hands on one-hand Mini Bar require two boards"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    func testOneArmTaskLetsAthleteChooseSide() throws {
+        app.terminate()
+        app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "9"
+        app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "metolius.contact.intermediate"
+        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
+        app.launch()
+        waitForTrainShellReady(timeout: 20)
+        app.open(URL(string: "hangten://plan/metolius.contact.intermediate/workout")!)
+        let rightHand = app.buttons["workout.taskHand.right"]
+        XCTAssertTrue(rightHand.waitForExistence(timeout: 20))
+        rightHand.tap()
+        XCTAssertTrue(app.staticTexts["Hold 1 of 3"].exists)
+        XCTAssertTrue(app.staticTexts["Hang • Right hand"].exists)
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "One arm Contact sloper on chosen right side"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     func testMaxHangsDeepLinkDefaultsToUntrackedAndAutoStarts() throws {
@@ -25,7 +118,8 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
 
         let leftHandCue = app.otherElements["workout.gripCue.left"]
         XCTAssertTrue(leftHandCue.waitForExistence(timeout: 10))
-        XCTAssertTrue(app.buttons["workout.gripCue.left.model"].exists)
+        XCTAssertFalse(app.buttons["workout.gripCue.left.model"].exists)
+        XCTAssertFalse(app.buttons["workout.gripCue.right.model"].exists)
         XCTAssertTrue(leftHandCue.label.contains("Exact fingers: index, middle, ring, and pinky"))
         XCTAssertFalse(app.staticTexts["P+R+M+I"].exists)
         XCTAssertFalse(app.staticTexts["I+M+R+P"].exists)
@@ -46,6 +140,64 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         attachment.name = "Inline manual weight setup in landscape"
         attachment.lifetime = .keepAlways
         add(attachment)
+    }
+
+    func testWorkoutPauseSurvivesRotationAndResumes() {
+        defer { XCUIDevice.shared.orientation = .portrait }
+        app.terminate()
+        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
+        XCUIDevice.shared.orientation = .landscapeLeft
+        app.launch()
+        openWorkoutDeepLinkAndChooseLeftHandIfNeeded()
+        let landscapeLayout = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                let frame = self.app.windows.firstMatch.frame
+                return frame.width > frame.height
+            },
+            object: nil
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [landscapeLayout], timeout: 10), .completed)
+        app.buttons["Pause"].tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 10))
+        let timer = app.staticTexts["workout.timer"]
+        XCTAssertTrue(timer.exists)
+        let pausedTime = timer.label
+        let landscape = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        landscape.name = "Paused workout landscape"
+        landscape.lifetime = .keepAlways
+        add(landscape)
+
+        XCUIDevice.shared.orientation = .portrait
+        let portrait = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                let frame = self.app.windows.firstMatch.frame
+                return frame.height > frame.width
+            },
+            object: nil
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [portrait], timeout: 10), .completed)
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 10))
+        XCTAssertEqual(timer.label, pausedTime, "Rotation must preserve the paused clock")
+        let portraitScreenshot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        portraitScreenshot.name = "Paused workout portrait"
+        portraitScreenshot.lifetime = .keepAlways
+        add(portraitScreenshot)
+
+        app.buttons["Resume"].tap()
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 10))
+        let skip = app.buttons["workout.skipStep"]
+        XCTAssertTrue(skip.isEnabled)
+        skip.tap()
+        // Entering a rest step is immediate; the next work step gets a countdown.
+        let restStep = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label == %@", "Skip step 2: Rest"),
+            object: skip
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [restStep], timeout: 5), .completed)
+        skip.tap()
+        XCTAssertTrue(app.buttons["Cancel countdown"].waitForExistence(timeout: 5))
+        app.buttons["Cancel countdown"].tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 10))
     }
 
     func testLandscapeManualWorkoutHidesStreamingSensorMeter() throws {
@@ -148,8 +300,8 @@ final class InitialWeightSetupUITests: XCTestCase {
             "HANGTEN_REVIEW_SENSOR_DISCONNECTED": "1",
             "HANGTEN_REVIEW_PLAN": "1",
             "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
-            // Weight-flow tests use a fixed raster board instead of a persisted
-            // selection with unrelated asynchronous model-preview work.
+            // Pin the board so earlier tests cannot change the weight-flow fixture.
+            // Its native model is bundled in DEBUG simulator builds.
             "HANGTEN_REVIEW_BOARD_ID": "tension.grindstone-original",
         ]
         app.launch()
@@ -159,7 +311,7 @@ final class InitialWeightSetupUITests: XCTestCase {
         )
         XCTAssertTrue(app.staticTexts["Max Hangs"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.staticTexts["Grindstone"].exists,
-                      "The weight-flow fixture must resolve to the requested raster board.")
+                      "The weight-flow fixture must resolve to the requested board.")
     }
 
     func testInlineChoicesDefaultToSkipAndKeepManualDraft() {
@@ -168,18 +320,14 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        let bodyweightReady = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == true AND hittable == true"),
-            object: bodyweight
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
         XCTAssertLessThan(
             bodyweight.frame.width,
-            app.frame.width / 3,
+            XCUIApplication(bundleIdentifier: "com.apple.springboard").frame.width / 3,
             "The switch accessibility target should not span the full weight-tracking row."
         )
         XCTAssertEqual(bodyweight.value as? String, "0")
-        bodyweight.tap()
+        app.buttons["workout.initialWeight.addBodyweight.label"].tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
@@ -211,27 +359,12 @@ final class InitialWeightSetupUITests: XCTestCase {
         app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        let setup = app.otherElements["plan.initialWeight.setup"]
-        let bodyweightReady = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == true AND hittable == true"),
-            object: bodyweight
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
         XCTAssertEqual(bodyweight.value as? String, "0")
         XCTAssertEqual(bodyweight.label, "Add bodyweight")
 
-        // The visible label is outside the switch's accessibility frame.
-        let labelPoint = CGPoint(
-            x: setup.frame.minX + setup.frame.width * 0.1,
-            y: bodyweight.frame.midY
-        )
-        XCTAssertTrue(setup.frame.contains(labelPoint))
-        XCTAssertLessThan(labelPoint.x, bodyweight.frame.minX)
-        let label = setup.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
-            .withOffset(CGVector(
-                dx: labelPoint.x - setup.frame.minX,
-                dy: labelPoint.y - setup.frame.minY
-            ))
+        let label = app.buttons["workout.initialWeight.addBodyweight.label"]
+        XCTAssertTrue(label.waitForExistence(timeout: 5))
         label.tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
@@ -259,7 +392,12 @@ final class InitialWeightSetupUITests: XCTestCase {
         tapStartRoutine()
         let skip = app.buttons["Skip preparation"]
         XCTAssertTrue(skip.waitForExistence(timeout: 15))
-        XCTAssertFalse(app.buttons["plan.initialWeight.connect"].exists)
+        // Navigation can retain the plan's accessibility elements behind the
+        // preparation sheet. Its connection control must not be interactive.
+        XCTAssertFalse(
+            connect.isHittable,
+            "The plan's connection button must not be interactive during preparation."
+        )
         skip.tap()
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
         XCTAssertTrue(app.otherElements["motherboard.forceRocker"].exists)
@@ -287,6 +425,44 @@ final class InitialWeightSetupUITests: XCTestCase {
 }
 
 final class DualMaxHangsHighlightUITests: XCTestCase {
+    func testLopezEdgePickerChangesTheBeastmaker1000Preview() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "beastmaker-1000",
+            "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+            "HANGTEN_REVIEW_PLAN": "1",
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0"
+        ]
+        app.launch()
+        XCTAssertTrue(app.navigationBars["Plan"].waitForExistence(timeout: 20))
+        let picker = app.buttons["plan.maxHangs.edgePicker"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        picker.tap()
+        app.buttons["15 mm"].tap()
+        app.swipeUp()
+        let board = app.otherElements["boardModel.3d"]
+        XCTAssertTrue(board.waitForExistence(timeout: 60))
+        let selectedHighlight = NSPredicate(format: "value CONTAINS[c] %@", "15 mm")
+        expectation(for: selectedHighlight, evaluatedWith: board)
+        waitForExpectations(timeout: 10)
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "López MaxHangs selected 15 mm Beastmaker 1000 edges"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+
+        let start = app.buttons["plan.startRoutine"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        if !start.isHittable { app.swipeDown() }
+        start.tap()
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 20))
+        pause.tap()
+        let workoutBoard = app.otherElements["boardModel.3d"]
+        XCTAssertTrue(workoutBoard.waitForExistence(timeout: 60))
+        expectation(for: selectedHighlight, evaluatedWith: workoutBoard)
+        waitForExpectations(timeout: 10)
+    }
+
     func testDualBoardExposesTheResolvedMaxHangHold() throws {
         let app = XCUIApplication()
         // HANGTEN_REVIEW_WORKOUT was removed; plan detail is the stable surface that
@@ -358,7 +534,9 @@ final class OneHandedHandChoiceUITests: XCTestCase {
         /// Sets up the test environment for one-handed board hand choice tests.
         continueAfterFailure = false
         app.launchEnvironment = [
-            "HANGTEN_REVIEW_BOARD_ID": "captain-fingerfood.dual",
+            // Use a real capacity-1 raster board with a 20 mm edge. This
+            // hand-choice test does not need asynchronous 3D preview rendering.
+            "HANGTEN_REVIEW_BOARD_ID": "frictitious.nug",
             "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
             "HANGTEN_REVIEW_PLAN": "1",
             "HANGTEN_REVIEW_PORTRAIT": "1",
@@ -367,64 +545,26 @@ final class OneHandedHandChoiceUITests: XCTestCase {
         app.launch()
     }
 
-    /// Tests that a user can select a hand for a one-handed board.
-    func testInlineHandChoiceOnOneHandedBoard() throws {
+    /// A two-hand source task on a one-hand board requires two boards.
+    func testTwoHandTaskOnOneHandedBoardRequiresTwoBoards() throws {
         XCTAssertTrue(
             app.navigationBars["Plan"].waitForExistence(timeout: 20),
-            "DEBUG plan-detail review route should open Max Hangs on the one-handed Dual board."
+            "DEBUG plan-detail review route should open Max Hangs on the one-handed Nug board."
         )
+        XCTAssertTrue(app.staticTexts["The NUG"].exists, "The hand-choice fixture must resolve to the Nug board.")
 
         selectManualWeightSourceIfNeeded()
         tapStartRoutine()
 
-        let handPicker = app.buttons["workout.handPicker"]
         XCTAssertTrue(
-            handPicker.waitForExistence(timeout: 20),
-            "The pre-start workout page must expose the inline hand picker when a choice is needed."
+            app.staticTexts["Use two boards, one hand on each."].waitForExistence(timeout: 20)
         )
-        XCTAssertTrue(
-            handPicker.label.contains("Alternate hands"),
-            "A capacity-1 board must default to Alternate hands, got: \(handPicker.label)"
-        )
-
-        handPicker.tap()
-
-        let both = app.buttons["handSide.both"]
-        XCTAssertTrue(both.waitForExistence(timeout: 10), "The Both menu item must be present.")
-        XCTAssertEqual(both.label, "Both hands (two boards)")
-        XCTAssertTrue(app.buttons["handSide.alternate"].exists, "The Alternate menu item must be present.")
-
-        let left = app.buttons["handSide.left"]
-        XCTAssertTrue(left.waitForExistence(timeout: 10), "The Left hand menu item must be present.")
-        // On iOS 26 the native SwiftUI Menu exposes its visible row with a
-        // valid button frame, but its zero-sized UICollectionView container
-        // makes XCTest report isHittable=false. Tap the visible row's center
-        // and verify the selected hand below.
-        left.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-
-        // Wait a moment for the UI to update after the tap
-        Thread.sleep(forTimeInterval: 1.0)
-
-        let updated = app.buttons["workout.handPicker"]
-        let labelUpdated = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "label CONTAINS %@", "Left hand"),
-            object: updated
-        )
-        XCTAssertEqual(
-            XCTWaiter.wait(for: [labelUpdated], timeout: 30),
-            .completed,
-            "Choosing a hand must update the picker label, got: \(updated.label)"
-        )
-
-        let start = app.buttons["Start"]
-        XCTAssertTrue(start.waitForExistence(timeout: 10))
-        start.tap()
-
-        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
         XCTAssertFalse(
-            app.buttons["workout.handPicker"].isEnabled,
-            "The hand picker must be disabled once the routine is running."
+            app.buttons["workout.handPicker"].exists,
+            "Explicit two-hand task targets do not need a separate session hand choice."
         )
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
+        XCTAssertFalse(app.buttons["workout.handPicker"].exists)
     }
 
     private func selectManualWeightSourceIfNeeded() {
@@ -441,5 +581,70 @@ final class OneHandedHandChoiceUITests: XCTestCase {
             app.swipeUp()
         }
         start.tap()
+    }
+}
+
+extension XCTestCase {
+    /// Tap a measured screen position without resolving the control's window again.
+    /// SwiftUI menus and switches can expose finite control frames beneath
+    /// invalid window containers on iOS 26. Use the owning application as the screen anchor
+    /// so events target that application’s process.
+    func tapVisibleControl(
+        _ element: XCUIElement,
+        in application: XCUIApplication,
+        normalizedOffset: CGVector = CGVector(dx: 0.5, dy: 0.5),
+        requireHittable: Bool = true,
+        timeout: TimeInterval = 10,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        visibleControlCoordinate(
+            element, in: application, normalizedOffset: normalizedOffset, requireHittable: requireHittable,
+            timeout: timeout, file: file, line: line
+        )?.tap()
+    }
+
+    /// Validate a complete accessibility snapshot before applying the retry budget.
+    /// A single hosted query can outlast that budget; a valid result is still ready.
+    func visibleControlCoordinate(
+        _ element: XCUIElement,
+        in application: XCUIApplication,
+        normalizedOffset: CGVector = CGVector(dx: 0.5, dy: 0.5),
+        requireHittable: Bool = true,
+        timeout: TimeInterval = 10,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> XCUICoordinate? {
+        let screen = application
+        let deadline = ProcessInfo.processInfo.systemUptime + timeout
+        var lastFrame: CGRect?
+        var lastViewport: CGRect?
+        repeat {
+            if element.exists, element.isEnabled, !requireHittable || element.isHittable {
+                let frame = element.frame
+                let viewport = screen.frame
+                lastFrame = frame
+                lastViewport = viewport
+                if frame.minX.isFinite, frame.minY.isFinite,
+                   frame.width.isFinite, frame.height.isFinite,
+                   frame.width > 0, frame.height > 0,
+                   viewport.minX.isFinite, viewport.minY.isFinite,
+                   viewport.width.isFinite, viewport.height.isFinite,
+                   viewport.width > 0, viewport.height > 0 {
+                    let point = CGPoint(
+                        x: frame.minX + frame.width * normalizedOffset.dx,
+                        y: frame.minY + frame.height * normalizedOffset.dy
+                    )
+                    if viewport.contains(point) {
+                        let offset = CGVector(dx: point.x - viewport.minX, dy: point.y - viewport.minY)
+                        return screen.coordinate(withNormalizedOffset: .zero).withOffset(offset)
+                    }
+                }
+            }
+            if ProcessInfo.processInfo.systemUptime >= deadline { break }
+            Thread.sleep(forTimeInterval: 0.1)
+        } while true
+        XCTFail("Control must have a finite, visible frame; control=\(String(describing: lastFrame)), screen=\(String(describing: lastViewport))", file: file, line: line)
+        return nil
     }
 }

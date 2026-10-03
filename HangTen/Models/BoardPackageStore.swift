@@ -186,6 +186,7 @@ struct BoardPackageStore {
     private let boardsByID: [String: BoardRevision]
     private let presentationURLsByBoardID: [String: [String: URL]]
     private let descriptorURLsByBoardID: [String: [String: URL]]
+    private let packageURLsByBoardID: [String: URL]
     private let modelResourcesByBoardID: [String: [String: BoardModelResource]]
     let resourceBundle: Bundle
 
@@ -201,6 +202,7 @@ struct BoardPackageStore {
         var loadedBoards: [BoardRevision] = []
         var loadedPresentationURLs: [String: [String: URL]] = [:]
         var loadedDescriptorURLs: [String: [String: URL]] = [:]
+        var loadedPackageURLs: [String: URL] = [:]
         var loadedModelResources: [String: [String: BoardModelResource]] = [:]
         var seenBoardIDs = Set<String>()
 
@@ -229,6 +231,7 @@ struct BoardPackageStore {
             guard seenBoardIDs.insert(loaded.board.id).inserted else {
                 throw BoardPackageStoreError.duplicateBoardID(loaded.board.id)
             }
+            loadedPackageURLs[loaded.board.id] = packageURL
             loadedBoards.append(loaded.board)
             loadedPresentationURLs[loaded.board.id] = loaded.presentationURLs
             loadedDescriptorURLs[loaded.board.id] = loaded.descriptorURLs
@@ -240,6 +243,7 @@ struct BoardPackageStore {
         self.boardsByID = Dictionary(uniqueKeysWithValues: loadedBoards.map { ($0.id, $0) })
         self.presentationURLsByBoardID = loadedPresentationURLs
         self.descriptorURLsByBoardID = loadedDescriptorURLs
+        self.packageURLsByBoardID = loadedPackageURLs
         self.modelResourcesByBoardID = loadedModelResources
         self.resourceBundle = bundle
     }
@@ -271,6 +275,42 @@ struct BoardPackageStore {
     ) -> URL? {
         let resolvedID = presentationID ?? board.defaultPresentation.id
         return descriptorURLsByBoardID[board.id]?[resolvedID]
+    }
+
+    /// The catalog validates physics on load but retains only its package path.
+    /// Decode the heavy collision payload only when a scene actually needs it.
+    func presentationPhysicsInput(
+        for board: BoardRevision,
+        presentationID: String? = nil
+    ) throws -> RopePhysicsInput? {
+        guard let registeredBoard = boardsByID[board.id] else {
+            throw RopePhysicsError.invalid("Unknown physics board")
+        }
+        let resolvedID = presentationID ?? registeredBoard.defaultPresentation.id
+        guard case .model(let media) = registeredBoard.presentation(id: resolvedID)?.media,
+              let path = media.physicsDescriptorPath else { return nil }
+        guard let packageURL = packageURLsByBoardID[board.id] else {
+            throw RopePhysicsError.invalid("Missing physics package URL")
+        }
+        try Self.validateHangboardsRoot(packageURL.deletingLastPathComponent())
+        guard try Self.isRegularDirectory(packageURL) else {
+            throw BoardPackageStoreError.packagePathEscape(boardID: board.id, path: packageURL.path)
+        }
+        try Self.validatePackageContainer(packageURL, boardID: board.id)
+        try Self.validateAssetPath(path, suffix: ".physics.json", boardID: board.id, packageURL: packageURL)
+        let url = packageURL.appendingPathComponent(path)
+        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
+        guard values.isRegularFile == true, values.isSymbolicLink != true,
+              let size = values.fileSize, size <= 64 * 1024 * 1024 else {
+            throw RopePhysicsError.invalid("Physics descriptor must be a regular file of at most 64 MiB")
+        }
+        let input = try RopePhysicsDescriptor.decode(Data(contentsOf: url)).validated(modelSHA256: media.descriptor.modelSHA256)
+        let profiles = input.profiles.filter { $0.presentationID == resolvedID }
+        let expectedInstances: Set<String?> = media.instances.map { Set($0.map { Optional($0.equipmentObjectID) }) } ?? [nil]
+        guard Set(profiles.map(\.instanceID)) == expectedInstances else {
+            throw RopePhysicsError.invalid("Physics profiles must cover presentation instances exactly")
+        }
+        return input
     }
 
     func modelResource(
@@ -735,7 +775,7 @@ struct BoardPackageStore {
                 hasRaster = true
                 try validateAssetPath(assetPath, suffix: ".png", boardID: document.id, packageURL: packageURL)
                 declaredAssetPaths.insert(assetPath)
-            case .model(let assetPath, let descriptorPath, let display, let suspension, let orientation, let instances):
+            case .model(let assetPath, let descriptorPath, let display, let suspension, let orientation, let instances, let physicsDescriptorPath):
                 hasModel = true
                 guard case .original = presentation.derivation else {
                     throw BoardPackageStoreError.invalidPackage(
@@ -759,6 +799,10 @@ struct BoardPackageStore {
                     )
                 }
                 declaredAssetPaths.formUnion([assetPath, descriptorPath])
+                if let physicsDescriptorPath {
+                    try validateAssetPath(physicsDescriptorPath, suffix: ".physics.json", boardID: document.id, packageURL: packageURL)
+                    declaredAssetPaths.insert(physicsDescriptorPath)
+                }
                 if modelAssetMode == .onDemand {
                     onDemandModelAssetPaths.insert(assetPath)
                 }
@@ -887,7 +931,7 @@ struct BoardPackageStore {
                     )
                 }
                 media = .raster(BoardRasterMedia(assetPath: assetPath, contactGeometry: contactGeometry))
-            case .model(let assetPath, let descriptorPath, let displayDocument, let suspensionDocument, let orientationDocument, let instanceDocuments):
+            case .model(let assetPath, let descriptorPath, let displayDocument, let suspensionDocument, let orientationDocument, let instanceDocuments, let physicsDescriptorPath):
                 guard !declaredPositionIDs.isEmpty else {
                     throw BoardPackageStoreError.invalidPackage(boardID: document.id, reason: "every model presentation must own at least one position")
                 }
@@ -905,6 +949,28 @@ struct BoardPackageStore {
                     instanceDocuments: instanceDocuments
                 )
                 let descriptor = loadedDescriptor.descriptor
+                _ = try physicsDescriptorPath.map { path -> RopePhysicsInput in
+                    do {
+                        let url = packageURL.appendingPathComponent(path)
+                        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
+                        guard values.isRegularFile == true, values.isSymbolicLink != true,
+                              let size = values.fileSize, size <= 64 * 1024 * 1024 else {
+                            throw RopePhysicsError.invalid("Physics descriptor must be a regular file of at most 64 MiB")
+                        }
+                        let input = try RopePhysicsDescriptor.decode(Data(contentsOf: url)).validated(modelSHA256: descriptor.modelSHA256)
+                        let profiles = input.profiles.filter { $0.presentationID == presentation.id }
+                        let expectedInstances: Set<String?> = loadedDescriptor.instances.map { Set($0.map { Optional($0.equipmentObjectID) }) } ?? [nil]
+                        guard Set(profiles.map(\.instanceID)) == expectedInstances else {
+                            throw RopePhysicsError.invalid("Physics profiles must cover presentation instances exactly")
+                        }
+                        return input
+                    } catch {
+                        throw BoardPackageStoreError.invalidPackage(
+                            boardID: document.id,
+                            reason: "Invalid rope physics descriptor: \(error.localizedDescription)"
+                        )
+                    }
+                }
                 let woodNodes = Set(displayDocument.woodNodeIDs)
                 let plasticNodes = Set(displayDocument.plasticNodeIDs)
                 let graniteNodes = Set(displayDocument.graniteNodeIDs)
@@ -965,7 +1031,8 @@ struct BoardPackageStore {
                         ),
                         suspension: suspension,
                         orientation: orientation,
-                        instances: loadedDescriptor.instances
+                        instances: loadedDescriptor.instances,
+                        physicsDescriptorPath: physicsDescriptorPath
                     )
                 )
                 descriptorURLs[presentation.id] = packageURL.appendingPathComponent(descriptorPath)
@@ -2149,10 +2216,46 @@ struct BoardPackageStore {
         positionIDs: Set<String>,
         boardID: String
     ) throws -> BoardModelSuspension {
+        let singleLoop = document.internalLoop != nil && document.meshWrap == nil && document.passages.right.isEmpty
+        let passagePairs = singleLoop ? [document.passages.left] : [document.passages.left, document.passages.right]
         guard document.canonicalPoses.values.allSatisfy({ $0.attachmentPoints == nil }),
               document.passages.left.count == 2,
-              document.passages.right.count == 2 else {
-            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord suspension requires exactly two passages per side")
+              (document.type == "threadedLoopCord" ? document.passages.right.isEmpty
+                  : (singleLoop || document.passages.right.count == 2)) else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: document.type == "threadedLoopCord"
+                ? "threadedLoopCord requires two left passages and no right passages"
+                : "twoBranchCord suspension requires exactly two passages per side")
+        }
+        if document.type == "threadedLoopCord" {
+            guard document.meshWrap == nil, let loop = document.internalLoop,
+                  let routes = loop.channelPointsByBranchID,
+                  Set(routes.keys) == Set(document.branches.map(\.id)),
+                  document.canonicalPoses.values.allSatisfy({ $0.cordContactPoints != nil }) else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "threadedLoopCord requires a measured connected channel and solved exterior routes")
+            }
+            for branch in document.branches {
+                guard let points = routes[branch.id], points.count >= 2,
+                      points.allSatisfy({ point in
+                          point.count == 3 && point.allSatisfy(\.isFinite)
+                              && zip(point, descriptor.modelBounds.minimum).allSatisfy({ $0 >= $1 })
+                              && zip(point, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 })
+                      }),
+                      zip(points, points.dropFirst()).allSatisfy({ pair in
+                          zip(pair.0, pair.1).reduce(0.0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) } >= 1e-14
+                      }),
+                      points.first == document.passages.left.first?.entryPointInModel,
+                      points.last == document.passages.left.last?.entryPointInModel else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "connected channel must join its two mouths")
+                }
+                let length = zip(points, points.dropFirst()).reduce(0.0) { total, pair in
+                    total + zip(pair.0, pair.1).reduce(0.0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
+                }
+                guard let declared = loop.channelLengthByBranchID[branch.id], abs(length - declared) < 1e-6 else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "connected channel length must match its CAD spine")
+                }
+            }
+        } else if document.internalLoop?.channelPointsByBranchID != nil {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "channel points require threadedLoopCord")
         }
         let passages = document.passages.left + document.passages.right
         let throughBore = passages[0].isThroughBore
@@ -2182,12 +2285,12 @@ struct BoardPackageStore {
                   }),
                   [0, document.canonicalPoses.count].contains(
                       document.canonicalPoses.values.filter { $0.cordContactPoints != nil }.count),
+                  !singleLoop || (!document.canonicalPoses.isEmpty && document.canonicalPoses.values.allSatisfy({ $0.cordContactPoints != nil })),
                   document.canonicalPoses.values.allSatisfy({ pose in
                       pose.wrappedRoutes == nil && (pose.cordContactPoints == nil ||
                           Set(pose.cordContactPoints!.keys) == Set(passages.map(\.id)))
                   }),
-                  document.passages.left[0].entryPointInModel != document.passages.left[1].entryPointInModel,
-                  document.passages.right[0].entryPointInModel != document.passages.right[1].entryPointInModel else {
+                  passagePairs.allSatisfy({ $0[0].entryPointInModel != $0[1].entryPointInModel }) else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "internalLoop requires two distinct point mouths per side and complete derived routes when cached")
             }
         }
@@ -2216,12 +2319,13 @@ struct BoardPackageStore {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage must declare a non-zero through-bore")
             }
         }
-        guard document.branches.count == 2,
+        guard document.branches.count == passagePairs.count,
               document.branches.allSatisfy({ $0.id.isBoardPackageIdentifier }),
-              document.branches[0].passageIDs == document.passages.left.map(\.id),
-              document.branches[1].passageIDs == document.passages.right.map(\.id),
+              zip(document.branches, passagePairs).allSatisfy({ $0.0.passageIDs == $0.1.map(\.id) }),
               Set(document.branches.map(\.id)).count == document.branches.count else {
-            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord branches must be two distinct ordered passage pairs")
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: document.type == "threadedLoopCord"
+                ? "threadedLoopCord requires one branch naming its two ordered mouths"
+                : "twoBranchCord branches must be two distinct ordered passage pairs")
         }
         guard document.branches.allSatisfy({
             $0.passageIDs.count == 2 && $0.hasContactRoute == throughBore &&
@@ -2368,7 +2472,8 @@ struct BoardPackageStore {
             internalLoopWindingByPassageID: document.internalLoop.map {
                 $0.windingByPassageID.mapValues { BoardModelLoopWinding(rawValue: $0)! }
             },
-            internalLoopChannelLengthByBranchID: document.internalLoop?.channelLengthByBranchID
+            internalLoopChannelLengthByBranchID: document.internalLoop?.channelLengthByBranchID,
+            internalLoopChannelPointsByBranchID: document.internalLoop?.channelPointsByBranchID
         ))
 
 }
@@ -2495,19 +2600,70 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
                   case .string(let mediaType)? = mediaMembers.value(named: "type") else {
                 throw BoardPackageRawJSONError.invalid
             }
-            guard mediaType == "model",
-                  case .object(let suspensionMembers)? = mediaMembers.value(named: "suspension"),
-                  case .string(let suspensionType)? = suspensionMembers.value(named: "type") else {
-                continue
+            guard mediaType == "model" else { continue }
+            var suspensions: [BoardPackageRawJSONValue] = []
+            if let suspension = mediaMembers.value(named: "suspension") {
+                suspensions.append(suspension)
             }
-            if suspensionType == "pairedLeadCord" {
-                try suspensionMembers.requireCanonicalOrder(["type", "attachments", "passages", "anchor", "cord", "canonicalPoses"])
-                guard case .array(let attachments)? = suspensionMembers.value(named: "attachments"),
-                      case .object(let passagesMembers)? = suspensionMembers.value(named: "passages"),
+            if case .array(let instances)? = mediaMembers.value(named: "instances") {
+                for instance in instances {
+                    guard case .object(let members) = instance else { throw BoardPackageRawJSONError.invalid }
+                    if let suspension = members.value(named: "suspension") { suspensions.append(suspension) }
+                }
+            }
+            for suspension in suspensions {
+                guard case .object(let suspensionMembers) = suspension,
+                      case .string(let suspensionType)? = suspensionMembers.value(named: "type") else {
+                    throw BoardPackageRawJSONError.invalid
+                }
+                if suspensionType == "pairedLeadCord" {
+                    try suspensionMembers.requireCanonicalOrder(["type", "attachments", "passages", "anchor", "cord", "canonicalPoses"])
+                    guard case .array(let attachments)? = suspensionMembers.value(named: "attachments"),
+                          case .object(let passagesMembers)? = suspensionMembers.value(named: "passages"),
+                          case .array(let leftPassages)? = passagesMembers.value(named: "left"),
+                          case .array(let rightPassages)? = passagesMembers.value(named: "right"),
+                          case .object(let anchorMembers)? = suspensionMembers.value(named: "anchor"),
+                          case .object(let cordMembers)? = suspensionMembers.value(named: "cord"),
+                          case .object(let poseMembers)? = suspensionMembers.value(named: "canonicalPoses") else {
+                        throw BoardPackageRawJSONError.invalid
+                    }
+                    try passagesMembers.requireCanonicalOrder(["left", "right"])
+                    for passage in leftPassages + rightPassages {
+                        guard case .object(let members) = passage else { throw BoardPackageRawJSONError.invalid }
+                        let pointKeys = members.contains(where: { $0.name == "pointInModel" })
+                            ? ["pointInModel"] : ["entryPointInModel", "exitPointInModel"]
+                        try members.requireCanonicalOrder(["id", "nodeID"] + pointKeys + ["provenance"])
+                    }
+                    for attachment in attachments {
+                        guard case .object(let members) = attachment else { throw BoardPackageRawJSONError.invalid }
+                        try members.requireCanonicalOrder(
+                            ["id", "nodeID", "pointInModel", "contactPointsInModel", "provenance"]
+                                .filter { members.value(named: $0) != nil }
+                        )
+                    }
+                    try anchorMembers.requireCanonicalOrder(["offsetFromBoardBounds", "visibility", "provenance"])
+                    try cordMembers.requireCanonicalOrder(["restLength", "radius", "material", "provenance"])
+                    for pose in poseMembers.mapValues() {
+                        guard case .object(let poseObject) = pose,
+                              case .object(let camera)? = poseObject.value(named: "camera") else {
+                            throw BoardPackageRawJSONError.invalid
+                        }
+                        try poseObject.requireCanonicalOrder(
+                            ["rotation", "translation", "camera", "attachmentPoints", "cordContactPoints"]
+                                .filter { poseObject.value(named: $0) != nil })
+                        try camera.requireCanonicalOrder(["viewDirection", "fitPadding"])
+                    }
+                    continue
+                }
+                guard suspensionType == "twoBranchCord" || suspensionType == "threadedLoopCord" else { continue }
+                try suspensionMembers.requireCanonicalOrder(
+                    ["type", "passages", "branches", "meshWrap", "internalLoop", "anchor", "canonicalPoses"]
+                        .filter { suspensionMembers.value(named: $0) != nil })
+                guard case .object(let passagesMembers)? = suspensionMembers.value(named: "passages"),
                       case .array(let leftPassages)? = passagesMembers.value(named: "left"),
                       case .array(let rightPassages)? = passagesMembers.value(named: "right"),
+                      case .array(let branches)? = suspensionMembers.value(named: "branches"),
                       case .object(let anchorMembers)? = suspensionMembers.value(named: "anchor"),
-                      case .object(let cordMembers)? = suspensionMembers.value(named: "cord"),
                       case .object(let poseMembers)? = suspensionMembers.value(named: "canonicalPoses") else {
                     throw BoardPackageRawJSONError.invalid
                 }
@@ -2518,62 +2674,28 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
                         ? ["pointInModel"] : ["entryPointInModel", "exitPointInModel"]
                     try members.requireCanonicalOrder(["id", "nodeID"] + pointKeys + ["provenance"])
                 }
-                for attachment in attachments {
-                    guard case .object(let members) = attachment else { throw BoardPackageRawJSONError.invalid }
-                    try members.requireCanonicalOrder(
-                        ["id", "nodeID", "pointInModel", "contactPointsInModel", "provenance"]
-                            .filter { members.value(named: $0) != nil }
-                    )
+                for branch in branches {
+                    guard case .object(let members) = branch else { throw BoardPackageRawJSONError.invalid }
+                    let contacts = members.contains(where: { $0.name == "entryContactPoints" })
+                        ? ["entryContactPoints", "exteriorContactPoints", "exitContactPoints"] : []
+                    try members.requireCanonicalOrder(["id", "passageIDs"] + contacts + ["restLength", "radius", "material", "provenance"])
                 }
                 try anchorMembers.requireCanonicalOrder(["offsetFromBoardBounds", "visibility", "provenance"])
-                try cordMembers.requireCanonicalOrder(["restLength", "radius", "material", "provenance"])
+                if case .object(let loopMembers)? = suspensionMembers.value(named: "internalLoop") {
+                    try loopMembers.requireCanonicalOrder(
+                        ["clearance", "windingByPassageID", "channelLengthByBranchID", "channelPointsByBranchID"]
+                            .filter { loopMembers.value(named: $0) != nil })
+                }
                 for pose in poseMembers.mapValues() {
                     guard case .object(let poseObject) = pose,
                           case .object(let camera)? = poseObject.value(named: "camera") else {
                         throw BoardPackageRawJSONError.invalid
                     }
                     try poseObject.requireCanonicalOrder(
-                        ["rotation", "translation", "camera", "attachmentPoints", "cordContactPoints"]
+                        ["rotation", "translation", "camera", "cordContactPoints", "wrappedRoutes"]
                             .filter { poseObject.value(named: $0) != nil })
                     try camera.requireCanonicalOrder(["viewDirection", "fitPadding"])
                 }
-                continue
-            }
-            guard suspensionType == "twoBranchCord" else { continue }
-            try suspensionMembers.requireCanonicalOrder(
-                ["type", "passages", "branches", "meshWrap", "internalLoop", "anchor", "canonicalPoses"]
-                    .filter { suspensionMembers.value(named: $0) != nil })
-            guard case .object(let passagesMembers)? = suspensionMembers.value(named: "passages"),
-                  case .array(let leftPassages)? = passagesMembers.value(named: "left"),
-                  case .array(let rightPassages)? = passagesMembers.value(named: "right"),
-                  case .array(let branches)? = suspensionMembers.value(named: "branches"),
-                  case .object(let anchorMembers)? = suspensionMembers.value(named: "anchor"),
-                  case .object(let poseMembers)? = suspensionMembers.value(named: "canonicalPoses") else {
-                throw BoardPackageRawJSONError.invalid
-            }
-            try passagesMembers.requireCanonicalOrder(["left", "right"])
-            for passage in leftPassages + rightPassages {
-                guard case .object(let members) = passage else { throw BoardPackageRawJSONError.invalid }
-                let pointKeys = members.contains(where: { $0.name == "pointInModel" })
-                    ? ["pointInModel"] : ["entryPointInModel", "exitPointInModel"]
-                try members.requireCanonicalOrder(["id", "nodeID"] + pointKeys + ["provenance"])
-            }
-            for branch in branches {
-                guard case .object(let members) = branch else { throw BoardPackageRawJSONError.invalid }
-                let contacts = members.contains(where: { $0.name == "entryContactPoints" })
-                    ? ["entryContactPoints", "exteriorContactPoints", "exitContactPoints"] : []
-                try members.requireCanonicalOrder(["id", "passageIDs"] + contacts + ["restLength", "radius", "material", "provenance"])
-            }
-            try anchorMembers.requireCanonicalOrder(["offsetFromBoardBounds", "visibility", "provenance"])
-            for pose in poseMembers.mapValues() {
-                guard case .object(let poseObject) = pose,
-                      case .object(let camera)? = poseObject.value(named: "camera") else {
-                    throw BoardPackageRawJSONError.invalid
-                }
-                try poseObject.requireCanonicalOrder(
-                    ["rotation", "translation", "camera", "cordContactPoints", "wrappedRoutes"]
-                        .filter { poseObject.value(named: $0) != nil })
-                try camera.requireCanonicalOrder(["viewDirection", "fitPadding"])
             }
         }
     }
@@ -2995,11 +3117,12 @@ private enum BoardPackageMediaDocument: Decodable {
         display: BoardPackageModelDisplayDocument,
         suspension: BoardPackageSuspensionDocument?,
         orientation: BoardPackageModelOrientationDocument?,
-        instances: [BoardPackageModelInstanceDocument]?
+        instances: [BoardPackageModelInstanceDocument]?,
+        physicsDescriptorPath: String?
     )
 
     private enum CodingKeys: String, CodingKey {
-        case type, assetPath, contactGeometry, descriptorPath, display, suspension, orientation, instances
+        case type, assetPath, contactGeometry, descriptorPath, display, suspension, orientation, instances, physicsDescriptorPath
     }
 
     init(from decoder: Decoder) throws {
@@ -3016,7 +3139,7 @@ private enum BoardPackageMediaDocument: Decodable {
                 )
             )
         case "model":
-            try decoder.rejectUnknownKeys(["type", "assetPath", "descriptorPath", "display", "suspension", "orientation", "instances"])
+            try decoder.rejectUnknownKeys(["type", "assetPath", "descriptorPath", "display", "suspension", "orientation", "instances", "physicsDescriptorPath"])
             self = .model(
                 assetPath: try container.decode(String.self, forKey: .assetPath),
                 descriptorPath: try container.decode(String.self, forKey: .descriptorPath),
@@ -3029,6 +3152,9 @@ private enum BoardPackageMediaDocument: Decodable {
                     : nil,
                 instances: container.contains(.instances)
                     ? try container.decode([BoardPackageModelInstanceDocument].self, forKey: .instances)
+                    : nil,
+                physicsDescriptorPath: container.contains(.physicsDescriptorPath)
+                    ? try container.decode(String.self, forKey: .physicsDescriptorPath)
                     : nil
             )
         default:
@@ -3042,7 +3168,7 @@ private enum BoardPackageMediaDocument: Decodable {
 
     var assetPath: String {
         switch self {
-        case .raster(let assetPath, _), .model(let assetPath, _, _, _, _, _): assetPath
+        case .raster(let assetPath, _), .model(let assetPath, _, _, _, _, _, _): assetPath
         }
     }
 }
@@ -3137,7 +3263,7 @@ enum BoardPackageSuspensionDocument: Decodable, Equatable {
             } else {
                 self = .pairedLeadCord(try BoardPackagePairedLeadCordSuspensionDocument(from: decoder))
             }
-        case "twoBranchCord":
+        case "twoBranchCord", "threadedLoopCord":
             if container.allKeys.contains(where: {
                 ["attachment", "attachments", "cord"].contains($0.stringValue)
             }) {
@@ -3325,6 +3451,7 @@ struct BoardPackageCordBranchDocument: Decodable, Equatable {
 }
 
 struct BoardPackageTwoBranchSuspensionDocument: Decodable, Equatable {
+    let type: String
     let passages: BoardPackagePassagePairsDocument
     let branches: [BoardPackageCordBranchDocument]
     let meshWrap: BoardPackageMeshWrapDocument?
@@ -3336,7 +3463,7 @@ struct BoardPackageTwoBranchSuspensionDocument: Decodable, Equatable {
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys(["type", "passages", "branches", "meshWrap", "internalLoop", "anchor", "canonicalPoses"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        _ = try container.decode(String.self, forKey: .type)
+        type = try container.decode(String.self, forKey: .type)
         passages = try container.decode(BoardPackagePassagePairsDocument.self, forKey: .passages)
         branches = try container.decode([BoardPackageCordBranchDocument].self, forKey: .branches)
         meshWrap = try container.decodeIfPresent(BoardPackageMeshWrapDocument.self, forKey: .meshWrap)
@@ -3361,14 +3488,16 @@ struct BoardPackageInternalLoopDocument: Decodable, Equatable {
     let clearance: Double
     let windingByPassageID: [String: String]
     let channelLengthByBranchID: [String: Double]
+    let channelPointsByBranchID: [String: [[Double]]]?
 
-    private enum CodingKeys: String, CodingKey { case clearance, windingByPassageID, channelLengthByBranchID }
+    private enum CodingKeys: String, CodingKey { case clearance, windingByPassageID, channelLengthByBranchID, channelPointsByBranchID }
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["clearance", "windingByPassageID", "channelLengthByBranchID"])
+        try decoder.rejectUnknownKeys(["clearance", "windingByPassageID", "channelLengthByBranchID", "channelPointsByBranchID"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         clearance = try container.decode(Double.self, forKey: .clearance)
         windingByPassageID = try container.decode([String: String].self, forKey: .windingByPassageID)
         channelLengthByBranchID = try container.decode([String: Double].self, forKey: .channelLengthByBranchID)
+        channelPointsByBranchID = try container.decodeIfPresent([String: [[Double]]].self, forKey: .channelPointsByBranchID)
     }
 }
 

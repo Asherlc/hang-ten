@@ -8,12 +8,13 @@ from pathlib import Path
 import re
 
 import pytest
-from hangboard_packages.board_catalog import load_board_package
+from hangboard_packages.board_catalog import PresentationMediaModel, load_board_package
 
 from conftest import (
     PRIMARY_PNG_BYTES,
     load_board_catalog_module,
     multi_presentation_board_document,
+    package_roots,
 )
 
 
@@ -1456,6 +1457,32 @@ def test_model_display_rejects_invalid_board_finish(tmp_path: Path, finish) -> N
     with pytest.raises(ValueError, match="surfaceFinish"):
         load_board_package(package)
 
+
+def test_every_catalog_model_authors_a_material_finish() -> None:
+    """Keep every catalog model on the material palette, including future additions."""
+    # Missing/neutral assignments silently render real wood and resin gray.
+    root = Path(__file__).resolve().parents[3] / "Hangboards"
+    model_count = 0
+    for package in package_roots(root):
+        board = load_board_package(package).board
+        for presentation in board.presentations:
+            if not isinstance(presentation.media, PresentationMediaModel):
+                continue
+            model_count += 1
+            display = presentation.media.display
+            if package.name == "aelith-cyclops-011":
+                # The maker specifies anodized aluminium. There is no metal palette;
+                # this exact revision must explicitly retain its neutral finish.
+                assert display.get("surfaceFinish") == "neutral", package
+            elif package.name == "plateau-lifting-edge":
+                # Only the accepted wooden body and working edge use wood;
+                # the neutral default preserves its attachment/insert appearance.
+                assert display.get("surfaceFinish") == "neutral", package
+                assert display.get("woodNodeIDs") == ("plateau_body", "plateau_edge_18"), package
+            else:
+                assert display.get("surfaceFinish") in {"wood", "plastic", "granite"}, package
+    # Preserve coverage of the 55 model presentations present at this rollout.
+    assert model_count >= 55
 
 
 def test_model_display_rejects_invented_per_surface_bands(tmp_path: Path) -> None:

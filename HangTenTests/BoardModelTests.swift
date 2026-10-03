@@ -4,6 +4,98 @@ import simd
 
 final class BoardModelTests: XCTestCase {
 
+    func testRotationOptionsUseAuthoredInstancePosesWithoutBoardIdentityChecks() throws {
+        let pivot = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        XCTAssertEqual(BoardMapRotationOptions.positions(on: pivot, presentationID: "primary").map(\.id),
+                       ["p1", "p2", "p3", "p5"])
+        // Identical capabilities must work after changing package identity.
+        let renamed = BoardRevision(
+            id: "test.rotating-halves", revisionID: pivot.revisionID,
+            manufacturer: pivot.manufacturer, name: pivot.name, subtitle: pivot.subtitle,
+            dimensions: pivot.dimensions, aspectRatio: pivot.aspectRatio,
+            equipmentObjects: pivot.equipmentObjects, contacts: pivot.contacts,
+            productURL: pivot.productURL, photoAssetName: pivot.photoAssetName,
+            presentations: pivot.presentations, positions: pivot.positions,
+            positionTransitions: pivot.positionTransitions
+        )
+        XCTAssertEqual(BoardMapRotationOptions.positions(on: renamed, presentationID: "primary").map(\.id),
+                       ["p1", "p2", "p3", "p5"])
+        XCTAssertTrue(BoardMapRotationOptions.positions(on: pivot, presentationID: "missing").isEmpty)
+        let single = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-1000"))
+        XCTAssertTrue(BoardMapRotationOptions.positions(on: single, presentationID: single.defaultPresentation.id).isEmpty)
+    }
+
+    func testPivotChosenRotationSurvivesActiveAndHighlightedHoldChanges() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        for positionID in ["p2", "p3", "p5"] {
+            XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(
+                board: board, presentationID: "primary", activeHoldID: "two-finger-pocket-left",
+                preferredPositionID: positionID), positionID)
+            XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(
+                board: board, presentationID: "primary", activeHoldID: nil,
+                highlightedHoldIDs: ["variable-edge-right"], preferredPositionID: positionID), positionID)
+        }
+        XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(
+            board: board, presentationID: "primary", activeHoldID: nil,
+            preferredPositionID: "missing"), "p1")
+        XCTAssertNil(BoardMapPresentationSelection.resolvePositionID(
+            board: board, presentationID: "primary", activeHoldID: "missing-hold",
+            preferredPositionID: "p3"))
+        XCTAssertNil(BoardMapPresentationSelection.resolvePositionID(
+            board: board, presentationID: "missing-presentation", activeHoldID: nil,
+            preferredPositionID: "p3"))
+    }
+
+    func testRotationOptionsRejectInconsistentContactsAndMissingTransforms() throws {
+        let pivot = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        let presentation = pivot.defaultPresentation
+        guard case .model(let media) = presentation.media else {
+            return XCTFail("The fixture requires model media")
+        }
+        func copy(positions: [BoardPosition], presentations: [BoardPresentation]) -> BoardRevision {
+            BoardRevision(
+                id: pivot.id, revisionID: pivot.revisionID,
+                manufacturer: pivot.manufacturer, name: pivot.name, subtitle: pivot.subtitle,
+                dimensions: pivot.dimensions, aspectRatio: pivot.aspectRatio,
+                equipmentObjects: pivot.equipmentObjects, contacts: pivot.contacts,
+                productURL: pivot.productURL, photoAssetName: pivot.photoAssetName,
+                presentations: presentations, positions: positions,
+                positionTransitions: pivot.positionTransitions
+            )
+        }
+        let inconsistentPositions = pivot.positions.map { position in
+            BoardPosition(id: position.id, presentationID: position.presentationID,
+                          contactIDs: position.id == "p5"
+                              ? Array(pivot.contactIDs(inPosition: position.id).dropLast())
+                              : pivot.contactIDs(inPosition: position.id))
+        }
+        let inconsistent = copy(positions: inconsistentPositions, presentations: pivot.presentations)
+        XCTAssertTrue(BoardMapRotationOptions.positions(on: inconsistent, presentationID: presentation.id).isEmpty)
+
+        let instances = try XCTUnwrap(media.instances).enumerated().map { index, instance in
+            var transforms = instance.positionTransforms
+            if index == 0 { transforms?.removeValue(forKey: "p5") }
+            return BoardModelInstance(
+                equipmentObjectID: instance.equipmentObjectID, baseTransform: instance.baseTransform,
+                contactIDsBySlotID: instance.contactIDsBySlotID, suspension: instance.suspension,
+                positionTransforms: transforms
+            )
+        }
+        let missingTransformMedia = BoardModelMedia(
+            assetPath: media.assetPath, descriptorPath: media.descriptorPath,
+            descriptor: media.descriptor, display: media.display, suspension: media.suspension,
+            orientation: media.orientation, instances: instances,
+            physicsDescriptorPath: media.physicsDescriptorPath
+        )
+        let missingTransformPresentation = BoardPresentation(
+            id: presentation.id, name: presentation.name, aspectRatio: presentation.aspectRatio,
+            isDefault: presentation.isDefault, sourcePresentationID: presentation.sourcePresentationID,
+            isInverted: presentation.isInverted, media: .model(missingTransformMedia)
+        )
+        let missingTransform = copy(positions: pivot.positions, presentations: [missingTransformPresentation])
+        XCTAssertTrue(BoardMapRotationOptions.positions(on: missingTransform, presentationID: presentation.id).isEmpty)
+    }
+
     @MainActor
     func testNativeCordMapAspectRatioIncludesCordAndSelectedPosition() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.baguette-evo"))

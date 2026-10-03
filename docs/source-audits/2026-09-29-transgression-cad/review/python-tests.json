@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "passedTests": 474,
+  "skippedTests": [
+    {
+      "name": "test_remove_mounting_bores",
+      "reason": "collection skipped"
+    }
+  ],
+  "deselectedTests": [
+    "test_committed_asset_rebuilds_byte_identically (whole-catalog rebuild); both changed packages separately rebuilt byte-identically"
+  ],
+  "initialEnvironmentFailure": "14 simplifier tests initially lacked numba/scipy/meshoptimizer; after installing repository-pinned dependencies and meshoptimizer v1.0, all 14 passed. No code changes needed.",
+  "retriedPassedTests": [
+    "test_compact_keeps_exact_corner_attributes",
+    "test_compact_preserves_uv_seam",
+    "test_invalid_indices_fail_closed",
+    "test_nonfinite_values_fail_closed",
+    "test_grid_simplification_preserves_open_border",
+    "test_reject_in_place_export",
+    "test_reject_hash_mismatch",
+    "test_crease_normals_keep_right_angle",
+    "test_crease_normals_smooth_shallow_angle",
+    "test_uniform_image_uv_cleanup_is_lossless",
+    "test_permissive_normal_seams_keep_physical_boundary",
+    "test_planar_normal_stabilization_does_not_move_geometry",
+    "test_canonical_layer_export_is_repeatable",
+    "test_geometric_topology_detects_new_nonmanifold_edge"
+  ],
+  "meshoptimizerCommit": "73583c335e541c139821d0de2bf5f12960a04941",
+  "meshoptimizerLibrarySHA256": "e7af4ccda4d11c94ae1bf16d2d7bda5b42fc1a7ee6b467c62aa3dc5cbfb02179"
+}

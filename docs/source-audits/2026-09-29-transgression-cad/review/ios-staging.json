@@ -1,0 +1,14 @@
+{
+  "surfaces-for-climbing-transgression-2011": {
+    "bundledMetadataExact": true,
+    "odrModelExact": true,
+    "nativeSourceExcluded": true,
+    "assetpack": "OnDemandResources/com.hangten.training.hang-ten-model-surfaces-for-climbing-transgression-2011-b2530b6cf19fd675ed455ad069bc2038.assetpack/Hangboards/surfaces-for-climbing-transgression-2011/assets/primary.usdz"
+  },
+  "surfaces-for-climbing-transgression-2013": {
+    "bundledMetadataExact": true,
+    "odrModelExact": true,
+    "nativeSourceExcluded": true,
+    "assetpack": "OnDemandResources/com.hangten.training.hang-ten-model-surfaces-for-climbing-transgression-2013-c465b1dbc6e7481958972b99d926fde5.assetpack/Hangboards/surfaces-for-climbing-transgression-2013/assets/primary.usdz"
+  }
+}

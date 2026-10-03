@@ -29,12 +29,13 @@ import argparse
 import heapq
 import hashlib
 import json
+import math
 import re
 from pathlib import Path
 
 import numpy as np
 import trimesh
-from shapely.geometry import LineString, Point, Polygon
+from shapely.geometry import LineString, Point, Polygon, box
 from shapely.geometry.polygon import orient
 from shapely.ops import unary_union
 
@@ -47,7 +48,7 @@ def rotate_inverse(quaternion, vector):
     return vector + quaternion[3] * turn + np.cross(xyz, turn)
 
 
-def bearing_section(pieces, mouth, offset):
+def bearing_section(pieces, mouth, offset, channel_profile=None):
     """Rope-centerline-free region of one section, open only at this mouth.
 
     One piece is the ordinary case. Several pieces mean a straight channel in
@@ -59,9 +60,30 @@ def bearing_section(pieces, mouth, offset):
     grown = wood.buffer(offset, quad_segs=12)
     if len(pieces) == 1:
         return grown
-    gap = max(a.distance(b) for i, a in enumerate(pieces) for b in pieces[i + 1:])
-    bridge = gap / 2 + 1e-5
-    closed = wood.buffer(bridge, quad_segs=12).buffer(-bridge, quad_segs=12)
+    if channel_profile == "rectangular":
+        # Circular morphological closing bows inward at a wide square mouth.
+        # An explicitly authored straight rectangular slot has parallel depth
+        # rims: join those rims without changing either remaining wood piece.
+        ordered = sorted(pieces, key=lambda piece: piece.bounds[0])
+        if len(ordered) != 2:
+            raise ValueError("rectangular channel requires two section pieces")
+        lower, upper = (piece.bounds for piece in ordered)
+        if lower[2] >= upper[0] or max(abs(lower[i] - upper[i]) for i in (1, 3)) > 1e-6:
+            raise ValueError("rectangular channel requires separated pieces with matching depth rims")
+        closed = wood.union(box(lower[2], lower[1], upper[0], lower[3]))
+    else:
+        gap = max(a.distance(b) for i, a in enumerate(pieces) for b in pieces[i + 1:])
+        bridge = gap / 2 + 1e-5
+        closed = wood.buffer(bridge, quad_segs=12).buffer(-bridge, quad_segs=12)
+        # A curved exit can have a narrow closest gap but a wider throat.
+        # Keep the existing outline when it succeeds; otherwise increase only
+        # this temporary topological closure, never the actual collision solid.
+        # Every generated route is still checked against the full native wood.
+        for _ in range(3):
+            if closed.geom_type == "Polygon" and not closed.interiors:
+                break
+            bridge *= 2
+            closed = wood.buffer(bridge, quad_segs=12).buffer(-bridge, quad_segs=12)
     if closed.geom_type != "Polygon" or closed.interiors:
         raise ValueError("section channel could not be bridged into one outline")
     channel = closed.buffer(offset, quad_segs=12).difference(grown)
@@ -74,7 +96,7 @@ def bearing_section(pieces, mouth, offset):
 class Section:
     DEPTH = np.array([0.0, 0.0, 1.0])
 
-    def __init__(self, mouth, mesh, radius, clearance, anchor=None):
+    def __init__(self, mouth, mesh, radius, clearance, anchor=None, channel_profile=None):
         """Section through `mouth`: the x-plane, or the plane holding `anchor`.
 
         Plane coordinates are (distance along `up`, model z). For the x-plane
@@ -100,6 +122,7 @@ class Section:
                 [Polygon(self.to_plane(loop)) for loop in cross.discrete],
                 self.to_plane(origin),
                 radius + clearance,
+                channel_profile,
             ),
             1,
         )
@@ -209,8 +232,75 @@ class Section:
         )
 
 
+def solve_direct_loop(mesh, setup, descriptor, native_solid=None):
+    """Settle a single loop with unobstructed rising legs from CAD mouths.
+
+    The connected CAD spine supplies the entire interior route. Reject any
+    bearing or collision instead of drawing substitute contacts by hand.
+    """
+    branch = setup["branches"][0]
+    mouths = {p["id"]: p for side in setup["passages"].values() for p in side}
+    first, second = (np.asarray(mouths[key]["pointInModel"], dtype=float) for key in branch["passageIDs"])
+    points = setup["internalLoop"]["channelPointsByBranchID"][branch["id"]]
+    channel_length = sum(np.linalg.norm(np.asarray(b) - a) for a, b in zip(points, points[1:]))
+    declared = setup["internalLoop"]["channelLengthByBranchID"][branch["id"]]
+    if abs(channel_length - declared) > 1e-6:
+        raise ValueError("channel length differs from its native spine")
+    bounds = descriptor["modelBounds"]
+    center = (np.asarray(bounds["min"]) + np.asarray(bounds["max"])) / 2
+    anchor = np.array([center[0], bounds["max"][1], center[2]]) + setup["anchor"]["offsetFromBoardBounds"]
+    rest = branch["restLength"]
+    output = {}
+    for pose_id, pose in setup["canonicalPoses"].items():
+        def local(height):
+            translation = np.asarray(pose["translation"], dtype=float).copy()
+            translation[1] = height
+            return rotate_inverse(pose["rotation"], anchor - translation)
+        def length(height):
+            support = local(height)
+            return np.linalg.norm(support - first) + np.linalg.norm(support - second) + channel_length
+        low, high = -2 * rest, 0.0
+        if length(high) > rest or length(low) < rest:
+            raise ValueError("cannot bracket the threaded loop hanging height")
+        for _ in range(40):
+            midpoint = (low + high) / 2
+            if length(midpoint) > rest: low = midpoint
+            else: high = midpoint
+        height = (low + high) / 2
+        support = local(height)
+        segments = [(support, first), *zip(points, points[1:]), (second, support)]
+        samples = np.concatenate([np.linspace(a, b, max(2, math.ceil(np.linalg.norm(np.asarray(b)-a)/0.0005)+1)) for a,b in segments])
+        if native_solid is not None:
+            import FreeCAD as App, Part
+            def signed_clearance(point):
+                vertex = App.Vector(point[0]*1000, -point[2]*1000, point[1]*1000)
+                distance = native_solid.distToShape(Part.Vertex(vertex))[0] / 1000
+                return -distance if native_solid.isInside(vertex, 1e-7, True) else distance
+            clearance = min(signed_clearance(point) for point in samples)
+        else:
+            clearance = -float(trimesh.proximity.signed_distance(mesh, samples).max())
+        required_clearance = branch["radius"] + setup["internalLoop"]["clearance"]
+        if clearance < required_clearance - 1e-5:
+            raise ValueError(f"{pose_id}: threaded channel or free leg collides with CAD: {clearance}")
+        contacts = {key: [mouths[key]["pointInModel"]] for key in branch["passageIDs"]}
+        output[pose_id] = {"height": round(height, 9), "lengths": {branch["id"]: float(length(height))}, "contacts": contacts}
+        print(f"{pose_id}: single loop {length(height):.9f} m; CAD clearance {clearance:.9f} m", flush=True)
+    return output
+
+
 def solve_package(package, mesh, suspension, descriptor):
     setup = suspension["suspension"]
+    if setup["type"] == "threadedLoopCord":
+        mouths = {p["id"]: p for side in setup["passages"].values() for p in side}
+        if len(mouths) != 2 or len(setup["branches"]) != 1:
+            raise ValueError("threadedLoopCord requires one connected loop with two mouths")
+        passage_ids = setup["branches"][0]["passageIDs"]
+        if len(passage_ids) != 2 or set(passage_ids) != set(mouths):
+            raise ValueError("threadedLoopCord passageIDs must name both distinct mouths")
+        native = mesh.metadata.get("nativeSolid")
+        if native is None and (not mesh.is_watertight or not mesh.is_winding_consistent):
+            raise ValueError("single loop clearance requires the native CAD solid or a watertight tessellation")
+        return solve_direct_loop(mesh, setup, descriptor, native)
     if not mesh.is_watertight or not mesh.is_winding_consistent:
         raise ValueError("the native CAD collision solid is not watertight")
     bounds = descriptor["modelBounds"]
@@ -219,8 +309,13 @@ def solve_package(package, mesh, suspension, descriptor):
         setup["anchor"]["offsetFromBoardBounds"], dtype=float
     )
     mouths = {p["id"]: p for side in setup["passages"].values() for p in side}
-    if len(mouths) != 4 or len(setup["branches"]) != 2:
-        raise ValueError("threaded-rope solver expects two loops with four mouths")
+    branch_count = len(setup["branches"])
+    if branch_count not in (1, 2) or len(mouths) != 2 * branch_count:
+        raise ValueError("threaded-rope solver expects one or two loops with two mouths each")
+    paired_ids = [key for branch in setup["branches"] for key in branch["passageIDs"]]
+    if (any(len(branch["passageIDs"]) != 2 for branch in setup["branches"])
+            or len(set(paired_ids)) != len(paired_ids) or set(paired_ids) != set(mouths)):
+        raise ValueError("threaded-rope branches must pair every distinct mouth exactly once")
     radii = {branch["radius"] for branch in setup["branches"]}
     rest_lengths = {branch["restLength"] for branch in setup["branches"]}
     if len(radii) != 1 or len(rest_lengths) != 1:
@@ -229,12 +324,15 @@ def solve_package(package, mesh, suspension, descriptor):
     rest = rest_lengths.pop()
     clearance = setup["internalLoop"]["clearance"]
     plane = suspension.get("ropeSolver", {}).get("sectionPlane", "mouth-x")
+    channel_profile = suspension.get("ropeSolver", {}).get("channelProfile")
+    if channel_profile not in (None, "rectangular") or (channel_profile == "rectangular" and plane != "mouth-x"):
+        raise ValueError("rectangular channelProfile requires the mouth-x section plane")
     if plane not in ("mouth-x", "anchor"):
         raise ValueError(f"unknown ropeSolver.sectionPlane {plane!r}")
 
     def build_sections(local=None):
         built = {
-            key: Section(mouth, mesh, radius, clearance, local)
+            key: Section(mouth, mesh, radius, clearance, local, channel_profile)
             for key, mouth in mouths.items()
         }
         print(
@@ -377,7 +475,7 @@ def main():
     ):
         raise ValueError("collision solid is stale relative to the native CAD source")
     document = json.loads(sidecar.read_text())
-    if document.get("schemaVersion") == 2:
+    if document.get("schemaVersion") == 2 and "entries" in document:
         selected = [entry for entry in document["entries"] if entry["presentationID"] == arguments.presentation
                     and entry.get("equipmentObjectID") == arguments.equipment_object]
         if len(selected) != 1:
@@ -385,6 +483,10 @@ def main():
         data = selected[0]
     else:
         data = document
+        if arguments.presentation is not None and arguments.presentation != data.get("presentationID"):
+            raise ValueError("--presentation does not match the sidecar presentation")
+        if arguments.equipment_object is not None and "instanceSuspensions" not in data:
+            raise ValueError("--equipment-object requires an instance sidecar")
     import use_hangboard_packages
     from hangboard_packages import cad_source as source_metadata
     board = source_metadata.load_board(cad_source)
@@ -396,30 +498,60 @@ def main():
     mesh = trimesh.Trimesh(
         vertices=source["vertices"], faces=source["triangles"], process=False
     )
-    native = data.get("ropeSolver", {}).get("method") == "nativeRoutes"
-    if native:
-        from native_cord_routes import solve_native_routes
-        solved = solve_native_routes(mesh, data, model, source_metadata=source)
-    else:
-        solved = solve_package(arguments.package, mesh, data, model)
-    for pose_id, result in solved.items():
-        pose = data["suspension"]["canonicalPoses"][pose_id]
-        if arguments.check:
-            if (
-                abs(pose["translation"][1] - result["height"]) > 1e-8
-                or pose.get("wrappedRoutes" if native else "cordContactPoints") != result["routes" if native else "contacts"]
-            ):
-                raise ValueError(f"{pose_id}: generated route cache is stale")
-        else:
-            pose["translation"][1] = result["height"]
-            pose["wrappedRoutes" if native else "cordContactPoints"] = result["routes" if native else "contacts"]
+    native_routes = data.get("ropeSolver", {}).get("method") == "nativeRoutes"
+    setups = data.get("instanceSuspensions", {"single": data.get("suspension")})
+    if "instanceSuspensions" in data and arguments.equipment_object is not None:
+        if arguments.equipment_object not in setups:
+            raise ValueError("--equipment-object must identify a sidecar instance")
+        setups = {arguments.equipment_object: setups[arguments.equipment_object]}
+    native_document = None
+    results = {}
+    try:
+        if any(setup["type"] == "threadedLoopCord" for setup in setups.values()):
+            try:
+                import FreeCAD as App
+            except ImportError as error:
+                raise ValueError("run the single-loop solve with FreeCAD Python for exact native-solid clearance") from error
+            native_document = App.openDocument(str(cad_source.resolve()))
+            feature = native_document.getObject(source["sourceFeature"])
+            if feature is None or not feature.Shape.isValid() or len(feature.Shape.Solids) != 1:
+                raise ValueError("collision source is not one valid native CAD solid")
+            mesh.metadata["nativeSolid"] = feature.Shape
+        for equipment_id, setup in setups.items():
+            import copy
+            local_data = dict(data, suspension=copy.deepcopy(setup))
+            if native_routes:
+                from native_cord_routes import solve_native_routes
+                solved = solve_native_routes(mesh, local_data, model, source_metadata=source)
+            else:
+                solved = solve_package(arguments.package, mesh, local_data, model)
+            results[equipment_id] = solved
+            cache_key = "wrappedRoutes" if native_routes else "cordContactPoints"
+            result_key = "routes" if native_routes else "contacts"
+            for pose_id, result in solved.items():
+                pose = setup["canonicalPoses"][pose_id]
+                if arguments.check:
+                    if (abs(pose["translation"][1] - result["height"]) > 1e-8
+                            or pose.get(cache_key) != result[result_key]):
+                        raise ValueError(f"{equipment_id}/{pose_id}: generated route cache is stale")
+                else:
+                    pose["translation"][1] = result["height"]
+                    pose[cache_key] = result[result_key]
+    finally:
+        if native_document is not None:
+            App.closeDocument(native_document.Name)
     if arguments.report:
         arguments.report.parent.mkdir(parents=True, exist_ok=True)
         report = {"package": arguments.package, "presentationID": data["presentationID"],
-            "modelSHA256": model["modelSHA256"], "sourceSHA256": source["sourceSHA256"], "method": "nativeRoutes" if native else "internalLoop", "poses": solved}
+            "modelSHA256": model["modelSHA256"], "sourceSHA256": source["sourceSHA256"],
+            "method": "nativeRoutes" if native_routes else "internalLoop"}
+        if "instanceSuspensions" in data:
+            report["instances"] = results
+        else:
+            report["poses"] = results["single"]
         if data.get("ropeSolver", {}).get("grooveGuides"):
             report["collisionSolidSHA256"] = hashlib.sha256(arguments.solid.read_bytes()).hexdigest()
-        arguments.report.write_text(json.dumps(report, indent=2)+"\n")
+        arguments.report.write_text(json.dumps(report, indent=2) + "\n")
     if arguments.apply:
         formatted = json.dumps(document, indent=2)
         number = r"-?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?"

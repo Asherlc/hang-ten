@@ -50,6 +50,30 @@ and transient suspension-renderer path. ODR is a plausible boundary only when
 the model is unavailable, its resource URL cannot be resolved, its bytes do not
 match the descriptor, or RealityKit cannot decode it.
 
+## Cord-point display tilt
+
+The normal RealityKit viewer uses bundled suspension geometry without starting
+live rope simulation. Pitch rotates each corded board instance about the line
+through its authored cord attachments or passage centers. A single attachment uses the canonical view's
+horizontal axis through that point. Multiple points use their widest separation
+through their mean. Authored reflection is retained when calculating this axis.
+
+The entire cord stays in its canonical pose, including guides and free spans.
+Pitch changes only the board transform. The camera fits the board's local
+rotation envelope at rest and keeps the same transform during pitch, so the
+cord also stays fixed on screen. Yaw and manual zoom retain their existing
+camera interaction. Reset restores the exact canonical board transform.
+Automatic hold adjustment is calculated from the canonical pose to avoid
+accumulating tilt and animates over 0.28 seconds; Reduce Motion applies it
+immediately. Manual gestures and lifecycle changes cancel superseded animation.
+
+This is a geometric display hinge, without a rope collision or equilibrium
+solve. Canonical cords are not rerouted when the board turns. Uncorded boards
+retain camera pitch when all instances are uncorded. In a mixed scene,
+uncorded instances rotate about the framing target with the inverse of that
+camera pitch, preserving their pitch view alongside the fixed cord. The loader's `useLivePhysics` opt-in retains the existing
+solver integration test lane.
+
 ## Diagnose by symptom
 
 | Symptom | First boundary to inspect | Do not use as a shortcut |
@@ -190,7 +214,7 @@ pose from the native solid and caches them in `suspension.json`; the renderer
 uses that cache as transient geometry. No cord is baked into the USDZ. Mouth
 positions, channel and cord diameters, anchor offset,
 and clearance are labeled display estimates. A sidecar's `modelSHA256` must
-match its descriptor, and the delivery lock pins its bytes.
+match its descriptor; package validation checks that binding.
 
 ## Make an evidence-backed correction
 

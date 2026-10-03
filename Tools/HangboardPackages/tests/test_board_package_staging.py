@@ -8,6 +8,7 @@ import re
 import shutil
 import stat
 import sys
+from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -34,6 +35,9 @@ LIVE_MODEL_PACKAGE_SLUGS = (
     "metolius-wood-grips-compact-ii",
     "plateau-lifting-edge",
     "tension-flash-board",
+    "yy-verticalboard-evo",
+    "tension-honestone",
+    "tension-grindstone-original",
 )
 
 
@@ -182,6 +186,61 @@ def stage_with_xcode_environment(
     return staged[0]
 
 
+def write_physics_descriptor(source: Path, board: dict) -> Path:
+    from test_rope_physics import physics_fixture
+    media = board["presentations"][0]["media"]
+    media["physicsDescriptorPath"] = "assets/primary.physics.json"
+    descriptor = json.loads((source / media["descriptorPath"]).read_text())
+    physics = physics_fixture()
+    physics["modelSHA256"] = descriptor["modelSHA256"]
+    physics["profiles"][0]["presentationID"] = board["presentations"][0]["id"]
+    (source / "board.json").write_text(json.dumps(board))
+    path = source / media["physicsDescriptorPath"]
+    path.write_text(json.dumps(physics))
+    return path
+
+
+def test_legacy_model_bundles_live_physics_without_cad_authoring(tmp_path, monkeypatch):
+    source = make_v3_model_package(tmp_path / "repository" / "Hangboards" / "live-model")
+    board = json.loads((source / "board.json").read_text())
+    write_physics_descriptor(source, board)
+    staged = stage_with_xcode_environment(source, monkeypatch)
+    assert (staged / "assets/primary.physics.json").read_bytes() == (source / "assets/primary.physics.json").read_bytes()
+    assert not (staged / "assets/primary.usdz").exists()
+
+
+def test_non_cad_physics_package_rejects_cad_authoring_sidecar(tmp_path):
+    from hangboard_packages.board_catalog import discover_board_packages
+
+    source = make_v3_model_package(tmp_path / "Hangboards" / "live-model")
+    board = json.loads((source / "board.json").read_text())
+    write_physics_descriptor(source, board)
+    # Bundled physics remains valid on a legacy model; authoring belongs to CAD.
+    assert len(discover_board_packages(source.parent).packages) == 1
+    (source / "rope-physics.json").write_text("{}")
+    with pytest.raises(ValueError, match="unknown package entry: rope-physics.json"):
+        discover_board_packages(source.parent)
+
+
+def test_declared_missing_or_stale_physics_fails_staging(tmp_path, monkeypatch):
+    source = make_v3_model_package(tmp_path / "repository" / "Hangboards" / "live-model")
+    board = json.loads((source / "board.json").read_text())
+    physics_path = write_physics_descriptor(source, board)
+    physics_path.unlink()
+    with pytest.raises(ValueError, match="missing"):
+        stage_with_xcode_environment(source, monkeypatch)
+    # The staging helper copies tooling only once; invoke the same loaded module
+    # for the second attempt after supplying a deliberately stale descriptor.
+    physics_path = write_physics_descriptor(source, board)
+    stale = json.loads(physics_path.read_text())
+    stale["modelSHA256"] = "c" * 64
+    physics_path.write_text(json.dumps(stale))
+    destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+    with pytest.raises(ValueError, match="rope physics model hash mismatch"):
+        load_staging_module().stage_board_packages(source.parents[1], destination)
+
+
 def stage_live_model_packages(
     root: Path, monkeypatch: pytest.MonkeyPatch
 ) -> tuple[Path, Path, Path]:
@@ -319,11 +378,21 @@ def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
 @pytest.mark.parametrize(
     "slug",
     (
+        "clavellium-training-block",
+        "lattice-mini-bar",
         "frictitious-doormount-pro-7",
         "frictitious-megalith",
         "tension-whetstone",
+        "surfaces-for-climbing-transgression-2011",
+        "surfaces-for-climbing-transgression-2013",
         "trango-rock-prodigy-forge",
         "trango-rock-prodigy-natural",
+        "yy-verticalboard-first",
+        "yy-verticalboard-light",
+        "yy-verticalboard-one",
+        "yy-verticalboard-evo",
+        "tension-honestone",
+        "tension-grindstone-original",
         "zlagboard-evo",
         "zlagboard-pro",
     ),
@@ -331,13 +400,24 @@ def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
 def test_ci_simulator_staging_bundles_model_fixtures_for_ui_interactions(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, slug: str
 ) -> None:
+    """Verify that CI Simulator staging embeds each model fixture needed for native interaction tests."""
     repository_root = tmp_path / "repository"
     for model_slug in (
+        "clavellium-training-block",
+        "lattice-mini-bar",
         "frictitious-doormount-pro-7",
         "frictitious-megalith",
         "tension-whetstone",
+        "surfaces-for-climbing-transgression-2011",
+        "surfaces-for-climbing-transgression-2013",
         "trango-rock-prodigy-forge",
         "trango-rock-prodigy-natural",
+        "yy-verticalboard-first",
+        "yy-verticalboard-light",
+        "yy-verticalboard-one",
+        "yy-verticalboard-evo",
+        "tension-honestone",
+        "tension-grindstone-original",
         "zlagboard-evo",
         "zlagboard-pro",
     ):
@@ -717,9 +797,20 @@ def test_xcode_staging_phase_intentionally_runs_for_every_build() -> None:
 
 
 def test_xcode_assigns_each_live_model_to_its_own_safe_odr_tag() -> None:
+    """Require unique Xcode objects and one safe, distinct ODR resource registration for every live model."""
     project = (REPO_ROOT / "HangTen.xcodeproj" / "project.pbxproj").read_text(
         encoding="utf-8"
     )
+    # Duplicate definitions are silently collapsed by plist readers, even when
+    # every ODR tag appears in the source text. Each resource needs its own object.
+    object_ids = re.findall(
+        r"^\t\t([A-Z0-9]{24})(?: /\*.*?\*/)? = \{", project, re.MULTILINE
+    )
+    assert object_ids
+    duplicate_ids = sorted(
+        identifier for identifier, count in Counter(object_ids).items() if count > 1
+    )
+    assert not duplicate_ids, f"Duplicate Xcode object identifiers: {duplicate_ids}"
     parser_module = load_staging_module().load_board_package_module(REPO_ROOT)
     inventory = parser_module.discover_board_packages(
         REPO_ROOT / "Hangboards",

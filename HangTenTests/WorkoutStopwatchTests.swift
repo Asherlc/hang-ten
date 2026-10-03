@@ -2,6 +2,15 @@ import XCTest
 @testable import HangTen
 
 final class WorkoutStopwatchTests: XCTestCase {
+    func testCountdownAndStopwatchKeepOppositeRoundingAtMinuteBoundary() {
+        XCTAssertEqual(WorkoutTimeText.countdown(59.2), "01:00")
+        XCTAssertEqual(WorkoutTimeText.stopwatch(59.2), "00:59")
+        XCTAssertEqual(WorkoutTimeText.countdown(60), "01:00")
+        XCTAssertEqual(WorkoutTimeText.stopwatch(60), "01:00")
+        XCTAssertEqual(WorkoutTimeText.countdown(-1), "00:00")
+        XCTAssertEqual(WorkoutTimeText.stopwatch(-1), "00:00")
+    }
+
     func testNeverStartedStopwatchHasNilElapsed() {
         let stopwatch = WorkoutStopwatch()
 

@@ -4,7 +4,7 @@
 
 Every corded CAD board uses this method: the cord's hidden passage is a void
 in the native FreeCAD solid, the topology lives in `suspension.json` as a
-`twoBranchCord` with `internalLoop`, the channel length is measured from CAD
+`twoBranchCord` (or the single-loop `threadedLoopCord`) with `internalLoop`, the channel length is measured from CAD
 with `Tools/HangboardCAD/measure_channel_spines.py`, and the visible routes
 and hanging height are solved against the exported CAD solid with
 `Tools/HangboardCAD/solve_threaded_rope.py`. Do not hand-place cord contact
@@ -13,12 +13,30 @@ board. The runtime's convex-section fallback and hand-authored
 `pairedLeadCord` / `singleCord` metadata remain only for older non-CAD
 packages; migrate a board's cord to this method when the board moves to CAD.
 
-Two boards use it:
+These boards use it:
 
 | Board | Channel | Section plane | Notes |
 | --- | --- | --- | --- |
 | Lattice Mini Bar | curved `PartDesign::SubtractivePipe`, two mouths on one face per end | `mouth-x` (default) | constant-section bar; four grip poses |
 | Crimptonite Helium Mobile | straight `Part::Cylinder` through-bore, front and back mouths per end | `anchor` | mouths sit in the rounded ends; one loop of cord through both holes |
+| Clavellium Training Block | owner-confirmed straight rectangular `Part::Box` passages | `mouth-x`, `channelProfile=rectangular` | one central-channel loop; round-cord adaptation of a flat sling; grip-to-channel mapping unknown |
+| Metolius Rock Rings | connected `Part::MultiFuse` void with linked ordered spine | none (direct-leg solve) | one continuous loop per displayed ring; exact native-solid clearance |
+
+One sling through one channel uses the same `twoBranchCord` wire type with
+one branch, its two mouths in `passages.left`, and an empty `passages.right`.
+This one-loop form is valid only with `internalLoop` and a complete generated
+route cache for every pose. It must not duplicate the physical sling to satisfy
+the older two-loop inventory. Existing exterior and uncached topologies still
+require two branches and four mouths.
+
+Rock Rings extend the topology to one branch with two mouths and retain the
+whole measured channel centerline in `internalLoop.channelPointsByBranchID`.
+The solver settles the board from total cord length and checks both free legs
+and the interior path against the native solid in FreeCAD Python. The spine is
+rendered as transient cord geometry, hidden by the body except at its openings.
+Schema-2 sidecars attach this setup to each independent instance of the same
+model. See the [retained threading audit](source-audits/2026-09-30-rock-ring-threading.md)
+for the owner-confirmed hidden connection and estimated channel dimensions.
 
 If a board's cord does not fit the solver's assumptions (below), extend the
 solver with evidence and tests rather than falling back to hand-authored
@@ -61,7 +79,7 @@ pairing, one overhead anchor, estimated radius and rest length, canonical
 board poses, a positive clearance, `internalLoop.windingByPassageID`, and
 `internalLoop.channelLengthByBranchID` measured from the CAD pipe spines.
 The passage IDs and pair order are part of the topology. The sidecar is bound
-to the model descriptor's `modelSHA256` and covered by the delivery lock;
+to the model descriptor's `modelSHA256` and checked by package validation;
 `board.json` is generated from the FCStd manifest plus this sidecar.
 
 `Tools/HangboardCAD/export_rope_collision_solid.py` tessellates the final,
@@ -183,15 +201,28 @@ The current solver applies when all of these hold:
    to that void in the descriptor/importer coordinate basis.
 3. Each mouth's section plane (below) is representative of the bearing
    surface along that leg. The native solid is watertight for collision checks.
-4. The model has two branches, four distinct point mouths, and one winding
+4. The internal-loop model has one or two branches, two distinct point mouths
+   per branch, and one winding
    choice for each mouth. Each branch's `passageIDs` lists its paired mouths
    in traversal order.
 
+The `threadedLoopCord` extension instead requires one branch with two distinct
+mouths, its complete ordered native channel spine, and unobstructed rising
+legs. It does not use a section plane or surface winding; exact native-solid
+checks enforce cord radius plus the configured internal-loop clearance.
+
 **Channels.** A channel is either a curved `PartDesign::SubtractivePipe`
 (its Sketcher spine is measured) or a straight `Part::Cylinder` through-bore
-(its axis is measured). A through-bore's two mouths lie in the same section,
+(its axis is measured). A straight rectangular sling passage can be an editable
+`Part::Box` with an operator-selected `HangTenChannelAxis` of `x`, `y`, or `z`;
+the tool measures the transformed centerline between the actual mouths, not
+the cutter's overhang. A through-bore's two mouths lie in the same section,
 which the bore cuts in two; the solver bridges that gap to recover the
 exterior outline and reopens only the notch at the mouth it is solving.
+For a wide rectangular passage, explicitly select
+`ropeSolver.channelProfile=rectangular` with `mouth-x`: the solver joins matching
+parallel depth rims across the slot instead of circular morphological closing.
+Tapered, overlapping, or multiple section pieces are rejected for that method.
 
 **Section planes.** The sidecar's optional, authoring-only
 `ropeSolver.sectionPlane` chooses each mouth's plane. It is never merged into
@@ -249,7 +280,7 @@ tests. No solver choice can recover hidden threading from the mesh alone.
    Generated pose routes are a cache in the sidecar, not operator-drawn
    contacts. Generate `board.json` through the normal CAD package process;
    never commit that generated file.
-4. Validate the schema, model SHA, delivery lock, package inventory, and
+4. Validate the schema, model SHA, package inventory, and
    byte-for-byte CAD rebuild. Add a focused parser and native solver test for
    every pose and a negative test for malformed topology.
 5. Measure cord-centerline clearance against the **actual FreeCAD solid**,
@@ -259,10 +290,27 @@ tests. No solver choice can recover hidden threading from the mesh alone.
    picking and accessibility, that selection and orbit still work, and that
    clearing/reselecting a pose removes/recreates the transient cord.
 
-The Mini Bar's generated routes found at least 2.097 mm exterior
-centerline-to-wood clearance with a 2 mm estimated rope radius. Those numbers
-are specific to its display model; they are not a general rope or safety
-specification.
+The original Mini Bar routes used a 2 mm estimated radius. The owner has since
+confirmed a 7 mm cord diameter for both the Mini Bar and Clavellium. The current
+Mini Bar's generated routes have at least 3.586 mm sampled centerline-to-wood
+clearance with a 3.5 mm radius. Its 7.4 mm CAD bores remain display estimates;
+see [the cord and bore audit](source-audits/2026-09-29-cord-and-bore-scale.md).
+
+For live physics, `export_rope_physics.py` supports native circular
+`PartDesign::SubtractivePipe` channels as well as straight Box and native
+`Part::Cylinder` adapters. A Cylinder supplies the bore axis from its authored
+placement. Its complete circular cap boundary comes from the CAD wire, rather
+than its single seam vertex. Native side seam vertices are retained while the
+convex planar caps receive deterministic triangulation; OCCT's varying internal
+cap diagonals otherwise change the exported descriptor between identical runs.
+The pipe adapter intersects the native subtractive tool with the pre-cut wood
+to retain the actual channel void. Curved wood mouths have no planar cap:
+complete circular sections just inside the exits track sliding material
+crossings, while the full wood collision mesh determines physical rim contact.
+These sections do not replace the curved mouth geometry. The source spine
+between those sections supplies the initial channel traversal. Export support
+alone does not enable live physics for a package; it still needs an accepted
+initial state, numerical transition checks and visual review.
 
 ## Evidenced exterior wraps and incomplete passage evidence
 
@@ -442,10 +490,12 @@ valid. A radius that fills a mouth cannot also provide clearance: use an audited
 cord display estimate when warranted, and preserve the evidenced native solid.
 
 Run `solve_threaded_rope.py --apply`, then `--check --report <owned-path>`.
-The cache contains only body-space `wrappedRoutes`; apps transform those points
-and add the fixed world support. They render transient non-pickable tubes and
-do not infer missing topology or solve live physics. The report retains native
-clearance and length ratios for every pose.
+The cache contains only body-space `wrappedRoutes`. For this cached
+`cadRoutedCord` path, apps transform those points and add the fixed world
+support; they render transient non-pickable tubes without inferring missing
+topology or solving live physics. Separately authored live-physics packages
+use the physics-descriptor contract described above. The offline report
+retains native clearance and length ratios for every pose.
 
 For several model assets or reusable equipment instances, sidecar schema 2
 contains an `entries` array. Each entry names `presentationID`, optionally
@@ -453,4 +503,14 @@ contains an `entries` array. Each entry names `presentationID`, optionally
 authoring `ropeSolver`. Each target occurs once. Generation validates every
 descriptor hash, preserves manifest number spelling, and stages only the
 merged `board.json`. Pass `--presentation` and/or `--equipment-object` to the
-solver to select the exact entry. Lock the entire sidecar and every descriptor.
+solver to select the exact entry. Keep the sidecar hash-bound to every referenced descriptor.
+
+Schema 2 also retains the single-presentation `instanceSuspensions` form used by
+threaded-loop reusable pairs: `presentationID`, `modelSHA256`, and the exact
+map of both equipment IDs to suspension setups, with optional shared
+`ropeSolver` settings. The `entries` and `instanceSuspensions` forms are
+mutually exclusive. Each form validates its model hash and native instance
+identity; authoring solver settings are never staged into the runtime board.
+The offline solver handles both forms. `--equipment-object` may select one
+instance from a shared map; omitting it solves both. `--presentation` selects
+an entry in the multi-presentation form.
