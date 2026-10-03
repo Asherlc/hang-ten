@@ -12,6 +12,7 @@ parser.add_argument('--label', required=True)
 parser.add_argument('--kind', choices=['queries', 'strict', 'trajectory'], required=True)
 parser.add_argument('--cached-kernels', action='store_true', help='isolated immutable triangle edge/parity cache')
 parser.add_argument('--residual-stop', action='store_true', help='isolated post-step active-KKT residual stopping estimator')
+parser.add_argument('--fp-edge-bounds',action='store_true',help='certified original computed edge witness boxes')
 parser.add_argument('--inline-kernels',action='store_true',help='inline four confirmed geometry boundaries')
 parser.add_argument('--edge-tuples',action='store_true',help='remove measured per-face edge tuple heap array')
 parser.add_argument('--four-triangle-kernels', action='store_true', help='isolated four-lane Double triangle kernels')
@@ -23,10 +24,13 @@ root.mkdir()
 stage = root / 'native'; stage.mkdir()
 sources = stage / 'sources'; sources.mkdir()
 original = {name: baseline(name) for name in NAMES}
-assert sum([args.cached_kernels,args.residual_stop,args.four_triangle_kernels,args.edge_tuples,args.inline_kernels])<=1
+assert sum([args.cached_kernels,args.residual_stop,args.four_triangle_kernels,args.edge_tuples,args.inline_kernels,args.fp_edge_bounds])<=1
 for name in NAMES:
     text = (REPO / 'HangTen/Models' / name).read_text()
     current_control = text
+    if name=='RopeTriangleCollider.swift' and args.fp_edge_bounds:
+        from fp_edge_bounds.snapshot import collider_source as fp_source
+        text=fp_source(text)
     if name=='RopeTriangleCollider.swift' and args.inline_kernels:
         from inline_kernel.snapshot import collider_source as inline_source
         text=inline_source(text)
@@ -121,6 +125,8 @@ let initial=solver.state''')
         main=main.replace('"strainStop":0.0002,','"strainStop":0.0002,"postStepResidualEstimator":true,"poseGateMeters":0.00005,')
 if args.residual_stop:
     main='import Foundation\nimport simd\n'+(tool/'residual_stop/Fixtures.swift').read_text()+'\n'+main
+if args.fp_edge_bounds:
+    main='import Foundation\nimport simd\n'+(tool/'fp_edge_bounds/Fixtures.swift').read_text()+'\n'+main
 (sources / 'main.swift').write_text(main)
 files = sorted(sources.glob('*.swift'))
 binary = stage / (REPO.name + '-current-screen')
@@ -129,6 +135,7 @@ checkpoint = REPO / '.context/strong-owl-live-physics-solver-foundation/clav-con
 prior = REPO / '.context/strong-owl-live-physics-accepted-profile/native/after-1.json'
 inputs = [*files, *(REPO/'HangTen/Models'/n for n in NAMES), Path(__file__), checkpoint, prior, REPO/'Hangboards/clavellium-training-block/assets/primary.physics.json']
 if args.residual_stop: inputs.extend(p for p in (tool/'residual_stop').glob('*.*') if p.is_file())
+if args.fp_edge_bounds: inputs.extend(p for p in (tool/'fp_edge_bounds').glob('*.*') if p.is_file())
 if args.inline_kernels: inputs.extend(p for p in (tool/'inline_kernel').glob('*.*') if p.is_file())
 if args.edge_tuples: inputs.extend(p for p in (tool/'edge_tuple').glob('*.*') if p.is_file())
 if args.four_triangle_kernels: inputs.extend(p for p in (tool/'four_triangle_kernel').glob('*.*') if p.is_file())
