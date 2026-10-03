@@ -1,0 +1,83 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "closed": true,
+  "result": {
+    "accuracyPass": true,
+    "adopted": false,
+    "candidateCaps": 0,
+    "candidateMetrics": {
+      "clearanceMargin": 9.99997376953366e-05,
+      "geometryAccepted": true,
+      "lengthError": 3.6104230716205166e-10,
+      "speed": 0.0003823739690897227,
+      "strain": 6.805768393292055e-08
+    },
+    "candidateQPs": 11,
+    "candidateRetries": 0,
+    "currentDifferenceMeters": 2.8979560426078943e-15,
+    "failure": "invalid(\"fixed planar row <=5QP gate\")",
+    "fixtureChangedQueries": 567,
+    "fixtureCheckedQueries": 3236,
+    "fixturesPass": true,
+    "initialWoodRowsAdded": 11,
+    "initialWoodRowsCandidate": 162,
+    "initialWoodRowsCommon": 151,
+    "initialWoodRowsOriginal": 164,
+    "initialWoodRowsRemoved": 13,
+    "meritReceiptBitsPreserved": true,
+    "originalCaps": 0,
+    "originalQPs": 11,
+    "originalRetries": 0,
+    "owner": "strong-owl-live-physics",
+    "pairs": [],
+    "prefixIdentitySteps": 108,
+    "rollbackIdentity": true,
+    "scope": "planar QP row nonlinear work-count discriminator; original triangle merit/receipts; no speed claim",
+    "step": 109,
+    "strictCaps": 0,
+    "strictDifferenceMeters": 1.4714864747744564e-07,
+    "strictRetries": 0
+  },
+  "ownedGroupsAbsent": [
+    {
+      "group": 45357,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-5cf2e4826-planar-rows-red/native/resources.jsonl"
+    },
+    {
+      "group": 49266,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-69f0e40cc-planar-rows-red-v2/native/resources.jsonl"
+    },
+    {
+      "group": 49739,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-69f0e40cc-planar-rows-red-v2/native/resources.jsonl"
+    },
+    {
+      "group": 55320,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-69f0e40cc-planar-rows-checkpoint/native/resources.jsonl"
+    },
+    {
+      "group": 56028,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-69f0e40cc-planar-rows-checkpoint/native/resources.jsonl"
+    }
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-69f0e40cc-planar-rows-checkpoint/native/result.json": "97649c895092f43cd8b57309d6f9b5099bbc098eaa0ebbf0d8aa826ca15b96b4",
+    ".context/strong-owl-live-physics-armijo-69f0e40cc-planar-rows-checkpoint/native/provenance.json": "b04b3e64a56cdc05aefc12f53e5f241fa27ddb833d844904240d03db267fb23d",
+    ".context/strong-owl-live-physics-planar-rows-proposal/PLAN.md": "fa0e8f16ea9d8d809dccb0caa9cf7da1613d2b1f2a43d5e17ea0aa02e6bfb824",
+    "Tools/HangboardRopePrototype/run_armijo_checkpoint.py": "b4a3d35ea33ad914dcebb82ba143387dfb624bfe3ec34302366f517b69ababde",
+    "Tools/HangboardRopePrototype/planar_regions/rows_snapshot.py": "fb1f8059b015ada646c67ea1f106f61c8ac6135f630f223c8840b7969fb5669c",
+    "Tools/HangboardRopePrototype/planar_regions/RowsMain.swift": "c1777398cb023cb711bb96a28312931f2e618c5a2f7cc69cd0347474fa425917"
+  },
+  "limits": [
+    "One frozen nonlinear checkpoint; no timing, full trajectory or simulator claim.",
+    "Atlas selected large planar groups only; active sharp mouth-edge constraints were not replaced.",
+    "Initial compile syntax failures preceded behavioral RED; fixed once before RED/GREEN.",
+    "Original triangle merit and clearance receipts retained exactly; no app/CAD/display changes."
+  ]
+}
