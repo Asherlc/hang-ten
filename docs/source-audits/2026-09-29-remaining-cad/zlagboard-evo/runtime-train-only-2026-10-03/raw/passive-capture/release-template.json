@@ -1,0 +1,26 @@
+{
+  "runtimeAuthorized": false,
+  "exclusiveRuntimeOwnership": false,
+  "owner": "placid-badger-cad-second-half",
+  "simulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "controllerPID": 96137,
+  "boardID": "zlagboard.evo",
+  "arm": "control-a",
+  "runID": "placid-badger-cad-second-half-train-only-control-a",
+  "helperSHA256": "3fc04051847e945614905aa5cd76b04246c069410c3dccb369cda895a737dfde",
+  "scheduleSHA256": "a1ddc84211b458b6a0e188bb110e83f64350290119de6b586050e8accf510701",
+  "sourceReferencePath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/passive-capture/source-reference.json",
+  "sourceReferenceSHA256": "ROOT_TO_FILL",
+  "trainOnlyBuildSourceVerified": false,
+  "planID": "research.max-hangs",
+  "appArguments": [
+    "-workoutAudioCuesEnabled",
+    "NO"
+  ],
+  "parityPath": "ROOT_TO_FILL",
+  "paritySHA256": "ROOT_TO_FILL",
+  "binarySHA256": "ROOT_TO_FILL",
+  "outputDirectory": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a",
+  "priorReviewPath": "REQUIRED_FOR_ACTION_AND_CONTROL_B",
+  "priorReviewSHA256": "REQUIRED_FOR_ACTION_AND_CONTROL_B"
+}

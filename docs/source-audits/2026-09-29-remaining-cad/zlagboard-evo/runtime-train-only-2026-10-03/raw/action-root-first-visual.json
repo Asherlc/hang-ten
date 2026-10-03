@@ -1,0 +1,64 @@
+{
+  "images": [
+    {
+      "offset": 4,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-004s.png",
+      "sha256": "0dca6990046bd55d9500e829f42f0c7f15ac25953a8ef925585de1864fcc680d",
+      "wholeImageReviewed": true,
+      "phase": "Hang1",
+      "color": "red",
+      "handsVisible": false
+    },
+    {
+      "offset": 5,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-005s.png",
+      "sha256": "fffec8e090edd169857c3dbb9dcf31184e8cd08f7eca05ebd00ffe1df9594492",
+      "wholeImageReviewed": true,
+      "phase": "Hang1",
+      "color": "red",
+      "handsVisible": false
+    },
+    {
+      "offset": 6,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-006s.png",
+      "sha256": "986bd7d21750958289d894bb9404e7f807e750bda9b65b3baa4052a4ce9588bd",
+      "wholeImageReviewed": true,
+      "phase": "Hang1",
+      "color": "red",
+      "handsVisible": true
+    },
+    {
+      "offset": 10,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-010s.png",
+      "sha256": "030e52d6b20be2ca3bd73537ea7d0b7e59ae0c0072f60b64a9d914b0cb6f9e14",
+      "wholeImageReviewed": true,
+      "phase": "Rest1",
+      "color": "red",
+      "handsVisible": true
+    },
+    {
+      "offset": 11,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-011s.png",
+      "sha256": "ed52b8f363cac827bdbcd8426ab95151b1b599dafa46435a28da0799dd42ce8f",
+      "wholeImageReviewed": true,
+      "phase": "Rest1",
+      "color": "red",
+      "handsVisible": true
+    },
+    {
+      "offset": 18,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-018s.png",
+      "sha256": "768b870ccff9af90be6383410379e63d95b7e79951791a6c1cfb562645a01bd8",
+      "wholeImageReviewed": true,
+      "phase": "Rest1",
+      "color": "red",
+      "handsVisible": true
+    }
+  ],
+  "fullRunPending": true,
+  "visualFailureAlreadyObserved": true,
+  "findings": [
+    "Handsabsent004/005; visible006",
+    "Rest010/011/018 remainsred"
+  ]
+}

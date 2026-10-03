@@ -1,0 +1,130 @@
+{
+  "images": [
+    {
+      "offset": 4,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-004s.png",
+      "sha256": "0dca6990046bd55d9500e829f42f0c7f15ac25953a8ef925585de1864fcc680d",
+      "wholeImageReviewed": true,
+      "phase": "Hang1",
+      "color": "red",
+      "handsVisible": false
+    },
+    {
+      "offset": 5,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-005s.png",
+      "sha256": "fffec8e090edd169857c3dbb9dcf31184e8cd08f7eca05ebd00ffe1df9594492",
+      "wholeImageReviewed": true,
+      "phase": "Hang1",
+      "color": "red",
+      "handsVisible": false
+    },
+    {
+      "offset": 6,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-006s.png",
+      "sha256": "986bd7d21750958289d894bb9404e7f807e750bda9b65b3baa4052a4ce9588bd",
+      "wholeImageReviewed": true,
+      "phase": "Hang1",
+      "color": "red",
+      "handsVisible": true
+    },
+    {
+      "offset": 10,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-010s.png",
+      "sha256": "030e52d6b20be2ca3bd73537ea7d0b7e59ae0c0072f60b64a9d914b0cb6f9e14",
+      "wholeImageReviewed": true,
+      "phase": "Rest1",
+      "color": "red",
+      "handsVisible": true
+    },
+    {
+      "offset": 11,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-011s.png",
+      "sha256": "ed52b8f363cac827bdbcd8426ab95151b1b599dafa46435a28da0799dd42ce8f",
+      "wholeImageReviewed": true,
+      "phase": "Rest1",
+      "color": "red",
+      "handsVisible": true
+    },
+    {
+      "offset": 18,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-018s.png",
+      "sha256": "bad95c653e01e68dac169010fce2fffd67b63aa752519e502cd5301160297af1",
+      "wholeImageReviewed": true,
+      "phase": "Rest1",
+      "color": "red",
+      "handsVisible": true
+    },
+    {
+      "offset": 90,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-090s.png",
+      "sha256": "dc589eb7ddb7afc570f0d1ec8cf4dcd4efe6de3328ed87d858d8adcc8d2a79db",
+      "wholeImageReviewed": true,
+      "phase": "Rest1",
+      "color": "blue",
+      "handsVisible": true
+    },
+    {
+      "offset": 191,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-191s.png",
+      "sha256": "9aba710be0c4f53014c5bd4a914ba65d52b4399d9a2048a74f98cab1f3c338e4",
+      "wholeImageReviewed": true,
+      "phase": "Hang2",
+      "color": "blue",
+      "handsVisible": true
+    },
+    {
+      "offset": 192,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-192s.png",
+      "sha256": "1c85bbf688225236ecda377b4873817ee6bfffe3bab18f7a41cc7b4850ef0770",
+      "wholeImageReviewed": true,
+      "phase": "Hang2",
+      "color": "blue",
+      "handsVisible": true
+    },
+    {
+      "offset": 193,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-193s.png",
+      "sha256": "28a36d75409e3372554f2a37c2e4e02a70e9486fdc260aeef61ac66d243734cf",
+      "wholeImageReviewed": true,
+      "phase": "Hang2",
+      "color": "blue",
+      "handsVisible": true
+    },
+    {
+      "offset": 194,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-194s.png",
+      "sha256": "c298c9e204ad11ecde537850972361a95eb37362e3a279821d27a2cc62fab62f",
+      "wholeImageReviewed": true,
+      "phase": "Hang2",
+      "color": "blue",
+      "handsVisible": true
+    },
+    {
+      "offset": 195,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-195s.png",
+      "sha256": "9b4eb7aa0e35e2686fa7a6c7a07f7209311f7085882eb1405be27a7ee14d66c3",
+      "wholeImageReviewed": true,
+      "phase": "Hang2",
+      "color": "blue",
+      "handsVisible": true
+    },
+    {
+      "offset": 196,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-196s.png",
+      "sha256": "3a769edeea7d6149606460f4fa350242b0ddcfeb50da5a50649fb7a4ce7c9f6f",
+      "wholeImageReviewed": true,
+      "phase": "Hang2",
+      "color": "blue",
+      "handsVisible": true
+    }
+  ],
+  "visualResult": "FAIL",
+  "findings": [
+    "Early Rest remains red; all6 secondHang frames blue.",
+    "Initialhandsmissing4/5,present6 onward."
+  ],
+  "limitations": [
+    "Externalelapsed, no CPU brackets",
+    "Otherimages reviewed independently"
+  ]
+}
