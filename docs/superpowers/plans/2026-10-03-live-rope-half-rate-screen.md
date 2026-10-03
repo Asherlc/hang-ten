@@ -1,7 +1,9 @@
 # Isolated 120 Hz live-rope screen
 
-Status: proposed; the 1/120 experiment requires explicit user authorization.
-The immutable handoff currently requires 1/240 steps. No product adoption,
+Status: user-authorized on 2026-10-03; CLOSED at the first accuracy checkpoint.
+The 120 Hz candidate differed by 133.731 µm (>50 µm) from the 240 Hz control.
+See docs/source-audits/2026-10-03-live-half-rate-screen.md/json.
+The handoff's 1/240 requirement remains the default outside this screen. No product adoption,
 1/60 fallback, physical tolerance change, interpolation or new solver is included.
 
 Reason: the contact Armijo trajectory passed accuracy but used 4.765 seconds

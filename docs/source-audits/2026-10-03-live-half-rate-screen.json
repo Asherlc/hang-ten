@@ -1,0 +1,46 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "candidateHz": 120,
+  "controlHz": 240,
+  "attemptedSteps": 1,
+  "measuredSteps": 1,
+  "failure": "invalid(\"matched-time pose/cap/retry step 1\")",
+  "status": "closed: first matched-time accuracy checkpoint failed",
+  "accuracyPass": false,
+  "physicalChecksPass": true,
+  "poseDifferenceMetres": 0.00013373123116368807,
+  "poseLimitMetres": 5e-05,
+  "candidateSeconds": 0.012411041665473022,
+  "singleSampleBudgetSeconds": 0.008,
+  "candidateQPs": 6,
+  "controlQPs": 7,
+  "candidateCaps": 0,
+  "candidateRetries": 0,
+  "predictorDiscriminator": {
+    "owner": "strong-owl-live-physics",
+    "scope": "first-step scalar gravity/damping predictor discriminator; no new simulator/trajectory/solver",
+    "candidateHeightDrop": 0.0005863632426044985,
+    "controlHeightDrop": 0.0004626069027965085,
+    "measuredHeightDifference": 0.00012375633980798995,
+    "freePredictionHeightDifference": 0.00012375535667401462,
+    "candidateHeightPredictionResidual": 5.933664927893628e-09,
+    "controlHeightPredictionResidual": 4.9505309525680295e-09,
+    "fullPoseDifference": 0.00013373123116368807
+  },
+  "independentlyAbsentGroups": [
+    55457,
+    55690
+  ],
+  "limitations": [
+    "One attempted step, no p95, complete trajectory, strict-reference stage or simulator/video validation.",
+    "Scalar predictor comparison explains height error; it is not a general unconstrained trajectory proof."
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-6e84748eb-approved-half-rate/native/result.json": "4c166e53cfd294bed9a51b67e73ed3807a88c35445ffab138c11c8d3a078d5cc",
+    ".context/strong-owl-live-physics-armijo-6e84748eb-approved-half-rate/native/predictor-discriminator.json": "d6cd934d9aa5f7a79662884532e81894b350a9c231ea13103eafa6da5db3e3c4",
+    ".context/strong-owl-live-physics-armijo-6e84748eb-approved-half-rate/native/provenance.json": "2905be13d4824ed30ef228e6a738169c31cbd272d2a7cea7ecceab9c42cb1a4c",
+    ".context/strong-owl-live-physics-armijo-6e84748eb-approved-half-rate/native/resources.jsonl": "81bbc407089447c32fc70164a1a16b4c02e22101a3fa4612adb2404a87a178c8",
+    ".context/strong-owl-live-physics-armijo-6e84748eb-approved-half-rate/native/pending-input.json": "adbe066534cd59f5878751dd0601f1fec370788767805faef8030ebb5f1a559e"
+  }
+}
