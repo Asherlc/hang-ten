@@ -1,0 +1,22 @@
+{
+  "owner": "strong-owl-live-physics",
+  "release": 402332481,
+  "persistentUserAuthorizedEvidence": true,
+  "assets": [
+    {
+      "id": 607160533,
+      "name": "strong-owl-live-physics-clavellium-schedule-baseline.mp4",
+      "size": 2166075,
+      "sha256": "085b931e63fa17dd75fd6c911a614143c433837b6a1850f631ec95ecd1b8d64b",
+      "url": "https://github.com/Asherlc/hang-ten/releases/download/strong-owl-live-physics-schedule-debt-20261003/strong-owl-live-physics-clavellium-schedule-baseline.mp4"
+    },
+    {
+      "id": 607160532,
+      "name": "strong-owl-live-physics-clavellium-schedule-candidate.mp4",
+      "size": 2084433,
+      "sha256": "656a326d00c3f87b65ee28e3761cef9ce5fc370d34675fbb9c8c71f3d0d2351c",
+      "url": "https://github.com/Asherlc/hang-ten/releases/download/strong-owl-live-physics-schedule-debt-20261003/strong-owl-live-physics-clavellium-schedule-candidate.mp4"
+    }
+  ],
+  "sha256Evidence": "3f20c2ad37ecbcea124377ceafd7dcc87f258844f54eed3f4116a5eac7ddf800"
+}

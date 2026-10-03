@@ -1,0 +1,155 @@
+{
+  "accuracyPassed": true,
+  "actualScalarCandidateImplemented": false,
+  "adopted": false,
+  "fixedMaximumRatio": 0.8,
+  "medianRatio": 0.838070706386301,
+  "oracleOnly": true,
+  "owner": "strong-owl-live-physics",
+  "pairedRuns": [
+    {
+      "candidateSeconds": 0.004176625006948598,
+      "controlSeconds": 0.004980124998837709,
+      "corrections": 2,
+      "outputCounts": {
+        "clearanceLookups": 0,
+        "fullBuilds": 2,
+        "recordedConfigurations": 3,
+        "rowUpgrades": 1,
+        "scalarLookups": 2
+      },
+      "ratio": 0.8386586697971161,
+      "run": 0,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.004081124992808327,
+      "controlSeconds": 0.004869666678132489,
+      "corrections": 2,
+      "outputCounts": {
+        "clearanceLookups": 0,
+        "fullBuilds": 2,
+        "recordedConfigurations": 3,
+        "rowUpgrades": 1,
+        "scalarLookups": 2
+      },
+      "ratio": 0.838070706386301,
+      "run": 1,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.004142125006183051,
+      "controlSeconds": 0.004873500001849607,
+      "corrections": 2,
+      "outputCounts": {
+        "clearanceLookups": 0,
+        "fullBuilds": 2,
+        "recordedConfigurations": 3,
+        "rowUpgrades": 1,
+        "scalarLookups": 2
+      },
+      "ratio": 0.849928183976817,
+      "run": 2,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.004248083336278796,
+      "controlSeconds": 0.004878874999121763,
+      "corrections": 2,
+      "outputCounts": {
+        "clearanceLookups": 0,
+        "fullBuilds": 2,
+        "recordedConfigurations": 3,
+        "rowUpgrades": 1,
+        "scalarLookups": 2
+      },
+      "ratio": 0.8707096076541182,
+      "run": 3,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.004125958323129453,
+      "controlSeconds": 0.005014041671529412,
+      "corrections": 2,
+      "outputCounts": {
+        "clearanceLookups": 0,
+        "fullBuilds": 2,
+        "recordedConfigurations": 3,
+        "rowUpgrades": 1,
+        "scalarLookups": 2
+      },
+      "ratio": 0.8228807404129389,
+      "run": 4,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.004090666669071652,
+      "controlSeconds": 0.004885583330178633,
+      "corrections": 2,
+      "outputCounts": {
+        "clearanceLookups": 0,
+        "fullBuilds": 2,
+        "recordedConfigurations": 3,
+        "rowUpgrades": 1,
+        "scalarLookups": 2
+      },
+      "ratio": 0.8372933982730949,
+      "run": 5,
+      "wholePhysicalCheckpointBitIdentity": true
+    },
+    {
+      "candidateSeconds": 0.0041174166690325364,
+      "controlSeconds": 0.0050699583371169865,
+      "corrections": 2,
+      "outputCounts": {
+        "clearanceLookups": 0,
+        "fullBuilds": 2,
+        "recordedConfigurations": 3,
+        "rowUpgrades": 1,
+        "scalarLookups": 2
+      },
+      "ratio": 0.8121204150513573,
+      "run": 6,
+      "wholePhysicalCheckpointBitIdentity": true
+    }
+  ],
+  "performancePassed": false,
+  "prefixSteps": 139,
+  "scope": "complete current-source step140 scalar-only oracle ceiling; actual full-row upgrades/self/intercord/QP/CCD/metrics; host-only",
+  "closed": true,
+  "productSourceChanged": false,
+  "actualScalarQueryImplemented": false,
+  "physicsIdentityChecks": [
+    "serialized physical/material/history/tension checkpoint",
+    "per-link accepted clearance bounds",
+    "contact hints",
+    "convergence/full-step flags",
+    "QP/cap/retry schedule"
+  ],
+  "cacheRepresentationIdentityRequired": false,
+  "cleanupGroups": [
+    81998,
+    86482,
+    88971,
+    89499
+  ],
+  "cleanupVerifiedByCurrentProcessListing": true,
+  "initialCaptureFailure": "Oracle key included irrelevant portal enumeration order; failed closed before first completed pair. No result or speed gate existed. Corrected only dependency key in fresh root; original live cache and merit order preserved.",
+  "limitation": "Oracle uses actual full fused queries for row upgrades, including their original additional outputs. This screen is not a universal lower bound for every possible row-builder rewrite or an implemented production speed result.",
+  "sha256": {
+    ".context/strong-owl-live-physics-lazy-output-current-089a28bbb/native/run.log": "c1b58b440963bcdfe049ff179faa14ed7046ac90a6d9b12ccda247b1b30f6190",
+    ".context/strong-owl-live-physics-lazy-output-current-089a28bbb/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-lazy-output-current-089a28bbb/native/provenance.json": "4f9936155c4d516e346d3542ed59755453a4bdf8d85394f70d918d2bc7d6765b",
+    ".context/strong-owl-live-physics-lazy-output-current-089a28bbb/native/resources.jsonl": "149f47a8949ee37e2c9b574c32f80ead6a907d56797c9838460a9761dd32bc9b",
+    ".context/strong-owl-live-physics-lazy-output-current-089a28bbb-geometry-key/native/run.log": "b58a13d4f8cd6d57444fdc771f77c87c0e5f469afaf1f5bb4bd4462457a9b1b1",
+    ".context/strong-owl-live-physics-lazy-output-current-089a28bbb-geometry-key/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-lazy-output-current-089a28bbb-geometry-key/native/provenance.json": "2deb3df8debdf3b0b5e621ec1a559c1f694fb29768ffa1e9eafb6f70de354d41",
+    ".context/strong-owl-live-physics-lazy-output-current-089a28bbb-geometry-key/native/resources.jsonl": "64128a76dd7dd89ffeb095db5e58f9cb8bd50564d1c6154b2133565266814370",
+    ".context/strong-owl-live-physics-lazy-output-current-089a28bbb-geometry-key/native/result.json": "1366c3be4060fb85c98e79a1b52aa9ee14d719901ed531dc2fb246237e075172",
+    ".context/strong-owl-live-physics-lazy-output-plan/PLAN.md": "b0edf99d388d1c2d62296d4a872d646046d1d92dfdc814e4a7c9a2c37287ec12",
+    "Tools/HangboardRopePrototype/run_lazy_output_ceiling.py": "9091c9539c8b88937588552d8271804ee742f30a29bd236d17bb609bb773a5a4",
+    "Tools/HangboardRopePrototype/lazy_output_ceiling/Replay.swift": "cd8e7b4bc9dfee67218ed09af8b5b385f96786ec041d5eef9d532d64e8b56fba",
+    "Tools/HangboardRopePrototype/lazy_output_ceiling/snapshot.py": "652aabb1c44d359ff549697a2b12d092280ba459e46322f287290116d882fe5e",
+    "Tools/HangboardRopePrototype/lazy_output_ceiling/PhysicsIdentity.swift": "30b5dd6cfdb1767fae9b9db07964acd9a13dbff8a45c42b95f2636c2e666d353"
+  }
+}
