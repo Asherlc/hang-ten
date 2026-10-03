@@ -10,6 +10,7 @@ from run_live_speed_screen import NAMES, BASE, baseline, trace
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--label', required=True)
 parser.add_argument('--kind', choices=['queries', 'strict', 'trajectory'], required=True)
+parser.add_argument('--cached-kernels', action='store_true', help='isolated immutable triangle edge/parity cache')
 args = parser.parse_args()
 assert args.label and all(c in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in args.label)
 tool = Path(__file__).resolve().parent
@@ -20,6 +21,9 @@ sources = stage / 'sources'; sources.mkdir()
 original = {name: baseline(name) for name in NAMES}
 for name in NAMES:
     text = (REPO / 'HangTen/Models' / name).read_text()
+    if name == 'RopeTriangleCollider.swift' and args.cached_kernels:
+        from triangle_kernel_cache.snapshot import collider_source
+        text = collider_source(text)
     if name == 'RopeDynamicsSolver.swift':
         text = text.replace('private extension SIMD4', 'extension SIMD4')
         text += '\n' + (tool / 'stock_chain/CheckpointAdapter.swift').read_text()

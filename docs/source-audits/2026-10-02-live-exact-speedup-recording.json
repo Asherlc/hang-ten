@@ -1,0 +1,41 @@
+{
+  "owner": "strong-owl-live-physics",
+  "commit": "597333b47",
+  "platform": "iPhone 16 Pro Simulator iOS 26.3",
+  "normalSpeedCapture": true,
+  "retimed": false,
+  "batches": 85,
+  "acceptedSteps": 350.0,
+  "simulatedSeconds": 1.4583333333333333,
+  "engineMilliseconds": 3146.13054,
+  "p95BatchMeanStepMilliseconds": 12.19897925,
+  "settledFrames": 2,
+  "caps": 0.0,
+  "retries": 0.0,
+  "failedBatches": 0,
+  "maximumStrain": 0.00019731786947385643,
+  "minimumClearanceMargin": 9.925664235135032e-05,
+  "physicalChecksPassed": true,
+  "performanceGatePassed": false,
+  "limit": "Batch mean timings do not establish individual-step p95 or iPhone performance. The complete observed cost still misses real-time simulation.",
+  "videoURL": "https://github.com/Asherlc/hang-ten/releases/download/strong-owl-live-physics-exact-speedups-20261003t013100z/strong-owl-live-physics-clavellium-exact-speedups.mp4",
+  "timestamps": {
+    "clipSamples": 800,
+    "maximumRelativeTimestampErrorSeconds": 2.6645352591003757e-15,
+    "identicalCompressedSamples": 800,
+    "encodedTimestampOffsetSeconds": 5.04,
+    "sourceSamples": 1019,
+    "retimed": false
+  },
+  "testsPassed": 95,
+  "evidenceHashes": {
+    ".context/strong-owl-live-physics-ios-current/capture-after-reboot/strong-owl-live-physics-clavellium-exact-speedups.mp4": "fb8f5da3680f203939742e09e687be88b5c665c8be3d58ad4d6ff27691dafaa3",
+    ".context/strong-owl-live-physics-ios-current/capture-after-reboot/stderr.log": "daa33d74c30526b415970ad6321b731a0a996db67662158426c646cf42170e35",
+    ".context/strong-owl-live-physics-ios-current/capture-after-reboot/record.log": "922601c3314b2250ea6ffdf0a0f3b135d884b70f3e074a44d0f01260f2882f0a",
+    ".context/strong-owl-live-physics-ios-current/capture-after-reboot/timestamp-verification.json": "de0fe6f734e8a7660d93c689458b5b04dd4fb3c9368d07d8fb6728011d576a8b",
+    ".context/strong-owl-live-physics-ios-current/capture-after-reboot/TrimVideo.swift": "0164f5ae92c047228b6568ae3a87b2c794699c2f260ae0c4b6549db7c8601370",
+    ".context/strong-owl-live-physics-ios-current/capture-after-reboot/run.py": "8364aef5cae1e6eaaaa04db2761fad7848c5f97d85d7c09a1149b2cec1fb1a3e",
+    ".context/strong-owl-live-physics-ios-current/tests.log": "830b972559638abfc6cb210ade403c02525d962af10f3bbe558fcb0250e9108a",
+    ".context/strong-owl-live-physics-ios-current/cleanup-retry.json": "27cfe3fda1975498bab101a449ff3d3b5b2f2391a287de976e0c4688b026c259"
+  }
+}
