@@ -1,0 +1,22 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "publishedBaseline": "0972d85585f763ebca8b37c483539f8a53d518e1",
+  "correction": "Terminal unavailable board/single-hand/pair-hand hosts finish initial preparation using the existing unavailable fallback; no successful CPU readiness certification is fabricated. Loading, required-kind presence and current token/exactly-once rules remain.",
+  "red": {
+    "mountedTests": 3,
+    "failures": 6,
+    "exitStatus": 65,
+    "seconds": 15.461
+  },
+  "green": {
+    "tests": 21,
+    "failures": 0,
+    "exitStatus": 0,
+    "seconds": 11.711,
+    "recipe": "Debug withSWIFT_OPTIMIZATION_LEVEL=-O andOTHER_SWIFT_FLAGS=$(inherited) -assert-config Debug, matchingexistingCI"
+  },
+  "physicalProductionChanges": false,
+  "physicsTestWaitsChanged": false,
+  "canonicalAssetChanges": false,
+  "wholeIntegratedWorkflowStatus": "Still pending; these focused checks do not establish PR readiness."
+}

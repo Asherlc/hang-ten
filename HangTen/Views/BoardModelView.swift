@@ -12,6 +12,17 @@ struct BoardModelSurface: View {
             guard case .loading = self else { return nil }
             return "Downloading 3D model…"
         }
+
+        func preparationReadiness(hostID: UUID, preparationID: UUID?) -> WorkoutRendererReadiness {
+            guard let preparationID else { return .init() }
+            let status: WorkoutRendererReadiness.Renderer.Status
+            switch self {
+            case .loading: status = .loading
+            case .unavailable: status = .unavailable
+            case .ready: return .init() // The mounted host reports fresh CPU synchronization.
+            }
+            return .init(renderers: [hostID: .init(kind: .board, status: status, preparationID: preparationID)])
+        }
     }
 
     let board: BoardRevision
@@ -94,8 +105,8 @@ struct BoardModelSurface: View {
             }
         }
         .transformPreference(WorkoutRendererReadinessKey.self) { readiness in
-            // Preserve the ready host's descendant report. A loading/unavailable
-            // Surface adds its own false record until that host is mounted.
+            // Preserve the ready host's descendant report. Loading remains
+            // pending; terminal unavailability preserves the existing fallback.
             readiness.renderers.merge(pendingPreparation.renderers) { _, pending in pending }
         }
         .task(id: loadIdentity) {
@@ -142,9 +153,7 @@ struct BoardModelSurface: View {
     }
 
     private var pendingPreparation: WorkoutRendererReadiness {
-        guard preparationID != nil else { return .init() }
-        if case .ready = result { return .init() }
-        return .init(renderers: [preparationHostID: .init(kind: .board, isReady: false, preparationID: preparationID)])
+        result.preparationReadiness(hostID: preparationHostID, preparationID: preparationID)
     }
 
     private var loadIdentity: BoardModelRealityKey? {

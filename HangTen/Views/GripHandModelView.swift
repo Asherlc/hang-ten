@@ -155,7 +155,8 @@ struct GripHandModelView: View {
             .accessibilityHidden(true)
             .preference(key: WorkoutRendererReadinessKey.self, value: preparationID == nil
                         ? .init() : .init(renderers: [preparationHostID: .init(
-                            kind: .hand, isReady: synchronizedPreparation == currentPreparation(in: size) && !isUnavailable,
+                            kind: .hand, status: isUnavailable ? .unavailable
+                                : synchronizedPreparation == currentPreparation(in: size) ? .ready : .loading,
                             preparationID: preparationID)]))
         }
     }
@@ -876,7 +877,8 @@ struct GripHandPairModelView: View {
             .accessibilityHidden(true)
             .preference(key: WorkoutRendererReadinessKey.self, value: preparationID == nil
                         ? .init() : .init(renderers: [preparationHostID: .init(
-                            kind: .hand, isReady: synchronizedPreparation == currentPreparation(in: size) && !isUnavailable,
+                            kind: .hand, status: isUnavailable ? .unavailable
+                                : synchronizedPreparation == currentPreparation(in: size) ? .ready : .loading,
                             preparationID: preparationID)]))
         }
     }

@@ -1,0 +1,39 @@
+{
+  "scope": "Independent read-only review of current terminal renderer-unavailability correction; no builds/tests/runtime/resources or source edits.",
+  "reviewedFiles": [
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "7c6a9d3902870dcc30d2035ef89a4c0515b22587da1f9496997b049aeffcec65"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "sha256": "15517e548d52fd29f52289a0fdbc5654199fc723c41759bcaf1dc0c3206c55e1"
+    },
+    {
+      "path": "HangTen/Views/WorkoutView.swift",
+      "sha256": "4de76a2fbb3fcf8f5968706e67b63260dcb50be08611e6e7088177ac8cd474d8"
+    },
+    {
+      "path": "HangTenTests/WorkoutTimelineTests.swift",
+      "sha256": "05a107902a4a78a5b29f1e1852d6893775efbf2c93b74eb5af53fca651b67474"
+    }
+  ],
+  "findings": [],
+  "blockingFindings": [],
+  "conclusion": "Scoped correction is semantically consistent: explicit terminal fallback resolves first-start preparation without certifying successful CPU synchronization; required host kinds/current request identity and exactly-once lifecycle remain enforced.",
+  "checks": {
+    "rendererStates": "loading/ready/unavailable are explicit; legacy Bool initializer maps false only to loading and computed isReady only to ready.",
+    "resolvedSemantics": "Required board/hand kind presence retained; every mounted report must be nonloading; unavailable does not make isReady true.",
+    "requestLifecycle": "consume retains pending check and all current UUID equality; only aggregate predicate changes. Cancellation, finishPreparation, initial-release reuse and exactly-once consumption remain unchanged. Nil preparation IDs report no entries from surface/hand hosts.",
+    "boardSurface": "Loading/unavailable report own host/current token. Ready returns empty own report, preserving mounted descendant CPU synchronization. Normal loader failure remains real production .task path with fallback unchanged.",
+    "handHosts": "Single/pair reports terminal state only from existing isUnavailable, otherwise original exact synchronization comparison selects ready/loading. CPU size/pose/side/reset/token checks remain unchanged.",
+    "unchangedBehavior": "Diff does not change startup flags, countdown durations, timer/audio scheduling, resume/Skip, cancellation wiring, camera handling, training targets, or fallback visual text.",
+    "tests": "Four policy/ResultState cases plus three actually mounted failing-host cases are meaningful behavioral coverage. Board failure uses unique presentationID and unavailable real media, exercising production resource resolution without new injection seam. Mounted tests assert actual gate release and no ready certificate; child UIWindow is released/restored in defer. Prior ready-host propagation tests remain."
+  },
+  "testEvidenceQualification": "Root reports pre-fix red actual-host suite:3tests,6failures,15.461s,exit65, normal resourceUnavailable board error. This review did not execute tests or independently reread all raw red archive; green validation remains root-owned/in progress.",
+  "remainingValidation": [
+    "Run targeted green readiness/host/timeline cases including existing successful synchronization and current-token propagation regressions.",
+    "Keep red failure/archive immutable; report green CPU setup/fallback resolution separately from later screenshot/GPU evidence."
+  ],
+  "riskLimit": "Allowing training to proceed with existing unavailable visual fallback is intentional. This change neither certifies an unavailable renderer nor adds GPU-presented-frame/physical-device guarantees."
+}

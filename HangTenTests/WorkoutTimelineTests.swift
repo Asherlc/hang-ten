@@ -4989,7 +4989,7 @@ final class WorkoutRendererReadinessTests: XCTestCase {
         XCTAssertFalse(value.isReady(requiresBoard: true, requiresHands: false))
     }
 
-    func testUnavailableHandKeepsFirstStartPending() {
+    func testLoadingHandKeepsFirstStartPending() {
         var value = WorkoutRendererReadiness()
         value.renderers[UUID()] = .init(kind: .board, isReady: true)
         value.renderers[UUID()] = .init(kind: .hand, isReady: false)
@@ -5013,6 +5013,75 @@ final class WorkoutRendererReadinessTests: XCTestCase {
 
 
 final class WorkoutRendererStartGateTests: XCTestCase {
+    func testTerminalFallbackReleasesStartOnlyOnceWithoutClaimingRendererReadiness() {
+        let combinations: [(WorkoutRendererReadiness.Renderer.Status, WorkoutRendererReadiness.Renderer.Status)] = [
+            (.unavailable, .ready), (.ready, .unavailable), (.unavailable, .unavailable)
+        ]
+        for (board, hand) in combinations {
+            var gate = WorkoutRendererStartGate()
+            XCTAssertFalse(gate.requestFirstStart())
+            let reports = WorkoutRendererReadiness(renderers: [
+                UUID(): .init(kind: .board, status: board, preparationID: gate.requestID),
+                UUID(): .init(kind: .hand, status: hand, preparationID: gate.requestID)
+            ])
+            XCTAssertFalse(reports.isReady(requiresBoard: true, requiresHands: true))
+            XCTAssertTrue(gate.consume(reports, requiresBoard: true, requiresHands: true))
+            XCTAssertFalse(gate.isPending)
+            XCTAssertFalse(gate.consume(reports, requiresBoard: true, requiresHands: true))
+        }
+    }
+
+    func testTerminalFailureDoesNotReleaseMissingOrStillLoadingRequiredHosts() {
+        var gate = WorkoutRendererStartGate()
+        XCTAssertFalse(gate.requestFirstStart())
+        var reports = WorkoutRendererReadiness(renderers: [
+            UUID(): .init(kind: .board, status: .unavailable, preparationID: gate.requestID)
+        ])
+        XCTAssertFalse(gate.consume(reports, requiresBoard: true, requiresHands: true))
+        let hand = UUID()
+        reports.renderers[hand] = .init(kind: .hand, status: .loading, preparationID: gate.requestID)
+        XCTAssertFalse(gate.consume(reports, requiresBoard: true, requiresHands: true))
+        XCTAssertTrue(gate.isPending)
+        reports.renderers[hand] = .init(kind: .hand, status: .unavailable, preparationID: gate.requestID)
+        XCTAssertTrue(gate.consume(reports, requiresBoard: true, requiresHands: true))
+    }
+
+    func testCancelledAndStaleUnavailableReportsCannotStartButFreshFallbackCan() {
+        var gate = WorkoutRendererStartGate()
+        XCTAssertFalse(gate.requestFirstStart())
+        let oldID = gate.requestID
+        let stale = WorkoutRendererReadiness(renderers: [
+            UUID(): .init(kind: .board, status: .unavailable, preparationID: oldID)
+        ])
+        gate.cancel()
+        XCTAssertFalse(gate.consume(stale, requiresBoard: true, requiresHands: false))
+        XCTAssertFalse(gate.requestFirstStart())
+        XCTAssertNotEqual(gate.requestID, oldID)
+        XCTAssertFalse(gate.consume(stale, requiresBoard: true, requiresHands: false))
+        let fresh = WorkoutRendererReadiness(renderers: [
+            UUID(): .init(kind: .board, status: .unavailable, preparationID: gate.requestID)
+        ])
+        XCTAssertTrue(gate.consume(fresh, requiresBoard: true, requiresHands: false))
+        gate.finishPreparation()
+        XCTAssertNil(gate.requestID)
+        XCTAssertFalse(gate.consume(fresh, requiresBoard: true, requiresHands: false))
+        XCTAssertTrue(gate.requestFirstStart())
+    }
+
+    func testBoardSurfaceLoadingAndTerminalFailureHaveDistinctPreparationReports() {
+        let host = UUID(), request = UUID()
+        let loading = BoardModelSurface.ResultState.loading.preparationReadiness(hostID: host, preparationID: request)
+        let unavailable = BoardModelSurface.ResultState.unavailable.preparationReadiness(hostID: host, preparationID: request)
+        XCTAssertEqual(loading.renderers[host]?.status, .loading)
+        XCTAssertEqual(unavailable.renderers[host]?.status, .unavailable)
+        XCTAssertEqual(unavailable.renderers[host]?.preparationID, request)
+        XCTAssertFalse(loading.isResolved(requiresBoard: true, requiresHands: false))
+        XCTAssertTrue(unavailable.isResolved(requiresBoard: true, requiresHands: false))
+        XCTAssertFalse(unavailable.isReady(requiresBoard: true, requiresHands: false))
+        XCTAssertTrue(BoardModelSurface.ResultState.unavailable.preparationReadiness(
+            hostID: host, preparationID: nil).renderers.isEmpty)
+    }
+
     func testPreparationConsumesTheStartIntentOnlyOnce() {
         var gate = WorkoutRendererStartGate()
         XCTAssertFalse(gate.requestFirstStart())
@@ -5078,6 +5147,84 @@ final class WorkoutRendererStartGateTests: XCTestCase {
 
 
 final class WorkoutRendererPreferenceTests: XCTestCase {
+    @MainActor
+    func testUnavailableSingleHandReleasesInitialStart() async throws {
+        let scene = GripHandRealityScene(assetResult: .failure(GripHandAsset.AssetError.missingResource))
+        XCTAssertTrue(scene.isUnavailable)
+        try await assertTerminalFailureReleasesStart(
+            GripHandModelView(posture: .halfCrimp, fingerConfiguration: nil,
+                              side: .left, resetToken: 0, scene: scene),
+            requiresBoard: false, requiresHands: true)
+    }
+
+    @MainActor
+    func testUnavailablePairHandsReleasesInitialStart() async throws {
+        let scene = GripHandRealityPairScene(assetResult: .failure(GripHandAsset.AssetError.missingResource))
+        XCTAssertFalse(scene.isAvailable)
+        try await assertTerminalFailureReleasesStart(
+            GripHandPairModelView(posture: .halfCrimp, fingerConfiguration: nil, scene: scene),
+            requiresBoard: false, requiresHands: true)
+    }
+
+    @MainActor
+    func testBoardLoadFailureReleasesInitialStart() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "zlagboard.evo"))
+        guard case .model(let original) = board.defaultPresentation.media else {
+            return XCTFail("Expected native fixture")
+        }
+        // A unique presentation key avoids borrowing a cached successful host.
+        // An unregistered presentation has no packaged or ODR resource,
+        // so the normal loader reaches its resource-unavailable failure.
+        let presentation = BoardPresentation(
+            id: "terminal-load-failure-fixture", name: "Failure fixture",
+            aspectRatio: board.defaultPresentation.aspectRatio, isDefault: false,
+            media: .model(BoardModelMedia(assetPath: "assets/missing-fixture.usdz",
+                descriptorPath: original.descriptorPath, descriptor: original.descriptor,
+                display: original.display)))
+        try await assertTerminalFailureReleasesStart(
+            BoardModelSurface(board: board, presentation: presentation,
+                              highlightedContactIDs: [], highlightMode: .active, onContactTap: nil),
+            requiresBoard: true, requiresHands: false)
+    }
+
+    @MainActor
+    private func assertTerminalFailureReleasesStart<Content: View>(
+        _ content: Content, requiresBoard: Bool, requiresHands: Bool
+    ) async throws {
+        var gate = WorkoutRendererStartGate()
+        XCTAssertFalse(gate.requestFirstStart())
+        let request = try XCTUnwrap(gate.requestID)
+        let released = expectation(description: "Unavailable fallback releases initial Start")
+        var fulfilled = false
+        var received: [WorkoutRendererReadiness] = []
+        let root = content.frame(width: 360, height: 100)
+            .environment(\.workoutRendererPreparationID, request)
+            .onPreferenceChange(WorkoutRendererReadinessKey.self) { value in
+                received.append(value)
+                if !fulfilled, gate.consume(value, requiresBoard: requiresBoard, requiresHands: requiresHands) {
+                    fulfilled = true
+                    released.fulfill()
+                }
+            }
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }.first)
+        let previous = scene.windows.first(where: \.isKeyWindow)
+        let window = UIWindow(windowScene: scene)
+        window.accessibilityIdentifier = "placid-badger-cad-second-half-terminal-preparation-test"
+        window.rootViewController = UIHostingController(rootView: root)
+        defer {
+            window.isHidden = true
+            window.rootViewController = nil
+            previous?.makeKey()
+        }
+        window.makeKeyAndVisible()
+        await fulfillment(of: [released], timeout: 5)
+        XCTAssertFalse(gate.isPending)
+        XCTAssertTrue(received.contains { !$0.renderers.isEmpty })
+        XCTAssertFalse(received.last?.isReady(requiresBoard: requiresBoard, requiresHands: requiresHands) ?? true,
+                       "An unavailable fallback must never certify successful CPU rendering")
+    }
+
     @MainActor
     func testMountedModelAndHandsForwardPreparationThroughSurface() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "zlagboard.evo"))

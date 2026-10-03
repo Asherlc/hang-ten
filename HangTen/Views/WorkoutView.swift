@@ -1853,15 +1853,35 @@ struct WorkoutView: View {
 struct WorkoutRendererReadiness: Equatable {
     enum Kind: Equatable { case board, hand }
     struct Renderer: Equatable {
+        enum Status: Equatable { case loading, ready, unavailable }
         let kind: Kind
-        let isReady: Bool
-        var preparationID: UUID? = nil
+        let status: Status
+        let preparationID: UUID?
+        var isReady: Bool { status == .ready }
+
+        init(kind: Kind, isReady: Bool, preparationID: UUID? = nil) {
+            self.init(kind: kind, status: isReady ? .ready : .loading, preparationID: preparationID)
+        }
+
+        init(kind: Kind, status: Status, preparationID: UUID? = nil) {
+            self.kind = kind
+            self.status = status
+            self.preparationID = preparationID
+        }
     }
     var renderers: [UUID: Renderer] = [:]
     func isReady(requiresBoard: Bool, requiresHands: Bool) -> Bool {
         (!requiresBoard || renderers.values.contains { $0.kind == .board })
             && (!requiresHands || renderers.values.contains { $0.kind == .hand })
             && renderers.values.allSatisfy(\.isReady)
+    }
+
+    /// Terminal load failures use the existing unavailable fallback. They
+    /// finish preparation without certifying successful renderer setup.
+    func isResolved(requiresBoard: Bool, requiresHands: Bool) -> Bool {
+        (!requiresBoard || renderers.values.contains { $0.kind == .board })
+            && (!requiresHands || renderers.values.contains { $0.kind == .hand })
+            && renderers.values.allSatisfy { $0.status != .loading }
     }
 }
 
@@ -1906,8 +1926,8 @@ struct WorkoutRendererStartGate {
                           requiresBoard: Bool, requiresHands: Bool) -> Bool {
         guard isPending,
               readiness.renderers.values.allSatisfy({ $0.preparationID == requestID }),
-              readiness.isReady(requiresBoard: requiresBoard,
-                                requiresHands: requiresHands) else { return false }
+              readiness.isResolved(requiresBoard: requiresBoard,
+                                   requiresHands: requiresHands) else { return false }
         isPending = false
         isReleased = true
         return true
