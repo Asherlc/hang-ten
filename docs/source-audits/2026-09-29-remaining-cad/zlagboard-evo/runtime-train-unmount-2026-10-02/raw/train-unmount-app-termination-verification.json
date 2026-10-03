@@ -1,0 +1,18 @@
+{
+  "pid": 18015,
+  "command": [
+    "rtk",
+    "proxy",
+    "ps",
+    "-p",
+    "18015",
+    "-o",
+    "pid=,args="
+  ],
+  "exitStatus": 1,
+  "stdout": "",
+  "stderr": "",
+  "absent": true,
+  "epoch": 1790991722.33296,
+  "scope": "Exact owned app only; Simulator and DerivedData remain registered under root controller90373."
+}

@@ -1,0 +1,340 @@
+{
+  "status": "Completed bounded two-arm diagnostic; valid CONTROL failure and valid UNMOUNT visual pass",
+  "debugDylibSHA256": "9855fc146d9bf381797b8a982a70f96e7f001c9838e5fd49df2d590e8d6d2242",
+  "arms": {
+    "control": {
+      "valid": true,
+      "visualFailure": true,
+      "visualReviewSHA256": "7697f3ff8debdda1f2b1bdb3c3e19ce33ed7019f8e4650ec5a065753acf7b12f",
+      "observedColors": [
+        "red",
+        "red",
+        "red",
+        "red",
+        "red",
+        "red",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue"
+      ],
+      "readinessSeconds": 5.096796292011277,
+      "checks": {
+        "structural-correspondence.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-landscape/structural-correspondence.json",
+          "sha256": "419dd6c9dc61d5abe5a4d4c03ce69c3fb1a27e939fdcc2cf7b125fed63ab5187",
+          "checks": {
+            "completeContiguous": true,
+            "captures12": true,
+            "allCPUBrackets": true,
+            "sameScene": true,
+            "naturalFirstHang": true,
+            "naturalRest": true,
+            "freshSession": true,
+            "boundaryAppActive": true,
+            "boundaryWindowActive": true,
+            "boundaryLandscape": true,
+            "lateBoundaryCensus": true,
+            "noAXOrTouch": true
+          }
+        },
+        "hand-lifetime-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-landscape/hand-lifetime-validation.json",
+          "sha256": "2d59cc0e83c1b812933fa45b6b4338ea190f89859810a43b05fc4f6470a9d3fd",
+          "checks": {
+            "completeOpeningStream": true,
+            "instrumentationVersion": true,
+            "suppressionFlagCorrect": true,
+            "allFourCountsOnEveryRecord": true,
+            "openingCountsZero": true,
+            "countsMonotonic": true,
+            "finalMarkerAfterLastCapture": true,
+            "noRecorderErrorOrCap": true,
+            "strictOFFZeroAllFourLifetimeCounts": true
+          }
+        },
+        "strict-absence-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-landscape/strict-absence-validation.json",
+          "sha256": "4cf25e38ef9a09a2bb63f8ee632e3c17867c0bf1ef937fe144af642df468dd32",
+          "checks": {
+            "strictFlagEnabled": true,
+            "perspectiveFlagAbsent": true,
+            "openingStrictEnabled": true,
+            "allFourCountsZeroThroughout": true,
+            "noHandLifecycleEvents": true,
+            "noHandCameraEvents": true
+          }
+        },
+        "normal-host-frame-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-landscape/normal-host-frame-validation.json",
+          "sha256": "f361baad7c61a1a8891a685a30adcfd13b7a0f5ecd89af668069b1bb7f4af8b1",
+          "checks": {
+            "workoutSceneFromCountdown": true,
+            "hostObserved": true,
+            "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+            "sameHost": true,
+            "sameActualScene": true,
+            "rootCameraActiveSameScene": true,
+            "hostVisible": true,
+            "sampledFramesOnMonotoneOwnEndpointPath": true,
+            "allPostFirstCaptureCensusesFinal": true
+          }
+        },
+        "train-constructor-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-landscape/train-constructor-validation.json",
+          "sha256": "9ef3fd54754d9ec13e636aa2d514876d7ecadaae18d64cc77b1ceaeded1f5644",
+          "checks": {
+            "completeContiguous": true,
+            "openingBeforeConstructors": true,
+            "uniqueConstructorTokens": true,
+            "exactlyOneWorkoutConstructor": true,
+            "exactlyOneWorkoutMake": true,
+            "allSceneRecordsHaveConstructor": true,
+            "markerGateMatches": true,
+            "strictHandsEnabled": true,
+            "observedPredecessorConstruction": true
+          }
+        },
+        "guarded-detach-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-landscape/guarded-detach-validation.json",
+          "sha256": "58d7a21721a2c2326b5252d0f2109ba575cb0a1b75561dde18eb78320064b215",
+          "checks": {
+            "commonTrial": true,
+            "normalTrainPresentHandsOff": true,
+            "exactTwoConstructorsAndMakes": true,
+            "oneBeforeAfterTrainOnly": true,
+            "actionFlagCorrect": true,
+            "allHostsRetainedCurrentValid": true,
+            "tagMatchesExactPredecessor": true,
+            "oneStableOwnerPerHost": true,
+            "beforeOwnershipObserved": true,
+            "actionBeforeFirstHang": true,
+            "commonDetachEnabledBothArms": true,
+            "structuralFlagMatchesArm": true,
+            "exactEnvironmentAllowlist": true,
+            "postActionEveryTrialHasPredecessor": true,
+            "bothHostsPresentFromFirstHang": true,
+            "workoutAttachedUnmarkedUnchanged": true,
+            "expectedPredecessorAttachmentThroughout": true,
+            "weakPredecessorAliveEveryPostObservation": true,
+            "weakMembershipMatchesAction": true,
+            "weakEntityIDsPreserved": true,
+            "observationsThroughTail": true
+          }
+        },
+        "train-navigation-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-landscape/train-navigation-validation.json",
+          "sha256": "2d305127231f50cf40b8ce3f5b357db9cc5ea6ac6ff7c1e834accb6231033f77",
+          "checks": {
+            "readinessPassedWithinBound": true,
+            "readinessEvidenceInCompleteTrace": true,
+            "readinessBeforeOpenURL": true,
+            "initialTrainConstructorAndMakeBeforeOpenURL": true,
+            "exactlyInitialFalseThenTrue": true,
+            "initialBoardMapBeforeOpenURL": true,
+            "navigationTrueAfterOpenURLBeforeFirstHang": true,
+            "requestedBranchMatchesAction": true,
+            "expectedBoardPlanPresentation": true,
+            "navFlagsCorrect": true,
+            "sameReadyPredecessorIsDetached": true,
+            "distinctWorkoutExactlyOne": true
+          }
+        }
+      }
+    },
+    "unmount": {
+      "valid": true,
+      "visualFailure": false,
+      "visualReviewSHA256": "b8b0ee1dca2803edfd537b837c74c22401c03ffdff4b10d4c3f62d511004137a",
+      "observedColors": [
+        "red",
+        "red",
+        "red",
+        "red",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "red",
+        "red",
+        "red",
+        "red"
+      ],
+      "readinessSeconds": 3.980552749999333,
+      "checks": {
+        "structural-correspondence.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/structural-correspondence.json",
+          "sha256": "ae5d91c5d9324945b6cafe81ab0bed03cd6decd55ffc7f6ea870ebaef0fd796d",
+          "checks": {
+            "completeContiguous": true,
+            "captures12": true,
+            "allCPUBrackets": true,
+            "sameScene": true,
+            "naturalFirstHang": true,
+            "naturalRest": true,
+            "freshSession": true,
+            "boundaryAppActive": true,
+            "boundaryWindowActive": true,
+            "boundaryLandscape": true,
+            "lateBoundaryCensus": true,
+            "noAXOrTouch": true
+          }
+        },
+        "hand-lifetime-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/hand-lifetime-validation.json",
+          "sha256": "1028b2a33c7883e085048e76e6490f18e9447d0c36b32c7b62243a1eff577625",
+          "checks": {
+            "completeOpeningStream": true,
+            "instrumentationVersion": true,
+            "suppressionFlagCorrect": true,
+            "allFourCountsOnEveryRecord": true,
+            "openingCountsZero": true,
+            "countsMonotonic": true,
+            "finalMarkerAfterLastCapture": true,
+            "noRecorderErrorOrCap": true,
+            "strictOFFZeroAllFourLifetimeCounts": true
+          }
+        },
+        "strict-absence-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/strict-absence-validation.json",
+          "sha256": "f365bcadab6873aec5cc5f798959540d95d7c1a94319bed90879ae29a16036f5",
+          "checks": {
+            "strictFlagEnabled": true,
+            "perspectiveFlagAbsent": true,
+            "openingStrictEnabled": true,
+            "allFourCountsZeroThroughout": true,
+            "noHandLifecycleEvents": true,
+            "noHandCameraEvents": true
+          }
+        },
+        "normal-host-frame-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/normal-host-frame-validation.json",
+          "sha256": "3293560ae32c98ddccf16334aa8c36d1fca5ba19e19814ca7d02db582d2f35ec",
+          "checks": {
+            "workoutSceneFromCountdown": true,
+            "hostObserved": true,
+            "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+            "sameHost": true,
+            "sameActualScene": true,
+            "rootCameraActiveSameScene": true,
+            "hostVisible": true,
+            "sampledFramesOnMonotoneOwnEndpointPath": true,
+            "allPostFirstCaptureCensusesFinal": true
+          }
+        },
+        "train-constructor-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/train-constructor-validation.json",
+          "sha256": "31a6f6ecad30c57e137518d584d1368bc42dd209d4f287d01bf1b9d3a2533a9c",
+          "checks": {
+            "completeContiguous": true,
+            "openingBeforeConstructors": true,
+            "uniqueConstructorTokens": true,
+            "exactlyOneWorkoutConstructor": true,
+            "exactlyOneWorkoutMake": true,
+            "allSceneRecordsHaveConstructor": true,
+            "markerGateMatches": true,
+            "strictHandsEnabled": true,
+            "observedPredecessorConstruction": true
+          }
+        },
+        "guarded-detach-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/guarded-detach-validation.json",
+          "sha256": "fed965875c3ea0ccb26f0eeb1db2384bf399ff19b1bfbc223c43c2cb24625340",
+          "checks": {
+            "commonTrial": true,
+            "normalTrainPresentHandsOff": true,
+            "exactTwoConstructorsAndMakes": true,
+            "oneBeforeAfterTrainOnly": true,
+            "actionFlagCorrect": true,
+            "allHostsRetainedCurrentValid": true,
+            "tagMatchesExactPredecessor": true,
+            "oneStableOwnerPerHost": true,
+            "beforeOwnershipObserved": true,
+            "actionBeforeFirstHang": true,
+            "commonDetachEnabledBothArms": true,
+            "structuralFlagMatchesArm": true,
+            "exactEnvironmentAllowlist": true,
+            "postActionEveryTrialHasPredecessor": true,
+            "bothHostsPresentFromFirstHang": true,
+            "workoutAttachedUnmarkedUnchanged": true,
+            "expectedPredecessorAttachmentThroughout": true,
+            "weakPredecessorAliveEveryPostObservation": true,
+            "weakMembershipMatchesAction": true,
+            "weakEntityIDsPreserved": true,
+            "observationsThroughTail": true
+          }
+        },
+        "train-navigation-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/train-navigation-validation.json",
+          "sha256": "3584ed6ac762712afeb686e1221a63172e40dfc979f6e5e3e0c2ec4288bb02db",
+          "checks": {
+            "readinessPassedWithinBound": true,
+            "readinessEvidenceInCompleteTrace": true,
+            "readinessBeforeOpenURL": true,
+            "initialTrainConstructorAndMakeBeforeOpenURL": true,
+            "exactlyInitialFalseThenTrue": true,
+            "initialBoardMapBeforeOpenURL": true,
+            "navigationTrueAfterOpenURLBeforeFirstHang": true,
+            "requestedBranchMatchesAction": true,
+            "expectedBoardPlanPresentation": true,
+            "navFlagsCorrect": true,
+            "sameReadyPredecessorIsDetached": true,
+            "distinctWorkoutExactlyOne": true
+          }
+        }
+      }
+    }
+  },
+  "crossArmChecks": {
+    "sameBinary": true,
+    "onlyActionAndRunIDEnvironmentDifference": true,
+    "sameNormalFrameEndpoints": true,
+    "sameResolvedWorkoutInputs": true,
+    "sameRootCameraTransformSets": true,
+    "sameConstructorAndMakeCounts": true
+  },
+  "lifecycleOrdering": {
+    "control": [
+      "board-scene-constructed:predecessor",
+      "view-make:predecessor",
+      "board-scene-constructed:workout",
+      "view-make:workout",
+      "detach-trial-before:predecessor",
+      "detach-trial-after:predecessor",
+      "view-disappear:predecessor"
+    ],
+    "unmount": [
+      "board-scene-constructed:predecessor",
+      "view-make:predecessor",
+      "detach-trial-before:predecessor",
+      "detach-trial-after:predecessor",
+      "view-disappear:predecessor",
+      "board-scene-constructed:workout",
+      "view-make:workout"
+    ],
+    "qualification": "CONTROL workout constructor/make precede Train detach/disappear; UNMOUNT Train detach/disappear precede workout constructor/make. Structural intervention changes startup ordering as well as later weak Scene/parent liveness. It does not isolate ongoing retained-host interference or deallocation mechanism."
+  },
+  "weakLifetimeTransition": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-weak-lifetime-transition.json",
+  "parity": {
+    "checkCount": 27,
+    "allEqual": true,
+    "proof": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-final-parity.json"
+  },
+  "limitations": [
+    "Both arms deliberately use new bounded Train make/attached-entity readiness before openurl; control reproduced failure under this protocol.",
+    "Weak references first observed nil are point liveness evidence, not exact deallocation timestamps or backing UIView/GPU destruction proof.",
+    "Source branch request is not proof of framework host destruction.",
+    "Actual sampled workout frame endpoints, resolved inputs and transform sets match; no identical animation timing claim.",
+    "Initial action Hang+3 has a black rounded capsule at far left; retained without cause/input inference.",
+    "Strict hand suppression and common diagnostic retention/detachment limit transfer to ordinary production.",
+    "Unknown DeviceHub process untouched; no frontend-isolation/headless claim.",
+    "Single action pass is not a replicated causal or production-fix claim."
+  ],
+  "productionFix": false,
+  "humanAcceptance": false,
+  "appTerminated": true,
+  "ownership": "Source/runtime/DerivedData handed back to root. Registered Simulator/DD and root controller90373 remain live; no resource cleanup beyond exact owned app termination.",
+  "reversal": "No reversal included in this frozen two-arm result; separate root release required."
+}

@@ -1,0 +1,20 @@
+{
+  "runtimeAuthorized": true,
+  "arm": "unmount",
+  "helperSHA256": "bdaa3530021d126ff5fde61d8e083c47190c77917a1818d1cc10e1a29fa0f304",
+  "constructorMarkerAuditReady": true,
+  "structuralNavEventAuditReady": true,
+  "rootSourceRuntimeRelease": true,
+  "previousArmGatePassed": true,
+  "binarySHA256": "9855fc146d9bf381797b8a982a70f96e7f001c9838e5fd49df2d590e8d6d2242",
+  "previousArmEvidence": {
+    "structural-correspondence.json": "419dd6c9dc61d5abe5a4d4c03ce69c3fb1a27e939fdcc2cf7b125fed63ab5187",
+    "hand-lifetime-validation.json": "2d59cc0e83c1b812933fa45b6b4338ea190f89859810a43b05fc4f6470a9d3fd",
+    "strict-absence-validation.json": "4cf25e38ef9a09a2bb63f8ee632e3c17867c0bf1ef937fe144af642df468dd32",
+    "normal-host-frame-validation.json": "f361baad7c61a1a8891a685a30adcfd13b7a0f5ecd89af668069b1bb7f4af8b1",
+    "train-constructor-validation.json": "9ef3fd54754d9ec13e636aa2d514876d7ecadaae18d64cc77b1ceaeded1f5644",
+    "guarded-detach-validation.json": "58d7a21721a2c2326b5252d0f2109ba575cb0a1b75561dde18eb78320064b215",
+    "train-navigation-validation.json": "2d305127231f50cf40b8ce3f5b357db9cc5ea6ac6ff7c1e834accb6231033f77",
+    "visual-review.json": "7697f3ff8debdda1f2b1bdb3c3e19ce33ed7019f8e4650ec5a065753acf7b12f"
+  }
+}

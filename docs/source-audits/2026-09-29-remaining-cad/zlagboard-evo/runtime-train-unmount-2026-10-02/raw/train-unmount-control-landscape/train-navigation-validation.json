@@ -1,0 +1,1753 @@
+{
+  "checks": {
+    "readinessPassedWithinBound": true,
+    "readinessEvidenceInCompleteTrace": true,
+    "readinessBeforeOpenURL": true,
+    "initialTrainConstructorAndMakeBeforeOpenURL": true,
+    "exactlyInitialFalseThenTrue": true,
+    "initialBoardMapBeforeOpenURL": true,
+    "navigationTrueAfterOpenURLBeforeFirstHang": true,
+    "requestedBranchMatchesAction": true,
+    "expectedBoardPlanPresentation": true,
+    "navFlagsCorrect": true,
+    "sameReadyPredecessorIsDetached": true,
+    "distinctWorkoutExactlyOne": true
+  },
+  "action": false,
+  "traceSHA256": "cc063dd2c3530dcf3d6780b31d3f1aeeed1eefed3977c28a5f76a365e2fe2fc3",
+  "readiness": {
+    "boundSeconds": 20,
+    "startEpoch": 1790990975.852596,
+    "endEpoch": 1790990980.9493709,
+    "elapsedSeconds": 5.096796292011277,
+    "passed": true,
+    "evidence": {
+      "makeRecord": {
+        "applicationCensus": {
+          "applicationState": 0,
+          "standaloneGate": false,
+          "windowScenes": [
+            {
+              "activationState": 0,
+              "interfaceOrientation": 3,
+              "sceneID": "ObjectIdentifier(0x0000000103ff4200)",
+              "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+              "windows": [
+                {
+                  "alpha": 1,
+                  "bounds": [
+                    874,
+                    402
+                  ],
+                  "hidden": false,
+                  "key": true,
+                  "rendererNamedViewClasses": {},
+                  "rendererPlacements": [],
+                  "windowID": "ObjectIdentifier(0x0000000103f54800)"
+                }
+              ]
+            }
+          ]
+        },
+        "boardDetachTrial": {
+          "detachRequested": true,
+          "hosts": [
+            {
+              "attachmentObserved": true,
+              "cameraActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+              "cameraParentID": "ObjectIdentifier(0x0000000115a56a20)",
+              "currentOwner": true,
+              "detached": false,
+              "disappeared": false,
+              "invalid": "nil",
+              "modelRetainedForTrial": true,
+              "ownerToken": "492F5D5C-4A1A-41E1-A842-04F841601658",
+              "reattachedAfterDetach": false,
+              "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+              "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+              "rootActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+              "rootParentID": "ObjectIdentifier(0x0000000115a56a20)",
+              "sceneLifecycleToken": "CED97908-EA71-4AEB-8796-AE9D40088B51",
+              "trainMarked": true,
+              "viewToken": "AF1E513A-4F12-4C5A-B21D-3A4A76DD2739"
+            }
+          ]
+        },
+        "boardLifetimeCensus": [
+          {
+            "camera": {
+              "alive": true,
+              "enabled": true,
+              "entityID": "ObjectIdentifier(0x0000000113e02160)",
+              "isActive": true,
+              "parentEntityID": "ObjectIdentifier(0x0000000115a56a20)",
+              "realitySceneID": "ObjectIdentifier(0x0000000104e30300)"
+            },
+            "constructedIDs": {
+              "cameraID": "ObjectIdentifier(0x0000000113e02160)",
+              "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+              "rootID": "ObjectIdentifier(0x0000000113e020e0)",
+              "wrapperID": "ObjectIdentifier(0x0000000105e96d80)"
+            },
+            "root": {
+              "alive": true,
+              "enabled": true,
+              "entityID": "ObjectIdentifier(0x0000000113e020e0)",
+              "isActive": true,
+              "parentEntityID": "ObjectIdentifier(0x0000000115a56a20)",
+              "realitySceneID": "ObjectIdentifier(0x0000000104e30300)"
+            },
+            "sceneLifecycleToken": "CED97908-EA71-4AEB-8796-AE9D40088B51",
+            "wrapperAlive": true
+          }
+        ],
+        "boardRenderMembership": {
+          "cameraActive": true,
+          "cameraEntityID": "ObjectIdentifier(0x0000000113e02160)",
+          "cameraRealitySceneID": "ObjectIdentifier(0x0000000104e30300)",
+          "cameraTransform": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.9438583850860596,
+            -0.33035042881965637,
+            0,
+            0,
+            0.33035042881965637,
+            0.9438583850860596,
+            0,
+            0,
+            0.10610384494066238,
+            0.3241538405418396,
+            1
+          ],
+          "far": 1000,
+          "near": 0.0010000000474974513,
+          "orthographic": false,
+          "perspective": true,
+          "rootActive": true,
+          "rootEntityID": "ObjectIdentifier(0x0000000113e020e0)",
+          "rootRealitySceneID": "ObjectIdentifier(0x0000000104e30300)",
+          "verticalFOVDegrees": 30
+        },
+        "cachedIDs": [],
+        "cachedMode": "active",
+        "cameraID": "ObjectIdentifier(0x0000000113e02160)",
+        "cameraTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.9438583850860596,
+          -0.33035042881965637,
+          0,
+          0,
+          0.33035042881965637,
+          0.9438583850860596,
+          0,
+          0,
+          0.10610384494066238,
+          0.3241538405418396,
+          1
+        ],
+        "complete": true,
+        "contentContainsRegisteredRoot": true,
+        "contentRootIDs": [
+          "ObjectIdentifier(0x0000000113e020e0)",
+          "ObjectIdentifier(0x0000000113e02160)"
+        ],
+        "epoch": 1790990980.918067,
+        "event": "view-make",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 0,
+          "pair.make-entry": 0,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+        "requestedMode": "active",
+        "resolvedSurfaceInputs": {
+          "boardID": "zlagboard.evo",
+          "ids": [],
+          "isDisplayOnly": false,
+          "mode": "active",
+          "positionID": "primary",
+          "presentationID": "primary"
+        },
+        "rootAttached": true,
+        "rootEnabled": true,
+        "rootID": "ObjectIdentifier(0x0000000113e020e0)",
+        "rootTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "sceneID": "ObjectIdentifier(0x0000000105e96d80)",
+        "sceneLifecycleToken": "CED97908-EA71-4AEB-8796-AE9D40088B51",
+        "selectedIDs": [],
+        "sequence": 7,
+        "surfaces": [],
+        "uptime": 74055.43780425,
+        "viewportPoints": [
+          674,
+          115.54285714285714
+        ],
+        "viewToken": "AF1E513A-4F12-4C5A-B21D-3A4A76DD2739"
+      },
+      "attachmentRecord": {
+        "applicationCensus": {
+          "applicationState": 0,
+          "standaloneGate": false,
+          "windowScenes": [
+            {
+              "activationState": 0,
+              "interfaceOrientation": 3,
+              "sceneID": "ObjectIdentifier(0x0000000103ff4200)",
+              "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+              "windows": [
+                {
+                  "alpha": 1,
+                  "bounds": [
+                    874,
+                    402
+                  ],
+                  "hidden": false,
+                  "key": true,
+                  "rendererNamedViewClasses": {},
+                  "rendererPlacements": [],
+                  "windowID": "ObjectIdentifier(0x0000000103f54800)"
+                }
+              ]
+            }
+          ]
+        },
+        "boardDetachTrial": {
+          "detachRequested": true,
+          "hosts": [
+            {
+              "attachmentObserved": true,
+              "cameraActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+              "cameraParentID": "ObjectIdentifier(0x0000000115a56a20)",
+              "currentOwner": true,
+              "detached": false,
+              "disappeared": false,
+              "invalid": "nil",
+              "modelRetainedForTrial": true,
+              "ownerToken": "492F5D5C-4A1A-41E1-A842-04F841601658",
+              "reattachedAfterDetach": false,
+              "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+              "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+              "rootActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+              "rootParentID": "ObjectIdentifier(0x0000000115a56a20)",
+              "sceneLifecycleToken": "CED97908-EA71-4AEB-8796-AE9D40088B51",
+              "trainMarked": true,
+              "viewToken": "AF1E513A-4F12-4C5A-B21D-3A4A76DD2739"
+            }
+          ]
+        },
+        "boardLifetimeCensus": [
+          {
+            "camera": {
+              "alive": true,
+              "enabled": true,
+              "entityID": "ObjectIdentifier(0x0000000113e02160)",
+              "isActive": true,
+              "parentEntityID": "ObjectIdentifier(0x0000000115a56a20)",
+              "realitySceneID": "ObjectIdentifier(0x0000000104e30300)"
+            },
+            "constructedIDs": {
+              "cameraID": "ObjectIdentifier(0x0000000113e02160)",
+              "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+              "rootID": "ObjectIdentifier(0x0000000113e020e0)",
+              "wrapperID": "ObjectIdentifier(0x0000000105e96d80)"
+            },
+            "root": {
+              "alive": true,
+              "enabled": true,
+              "entityID": "ObjectIdentifier(0x0000000113e020e0)",
+              "isActive": true,
+              "parentEntityID": "ObjectIdentifier(0x0000000115a56a20)",
+              "realitySceneID": "ObjectIdentifier(0x0000000104e30300)"
+            },
+            "sceneLifecycleToken": "CED97908-EA71-4AEB-8796-AE9D40088B51",
+            "wrapperAlive": true
+          }
+        ],
+        "boardRenderMembership": {
+          "cameraActive": true,
+          "cameraEntityID": "ObjectIdentifier(0x0000000113e02160)",
+          "cameraRealitySceneID": "ObjectIdentifier(0x0000000104e30300)",
+          "cameraTransform": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.9438583850860596,
+            -0.33035042881965637,
+            0,
+            0,
+            0.33035042881965637,
+            0.9438583850860596,
+            0,
+            0,
+            0.10610384494066238,
+            0.3241538405418396,
+            1
+          ],
+          "far": 1000,
+          "near": 0.0010000000474974513,
+          "orthographic": false,
+          "perspective": true,
+          "rootActive": true,
+          "rootEntityID": "ObjectIdentifier(0x0000000113e020e0)",
+          "rootRealitySceneID": "ObjectIdentifier(0x0000000104e30300)",
+          "verticalFOVDegrees": 30
+        },
+        "cachedIDs": [],
+        "cachedMode": "active",
+        "cameraID": "ObjectIdentifier(0x0000000113e02160)",
+        "cameraTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.9438583850860596,
+          -0.33035042881965637,
+          0,
+          0,
+          0.33035042881965637,
+          0.9438583850860596,
+          0,
+          0,
+          0.10610384494066238,
+          0.3241538405418396,
+          1
+        ],
+        "complete": true,
+        "contentContainsRegisteredRoot": true,
+        "contentRootIDs": [
+          "ObjectIdentifier(0x0000000113e020e0)",
+          "ObjectIdentifier(0x0000000113e02160)"
+        ],
+        "epoch": 1790990980.918067,
+        "event": "view-make",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 0,
+          "pair.make-entry": 0,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+        "requestedMode": "active",
+        "resolvedSurfaceInputs": {
+          "boardID": "zlagboard.evo",
+          "ids": [],
+          "isDisplayOnly": false,
+          "mode": "active",
+          "positionID": "primary",
+          "presentationID": "primary"
+        },
+        "rootAttached": true,
+        "rootEnabled": true,
+        "rootID": "ObjectIdentifier(0x0000000113e020e0)",
+        "rootTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "sceneID": "ObjectIdentifier(0x0000000105e96d80)",
+        "sceneLifecycleToken": "CED97908-EA71-4AEB-8796-AE9D40088B51",
+        "selectedIDs": [],
+        "sequence": 7,
+        "surfaces": [],
+        "uptime": 74055.43780425,
+        "viewportPoints": [
+          674,
+          115.54285714285714
+        ],
+        "viewToken": "AF1E513A-4F12-4C5A-B21D-3A4A76DD2739"
+      },
+      "trainToken": "CED97908-EA71-4AEB-8796-AE9D40088B51",
+      "host": {
+        "attachmentObserved": true,
+        "cameraActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+        "cameraParentID": "ObjectIdentifier(0x0000000115a56a20)",
+        "currentOwner": true,
+        "detached": false,
+        "disappeared": false,
+        "invalid": "nil",
+        "modelRetainedForTrial": true,
+        "ownerToken": "492F5D5C-4A1A-41E1-A842-04F841601658",
+        "reattachedAfterDetach": false,
+        "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+        "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+        "rootActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+        "rootParentID": "ObjectIdentifier(0x0000000115a56a20)",
+        "sceneLifecycleToken": "CED97908-EA71-4AEB-8796-AE9D40088B51",
+        "trainMarked": true,
+        "viewToken": "AF1E513A-4F12-4C5A-B21D-3A4A76DD2739"
+      },
+      "weak": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x0000000113e02160)",
+          "isActive": true,
+          "parentEntityID": "ObjectIdentifier(0x0000000115a56a20)",
+          "realitySceneID": "ObjectIdentifier(0x0000000104e30300)"
+        },
+        "constructedIDs": {
+          "cameraID": "ObjectIdentifier(0x0000000113e02160)",
+          "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+          "rootID": "ObjectIdentifier(0x0000000113e020e0)",
+          "wrapperID": "ObjectIdentifier(0x0000000105e96d80)"
+        },
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x0000000113e020e0)",
+          "isActive": true,
+          "parentEntityID": "ObjectIdentifier(0x0000000115a56a20)",
+          "realitySceneID": "ObjectIdentifier(0x0000000104e30300)"
+        },
+        "sceneLifecycleToken": "CED97908-EA71-4AEB-8796-AE9D40088B51",
+        "wrapperAlive": true
+      },
+      "hostObservedEpoch": 1790990980.9493692
+    },
+    "scope": "Existing Train-tagged make and actual root/camera attachment observation only; not frame-presentation or backing-view-deallocation proof. No fixed delay fallback."
+  },
+  "openurl": {
+    "startEpoch": 1790990980.950214,
+    "endEpoch": 1790990981.1637309,
+    "readinessObservedEpoch": 1790990980.9493692,
+    "readinessBeforeOpenURL": true
+  },
+  "navigationEvents": [
+    {
+      "boardID": "zlagboard.evo",
+      "complete": true,
+      "detachRequested": true,
+      "epoch": 1790990979.978591,
+      "event": "train-navigation-source",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 0,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "initialTrainSuppressionRequested": false,
+      "planID": "nil",
+      "presentationCount": 1,
+      "sequence": 2,
+      "showsDeepLinkedWorkout": false,
+      "sourceBranchRequested": "board-map",
+      "stage": "workout-navigation-state",
+      "trialHosts": [],
+      "unmountTrainForWorkoutRequested": false,
+      "uptime": 74054.49832520833
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "complete": true,
+      "detachRequested": true,
+      "epoch": 1790990981.17044,
+      "event": "train-navigation-source",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 0,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "initialTrainSuppressionRequested": false,
+      "planID": "research.max-hangs",
+      "presentationCount": 1,
+      "sequence": 8,
+      "showsDeepLinkedWorkout": true,
+      "sourceBranchRequested": "board-map",
+      "stage": "workout-navigation-state",
+      "trialHosts": [
+        {
+          "attachmentObserved": true,
+          "cameraActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+          "cameraParentID": "ObjectIdentifier(0x0000000115a56a20)",
+          "currentOwner": true,
+          "detached": false,
+          "disappeared": false,
+          "invalid": "nil",
+          "modelRetainedForTrial": true,
+          "ownerToken": "492F5D5C-4A1A-41E1-A842-04F841601658",
+          "reattachedAfterDetach": false,
+          "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+          "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+          "rootActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+          "rootParentID": "ObjectIdentifier(0x0000000115a56a20)",
+          "sceneLifecycleToken": "CED97908-EA71-4AEB-8796-AE9D40088B51",
+          "trainMarked": true,
+          "viewToken": "AF1E513A-4F12-4C5A-B21D-3A4A76DD2739"
+        }
+      ],
+      "unmountTrainForWorkoutRequested": false,
+      "uptime": 74055.69017850001
+    }
+  ],
+  "recordedWeakParentSceneLiveness": [
+    {
+      "sequence": 17,
+      "epoch": 1790990982.0542588,
+      "event": "detach-trial-after",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 18,
+      "epoch": 1790990982.054702,
+      "event": "view-disappear",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 19,
+      "epoch": 1790990982.686774,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 20,
+      "epoch": 1790990983.749991,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 21,
+      "epoch": 1790990984.565013,
+      "event": "highlight-before",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 22,
+      "epoch": 1790990984.5761871,
+      "event": "highlight-after",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 23,
+      "epoch": 1790990984.576993,
+      "event": "view-update",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 25,
+      "epoch": 1790990984.812664,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 26,
+      "epoch": 1790990985.8615541,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 27,
+      "epoch": 1790990986.927734,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 28,
+      "epoch": 1790990987.986168,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 29,
+      "epoch": 1790990989.0310102,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 30,
+      "epoch": 1790990991.066195,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 31,
+      "epoch": 1790990991.620388,
+      "event": "highlight-before",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 32,
+      "epoch": 1790990991.626852,
+      "event": "highlight-after",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 33,
+      "epoch": 1790990991.627623,
+      "event": "view-update",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 35,
+      "epoch": 1790990992.132525,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 36,
+      "epoch": 1790990993.202001,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 37,
+      "epoch": 1790990994.251579,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 38,
+      "epoch": 1790990995.299107,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 39,
+      "epoch": 1790990996.6767821,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 40,
+      "epoch": 1790990997.726941,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 41,
+      "epoch": 1790990998.729856,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 42,
+      "epoch": 1790991000.078912,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 43,
+      "epoch": 1790991001.081635,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 44,
+      "epoch": 1790991002.09277,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 45,
+      "epoch": 1790991003.095663,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 46,
+      "epoch": 1790991005.0998502,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 47,
+      "epoch": 1790991006.104388,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 48,
+      "epoch": 1790991007.106873,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 49,
+      "epoch": 1790991008.113945,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 50,
+      "epoch": 1790991010.112716,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 51,
+      "epoch": 1790991011.120315,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 52,
+      "epoch": 1790991012.126933,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 53,
+      "epoch": 1790991014.125083,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 54,
+      "epoch": 1790991015.132206,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 55,
+      "epoch": 1790991016.137418,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 56,
+      "epoch": 1790991018.14813,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 57,
+      "epoch": 1790991019.164654,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 58,
+      "epoch": 1790991021.153449,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 59,
+      "epoch": 1790991022.610101,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 60,
+      "epoch": 1790991023.618414,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 61,
+      "epoch": 1790991024.623038,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 62,
+      "epoch": 1790991025.629675,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 63,
+      "epoch": 1790991026.633255,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 64,
+      "epoch": 1790991027.655888,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 65,
+      "epoch": 1790991028.725219,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 66,
+      "epoch": 1790991029.7801418,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 67,
+      "epoch": 1790991030.792762,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 68,
+      "epoch": 1790991032.026536,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 69,
+      "epoch": 1790991033.0362148,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 70,
+      "epoch": 1790991034.040149,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 71,
+      "epoch": 1790991035.0435681,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 72,
+      "epoch": 1790991037.049609,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 73,
+      "epoch": 1790991038.054368,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 74,
+      "epoch": 1790991039.057617,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 75,
+      "epoch": 1790991040.064227,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 76,
+      "epoch": 1790991041.066175,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 77,
+      "epoch": 1790991042.0689301,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 78,
+      "epoch": 1790991043.074399,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 79,
+      "epoch": 1790991045.083996,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 80,
+      "epoch": 1790991046.085837,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 81,
+      "epoch": 1790991047.0933309,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 82,
+      "epoch": 1790991048.0978808,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 83,
+      "epoch": 1790991049.09966,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 84,
+      "epoch": 1790991050.104538,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 85,
+      "epoch": 1790991051.108961,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 86,
+      "epoch": 1790991052.1117,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 87,
+      "epoch": 1790991053.114702,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 88,
+      "epoch": 1790991055.1221771,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 89,
+      "epoch": 1790991056.128556,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 90,
+      "epoch": 1790991058.134959,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 91,
+      "epoch": 1790991060.142147,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 92,
+      "epoch": 1790991061.1447449,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 93,
+      "epoch": 1790991062.177155,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 94,
+      "epoch": 1790991063.186036,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 95,
+      "epoch": 1790991064.219198,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 96,
+      "epoch": 1790991065.246938,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 97,
+      "epoch": 1790991066.3098469,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 98,
+      "epoch": 1790991067.3771272,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 99,
+      "epoch": 1790991068.384138,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 100,
+      "epoch": 1790991069.42599,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 101,
+      "epoch": 1790991070.450906,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 102,
+      "epoch": 1790991071.5181398,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 103,
+      "epoch": 1790991072.626584,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 104,
+      "epoch": 1790991073.6327171,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 105,
+      "epoch": 1790991075.639924,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 106,
+      "epoch": 1790991076.644404,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 107,
+      "epoch": 1790991077.655643,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 108,
+      "epoch": 1790991078.77402,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 109,
+      "epoch": 1790991079.7895799,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 110,
+      "epoch": 1790991081.789823,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 111,
+      "epoch": 1790991082.796633,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 112,
+      "epoch": 1790991084.797744,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 113,
+      "epoch": 1790991085.803045,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 114,
+      "epoch": 1790991086.807281,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 115,
+      "epoch": 1790991087.810371,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 116,
+      "epoch": 1790991088.816392,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 117,
+      "epoch": 1790991089.821842,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 118,
+      "epoch": 1790991091.824399,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 119,
+      "epoch": 1790991092.827754,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 120,
+      "epoch": 1790991093.831018,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 121,
+      "epoch": 1790991094.8421888,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 122,
+      "epoch": 1790991095.846165,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 123,
+      "epoch": 1790991097.852831,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 124,
+      "epoch": 1790991098.860664,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 125,
+      "epoch": 1790991099.862863,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 126,
+      "epoch": 1790991100.8656878,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 127,
+      "epoch": 1790991101.868544,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 128,
+      "epoch": 1790991102.8719301,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 129,
+      "epoch": 1790991103.8772268,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 130,
+      "epoch": 1790991104.87996,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 131,
+      "epoch": 1790991105.8825788,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 132,
+      "epoch": 1790991106.886445,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 133,
+      "epoch": 1790991107.8931909,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 134,
+      "epoch": 1790991108.898088,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 135,
+      "epoch": 1790991109.9002361,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 136,
+      "epoch": 1790991110.9050689,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 137,
+      "epoch": 1790991111.915122,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 138,
+      "epoch": 1790991113.916966,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 139,
+      "epoch": 1790991114.919771,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 140,
+      "epoch": 1790991115.9229112,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 141,
+      "epoch": 1790991116.9289699,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 142,
+      "epoch": 1790991118.9324532,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 143,
+      "epoch": 1790991119.9345021,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 144,
+      "epoch": 1790991120.9376888,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 145,
+      "epoch": 1790991121.942347,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 146,
+      "epoch": 1790991122.946384,
+      "event": "sample",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 147,
+      "epoch": 1790991122.947002,
+      "event": "sample-end",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 148,
+      "epoch": 1790991172.139981,
+      "event": "highlight-before",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 149,
+      "epoch": 1790991172.146744,
+      "event": "highlight-after",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 150,
+      "epoch": 1790991172.147671,
+      "event": "view-update",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 152,
+      "epoch": 1790991179.160709,
+      "event": "highlight-before",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 153,
+      "epoch": 1790991179.166956,
+      "event": "highlight-after",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    },
+    {
+      "sequence": 154,
+      "epoch": 1790991179.1677,
+      "event": "view-update",
+      "recordedParentID": "ObjectIdentifier(0x0000000115a56a20)",
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000104e30300)",
+      "currentRootParentID": "nil",
+      "currentRootSceneID": "nil"
+    }
+  ],
+  "weakLivenessCounts": {
+    "observations": 135,
+    "parentAlive": 135,
+    "sceneAlive": 135
+  },
+  "limitations": [
+    "The readiness gate changes startup history from previous immediate-openurl runs. Both new arms share it and control reproduction is mandatory.",
+    "Source branch request is not proof of backing UIView deallocation or committed structural removal.",
+    "Weak parent/actual Scene references report object liveness at sparse points only, not GPU rendering or deallocation timing.",
+    "No separate visible Train frame is claimed."
+  ]
+}
