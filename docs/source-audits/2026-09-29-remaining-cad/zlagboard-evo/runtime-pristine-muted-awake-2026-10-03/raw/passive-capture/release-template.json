@@ -1,0 +1,22 @@
+{
+  "runtimeAuthorized": false,
+  "exclusiveRuntimeOwnership": false,
+  "owner": "placid-badger-cad-second-half",
+  "simulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "controllerPID": 96137,
+  "boardID": "zlagboard.evo",
+  "runID": "placid-badger-cad-second-half-pristine-zlagboard-evo-a",
+  "helperSHA256": "af6434b4e4f413992c94f91b594904e8934b6156d796e4028174f7a2f4b7eddc",
+  "scheduleSHA256": "a1ddc84211b458b6a0e188bb110e83f64350290119de6b586050e8accf510701",
+  "sourceReferenceSHA256": "516355903567747006804ed1ee8b98319ce54d3bff609917c97a38411f5c1108",
+  "pristineBuildSourceVerified": true,
+  "planID": "research.max-hangs",
+  "appArguments": [
+    "-workoutAudioCuesEnabled",
+    "NO"
+  ],
+  "parityPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/passive-capture/normalized-parity.json",
+  "paritySHA256": "81e23431b105dcca2785565562b8d1b3e09d91a510c3cbea36c675d25bda9449",
+  "binarySHA256": "0ae1b0601daaf3964f1482b482cbdae3ee85d66c821c38a65bc6474c9fcd69b9",
+  "outputDirectory": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-a"
+}

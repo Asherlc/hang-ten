@@ -1,0 +1,467 @@
+{
+  "boardID": "zlagboard.evo",
+  "runtimeComplete": true,
+  "allWholeImagesReviewed": true,
+  "reviewer": "root",
+  "binarySHA256": "0ae1b0601daaf3964f1482b482cbdae3ee85d66c821c38a65bc6474c9fcd69b9",
+  "visualResult": "FAIL",
+  "proAuthorized": false,
+  "images": [
+    {
+      "offset": 1,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-001s.png",
+      "sha256": "9183b614240919e582485cb15c417374414e26d4de857df7a3b988faf670b1d4",
+      "phaseVisible": "Ready",
+      "selectedPocketColor": "none",
+      "handsVisible": false,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 2,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-002s.png",
+      "sha256": "bbf4e8f025305dcf672b13dfb9d00f25c5cef433826608ed3115df30bbfcb092",
+      "phaseVisible": "Ready",
+      "selectedPocketColor": "none",
+      "handsVisible": false,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 3,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-003s.png",
+      "sha256": "123bb018f0c96a54221abe6dc2680c14b7d849988bade1d29f2694e6541baaf2",
+      "phaseVisible": "Ready",
+      "selectedPocketColor": "none",
+      "handsVisible": false,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 4,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-004s.png",
+      "sha256": "0dca6990046bd55d9500e829f42f0c7f15ac25953a8ef925585de1864fcc680d",
+      "phaseVisible": "Hang 1",
+      "selectedPocketColor": "red",
+      "handsVisible": false,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 5,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-005s.png",
+      "sha256": "fffec8e090edd169857c3dbb9dcf31184e8cd08f7eca05ebd00ffe1df9594492",
+      "phaseVisible": "Hang 1",
+      "selectedPocketColor": "red",
+      "handsVisible": false,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 6,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-006s.png",
+      "sha256": "986bd7d21750958289d894bb9404e7f807e750bda9b65b3baa4052a4ce9588bd",
+      "phaseVisible": "Hang 1",
+      "selectedPocketColor": "red",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 7,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-007s.png",
+      "sha256": "1834f6e15bfbc9e1e602dfd83356c77d4aa5d1d3554bfd7535d4eb6f84eff09b",
+      "phaseVisible": "Hang 1",
+      "selectedPocketColor": "red",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 8,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-008s.png",
+      "sha256": "6a3f16b1575fae543b1da2f0cbd3894ccc415f708cb133fdd3afedac7936acea",
+      "phaseVisible": "Hang 1",
+      "selectedPocketColor": "red",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 9,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-009s.png",
+      "sha256": "8f02c3ddaa4e1c4da41dab40eeb5694d7973132e2d90176a3b46d0b61ed2f58c",
+      "phaseVisible": "Hang 1",
+      "selectedPocketColor": "red",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 10,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-010s.png",
+      "sha256": "030e52d6b20be2ca3bd73537ea7d0b7e59ae0c0072f60b64a9d914b0cb6f9e14",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "red",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": false
+    },
+    {
+      "offset": 11,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-011s.png",
+      "sha256": "f6ed36980e7d9f75eea6a4220854660d6ca76f21bbca62f5c8555302aa073e01",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 12,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-012s.png",
+      "sha256": "f6ed36980e7d9f75eea6a4220854660d6ca76f21bbca62f5c8555302aa073e01",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 13,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-013s.png",
+      "sha256": "f6ed36980e7d9f75eea6a4220854660d6ca76f21bbca62f5c8555302aa073e01",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 14,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-014s.png",
+      "sha256": "b882fa169ddf3f273eb5aa0b48f1a686c4e693705549dda975cd17d81589335c",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 15,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-015s.png",
+      "sha256": "6fe9f0e70f1ee8abe0456ed0a20f01576c137792d514d20c21a2647e22f59d13",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 16,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-016s.png",
+      "sha256": "b73cc92a2620918a189e9ea44c99def3deb3ef05c297d671e4dc220fbfa6fe61",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 17,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-017s.png",
+      "sha256": "291ab959c83da3a944285f44ee73d2f7fd2b8d1982f3017e4dd99b85a8fce3d0",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 18,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-018s.png",
+      "sha256": "804bab1c41582dad93d177863ea35b26f2acec9c8819f67266f33ad0b36c4d78",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 90,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-090s.png",
+      "sha256": "c6918326a360a24aabd010a62c6751ff24a99238f88a2aef339a5984dc88b446",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 183,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-183s.png",
+      "sha256": "f00173e55ca846ac81d5b2f180b03af02c5f59c82bc1f1fdc79fd9585d1b842f",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 184,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-184s.png",
+      "sha256": "801d3476e2fab3b11b5a2ee1aa015df2589a36f06ea055abf605524df671fde1",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 185,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-185s.png",
+      "sha256": "c175b9b8971590a26d1f1b1f766eb796d58fd31150090548a28fba864755ca11",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 186,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-186s.png",
+      "sha256": "bedbad4a5333cf614362fb767ef4a9c4f28f4a1ab6d9c3052338258bc303d8ac",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 187,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-187s.png",
+      "sha256": "845b200137cbd2ff8e3d8e9ee15c676e7bef016ddbed6590f9c2b0337e88ad3e",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 188,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-188s.png",
+      "sha256": "80a97e852c61d92aee7ef0910e247196770ebd4adcd65cec8115fc170ed16395",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 189,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-189s.png",
+      "sha256": "12a0d226ffd6eebb6c6e7e40fa8b222f239639a5205149d532f360264658d0bf",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 190,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-190s.png",
+      "sha256": "0f94f96c586f3ba3266d32fa8f9ae4032e993e16994f249a4e7f73dabc608751",
+      "phaseVisible": "Rest 1",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 191,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-191s.png",
+      "sha256": "1b7457ae8c81535cc69b9e9de47f39440b157271423aeffe23bde4958d87faef",
+      "phaseVisible": "Hang 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": false
+    },
+    {
+      "offset": 192,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-192s.png",
+      "sha256": "11fddb15181c797f7ee0d0c5f29ee5e990e898f6a644877b0116a9bbc53c4c62",
+      "phaseVisible": "Hang 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": false
+    },
+    {
+      "offset": 193,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-193s.png",
+      "sha256": "51b11d65518f8896b11e6a1257c3cba64237faab58643c7f7f9ec92eb6b731a8",
+      "phaseVisible": "Hang 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": false
+    },
+    {
+      "offset": 194,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-194s.png",
+      "sha256": "7129665d20c9e59963958a60a829c18a73e0f044deef3d42a02df8628996c5d6",
+      "phaseVisible": "Hang 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": false
+    },
+    {
+      "offset": 195,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-195s.png",
+      "sha256": "d076050118f55f824c91d5e92b6a75db21ba3f7f09b3f06f6b996449dbe68e51",
+      "phaseVisible": "Hang 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": false
+    },
+    {
+      "offset": 196,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-196s.png",
+      "sha256": "a6f51d1fbfa4e1167ca8f3e2305a242b80f099e746160e090473f21ef262599b",
+      "phaseVisible": "Hang 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": false
+    },
+    {
+      "offset": 197,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-197s.png",
+      "sha256": "44565e91e2c8509dc55501508e197a091a0702534fbd055cdd7a9d6c412c0b12",
+      "phaseVisible": "Rest 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 198,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-198s.png",
+      "sha256": "5238300d2c8b03c157f781c47e93c00d78c70a53afaaae93c81f4261d89524a3",
+      "phaseVisible": "Rest 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 199,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-199s.png",
+      "sha256": "ed0899a2c2989f948d73c8eaf31456353515fcdadb57fee74b824eb24f950d4d",
+      "phaseVisible": "Rest 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 200,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-200s.png",
+      "sha256": "68deee5cec2699dbd6f0efc75acdba4d11f72177d4abe42fa5b03ad48d02beed",
+      "phaseVisible": "Rest 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 201,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-201s.png",
+      "sha256": "b00380588115602e507e57d290ee7a97f4b5dc75647e2a7760270d615f2c477b",
+      "phaseVisible": "Rest 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 202,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-202s.png",
+      "sha256": "c2551003bc23a8607f1a3a9e9f8a9c635c90486bec9eecaeffb93d2249f0862a",
+      "phaseVisible": "Rest 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 203,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-203s.png",
+      "sha256": "149445bae4070e76cbc85a9a2fbd593c5b90b3f949e68a1a7276e3ba758cae5d",
+      "phaseVisible": "Rest 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 204,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-204s.png",
+      "sha256": "cd2b25869ee4753925dbc2b93e169e7891fb35e862683c6065ed7caaf178a008",
+      "phaseVisible": "Rest 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 205,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-205s.png",
+      "sha256": "6763be25386ef12e73d875fa3fbc620fad406d27f22ab6a0d45acaf53658c508",
+      "phaseVisible": "Rest 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 206,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-206s.png",
+      "sha256": "184243165636fe150df6437f97afa64f446dfa1ad3ffc61cc003bfc339b48e89",
+      "phaseVisible": "Rest 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    },
+    {
+      "offset": 207,
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-207s.png",
+      "sha256": "7290d51cbc2f6cf3b4e8f37f9fdb7f5a53f972fbd0d3b6ebcdec6da2b3b83a80",
+      "phaseVisible": "Rest 2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true,
+      "wholeImageReviewed": true,
+      "correctBoardColor": true
+    }
+  ],
+  "findings": [
+    "Second Hang pockets remain blue through all six captured Hang frames at external elapsed191\u2013196s, while UI countdown runs07\u201302; hands visible.",
+    "Hands absent during first Hang elapsed004/005, present006 onward.",
+    "First Rest elapsed010 shows red pockets;011 onward blue."
+  ],
+  "limits": [
+    "Offsets are from external openurl completion, not semantic mutation. No CPU or actual phase-time brackets.",
+    "Muted volatile launch setting and owned idle-sleep assertion; Simulator only.",
+    "No production fix, human approval, or PR readiness."
+  ],
+  "independentTailConfirmation": [
+    191,
+    194,
+    196
+  ],
+  "preservedCorrection": "evo-b-first-visual-independent-correction.json"
+}
