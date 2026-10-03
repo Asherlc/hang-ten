@@ -1,0 +1,262 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "closed": true,
+  "result": {
+    "adopted": false,
+    "armijoEnabled": false,
+    "attemptedSteps": 177,
+    "candidateHz": 240,
+    "controlHz": 240,
+    "failure": "invalid(\"strict false-settle continuation\")",
+    "guardedArrivalStop": true,
+    "measuredSteps": 177,
+    "owner": "strong-owl-live-physics",
+    "pendingPhase": 0,
+    "preflight": false,
+    "stageOnePass": true,
+    "maximumPropagatedDifference": 1.189793568223536e-05,
+    "candidateQPs": 518,
+    "controlQPs": 622,
+    "lastFrame": {
+      "candidateCaps": 0,
+      "candidateQPs": 2,
+      "candidateRetries": 0,
+      "candidateSeconds": 0.005202791668125428,
+      "controlCaps": 0,
+      "controlQPs": 4,
+      "controlRetries": 0,
+      "controlSeconds": 0.00992470832716208,
+      "controlStep": 177,
+      "difference": 4.714097352929959e-06,
+      "falseSettleChecks": [
+        {
+          "boardHistoryDisplacement": 2.2668233670725124e-05,
+          "caps": 0,
+          "retries": 0,
+          "settled": false,
+          "speed": 0.001126070432856959
+        }
+      ],
+      "metrics": {
+        "boardDisplacement": 3.539954820599989e-05,
+        "clearanceMargin": 9.960329062871486e-05,
+        "geometryAccepted": true,
+        "lengthError": 2.3627298961770293e-07,
+        "speed": 0.0009113363654727498,
+        "strain": 0.00010471599576500346
+      },
+      "phase": 0,
+      "settled": true,
+      "step": 177,
+      "trace": [
+        {
+          "alpha": 1,
+          "armijoRejected": 0,
+          "movement": 0.0001620855335047354,
+          "originalRejected": 0,
+          "rows": 449,
+          "slope": null,
+          "strain": 0.0002137685883210061
+        },
+        {
+          "alpha": 1,
+          "armijoRejected": 0,
+          "movement": 8.690875236666332e-06,
+          "originalRejected": 0,
+          "rows": 442,
+          "slope": null,
+          "strain": 0.00010471599576500346
+        }
+      ]
+    },
+    "strictContinuationCheckedFrames": 3
+  },
+  "checkpoint109": {
+    "adopted": false,
+    "candidateCaps": 0,
+    "candidateMetrics": {
+      "clearanceMargin": 9.988713180266199e-05,
+      "geometryAccepted": true,
+      "lengthError": 1.7115252426425087e-07,
+      "speed": 0.00015288996163317572,
+      "strain": 3.054055729001526e-05
+    },
+    "candidateQPs": 2,
+    "candidateRetries": 0,
+    "candidateSeconds": 0.005210125003941357,
+    "candidateSettled": false,
+    "checkpointPass": true,
+    "controlSeconds": 0.023875124999904074,
+    "currentDifferenceMeters": 2.1964706254308803e-06,
+    "fixturesPass": true,
+    "guardedArrivalStop": true,
+    "medianRatio": 0.21412385855809804,
+    "originalQPs": 11,
+    "owner": "strong-owl-live-physics",
+    "pairs": [
+      {
+        "candidateSeconds": 0.0050594166677910835,
+        "originalSeconds": 0.023628458322491497,
+        "ratio": 0.21412385855809804
+      },
+      {
+        "candidateSeconds": 0.004978500001016073,
+        "originalSeconds": 0.024121666661812924,
+        "ratio": 0.2063912113045468
+      },
+      {
+        "candidateSeconds": 0.005502250001882203,
+        "originalSeconds": 0.02366987499408424,
+        "ratio": 0.23245792397540624
+      },
+      {
+        "candidateSeconds": 0.005786958325188607,
+        "originalSeconds": 0.023785041659721173,
+        "ratio": 0.24330242544786218
+      },
+      {
+        "candidateSeconds": 0.006215083340066485,
+        "originalSeconds": 0.02576575000421144,
+        "ratio": 0.2412149205457098
+      },
+      {
+        "candidateSeconds": 0.005155041653779335,
+        "originalSeconds": 0.02617958333576098,
+        "ratio": 0.19691076010127379
+      },
+      {
+        "candidateSeconds": 0.0050026249955408275,
+        "originalSeconds": 0.02506129167159088,
+        "ratio": 0.1996156088479562
+      }
+    ],
+    "prefixIdentitySteps": 108,
+    "step": 109,
+    "strictConverged": true,
+    "strictDifferenceMeters": 2.1671536087553684e-06,
+    "strictRetries": 0,
+    "workAndAccuracyPass": true
+  },
+  "checkpoint140": {
+    "adopted": false,
+    "candidateCaps": 0,
+    "candidateMetrics": {
+      "clearanceMargin": 9.994055532242755e-05,
+      "geometryAccepted": true,
+      "lengthError": 9.326733274583887e-08,
+      "speed": 0.00029439116791770906,
+      "strain": 1.516625981801134e-05
+    },
+    "candidateQPs": 2,
+    "candidateRetries": 0,
+    "candidateSeconds": 0.00614050000149291,
+    "candidateSettled": false,
+    "checkpointPass": true,
+    "controlSeconds": 0.005093041661893949,
+    "currentDifferenceMeters": 0,
+    "fixturesPass": true,
+    "guardedArrivalStop": true,
+    "medianRatio": 0.9157418180644297,
+    "originalQPs": 2,
+    "owner": "strong-owl-live-physics",
+    "pairs": [
+      {
+        "candidateSeconds": 0.005184708323213272,
+        "originalSeconds": 0.00579525000648573,
+        "ratio": 0.8946479129305598
+      },
+      {
+        "candidateSeconds": 0.006271791658946313,
+        "originalSeconds": 0.005136833337019198,
+        "ratio": 1.2209451324316682
+      },
+      {
+        "candidateSeconds": 0.004955458323820494,
+        "originalSeconds": 0.0060108333273092285,
+        "ratio": 0.8244211832170072
+      },
+      {
+        "candidateSeconds": 0.005149000004166737,
+        "originalSeconds": 0.006427583328331821,
+        "ratio": 0.8010786855878973
+      },
+      {
+        "candidateSeconds": 0.0056383749906672165,
+        "originalSeconds": 0.006157166659249924,
+        "ratio": 0.9157418180644297
+      },
+      {
+        "candidateSeconds": 0.00586516666226089,
+        "originalSeconds": 0.005746583323343657,
+        "ratio": 1.0206354510575921
+      },
+      {
+        "candidateSeconds": 0.00528029166162014,
+        "originalSeconds": 0.005400124995503575,
+        "ratio": 0.9778091555319156
+      }
+    ],
+    "prefixIdentitySteps": 139,
+    "step": 140,
+    "strictConverged": true,
+    "strictDifferenceMeters": 1.7280166712871417e-06,
+    "strictRetries": 0,
+    "workAndAccuracyPass": true
+  },
+  "ownedGroupsAbsent": [
+    {
+      "group": 93499,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-red/native/resources.jsonl"
+    },
+    {
+      "group": 94704,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-red/native/resources.jsonl"
+    },
+    {
+      "group": 94998,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-109/native/resources.jsonl"
+    },
+    {
+      "group": 98142,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-109/native/resources.jsonl"
+    },
+    {
+      "group": 98293,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-140/native/resources.jsonl"
+    },
+    {
+      "group": 98707,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-140/native/resources.jsonl"
+    },
+    {
+      "group": 98898,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-trajectory/native/resources.jsonl"
+    },
+    {
+      "group": 99217,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-trajectory/native/resources.jsonl"
+    }
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-red/native/result.json": "5b4f4833a080286a193a255fcc4ebed3709355258c2c6f5de29a0847198d4685",
+    ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-red/native/provenance.json": "ac5469a3dd569e0df2b598cf01dc331b47a928acbda2e318156ccc686d6c2125",
+    ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-109/native/result.json": "eee0cd25a475d43f3f914c4cd9842383ca207b101b4f0d4bd4516954e5df7de7",
+    ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-109/native/provenance.json": "8ed4259bdbc69c3c90b9611979153dd5344f630001a52c168b39e73332647929",
+    ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-140/native/result.json": "ec4eff820ede2623911a5229e4c54de68d0b85f5d4ea2aa4a5f0db571fa9dd86",
+    ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-140/native/provenance.json": "5a1479df79bfff452347109519f271fbd2f95b68fb742cd4577ab31f81025ddc",
+    ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-trajectory/native/result.json": "94c6c1c46360de8f0a00c48f6a957cc5a9cbcda6612bbfe5e3a7a286e4f2868f",
+    ".context/strong-owl-live-physics-armijo-a0427667a-arrival-stop-trajectory/native/provenance.json": "7dc51a1bd8d23de3452c25598359b6b6f1722cb5c013bec8c0fc2617227b7d31",
+    ".context/strong-owl-live-physics-arrival-stop-proposal/PLAN.md": "e999fff7bff53f1ffb110c6d3cae148404ed675cb74085d1068f2bf2c7f2494b",
+    "Tools/HangboardRopePrototype/arrival_stop/snapshot.py": "cfb8e31a00352fd0dd3df2caad07f856976a4fea962412487ab8a78ef5442d28",
+    "Tools/HangboardRopePrototype/run_armijo_checkpoint.py": "e8b345b3536d6d00175005d23b0365f8755323fedfe5c5d3debcb9763ab2af1f"
+  }
+}
