@@ -9,7 +9,7 @@ def collider_source(source):
     source=source.replace('FusedWitness(best:rowSquare,radius:rowRadius,faceNormal:normal)',
         'FusedWitness(best:rowSquare,radius:rowRadius,faceNormal:normal,armijoTrackDerivative:false)')
     source=once(source,'FusedWitness(best:meritSquare,radius:meritRadius,faceNormal:normal)',
-        'FusedWitness(best:meritSquare,radius:meritRadius,faceNormal:normal,armijoTrackDerivative:true)')
+        'FusedWitness(best:meritSquare,radius:meritRadius,faceNormal:normal,armijoTrackDerivative:ArmijoTrace.collectDerivatives)')
     beginning,tail=source.split('    private struct FusedWitness {',1)
     tail=once(tail,'        let faceNormal:SIMD3<Double>','        let faceNormal:SIMD3<Double>\n        let armijoTrackDerivative:Bool')
     tail=once(tail,'            guard distanceSquared<best else{return}', '''            if armijoTrackDerivative,distanceSquared==best,let previous=hit {

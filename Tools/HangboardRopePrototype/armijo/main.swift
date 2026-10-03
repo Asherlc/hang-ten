@@ -28,6 +28,7 @@ func difference(_ a:RopeDynamicsSolver,_ b:RopeDynamicsSolver)->Double {
     return d
 }
 func run(_ x:inout RopeDynamicsSolver)throws->(Double,[[String:Any]]) {
+    ArmijoTrace.collectDerivatives=x.armijoExperiment
     ArmijoTrace.corrections=[];alarm(10)
     let start=ProcessInfo.processInfo.systemUptime
     _ = try x.step(dt:1.0/240,targetOrientation:target)

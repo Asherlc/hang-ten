@@ -130,7 +130,7 @@
   "currentDifferenceMeters": 2.3151876464603742e-07,
   "fixturesPass": true,
   "fullMeritDerivative": true,
-  "medianRatio": 0.44599983855573294,
+  "medianRatio": 0.4319727781965161,
   "originalQPs": 11,
   "originalTrace": [
     {
@@ -247,39 +247,39 @@
   "owner": "strong-owl-live-physics",
   "pairs": [
     {
-      "candidateSeconds": 0.012491333327488974,
-      "originalSeconds": 0.026989583333488554,
-      "ratio": 0.46282053239368776
+      "candidateSeconds": 0.011165374991833232,
+      "originalSeconds": 0.02624870832369197,
+      "ratio": 0.4253685497261369
     },
     {
-      "candidateSeconds": 0.017598291669855826,
-      "originalSeconds": 0.03247295832261443,
-      "ratio": 0.5419368169360853
+      "candidateSeconds": 0.011070749998907559,
+      "originalSeconds": 0.02512449999630917,
+      "ratio": 0.44063563456123983
     },
     {
-      "candidateSeconds": 0.010603958333376795,
-      "originalSeconds": 0.025562374998116866,
-      "ratio": 0.4148268044013113
+      "candidateSeconds": 0.01138587499735877,
+      "originalSeconds": 0.026740833331132308,
+      "ratio": 0.4257860948597688
     },
     {
-      "candidateSeconds": 0.010930791657301597,
-      "originalSeconds": 0.024389958329265937,
-      "ratio": 0.44816770532098654
+      "candidateSeconds": 0.011088541665230878,
+      "originalSeconds": 0.027558708330616355,
+      "ratio": 0.402360717788506
     },
     {
-      "candidateSeconds": 0.010755666677141562,
-      "originalSeconds": 0.024745291666476987,
-      "ratio": 0.43465507790771
+      "candidateSeconds": 0.012123666674597189,
+      "originalSeconds": 0.027129458336276002,
+      "ratio": 0.4468820027411346
     },
     {
-      "candidateSeconds": 0.011034333336283453,
-      "originalSeconds": 0.024740666660363786,
-      "ratio": 0.44599983855573294
+      "candidateSeconds": 0.015606874992954545,
+      "originalSeconds": 0.030778500004089437,
+      "ratio": 0.5070706821606287
     },
     {
-      "candidateSeconds": 0.010814583336468786,
-      "originalSeconds": 0.025124916661297902,
-      "ratio": 0.4304326053000379
+      "candidateSeconds": 0.010748166678240523,
+      "originalSeconds": 0.024881583332899027,
+      "ratio": 0.4319727781965161
     }
   ],
   "prefixIdentitySteps": 108,
@@ -441,15 +441,6 @@
     }
   ],
   "workAndAccuracyPass": true,
-  "independentlyAbsentGroups": [
-    2843,
-    4472,
-    11856,
-    12031,
-    13901,
-    17445,
-    17650
-  ],
   "priorPrototypes": [
     {
       "root": ".context/strong-owl-live-physics-armijo-a3bff8f8b-ambiguity-fix",
@@ -462,11 +453,19 @@
     {
       "root": ".context/strong-owl-live-physics-armijo-a3bff8f8b-tied-witnesses",
       "disposition": "compile-only exclusivity failure"
+    },
+    {
+      "root": ".context/strong-owl-live-physics-armijo-a3bff8f8b-tied-output-fixed",
+      "disposition": "accurate but control also collected derivative aliases; superseded timing fairness"
     }
   ],
+  "independentlyAbsentGroups": [
+    35034,
+    35529
+  ],
   "hashes": {
-    ".context/strong-owl-live-physics-armijo-a3bff8f8b-tied-output-fixed/native/result.json": "89fab513b4b93c114eb6e8076a1059090ba91498e9d27e527ea58db2dc8a0d4f",
-    ".context/strong-owl-live-physics-armijo-a3bff8f8b-tied-output-fixed/native/provenance.json": "d617f2911cb0eccdf6993eee3aa18dab700f63290e0c856388b17464dd9320b8",
-    ".context/strong-owl-live-physics-armijo-a3bff8f8b-tied-output-fixed/native/resources.jsonl": "e8e3b7ff40e289072ca80c71d685ca49924db3fac773178e127268d5ee36353b"
+    ".context/strong-owl-live-physics-armijo-d26b267ff-fair-metadata-control/native/result.json": "a384dec68089c3cbd28096c58484076b11857ee4fe514aa6a0103e3328699870",
+    ".context/strong-owl-live-physics-armijo-d26b267ff-fair-metadata-control/native/provenance.json": "cd1f73f65b28d6a654aef83b515b9aea5ae7f308b4aa670e95792f12f89dae69",
+    ".context/strong-owl-live-physics-armijo-d26b267ff-fair-metadata-control/native/resources.jsonl": "27e3211998e031bb92fc6d77c6cd888362155e7531bf3b96cd09f93b6eb9c41f"
   }
 }

@@ -27,13 +27,18 @@ On unchanged original prefix108 / fixed step109, the corrected result:
   **0.0929 µm**, with no strict retry;
 - agrees with independently queried one-sided merit slopes at alpha=1e-5 to
   at most **1.386e-11** merit units/alpha;
-- passes seven alternating complete-step pairs, median ratio **0.4460**.
+- passes seven alternating complete-step pairs, median ratio **0.4320**.
 
 **Bounded local checkpoint PASS; no product adoption.** Complete native candidate
-steps still take about 10–13 ms in this run, above 4 ms. This tail-specific result
+steps still take about 11–16 ms in this run, above 4 ms. This tail-specific result
 does not prove a general derivative certificate, complete trajectory stability,
 real-time behavior or iPhone performance. Full trajectory/false-settle checks
 are next. No new recording is claimed. A tied-output build first failed Swift
 exclusivity and was corrected using a local immutable normal, without changing
 physics or the gates. Exact owned process groups were independently verified
 absent; adjacent JSON binds final and superseded evidence.
+
+A fair same-binary repeat enables tied-derivative metadata only for the candidate,
+with the flag changed before fully joined step calls. The original control pays
+no collection cost. Accuracy and four-correction decisions are unchanged; the
+fair seven-pair ratio above supersedes the earlier 0.4460 comparison.

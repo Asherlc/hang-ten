@@ -1,5 +1,8 @@
 import simd
 func ambiguityFixtures()throws {
+    let previous=ArmijoTrace.collectDerivatives
+    ArmijoTrace.collectDerivatives=true
+    defer {ArmijoTrace.collectDerivatives=previous}
     let a=SIMD3<Double>(-0.01,-0.01,-0.01),b=SIMD3<Double>(0.01,0,0.01)
     let v=[SIMD3(a.x,a.y,a.z),SIMD3(b.x,a.y,a.z),SIMD3(b.x,b.y,a.z),SIMD3(a.x,b.y,a.z),
         SIMD3(a.x,a.y,b.z),SIMD3(b.x,a.y,b.z),SIMD3(b.x,b.y,b.z),SIMD3(a.x,b.y,b.z)]
