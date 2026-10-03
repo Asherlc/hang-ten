@@ -13,8 +13,9 @@ records are committed in `c63554f9f` and `04979bde9`. #20 geometry was accepted 
 `b60f41c59`). Workout highlight transitions remain unresolved on iOS 26.4 and
 26.5; full app-workflow validation is not passing. #21’s displayed native
 geometry was accepted on 2026-10-02 (reply “Y”, displayed commit `e28886489`).
-All six allocated boards now have geometry approval; #21 fresh app review
-remains blocked and pending with 0/28 contacts checked.
+All six allocated boards have geometry approval. Fresh agent checks now cover
+all 28 Pro contacts; user acceptance of those app views and complete workout
+validation remain pending. Historical 0/28 failure packets remain unchanged.
 
 The parent `placid-badger` owns #9–15; accepted #1–8 and all other packages
 are outside this workspace's scope. Shared compiler, schema, renderer, and
@@ -253,3 +254,22 @@ and proposal correction are retained, without expanding our board allocation.
 This diagnostic contrast establishes no generic host rule or production fix.
 Previous acceptances remain unchanged; coordinated owned resources stay live
 and cleanup remains pending.
+
+### Current runtime boundary — Train teardown and real hands
+
+The [ordinary-ownership comparison](zlagboard-evo/runtime-structural-dependency-2026-10-02/README.md)
+passed with all hands suppressed. Restoring real hands
+[failed](zlagboard-evo/runtime-structural-real-hands-2026-10-02/README.md). The
+[weak-hand census](zlagboard-evo/runtime-weak-hand-census-2026-10-02/README.md)
+reproduced the failure while the earlier hand root/camera were absent at all
+capture brackets and the current pair remained attached. Sparse observations
+do not establish continuous lifetime, GPU activity, or a framework cause. No
+production repair or new human acceptance is established. The subsequent
+[same-binary perspective comparison](zlagboard-evo/runtime-weak-hand-perspective-2026-10-02/README.md)
+also failed; no camera reversal or production camera change followed.
+
+The coordinated reservation now covers the original five renderer/test paths
+plus `HangTen/Views/GripHandModelView.swift` and `HangTen/Views/TrainView.swift`.
+Temporary diagnostics remain uncommitted; owned validation resources remain
+registered under the existing cleanup controller. Exact final integration and
+cleanup verification are still required before readiness is claimed.
