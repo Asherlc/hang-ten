@@ -1,0 +1,15 @@
+{
+  "owner": "strong-owl-live-physics",
+  "closed": true,
+  "candidateImplemented": false,
+  "adopted": false,
+  "controlCorrections": 1657,
+  "optimisticallyCountStableRemovableCorrections": 1,
+  "ignoringSignaturesRemovableCorrections": 157,
+  "scope": "Necessary counts-only ceiling for depth-two within-step acceleration with fresh verification; no wall-time bound, state proposal, or performance acceptance",
+  "sha256": {
+    ".context/strong-owl-live-physics-acceleration-census/result.json": "91ecfee4a7984bc1b9f2d708bb4358a2c448e210286c308474e8a6271e550403",
+    "Tools/HangboardRopePrototype/census_acceleration_history.py": "aeec062e0d560f84fbfa855c302869b2181c1d3b127f18144eee9a345be1f81b",
+    ".context/strong-owl-live-physics-current-diagnostic-trajectory/native/result.json": "f53af4dd14b4fa181f62e34113000b26e4b2bb9d810b256c2a7ee38e8cd3ba74"
+  }
+}
