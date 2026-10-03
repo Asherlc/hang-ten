@@ -105,7 +105,6 @@ struct AppSettingsView: View {
                 .accessibilityIdentifier("settings.forceUnit")
             }
         }
-        .padding(16)
         .hangCard()
     }
 

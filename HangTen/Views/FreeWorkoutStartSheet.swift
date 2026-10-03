@@ -108,7 +108,7 @@ struct FreeWorkoutStartSheet: View {
                 Text("Start")
             } footer: {
                 if latest == nil {
-                    Text("Finish a free workout to unlock Last workout.")
+                    Text("Your last completed free workout will appear here.")
                 }
             }
 

@@ -38,27 +38,30 @@ struct MotherboardCard: View {
                 }
             }
 
-            MotherboardMeterView(
-                measurement: service.latestMeasurement,
-                peakLoadKGF: nil,
-                actualLoadedTime: 0,
-                plannedActiveDuration: 0,
-                bodyweightKGF: service.bodyweightKGF,
-                unit: settings.forceUnit,
-                state: service.state,
-                thresholdKGF: settings.thresholdKGF
-            )
+            if service.state == .streaming {
+                MotherboardMeterView(
+                    measurement: service.latestMeasurement,
+                    peakLoadKGF: nil,
+                    actualLoadedTime: 0,
+                    plannedActiveDuration: 0,
+                    bodyweightKGF: service.bodyweightKGF,
+                    unit: settings.forceUnit,
+                    state: service.state,
+                    thresholdKGF: settings.thresholdKGF
+                )
+            }
 
-            HStack {
-                sensorValue(title: "Battery", value: batteryText)
-                Spacer()
+            if let batteryValue = service.batteryValue {
+                sensorValue(title: "Battery", value: "\(batteryValue)%")
+            }
+
+            if let lastError = service.lastError, !lastError.isEmpty {
                 sensorValue(
                     title: "Last error",
                     value: ForceSensorConnectionCopy.lastError(
-                        service.lastError,
+                        lastError,
                         profile: service.connectedProfile ?? settings.forceSensorProfile
-                    ),
-                    alignment: .trailing
+                    )
                 )
             }
 
@@ -81,11 +84,6 @@ struct MotherboardCard: View {
         .hangCard()
     }
 
-    private var batteryText: String {
-        guard let batteryValue = service.batteryValue else { return "—" }
-        return "\(batteryValue)%"
-    }
-
     private var connectionActionTitle: String {
         service.state.shouldDisconnect ? "Disconnect sensor" : "Connect sensor"
     }
@@ -105,16 +103,15 @@ struct MotherboardCard: View {
         }
     }
 
-    private func sensorValue(title: String, value: String, alignment: HorizontalAlignment = .leading) -> some View {
-        VStack(alignment: alignment, spacing: 3) {
+    private func sensorValue(title: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
             Text(title.uppercased())
                 .font(.system(size: 10, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
             Text(value)
                 .font(.system(size: 13, weight: .semibold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
-                .lineLimit(2)
-                .multilineTextAlignment(alignment == .trailing ? .trailing : .leading)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 

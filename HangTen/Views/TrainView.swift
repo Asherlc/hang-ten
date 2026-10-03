@@ -48,6 +48,7 @@ struct TrainView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 22) {
                     selectedBoardCard
+                    freeWorkoutButton
                     favoritesSection
                 }
                 .padding(.horizontal, 20)
@@ -55,6 +56,8 @@ struct TrainView: View {
                 .padding(.bottom, 30)
             }
             .background(Color.hangBackground)
+            .navigationTitle("Train")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
@@ -142,9 +145,19 @@ struct TrainView: View {
                 .cardPreviewStyle()
 
             VStack(alignment: .leading, spacing: 5) {
-                SectionLabel(title: "Your board")
+                HStack {
+                    SectionLabel(title: "Your board")
+                    Spacer()
+                    Link(destination: store.selectedBoard.productURL) {
+                        Label("Product page", systemImage: "arrow.up.right")
+                            .frame(minHeight: 44)
+                            .contentShape(Rectangle())
+                    }
+                    .font(.system(.footnote, design: .rounded, weight: .medium))
+                    .foregroundStyle(Color.hangGreenDark)
+                }
                 Text(store.selectedBoard.name)
-                    .font(.system(size: 21, weight: .bold, design: .rounded))
+                    .font(.system(.title3, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
                 if let dimensions = store.selectedBoard.dimensions {
                     Text(dimensions)
@@ -153,28 +166,44 @@ struct TrainView: View {
                 }
             }
 
-            HStack(spacing: 16) {
-                Link(destination: store.selectedBoard.productURL) {
-                    Label("Product page", systemImage: "arrow.up.right")
-                }
-
-                Spacer()
-
-                NavigationLink("Change board") {
-                    BoardPickerView()
-                }
-                .accessibilityIdentifier("train.changeBoard")
-
-                NavigationLink("View hold specs") {
-                    BoardDetailView(board: store.selectedBoard)
-                }
-                .accessibilityIdentifier("train.boardDetails")
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 12) { boardActions }
+                    .fixedSize(horizontal: true, vertical: false)
+                VStack(alignment: .leading, spacing: 8) { boardActions }
             }
-            .font(.system(size: 13, weight: .bold, design: .rounded))
-            .foregroundStyle(Color.hangGreenDark)
+            .buttonStyle(.bordered)
+            .controlSize(.large)
+            .font(.system(.subheadline, design: .rounded, weight: .semibold))
+            .tint(.hangGreenDark)
         }
         .hangCard()
         .accessibilityIdentifier("train.board")
+    }
+
+    @ViewBuilder
+    private var boardActions: some View {
+        NavigationLink("Change board") {
+            BoardPickerView()
+        }
+        .accessibilityIdentifier("train.changeBoard")
+
+        NavigationLink("View hold specs") {
+            BoardDetailView(board: store.selectedBoard)
+        }
+        .accessibilityIdentifier("train.boardDetails")
+    }
+
+    private var freeWorkoutButton: some View {
+        Button {
+            showsFreeWorkout = true
+        } label: {
+            Label("Start free workout", systemImage: "plus")
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.borderedProminent)
+        .controlSize(.large)
+        .tint(.hangGreenDark)
+        .accessibilityIdentifier("train.freeWorkout")
     }
 
     @ViewBuilder
@@ -182,23 +211,19 @@ struct TrainView: View {
         if store.favoritePlans.isEmpty {
             VStack(alignment: .leading, spacing: 17) {
                 SectionLabel(title: "Favorites")
-                Text("Favorite routines from Plans to keep them handy here.")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                Text("No favorites yet")
+                    .font(.system(.headline, design: .rounded))
                     .foregroundStyle(Color.hangInk)
-                Text("Your favorites will appear here when they are compatible with your selected board.")
-                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                Text("Star a plan to keep it handy here.")
+                    .font(.system(.subheadline, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
                 Button("Browse plans", action: onBrowsePlans)
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
                     .tint(.hangGreenDark)
                     .accessibilityIdentifier("train.browsePlans")
-                Button("Start Free Workout") {
-                    showsFreeWorkout = true
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.hangGreenDark)
-                .accessibilityIdentifier("train.freeWorkout")
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .hangCard()
         } else {
             VStack(alignment: .leading, spacing: 12) {
@@ -214,12 +239,6 @@ struct TrainView: View {
                         store.toggleFavorite(plan)
                     }
                 }
-                Button("Start Free Workout") {
-                    showsFreeWorkout = true
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.hangGreenDark)
-                .accessibilityIdentifier("train.freeWorkout")
             }
         }
     }
