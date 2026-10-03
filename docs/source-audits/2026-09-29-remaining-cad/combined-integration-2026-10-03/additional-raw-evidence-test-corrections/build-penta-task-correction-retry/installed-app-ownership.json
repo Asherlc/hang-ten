@@ -1,0 +1,8 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "simulatorUUID": "055BDCE2-3263-470D-89DF-04B967EF7790",
+  "builtApp": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app",
+  "installedApp": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/055BDCE2-3263-470D-89DF-04B967EF7790/data/Containers/Bundle/Application/2C9D18AD-CC52-4C9E-A58B-64CACF52D5D3/HangTen.app",
+  "bundleID": "com.hangten.training",
+  "lifetimeOwner": "simulator"
+}

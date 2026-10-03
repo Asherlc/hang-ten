@@ -1,0 +1,12 @@
+{
+  "supersedesInferenceOnly": "external-stop.json wording about declared600secondlimit",
+  "scope": "Elapsed ps/epoch wall time exceeded600seconds. Clock-suspend/monotonic behavior was not measured, so expiry of simctl internal deadline is unproven. All selected test cases had already completed with failures; external interruption only terminated later diagnostic collection. Raw command/output/result/archive bytes preserved.",
+  "verifiedExactPIDsAbsent": [
+    52302,
+    52365,
+    52366,
+    62039
+  ],
+  "archiveVerified": true,
+  "recordedEpoch": 1791068053.186242
+}

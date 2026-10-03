@@ -1,0 +1,6 @@
+{
+  "reason": "Selected test completed with failures and full scalar timing; interrupt subsequent xcodebuild diagnostic collection only. No test-case pass inferred from process exit.",
+  "helperPID": 98259,
+  "epoch": 1791068499.62415,
+  "verifiedCommand": "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python .context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/run-tests.py --name pause-timing-controller --only HangTenTests/LiveRopeControllerTests/testReduceMotionDeliversOnlyAcceptedSettledFrame\n"
+}

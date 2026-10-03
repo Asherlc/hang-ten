@@ -1,4 +1,5 @@
 import Foundation
+import simd
 
 struct ResolvedContactSnapshot: Codable, Hashable {
     let boardID: String
@@ -454,6 +455,9 @@ enum ContactResolver {
     static func resolveSelection(
         _ task: [PlanHandTarget], step: WorkoutStep, board: BoardRevision
     ) throws -> Selection {
+        if let selection = reusableCADPairSelection(task, step: step, board: board) {
+            return selection
+        }
         guard board.positions.contains(where: { !$0.effectiveDepths.isEmpty }) else {
             let available = board.contacts.filter { contactIDsForDefaultPosition(on: board).contains($0.id) }
             return Selection(contacts: try resolveTaskCandidates(task, step: step, board: board,
@@ -468,6 +472,62 @@ enum ContactResolver {
             return Selection(contacts: contacts, positionID: position.id)
         }
         throw ContactResolutionError.noMatches
+    }
+
+    /// Reusable suspended units have model-local descriptor frames. Resolve
+    /// only one matching slot pair with one authored common position. Ambiguous
+    /// ranges and differing candidate sets follow the existing resolver.
+    private static func reusableCADPairSelection(
+        _ task: [PlanHandTarget], step: WorkoutStep, board: BoardRevision
+    ) -> Selection? {
+        guard task.count == 2,
+              case .model(let media) = board.defaultPresentation.media,
+              let instances = media.instances, instances.count == 2,
+              instances.allSatisfy({
+                  if case .cadRoutedCord = $0.suspension { return true }
+                  return false
+              }) else { return nil }
+        let available = board.contacts.filter { contactIDsForDefaultPosition(on: board).contains($0.id) }
+        let candidates = task.map { hand in
+            available.filter {
+                matches(hand.target?.legacyRequirement ?? ContactRequirement(), contact: $0)
+                    && matches(stepGripType: step.gripType, contact: $0)
+            }
+        }
+        guard candidates.allSatisfy({ $0.count == 2 }),
+              Set(candidates[0].map(\.id)) == Set(candidates[1].map(\.id)),
+              let pair = outermostPair(from: candidates[0], in: board.defaultPresentation) else { return nil }
+        let positions = board.positions.filter {
+            $0.presentationID == board.defaultPresentation.id && Set($0.contactIDs) == Set(pair.map(\.id))
+        }
+        guard positions.count == 1, let position = positions.first,
+              media.descriptor.modelBounds.minimum.count == 3,
+              media.descriptor.modelBounds.maximum.count == 3 else { return nil }
+        let center = (SIMD3<Double>(media.descriptor.modelBounds.minimum)
+                      + SIMD3<Double>(media.descriptor.modelBounds.maximum)) / 2
+        var placed: [(contact: PhysicalContact, x: Float)] = []
+        for instance in instances {
+            guard let pose = instance.suspension?.canonicalPoses[position.id],
+                  let transform = try? SuspendedBoardPresentation.boardTransform(for: pose),
+                  instance.baseTransform.translation.count == 3,
+                  let contact = pair.first(where: { $0.equipmentObjectID == instance.equipmentObjectID }) else { return nil }
+            // Base rotation/reflection is about the bounds center; it leaves
+            // that center fixed. Native CAD then composes pose * base.
+            let baseCenter = center + SIMD3<Double>(instance.baseTransform.translation)
+            let world = transform * SIMD4<Float>(Float(baseCenter.x), Float(baseCenter.y), Float(baseCenter.z), 1)
+            guard world.x.isFinite else { return nil }
+            placed.append((contact, world.x))
+        }
+        guard placed.count == 2, placed[0].x != placed[1].x else { return nil }
+        placed.sort { $0.x < $1.x }
+        let firstSide = task[0].side ?? (task[1].side == .left ? .right : .left)
+        let secondSide = task[1].side ?? (firstSide == .left ? .right : .left)
+        guard firstSide != secondSide else { return nil }
+        let bySide: [WorkoutSide: PhysicalContact] = [.left: placed[0].contact, .right: placed[1].contact]
+        guard let first = bySide[firstSide], let second = bySide[secondSide],
+              first.side == nil || first.side?.rawValue == firstSide.rawValue,
+              second.side == nil || second.side?.rawValue == secondSide.rawValue else { return nil }
+        return Selection(contacts: [first, second], positionID: position.id)
     }
 
     private static func resolveTaskCandidates(

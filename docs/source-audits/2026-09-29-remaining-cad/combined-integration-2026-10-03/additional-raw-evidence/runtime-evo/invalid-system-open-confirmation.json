@@ -1,0 +1,6 @@
+{
+  "classification": "INVALID_WORKOUT_STARTUP",
+  "evidence": "elapsed-001s.png whole image shows system Open in Hang Ten confirmation; app remains Train. No routine phase sequence evaluated.",
+  "epoch": 1791068165.314738,
+  "helperPID": 91572
+}
