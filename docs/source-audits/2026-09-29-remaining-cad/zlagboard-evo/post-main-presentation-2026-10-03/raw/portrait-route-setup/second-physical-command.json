@@ -1,0 +1,1 @@
+{"command": ["rtk", "proxy", "/opt/homebrew/bin/axe", "tap", "--udid", "E0AC7F37-369F-414E-B407-353435A0BE03", "--label", "Open", "--element-type", "Button", "--tap-style", "physical"], "exitStatus": 0}

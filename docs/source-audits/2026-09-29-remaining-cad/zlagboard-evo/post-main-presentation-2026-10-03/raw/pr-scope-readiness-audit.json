@@ -1,0 +1,347 @@
+{
+  "scope": "Read-only canonical byte and existing human-review scope audit; no current runtime outputs inspected, no geometry export/tests, no app/source/queue edits.",
+  "baseline": "a314f39c03121465b493da6f45e49fa7c928b1cc",
+  "observedHEAD": "a314f39c03121465b493da6f45e49fa7c928b1cc",
+  "priorManifest": {
+    "path": ".context/placid-badger-cad-second-half/main-sync-2026-10-03/six-packages-preservation.json",
+    "sha256": "696331faea598b421f219b64eb679e47d6f00dec916b1ef64d2f7ade26a6d4ee"
+  },
+  "canonical22": [
+    {
+      "path": "Hangboards/yy-baguette/assets/primary.model.json",
+      "sha256": "75be5cf44e996606261dfd942f3004058d6cc9cd5bfe66e1c159ceaf1578f934",
+      "bytes": 2788,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/yy-baguette/assets/primary.usdz",
+      "sha256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea",
+      "bytes": 1552947,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/yy-baguette/suspension.json",
+      "sha256": "c69c11dc9708bc1e2dc9f235004f55a7c0ecd524fdf5b073c40dda1d9b0c956f",
+      "bytes": 114727,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/yy-baguette/yy-baguette.FCStd",
+      "sha256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+      "bytes": 231688,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false,
+      "realZip": true,
+      "committedLFSPointer": true,
+      "lfsObjectPath": "/Users/asherlc/src/hang-ten/.git/lfs/objects/49/70/49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+      "realLFSObjectMatches": true,
+      "nativeDocumentPresent": true,
+      "nativeGeometryMemberCount": 47
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/assets/primary.model.json",
+      "sha256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+      "bytes": 9232,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/assets/primary.usdz",
+      "sha256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+      "bytes": 636587,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/suspension.json",
+      "sha256": "4d0aa10c8914bd41fd79cc825d094ffc5a785aae64aef5406ade19778102a282",
+      "bytes": 74670,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd",
+      "sha256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+      "bytes": 4904495,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false,
+      "realZip": true,
+      "committedLFSPointer": true,
+      "lfsObjectPath": "/Users/asherlc/src/hang-ten/.git/lfs/objects/0c/e8/0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+      "realLFSObjectMatches": true,
+      "nativeDocumentPresent": true,
+      "nativeGeometryMemberCount": 195
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/assets/primary.model.json",
+      "sha256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+      "bytes": 3408,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/assets/primary.usdz",
+      "sha256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+      "bytes": 1531074,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/suspension.json",
+      "sha256": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97",
+      "bytes": 84593,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
+      "sha256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "bytes": 1224598,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false,
+      "realZip": true,
+      "committedLFSPointer": true,
+      "lfsObjectPath": "/Users/asherlc/src/hang-ten/.git/lfs/objects/5c/c4/5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "realLFSObjectMatches": true,
+      "nativeDocumentPresent": true,
+      "nativeGeometryMemberCount": 139
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.model.json",
+      "sha256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+      "bytes": 2866,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.usdz",
+      "sha256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+      "bytes": 1432139,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/yy-travelboard/suspension.json",
+      "sha256": "7af15a7f897baa87a4da89fcf62c8123dbb7544d8c3cb0bced71474bf9d044e4",
+      "bytes": 31173,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/yy-travelboard/yy-travelboard.FCStd",
+      "sha256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "bytes": 223596,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false,
+      "realZip": true,
+      "committedLFSPointer": true,
+      "lfsObjectPath": "/Users/asherlc/src/hang-ten/.git/lfs/objects/62/0d/620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "realLFSObjectMatches": true,
+      "nativeDocumentPresent": true,
+      "nativeGeometryMemberCount": 47
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/assets/primary.model.json",
+      "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+      "bytes": 10140,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/assets/primary.usdz",
+      "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "bytes": 1020310,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/zlagboard-evo.FCStd",
+      "sha256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+      "bytes": 1000365,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false,
+      "realZip": true,
+      "committedLFSPointer": true,
+      "lfsObjectPath": "/Users/asherlc/src/hang-ten/.git/lfs/objects/6f/44/6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+      "realLFSObjectMatches": true,
+      "nativeDocumentPresent": true,
+      "nativeGeometryMemberCount": 207
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.model.json",
+      "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+      "bytes": 13417,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.usdz",
+      "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+      "bytes": 1284438,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/zlagboard-pro.FCStd",
+      "sha256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "bytes": 1412874,
+      "matchesMainSyncManifest": true,
+      "matchesCommittedData": true,
+      "workingFileIsLFSPointer": false,
+      "realZip": true,
+      "committedLFSPointer": true,
+      "lfsObjectPath": "/Users/asherlc/src/hang-ten/.git/lfs/objects/44/02/44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "realLFSObjectMatches": true,
+      "nativeDocumentPresent": true,
+      "nativeGeometryMemberCount": 291
+    }
+  ],
+  "all22Exact": true,
+  "sixRealFCStdVerified": true,
+  "canonicalHangboardsChangedSinceBaseline": [],
+  "parentOutOfScopeCanonicalPathsUnchanged": true,
+  "queue": {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/review-queue.json",
+    "sha256": "e259be7d20700af24a253606a51b7b28e0d0c83ce221e863cf0383e935a2ffb3",
+    "allRowsBytePreserved": true
+  },
+  "humanReview": [
+    {
+      "number": 16,
+      "package": "yy-baguette",
+      "queueHumanReview": "reviewed; smooth-end geometry, exterior cords and wood display accepted",
+      "acceptedScope": "Displayed La Baguette revision with unsupported grooves removed, exterior cords on smooth rounded end surfaces, wood finish and all six selectable contacts.",
+      "humanRecordStatus": "accepted",
+      "recordPath": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/human-review.json",
+      "recordSHA256": "729b6682a1ac1e88503896aa9891557c2b3321832a8066909ef690e445a25574",
+      "recordMatchesHEAD": true,
+      "remainingHumanGate": "None for already accepted displayed revision; do not reopen or revoke acceptance."
+    },
+    {
+      "number": 17,
+      "package": "yy-baguette-evo",
+      "queueHumanReview": "reviewed; rounded cavity geometry, cords, wood display and opposing hold poses accepted",
+      "acceptedScope": "Displayed Baguette Evo revision with rounded native cavity ends, wood finish, visible native-solved cords, nineteen contacts and nine bearing-up poses; rounding radii documented as display estimates.",
+      "humanRecordStatus": "accepted",
+      "recordPath": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/human-review.json",
+      "recordSHA256": "6a1d33cf2b640aaa57a0c7e48047791514d88a995c1b76ac24fb521a09a09dfc",
+      "recordMatchesHEAD": true,
+      "remainingHumanGate": "None for already accepted displayed revision; do not reopen or revoke acceptance."
+    },
+    {
+      "number": 18,
+      "package": "yy-penta-evo",
+      "queueHumanReview": "reviewed; corrected rear recess, wood display, seven grip poses, cords and workout highlighting accepted",
+      "acceptedScope": "Displayed Penta Evo revision: enclosed rear 10 mm recess, wood finish, seven loadable grip poses with native-solved cords, fourteen contact selections and bilateral workout highlighting. Display estimates remain labeled.",
+      "humanRecordStatus": "accepted",
+      "recordPath": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/human-review.json",
+      "recordSHA256": "13f52a27399dd97fd079839cce7bd5028a8f8d3e5dd6ff0f0fbe08a632838baf",
+      "recordMatchesHEAD": true,
+      "remainingHumanGate": "None for already accepted displayed revision; do not reopen or revoke acceptance."
+    },
+    {
+      "number": 19,
+      "package": "yy-travelboard",
+      "queueHumanReview": "reviewed; wood finish, short native-solved cords, six contact selections and both poses accepted",
+      "acceptedScope": "Displayed TravelBoard revision: wood finish, shorter native-solved visible cords, six contact selections, both poses and 15 mm workout highlighting. Native body geometry unchanged; display estimates remain labeled.",
+      "humanRecordStatus": "accepted",
+      "recordPath": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/human-review.json",
+      "recordSHA256": "e8c571f913892a862b873eeed5c3873b7ea5e887e5d4ce2b2ef6e5f45ea59eae",
+      "recordMatchesHEAD": true,
+      "remainingHumanGate": "None for already accepted displayed revision; do not reopen or revoke acceptance."
+    },
+    {
+      "number": 20,
+      "package": "zlagboard-evo",
+      "queueHumanReview": "reviewed; rounded native geometry, wood finish and all 21 static contact selections accepted; workout highlight refresh remains unresolved",
+      "acceptedScope": "Displayed Zlagboard.Evo geometry at b60f41c59: native top rounds, full jug crest/corner selection coverage, wood finish and all 21 static selections. Display-estimate limits remain. This reply does not accept or resolve the documented workout red/blue refresh failure.",
+      "humanRecordStatus": "geometry accepted; workout validation unresolved",
+      "recordPath": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/human-review.json",
+      "recordSHA256": "cbd7b03e4f88c439def1ef699fba49df4b37a5e727cae314a5451d33c26d55ba",
+      "recordMatchesHEAD": true,
+      "remainingHumanGate": "Existing geometry/static acceptance stands; corrected workout presentation must be shown separately, no workflow acceptance inferred."
+    },
+    {
+      "number": 21,
+      "package": "zlagboard-pro",
+      "queueHumanReview": "native geometry accepted; fresh app review remains blocked and pending (0/28 contacts)",
+      "acceptedScope": "Displayed Zlagboard.Pro 2.0 native geometry at e28886489, shown in original/prior/corrected front-side-top comparisons. Estimated top rounding and native contact-region corrections are included. Fresh app appearance, highlighting, picking and workout behavior are not accepted or verified by this reply; app contact coverage remains 0/28.",
+      "humanRecordStatus": "native geometry accepted; fresh app review remains blocked and pending (0/28 contacts)",
+      "recordPath": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/human-review.json",
+      "recordSHA256": "6d3b112acd91ade64ed4e37142da45d0430ecd58d0056ea5e194c1baeb67f625",
+      "recordMatchesHEAD": true,
+      "remainingHumanGate": "Show fresh app appearance and all28 contacts plus picking/camera/workout verification, then request the separate fresh-app review reply. Native geometry acceptance stands."
+    }
+  ],
+  "reviewNotesRead": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/groove-removal-review/review.md",
+      "sha256": "fde1a228ae71967bbfe5d46d9a2903038f989f087d1b5a0bf656004792b2dd26"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/review.md",
+      "sha256": "c03013cb957b62566806fdc8c1243e85171793d365b56cd6a5252f1e90ce6c43"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/review.md",
+      "sha256": "be0431d1e3a7cecd7344aa9b9a5273b46d2937ab5fe4238e62beb702b4a7843f"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/individual-review-2026-10-01/review.md",
+      "sha256": "bb27a795bb13a9c12e806d7650f718319b4948d93fbeb91397d92cefced94de1"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/app-review-2026-10-02/review.md",
+      "sha256": "1665660d93033a22901b4b8bf53e95ab0d3b91d6ecf9e174bc51e01321f10788"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/review.md",
+      "sha256": "66e82ed5bc997b8953ed59f57682cd450264e72e42661033303ef202c39ec7bf"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/runtime-clean-hand-output-2026-10-03/README.md",
+      "sha256": "258a0bb3d32c985ad8214b3f881e12e7ab5a00034c3336b1b1a867074e1fd0d1"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/runtime-board-frame-2026-10-03/README.md",
+      "sha256": "083454cfcbff13bf63bf70ea02fe2cb0122fe472b0044711d25b71ff1dc9b1de"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/runtime-uninterrupted-2026-10-02/review.md",
+      "sha256": "d28831b4ec48b04bc813f8c27f009e9e177624dd47fef9e16f0d013eedf76876"
+    }
+  ],
+  "historicalNoteQualification": "Review pages originally written before Y approvals retain pending language; the later human-review records and queue scope govern accepted native/static revisions. Historical pages were not rewritten.",
+  "remaining": [
+    "#16\u201319 have no outstanding board acceptance in these records.",
+    "#20 retains native/static acceptance; unresolved workout behavior requires fresh successful runtime evidence and separate presentation of the correction. Do not mark existing approval as workflow acceptance.",
+    "#21 retains native comparison acceptance only; fresh28-contact app review, interactions/workout checks and user reply remain.",
+    "Current Main candidate control/action validation is ongoing; this audit does not establish a fix, runtime pass, complete cleanup, or PR readiness."
+  ],
+  "prReadyClaim": false,
+  "runtimeFixClaim": false
+}

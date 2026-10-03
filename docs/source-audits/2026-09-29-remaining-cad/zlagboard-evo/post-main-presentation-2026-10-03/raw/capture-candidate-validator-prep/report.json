@@ -1,0 +1,14 @@
+{
+  "preparedOnly": true,
+  "syntax": "AST parse PASS; validator not run against active or completed capture",
+  "sourceEdits": false,
+  "runtimeActions": false,
+  "parityReads": "Released recorded parity JSON bytes/hash and equality records only; no installed-file reads",
+  "boundCaptureHelperSHA256": "db2b679301a8ead9a129647a50f366ecdded054b9c84d90b692b84fa264645f7",
+  "files": {
+    "README.md": "4b78c3aef23b86d6d382efb84b92f156207013f3e621f48bc9a7961170cb786d",
+    "validate-completed.original.py": "61692888473892874b6da5847185ed7920e69f802a2f0592fa3ad280997f6e4b",
+    "validate-completed.py": "19a33a272d2c55cfbfc9cc68693c41242305d6be717d8c9368d798e67e90fd06",
+    "validator.diff": "0d2acea5c5dbaf8bd460ef46d3e698162f6b2b7356200f7fba1742d635fa7f64"
+  }
+}

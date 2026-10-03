@@ -1,0 +1,8 @@
+{
+  "scope": "SETUP_ONLY",
+  "firstTapAcceptedClaim": "WITHDRAWN: whole before/after images identical; modal remained",
+  "routeApprovedReleaseAnnotation": "NOT_VERIFIED_AT_ISSUE: preserve original; second run invalid with zero captures",
+  "portraitFirstPhysical": "route visible behind remaining system modal; not dismissed",
+  "portraitSecondPhysical": "Whole screenshot after-second-physical.png visibly shows Session Step4 Rest, blue correct board preview, visible hands and no modal. Not a scheduled rendering trial.",
+  "noRendererConclusion": true
+}

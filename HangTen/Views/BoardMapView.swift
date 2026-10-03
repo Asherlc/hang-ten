@@ -632,11 +632,13 @@ struct BoardMapView: View {
     private let requestedPresentationID: String?
     private let activeHoldID: String?
     private let isDisplayOnly: Bool
-    private let usesFrameRenderer: Bool
     private let maximumMapHeight: CGFloat?
 
     @State private var presentationSelection: BoardMapPresentationSelection
     @State private var preferredPositionIDs: [String: String] = [:]
+
+    @Environment(\.workoutRendererPreparationID) private var preparationID
+    @State private var preparationHostID = UUID()
 
     init(
         board: BoardRevision,
@@ -646,8 +648,7 @@ struct BoardMapView: View {
         activeHoldID: String? = nil,
         onHoldTap: ((PhysicalContact) -> Void)? = nil,
         isDisplayOnly: Bool = false,
-        maximumMapHeight: CGFloat? = nil,
-        usesFrameRenderer: Bool = false
+        maximumMapHeight: CGFloat? = nil
     ) {
         self.board = board
         self.highlightedHoldIDs = highlightedHoldIDs
@@ -656,7 +657,6 @@ struct BoardMapView: View {
         requestedPresentationID = selectedPresentationID
         self.activeHoldID = activeHoldID
         self.isDisplayOnly = isDisplayOnly
-        self.usesFrameRenderer = usesFrameRenderer
         self.maximumMapHeight = maximumMapHeight
         let resolvedSelection = BoardMapPresentationSelection(
             board: board,
@@ -734,6 +734,15 @@ struct BoardMapView: View {
                             }
                         }
                         .frame(width: boardBounds.width, height: boardBounds.height)
+                        // Raster presentations have no asynchronous 3D host.
+                        // Report the actual selected presentation, so a retained
+                        // picker selection cannot be mistaken for a model host.
+                        .preference(key: WorkoutRendererReadinessKey.self, value: preparationID == nil
+                                    ? .init() : .init(renderers: [preparationHostID: .init(
+                                        kind: .board,
+                                        isReady: boardBounds.width.isFinite && boardBounds.height.isFinite
+                                            && boardBounds.width > 0 && boardBounds.height > 0,
+                                        preparationID: preparationID)]))
                     }
                 case .model:
                     BoardModelSurface(
@@ -749,8 +758,7 @@ struct BoardMapView: View {
                                 } ?? contact)
                             }
                         },
-                        isDisplayOnly: isDisplayOnly,
-                        usesFrameRenderer: usesFrameRenderer
+                        isDisplayOnly: isDisplayOnly
                     )
                 }
             }

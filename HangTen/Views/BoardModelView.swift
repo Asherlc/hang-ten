@@ -1,7 +1,5 @@
 import RealityKit
 import SwiftUI
-import CoreImage
-import Metal
 import UIKit
 
 struct BoardModelSurface: View {
@@ -23,8 +21,9 @@ struct BoardModelSurface: View {
     let highlightMode: BoardHighlightMode
     let onContactTap: ((PhysicalContact) -> Void)?
     var isDisplayOnly = false
-    var usesFrameRenderer = false
     @State private var result: ResultState = .loading
+    @State private var preparationHostID = UUID()
+    @Environment(\.workoutRendererPreparationID) private var preparationID
 
     init(
         board: BoardRevision,
@@ -33,8 +32,7 @@ struct BoardModelSurface: View {
         highlightedContactIDs: Set<String>,
         highlightMode: BoardHighlightMode,
         onContactTap: ((PhysicalContact) -> Void)?,
-        isDisplayOnly: Bool = false,
-        usesFrameRenderer: Bool = false
+        isDisplayOnly: Bool = false
     ) {
         self.board = board
         self.presentation = presentation
@@ -43,7 +41,6 @@ struct BoardModelSurface: View {
         self.highlightMode = highlightMode
         self.onContactTap = onContactTap
         self.isDisplayOnly = isDisplayOnly
-        self.usesFrameRenderer = usesFrameRenderer
     }
 
     var body: some View {
@@ -51,16 +48,6 @@ struct BoardModelSurface: View {
         // lifecycle modifiers to its changing placeholder/model children.
         ZStack {
             if case .ready(let model) = result {
-                if usesFrameRenderer, onContactTap == nil {
-                    BoardFrameImageView(model: model, positionID: positionID,
-                                        contactIDs: highlightedContactIDs, mode: highlightMode,
-                                        isDisplayOnly: isDisplayOnly)
-                    .id(ObjectIdentifier(model))
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("\(board.name) hangboard")
-                    .accessibilityValue(highlightedContactCue ?? "")
-                    .accessibilityIdentifier("boardModel.3d")
-                } else {
                 let realityView = BoardModelRealityView(
                     model: model,
                     boardName: board.name,
@@ -71,7 +58,8 @@ struct BoardModelSurface: View {
                     highlightMode: highlightMode,
                     onContactTap: onContactTap,
                     onUnavailable: { result = .unavailable },
-                    isDisplayOnly: isDisplayOnly
+                    isDisplayOnly: isDisplayOnly,
+                    preparationHostID: preparationHostID
                 )
                 // Display-only picker cards wrap this in a Button; claiming
                 // SwiftUI hits here would intercept the card select tap even
@@ -85,7 +73,6 @@ struct BoardModelSurface: View {
                     // per-contact identifiers available to UI automation and
                     // assistive technology on interactive board maps.
                     realityView
-                }
                 }
             } else if let loadingMessage = result.loadingMessage {
                 HStack(spacing: 12) {
@@ -106,6 +93,11 @@ struct BoardModelSurface: View {
                 BoardModelUnavailableView()
             }
         }
+        .transformPreference(WorkoutRendererReadinessKey.self) { readiness in
+            // Preserve the ready host's descendant report. A loading/unavailable
+            // Surface adds its own false record until that host is mounted.
+            readiness.renderers.merge(pendingPreparation.renderers) { _, pending in pending }
+        }
         .task(id: loadIdentity) {
             guard !Task.isCancelled else { return }
             guard case .model = presentation.media else {
@@ -113,7 +105,6 @@ struct BoardModelSurface: View {
                 return
             }
             result = .loading
-            if usesFrameRenderer { BoardFrameEnvironment.prewarm() }
             #if DEBUG
             if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
                 print("[BoardModelSurface] load begin \(board.id) displayOnly=\(isDisplayOnly)")
@@ -148,6 +139,12 @@ struct BoardModelSurface: View {
             #endif
             result = .loading
         }
+    }
+
+    private var pendingPreparation: WorkoutRendererReadiness {
+        guard preparationID != nil else { return .init() }
+        if case .ready = result { return .init() }
+        return .init(renderers: [preparationHostID: .init(kind: .board, isReady: false, preparationID: preparationID)])
     }
 
     private var loadIdentity: BoardModelRealityKey? {
@@ -201,6 +198,24 @@ struct BoardModelRealityView: View {
     let onContactTap: ((PhysicalContact) -> Void)?
     let onUnavailable: (() -> Void)?
     var isDisplayOnly = false
+
+    var preparationHostID = UUID()
+    @Environment(\.workoutRendererPreparationID) private var preparationID
+    @State private var synchronizedPreparation: Preparation?
+
+    private struct Preparation: Equatable {
+        let modelID: ObjectIdentifier
+        let id: UUID
+        let size: CGSize
+        let positionID: String?
+        let contactIDs: Set<String>
+        let mode: BoardHighlightMode
+    }
+
+    private func currentPreparation(in size: CGSize) -> Preparation? {
+        preparationID.map { Preparation(modelID: ObjectIdentifier(model), id: $0, size: size, positionID: positionID,
+                                        contactIDs: highlightedContactIDs, mode: highlightMode) }
+    }
 
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -293,9 +308,7 @@ struct BoardModelRealityView: View {
             .overlay { accessibilityOverlay(size: size) }
             #if targetEnvironment(simulator)
             .background {
-                if onContactTap != nil {
-                    BoardSimulatorPresentation().allowsHitTesting(false)
-                }
+                SimulatorDrawablePresentation().allowsHitTesting(false)
             }
             #endif
             #if DEBUG
@@ -315,6 +328,10 @@ struct BoardModelRealityView: View {
             // A different scene needs a fresh RealityView make closure so its
             // root and camera replace the prior scene entities.
             .id(ObjectIdentifier(model))
+            .preference(key: WorkoutRendererReadinessKey.self, value: preparationID == nil
+                        ? .init() : .init(renderers: [preparationHostID: .init(
+                            kind: .board, isReady: synchronizedPreparation == currentPreparation(in: size),
+                            preparationID: preparationID)]))
         }
         // A display-only card is one element (its host Button owns the tap). An
         // interactive board exposes its contact elements instead, so the
@@ -365,6 +382,13 @@ struct BoardModelRealityView: View {
             Task { @MainActor in
                 cameraRevision &+= 1
             }
+        }
+        // content.add and this sync have completed. Scene attachment and GPU
+        // presentation may occur later; neither is certified by this milestone.
+        if let preparation = currentPreparation(in: size), synchronizedPreparation != preparation,
+           size.width.isFinite, size.height.isFinite, size.width > 0, size.height > 0,
+           positionID == nil || didSelect {
+            Task { @MainActor in synchronizedPreparation = preparation }
         }
         if let positionID, !didSelect {
             Task { @MainActor in
@@ -463,313 +487,16 @@ private struct BoardModelAccessibilityContainer: ViewModifier {
     }
 }
 
-// Temporary candidate: explicit completed frames for the workout's non-pickable
-// native board. Geometry, material, suspension and camera authoring remain in
-// BoardModelRealityScene. No image is stored in a board package.
-struct BoardFrameInput: Equatable {
-    let positionID: String?
-    let contacts: Set<String>
-    let mode: BoardHighlightMode
-    let size: CGSize
-    let scale: CGFloat
-}
-
-/// Two completed native frames for the same presentation and camera.
-struct BoardFrameCache<Value> {
-    private struct Entry {
-        let input: BoardFrameInput
-        let orbit: SIMD3<Float>
-        let value: Value
-    }
-    private var entries: [Entry] = []
-    var count: Int { entries.count }
-
-    mutating func store(_ value: Value, input: BoardFrameInput, orbit: SIMD3<Float>) {
-        entries.removeAll {
-            $0.orbit != orbit || $0.input.positionID != input.positionID
-                || $0.input.contacts != input.contacts || $0.input.size != input.size
-                || $0.input.scale != input.scale || $0.input.mode == input.mode
-        }
-        entries.append(Entry(input: input, orbit: orbit, value: value))
-    }
-
-    func value(for input: BoardFrameInput, orbit: SIMD3<Float>, exactViewport: Bool = false) -> Value? {
-        entries.last { entry in
-            guard entry.orbit == orbit, entry.input.positionID == input.positionID,
-                  entry.input.contacts == input.contacts, entry.input.mode == input.mode else { return false }
-            if entry.input.size == input.size && entry.input.scale == input.scale { return true }
-            guard !exactViewport, entry.input.size.width > 0, entry.input.size.height > 0,
-                  input.size.width > 0, input.size.height > 0 else { return false }
-            let prior = entry.input.size.width / entry.input.size.height
-            let next = input.size.width / input.size.height
-            return prior.isFinite && next.isFinite && abs(prior - next) < 0.000001
-        }?.value
-    }
-}
-
-@MainActor
-private enum BoardFrameEnvironment {
-    private static var preparation: Task<EnvironmentResource, Error>?
-    static func prewarm() {
-        guard preparation == nil else { return }
-        preparation = Task {
-            guard let space = CGColorSpace(name: CGColorSpace.sRGB),
-                  let bitmap = CGContext(data: nil, width: 32, height: 16,
-                    bitsPerComponent: 8, bytesPerRow: 0, space: space,
-                    bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else {
-                throw BoardFrameCoordinator.Failure.environment
-            }
-            // Analytic uniform white illumination; display adaptation only.
-            bitmap.setFillColor(red: 1, green: 1, blue: 1, alpha: 1)
-            bitmap.fill(CGRect(x: 0, y: 0, width: 32, height: 16))
-            guard let image = bitmap.makeImage() else { throw BoardFrameCoordinator.Failure.environment }
-            return try await EnvironmentResource(equirectangular: image,
-                withName: "placid-badger-cad-second-half-board-frame-neutral-\(UUID().uuidString)")
-        }
-    }
-    static func resource() async throws -> EnvironmentResource {
-        prewarm()
-        do { return try await preparation!.value }
-        catch { preparation = nil; throw error }
-    }
-}
-
-@MainActor
-private final class BoardFrameCoordinator: ObservableObject {
-    @Published private var cache = BoardFrameCache<UIImage>()
-    private var presentedOrbit = SIMD3<Float>(0, 0, 1)
-    @Published private(set) var unavailable = false
-    let model: BoardModelRealityScene
-    private var input: BoardFrameInput?
-    private var orbit = SIMD3<Float>(0, 0, 1)
-    private var renderer: RealityRenderer?
-    private var device: (any MTLDevice)?
-    private var context: CIContext?
-    private var setup: Task<Void, Never>?
-    private var active = false
-    private var revision = 0
-    private var pending: Request?
-    private var frame: Frame?
-    private struct Request {
-        let revision: Int
-        let input: BoardFrameInput
-        let orbit: SIMD3<Float>
-    }
-    // Retains the scene (including the ODR lease), renderer and GPU resources
-    // until completion and eager image conversion finish, even after disappear.
-    private final class Frame {
-        let request: Request
-        let model: BoardModelRealityScene
-        let renderer: RealityRenderer
-        let texture: any MTLTexture
-        let output: RealityRenderer.CameraOutput
-        init(_ request: Request, _ model: BoardModelRealityScene, _ renderer: RealityRenderer,
-             _ texture: any MTLTexture, _ output: RealityRenderer.CameraOutput) {
-            self.request = request; self.model = model; self.renderer = renderer
-            self.texture = texture; self.output = output
-        }
-    }
-    enum Failure: Error { case environment, viewport, renderer, texture, conversion, position }
-    init(model: BoardModelRealityScene) { self.model = model }
-
-    func submit(_ next: BoardFrameInput) {
-        guard !unavailable else { return }
-        let changed = !active || input != next
-        active = true; input = next
-        if changed { enqueue() }
-    }
-    func orbitBy(azimuth: Float = 0, elevation: Float = 0, zoomRatio: Float = 1) {
-        guard active, !unavailable, azimuth.isFinite, elevation.isFinite,
-              zoomRatio.isFinite, zoomRatio > 0 else { return }
-        orbit.x = (orbit.x + azimuth).truncatingRemainder(dividingBy: .pi * 2)
-        orbit.y = min(max(orbit.y + elevation, -0.55), 0.55)
-        orbit.z = min(max(orbit.z / zoomRatio, 0.75), 1.35)
-        enqueue()
-    }
-    func resetCamera() {
-        guard active, !unavailable else { return }
-        orbit = SIMD3(0, 0, 1); enqueue()
-    }
-    func disappear() {
-        active = false; revision += 1; pending = nil; cache = BoardFrameCache()
-    }
-    private func enqueue() {
-        guard let input else { return }
-        revision += 1
-        pending = Request(revision: revision, input: input, orbit: orbit)
-        drain()
-    }
-    func image(for input: BoardFrameInput) -> UIImage? {
-        // A completed old camera view can remain visible while an orbit gesture
-        // renders. A different contact set, position, or mode never substitutes.
-        cache.value(for: input, orbit: orbit) ?? cache.value(for: input, orbit: presentedOrbit)
-    }
-    private func drain() {
-        guard active, !unavailable, frame == nil, let input else { return }
-        if pending == nil, !input.contacts.isEmpty,
-           cache.value(for: input, orbit: orbit, exactViewport: true) != nil {
-            let alternate = BoardFrameInput(positionID: input.positionID, contacts: input.contacts,
-                mode: input.mode == .active ? .preview : .active, size: input.size, scale: input.scale)
-            if cache.value(for: alternate, orbit: orbit, exactViewport: true) == nil {
-                pending = Request(revision: revision, input: alternate, orbit: orbit)
-            }
-        }
-        guard let request = pending else { return }
-        if cache.value(for: request.input, orbit: request.orbit, exactViewport: true) != nil {
-            pending = nil
-            model.highlight(input.contacts, mode: input.mode)
-            drain()
-            return
-        }
-        if renderer == nil {
-            guard setup == nil else { return }
-            setup = Task { @MainActor [self] in
-                do {
-                    let environment = try await BoardFrameEnvironment.resource()
-                    guard active else { setup = nil; return }
-                    guard let device = MTLCreateSystemDefaultDevice() else { throw Failure.renderer }
-                    let renderer = try RealityRenderer()
-                    // Runtime studio lighting follows the camera, making cavity
-                    // normals and self-shadowing legible under every orbit.
-                    let key = Entity(), fill = Entity()
-                    key.components.set(DirectionalLightComponent(color: .white, intensity: 3_200))
-                    key.components.set(DirectionalLightComponent.Shadow())
-                    fill.components.set(DirectionalLightComponent(color: .white, intensity: 600))
-                    model.camera.addChild(key); model.camera.addChild(fill)
-                    key.look(at: .zero, from: SIMD3(-3, 4, 5), relativeTo: model.camera)
-                    fill.look(at: .zero, from: SIMD3(3, 1, 5), relativeTo: model.camera)
-                    renderer.entities.append(contentsOf: [model.root, model.camera])
-                    renderer.activeCamera = model.camera
-                    renderer.lighting.resource = environment
-                    renderer.lighting.intensityExponent = 0
-                    renderer.extendedDynamicRangeOutput = false
-                    renderer.cameraSettings.colorBackground = .color(CGColor(gray: 0, alpha: 0))
-                    self.renderer = renderer; self.device = device
-                    context = CIContext(mtlDevice: device)
-                    setup = nil; drain()
-                } catch {
-                    setup = nil
-                    if active { fail() }
-                }
-            }
-            return
-        }
-        pending = nil
-        do {
-            let input = request.input, size = input.size
-            guard size.width.isFinite, size.height.isFinite, input.scale.isFinite,
-                  size.width >= 0, size.height >= 0, input.scale > 0,
-                  size.width * input.scale <= 4096, size.height * input.scale <= 4096 else {
-                throw Failure.viewport
-            }
-            guard size.width > 0, size.height > 0 else { return }
-            guard let renderer, let device else { throw Failure.renderer }
-            var camera = model.camera.camera
-            camera.fieldOfViewInDegrees = 30
-            camera.fieldOfViewOrientation = .vertical
-            camera.near = 0.001; camera.far = 1000
-            model.camera.camera = camera
-            model.frame(in: size)
-            let selected = model.select(positionID: input.positionID)
-            if input.positionID != nil, !selected { throw Failure.position }
-            model.orbit(azimuth: request.orbit.x, elevation: request.orbit.y, zoomScale: request.orbit.z)
-            model.highlight(input.contacts, mode: input.mode)
-            let descriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .bgra8Unorm_srgb,
-                width: Int(ceil(size.width * input.scale)), height: Int(ceil(size.height * input.scale)),
-                mipmapped: false)
-            descriptor.usage = [.renderTarget, .shaderRead, .shaderWrite]
-            descriptor.storageMode = .private
-            guard let texture = device.makeTexture(descriptor: descriptor) else { throw Failure.texture }
-            let output = try RealityRenderer.CameraOutput(.singleProjection(colorTexture: texture))
-            let submitted = Frame(request, model, renderer, texture, output)
-            frame = submitted
-            do {
-                try renderer.updateAndRender(deltaTime: 0, cameraOutput: output, onComplete: { [self, submitted] _ in
-                    Task { @MainActor in
-                        withExtendedLifetime(submitted) { completed(request.revision) }
-                    }
-                })
-            } catch {
-                frame = nil
-                throw error
-            }
-        } catch { fail() }
-    }
-    private func completed(_ value: Int) {
-        guard let frame, frame.request.revision == value else { return }
-        defer { self.frame = nil; drain() }
-        guard active, !unavailable, value == revision else { return }
-        guard let context, let space = CGColorSpace(name: CGColorSpace.sRGB),
-              let source = CIImage(mtlTexture: frame.texture, options: [.colorSpace: space]) else {
-            fail(); return
-        }
-        let normalized = source.oriented(.downMirrored)
-        guard let rendered = context.createCGImage(normalized, from: normalized.extent,
-            format: .RGBA8, colorSpace: space, deferred: false) else { fail(); return }
-        let image = UIImage(cgImage: rendered, scale: frame.request.input.scale, orientation: .up)
-        presentedOrbit = frame.request.orbit
-        cache.store(image, input: frame.request.input, orbit: frame.request.orbit)
-        if let input { model.highlight(input.contacts, mode: input.mode) }
-    }
-    private func fail() { unavailable = true; cache = BoardFrameCache(); pending = nil }
-}
-
-private struct BoardFrameImageView: View {
-    let positionID: String?
-    let contactIDs: Set<String>
-    let mode: BoardHighlightMode
-    let isDisplayOnly: Bool
-    @Environment(\.displayScale) private var displayScale
-    @StateObject private var coordinator: BoardFrameCoordinator
-    @State private var lastDrag: CGSize = .zero
-    @State private var lastMagnification: CGFloat = 1
-    init(model: BoardModelRealityScene, positionID: String?, contactIDs: Set<String>,
-         mode: BoardHighlightMode, isDisplayOnly: Bool) {
-        self.positionID = positionID; self.contactIDs = contactIDs; self.mode = mode
-        self.isDisplayOnly = isDisplayOnly
-        _coordinator = StateObject(wrappedValue: BoardFrameCoordinator(model: model))
-    }
-    var body: some View {
-        // Semantic values are captured outside GeometryReader's escaping closure.
-        let contacts = contactIDs, selection = positionID, highlightMode = mode
-        GeometryReader { proxy in
-            let input = BoardFrameInput(positionID: selection, contacts: contacts,
-                mode: highlightMode, size: proxy.size, scale: displayScale)
-            ZStack {
-                if coordinator.unavailable { BoardModelUnavailableView() }
-                else if let image = coordinator.image(for: input) {
-                    Image(uiImage: image).resizable().interpolation(.high).frame(width: proxy.size.width, height: proxy.size.height)
-                } else { Color.clear }
-            }
-            .contentShape(Rectangle())
-            .onAppear { coordinator.submit(input) }
-            .onChange(of: input) { _, next in coordinator.submit(next) }
-            .simultaneousGesture(TapGesture().onEnded {
-                coordinator.resetCamera()
-            })
-            .gesture(DragGesture(minimumDistance: 4).onChanged { value in
-                let delta = CGSize(width: value.translation.width - lastDrag.width,
-                                   height: value.translation.height - lastDrag.height)
-                lastDrag = value.translation
-                coordinator.orbitBy(azimuth: -Float(delta.width / max(proxy.size.width, 1)) * 0.9,
-                                    elevation: -Float(delta.height / max(proxy.size.height, 1)) * 0.65)
-            }.onEnded { _ in lastDrag = .zero })
-            .simultaneousGesture(MagnificationGesture().onChanged { value in
-                let ratio = value / max(lastMagnification, 0.001)
-                lastMagnification = value
-                coordinator.orbitBy(zoomRatio: Float(ratio))
-            }.onEnded { _ in lastMagnification = 1 })
-            .allowsHitTesting(!isDisplayOnly)
-        }
-        .onDisappear { coordinator.disappear() }
-    }
-}
 #if targetEnvironment(simulator)
 import QuartzCore
 /// Keep Simulator drawable presentation independent of worker-thread CA transactions.
-private struct BoardSimulatorPresentation: UIViewRepresentable {
-    func makeUIView(context: Context) -> PresentationView { PresentationView() }
-    func updateUIView(_ view: PresentationView, context: Context) { view.scheduleConfiguration() }
+struct SimulatorDrawablePresentation: UIViewRepresentable {
+    func makeUIView(context: Context) -> PresentationView {
+        PresentationView()
+    }
+    func updateUIView(_ view: PresentationView, context: Context) {
+        view.scheduleConfiguration()
+    }
 
     final class PresentationView: UIView {
         private var pending: DispatchWorkItem?
@@ -842,9 +569,6 @@ private struct BoardSimulatorPresentation: UIViewRepresentable {
                     let layer = candidates[0]
                     layer.presentsWithTransaction = false
                     configuredLayer = layer
-                    #if DEBUG
-                    print("[BoardSimulatorPresentation] asynchronous=\(!layer.presentsWithTransaction) viewport=\(viewport)")
-                    #endif
                     attempts = 120
                     return
                 }

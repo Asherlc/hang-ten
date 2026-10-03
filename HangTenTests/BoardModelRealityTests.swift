@@ -5,59 +5,6 @@ import simd
 @testable import HangTen
 
 final class BoardModelRealityTests: XCTestCase {
-    func testCompletedBoardFramesSwitchModesWithoutAnotherRender() throws {
-        let active = BoardFrameInput(positionID: "primary", contacts: ["left", "right"],
-                                     mode: .active, size: CGSize(width: 210, height: 36), scale: 2)
-        let preview = BoardFrameInput(positionID: active.positionID, contacts: active.contacts,
-                                                       mode: .preview, size: active.size, scale: active.scale)
-        var cache = BoardFrameCache<String>()
-        cache.store("red", input: active, orbit: SIMD3(0, 0, 1))
-        cache.store("blue", input: preview, orbit: SIMD3(0, 0, 1))
-        XCTAssertEqual(cache.value(for: active, orbit: SIMD3(0, 0, 1)), "red")
-        XCTAssertEqual(cache.value(for: preview, orbit: SIMD3(0, 0, 1)), "blue")
-        XCTAssertEqual(cache.count, 2)
-    }
-
-    func testCompletedBoardFrameDoesNotSubstituteDifferentSelectionOrCamera() {
-        let active = BoardFrameInput(positionID: "primary", contacts: ["left"],
-                                     mode: .active, size: CGSize(width: 210, height: 36), scale: 2)
-        var cache = BoardFrameCache<String>()
-        cache.store("selected", input: active, orbit: SIMD3(0, 0, 1))
-        let clear = BoardFrameInput(positionID: nil, contacts: [], mode: .active, size: active.size, scale: 2)
-        let other = BoardFrameInput(positionID: "other", contacts: active.contacts, mode: .active, size: active.size, scale: 2)
-        XCTAssertNil(cache.value(for: clear, orbit: SIMD3(0, 0, 1)))
-        XCTAssertNil(cache.value(for: other, orbit: SIMD3(0, 0, 1)))
-        XCTAssertNil(cache.value(for: active, orbit: SIMD3(0.2, 0, 1)))
-        XCTAssertEqual(cache.value(for: active, orbit: SIMD3(0, 0, 1)), "selected")
-    }
-
-    func testCompletedBoardFrameCanScaleDuringAspectPreservingResize() {
-        let small = BoardFrameInput(positionID: "primary", contacts: ["left"],
-                                    mode: .active, size: CGSize(width: 210, height: 36), scale: 2)
-        let large = BoardFrameInput(positionID: small.positionID, contacts: small.contacts, mode: .active,
-                                    size: CGSize(width: 420, height: 72), scale: 3)
-        let portrait = BoardFrameInput(positionID: small.positionID, contacts: small.contacts, mode: .active,
-                                       size: CGSize(width: 36, height: 210), scale: 2)
-        var cache = BoardFrameCache<String>()
-        cache.store("complete", input: small, orbit: SIMD3(0, 0, 1))
-        XCTAssertEqual(cache.value(for: large, orbit: SIMD3(0, 0, 1)), "complete")
-        XCTAssertNil(cache.value(for: large, orbit: SIMD3(0, 0, 1), exactViewport: true))
-        XCTAssertNil(cache.value(for: portrait, orbit: SIMD3(0, 0, 1)))
-    }
-
-    func testCompletedBoardFrameCacheReleasesSupersededPresentation() {
-        let old = BoardFrameInput(positionID: "primary", contacts: ["left"],
-                                  mode: .active, size: CGSize(width: 210, height: 36), scale: 2)
-        let next = BoardFrameInput(positionID: "next", contacts: ["right"],
-                                   mode: .preview, size: old.size, scale: old.scale)
-        var cache = BoardFrameCache<String>()
-        cache.store("old", input: old, orbit: SIMD3(0, 0, 1))
-        cache.store("next", input: next, orbit: SIMD3(0, 0, 1))
-        XCTAssertNil(cache.value(for: old, orbit: SIMD3(0, 0, 1)))
-        XCTAssertEqual(cache.value(for: next, orbit: SIMD3(0, 0, 1)), "next")
-        XCTAssertEqual(cache.count, 1)
-    }
-
     @MainActor
     func testClavelliumPitchMovesBoardAroundCordPivotWhileSupportAndCameraStayFixed() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "clavellium-training-block"))

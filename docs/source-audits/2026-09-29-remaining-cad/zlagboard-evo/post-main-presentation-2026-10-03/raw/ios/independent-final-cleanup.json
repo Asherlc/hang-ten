@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "exactUUID": "E0AC7F37-369F-414E-B407-353435A0BE03",
+  "simulatorAbsent": true,
+  "controllerPID": 17341,
+  "controllerAbsent": true,
+  "ownedPathsAbsent": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/DerivedData-placid-badger-cad-second-half",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/build-placid-badger-cad-second-half.xcresult",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/tests-placid-badger-cad-second-half.xcresult"
+  ],
+  "ownershipManifestsConsumed": true,
+  "passed": true,
+  "sharedResourcesUntouched": true
+}

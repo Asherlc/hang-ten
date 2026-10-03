@@ -1,0 +1,68 @@
+{
+  "scope": "Read-only source audit and prospective sparse receipt design; no source changes, compile/build, runtime actions, or new capture interpretation.",
+  "sources": [
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "7b4333fe533e4deda3848ea74a0b0db846f237f9b6b7fd90a2ae0ffb22aa3db0"
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "sha256": "bb126b43ac1065fa048cc10ff90d275c1816bdbb3ea3beed3609b005521e0cec"
+    },
+    {
+      "path": "HangTen/Views/WorkoutView.swift",
+      "sha256": "caa67bd053af93b60b92adc14e9ba6a3325ac0e91936d765f56d6232314a7029"
+    }
+  ],
+  "facts": [
+    {
+      "ref": "WorkoutView.swift:445,663; BoardMapView.swift:647,739\u2013753",
+      "fact": "Both workout maps omit onHoldTap, whose default is nil; BoardMap forwards nil through Optional.map. isDisplayOnly defaults false. Read-only callback status is therefore distinct from display-only picker status."
+    },
+    {
+      "ref": "BoardModelView.swift:294\u2013307",
+      "fact": "Candidate action adds BoardSimulatorPresentation to nil-callback maps. Control/reversal skip flag omits it only for nil callbacks; interactive maps still attach helper. No board identity is currently passed into PresentationView."
+    },
+    {
+      "ref": "BoardModelView.swift:787\u2013819",
+      "fact": "Window changes reset cached weak layer, viewport and attempt count. Layout and SwiftUI updates schedule the existing main-queue50ms retry, maximum120 attempts per observed viewport or cached flag reset. Successful attached layer with presentsWithTransaction=false returns early."
+    },
+    {
+      "ref": "BoardModelView.swift:822\u2013863",
+      "fact": "Matching requires positive helper bounds; converts helper bounds through UIView to window coordinates, converts CAMetalLayer bounds through CALayer to window.layer, and requires all4 differences strictly<1 point. It searches each ancestor subtree independently, accepts exactly1 match only if traversal visited<4096. Zero/multiple matches and capped traversal cannot configure."
+    },
+    {
+      "ref": "BoardModelView.swift:850\u2013855",
+      "fact": "Only success prints, after setting presentsWithTransaction=false. No existing receipt for never attached, bounds invalid, exhausted match, window detach, or cache flag observations. Empty stdout cannot distinguish buffering from missing success."
+    },
+    {
+      "ref": "BoardMapView.swift:583\u2013599,757\u2013763; WorkoutView.swift:658\u2013675",
+      "fact": "Workout model is aspect-fit within an expanding outer frame, with landscape maximum height and a0.18s highlighted-ID animation. Helper is a background on inner RealityView. There is no source guarantee that its converted viewport exactly equals the actual drawable layer bounds during host layout/animation."
+    }
+  ],
+  "concreteUnverifiedMismatchBoundaries": [
+    "Helper viewport vs actual metal-layer bounds may differ because matching uses two host hierarchies; scalar delta receipts are required, not guessed tolerance changes.",
+    "Multiple same-frame metal layers in a searched ancestor reject matching; uniquely matching a frame does not prove that layer belongs to the intended board.",
+    "Configured weak layer can remain attached with false flag even if a different same-viewport drawable replaces it: current early return does not reconfirm current candidate identity. This is a source-level coverage limit, not an observed replacement.",
+    "Retry exhaustion is silent until a later viewport/flag reset."
+  ],
+  "minimalReceiptProposal": {
+    "implementation": "DEBUG-only FileHandle.standardError.write(contentsOf:) with one UTF8 line; no print/stdout buffering dependency, no new timer/task/subscription, no render mutation. Reuse only existing didMoveToWindow, scheduleConfiguration, configurePresentation callbacks.",
+    "events": [
+      "window-attached and window-detached (before clearing weak cached state)",
+      "configured (at existing success) with property before/after",
+      "exhausted (once when attempts reaches120 after failed search)",
+      "observed-config-state change only, comparing last scalar signature in existing callbacks; exclude monotonically increasing attempt/time from dedup signature"
+    ],
+    "scalarFields": [
+      "event, process PID, systemUptime, helper ObjectIdentifier, optional window ObjectIdentifier",
+      "helper bounds and converted viewport x/y/w/h; window bounds; positive/finite checks",
+      "cached layer ObjectIdentifier, superlayer ObjectIdentifier or nil, presentsWithTransaction",
+      "success matched layer identity/type, layer bounds/window-frame, deltaX/deltaY/deltaWidth/deltaHeight, drawableSize, contentsScale, selected ancestor depth, visited count and candidate count",
+      "exhaustion summary: attempts, total metal candidates observed in existing traversal, minimum4-component frame deltas/identity for closest candidate, no extra hierarchy walk"
+    ],
+    "noStrongRetention": "Diagnostic signature stores scalar text only, not layer/view/window references. Do not infer presenting-host ownership from identities or bounds.",
+    "stateChangeCost": "Sparse direct stderr writes can affect scheduling; both arms must use same diagnostic binary/output plumbing. Receipts establish sampled configuration, not continuous flags, drawable presentation, or causal repair."
+  },
+  "interpretation": "First determine whether helper attached and matched the actual expected workout viewport; if matched, require before/after flag and later observed state. No source-only likely framework cause or production repair is established."
+}

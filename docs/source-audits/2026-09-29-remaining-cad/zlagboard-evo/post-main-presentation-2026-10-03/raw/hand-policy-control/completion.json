@@ -1,0 +1,10 @@
+{
+  "captureCompleted": true,
+  "plannedCaptures": 44,
+  "actualCaptures": 44,
+  "errors": [],
+  "visualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+  "CPUBracketsAvailable": false,
+  "phaseTimingsKnown": false,
+  "noRetries": true
+}
