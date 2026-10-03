@@ -1,0 +1,57 @@
+{
+  "note": "This normal strict-OFF run uses the unchanged eef5a676 diagnostic binary. Exact committed source/build references below were hash-verified during packaging; no app bundle duplication or new build.",
+  "directPacketCommit": "03942cb5253f6ada134a21d7abcdde063d1f17e8",
+  "references": [
+    {
+      "retainedPath": "../runtime-all-hand-projection-2026-10-02/frozen-applied-source/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "eb00001d1215aa25f02f62e80340bc905203f0deecd730fbff02fd276fc638e6",
+      "bytes": 89007
+    },
+    {
+      "retainedPath": "../runtime-all-hand-projection-2026-10-02/frozen-applied-source/HangTen/Views/BoardModelView.swift",
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c",
+      "bytes": 22063
+    },
+    {
+      "retainedPath": "../runtime-all-hand-projection-2026-10-02/frozen-applied-source/HangTen/Views/GripHandModelView.swift",
+      "sha256": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2",
+      "bytes": 47424
+    },
+    {
+      "retainedPath": "../runtime-all-hand-projection-2026-10-02/frozen-applied-source/HangTen/Views/RootView.swift",
+      "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221",
+      "bytes": 149223
+    },
+    {
+      "retainedPath": "../runtime-all-hand-projection-2026-10-02/frozen-applied-source/applied.patch",
+      "sha256": "103c25dd368f4a819f6cd84f289d577e68154d5741d8e44090e81243a3b2c9e4",
+      "bytes": 12643
+    },
+    {
+      "retainedPath": "../runtime-all-hand-projection-2026-10-02/frozen-applied-source/provenance.json",
+      "sha256": "066c7c30583d960f156e9e7b1307b91d5a605038873347c606fb723571731381",
+      "bytes": 1259
+    },
+    {
+      "retainedPath": "../runtime-all-hand-projection-2026-10-02/frozen-applied-source/source-freeze.json",
+      "sha256": "036f0fd467b6de0309ec13e895d7ad70ae0d11ce875221be87f9a88e948d41fb",
+      "bytes": 2227
+    },
+    {
+      "retainedPath": "../runtime-all-hand-projection-2026-10-02/raw/all-hand-projection-build-command.json",
+      "sha256": "9b7a4f3d60dae98fc15de3df4b7114715dfbf1566739270e2f58db1ed4d938ba",
+      "bytes": 533
+    },
+    {
+      "retainedPath": "../runtime-all-hand-projection-2026-10-02/raw/all-hand-projection-install-command.json",
+      "sha256": "a40bcec6cde483512ced88509898ac9f1c2e63a0562e8471630896424863f72a",
+      "bytes": 449
+    },
+    {
+      "retainedPath": "../runtime-all-hand-projection-2026-10-02/raw/all-hand-projection-code-parity/mach-o-parity.json",
+      "sha256": "d8cda4b11ad9bce7f1f162dcfcf2e125877df0eb5b0b0476d00949c7760f2682",
+      "bytes": 2030
+    }
+  ],
+  "binarySHA256": "eef5a676aac05b09fbff374204347109caabd9842a1da7e8c6a64e7953914d15"
+}

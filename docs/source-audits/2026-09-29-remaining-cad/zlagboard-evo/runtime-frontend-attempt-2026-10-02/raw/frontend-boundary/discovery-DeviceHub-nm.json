@@ -1,0 +1,17 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "nm",
+    "-u",
+    "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/MacOS/DeviceHub"
+  ],
+  "exitStatus": 0,
+  "selectedStaticOutput": [
+    "_OBJC_CLASS_$_NSApplication",
+    "_exit",
+    "_kSMDomainUserLaunchd"
+  ],
+  "stderr": "",
+  "executedTarget": false
+}

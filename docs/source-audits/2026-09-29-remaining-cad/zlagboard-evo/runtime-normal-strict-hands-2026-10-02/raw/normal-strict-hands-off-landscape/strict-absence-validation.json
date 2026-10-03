@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "strictFlagEnabled": true,
+    "perspectiveFlagAbsent": true,
+    "openingStrictEnabled": true,
+    "allFourCountsZeroThroughout": true,
+    "noHandLifecycleEvents": true,
+    "noHandCameraEvents": true
+  },
+  "recordCount": 149,
+  "cameraEvents": [],
+  "lifecycleEvents": [],
+  "scope": "Complete retained recorder-open through finaltail; no future-lifetime claim."
+}

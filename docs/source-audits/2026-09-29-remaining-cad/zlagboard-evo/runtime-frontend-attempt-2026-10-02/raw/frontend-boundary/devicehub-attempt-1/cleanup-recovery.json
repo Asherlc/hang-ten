@@ -1,0 +1,17 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "pid": 40262,
+  "reason": "Original cleanup guard rejected truncated Darwin ps comm; exact full argv and unique owner marker used for bounded recovery",
+  "originalCleanupRemainsFailed": true,
+  "startedEpoch": 1790986838.769183,
+  "before": {
+    "pid": 40262,
+    "ppid": 1,
+    "args": "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/MacOS/DeviceHub -PaseoWorkspaceOwner placid-badger-cad-second-half-devicehub-frontend-boundary-2026-10-02"
+  },
+  "sentTERM": true,
+  "sentKILL": true,
+  "exactOwnedPIDAbsent": true,
+  "unknownDeviceHubUntouched": true,
+  "deviceAndDDUntouched": true
+}

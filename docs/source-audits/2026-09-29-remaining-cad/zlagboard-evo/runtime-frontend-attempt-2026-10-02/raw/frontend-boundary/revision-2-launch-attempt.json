@@ -1,0 +1,11 @@
+{
+  "command": "rtk proxy python3 .context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/frontend-controller-revision-2.py --launch-reviewed",
+  "toolChunkID": "9a7ef0",
+  "exitStatus": 1,
+  "observedFailure": "AssertionError at frontend-controller-revision-2.py line83: assert BIN.is_file()",
+  "failedExpectedExecutable": "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/Contents/MacOS/Simulator",
+  "noFrontendCreated": true,
+  "cleanupEvidence": "cleanup.json",
+  "evidenceType": "Recorded tool-result metadata; no standalone raw stderr file was captured by this exec call",
+  "next": "Discover actual DeviceHub entry point before launch; no app-source change"
+}

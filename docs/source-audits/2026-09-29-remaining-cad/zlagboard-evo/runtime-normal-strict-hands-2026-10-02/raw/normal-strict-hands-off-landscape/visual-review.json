@@ -1,0 +1,132 @@
+{
+  "captures": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-0-active-plus-0.25.png",
+      "sha256": "632393338ecc1fb605f05792e2ed4869711c93238306f153af51bd6c1af319e9",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:06",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-0-active-plus-1.png",
+      "sha256": "7e8ed8feee14825328827188978ff289f50fdbfb42e38b8c7531a7a9e22ce172",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:05",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-0-active-plus-3.png",
+      "sha256": "ea4f6b04a92acc4747d0460a44277ab265165f4eaf086d2893e59ff947b205e5",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:04",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-0-active-plus-5.png",
+      "sha256": "46508c2c745492ddca17a3b51de8576fd4cdaee5f311c30bba580d5cc960aca3",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:02",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-1-preview-plus-0.25.png",
+      "sha256": "3c61b01eb9dcdb482e663b8dfecf660314d518f93f50b383ebf8f898392331e0",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "timer": "03:00",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-1-preview-plus-1.png",
+      "sha256": "f89720fdecdc4cbb8b0698254ee99732f4c7b54ce09b4328bd3e9cceec94c8b6",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "timer": "02:59",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-1-preview-plus-3.png",
+      "sha256": "bed81a70a682a2be4ef216a7216d96af7c92a7d0430c94ce926ab77a24ebdef8",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "timer": "02:57",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-1-preview-plus-5.png",
+      "sha256": "5501e6d0debbfb7c3c4c8ca68fe9344a2f920f77bcc0dc3f2efd108dc903e90b",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "timer": "02:55",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "fe701d11ce39e3e5ee4dee667b0cf27c29c9d29d90bc0e72afc2e95d44b2ce95",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "timer": "00:07",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-2-active-plus-1.png",
+      "sha256": "5369f666cc635064abc81407a3db48c386e051d526945b5f4cd9e7a752acad1a",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "timer": "00:06",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-2-active-plus-3.png",
+      "sha256": "9c15e495f3bd5618001368e04d3333186668816500234fc68f4cba61736b4a18",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "timer": "00:04",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-2-active-plus-5.png",
+      "sha256": "279127f16735603c9109ec885c6f6af85198d09376c6df9ff8cb688491878bee",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:01",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    }
+  ],
+  "scope": "All 12 whole original PNGs directly inspected. No crops or pixel measurements.",
+  "allBoardColorsCorrect": false,
+  "incorrectCaptures": 7,
+  "conclusion": "Strictly suppressing all hand hosts did not prevent the normal-route board color failure. All four observed Rest frames remained red; next Hang stayed blue through +3 and was red at +5.",
+  "limits": [
+    "Only retained capture windows judged; no inference about unsampled middle-Rest frames.",
+    "Timer labels are observed screenshot text, not substitutes for actual capture timestamps."
+  ]
+}
