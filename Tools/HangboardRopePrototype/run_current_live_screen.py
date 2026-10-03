@@ -12,6 +12,7 @@ parser.add_argument('--label', required=True)
 parser.add_argument('--kind', choices=['queries', 'strict', 'trajectory'], required=True)
 parser.add_argument('--cached-kernels', action='store_true', help='isolated immutable triangle edge/parity cache')
 parser.add_argument('--residual-stop', action='store_true', help='isolated post-step active-KKT residual stopping estimator')
+parser.add_argument('--edge-tuples',action='store_true',help='remove measured per-face edge tuple heap array')
 parser.add_argument('--four-triangle-kernels', action='store_true', help='isolated four-lane Double triangle kernels')
 args = parser.parse_args()
 assert args.label and all(c in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in args.label)
@@ -21,10 +22,13 @@ root.mkdir()
 stage = root / 'native'; stage.mkdir()
 sources = stage / 'sources'; sources.mkdir()
 original = {name: baseline(name) for name in NAMES}
-assert sum([args.cached_kernels,args.residual_stop,args.four_triangle_kernels])<=1
+assert sum([args.cached_kernels,args.residual_stop,args.four_triangle_kernels,args.edge_tuples])<=1
 for name in NAMES:
     text = (REPO / 'HangTen/Models' / name).read_text()
     current_control = text
+    if name=='RopeTriangleCollider.swift' and args.edge_tuples:
+        from edge_tuple.snapshot import collider_source as edge_source
+        text=edge_source(text)
     if name=='RopeTriangleCollider.swift' and args.four_triangle_kernels:
         from four_triangle_kernel.snapshot import collider_source as four_source
         text=four_source(text)
@@ -121,6 +125,7 @@ checkpoint = REPO / '.context/strong-owl-live-physics-solver-foundation/clav-con
 prior = REPO / '.context/strong-owl-live-physics-accepted-profile/native/after-1.json'
 inputs = [*files, *(REPO/'HangTen/Models'/n for n in NAMES), Path(__file__), checkpoint, prior, REPO/'Hangboards/clavellium-training-block/assets/primary.physics.json']
 if args.residual_stop: inputs.extend(p for p in (tool/'residual_stop').glob('*.*') if p.is_file())
+if args.edge_tuples: inputs.extend(p for p in (tool/'edge_tuple').glob('*.*') if p.is_file())
 if args.four_triangle_kernels: inputs.extend(p for p in (tool/'four_triangle_kernel').glob('*.*') if p.is_file())
 (stage / 'provenance.json').write_text(json.dumps({'owner':REPO.name,'baselineCommit':BASE,'arguments':vars(args),'command':command,'hashes':{str(p.relative_to(REPO)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}},indent=2))
 owner = OwnedCommands(REPO.name, stage)
