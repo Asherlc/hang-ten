@@ -1,0 +1,176 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "closed": true,
+  "result": {
+    "owner": "strong-owl-live-physics",
+    "adopted": false,
+    "scope": "exact graph metric certificate and retained nonempty query BVH work counts, no native outputs or timing",
+    "originalTriangles": 10200,
+    "proxyTriangles": 9296,
+    "limitMeters": 1e-05,
+    "roundLimit": 12,
+    "rounds": [
+      {
+        "round": 1,
+        "replacements": 418,
+        "triangles": 9364,
+        "maximumBoundMeters": 9.981070817635206e-06
+      },
+      {
+        "round": 2,
+        "replacements": 28,
+        "triangles": 9308,
+        "maximumBoundMeters": 9.999760099030756e-06
+      },
+      {
+        "round": 3,
+        "replacements": 6,
+        "triangles": 9296,
+        "maximumBoundMeters": 9.999760099030756e-06
+      }
+    ],
+    "records": [
+      {
+        "step": 1,
+        "queries": 295,
+        "originalFaceVisits": 24439,
+        "proxyFaceVisits": 27591,
+        "faceRatio": 1.1289741806129547,
+        "originalBBoxGapNorms": 111369,
+        "proxyBBoxGapNorms": 132777,
+        "normRatio": 1.1922258438165019,
+        "originalMasksMatch": true
+      },
+      {
+        "step": 6,
+        "queries": 1471,
+        "originalFaceVisits": 110068,
+        "proxyFaceVisits": 121833,
+        "faceRatio": 1.1068884689464695,
+        "originalBBoxGapNorms": 531495,
+        "proxyBBoxGapNorms": 634215,
+        "normRatio": 1.1932661643101063,
+        "originalMasksMatch": true
+      },
+      {
+        "step": 109,
+        "queries": 819,
+        "originalFaceVisits": 64704,
+        "proxyFaceVisits": 74168,
+        "faceRatio": 1.1462660731948566,
+        "originalBBoxGapNorms": 301965,
+        "proxyBBoxGapNorms": 362739,
+        "normRatio": 1.2012617356316129,
+        "originalMasksMatch": true
+      },
+      {
+        "step": 140,
+        "queries": 189,
+        "originalFaceVisits": 14934,
+        "proxyFaceVisits": 17118,
+        "faceRatio": 1.1462434712736038,
+        "originalBBoxGapNorms": 69687,
+        "proxyBBoxGapNorms": 83709,
+        "normRatio": 1.2012139997417022,
+        "originalMasksMatch": true
+      },
+      {
+        "step": 493,
+        "queries": 462,
+        "originalFaceVisits": 34244,
+        "proxyFaceVisits": 37939,
+        "faceRatio": 1.1079021142389909,
+        "originalBBoxGapNorms": 166638,
+        "proxyBBoxGapNorms": 199062,
+        "normRatio": 1.1945774673243799,
+        "originalMasksMatch": true
+      }
+    ],
+    "faceRatio": 1.1218250405613774,
+    "normRatio": 1.1958660767351252,
+    "necessaryScreenPass": false,
+    "limits": [
+      "Signedness/global embedding/contact normals/trajectory not certified; original parity required.",
+      "Per-face composed map bounds supply original-surface two-sided proximity; no claim of CAD accuracy.",
+      "Independent exact replay still required before native query stage."
+    ],
+    "hashes": {
+      "Hangboards/clavellium-training-block/assets/primary.physics.json": "c60fbd6dfaf59bfd5fb7e6aa8d806f78af7e828a7f64074d326865e08f13e853",
+      ".context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/result.json": "58c1baf98e52618f6d20d5eaca13f47c8c929ecb70aa6edb1dd9c5015382d363",
+      "Tools/HangboardRopePrototype/certified_proxy/census.py": "2670aefd54ab38c1fdf49d3660d39798d6493c3ac6589c0e087dcef5c1c494ce",
+      "Tools/HangboardRopePrototype/certified_proxy/geometry.py": "158b3fc46a3ddb9b7c0e181a99d4de0c511ae326df816309efc932968966eeee",
+      ".context/strong-owl-live-physics-certified-proxy-5cf2e4826-graph-v1/census/proxy.json": "56828dd95975071f5c6541ff015e2156806942f248dbfdb169d965bfcc317460",
+      ".context/strong-owl-live-physics-certified-proxy-5cf2e4826-graph-v1/census/certificates.json": "2eeb7ccc476a83a0c7d97073108246a1a1cf7def0bb3fadb5d9065e2f238eee2"
+    }
+  },
+  "independentProof": {
+    "records": 452,
+    "rounds": 3,
+    "maximumComposedBoundMeters": 9.999760099030756e-06,
+    "exactGraphCoveragePass": true,
+    "closedOrientationPass": true,
+    "limits": [
+      "Abstract continuous graph-map composition supplies two-sided metric proximity.",
+      "Does not prove global embedding, signedness, CAD accuracy, normals or dynamics."
+    ],
+    "owner": "strong-owl-live-physics",
+    "adopted": false,
+    "hashes": {
+      "Hangboards/clavellium-training-block/assets/primary.physics.json": "c60fbd6dfaf59bfd5fb7e6aa8d806f78af7e828a7f64074d326865e08f13e853",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-certified-proxy-5cf2e4826-graph-v1/census/proxy.json": "56828dd95975071f5c6541ff015e2156806942f248dbfdb169d965bfcc317460",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-certified-proxy-5cf2e4826-graph-v1/census/certificates.json": "2eeb7ccc476a83a0c7d97073108246a1a1cf7def0bb3fadb5d9065e2f238eee2",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/Tools/HangboardRopePrototype/certified_proxy/verify.py": "d05f68c616bc09141f09b747e8dcee382b28dd50cd7f59fbfc1e3927d0b88bf9"
+    }
+  },
+  "resources": [
+    {
+      "group": 31735,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-certified-proxy-5cf2e4826-graph-v1/resources.jsonl"
+    },
+    {
+      "group": 31741,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-certified-proxy-5cf2e4826-graph-v1/resources.jsonl"
+    },
+    {
+      "group": 31769,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-certified-proxy-5cf2e4826-graph-v1/resources.jsonl"
+    },
+    {
+      "group": 36855,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-certified-proxy-5cf2e4826-lifecycle-fixtures/resources.jsonl"
+    },
+    {
+      "group": 36861,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-certified-proxy-5cf2e4826-lifecycle-fixtures/resources.jsonl"
+    },
+    {
+      "group": 36891,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-certified-proxy-proof-5cf2e4826/resources.jsonl"
+    }
+  ],
+  "limits": [
+    "Necessary work-count FAIL, no native timing or nonlinear stage.",
+    "Exact graph maps and inductive two-sided metric bound do not prove global embedding, signedness, CAD accuracy, normals or dynamics.",
+    "No compiled app/display/CAD/package change; original parity/physical mesh/CCD remain required.",
+    "Initial nominal nonconvex negative fixture was convex, corrected to an actual concave five-vertex disk.",
+    "Launcher called nonexistent close() after every owned child had already been reaped; changed to cleanup() and verified with fresh RED/GREEN-only run, no census retry."
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-certified-proxy-5cf2e4826-graph-v1/census/result.json": "3963c95e7030f5cd879b86d56efdd86f39b97cc86f7f075e059a664c3477e245",
+    ".context/strong-owl-live-physics-certified-proxy-5cf2e4826-graph-v1/census/proxy.json": "56828dd95975071f5c6541ff015e2156806942f248dbfdb169d965bfcc317460",
+    ".context/strong-owl-live-physics-certified-proxy-5cf2e4826-graph-v1/census/certificates.json": "2eeb7ccc476a83a0c7d97073108246a1a1cf7def0bb3fadb5d9065e2f238eee2",
+    ".context/strong-owl-live-physics-certified-proxy-proof-5cf2e4826/result.json": "5addfd99671d4d55515466c93d8f2bd5979436e019c2c5a2090fd99439b76511",
+    ".context/strong-owl-live-physics-certified-proxy-proposal/PLAN.md": "da6bd5ea599c1b7834e76dc206ff6d3b1d437281faa6d12f513512846070afc6",
+    "Tools/HangboardRopePrototype/run_certified_proxy_census.py": "07cce30e3c1763142db2a08d3c03de7fb7283fca842893d84ad29e4bade27fe2",
+    "Tools/HangboardRopePrototype/certified_proxy/census.py": "2670aefd54ab38c1fdf49d3660d39798d6493c3ac6589c0e087dcef5c1c494ce",
+    "Tools/HangboardRopePrototype/certified_proxy/geometry.py": "158b3fc46a3ddb9b7c0e181a99d4de0c511ae326df816309efc932968966eeee",
+    "Tools/HangboardRopePrototype/certified_proxy/verify.py": "d05f68c616bc09141f09b747e8dcee382b28dd50cd7f59fbfc1e3927d0b88bf9"
+  }
+}
