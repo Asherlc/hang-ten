@@ -1,0 +1,7 @@
+{
+  "actualTrainClearSlotMeasured": false,
+  "reason": "Existing immediate-openurl recipe and board UIKit census do not independently measure the clear Train placeholder slot. No source/layout hooks added mid-experiment.",
+  "sourceDerivedLayoutPreservationOnly": true,
+  "requiredActualMeasurement": "Workout renderer endpoints/path/placement and resolved inputs must correspond; no frame compensation.",
+  "interpretation": "Train subtree removal bundle, not a uniquely isolated active renderer mechanism."
+}

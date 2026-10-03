@@ -1,0 +1,553 @@
+{
+  "scope": "Read-only extraction from complete frozen traces; not new runtime evidence.",
+  "traces": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/events-4C000B34-D722-4678-8FC6-F4233D3CAF8F.jsonl",
+      "sha256": "bcbd4e963b6fdd2b2f2d8fa95becbc07152f3028e75904cd3cb8d3cc0b0b98d3",
+      "records": 162,
+      "makeCount": 3,
+      "makeSceneTokens": [
+        "07390C08-3B51-4C34-9C1A-6DCD5D808DFD",
+        "208DF2E0-6DC4-42A0-AAB2-7D7989BF49A2",
+        "440EE531-68EF-4BE6-9B90-4C8C3F7C46A8"
+      ],
+      "events": [
+        {
+          "sequence": 7,
+          "event": "surface-inputs",
+          "epoch": 1790985393.805901,
+          "sceneLifecycleToken": "07390C08-3B51-4C34-9C1A-6DCD5D808DFD",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 10,
+          "event": "view-make",
+          "epoch": 1790985393.8127341,
+          "sceneLifecycleToken": "07390C08-3B51-4C34-9C1A-6DCD5D808DFD",
+          "viewToken": "19FBBD8F-1BEB-49F3-8C34-A588FB4E5AB3",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          },
+          "viewportPoints": [
+            326,
+            55.885714285714286
+          ]
+        },
+        {
+          "sequence": 11,
+          "event": "surface-inputs",
+          "epoch": 1790985393.9323,
+          "sceneLifecycleToken": "208DF2E0-6DC4-42A0-AAB2-7D7989BF49A2",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 14,
+          "event": "view-make",
+          "epoch": 1790985393.936537,
+          "sceneLifecycleToken": "208DF2E0-6DC4-42A0-AAB2-7D7989BF49A2",
+          "viewToken": "D6CE448B-7343-434B-99CF-9C7FB533C070",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          },
+          "viewportPoints": [
+            358,
+            61.371428571428574
+          ]
+        },
+        {
+          "sequence": 15,
+          "event": "view-disappear",
+          "epoch": 1790985393.9929261,
+          "sceneLifecycleToken": "07390C08-3B51-4C34-9C1A-6DCD5D808DFD",
+          "viewToken": "19FBBD8F-1BEB-49F3-8C34-A588FB4E5AB3",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          },
+          "viewportPoints": [
+            326,
+            55.885714285714286
+          ]
+        },
+        {
+          "sequence": 17,
+          "event": "view-disappear",
+          "epoch": 1790985394.031036,
+          "sceneLifecycleToken": "208DF2E0-6DC4-42A0-AAB2-7D7989BF49A2",
+          "viewToken": "D6CE448B-7343-434B-99CF-9C7FB533C070",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          },
+          "viewportPoints": [
+            296,
+            50.74285714285715
+          ]
+        },
+        {
+          "sequence": 18,
+          "event": "surface-inputs",
+          "epoch": 1790985394.147843,
+          "sceneLifecycleToken": "440EE531-68EF-4BE6-9B90-4C8C3F7C46A8",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 21,
+          "event": "view-make",
+          "epoch": 1790985394.151476,
+          "sceneLifecycleToken": "440EE531-68EF-4BE6-9B90-4C8C3F7C46A8",
+          "viewToken": "A0EC4DE0-557C-4C55-8B84-F854974871A2",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          },
+          "viewportPoints": [
+            410,
+            70.28571428571429
+          ]
+        },
+        {
+          "sequence": 26,
+          "event": "surface-inputs",
+          "epoch": 1790985395.8264232,
+          "sceneLifecycleToken": "440EE531-68EF-4BE6-9B90-4C8C3F7C46A8",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [
+              "edge-20-left",
+              "edge-20-right"
+            ],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 41,
+          "event": "surface-inputs",
+          "epoch": 1790985402.7820358,
+          "sceneLifecycleToken": "440EE531-68EF-4BE6-9B90-4C8C3F7C46A8",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [
+              "edge-20-left",
+              "edge-20-right"
+            ],
+            "isDisplayOnly": false,
+            "mode": "preview",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 158,
+          "event": "surface-inputs",
+          "epoch": 1790985583.611596,
+          "sceneLifecycleToken": "440EE531-68EF-4BE6-9B90-4C8C3F7C46A8",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [
+              "edge-20-left",
+              "edge-20-right"
+            ],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 162,
+          "event": "surface-inputs",
+          "epoch": 1790985590.652535,
+          "sceneLifecycleToken": "440EE531-68EF-4BE6-9B90-4C8C3F7C46A8",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [
+              "edge-20-left",
+              "edge-20-right"
+            ],
+            "isDisplayOnly": false,
+            "mode": "preview",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        }
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/events-4A57D30B-E5EF-4BCC-9376-2B07720332D4.jsonl",
+      "sha256": "40c1814c80d17363e3de88d80c412c10cd44cda1d4304765f3dea9e609d3219b",
+      "records": 156,
+      "makeCount": 2,
+      "makeSceneTokens": [
+        "3573D079-3BDD-4F77-8DA7-911AF2A19F37",
+        "280CD5F7-9953-45AD-8C4E-2FE84248689F"
+      ],
+      "events": [
+        {
+          "sequence": 7,
+          "event": "surface-inputs",
+          "epoch": 1790985646.413768,
+          "sceneLifecycleToken": "3573D079-3BDD-4F77-8DA7-911AF2A19F37",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 10,
+          "event": "view-make",
+          "epoch": 1790985646.419806,
+          "sceneLifecycleToken": "3573D079-3BDD-4F77-8DA7-911AF2A19F37",
+          "viewToken": "1477E299-CB12-49F3-B397-DE1DC98C1AA3",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          },
+          "viewportPoints": [
+            264,
+            45.25714285714286
+          ]
+        },
+        {
+          "sequence": 11,
+          "event": "surface-inputs",
+          "epoch": 1790985646.521302,
+          "sceneLifecycleToken": "280CD5F7-9953-45AD-8C4E-2FE84248689F",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 14,
+          "event": "view-make",
+          "epoch": 1790985646.525508,
+          "sceneLifecycleToken": "280CD5F7-9953-45AD-8C4E-2FE84248689F",
+          "viewToken": "A2ED55A6-DD90-48BC-8921-8709DEA8CDB7",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          },
+          "viewportPoints": [
+            410,
+            70.28571428571429
+          ]
+        },
+        {
+          "sequence": 15,
+          "event": "view-disappear",
+          "epoch": 1790985646.627876,
+          "sceneLifecycleToken": "3573D079-3BDD-4F77-8DA7-911AF2A19F37",
+          "viewToken": "1477E299-CB12-49F3-B397-DE1DC98C1AA3",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          },
+          "viewportPoints": [
+            264,
+            45.25714285714286
+          ]
+        },
+        {
+          "sequence": 20,
+          "event": "surface-inputs",
+          "epoch": 1790985648.4360008,
+          "sceneLifecycleToken": "280CD5F7-9953-45AD-8C4E-2FE84248689F",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [
+              "edge-20-left",
+              "edge-20-right"
+            ],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 35,
+          "event": "surface-inputs",
+          "epoch": 1790985655.350576,
+          "sceneLifecycleToken": "280CD5F7-9953-45AD-8C4E-2FE84248689F",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [
+              "edge-20-left",
+              "edge-20-right"
+            ],
+            "isDisplayOnly": false,
+            "mode": "preview",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 152,
+          "event": "surface-inputs",
+          "epoch": 1790985835.8346028,
+          "sceneLifecycleToken": "280CD5F7-9953-45AD-8C4E-2FE84248689F",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [
+              "edge-20-left",
+              "edge-20-right"
+            ],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 156,
+          "event": "surface-inputs",
+          "epoch": 1790985842.40172,
+          "sceneLifecycleToken": "280CD5F7-9953-45AD-8C4E-2FE84248689F",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [
+              "edge-20-left",
+              "edge-20-right"
+            ],
+            "isDisplayOnly": false,
+            "mode": "preview",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        }
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/events-9F6E7E3E-5C72-4A03-827F-1784D072BCD3.jsonl",
+      "sha256": "2023d9538dcec780cd02ba92dd1a7fb002bed774b6290d6a1edaa1c08c799002",
+      "records": 149,
+      "makeCount": 2,
+      "makeSceneTokens": [
+        "9ADE52CC-C5FB-435F-818B-37AD8788E66B",
+        "63C8974F-6835-46E7-9CD2-7652949B4669"
+      ],
+      "events": [
+        {
+          "sequence": 3,
+          "event": "surface-inputs",
+          "epoch": 1790987019.977778,
+          "sceneLifecycleToken": "9ADE52CC-C5FB-435F-818B-37AD8788E66B",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 6,
+          "event": "view-make",
+          "epoch": 1790987019.9867449,
+          "sceneLifecycleToken": "9ADE52CC-C5FB-435F-818B-37AD8788E66B",
+          "viewToken": "794829F6-8F3D-4C9F-8B0A-7C75FB473B45",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          },
+          "viewportPoints": [
+            326,
+            55.885714285714286
+          ]
+        },
+        {
+          "sequence": 7,
+          "event": "view-disappear",
+          "epoch": 1790987020.069664,
+          "sceneLifecycleToken": "9ADE52CC-C5FB-435F-818B-37AD8788E66B",
+          "viewToken": "794829F6-8F3D-4C9F-8B0A-7C75FB473B45",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          },
+          "viewportPoints": [
+            326,
+            55.885714285714286
+          ]
+        },
+        {
+          "sequence": 9,
+          "event": "surface-inputs",
+          "epoch": 1790987020.228857,
+          "sceneLifecycleToken": "63C8974F-6835-46E7-9CD2-7652949B4669",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 12,
+          "event": "view-make",
+          "epoch": 1790987020.232558,
+          "sceneLifecycleToken": "63C8974F-6835-46E7-9CD2-7652949B4669",
+          "viewToken": "59799FCF-2E0A-494A-BC72-8BD36E79DF5E",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          },
+          "viewportPoints": [
+            410,
+            70.28571428571429
+          ]
+        },
+        {
+          "sequence": 17,
+          "event": "surface-inputs",
+          "epoch": 1790987022.390394,
+          "sceneLifecycleToken": "63C8974F-6835-46E7-9CD2-7652949B4669",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [
+              "edge-20-left",
+              "edge-20-right"
+            ],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 28,
+          "event": "surface-inputs",
+          "epoch": 1790987029.144923,
+          "sceneLifecycleToken": "63C8974F-6835-46E7-9CD2-7652949B4669",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [
+              "edge-20-left",
+              "edge-20-right"
+            ],
+            "isDisplayOnly": false,
+            "mode": "preview",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 145,
+          "event": "surface-inputs",
+          "epoch": 1790987209.976166,
+          "sceneLifecycleToken": "63C8974F-6835-46E7-9CD2-7652949B4669",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [
+              "edge-20-left",
+              "edge-20-right"
+            ],
+            "isDisplayOnly": false,
+            "mode": "active",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        },
+        {
+          "sequence": 149,
+          "event": "surface-inputs",
+          "epoch": 1790987216.24501,
+          "sceneLifecycleToken": "63C8974F-6835-46E7-9CD2-7652949B4669",
+          "resolvedSurfaceInputs": {
+            "boardID": "zlagboard.evo",
+            "ids": [
+              "edge-20-left",
+              "edge-20-right"
+            ],
+            "isDisplayOnly": false,
+            "mode": "preview",
+            "positionID": "primary",
+            "presentationID": "primary"
+          }
+        }
+      ]
+    }
+  ]
+}
