@@ -1,0 +1,14 @@
+{
+  "runtimeAuthorized": true,
+  "arm": "retained-detach",
+  "helperSHA256": "010179a029a5595850238e6ad1872c5ee05956a171f34a9e998d002faacdac5e",
+  "constructorMarkerAuditReady": true,
+  "structuralNavEventAuditReady": true,
+  "rootSourceRuntimeRelease": true,
+  "previousArmGatePassed": true,
+  "postbootConfirmationPassed": true,
+  "retainedDetachIntervention": true,
+  "simulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "binarySHA256": "192112d7c16c876094c4a4d1edec76d21d9ec9e3ff3d02801e7fa5f57cdb599c",
+  "authorization": "Parent released ONLY retained-detach reference after build/install/parity and independent helper review. Ordinary forbidden until new root hashed gate."
+}

@@ -1,0 +1,19 @@
+{
+  "status": "Scratch textual/static checks only",
+  "gitApplyCheckPassed": true,
+  "helperPythonASTParsePassed": true,
+  "liveSourcesUnchanged": {
+    "HangTen/Models/BoardModelRealityTypes.swift": true,
+    "HangTen/Views/BoardModelView.swift": true,
+    "HangTen/Views/TrainView.swift": true
+  },
+  "patchSHA256": "38d52bfb7b88330e83d80463b77030444a6ee3536fb03dc614b98c6af8325faf",
+  "notDone": [
+    "source application",
+    "Swift compilation or typecheck",
+    "tests",
+    "runtime",
+    "claim of fix"
+  ],
+  "optionalSafety": "TrialHost.model is used only via weak assignment, nil/aliveness snapshot, and identity comparison; snapshot root/camera accesses use optional chaining. Independent weak root/camera tracking survives wrapper deallocation."
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-normal-all-hand-workout.py",
+    "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-dependency-runtime-prep/check-cpu-semantics.py",
+    "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+    "byteExact": true
+  },
+  {
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-normal-projection-hosts.py",
+    "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-dependency-runtime-prep/check-frames.py",
+    "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+    "byteExact": true
+  },
+  {
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-proposal/check-train-constructors.py",
+    "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-dependency-runtime-prep/check-constructors.py",
+    "sha256": "8c671fee30985971a5db26847fd625a725f54829875b9fc688a5dbdfc29532c0",
+    "byteExact": true
+  },
+  {
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-normal-strict-hand-absence.py",
+    "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-dependency-runtime-prep/check-hands.py",
+    "sha256": "9c0395c040a4cb62c79eca1c57b8127e6579b02a738f7483f54e29f802aa1ec6",
+    "byteExact": true
+  }
+]

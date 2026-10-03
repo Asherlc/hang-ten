@@ -1,0 +1,130 @@
+{
+  "checks": {
+    "sameBinary": true,
+    "onlyCombinedInterventionAndRunIDEnvironmentDifference": true,
+    "sameNormalFrameEndpoints": true,
+    "sameResolvedWorkoutInputs": true,
+    "sameRootCameraTransformSets": true,
+    "sameConstructorAndMakeCounts": true
+  },
+  "retainedDetach": {
+    "endpoints": [
+      [
+        232,
+        182.33333333333331,
+        410,
+        70
+      ],
+      [
+        332,
+        240,
+        210,
+        36
+      ]
+    ],
+    "inputs": [
+      "{\"boardID\": \"zlagboard.evo\", \"ids\": [\"edge-20-left\", \"edge-20-right\"], \"isDisplayOnly\": false, \"mode\": \"active\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}",
+      "{\"boardID\": \"zlagboard.evo\", \"ids\": [\"edge-20-left\", \"edge-20-right\"], \"isDisplayOnly\": false, \"mode\": \"preview\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}",
+      "{\"boardID\": \"zlagboard.evo\", \"ids\": [], \"isDisplayOnly\": false, \"mode\": \"active\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}"
+    ],
+    "values": {
+      "rootTransform": [
+        "[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]"
+      ],
+      "cameraTransform": [
+        "[1, 0, 0, 0, 0, 0.9438583850860596, -0.33035042881965637, 0, 0, 0.33035042881965637, 0.9438583850860596, 0, 0, 0.10610384494066238, 0.3241538405418396, 1]"
+      ],
+      "projection": [
+        "{\"far\": 1000, \"near\": 0.0010000000474974513, \"orthographic\": false, \"perspective\": true, \"verticalFOVDegrees\": 30}"
+      ]
+    },
+    "environment": {
+      "HANGTEN_REVIEW_BOARD_ID": "zlagboard.evo",
+      "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+      "HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC": "1",
+      "HANGTEN_REVIEW_DIAGNOSTIC_RUN": "placid-badger-cad-second-half-structural-dependency-retained-detach",
+      "HANGTEN_REVIEW_LANDSCAPE": "1",
+      "HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS": "1",
+      "HANGTEN_REVIEW_SUPPRESS_ALL_HAND_HOSTS": "1",
+      "HANGTEN_REVIEW_PREDECESSOR_ATTACHMENT_CENSUS": "1",
+      "HANGTEN_REVIEW_BOARD_HOST_OBSERVATION": "1",
+      "HANGTEN_REVIEW_BOARD_DETACH_TRIAL": "1",
+      "HANGTEN_REVIEW_DETACH_DISAPPEARING_BOARD_HOST": "1",
+      "HANGTEN_REVIEW_UNMOUNT_TRAIN_FOR_WORKOUT": "1"
+    },
+    "code": "192112d7c16c876094c4a4d1edec76d21d9ec9e3ff3d02801e7fa5f57cdb599c",
+    "constructorCount": 2,
+    "makeCount": 2,
+    "eventOrder": [
+      "board-scene-constructed:predecessor",
+      "view-make:predecessor",
+      "detach-trial-before:predecessor",
+      "detach-trial-after:predecessor",
+      "view-disappear:predecessor",
+      "board-scene-constructed:workout",
+      "view-make:workout"
+    ]
+  },
+  "ordinary": {
+    "endpoints": [
+      [
+        232,
+        182.33333333333331,
+        410,
+        70
+      ],
+      [
+        332,
+        240,
+        210,
+        36
+      ]
+    ],
+    "inputs": [
+      "{\"boardID\": \"zlagboard.evo\", \"ids\": [\"edge-20-left\", \"edge-20-right\"], \"isDisplayOnly\": false, \"mode\": \"active\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}",
+      "{\"boardID\": \"zlagboard.evo\", \"ids\": [\"edge-20-left\", \"edge-20-right\"], \"isDisplayOnly\": false, \"mode\": \"preview\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}",
+      "{\"boardID\": \"zlagboard.evo\", \"ids\": [], \"isDisplayOnly\": false, \"mode\": \"active\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}"
+    ],
+    "values": {
+      "rootTransform": [
+        "[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]"
+      ],
+      "cameraTransform": [
+        "[1, 0, 0, 0, 0, 0.9438583850860596, -0.33035042881965637, 0, 0, 0.33035042881965637, 0.9438583850860596, 0, 0, 0.10610384494066238, 0.3241538405418396, 1]"
+      ],
+      "projection": [
+        "{\"far\": 1000, \"near\": 0.0010000000474974513, \"orthographic\": false, \"perspective\": true, \"verticalFOVDegrees\": 30}"
+      ]
+    },
+    "environment": {
+      "HANGTEN_REVIEW_BOARD_ID": "zlagboard.evo",
+      "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+      "HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC": "1",
+      "HANGTEN_REVIEW_DIAGNOSTIC_RUN": "placid-badger-cad-second-half-structural-dependency-ordinary",
+      "HANGTEN_REVIEW_LANDSCAPE": "1",
+      "HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS": "1",
+      "HANGTEN_REVIEW_SUPPRESS_ALL_HAND_HOSTS": "1",
+      "HANGTEN_REVIEW_PREDECESSOR_ATTACHMENT_CENSUS": "1",
+      "HANGTEN_REVIEW_BOARD_HOST_OBSERVATION": "1",
+      "HANGTEN_REVIEW_UNMOUNT_TRAIN_FOR_WORKOUT": "1"
+    },
+    "code": "192112d7c16c876094c4a4d1edec76d21d9ec9e3ff3d02801e7fa5f57cdb599c",
+    "constructorCount": 2,
+    "makeCount": 2,
+    "eventOrder": [
+      "board-scene-constructed:predecessor",
+      "view-make:predecessor",
+      "detach-trial-before:predecessor",
+      "detach-trial-after:predecessor",
+      "view-disappear:predecessor",
+      "board-scene-constructed:workout",
+      "view-make:workout"
+    ]
+  },
+  "eventOrderingEqual": true,
+  "limitations": [
+    "Entity/actual scene IDs naturally differ between fresh processes; compare role and recorded membership, not pointer equality across runs.",
+    "Frame endpoints and sampled path comparison do not assert identical animation timing.",
+    "Lifecycle event ordering retained; init completion is not loader entry or GPU creation."
+  ]
+}

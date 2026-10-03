@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/C0DABE75-A621-4F9D-8B17-0F4EF75A2132/Documents/HighlightDiagnostic-placid-badger-cad-second-half-structural-dependency-ordinary/events-F7855391-6C47-407C-9150-AC038E7C142A.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/events-F7855391-6C47-407C-9150-AC038E7C142A.jsonl",
+      "sha256": "d45980233ab62968cf75699eaf9090d042c8a70b74f06593bf2f2764e28ed1fa"
+    }
+  ],
+  "records": 154,
+  "completeContiguous": true,
+  "copiedEpoch": 1790993440.5070379,
+  "includesSamplerEnd": true
+}
