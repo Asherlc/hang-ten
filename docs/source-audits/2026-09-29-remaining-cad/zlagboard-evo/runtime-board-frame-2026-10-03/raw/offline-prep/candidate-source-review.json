@@ -1,0 +1,98 @@
+{
+  "scope": "Read-only current frozen candidate review; no live runtime evidence inspected and no source edits.",
+  "sourceSHA256": {
+    "HangTen/Views/BoardModelView.swift": "81e1a5e8fa50ed009a78f81ebaba7af5a9581ba02a01d20ae18b11a4b95a6e1d",
+    "HangTen/Views/BoardMapView.swift": "b2986f27f69f59d221cb8a84a5d0e0b84e9ff3a94c9457108ccd5ed820ca4e08",
+    "HangTen/Views/RootView.swift": "5e840c019cd28157a4cd180fd0423f32f31050e03b1ac0523c6f9abffd731091",
+    "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5"
+  },
+  "findings": [
+    {
+      "priority": "production interaction gap",
+      "refs": [
+        "BoardModelView.swift:250-258",
+        "BoardModelView.swift:534-548"
+      ],
+      "fact": "Existing non-pickable RealityView still resets camera on a targeted contact tap before optional callback. Image branch has drag/magnify only, no reset action.",
+      "implication": "If adopted, preserve an explicit accessible reset interaction or document/approve changed workout orbit UX; this trial cannot establish interaction equivalence."
+    },
+    {
+      "priority": "bounded completion/lifetime gap",
+      "refs": [
+        "BoardModelView.swift:388-400",
+        "BoardModelView.swift:430",
+        "BoardModelView.swift:482-501"
+      ],
+      "fact": "Frame retains model/ODR lease/renderer/texture until completion. Completion closure retains coordinator. No timeout/cancellation/failure callback policy exists; if updateAndRender throws after frame assignment, fail() leaves frame set. If callback never arrives, latest pending work cannot drain and disappeared coordinator resources may remain retained.",
+      "limit": "This is a source-level unhandled completion/error path, not evidence that RealityRenderer actually omits callbacks in current runs."
+    },
+    {
+      "priority": "global recovery limitation",
+      "refs": [
+        "BoardModelView.swift:344-364",
+        "BoardModelView.swift:448-450"
+      ],
+      "fact": "Static environment preparation caches a failed Task permanently. Subsequent coordinator/view creation reawaits the same failure; only process restart resets it.",
+      "implication": "Production retry/error policy needs an explicit decision and targeted failure test."
+    },
+    {
+      "priority": "appearance/readiness limitation",
+      "refs": [
+        "BoardModelView.swift:354-359",
+        "BoardModelView.swift:426",
+        "BoardModelView.swift:441-444",
+        "BoardModelView.swift:529"
+      ],
+      "fact": "Uniform-white environment is an intentional lighting adaptation. Every semantic/size/orbit request immediately clears visible image; pending work yields transparent content with no loading indication. Initial environment setup and rapid animated resizing can extend blank intervals.",
+      "limit": "No appearance equivalence or actual latency inferred; runtime whole-image coverage must assess visibility and orientation."
+    }
+  ],
+  "confirmedDesignProperties": [
+    {
+      "refs": [
+        "BoardModelView.swift:405-427",
+        "BoardModelView.swift:429-455",
+        "BoardModelView.swift:488-500"
+      ],
+      "fact": "MainActor serial state; one in-flight Frame and one replaceable latest pending Request. New revision clears old image immediately; completion publishes only when active and exact current revision. Stale completion releases frame then drains newest pending."
+    },
+    {
+      "refs": [
+        "BoardModelView.swift:419-421",
+        "BoardModelView.swift:436",
+        "BoardModelView.swift:491"
+      ],
+      "fact": "Disappear invalidates revision, clears pending/image, rejects late publication. Setup returning while inactive does not attach model. Reappearance can resubmit same input because active was false."
+    },
+    {
+      "refs": [
+        "BoardModelView.swift:52-56",
+        "BoardModelView.swift:465-474",
+        "BoardModelRealityTypes.swift:702-707"
+      ],
+      "fact": "StateObject scoped to model identity; same model root/camera/selection/highlight authoring reused. Orbit clamps match existing scene. No scene mutations for newer request until older frame completion."
+    },
+    {
+      "refs": [
+        "BoardMapView.swift:654-668",
+        "RootView.swift:2260-2267",
+        "RootView.swift:2308-2314",
+        "RootView.swift:2399-2406"
+      ],
+      "fact": "Flag forwarded only through workout portrait/landscape; DEBUG env false in release. Interactive onContactTap maps retain original RealityView and picking. Actual no-callback workout host is image branch; Train remains original."
+    }
+  ],
+  "focusedTestsIfRuntimePasses": [
+    "Synchronous fake completion driver: submit active A, preview B, active C before A completes; one in-flight, stale A not published, only C drains/publishes, repeated identical submit creates no render.",
+    "Submit clear contacts and nil pose after highlighted/posed frame; exact latest image revision corresponds to restored materials/canonical pose; no stale colored image during pending work.",
+    "Disappear during setup and GPU work, then reappear or replace model identity: no old publication; eventual resource/ODR release after completion; setup failure and synchronous render throw release ownership safely.",
+    "Zero-size then positive resize and scale change: no invalid allocation, correct dimensions/orientation, newest viewport wins; unchanged inputs remain idle.",
+    "Orbit/zoom survives mode-only changes, clamp bounds match scene, return/reset behavior verified; interactive contact-tap routes remain original physical picking.",
+    "Whole fresh app normal workout with real hands, portrait/landscape, early readiness and both active/preview directions; actual rendered frame verdict rather than CPU material values. Include a suspended/posed board before generalizing past fixed Evo."
+  ],
+  "limits": [
+    "No production recommendation before actual trial verdict.",
+    "Private candidate types currently lack injectable render completion; deterministic request tests would need a narrow test seam, not a broad renderer rewrite.",
+    "No new tests, builds, source changes or resources were run."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "runtimeAuthorized": false,
+  "exclusiveRuntimeOwnership": false,
+  "owner": "placid-badger-cad-second-half",
+  "simulatorUUID": "ROOT_SUPPLIED",
+  "controllerPID": null,
+  "ownershipPath": "ROOT_SUPPLIED",
+  "ownershipSHA256": "ROOT_SUPPLIED",
+  "boardID": "zlagboard.evo",
+  "planID": "research.max-hangs",
+  "arm": "control-a",
+  "runID": "placid-badger-cad-second-half-board-frame-control-a",
+  "appArguments": [
+    "-workoutAudioCuesEnabled",
+    "NO"
+  ],
+  "allowedChangedPaths": [],
+  "helperSHA256": "ROOT_SUPPLIED",
+  "scheduleSHA256": "ROOT_SUPPLIED",
+  "sourceReferencePath": "ROOT_SUPPLIED",
+  "sourceReferenceSHA256": "ROOT_SUPPLIED",
+  "parityPath": "ROOT_SUPPLIED",
+  "paritySHA256": "ROOT_SUPPLIED",
+  "binarySHA256": "ROOT_SUPPLIED",
+  "outputDirectory": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/control-a",
+  "priorReviewPath": null,
+  "priorReviewSHA256": null
+}

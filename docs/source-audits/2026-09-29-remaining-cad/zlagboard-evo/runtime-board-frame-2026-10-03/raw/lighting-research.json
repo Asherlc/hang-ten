@@ -1,0 +1,9 @@
+{
+  "primaryURLs": [
+    "https://developer.apple.com/documentation/realitykit/directionallight",
+    "https://developer.apple.com/documentation/realitykit/realityrenderer/imagebasedlight",
+    "https://developer.apple.com/videos/play/wwdc2024/10103/"
+  ],
+  "SDK": "iPhoneSimulator27.0 RealityFoundation.swiftinterface",
+  "inference": "Uniform environment alone coincides with flat output; runtime directional lighting is a candidate appearance correction, not yet visually verified."
+}

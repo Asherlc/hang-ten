@@ -1,0 +1,33 @@
+{
+  "scope": "Read-only minimal hand-readiness candidate; no source/runtime mutation and no active run read.",
+  "sources": {
+    "HangTen/Views/RootView.swift": "5e840c019cd28157a4cd180fd0423f32f31050e03b1ac0523c6f9abffd731091",
+    "HangTen/Views/GripHandModelView.swift": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+    "HangTen/Views/GripDiagramView.swift": "8c6ce950541f536a7f26b4bda6759dbf78f4c6eceeb2d07a0b0745090c3ffa06",
+    "HangTen/Models/WorkoutTimeline.swift": "f6133f787e0639cf6071eb1236f9b39fa8d85eca0cc02bc295f8cd164a882248"
+  },
+  "facts": [
+    "WorkoutTimeline.swift:613-620 deliberately returns nil step during initial countdown. RootView.swift:1956-1963 therefore resolves no holdCue; it is not merely a visibility modifier.",
+    "RootView.swift:2353-2382 conditionally inserts the landscape pair host only when visible cue policy passes. Pre-countdown countdown==0 can insert it; countdown>0 removes it; first active countdown==0 inserts a fresh host. This source path explains two possible scene lifetimes, not the observed GPU delay.",
+    "GripHandModelView.swift:730-758 lazy pair storage belongs to child @State. Removing its SwiftUI branch discards that owner. First scene access occurs in RealityView make/sync at774-801. Single equivalent at38-44,84-109,116-143.",
+    "Portrait RootView.swift:2269-2285 similarly removes whole cue block; GripDiagramView pair and single wrappers create their own models. Fixing landscape pair alone must not be claimed to fix portrait/single readiness."
+  ],
+  "smallestConcreteCandidate": {
+    "purpose": "Keep the existing landscape paired hand host identity across initial countdown, without adding a second host or sharing one scene root between hosts.",
+    "rootChange": "Separate authored hand preparation cue from visible boardCue: derive hidden preparation from the same timeline/current materialized step and hold resolver as countdown-zero (holdPreviewStep semantics), only during initial countdown. Do not feed this preparation cue to board highlighting, text, audio or workout/session mutation.",
+    "hostChange": "Mount one stable paired hand view while that authored bilateral preparation cue exists. Keep the same inner68-point framing viewport throughout countdown and first Hang; reveal it according to the unchanged visibility policy. During suppression, collapse only outer layout to0 and clip/opacity0/hit-test false/accessibilityHidden, avoiding placeholder space or text changes. Preserve exact surrounding VStack spacing when the hidden slot occupies0 (old absent branch had no extra2-point gap). Keep real gesture/camera/state in the same host.",
+    "gripAPI": "A narrow visibility/layout wrapper or presentation flag around GripHandPairModelView can preserve its existing lazy @State storage; no need for global scene cache or Root owning/prewarming every scene. All authored posture/finger inputs and resetToken remain identical. Single/portrait variants require equivalent stable wrappers through their existing card APIs; do not silently add those untested.",
+    "criticalLimit": "Opacity/clipping may allow framework render suppression. Stable scene/mesh preparation is source-supported; a presented GPU frame before reveal is NOT guaranteed. Do not claim prewarming removes initial latency without actual first-Hang whole images.",
+    "avoid": "Do not cache/share the same RealityKit root across old and new RealityView hosts: reparenting could invalidate ownership. Do not add hidden duplicate hosts, timers, startup delay, audio/state changes or invented grip fallbacks."
+  },
+  "focusedVerification": [
+    "Hosted identity/constructor test drives prestart0\u2192countdown3/2/1\u2192active0 with real authored bilateral cue; one scene/host, exact pose/fingers after reveal, original hidden-layout size/accessibility remains.",
+    "Whole-image early first-Hang check of actual normal route verifies hands visible at earliest eligible sampled frame, correct pose/fingers, unchanged board/layout/audio timing. Do not label later006 visibility a pass for missing004/005.",
+    "Retain skip countdown/completion cue visibility policies and hand side filtering; same active authoring inputs, no new training content."
+  ],
+  "limits": [
+    "No GPU root cause inferred from externally timed screenshots.",
+    "Preserving one host while collapsed is a candidate mechanism, not a proven fix.",
+    "No automatic broad portrait/single rollout or new experiment is authorized by this report."
+  ]
+}

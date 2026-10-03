@@ -1,0 +1,20 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "63244",
+      "-o",
+      "pid=,command="
+    ],
+    "startEpoch": 1791034141.355799,
+    "startMonotonic": 103837.593601666,
+    "limitSeconds": 20,
+    "pid": 70901,
+    "endEpoch": 1791034141.3853388,
+    "endMonotonic": 103837.623142083,
+    "exitStatus": 0
+  }
+]

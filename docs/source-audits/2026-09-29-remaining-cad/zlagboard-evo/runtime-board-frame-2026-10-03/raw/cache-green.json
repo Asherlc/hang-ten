@@ -1,0 +1,31 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-parallel-testing-enabled",
+    "NO",
+    "-destination",
+    "platform=iOS Simulator,id=9D5850FF-04D5-4498-AF99-E1F0C56ACA4A",
+    "-derivedDataPath",
+    ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/ios/DerivedData-placid-badger-cad-second-half",
+    "-resultBundlePath",
+    ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/ios/tests-placid-badger-cad-second-half.xcresult",
+    "-only-testing:HangTenTests/BoardModelRealityTests/testCompletedBoardFramesSwitchModesWithoutAnotherRender",
+    "-only-testing:HangTenTests/BoardModelRealityTests/testCompletedBoardFrameDoesNotSubstituteDifferentSelectionOrCamera",
+    "-only-testing:HangTenTests/BoardModelRealityTests/testCompletedBoardFrameCanScaleDuringAspectPreservingResize",
+    "-only-testing:HangTenTests/BoardModelRealityTests/testCompletedBoardFrameCacheReleasesSupersededPresentation",
+    "test"
+  ],
+  "boundSeconds": 600.0,
+  "timedOut": false,
+  "interruptedBySignal": null,
+  "exitStatus": 0,
+  "elapsedSeconds": 25.617546000008588
+}

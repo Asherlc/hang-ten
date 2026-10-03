@@ -1,0 +1,44 @@
+{
+  "reviewer": "root",
+  "method": "whole screenshots individually viewed",
+  "CPUBracketsAvailable": false,
+  "actualAppPhaseBoundariesMeasured": false,
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-004s.png",
+      "sha256": "a3c3c185abf536ecdb1f922c5d8ce7dd4308d4b5d2a6806c485124dbe20a13d1",
+      "visiblePhase": "Hang",
+      "boardContactColor": "red",
+      "colorCorrect": true,
+      "handsVisible": false,
+      "appearance": "Board body dark and uniform; hold cavities poorly legible, display appearance regression"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-006s.png",
+      "sha256": "cca49b7c811a89a537deffda07ba0a74ae8da6d93ee03a30c678009c4792a850",
+      "visiblePhase": "Hang",
+      "boardContactColor": "red",
+      "colorCorrect": true,
+      "handsVisible": true,
+      "appearance": "Board body dark and uniform; hold cavities poorly legible, display appearance regression"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-011s.png",
+      "sha256": "2c89c4e0acdfd51ab0baca991daf196fb232102fa0f95f15134730fa734a752a",
+      "visiblePhase": "Rest",
+      "boardContactColor": "blue",
+      "colorCorrect": true,
+      "handsVisible": true,
+      "appearance": "Board body dark and uniform; hold cavities poorly legible, display appearance regression"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-018s.png",
+      "sha256": "3d34c9d4b461cbda3bb705591b5b6795215bc0d53159ec8cdd92d9c9a403fc86",
+      "visiblePhase": "Rest",
+      "boardContactColor": "blue",
+      "colorCorrect": true,
+      "handsVisible": true,
+      "appearance": "Board body dark and uniform; hold cavities poorly legible, display appearance regression"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "install",
+    "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A",
+    ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/ios/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app"
+  ],
+  "boundSeconds": 45.0,
+  "timedOut": false,
+  "interruptedBySignal": null,
+  "exitStatus": 0,
+  "elapsedSeconds": 8.694646207994083
+}
