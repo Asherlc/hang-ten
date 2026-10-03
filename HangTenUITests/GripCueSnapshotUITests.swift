@@ -118,7 +118,8 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
 
         let leftHandCue = app.otherElements["workout.gripCue.left"]
         XCTAssertTrue(leftHandCue.waitForExistence(timeout: 10))
-        XCTAssertTrue(app.buttons["workout.gripCue.left.model"].exists)
+        XCTAssertFalse(app.buttons["workout.gripCue.left.model"].exists)
+        XCTAssertFalse(app.buttons["workout.gripCue.right.model"].exists)
         XCTAssertTrue(leftHandCue.label.contains("Exact fingers: index, middle, ring, and pinky"))
         XCTAssertFalse(app.staticTexts["P+R+M+I"].exists)
         XCTAssertFalse(app.staticTexts["I+M+R+P"].exists)
