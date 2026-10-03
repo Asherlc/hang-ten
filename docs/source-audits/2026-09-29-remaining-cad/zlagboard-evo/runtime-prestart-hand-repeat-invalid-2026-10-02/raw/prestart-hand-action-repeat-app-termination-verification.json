@@ -1,0 +1,10 @@
+{
+  "pid": 30370,
+  "simulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "bundleID": "com.hangten.training",
+  "terminateExitStatus": 0,
+  "psExitStatus": 1,
+  "exactPIDAbsent": true,
+  "epoch": 1791000261.816345,
+  "deviceDDRemainRootOwned": true
+}

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-repeat-helpers/capture.py", line 140, in <module>
+    assert len(transitions)==3 and len(captures)==12 and (out/'following-preview-tail.json').exists(),'Hard bound reached before all required transitions/captures/following-preview tail'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Hard bound reached before all required transitions/captures/following-preview tail
