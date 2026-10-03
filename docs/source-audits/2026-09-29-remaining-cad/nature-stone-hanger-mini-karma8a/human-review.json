@@ -1,9 +1,9 @@
 {
   "reviewNumber": 11,
   "boardID": "nature.stone-hanger-mini-karma8a",
-  "status": "Pinch wraps upper/lower front/back finger-contact rails and rounded end shoulders; ready for human CAD review; current app appearance and interaction unverified.",
-  "answer": null,
-  "acceptedDate": null,
+  "status": "Shown #11 CAD shape and corrected pinch finger-contact wrap accepted; current app appearance and interaction remain unverified.",
+  "answer": "Y",
+  "acceptedDate": "2026-10-03",
   "identity": {
     "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
     "modelSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
@@ -12,8 +12,8 @@
   },
   "baselineCommit": "9105c89528463acd5b2d645e633164d182f03883",
   "technicalGeometryReviewPresentedDate": "2026-10-02",
-  "acceptedScope": null,
-  "completionHumanAcceptance": "pending",
+  "acceptedScope": "Corrected pinch-60 highlight across the upper and lower exterior wooden finger-contact rails, wrapping onto their front/back faces and rounded end shoulders, shown in the whole front/back preview and prior/current front/side/top comparison.",
+  "completionHumanAcceptance": "pending current app review",
   "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/index.html",
   "runtimeValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
   "postIntegrationTests": {
@@ -66,6 +66,46 @@
       "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/index.html",
       "humanAnswer": null,
       "runtimeVerified": false
+    },
+    {
+      "owner": "placid-badger",
+      "eventType": "human-CAD-contact-acceptance",
+      "reviewNumber": 11,
+      "boardID": "nature.stone-hanger-mini-karma8a",
+      "reviewer": "asherlc",
+      "date": "2026-10-03",
+      "recordedUTC": "2026-10-03T17:21:06.468167+00:00",
+      "question": "Does this wrap look right now?",
+      "answer": "Y",
+      "acceptedScope": "Corrected pinch-60 highlight across the upper and lower exterior wooden finger-contact rails, wrapping onto their front/back faces and rounded end shoulders, shown in the whole front/back preview and prior/current front/side/top comparison.",
+      "shownAssetCommit": "63f928cbf8cb7c6522721a4ebc15d2b9b30e5923",
+      "identity": {
+        "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+        "modelSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+        "descriptorSHA256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+        "sidecarSHA256": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc"
+      },
+      "generatedManifestSHA256": "024c2c5df652271ae699487abfc963c33761a18e0c3dbd5d43aff0ac3cfe16a4",
+      "shownWholeImages": [
+        {
+          "sha256": "b29dda4e02f2a28125e052e78d94eece9cc531062601ba467d5cc02d8ecad4da",
+          "poseID": null,
+          "selectedContactID": "pinch-60",
+          "selectedNodeIDs": [
+            "nature_pinch",
+            "nature_pinch_pressure"
+          ],
+          "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-front-back.png"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/prior-current-pinch-front-side-top.png",
+          "sha256": "dd31f4d5c193f65cddef240db78d157e8677063143d26b094879018dcb1346e3"
+        }
+      ],
+      "runtimeVerified": false,
+      "usableAppFrames": 0,
+      "approvalLimit": "Acceptance covers the shown CAD shape and corrected existing pinch highlight. Current app finishes, picking, orbit, workout behavior and interaction remain unverified. The three factual contacts are preserved; this correction does not add a jug contact.",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/human-review.json"
     }
   ],
   "latestCADShapeReview": {
@@ -73,9 +113,9 @@
     "reviewNumber": 11,
     "boardID": "nature.stone-hanger-mini-karma8a",
     "preparedUTC": "2026-10-03T14:28:17.073132+00:00",
-    "status": "ready-pending-human-review",
-    "question": "Does the wrap look right now?",
-    "humanAnswer": null,
+    "status": "accepted",
+    "question": "Does this wrap look right now?",
+    "humanAnswer": "Y",
     "baselineCommit": "f6c3e2299734f141a19187924ad9e0fed7eab8d0",
     "identity": {
       "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
@@ -175,7 +215,11 @@
       ],
       "finding": "Upper/lower red finger-contact bands wrap continuously over front/back rails and rounded end shoulders. Center panels, groove walls, cavity interior and granite stay excluded. Original wood/granite selections remain."
     },
-    "previewProvenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/preview-provenance.json"
+    "previewProvenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/preview-provenance.json",
+    "acceptedDate": "2026-10-03",
+    "shownAssetCommit": "63f928cbf8cb7c6522721a4ebc15d2b9b30e5923",
+    "acceptedScope": "Corrected pinch-60 highlight across the upper and lower exterior wooden finger-contact rails, wrapping onto their front/back faces and rounded end shoulders, shown in the whole front/back preview and prior/current front/side/top comparison.",
+    "acceptanceRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-acceptance-2026-10-03.json"
   },
   "latestReviewPreparedDate": "2026-10-03",
   "latestDiagnosticValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/validation.json",
@@ -306,7 +350,7 @@
     "rawFeedback": "same jug wrapping issue",
     "previousAcceptedCorrection": "#10 jug highlight covers broad exterior front/back finger-pressure faces; accepted by user Lgtm.",
     "interpretation": "Extend the existing #11 pinch-60 selection around upper/lower exterior finger-contact rails onto front/back faces. No new contact identity or factual jug is added.",
-    "humanAcceptance": "pending",
+    "humanAcceptance": "accepted",
     "recordedUTC": "2026-10-03T14:28:17.073132+00:00",
     "priorShownCommit": "f6c3e2299734f141a19187924ad9e0fed7eab8d0",
     "priorShownIdentity": {
@@ -315,18 +359,61 @@
       "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
       "sidecarSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf"
     },
-    "currentHumanAcceptance": "pending"
+    "currentHumanAcceptance": "accepted",
+    "acceptanceAnswer": "Y",
+    "acceptanceDate": "2026-10-03",
+    "acceptanceRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-acceptance-2026-10-03.json"
   },
-  "geometryHumanAcceptance": "pending",
-  "completionQuestion": "Does the wrap look right now?",
+  "geometryHumanAcceptance": "accepted",
+  "completionQuestion": "Does this wrap look right now?",
   "completedTechnicalScope": "Existing pinch60 wraps upper/lower exterior front/back rails and end shoulders; original closed body, wood/granite and narrow pinch surfaces, three facts and saved cords preserved.",
   "latestValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/validation.json",
-  "currentShownAssetCommit": null,
-  "currentShownAssetCommitNote": "Prepared from f6c3e2299734f141a19187924ad9e0fed7eab8d0; exact final identities pinned here.",
+  "currentShownAssetCommit": "63f928cbf8cb7c6522721a4ebc15d2b9b30e5923",
+  "currentShownAssetCommitNote": "The exact current model and whole front/back preview were shown after the main integration; this acceptance is pinned to that commit and the unchanged canonical asset hashes.",
   "latestPackageTests": {
     "passed": 67,
     "failures": 0,
     "skipped": 0,
     "scope": "CAD contact, cached cords, delivery/catalog and platform staging; current runtime unverified."
+  },
+  "latestCADAcceptance": {
+    "owner": "placid-badger",
+    "eventType": "human-CAD-contact-acceptance",
+    "reviewNumber": 11,
+    "boardID": "nature.stone-hanger-mini-karma8a",
+    "reviewer": "asherlc",
+    "date": "2026-10-03",
+    "recordedUTC": "2026-10-03T17:21:06.468167+00:00",
+    "question": "Does this wrap look right now?",
+    "answer": "Y",
+    "acceptedScope": "Corrected pinch-60 highlight across the upper and lower exterior wooden finger-contact rails, wrapping onto their front/back faces and rounded end shoulders, shown in the whole front/back preview and prior/current front/side/top comparison.",
+    "shownAssetCommit": "63f928cbf8cb7c6522721a4ebc15d2b9b30e5923",
+    "identity": {
+      "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+      "modelSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+      "descriptorSHA256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+      "sidecarSHA256": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc"
+    },
+    "generatedManifestSHA256": "024c2c5df652271ae699487abfc963c33761a18e0c3dbd5d43aff0ac3cfe16a4",
+    "shownWholeImages": [
+      {
+        "sha256": "b29dda4e02f2a28125e052e78d94eece9cc531062601ba467d5cc02d8ecad4da",
+        "poseID": null,
+        "selectedContactID": "pinch-60",
+        "selectedNodeIDs": [
+          "nature_pinch",
+          "nature_pinch_pressure"
+        ],
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-front-back.png"
+      },
+      {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/prior-current-pinch-front-side-top.png",
+        "sha256": "dd31f4d5c193f65cddef240db78d157e8677063143d26b094879018dcb1346e3"
+      }
+    ],
+    "runtimeVerified": false,
+    "usableAppFrames": 0,
+    "approvalLimit": "Acceptance covers the shown CAD shape and corrected existing pinch highlight. Current app finishes, picking, orbit, workout behavior and interaction remain unverified. The three factual contacts are preserved; this correction does not add a jug contact.",
+    "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/human-review.json"
   }
 }

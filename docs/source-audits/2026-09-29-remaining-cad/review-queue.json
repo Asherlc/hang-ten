@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "First nine shown revisions accepted; #10 Mini overall shape accepted, final app/completion pending; #11 geometry shown, app and human acceptance pending; #12 shown CAD shape accepted, current app unverified; #13 shown CAD shape and seated cord accepted, current app unverified; #14 shown CAD shape and inferred barrel-wrap cord accepted, current app unverified; #15 shown Forge CAD shape accepted after Opus review, current app unverified",
+  "reviewState": "All shown CAD revisions assigned to this workspace (#1–15) accepted, including the corrected #10 Mini jug and #11 KARMA8A pinch finger-contact wraps. Current app appearance and interaction for #10–15 remain unverified. Reviews #16–21 belong to the separate second-half workspace.",
   "boards": [
     {
       "number": 1,
@@ -405,7 +405,7 @@
       "package": "nature-stone-hanger-mini-karma8a",
       "boardID": "nature.stone-hanger-mini-karma8a",
       "name": "Nature Climbing Stone Hanger Mini x KARMA8A",
-      "humanReview": "Pinch wraps upper/lower front/back finger-contact rails and rounded end shoulders; ready for human CAD review; current app appearance and interaction unverified.",
+      "humanReview": "Shown #11 CAD shape and corrected pinch finger-contact wrap accepted; current app appearance and interaction remain unverified.",
       "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
       "reviewPage": "nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/index.html",
       "sourceAudit": "nature-stone-hanger-mini-karma8a/native-authoring.md",
@@ -457,15 +457,15 @@
         "nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-back.png",
         "nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-front-back.png"
       ],
-      "finalCADReviewQuestion": "Does the wrap look right now?",
-      "completionHumanAcceptance": "pending",
+      "finalCADReviewQuestion": "Does this wrap look right now?",
+      "completionHumanAcceptance": "pending current app review",
       "latestHumanFeedback": {
         "owner": "placid-badger",
         "reviewNumber": 11,
         "rawFeedback": "same jug wrapping issue",
         "previousAcceptedCorrection": "#10 jug highlight covers broad exterior front/back finger-pressure faces; accepted by user Lgtm.",
         "interpretation": "Extend the existing #11 pinch-60 selection around upper/lower exterior finger-contact rails onto front/back faces. No new contact identity or factual jug is added.",
-        "humanAcceptance": "pending",
+        "humanAcceptance": "accepted",
         "recordedUTC": "2026-10-03T14:28:17.073132+00:00",
         "priorShownCommit": "f6c3e2299734f141a19187924ad9e0fed7eab8d0",
         "priorShownIdentity": {
@@ -474,8 +474,18 @@
           "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
           "sidecarSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf"
         },
-        "currentHumanAcceptance": "pending"
-      }
+        "currentHumanAcceptance": "accepted",
+        "acceptanceAnswer": "Y",
+        "acceptanceDate": "2026-10-03",
+        "acceptanceRecord": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-acceptance-2026-10-03.json"
+      },
+      "geometryHumanAcceptance": "accepted",
+      "acceptedScope": "Corrected pinch-60 highlight across the upper and lower exterior wooden finger-contact rails, wrapping onto their front/back faces and rounded end shoulders, shown in the whole front/back preview and prior/current front/side/top comparison.",
+      "reviewAnswer": "Y",
+      "acceptedDate": "2026-10-03",
+      "acceptedGeometryDate": "2026-10-03",
+      "acceptedPinchHighlightDate": "2026-10-03",
+      "latestHumanAcceptance": "nature-stone-hanger-mini-karma8a/pinch-wrap-acceptance-2026-10-03.json"
     },
     {
       "number": 12,

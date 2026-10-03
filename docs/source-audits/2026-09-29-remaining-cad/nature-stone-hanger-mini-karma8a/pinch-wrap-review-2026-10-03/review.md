@@ -6,6 +6,6 @@ Four independent flat-pad probes reproduce the old missing wrap and now lie on a
 
 Fresh verification passes 67 focused tests, the 64-board catalog, delivery lock, iOS/Android staging, deterministic exports, USDZ reimport, native edit/restore and source-bound checks of all three unchanged cord caches. Continuous clearance evidence remains applicable because the collision solid and paths are identical. Only the sidecar model hash changes.
 
-These are whole neutral CAD diagnostic previews, not app screenshots. Runtime finish and interaction remain unverified. Human acceptance is pending. Raw failures and exact owned-resource cleanup receipts are retained; no shared runtime or solver changes were made.
+These are whole neutral CAD diagnostic previews, not app screenshots. Runtime finish and interaction remain unverified. The shown CAD shape and corrected pinch wrap were accepted by the user on 2026-10-03 (Y). Raw failures and exact owned-resource cleanup receipts are retained; no shared runtime or solver changes were made.
 
-Does the wrap look right now?
+Human review: “Does this wrap look right now?” Answer: “Y”. [Exact acceptance record](../pinch-wrap-acceptance-2026-10-03.json) pins the shown commit, canonical hashes and whole previews.
