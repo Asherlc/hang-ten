@@ -1,0 +1,9 @@
+# Strict-strain early termination does not remove the two-QP floor
+
+The fixed ordinary step 140 still needed **two QPs** and failed the required one-QP gate. The first accepted full correction left strain .0002135522, just above the unchanged .0002 internal stop; the second reduced it to .0000151663. This closes this specific early-termination performance hypothesis. No full trajectory or simulator followed.
+
+The native candidate stops after a full accepted correction with strain below .0002 when the resulting pose is not actually quiet. Quiet poses retain the original speed-derived raw correction norm bound. It computes quiet from old-to-current displacement velocities and the identically appended/pruned prospective history, then asserts that the terminating prediction equals the final snapshot's actual settled predicate. Full-step acceptance resets per advance, including retries. Original integration, objective, contact queries, merit, physical mesh/material, CCD and velocity finalization remain unchanged. This was not a force-convergence certificate.
+
+First 20 propagated steps passed: maximum current difference 13.557846 µm and strict same-input difference 7.616622 µm, no caps/retries, original physical gates. Candidate used 87 QPs versus 88 control. Step 109 passed two versus eleven, median seven-pair ratio .239706, strict error 2.167154 µm. Step 140 matched the current pose exactly and strict error was 1.728017 µm, but accuracy does not rescue its failed one-QP work gate.
+
+RED retained the inert flag and failed strict total QP reduction at 88 versus 88. GREEN implemented only eligibility and passed preflight before exposing the fixed floor failure. The advisor found no blocking arithmetic/wiring defect. All eight private groups independently verified absent; companion JSON contains source/result/proposal hashes and manifests. Product sources/assets/seated cords were untouched. No real-time or stability claim follows.

@@ -15,6 +15,7 @@ parser.add_argument('--step-rate',type=int,choices=[240,120])
 parser.add_argument('--composed-step',action='store_true')
 parser.add_argument('--mass-only',action='store_true')
 parser.add_argument('--arrival-stop',action='store_true')
+parser.add_argument('--quiet-strain',action='store_true')
 parser.add_argument('--arrival-checkpoint',type=int,choices=[109,140],default=109)
 parser.add_argument('--lagged-reaction',action='store_true')
 parser.add_argument('--planar-regions',action='store_true')
@@ -35,6 +36,7 @@ parser.add_argument('--geometry-profile',action='store_true')
 parser.add_argument('--spectral-trajectory',action='store_true')
 parser.add_argument('--spectral-checkpoint',type=int,choices=[109,140],default=109)
 parser.add_argument('--preflight',action='store_true');args=parser.parse_args()
+if args.quiet_strain and (args.arrival_stop or args.full_merit or args.trajectory or args.step_rate==120 or args.composed_step or args.mass_only or args.planar_regions or args.spectral_step or args.clearance_bounds or args.scaled_merit or args.geometry_hints or args.lagged_reaction):parser.error('--quiet-strain is isolated')
 if args.arrival_stop and (args.full_merit or args.trajectory or args.step_rate==120 or args.composed_step or args.mass_only or args.planar_regions or args.spectral_step or args.clearance_bounds or args.scaled_merit or args.geometry_hints or args.lagged_reaction):parser.error('--arrival-stop is isolated')
 if args.planar_regions and (args.clearance_bounds or args.full_merit or args.trajectory or args.step_rate or args.spectral_step or args.scaled_merit or args.geometry_hints):parser.error('--planar-regions is isolated')
 if args.clipped_regions and not args.planar_regions:parser.error('--clipped-regions requires --planar-regions')
@@ -98,6 +100,9 @@ for name in NAMES:
     if name=='RopeDynamicsSolver.swift':
         text=solver_source(text).replace('private extension SIMD4','extension SIMD4')
         text+='\n'+(tool/'stock_chain/CheckpointAdapter.swift').read_text()+'\n'+(tool/'contact_bundle/CheckpointExtras.swift').read_text()
+        if args.quiet_strain:
+            from quiet_strain.snapshot import solver_source as quiet_solver
+            text=quiet_solver(text)
         if args.arrival_stop:
             from arrival_stop.snapshot import solver_source as arrival_solver
             text=arrival_solver(text)
@@ -149,6 +154,9 @@ for name in ['Math.swift','Trace.swift','main.swift']:
     text=(tool/'armijo'/('StepRateMain.swift' if (args.step_rate or args.spectral_trajectory) and name=='main.swift' else 'TrajectoryMain.swift' if args.trajectory and name=='main.swift' else name)).read_text()
     if name=='main.swift' and not args.full_merit:
         text=text.replace('    ArmijoTrace.collectOracleBranches=x.verifyArmijoDerivative\n','')
+    if name=='main.swift' and args.quiet_strain:
+        from quiet_strain.snapshot import driver_source as quiet_driver,trajectory_source as quiet_trajectory
+        text=quiet_trajectory(text) if args.step_rate else quiet_driver(text,args.arrival_checkpoint)
     if name=='main.swift' and args.arrival_stop:
         from arrival_stop.snapshot import driver_source as arrival_driver,trajectory_source as arrival_trajectory
         text=arrival_trajectory(text) if args.step_rate else arrival_driver(text,args.arrival_checkpoint)
@@ -265,6 +273,7 @@ if args.spectral_step:inputs += list((tool/'spectral_step').glob('*.*'))
 if args.scaled_merit:inputs += list((tool/'scaled_merit').glob('*.*'))
 if args.region_queries or args.planar_rows:inputs += [REPO/'.context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/result.json']
 if args.planar_regions:inputs += [*list((tool/'planar_regions').glob('*.*')),tool/'census_planar_regions.py',stage/'region-topology.json']
+if args.quiet_strain:inputs += list((tool/'quiet_strain').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))
 if args.arrival_stop:inputs += list((tool/'arrival_stop').glob('*.*'))
 if args.mass_only:inputs += list((tool/'mass_only').glob('*.*'))
 if args.lagged_reaction:inputs += list((tool/'lagged_reaction').glob('*.*'))
