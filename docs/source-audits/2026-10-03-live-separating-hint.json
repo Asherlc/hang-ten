@@ -1,0 +1,252 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "status": "whole-face cost ceiling passes, rounded barycentric envelope unproved; safe edge-only continuation CLOSED on cost",
+  "definitiveWholeFaceKernelRatio": 0.2941227137099363,
+  "definitiveEdgeOnlyKernelRatio": 0.9575354664541247,
+  "runs": [
+    {
+      "label": "5a12d1ee2-chronological",
+      "result": null,
+      "capturedInputProvenanceAccepted": false,
+      "independentlyAbsentGroups": [
+        16251
+      ],
+      "hashes": {
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-chronological/native/PLAN.md": "569e1361b2da19ec65c2dfda9e072c1315061b3b694cf76c727ce88e2e3ad86e",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-chronological/native/provenance.json": "cf356483e1f7a76fa45a556d765fc85e393b760c202d6eb3245739463e634e87",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-chronological/native/resources.jsonl": "28368f4392e6c2b4c96e443254d2e61834fe80d39e1132a63f13a094c492e1a6",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-chronological/native/compile.log": "09d54bc799a861a2cfbf48dea5b581f65bf08730efe66680b9edd08c9d88a2d7"
+      }
+    },
+    {
+      "label": "5a12d1ee2-chronological-v2",
+      "result": {
+        "adopted": false,
+        "coldCoverage": {
+          "cacheEntries": 4978,
+          "faces": 14934,
+          "firstUseMisses": 4978,
+          "proposedRejections": 9630,
+          "rayBlocks": 0,
+          "refreshes": 5304
+        },
+        "fixedMaximumKernelRatio": 0.5,
+        "limitations": [
+          "No general computed triangleClosest barycentric envelope proof.",
+          "Ray branch retained on every proposed skip.",
+          "Dictionary lookup, fresh support tests and refresh are timed; corpus decoding and previous-step training are outside the clock.",
+          "BVH discovery, original merge/row/solver costs, parallel execution, complete trajectory and simulator/video not measured."
+        ],
+        "medianKernelRatio": 0.28976588600323144,
+        "necessaryCostScreenPassed": true,
+        "owner": "strong-owl-live-physics",
+        "proposalValidationPassed": true,
+        "scope": "chronological hint coverage with every original face checked; non-adoptable serial predecoded corpus cost ceiling, not complete-step/device timing",
+        "training139": {
+          "cacheEntries": 4978,
+          "faces": 14934,
+          "firstUseMisses": 4978,
+          "proposedRejections": 9630,
+          "rayBlocks": 0,
+          "refreshes": 5304
+        },
+        "warmCoverage": {
+          "cacheEntries": 4978,
+          "faces": 14934,
+          "firstUseMisses": 0,
+          "proposedRejections": 14445,
+          "rayBlocks": 0,
+          "refreshes": 489
+        }
+      },
+      "capturedInputProvenanceAccepted": false,
+      "independentlyAbsentGroups": [
+        16824,
+        17019
+      ],
+      "hashes": {
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-chronological-v2/native/PLAN.md": "569e1361b2da19ec65c2dfda9e072c1315061b3b694cf76c727ce88e2e3ad86e",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-chronological-v2/native/provenance.json": "28830ad7e5443dd969abe57ea1b7437a6d8c3c2dfa1dbfda22173ddd9e6a38d7",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-chronological-v2/native/resources.jsonl": "fc4ab6cac61b8767c8fa666b8fb1231844ef682d529c60d2c19c35bac2d55038",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-chronological-v2/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-chronological-v2/native/run.log": "9014c49dc11d0f93703fd6639ed510c49ce8f1ed9f95270342b107abe6c40668",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-chronological-v2/native/result.json": "466785bae7a0bf38bf5d83ae896753866d3fe5f3af1160d34ff2adc222d18d6f"
+      }
+    },
+    {
+      "label": "5a12d1ee2-edge-envelope",
+      "result": {
+        "adopted": false,
+        "coldCoverage": {
+          "cacheEntries": 4978,
+          "faces": 14934,
+          "firstUseMisses": 4978,
+          "proposedRejections": 9630,
+          "rayBlocks": 0,
+          "refreshes": 5304
+        },
+        "fixedMaximumKernelRatio": 0.5,
+        "kind": "edge-only interpolation envelope; original point and ray kernels retained",
+        "limitations": [
+          "No general computed triangleClosest barycentric envelope proof.",
+          "Ray branch retained on every proposed skip.",
+          "Dictionary lookup, fresh support tests and refresh are timed; corpus decoding and previous-step training are outside the clock.",
+          "BVH discovery, original merge/row/solver costs, parallel execution, complete trajectory and simulator/video not measured."
+        ],
+        "medianKernelRatio": 0.9886564405101192,
+        "necessaryCostScreenPassed": false,
+        "owner": "strong-owl-live-physics",
+        "proposalValidationPassed": true,
+        "scope": "chronological hint coverage with every original face checked; non-adoptable serial predecoded corpus cost ceiling, not complete-step/device timing",
+        "training139": {
+          "cacheEntries": 4978,
+          "faces": 14934,
+          "firstUseMisses": 4978,
+          "proposedRejections": 9630,
+          "rayBlocks": 0,
+          "refreshes": 5304
+        },
+        "warmCoverage": {
+          "cacheEntries": 4978,
+          "faces": 14934,
+          "firstUseMisses": 0,
+          "proposedRejections": 14445,
+          "rayBlocks": 0,
+          "refreshes": 489
+        }
+      },
+      "capturedInputProvenanceAccepted": false,
+      "independentlyAbsentGroups": [
+        25257,
+        25417
+      ],
+      "hashes": {
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-edge-envelope/native/PLAN.md": "e2da604f5efdcc24f3a4d526f94be42e21b555198516848f538319ad67711177",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-edge-envelope/native/provenance.json": "42eb081f1375be01fd8f2133f9fda79fad4c27c5cf69cda90263e44f8f437340",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-edge-envelope/native/resources.jsonl": "ba10a38b7c6745eda02b1fa41ac7257018a21e024be03e35185b789b87deb7da",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-edge-envelope/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-edge-envelope/native/run.log": "d063d0b5304672c81574cf9e5a5ea764c402bdd9f856a3626215e2ef814281e9",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-edge-envelope/native/result.json": "3e49dc490177d0ad88fd362a8b445f855dba5bb5ac1f32a5dd7eb4902a191728"
+      }
+    },
+    {
+      "label": "5a12d1ee2-exact-decoder",
+      "result": {
+        "adopted": false,
+        "coldCoverage": {
+          "cacheEntries": 4978,
+          "faces": 14934,
+          "firstUseMisses": 4978,
+          "proposedRejections": 9630,
+          "rayBlocks": 0,
+          "refreshes": 5304
+        },
+        "fixedMaximumKernelRatio": 0.5,
+        "kind": "whole-face hint oracle; rounded barycentric envelope unproved",
+        "limitations": [
+          "No general computed triangleClosest barycentric envelope proof.",
+          "Ray branch retained on every proposed skip.",
+          "Dictionary lookup, fresh support tests and refresh are timed; corpus decoding and previous-step training are outside the clock.",
+          "BVH discovery, original merge/row/solver costs, parallel execution, complete trajectory and simulator/video not measured."
+        ],
+        "medianKernelRatio": 0.2941227137099363,
+        "necessaryCostScreenPassed": true,
+        "owner": "strong-owl-live-physics",
+        "proposalValidationPassed": true,
+        "scope": "chronological hint coverage with every original face checked; non-adoptable serial predecoded corpus cost ceiling, not complete-step/device timing",
+        "training139": {
+          "cacheEntries": 4978,
+          "faces": 14934,
+          "firstUseMisses": 4978,
+          "proposedRejections": 9630,
+          "rayBlocks": 0,
+          "refreshes": 5304
+        },
+        "warmCoverage": {
+          "cacheEntries": 4978,
+          "faces": 14934,
+          "firstUseMisses": 0,
+          "proposedRejections": 14445,
+          "rayBlocks": 0,
+          "refreshes": 489
+        }
+      },
+      "capturedInputProvenanceAccepted": true,
+      "independentlyAbsentGroups": [
+        32526,
+        32657
+      ],
+      "hashes": {
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-exact-decoder/native/PLAN.md": "569e1361b2da19ec65c2dfda9e072c1315061b3b694cf76c727ce88e2e3ad86e",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-exact-decoder/native/provenance.json": "83addaa47e2790d26362c8192f56374cea11f3cf68e53a4a7421678b89a0fcaf",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-exact-decoder/native/resources.jsonl": "124e2a97926e4b2d97c90fcdff7937960a3d4fd7a543fd9c7b860d0e83041ae9",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-exact-decoder/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-exact-decoder/native/run.log": "e6a2c7f58aafacb3f96149d969c57384b3e40a4e6f61d5253118a71fd72ff0de",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-exact-decoder/native/result.json": "bb0066f94c42c5758ce4f3666d00bea069357501cfbcd8a438e6713f6134ea2a"
+      }
+    },
+    {
+      "label": "5a12d1ee2-edge-exact-decoder",
+      "result": {
+        "adopted": false,
+        "coldCoverage": {
+          "cacheEntries": 4978,
+          "faces": 14934,
+          "firstUseMisses": 4978,
+          "proposedRejections": 9630,
+          "rayBlocks": 0,
+          "refreshes": 5304
+        },
+        "fixedMaximumKernelRatio": 0.5,
+        "kind": "edge-only interpolation envelope; original point and ray kernels retained",
+        "limitations": [
+          "No general computed triangleClosest barycentric envelope proof.",
+          "Ray branch retained on every proposed skip.",
+          "Dictionary lookup, fresh support tests and refresh are timed; corpus decoding and previous-step training are outside the clock.",
+          "BVH discovery, original merge/row/solver costs, parallel execution, complete trajectory and simulator/video not measured."
+        ],
+        "medianKernelRatio": 0.9575354664541247,
+        "necessaryCostScreenPassed": false,
+        "owner": "strong-owl-live-physics",
+        "proposalValidationPassed": true,
+        "scope": "chronological hint coverage with every original face checked; non-adoptable serial predecoded corpus cost ceiling, not complete-step/device timing",
+        "training139": {
+          "cacheEntries": 4978,
+          "faces": 14934,
+          "firstUseMisses": 4978,
+          "proposedRejections": 9630,
+          "rayBlocks": 0,
+          "refreshes": 5304
+        },
+        "warmCoverage": {
+          "cacheEntries": 4978,
+          "faces": 14934,
+          "firstUseMisses": 0,
+          "proposedRejections": 14445,
+          "rayBlocks": 0,
+          "refreshes": 489
+        }
+      },
+      "capturedInputProvenanceAccepted": true,
+      "independentlyAbsentGroups": [
+        34105,
+        34614
+      ],
+      "hashes": {
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-edge-exact-decoder/native/PLAN.md": "e2da604f5efdcc24f3a4d526f94be42e21b555198516848f538319ad67711177",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-edge-exact-decoder/native/provenance.json": "8fce0212833ba0cf1dc6146fb27f8e3f5559c7cdc18f793e3b1eab924c0ed971",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-edge-exact-decoder/native/resources.jsonl": "cec40a358be88c4f3a4ef03d0747ce4e352b2183763c61bfbffe12b698795dfd",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-edge-exact-decoder/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-edge-exact-decoder/native/run.log": "b651f40bf1f8f8e867292a142c72910bcd10aa4d85f814e9288513d341be9aac",
+        ".context/strong-owl-live-physics-separating-hint-5a12d1ee2-edge-exact-decoder/native/result.json": "5d38b3aa1a6636d7037afa428eaa9b15947fc796db5ac5c451ccb14e23f43821"
+      }
+    }
+  ],
+  "limitations": [
+    "Serial predecoded kernel corpus, not complete engine/device/p95 or simulator video.",
+    "Whole-face skip lacks general original floating barycentric-output enclosure; no production use.",
+    "Safe edge-envelope source reviewed conditionally; no optimized IR proof, because cost screen already failed.",
+    "Initial Foundation bridge runs are superseded for captured-input provenance; exact JSONDecoder runs use original radius expression and unchanged gates."
+  ]
+}

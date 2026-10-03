@@ -1,0 +1,116 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "identicalSteps": 493,
+  "steps": [
+    {
+      "caps": 0,
+      "census": {
+        "faceVisits": 24439,
+        "optimisticConnectedPatchRemovedFraction": 0.5262490281926429,
+        "optimisticRemovedFraction": 0.56409836736364,
+        "queries": 1395,
+        "repeatedQueries": 287,
+        "uniqueConnectedPatchVisits": 11578,
+        "uniquePlaneVisits": 10653
+      },
+      "corrections": 4,
+      "persistedPhysicsCheckpointBitIdentity": true,
+      "retries": 0,
+      "step": 1
+    },
+    {
+      "caps": 0,
+      "census": {
+        "faceVisits": 110068,
+        "optimisticConnectedPatchRemovedFraction": 0.5349420358323945,
+        "optimisticRemovedFraction": 0.5673401897009122,
+        "queries": 5301,
+        "repeatedQueries": 1433,
+        "uniqueConnectedPatchVisits": 51188,
+        "uniquePlaneVisits": 47622
+      },
+      "corrections": 11,
+      "persistedPhysicsCheckpointBitIdentity": true,
+      "retries": 0,
+      "step": 6
+    },
+    {
+      "caps": 0,
+      "census": {
+        "faceVisits": 64704,
+        "optimisticConnectedPatchRemovedFraction": 0.5350055637982196,
+        "optimisticRemovedFraction": 0.5673219584569733,
+        "queries": 3627,
+        "repeatedQueries": 793,
+        "uniqueConnectedPatchVisits": 30087,
+        "uniquePlaneVisits": 27996
+      },
+      "corrections": 11,
+      "persistedPhysicsCheckpointBitIdentity": true,
+      "retries": 0,
+      "step": 109
+    },
+    {
+      "caps": 0,
+      "census": {
+        "faceVisits": 14934,
+        "optimisticConnectedPatchRemovedFraction": 0.5349537967055042,
+        "optimisticRemovedFraction": 0.5672961028525513,
+        "queries": 837,
+        "repeatedQueries": 183,
+        "uniqueConnectedPatchVisits": 6945,
+        "uniquePlaneVisits": 6462
+      },
+      "corrections": 2,
+      "persistedPhysicsCheckpointBitIdentity": true,
+      "retries": 0,
+      "step": 139
+    },
+    {
+      "caps": 0,
+      "census": {
+        "faceVisits": 14934,
+        "optimisticConnectedPatchRemovedFraction": 0.5349537967055042,
+        "optimisticRemovedFraction": 0.5672961028525513,
+        "queries": 837,
+        "repeatedQueries": 183,
+        "uniqueConnectedPatchVisits": 6945,
+        "uniquePlaneVisits": 6462
+      },
+      "corrections": 2,
+      "persistedPhysicsCheckpointBitIdentity": true,
+      "retries": 0,
+      "step": 140
+    },
+    {
+      "caps": 0,
+      "census": {
+        "faceVisits": 34244,
+        "optimisticConnectedPatchRemovedFraction": 0.5379628548066815,
+        "optimisticRemovedFraction": 0.5687419693960986,
+        "queries": 1674,
+        "repeatedQueries": 450,
+        "uniqueConnectedPatchVisits": 15822,
+        "uniquePlaneVisits": 14768
+      },
+      "corrections": 4,
+      "persistedPhysicsCheckpointBitIdentity": true,
+      "retries": 0,
+      "step": 493
+    }
+  ],
+  "independentlyAbsentGroups": [
+    6222,
+    6523,
+    10274,
+    10577
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/PLAN.md": "779ef82bbfb74a33cc4e7cdbc63772639c21917f2b3785b335431f4c1b496400",
+    ".context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/planes.json": "37187e175e2bc259c2e8bd4945582d0c8ed533999ad96bd73bc493afb281ceac",
+    ".context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/result.json": "58c1baf98e52618f6d20d5eaca13f47c8c929ecb70aa6edb1dd9c5015382d363",
+    ".context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/provenance.json": "f788185091f3a8f977c20ea2bda5a8935ce1ad121f74aaf7978fdcad695e3e15",
+    ".context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/resources.jsonl": "5c571ea7338b07e9e5ae302a1093c416628032e377515126d59ef9e37815ebba"
+  }
+}

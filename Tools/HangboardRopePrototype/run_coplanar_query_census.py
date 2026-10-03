@@ -50,7 +50,24 @@ sources = stage / 'sources'; sources.mkdir()
 tool = Path(__file__).resolve().parent
 descriptor = REPO / 'Hangboards/clavellium-training-block/assets/primary.physics.json'
 ids, denominator = exact_planes(json.loads(descriptor.read_text())['collision'])
-(stage/'planes.json').write_text(json.dumps({'facePlaneIDs': ids, 'denominator': str(denominator)}))
+mesh = json.loads(descriptor.read_text())['collision']
+parents = list(range(len(ids)))
+def parent(x):
+    while parents[x] != x:
+        parents[x] = parents[parents[x]]
+        x = parents[x]
+    return x
+edges = {}
+for f, vertices in enumerate(mesh['triangles']):
+    for a, b in zip(vertices, vertices[1:]+vertices[:1]):
+        key = (ids[f], *sorted((a,b)))
+        if key in edges:
+            a, b = parent(f), parent(edges[key])
+            parents[max(a,b)] = min(a,b)
+        else:
+            edges[key] = f
+patches = [parent(f) for f in range(len(ids))]
+(stage/'planes.json').write_text(json.dumps({'facePlaneIDs': ids, 'facePatchIDs': patches, 'denominator': str(denominator)}))
 # The 50% overlap threshold is a necessary optimistic screen, fixed before execution.
 # At the retained 45% triangle-cost share, even deleting half that work saves only 22.5%.
 (stage/'PLAN.md').write_text('''Read-only census at fixed steps 1,6,109,140,493 of the original 240Hz trajectory.
@@ -75,7 +92,16 @@ for path in inputs:
         candidate = candidate.replace(needle, needle+'    let planeCensus = RopePlaneCensus()\n')
         needle = '        var minimum=Double.infinity\n        for (index,mask) in faces.sorted(by:{$0.0<$1.0}) {'
         assert candidate.count(needle) == 1
-        candidate = candidate.replace(needle, '        planeCensus.record(faces, start, end)\n'+needle)
+        candidate = candidate.replace(needle, '        planeCensus.record(faces, start, end, censusBatch, censusLink)\n'+needle)
+        needle = 'startInside:Bool,endInside:Bool)->(hits:[[RopeSegmentContact]],clearance:Double?) {'
+        assert candidate.count(needle) == 1
+        candidate = candidate.replace(needle, 'startInside:Bool,endInside:Bool,censusBatch:Int = -1,censusLink:Int = -1)->(hits:[[RopeSegmentContact]],clearance:Double?) {')
+        needle = '        let storage=RopeContactBatchStorage(points:points.count),links=points.count-1'
+        assert candidate.count(needle) == 1
+        candidate = candidate.replace(needle, '        let censusBatch=planeCensus.beginBatch()\n'+needle)
+        needle = 'startInside:storage.inside[i],endInside:storage.inside[i+1])'
+        assert candidate.count(needle) == 1
+        candidate = candidate.replace(needle, 'startInside:storage.inside[i],endInside:storage.inside[i+1],censusBatch:censusBatch,censusLink:i)')
     if path.name == 'RopeDynamicsSolver.swift':
         candidate = candidate.replace('private extension SIMD4', 'extension SIMD4')+'\n'+adapter
         original = re.sub(r'private extension SIMD4 where Scalar == Double \{\s*var xyz:SIMD3<Double>\{SIMD3\(x,y,z\)\}\s*\}', '', original)+'\n'+adapter
@@ -86,25 +112,31 @@ for path in inputs:
 import simd
 final class RopePlaneCensus: @unchecked Sendable {
     static let planes: [Int] = '''+json.dumps(ids)+'''
+    static let patches: [Int] = '''+json.dumps(patches)+'''
     private let lock = NSLock()
     var enabled = false // Driver changes only outside joined query workers.
-    private var queries = 0, visits = 0, unique = 0, repeatedQueries = 0
+    private var queries = 0, visits = 0, unique = 0, uniquePatches = 0, repeatedQueries = 0
+    private var batch = 0
     private var examples: [[String:Any]] = []
-    func record(_ faces:[(Int,Int)], _ a:SIMD3<Double>, _ b:SIMD3<Double>) {
+    func beginBatch()->Int {let result=batch;batch+=1;return result}
+    func record(_ faces:[(Int,Int)], _ a:SIMD3<Double>, _ b:SIMD3<Double>, _ batch:Int, _ link:Int) {
         guard enabled else {return}
         let planes = Set(faces.map {Self.planes[$0.0]})
+        let patches = Set(faces.map {Self.patches[$0.0]})
         lock.lock(); defer {lock.unlock()}
-        queries += 1; visits += faces.count; unique += planes.count
+        queries += 1; visits += faces.count; unique += planes.count; uniquePatches += patches.count
         if faces.count > planes.count {repeatedQueries += 1}
-        if faces.count >= 20 && examples.count < 20 {
-            examples.append(["start":[a.x,a.y,a.z],"end":[b.x,b.y,b.z],
-                "faces":faces.map {[$0.0,$0.1]},"uniquePlanes":planes.count])
+        if !faces.isEmpty {
+            examples.append(["batch":batch,"link":link,"start":[a.x,a.y,a.z],"end":[b.x,b.y,b.z],
+                "faces":faces.map {[$0.0,$0.1]},"uniquePlanes":planes.count,"uniquePatches":patches.count])
         }
     }
-    func reset() {queries=0; visits=0; unique=0; repeatedQueries=0; examples=[]}
+    func reset() {queries=0; visits=0; unique=0; uniquePatches=0; repeatedQueries=0; examples=[];batch=0}
     var summary:[String:Any] {
         lock.lock(); defer {lock.unlock()}
         return ["queries":queries,"faceVisits":visits,"uniquePlaneVisits":unique,
+            "uniqueConnectedPatchVisits":uniquePatches,
+            "optimisticConnectedPatchRemovedFraction":visits>0 ? Double(visits-uniquePatches)/Double(visits):0,
             "repeatedQueries":repeatedQueries,"optimisticRemovedFraction":visits>0 ? Double(visits-unique)/Double(visits):0,
             "examples":examples]
     }
@@ -116,7 +148,7 @@ extension RopeTriangleCollider {
 ''')
 main = (tool/'triangle_kernel_cache/main.swift').read_text()
 main = main[:main.index('for step in 1...139')]+'''
-let checkpoints: Set<Int> = [1,6,109,140,493]
+let checkpoints: Set<Int> = [1,6,109,139,140,493]
 var reports:[[String:Any]]=[]
 for step in 1...493 {
     collider.setPlaneCensus(checkpoints.contains(step))
