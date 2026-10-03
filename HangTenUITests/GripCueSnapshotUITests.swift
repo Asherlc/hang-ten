@@ -149,7 +149,14 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         XCUIDevice.shared.orientation = .landscapeLeft
         app.launch()
         openWorkoutDeepLinkAndChooseLeftHandIfNeeded()
-        XCTAssertGreaterThan(app.windows.firstMatch.frame.width, app.windows.firstMatch.frame.height)
+        let landscapeLayout = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                let frame = self.app.windows.firstMatch.frame
+                return frame.width > frame.height
+            },
+            object: nil
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [landscapeLayout], timeout: 10), .completed)
         app.buttons["Pause"].tap()
         XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 10))
         let timer = app.staticTexts["workout.timer"]

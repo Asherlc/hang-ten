@@ -14,18 +14,19 @@ struct MotherboardWorkoutPreparationView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 22) {
-                switch preparation.step {
-                case .tare:
-                    tareContent
-                case .bodyweight:
-                    bodyweightContent
-                case .ready:
-                    readyContent
+            ScrollView {
+                VStack(alignment: .leading, spacing: 22) {
+                    switch preparation.step {
+                    case .tare:
+                        tareContent
+                    case .bodyweight:
+                        bodyweightContent
+                    case .ready:
+                        readyContent
+                    }
                 }
+                .padding(24)
             }
-            .padding(24)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .background(Color.hangBackground)
             .navigationTitle("Prepare \(sensorName)")
             .navigationBarTitleDisplayMode(.inline)

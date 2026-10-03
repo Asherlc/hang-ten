@@ -23,17 +23,14 @@ struct WorkoutCueCard: View {
                 Text(instruction.text)
                     .font(.system(compact ? .subheadline : .callout, design: .rounded, weight: .semibold))
                     .foregroundStyle(Color.hangInk)
-                    .lineLimit(compact ? 2 : nil)
-                    .minimumScaleFactor(compact ? 0.82 : 1)
-                    .fixedSize(horizontal: false, vertical: !compact)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
             if let accessory = rows.first(where: { $0.kind == .accessory }) {
                 Text(accessory.text)
                     .font(.system(compact ? .caption2 : .caption, design: .rounded, weight: .bold))
                     .foregroundStyle(tint)
-                    .lineLimit(compact ? 1 : nil)
-                    .minimumScaleFactor(compact ? 0.78 : 1)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

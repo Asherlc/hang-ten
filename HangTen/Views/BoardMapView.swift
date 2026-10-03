@@ -550,6 +550,7 @@ struct BoardDetailMapView: View {
 private struct BoardDetailMapSizeModifier: ViewModifier {
     let aspectRatio: CGFloat
     let maximumHeight: CGFloat?
+    var accessibilityIdentifier: String? = "boardDetail.map"
 
     /// Fits the map through one modifier chain so compact-height changes preserve its renderer identity.
     func body(content: Content) -> some View {
@@ -561,9 +562,11 @@ private struct BoardDetailMapSizeModifier: ViewModifier {
             // Keep the accessibility node on the fitted map, before the outer
             // frame expands to the available width.
             .background {
-                Color.clear
-                    .accessibilityElement()
-                    .accessibilityIdentifier("boardDetail.map")
+                if let accessibilityIdentifier {
+                    Color.clear
+                        .accessibilityElement()
+                        .accessibilityIdentifier(accessibilityIdentifier)
+                }
             }
             .frame(maxWidth: .infinity)
     }
@@ -713,9 +716,11 @@ struct BoardMapView: View {
                     )
                 }
             }
-            .aspectRatio(content.presentation.aspectRatio, contentMode: .fit)
-            .frame(maxWidth: maximumMapHeight.map { $0 * content.presentation.aspectRatio })
-            .frame(maxWidth: .infinity)
+            .modifier(BoardDetailMapSizeModifier(
+                aspectRatio: content.presentation.aspectRatio,
+                maximumHeight: maximumMapHeight,
+                accessibilityIdentifier: nil
+            ))
         }
         .animation(.easeInOut(duration: 0.18), value: highlightedHoldIDs)
         .onChange(of: highlightedHoldIDs) { previousHoldIDs, holdIDs in

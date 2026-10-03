@@ -562,9 +562,7 @@ enum ForceSensorConnectionCopy {
         }
     }
 
-    static func lastError(_ error: String?, profile: ForceSensorProfile) -> String {
-        guard let error else { return "None" }
-
+    static func lastError(_ error: String, profile: ForceSensorProfile) -> String {
         let displayProfile = displayProfile(for: profile)
         if !ForceSensorProfile.connectableCases.contains(profile),
            error.hasSuffix(" is not available yet.") {

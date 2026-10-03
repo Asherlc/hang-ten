@@ -223,6 +223,13 @@ enum WorkoutSessionPolicy {
     static let initialCountdownDuration: TimeInterval = 3
     static let skipCountdownDuration: TimeInterval = 3
 
+    static func shouldPauseAfterCancellingPendingCountdown(
+        kind: WorkoutCountdownKind?,
+        isRunning: Bool
+    ) -> Bool {
+        kind == .skip && isRunning
+    }
+
     static func countdownDuration(for kind: WorkoutCountdownKind) -> TimeInterval {
         kind == .initial ? initialCountdownDuration : skipCountdownDuration
     }
@@ -451,17 +458,27 @@ struct WorkoutSessionState: Equatable {
         }
     }
 
-    mutating func skipCurrentStep(timeline: WorkoutTimeline, planDuration: TimeInterval, at uptime: TimeInterval) -> Bool {
-        guard canNavigate(planDuration: planDuration, at: uptime) else { return false }
+    enum SkipDecision: Equatable {
+        case seek(TimeInterval)
+        case countdown(TimeInterval)
+    }
 
+    func skipDecision(timeline: WorkoutTimeline, planDuration: TimeInterval, at uptime: TimeInterval) -> SkipDecision? {
+        guard canNavigate(planDuration: planDuration, at: uptime) else { return nil }
         let elapsed = currentElapsed(planDuration: planDuration, at: uptime)
-        guard let target = timeline.skipTarget(from: elapsed) else { return false }
+        guard let target = timeline.skipTarget(from: elapsed) else { return nil }
+        if target >= planDuration || timeline.step(at: target)?.phase == .rest {
+            return .seek(target)
+        }
+        return .countdown(target)
+    }
 
-        if target >= planDuration {
+    mutating func skipCurrentStep(timeline: WorkoutTimeline, planDuration: TimeInterval, at uptime: TimeInterval) -> Bool {
+        guard let decision = skipDecision(timeline: timeline, planDuration: planDuration, at: uptime) else { return false }
+        switch decision {
+        case .seek(let target):
             seek(to: target, planDuration: planDuration, at: uptime)
-        } else if timeline.step(at: target)?.phase == .rest {
-            seek(to: target, planDuration: planDuration, at: uptime)
-        } else {
+        case .countdown(let target):
             startSkipCountdown(to: target, at: uptime)
         }
         return true

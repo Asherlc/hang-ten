@@ -408,12 +408,17 @@ def test_metal_setup_selects_installed_component_and_verifies_compiler(tmp_path:
         capture_output=True, text=True, check=False,
     )
     assert (result.returncode == 0) == (mode in {"installed", "needs-selection"}), result.stdout + result.stderr
-    history = log.read_text()
-    if mode == "installed":
-        assert "xcodebuild" not in history
+    history = log.read_text().splitlines()
+    expected = ["xcrun metal -v"]
+    if mode != "installed":
+        expected.append("xcodebuild -downloadComponent MetalToolchain")
+    if mode not in {"installed", "download-fails"}:
+        expected.append("xcodebuild -showComponent MetalToolchain -json")
+    if mode in {"needs-selection", "unavailable"}:
+        expected.extend(["xcrun --kill-cache", "xcrun metal -v"])
     if mode == "needs-selection":
-        assert history.count("xcrun metal -v") == 2
-        assert "xcrun swift --version" in history
+        expected.append("xcrun swift --version")
         assert github_env.read_text() == "XCTEST_TOOLCHAIN=com.apple.dt.toolchain.Metal.123\n"
     else:
         assert not github_env.exists()
+    assert history == expected

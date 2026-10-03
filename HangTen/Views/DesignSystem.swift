@@ -83,20 +83,40 @@ struct CardStatusHeading: View {
     let tint: Color
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-    private var layout: AnyLayout {
-        dynamicTypeSize.isAccessibilitySize
-            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
-            : AnyLayout(HStackLayout())
-    }
-
     var body: some View {
-        layout {
-            Text(title)
-                .font(.system(.subheadline, design: .rounded, weight: .bold))
-                .foregroundStyle(Color.hangInk)
-            if !dynamicTypeSize.isAccessibilitySize { Spacer() }
-            Pill(title: status, tint: tint, fill: tint.opacity(0.12))
+        Group {
+            if dynamicTypeSize.isAccessibilitySize {
+                verticalHeading
+            } else {
+                ViewThatFits(in: .horizontal) {
+                    HStack {
+                        headingTitle.fixedSize()
+                        Spacer(minLength: 8)
+                        statusPill.fixedSize()
+                    }
+                    verticalHeading
+                }
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var headingTitle: some View {
+        Text(title)
+            .font(.system(.subheadline, design: .rounded, weight: .bold))
+            .foregroundStyle(Color.hangInk)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var statusPill: some View {
+        Pill(title: status, tint: tint, fill: tint.opacity(0.12))
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var verticalHeading: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            headingTitle
+            statusPill
+        }
     }
 }

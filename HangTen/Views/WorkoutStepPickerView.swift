@@ -89,7 +89,9 @@ struct WorkoutStepPickerView: View {
                 Text("\(step.number)")
                     .font(.system(.footnote, design: .rounded, weight: .bold))
                     .foregroundStyle(step.phase.textTint)
-                    .frame(width: 28, height: 28)
+                    .fixedSize()
+                    .frame(minWidth: 28, minHeight: 28)
+                    .padding(2)
                     .background(step.phase.tint.opacity(0.17), in: Circle())
 
                 VStack(alignment: .leading, spacing: 5) {

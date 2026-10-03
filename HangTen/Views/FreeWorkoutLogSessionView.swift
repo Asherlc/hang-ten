@@ -409,7 +409,8 @@ struct FreeWorkoutLogSessionView: View {
     private func setHeaderRow(for exercise: FreeExercise) -> some View {
         HStack(spacing: 8) {
             Text("#")
-                .frame(width: 28, alignment: .leading)
+                .fixedSize(horizontal: true, vertical: false)
+                .frame(minWidth: 28, alignment: .leading)
             Text("kg")
                 .frame(maxWidth: .infinity)
             if exercise.type == .hang {
@@ -436,7 +437,8 @@ struct FreeWorkoutLogSessionView: View {
             Text("\(number)")
                 .font(.system(.subheadline, design: .rounded, weight: .bold))
                 .foregroundStyle(isFocused ? Color.hangGreenDark : Color.hangInk)
-                .frame(width: 28, alignment: .leading)
+                .fixedSize(horizontal: true, vertical: false)
+                .frame(minWidth: 28, alignment: .leading)
 
             TextField(
                 "kg",

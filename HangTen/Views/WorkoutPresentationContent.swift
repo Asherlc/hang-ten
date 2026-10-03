@@ -18,14 +18,6 @@ enum InstructionAccessoryCardContent {
         ].compactMap { $0 }
     }
 
-    static func instructionText(_ text: String) -> String? {
-        row(kind: .instruction, text: text)?.text
-    }
-
-    static func accessoryText(_ text: String) -> String? {
-        row(kind: .accessory, text: text)?.text
-    }
-
     private static func row(
         kind: InstructionAccessoryCardRow.Kind,
         text: String
@@ -40,7 +32,6 @@ enum InstructionAccessoryCardContent {
 
 enum WorkoutPresentationContent {
     static let portraitTimerLineLimit = 1
-    static let portraitTimerSupportingStatus: String? = nil
 
     static func title(step: WorkoutStep, isComplete: Bool) -> String {
         isComplete ? "Session complete" : step.title

@@ -5,6 +5,13 @@ struct WorkoutView: View {
     private enum PendingCountdownStart: Equatable {
         case initial
         case skip(targetElapsed: TimeInterval)
+
+        var kind: WorkoutCountdownKind {
+            switch self {
+            case .initial: .initial
+            case .skip: .skip
+            }
+        }
     }
 
     private enum LandscapeLayout {
@@ -455,7 +462,7 @@ struct WorkoutView: View {
 							hold: hold,
 							gripType: holdCue.gripType,
 							fingerConfiguration: holdCue.fingerConfiguration,
-							resolvedHandSide: resolvedHandSide(for: step)
+							resolvedHandSide: resolvedHandSide(for: cueStep ?? step)
 						)
 					} else {
 						portraitHandCueCards(
@@ -602,110 +609,112 @@ struct WorkoutView: View {
 				selectedHandSide: highlightedSelectedHandSide
 			)
 		}()
-		return VStack(spacing: 9) {
-			landscapeHeader(
-				step: step,
-				stepElapsed: stepElapsed,
-				countdown: countdown,
-				canNavigate: canNavigate,
-				isResting: isResting,
-				isComplete: isComplete
-			)
-
-			ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
-				.tint(Color.hangGreenDark)
-
-			VStack(spacing: 2) {
-				if showsPairedHandCue, let holdCue {
-					GripHandPairModelView(posture: holdCue.gripType,
-										 fingerConfiguration: holdCue.fingerConfiguration)
-						.frame(height: 68)
-						.accessibilityHidden(true)
-				}
-				HStack(spacing: 12) {
-				landscapeHandCueSlot(
-					holdCue: holdCue,
-					cueStep: cueStep,
-					countdown: countdown,
-					isComplete: isComplete,
-					isSkipCountdown: isSkipCountdown,
-					taskIndex: highlightedTaskIndex,
-					selectedHandSide: highlightedSelectedHandSide,
-					side: .left,
-					usesSharedPairPreview: showsPairedHandCue
-				)
-
-				VStack(alignment: .leading, spacing: 4) {
-					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
-						.frame(maxWidth: .infinity, minHeight: LandscapeLayout.previewLabelHeight, alignment: .center)
-						.opacity(showsHoldPreview ? 1 : 0)
-						.accessibilityHidden(!showsHoldPreview)
-					BoardMapView(
-						board: board,
-						highlightedHoldIDs: highlightedHoldIDs,
-						highlightMode: highlightMode,
-						activeHoldID: holdCue?.hold?.id
-					)
-						.frame(maxWidth: .infinity)
-						.frame(maxHeight: LandscapeLayout.boardMaxHeight)
-					taskControls(for: step, cueStep: cueStep, countdown: countdown, isResting: isResting)
-				}
-				.frame(maxWidth: .infinity)
-
-				landscapeHandCueSlot(
-					holdCue: holdCue,
-					cueStep: cueStep,
-					countdown: countdown,
-					isComplete: isComplete,
-					isSkipCountdown: isSkipCountdown,
-					taskIndex: highlightedTaskIndex,
-					selectedHandSide: highlightedSelectedHandSide,
-					side: .right,
-					usesSharedPairPreview: showsPairedHandCue
-				)
-				}
-			}
-			.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
-
-			if WorkoutLandscapeControlLayoutPolicy.usesCompactControls(
-				isFirstStart: WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
-				countdown: countdown,
-				isComplete: isComplete
-			) {
-				landscapePreStartControls(
+		return ScrollView(showsIndicators: false) {
+			VStack(spacing: 9) {
+				landscapeHeader(
 					step: step,
-					isResting: isResting,
-					isComplete: isComplete,
+					stepElapsed: stepElapsed,
 					countdown: countdown,
-					monotonicTime: monotonicTime,
 					canNavigate: canNavigate,
-					currentStopwatchKey: currentStopwatchKey(for: step)
+					isResting: isResting,
+					isComplete: isComplete
 				)
-			} else {
-				HStack(alignment: .center, spacing: 12) {
-					if let cueCardRows = WorkoutPresentationContent.cueCardRows(
-						step: step,
+
+				ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
+					.tint(Color.hangGreenDark)
+
+				VStack(spacing: 2) {
+					if showsPairedHandCue, let holdCue {
+						GripHandPairModelView(posture: holdCue.gripType,
+											 fingerConfiguration: holdCue.fingerConfiguration)
+							.frame(height: 68)
+							.accessibilityHidden(true)
+					}
+					HStack(spacing: 12) {
+					landscapeHandCueSlot(
+						holdCue: holdCue,
+						cueStep: cueStep,
 						countdown: countdown,
-						isComplete: isComplete
-					) {
-						cueCard(
-							rows: cueCardRows,
+						isComplete: isComplete,
+						isSkipCountdown: isSkipCountdown,
+						taskIndex: highlightedTaskIndex,
+						selectedHandSide: highlightedSelectedHandSide,
+						side: .left,
+						usesSharedPairPreview: showsPairedHandCue
+					)
+
+					VStack(alignment: .leading, spacing: 4) {
+						SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+							.frame(maxWidth: .infinity, minHeight: LandscapeLayout.previewLabelHeight, alignment: .center)
+							.opacity(showsHoldPreview ? 1 : 0)
+							.accessibilityHidden(!showsHoldPreview)
+						BoardMapView(
+							board: board,
+							highlightedHoldIDs: highlightedHoldIDs,
+							highlightMode: highlightMode,
+							activeHoldID: holdCue?.hold?.id
+						)
+							.frame(maxWidth: .infinity)
+							.frame(maxHeight: LandscapeLayout.boardMaxHeight)
+						taskControls(for: step, cueStep: cueStep, countdown: countdown, isResting: isResting)
+					}
+					.frame(maxWidth: .infinity)
+
+					landscapeHandCueSlot(
+						holdCue: holdCue,
+						cueStep: cueStep,
+						countdown: countdown,
+						isComplete: isComplete,
+						isSkipCountdown: isSkipCountdown,
+						taskIndex: highlightedTaskIndex,
+						selectedHandSide: highlightedSelectedHandSide,
+						side: .right,
+						usesSharedPairPreview: showsPairedHandCue
+					)
+					}
+				}
+				.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
+
+				if WorkoutLandscapeControlLayoutPolicy.usesCompactControls(
+					isFirstStart: WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
+					countdown: countdown,
+					isComplete: isComplete
+				) {
+					landscapePreStartControls(
+						step: step,
+						isResting: isResting,
+						isComplete: isComplete,
+						countdown: countdown,
+						monotonicTime: monotonicTime,
+						canNavigate: canNavigate,
+						currentStopwatchKey: currentStopwatchKey(for: step)
+					)
+				} else {
+					HStack(alignment: .center, spacing: 12) {
+						if let cueCardRows = WorkoutPresentationContent.cueCardRows(
 							step: step,
 							countdown: countdown,
-							isResting: isResting,
-							compact: true
-						)
+							isComplete: isComplete
+						) {
+							cueCard(
+								rows: cueCardRows,
+								step: step,
+								countdown: countdown,
+								isResting: isResting,
+								compact: true
+							)
+						}
+						controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
+							.frame(width: 224)
 					}
-					controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
-						.frame(width: 224)
+				}
+				if isScaleTrackingReady, motherboardBluetoothService.state.showsWorkoutMeter {
+					meter(step: step)
 				}
 			}
-			if isScaleTrackingReady, motherboardBluetoothService.state.showsWorkoutMeter {
-				meter(step: step)
-			}
-		}
-		.padding(.horizontal, 16)
-		.padding(.vertical, 10)
+			.padding(.horizontal, 16)
+			.padding(.vertical, 10)
+        }
 	}
 
 	private func landscapeHandCueSlot(
@@ -1155,11 +1164,15 @@ struct WorkoutView: View {
 		}
 		let monotonicTime = WorkoutClock.monotonicTime
 		if pendingCountdownStart != nil || countdownArmTask != nil {
+            let shouldPause = WorkoutSessionPolicy.shouldPauseAfterCancellingPendingCountdown(
+                kind: pendingCountdownStart?.kind,
+                isRunning: sessionState.activeStartUptime != nil
+            )
 			countdownArmTask?.cancel()
 			countdownArmTask = nil
 			pendingCountdownStart = nil
 			audioCoach.stop()
-			return
+            guard shouldPause else { return }
 		}
 		if sessionState.activeStartUptime != nil {
 			if countdownRemaining(at: monotonicTime) > 0 {
@@ -1230,6 +1243,7 @@ struct WorkoutView: View {
 			)
 		_ = audioCoach.startCountdown(schedule, startUptime: armUptime)
 		countdownArmTask?.cancel()
+        pendingCountdownStart = countdown
 		countdownArmTask = Task { @MainActor in
 			do {
 				try await Task.sleep(for: .seconds(max(0, armUptime - WorkoutClock.monotonicTime)))
@@ -1238,6 +1252,7 @@ struct WorkoutView: View {
 			}
 			guard !Task.isCancelled else { return }
 			countdownArmTask = nil
+            pendingCountdownStart = nil
 			beginVisibleCountdown(countdown, at: armUptime)
 		}
 	}
@@ -1518,7 +1533,10 @@ struct WorkoutView: View {
     }
 
     private func step(at elapsed: TimeInterval) -> WorkoutStep {
-        timeline.step(at: elapsed) ?? activeSteps.last ?? PlanCatalog.metoliusTenMinute.steps[0]
+        guard let step = timeline.step(at: elapsed) ?? activeSteps.last else {
+            preconditionFailure("A workout session requires at least one step.")
+        }
+        return step
     }
 
     private func elapsedInStep(at elapsed: TimeInterval) -> TimeInterval {
@@ -1544,22 +1562,20 @@ struct WorkoutView: View {
 		seek(to: target, at: monotonicTime)
     }
 
-	private func skipCurrentStep() {
-		let monotonicTime = WorkoutClock.monotonicTime
-		guard canNavigate(at: monotonicTime) else { return }
+    private func skipCurrentStep() {
+        let monotonicTime = WorkoutClock.monotonicTime
+        guard let decision = sessionState.skipDecision(
+            timeline: timeline, planDuration: sessionDuration, at: monotonicTime
+        ) else { return }
         finalizeCurrentStopwatch(at: monotonicTime)
-		let elapsed = currentElapsed(at: monotonicTime)
-		guard let target = timeline.skipTarget(from: elapsed) else { return }
-
-		if target >= sessionDuration || timeline.step(at: target)?.phase == .rest {
-			sessionState.seek(to: target, planDuration: sessionDuration, at: monotonicTime)
-			audioCoach.stop()
-			return
-		}
-
-		audioCoach.stop()
-		requestCountdownStart(.skip(targetElapsed: target))
-	}
+        audioCoach.stop()
+        switch decision {
+        case .seek(let target):
+            sessionState.seek(to: target, planDuration: sessionDuration, at: monotonicTime)
+        case .countdown(let target):
+            requestCountdownStart(.skip(targetElapsed: target))
+        }
+    }
 
 	private func stepStartElapsed(at elapsed: TimeInterval) -> TimeInterval {
 		var cursor: TimeInterval = 0
@@ -1619,9 +1635,7 @@ struct WorkoutView: View {
 
 	private func finalizeAllStopwatches(at monotonicTime: TimeInterval) {
 		for key in stopwatches.keys {
-			guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { continue }
-			stopwatch.stop(at: monotonicTime)
-			stopwatches[key] = stopwatch
+			WorkoutStopwatchLifecycle.finalizeStopwatch(for: key, at: monotonicTime, in: &stopwatches)
 		}
 	}
 

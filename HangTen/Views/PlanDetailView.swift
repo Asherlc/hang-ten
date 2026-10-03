@@ -1,6 +1,15 @@
 import SwiftUI
 
 enum PlanDetailPlanResolver {
+    static func maxHangsVariant(
+        from plans: [Double: TrainingPlan],
+        selectedDepth: Double?
+    ) -> TrainingPlan? {
+        let depth = selectedDepth.flatMap { plans[$0] != nil ? $0 : nil }
+            ?? plans.keys.max()
+        return depth.flatMap { plans[$0] }
+    }
+
     static func resolve(
         capturedPlan: TrainingPlan,
         eligiblePlans: [TrainingPlan]
@@ -86,16 +95,21 @@ struct PlanDetailView: View {
         guard let basePlan else { return nil }
         guard basePlan.id == "research.max-hangs" else { return basePlan }
         guard resolvedMaxHangsInput == maxHangsResolutionInput else { return nil }
-        let depth = selectedMaxHangsDepth.flatMap { resolvedMaxHangsPlans[$0] != nil ? $0 : nil }
-            ?? maxHangsDepths.first
-        return depth.flatMap { resolvedMaxHangsPlans[$0] } ?? basePlan
+        return PlanDetailPlanResolver.maxHangsVariant(
+            from: resolvedMaxHangsPlans,
+            selectedDepth: selectedMaxHangsDepth
+        )
     }
 
     @MainActor
     static func duplicateDefinition(
         for plan: TrainingPlan,
-        in store: AppStore
+        in store: AppStore,
+        resolvedPlan: TrainingPlan? = nil
     ) throws -> CustomRoutineDefinition {
+        if let resolvedPlan {
+            return try store.duplicateRoutine(resolvedPlan)
+        }
         guard let currentPlan = PlanDetailPlanResolver.resolve(
             capturedPlan: plan,
             eligiblePlans: store.plans
@@ -613,7 +627,7 @@ struct PlanDetailView: View {
     private func duplicateRoutine() {
         do {
             editorDraft = CustomRoutineDraft(
-                duplicate: try Self.duplicateDefinition(for: plan, in: store)
+                duplicate: try Self.duplicateDefinition(for: plan, in: store, resolvedPlan: currentPlan)
             )
             isShowingEditor = true
         } catch {
@@ -655,14 +669,13 @@ private struct StepRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             VStack(spacing: 0) {
-                ZStack {
-                    Circle()
-                        .fill(step.phase.tint.opacity(0.17))
-                        .frame(width: 31, height: 31)
-                    Text("\(step.number)")
-                        .font(.system(.caption, design: .rounded, weight: .bold))
-                        .foregroundStyle(step.phase.textTint)
-                }
+                Text("\(step.number)")
+                    .font(.system(.caption, design: .rounded, weight: .bold))
+                    .foregroundStyle(step.phase.textTint)
+                    .fixedSize()
+                    .frame(minWidth: 31, minHeight: 31)
+                    .padding(2)
+                    .background(step.phase.tint.opacity(0.17), in: Circle())
                 if !isLast {
                     Rectangle()
                         .fill(Color.hangLine)
