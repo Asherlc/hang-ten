@@ -20,7 +20,7 @@ def collider_source(source):
                 normal:simd_normalize(simd_cross(b-a,c-a)),faces:faces)
         }:[]''')
     source=once(source,'endInside:Bool)->(hits:[[RopeSegmentContact]],clearance:Double?)',
-        'endInside:Bool,planarRegionExperiment:Bool=false,onlyRegion:Int?=nil)->(hits:[[RopeSegmentContact]],clearance:Double?,regionWork:RopePlanarWork)')
+        'endInside:Bool,planarRegionExperiment:Bool=false,onlyRegion:Int?=nil,clippedPlanarExperiment:Bool=false)->(hits:[[RopeSegmentContact]],clearance:Double?,regionWork:RopePlanarWork)')
     source=once(source,'radius:rowRadius)],nil)', 'radius:rowRadius)],nil,RopePlanarWork())')
     source=once(source,'        var minimum=Double.infinity',
         '        var minimum=Double.infinity,regionWork=RopePlanarWork()\n        var done=Array(repeating:false,count:planarRegionExperiment ? planarRegions.count:0)')
@@ -34,7 +34,7 @@ def collider_source(source):
                     let gap=max(0,max(min(start[region.axis],end[region.axis])-region.coordinate,
                         region.coordinate-max(start[region.axis],end[region.axis]))).nextDown
                     if gap>rowRadius+1e-9 {continue}
-                    if let candidates=region.candidates(start,end) {
+                    if let candidates=region.candidates(start,end,radius:clippedPlanarExperiment ? rowRadius:nil) {
                         regionWork.boundaryPairs += candidates.boundaryPairs
                         let first=Self.planarHits(candidates.first,radius:rowRadius,normal:region.normal,point:true)
                         let last=Self.planarHits(candidates.last,radius:rowRadius,normal:region.normal,point:true)
@@ -68,10 +68,29 @@ def collider_source(source):
 
 from pathlib import Path
 
-def driver_source(source):
+def driver_source(source,clipped=False):
     source=once(source,'    try fixtures();result["fixturesPass"]=true', '    try planarRegionFixtures();try fixtures();result["fixturesPass"]=true')
+    if clipped:source=once(source,'try planarRegionFixtures();try fixtures();','try clippedPlanarFixtures();try planarRegionFixtures();try fixtures();')
     return source
 
 
-def query_driver(source):
-    return source[:source.index('func fixtures()throws {')]+Path(__file__).with_name('Queries.swift').read_text()
+def query_driver(source,clipped=False):
+    queries=Path(__file__).with_name('Queries.swift').read_text()
+    if clipped:
+        queries=once(queries,'func evaluateRegions(_ enabled:Bool)', 'func evaluateRegions(_ enabled:Bool,_ clipped:Bool=false)')
+        queries=once(queries,'planarRegionExperiment:enabled)', 'planarRegionExperiment:enabled,clippedPlanarExperiment:clipped)')
+        queries=once(queries,'    try planarRegionFixtures()', '    try clippedPlanarFixtures();try planarRegionFixtures()')
+        queries=once(queries,'let a=evaluateRegions(false),b=evaluateRegions(true)', 'let a=evaluateRegions(false),u=evaluateRegions(true),b=evaluateRegions(true,true)')
+        queries=once(queries,'"maximumDepthDifferenceMeters":try validateRegions(a.1,b.1)]',
+            '"maximumDepthDifferenceMeters":try validateRegions(a.1,b.1),"unboundedBoundaryPairs":u.2.boundaryPairs]')
+        queries=once(queries,'        let a:(Double,[[[RopeSegmentContact]]],RopePlanarWork),b:(Double,[[[RopeSegmentContact]]],RopePlanarWork)',
+            '        let a:(Double,[[[RopeSegmentContact]]],RopePlanarWork),b:(Double,[[[RopeSegmentContact]]],RopePlanarWork),u:(Double,[[[RopeSegmentContact]]],RopePlanarWork)')
+        queries=once(queries,'        if iteration%2==0 {a=evaluateRegions(false);b=evaluateRegions(true)} else {b=evaluateRegions(true);a=evaluateRegions(false)}', '''        if iteration%3==0 {a=evaluateRegions(false);u=evaluateRegions(true);b=evaluateRegions(true,true)}
+        else if iteration%3==1 {b=evaluateRegions(true,true);u=evaluateRegions(true);a=evaluateRegions(false)}
+        else {u=evaluateRegions(true);a=evaluateRegions(false);b=evaluateRegions(true,true)}''')
+        queries=once(queries,'"candidateSeconds":b.0,"ratio":b.0/a.0', '"candidateSeconds":b.0,"unboundedSeconds":u.0,"ratio":b.0/a.0,"unboundedRatio":b.0/u.0')
+        queries=once(queries,'    guard median<=2.0/3 else', '''    let incremental=pairs.map{$0["unboundedRatio"] as! Double}.sorted()[3];result["medianUnboundedRatio"]=incremental
+    try persist(nil)
+    guard median<=2.0/3,incremental<=0.80 else''')
+        queries=queries.replace('planar full-output corpus ratio<=2/3','clipped planar corpus total<=2/3 and incremental<=.8')
+    return source[:source.index('func fixtures()throws {')]+queries

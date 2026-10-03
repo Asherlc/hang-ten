@@ -16,6 +16,7 @@ parser.add_argument('--composed-step',action='store_true')
 parser.add_argument('--mass-only',action='store_true')
 parser.add_argument('--planar-regions',action='store_true')
 parser.add_argument('--region-queries',action='store_true')
+parser.add_argument('--clipped-regions',action='store_true')
 parser.add_argument('--scaled-merit',action='store_true')
 parser.add_argument('--spectral-step',action='store_true')
 parser.add_argument('--geometry-hints',action='store_true')
@@ -30,6 +31,7 @@ parser.add_argument('--spectral-trajectory',action='store_true')
 parser.add_argument('--spectral-checkpoint',type=int,choices=[109,140],default=109)
 parser.add_argument('--preflight',action='store_true');args=parser.parse_args()
 if args.planar_regions and (args.clearance_bounds or args.full_merit or args.trajectory or args.step_rate or args.spectral_step or args.scaled_merit or args.geometry_hints):parser.error('--planar-regions is isolated')
+if args.clipped_regions and not args.planar_regions:parser.error('--clipped-regions requires --planar-regions')
 if args.region_queries and not args.planar_regions:parser.error('--region-queries requires --planar-regions')
 if args.mass_only and (args.step_rate!=240 or not args.preflight or args.composed_step or args.clearance_bounds or args.spectral_step or args.scaled_merit):parser.error('--mass-only requires isolated --step-rate 240 --preflight')
 if args.bounds_profile and not args.clearance_bounds:parser.error('--bounds-profile requires --clearance-bounds')
@@ -125,10 +127,10 @@ for name in ['Math.swift','Trace.swift','main.swift']:
         text=text.replace('    ArmijoTrace.collectOracleBranches=x.verifyArmijoDerivative\n','')
     if name=='main.swift' and args.planar_regions:
         from planar_regions.snapshot import driver_source as region_driver
-        text=region_driver(text)
+        text=region_driver(text,args.clipped_regions)
         if args.region_queries:
             from planar_regions.snapshot import query_driver
-            text=query_driver(text)
+            text=query_driver(text,args.clipped_regions)
     if name=='main.swift' and args.geometry_hints:
         from geometry_hints.snapshot import driver_source as hint_driver
         text=hint_driver(text)

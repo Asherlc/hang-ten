@@ -1,0 +1,121 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "closed": true,
+  "result": {
+    "accuracyPass": true,
+    "adopted": false,
+    "boundaryPairs": 1771,
+    "failure": "invalid(\"clipped planar corpus total<=2/3 and incremental<=.8\")",
+    "insideQueries": 0,
+    "maximumDepthDifferenceMeters": 0,
+    "medianRatio": 0.7235546257530862,
+    "medianUnboundedRatio": 0.8680383028554639,
+    "owner": "strong-owl-live-physics",
+    "pairs": [
+      {
+        "candidateSeconds": 0.04818899999372661,
+        "originalSeconds": 0.04688508334220387,
+        "ratio": 1.027810906125638,
+        "unboundedRatio": 0.965034544729924,
+        "unboundedSeconds": 0.04993500000273343
+      },
+      {
+        "candidateSeconds": 0.04272754165867809,
+        "originalSeconds": 0.04800804166006856,
+        "ratio": 0.8900080107666086,
+        "unboundedRatio": 1.0861967789444615,
+        "unboundedSeconds": 0.03933683333161753
+      },
+      {
+        "candidateSeconds": 0.034386541665298864,
+        "originalSeconds": 0.04752445833582897,
+        "ratio": 0.7235546257530862,
+        "unboundedRatio": 0.8680383028554639,
+        "unboundedSeconds": 0.039614083332708105
+      },
+      {
+        "candidateSeconds": 0.034306083325645886,
+        "originalSeconds": 0.04828408334287815,
+        "ratio": 0.7105050142927897,
+        "unboundedRatio": 0.8654092146063987,
+        "unboundedSeconds": 0.03964145833742805
+      },
+      {
+        "candidateSeconds": 0.03387783333892003,
+        "originalSeconds": 0.0473047083360143,
+        "ratio": 0.7161619747928549,
+        "unboundedRatio": 0.8669183685276624,
+        "unboundedSeconds": 0.03907845832873136
+      },
+      {
+        "candidateSeconds": 0.03351945833128411,
+        "originalSeconds": 0.04703200000221841,
+        "ratio": 0.7126947254997249,
+        "unboundedRatio": 0.8462150179504268,
+        "unboundedSeconds": 0.03961104166228324
+      },
+      {
+        "candidateSeconds": 0.03549266667687334,
+        "originalSeconds": 0.048819291667314246,
+        "ratio": 0.7270213365393128,
+        "unboundedRatio": 0.8758719403243653,
+        "unboundedSeconds": 0.040522666662582196
+      }
+    ],
+    "queries": 3236,
+    "regionCalls": 18149,
+    "scope": "fixed nonempty full-output narrowphase corpus, parity packing excluded, no step or device claim",
+    "unboundedBoundaryPairs": 269200,
+    "wholePatchFallbacks": 0
+  },
+  "resources": [
+    {
+      "group": 89882,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-90f284bc1-clipped-planar-red/native/resources.jsonl"
+    },
+    {
+      "group": 90046,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-90f284bc1-clipped-planar-red/native/resources.jsonl"
+    },
+    {
+      "group": 90293,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-90f284bc1-clipped-planar-green/native/resources.jsonl"
+    },
+    {
+      "group": 90430,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-90f284bc1-clipped-planar-green/native/resources.jsonl"
+    },
+    {
+      "group": 90709,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-90f284bc1-clipped-planar-queries/native/resources.jsonl"
+    },
+    {
+      "group": 90842,
+      "absent": true,
+      "manifest": ".context/strong-owl-live-physics-armijo-90f284bc1-clipped-planar-queries/native/resources.jsonl"
+    }
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-90f284bc1-clipped-planar-queries/native/result.json": "a46c477038cf489fd5460d970adaed72b3225721575867d3ba1e94435b01a865",
+    ".context/strong-owl-live-physics-armijo-90f284bc1-clipped-planar-queries/native/provenance.json": "73ca48a20845363a783d778396b7ee39331a31756cf360c6f5da6e464059a0f0",
+    ".context/strong-owl-live-physics-armijo-90f284bc1-clipped-planar-queries/native/region-topology.json": "b18d95418fe5d7f13c34d10397ba91d3a76bf9eeba589191305e6da7e3c16bf5",
+    ".context/strong-owl-live-physics-clipped-planar-proposal/PLAN.md": "b5e83978c3662d336cf5ff32ee898e83e5ddf7b9b71945c0b5e658e6526f430f",
+    "Tools/HangboardRopePrototype/planar_regions/Math.swift": "c9cec17247ebb6835098170dc91f7034b69a1cdbe9c95b73a780b3a7318f0e1f",
+    "Tools/HangboardRopePrototype/planar_regions/snapshot.py": "8f2e3906ecff54d18abbe8b449ed861ead1e0869963d6e654e0f16d70c44bb09",
+    "Tools/HangboardRopePrototype/planar_regions/Hits.swift": "a57f9a3404ce8e5ec2d8ac46e5caef39d5ffb4ce42fce75c4d36e46ab394cd86",
+    "Tools/HangboardRopePrototype/planar_regions/Queries.swift": "86747c2f026de16135327b55d57fd1638b21372e2e796dded42c2a6798e5df2f",
+    "Tools/HangboardRopePrototype/run_armijo_checkpoint.py": "3aa1e5c2f7cc421e641d94793e4b277797c9bdd79ba428eaf624f2fea1cbc297"
+  },
+  "limits": [
+    "Fixed nonempty query corpus only; original parity excluded equally. No complete-step/device speed claim.",
+    "Geometric maximum-depth equality on this corpus does not certify original rounded merit, facet affine inequalities, forces or trajectory.",
+    "Both pre-registered cost gates failed; no timing retry, tolerance tuning, nonlinear/simulator stage or product adoption.",
+    "Behavioral fixtures observed RED then GREEN, with outputs retained."
+  ]
+}
