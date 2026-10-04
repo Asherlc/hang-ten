@@ -1,0 +1,28 @@
+{
+  "verification": "Fresh pinned FreeCAD process compiled each presentation from current native source; runtime output compared against checked-in package assets.",
+  "sourceSHA256Before": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+  "sourceSHA256After": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+  "sourceUnchanged": true,
+  "command": "Tools/HangboardCAD/verify_reproducible.py --package frictitious-port-a-board --freecad /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd --extra-python-path .context/placid-badger/pxr311 --keep-rebuild .context/placid-badger/cad-raster-boards/reproducibility",
+  "verifierSHA256": "5dba947d12ad284d286e7c87682d7d09010ae41c4b66e8f96755574b6033690a",
+  "result": {
+    "assetMatches": true,
+    "bytes": 944430,
+    "committedAssetSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+    "descriptorBindsCommittedAsset": true,
+    "descriptorMatches": true,
+    "package": "frictitious-port-a-board",
+    "presentations": [
+      {
+        "assetMatches": true,
+        "bytes": 944430,
+        "committedAssetSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+        "descriptorBindsCommittedAsset": true,
+        "descriptorMatches": true,
+        "presentationID": "primary",
+        "rebuiltAssetSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273"
+      }
+    ],
+    "rebuiltAssetSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273"
+  }
+}

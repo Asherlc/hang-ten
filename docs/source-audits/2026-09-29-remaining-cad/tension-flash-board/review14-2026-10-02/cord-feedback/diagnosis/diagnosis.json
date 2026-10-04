@@ -1,0 +1,171 @@
+{
+  "status": "fail",
+  "scope": "focused source-fidelity and visual-entry followup; release/source acceptance pending",
+  "blockers": [
+    "The authored short sideways rear links are not supported by the retained visible circumferential strands; their hidden adjacent-mouth connectivity is unestablished."
+  ],
+  "candidatePackage": "Hangboards/tension-flash-board",
+  "files": {
+    "tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+    "assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17"
+  },
+  "sourceImages": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard1.png",
+      "sha256": "aa00ab77e04c685acc4dee0e0704d25fd3165810387649a4e924bf3f7bfff148"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard2.png",
+      "sha256": "ae84f7d58def1c2f4e3b14c2e98ddf8e332b7f48e6c774312744b792d4ab97b4"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard3.png",
+      "sha256": "5753461d938adb19655556e8070f7361a0f9a1697752a861bacde4d240f0f63d"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard4.png",
+      "sha256": "7c078225890ae6d6975bff865e706e8858e7a56c3edc8df572637241ca6df200"
+    }
+  ],
+  "viewedRenderFiles": [
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-inline-previews-20261002T160037/placid-badger-flash14-current-three-well-whole.png",
+      "sha256": "fd2659b2b0b8715c1c9377275e1ec5efd8e0bbfb9ba092e64aed51a12de257a1"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-inline-previews-20261002T160037/placid-badger-flash14-current-two-well-crimp-whole.png",
+      "sha256": "30f3fd98e35f0bd737d73696f63483a195318fbdf70f8599d36b439fed457604"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/three-edge-upright-reverse-oblique-depth.png",
+      "sha256": "4d0ad35e1236bf1cb1bffa974f6461ea2473555984fb0f5ffc040f0691e9898a"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/two-edge-upright-reverse-oblique-depth.png",
+      "sha256": "36d159560d70e2db8f0ba2c727334ed65c47c8dd0c2e95e6cb648efe546d864f"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/three-edge-upright-side-depth.png",
+      "sha256": "fb37835aa9cd983d6289d1f54c5696526b34ebbe858de8c90fb82a32a70ab8d1"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/two-edge-upright-oblique-depth.png",
+      "sha256": "75dbde1accad031ef5af06dd0725eacdb0dfda834909a2e3334b40e78da202de"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/three-edge-upright-reverse-oblique-matched-depth.png",
+      "sha256": "4fcc304aef5c102757bc2fa9ac2948f43b8bdb3af7e82dc185889cd7f76595fb"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/two-edge-upright-reverse-oblique-matched-depth.png",
+      "sha256": "7749e06d287fa4027421c9c063d5cde463530b104893145489cb91d1ed44e9c1"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/three-edge-upright-high-reverse-oblique-matched-depth.png",
+      "sha256": "3addf97da4ae4d72d884a90715e30555c459b5c3a0508d6c562b3ca419dcd606"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/two-edge-upright-high-reverse-oblique-matched-depth.png",
+      "sha256": "432f65390c79b95df8b78e3c3cdcc20563ec955e4573fc839afc97a7bd93a11e"
+    }
+  ],
+  "diagnosticProvenance": {
+    "path": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/matched-depth-provenance.json",
+    "sha256": "8ec472b80e6c824c95aebe5dd8940a636c7958d7e508bcc5b6481af99c31ceee"
+  },
+  "findings": {
+    "previewOcclusion": "confirmed triangle-mean painter artifact; per-pixel depth removes broken cord/wood strips with exact same scene",
+    "woodPenetration": "not established by these previews; separate existing native clearance and outward-entry checks remain valid for authored model",
+    "rearSourceFidelity": "fails supported-visible-representation review; short crossbars omit photographed circumference-directed runs",
+    "nativeBores": "four independent radius-3mm cylinders retained; paired openings on both faces are consistent with this estimate but hidden bore axes/connectivity are not proven by photos",
+    "loadedShapeLimit": "maker photos are posed/relaxed; exact loaded curvature, slack length, and unseen strand pairing cannot be recovered by eye",
+    "visibleStrands": [
+      {
+        "face": "three-well",
+        "end": "left",
+        "mouth": "outer: nearer circular end",
+        "source": "FlashBoard2.png",
+        "visibleContinuation": "separate curved exterior run across lower/back round shoulder and lower silhouette",
+        "hiddenAfter": "far side/occlusion; exact continuation cannot be assigned",
+        "connectionToAnotherMouth": "unknown"
+      },
+      {
+        "face": "three-well",
+        "end": "left",
+        "mouth": "inner: nearer grip",
+        "source": "FlashBoard2.png",
+        "visibleContinuation": "separate curved exterior run across lower/back round shoulder and lower silhouette",
+        "hiddenAfter": "far side/occlusion; exact continuation cannot be assigned",
+        "connectionToAnotherMouth": "unknown"
+      },
+      {
+        "face": "three-well",
+        "end": "right",
+        "mouth": "outer: nearer circular end",
+        "source": "FlashBoard2.png",
+        "visibleContinuation": "separate curved exterior run across lower/back round shoulder and lower silhouette",
+        "hiddenAfter": "far side/occlusion; exact continuation cannot be assigned",
+        "connectionToAnotherMouth": "unknown"
+      },
+      {
+        "face": "three-well",
+        "end": "right",
+        "mouth": "inner: nearer grip",
+        "source": "FlashBoard2.png",
+        "visibleContinuation": "separate curved exterior run across lower/back round shoulder and lower silhouette",
+        "hiddenAfter": "far side/occlusion; exact continuation cannot be assigned",
+        "connectionToAnotherMouth": "unknown"
+      },
+      {
+        "face": "two-well/crimp",
+        "end": "left",
+        "mouth": "outer: nearer circular end",
+        "source": "FlashBoard1.png; corroborated left by FlashBoard3.png and right by FlashBoard4.png",
+        "visibleContinuation": "separate curved exterior run across upper/back round shoulder",
+        "hiddenAfter": "far side/occlusion; exact continuation cannot be assigned",
+        "connectionToAnotherMouth": "unknown"
+      },
+      {
+        "face": "two-well/crimp",
+        "end": "left",
+        "mouth": "inner: nearer grip",
+        "source": "FlashBoard1.png; corroborated left by FlashBoard3.png and right by FlashBoard4.png",
+        "visibleContinuation": "separate curved exterior run across upper/back round shoulder",
+        "hiddenAfter": "far side/occlusion; exact continuation cannot be assigned",
+        "connectionToAnotherMouth": "unknown"
+      },
+      {
+        "face": "two-well/crimp",
+        "end": "right",
+        "mouth": "outer: nearer circular end",
+        "source": "FlashBoard1.png; corroborated left by FlashBoard3.png and right by FlashBoard4.png",
+        "visibleContinuation": "separate curved exterior run across upper/back round shoulder",
+        "hiddenAfter": "far side/occlusion; exact continuation cannot be assigned",
+        "connectionToAnotherMouth": "unknown"
+      },
+      {
+        "face": "two-well/crimp",
+        "end": "right",
+        "mouth": "inner: nearer grip",
+        "source": "FlashBoard1.png; corroborated left by FlashBoard3.png and right by FlashBoard4.png",
+        "visibleContinuation": "separate curved exterior run across upper/back round shoulder",
+        "hiddenAfter": "far side/occlusion; exact continuation cannot be assigned",
+        "connectionToAnotherMouth": "unknown"
+      }
+    ]
+  },
+  "priorVerdictReconciliation": "The prior source-supported physical PASS was too broad for the rear return representation. Retain its exact native clearance/front-entry/export findings; do not use it to accept visible cord topology. Historical reports left unchanged.",
+  "smallestCorrection": [
+    "Replace offline painter previews with depth-correct whole views; diagnostic already demonstrates no model mutation needed for strip artifacts.",
+    "Before changing a package, deliberately choose source-supported visible mouth-to-shoulder portions at both ends and omit unverified hidden continuity. Re-author only necessary cord terminal/strand representation through existing native solving, then review complete routes in all4 orientations.",
+    "Do not assume merely lengthening each adjacent-mouth U creates the observed topology; photos do not establish that pairing. Do not alter bores/body solely from this visual evidence."
+  ],
+  "productionFilesChanged": false,
+  "appFrames": 0,
+  "humanAcceptance": "pending; user reported visible defect",
+  "nativeJobsLaunched": 0,
+  "newExternalResources": [],
+  "cleanupVerified": true
+}

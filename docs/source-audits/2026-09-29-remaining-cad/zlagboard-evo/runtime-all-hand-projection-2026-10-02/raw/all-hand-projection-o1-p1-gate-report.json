@@ -1,0 +1,134 @@
+{
+  "status": "STOPPED_PENDING_FRAME_GATE_REVIEW",
+  "runs": [
+    {
+      "arm": "o1",
+      "directory": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o1-landscape",
+      "visualFailureReproduced": true,
+      "colors": [
+        "red",
+        "red",
+        "red",
+        "red",
+        "red",
+        "red",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "red",
+        "red"
+      ],
+      "all12DirectlyViewed": true,
+      "structuralChecks": {
+        "completeContiguous": true,
+        "captures12": true,
+        "allCPUBrackets": true,
+        "sameScene": true,
+        "naturalFirstHang": true,
+        "naturalRest": true,
+        "freshSession": true,
+        "boundaryAppActive": true,
+        "boundaryWindowActive": true,
+        "boundaryLandscape": true,
+        "lateBoundaryCensus": true,
+        "noAXOrTouch": true
+      },
+      "cameraChecks": {
+        "openingFlag": true,
+        "suppressionAbsent": true,
+        "cameraEvidencePresent": true,
+        "everyConfiguredCameraHasReset": true,
+        "oneConfiguredCameraPerConstructedScene": true,
+        "componentMatchesFlag": true,
+        "noFitRejected": true,
+        "unchangedClips": true,
+        "finiteDepthsInsideClips": true,
+        "validFOVorScale": true
+      },
+      "traceRecords": 151,
+      "actualPhaseIntervals": [
+        7.6601362228393555,
+        179.3142728805542
+      ],
+      "cameraCount": 2,
+      "visualReviewSHA256": "d2cf36297107f4f8fbd9b4fb480ef7df9551e5a3e480894bdc62052b62cf40e9"
+    },
+    {
+      "arm": "p1",
+      "directory": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-p1-landscape",
+      "visualFailureReproduced": false,
+      "colors": [
+        "red",
+        "red",
+        "red",
+        "red",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "red",
+        "red",
+        "red",
+        "red"
+      ],
+      "all12DirectlyViewed": true,
+      "structuralChecks": {
+        "completeContiguous": true,
+        "captures12": true,
+        "allCPUBrackets": true,
+        "sameScene": true,
+        "naturalFirstHang": true,
+        "naturalRest": true,
+        "freshSession": true,
+        "boundaryAppActive": true,
+        "boundaryWindowActive": true,
+        "boundaryLandscape": true,
+        "lateBoundaryCensus": true,
+        "noAXOrTouch": true
+      },
+      "cameraChecks": {
+        "openingFlag": true,
+        "suppressionAbsent": true,
+        "cameraEvidencePresent": true,
+        "everyConfiguredCameraHasReset": true,
+        "oneConfiguredCameraPerConstructedScene": true,
+        "componentMatchesFlag": true,
+        "noFitRejected": true,
+        "unchangedClips": true,
+        "finiteDepthsInsideClips": true,
+        "validFOVorScale": true
+      },
+      "traceRecords": 151,
+      "actualPhaseIntervals": [
+        6.861670970916748,
+        180.04487419128418
+      ],
+      "cameraCount": 2,
+      "visualReviewSHA256": "c36f1c30fe27946c6f541f6c6bfe9905be9d919884a9e67830a64b27056dc283"
+    }
+  ],
+  "completedArms": [
+    "o1",
+    "p1"
+  ],
+  "unlaunchedArms": [
+    "p2",
+    "o2"
+  ],
+  "binarySHA256": "eef5a676aac05b09fbff374204347109caabd9842a1da7e8c6a64e7953914d15",
+  "patchSHA256": "103c25dd368f4a819f6cd84f289d577e68154d5741d8e44090e81243a3b2c9e4",
+  "exactFrameSetGatePassed": false,
+  "reason": "Sparse sampled initial resize intermediates differ, before first capture; both start and settled frames equal. Original failed assertion retained. No protocol waiver applied.",
+  "allOtherComparisonChecksPassed": true,
+  "all26PostP1ParityChecksPassed": true,
+  "productionFix": false,
+  "workoutIssueResolved": false,
+  "evidenceLimits": [
+    "Actually observed cameras are two paired scene instances; single-hand path unconstructed.",
+    "Hands visible in all24 measured wholeframes with expected perspective appearance difference; no allposes/orbit claim.",
+    "P1 was not launched until corrected installed-container package checks passed. O1 package parity helper failed stale path and corrected checks completed during O1; retained explicitly.",
+    "No inference of exact recovery between sparse frames or middle-rest continuous rendering."
+  ],
+  "sourceAndRuntime": "Frozen after P1; no further source/build/install/runtime actions pending parent decision; existing registered resources/controller remain live."
+}

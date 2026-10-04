@@ -1,0 +1,30 @@
+{
+  "owner": "placid-badger",
+  "simulator": "2B43841B-18A2-46B4-8080-B4E90AA24F4A",
+  "command": [
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=2B43841B-18A2-46B4-8080-B4E90AA24F4A",
+    "-derivedDataPath",
+    ".context/DerivedData",
+    "-parallel-testing-enabled",
+    "NO",
+    "-only-testing:HangTenTests/BoardModelRealityTests/testWoodFinishHighlightsAndRestoresEveryContactWithoutChangingPicking",
+    "-only-testing:HangTenTests/BoardModelRealityTests/testWoodSelectionDoesNotAlterAnotherSceneUsingTheSameResource",
+    "-collect-test-diagnostics",
+    "never",
+    "-resultBundlePath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mammut-wood-integration/placid-badger-mammut-wood-red.xcresult",
+    "test-without-building"
+  ],
+  "timeoutSeconds": 900,
+  "resultBundle": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mammut-wood-integration/placid-badger-mammut-wood-red.xcresult",
+  "exitCode": 65,
+  "elapsedSeconds": 13.642505874973722
+}

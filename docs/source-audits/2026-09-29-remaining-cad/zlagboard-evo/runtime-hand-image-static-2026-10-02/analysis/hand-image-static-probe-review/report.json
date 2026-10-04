@@ -1,0 +1,70 @@
+{
+  "status": "READ_ONLY_PROSPECTIVE_FEASIBILITY_REVIEW_NO_PATCH_OR_RUNTIME",
+  "route": {
+    "launchEnvironment": {
+      "HANGTEN_REVIEW_GRIP_MODEL": "1",
+      "HANGTEN_REVIEW_GRIP_POSE": "halfCrimp",
+      "HANGTEN_REVIEW_GRIP_FINGERS": "index,middle,ring,pinky"
+    },
+    "source": "HangTenApp.swift:84 selects GripHandModelReviewView instead of RootView. GripHandModelView.swift:1151\u20131206 contains isolated NavigationStack, paired view, existing selectors/reset, cream background. HalfCrimp is raw enum case TrainingModels.swift:1005.",
+    "initialValuesAlreadyMatch": true,
+    "noWorkoutAudio": "Route bypasses RootView and WorkoutView; no workout auto-start, requestCountdown, or WorkoutAudioCoach prepare call occurs in this review view.",
+    "remainingAppWork": "HangTenApp still initializes app-level store/services and runs purchaseManager.prepare task; this route is not a zero-framework-work process.",
+    "comparison": "One fresh live-reference launch and one image-prototype launch of same built binary/pose/fingers/orientation/viewport. Only image flag/runID differ; no workout URL, autostart, hand suppression or perspective adaptation flags. Static paired feasibility only, not a workout or architecture matrix."
+  },
+  "contracts": {
+    "offscreen": "Retained SDK supports RealityRenderer entities and activeCamera; CameraOutput singleProjection(colorTexture:) and explicit updateAndRender completion provide an offscreen path without a hidden RealityView.",
+    "imageHandoff": "Retain renderer/scene/texture through command completion, then CIImage(mtlTexture:options:) and nondeferred CIContext.createCGImage. Materialize UIImage; no waitUntilCompleted on MainActor.",
+    "unknowns": "Accepted texture format/usages, initial shader readiness, alpha convention, image orientation and exact host-default lighting parity still require actual completion and whole-image inspection. Public signatures do not prove them."
+  },
+  "minimumProspectiveEvidence": [
+    {
+      "gate": "Bounded successful completion",
+      "evidence": "Externally bounded, e.g.30s from first valid render submission; submission/revision, pixel dimensions/scale, texture format, actual active-camera component/transform, completion status, conversion and current-revision publication events retained. Timeout/error/blank publication invalidates feasibility; do not keep retrying until a frame appears. No in-app timer needed."
+    },
+    {
+      "gate": "Whole image pose/orientation",
+      "evidence": "Inspect each whole screenshot and the exact generated transparent image. Both hands, half-crimp articulation, thumb/palm direction, left/right reflection, engaged finger color, viewport framing and absence of clipping must agree with live reference within explicitly observed host-lighting differences. No image registration/cropping/pixel measurements."
+    },
+    {
+      "gate": "Transparency/composition",
+      "evidence": "Retain RGBA/CGImage alpha/color-space/orientation metadata and original encoded image hash. Whole composition on existing cream is one backing only. A second contrasting backing of the same UIImage is needed before claiming robust transparent composition/absence of opaque rectangle or edge halos; record that separately if not included in first static check."
+    },
+    {
+      "gate": "No live hand host",
+      "evidence": "Image arm must select image branch before hand RealityView creation and emit no hand RealityView make. Existing hand constructor may occur for offscreen scene and is expected, so constructor count zero would be wrong. At static postpublication census, zero public RealityKit.ARView is expected because route contains no board. No hidden surrogate live host; do not infer ownership solely from wrapper liveness."
+    },
+    {
+      "gate": "On-demand lifetime",
+      "evidence": "A semantic initial request may coalesce with final geometry size. Record maximum inflight1, request/current/published revision identities, completion before conversion/publication and stale-result discard. Same static semantic/size state should produce no further submissions; event count at bounded observation endpoints is evidence, not GPU-idle guarantee."
+    },
+    {
+      "gate": "Scope",
+      "evidence": "Canonical board/source package hashes and existing authored hand assets remain unchanged. This paired static route cannot establish single-hand parity, gesture/remount behavior, audio behavior or the board red/blue workout fix."
+    }
+  ],
+  "sourceHashes": {
+    "HangTen/HangTenApp.swift": "ce691d0d9a5360452f3704a64918f5a6af6c20d2608450aa532bf346bd101efd",
+    "HangTen/Views/GripHandModelView.swift": "78398b0253e6bca1184a9c24c5c938a3dd1cc0afce807b0226b0f4605e6824a1",
+    "HangTen/Models/TrainingModels.swift": "2e680154c8f9389324440dcf853f2f3ca106c17d3905dac9fb6f51c05676646d"
+  },
+  "retainedPrimaryEvidence": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-feasibility/report.json",
+      "sha256": "e7ed5eae9248d91d3a827b2b4cec93bcd50f8fdb51fd83055cebd4d1db413fb8"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-feasibility/sdk-and-source-excerpts.txt",
+      "sha256": "b74e4b615e31856a696e89f57257ad44eba0d53555efb5651ea375b354f2f7c5"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/reality-renderer-feasibility/sdk-excerpts.txt",
+      "sha256": "01438c628cd60bfa4694914abf03069c53114f280ea8575c3a1d77f6d1a680cd"
+    }
+  ],
+  "limits": [
+    "No prototype source implementation reviewed yet; worker owns scratch patch and any later live application/build/runtime.",
+    "No new official-document search was needed: retained primary SDK excerpts already answer the API feasibility questions.",
+    "No resource/device/build access and no source edits; this is a bounded static-probe recommendation, not launch authorization."
+  ]
+}

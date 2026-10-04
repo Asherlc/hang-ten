@@ -1,0 +1,34 @@
+{
+  "reviewer": "root",
+  "method": "Direct whole-image inspection, no crop or image measurements",
+  "scope": "Exactly these three ordinary images; separate prior reference report covers three reference images. No claim root viewed all24.",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-1-preview-plus-5.png",
+      "sha256": "960e8624279761069e2f81989cd8413b973d8dcc64413743a5e02ee9a114c39c",
+      "observedBoardColor": "blue",
+      "visibleTimer": "02:55",
+      "correct": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "4841352df29a71adf8646ee93462683b596ece2b587475fa01d6e4e72707f9f3",
+      "observedBoardColor": "red",
+      "visibleTimer": "00:07",
+      "correct": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-2-active-plus-5.png",
+      "sha256": "26e003b8320d2f39151c4a622291d8ea7261ddf0105af6312c8a6d114d4baedc",
+      "observedBoardColor": "red",
+      "visibleTimer": "00:02",
+      "correct": true
+    }
+  ],
+  "reportedMechanicalChecks": {
+    "ownership27": true,
+    "navigation12": true,
+    "crossArm6": true,
+    "ordinaryTeardownMarker": false
+  }
+}

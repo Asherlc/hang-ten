@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "method": "Byte/archive identity verification only; not execution-result validation.",
+  "archives": [
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/final-integrated-validation/tests-placid-badger-cad-second-half-final-integrated-validation.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-validation-phase3/final-integrated-validation/tests-placid-badger-cad-second-half-final-integrated-validation.xcresult.zip",
+      "archiveSHA256": "33d6462ea7a14902e2159325a300b963f7457475522e190b4f53ca75bdce2dd7",
+      "archiveBytes": 7585389,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/final-integrated-validation/tests-placid-badger-cad-second-half-final-integrated-validation.xcresult.archive.json",
+      "verifiedMemberCount": 3108,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    }
+  ]
+}

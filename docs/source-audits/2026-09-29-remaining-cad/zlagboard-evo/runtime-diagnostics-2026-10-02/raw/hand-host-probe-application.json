@@ -1,0 +1,7 @@
+{
+  "authorization": "Root conditional DEBUG hand-host suppression authorization; persistent CPU/display mismatch established by trace-a/trace-finding.json",
+  "beforeSHA256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+  "afterSHA256": "7b4069461ed1fd1067ead5715c20be962c2be30326823a3bec49a535fa9f6f2b",
+  "patchSHA256": "b4e2d0e1e9df6e6b399d2da7c7806855e50da6a3fe2750faa5648cea3f3abd82",
+  "scope": "landscape paired hand host only, same height68, unchanged board inputs; no production fix"
+}

@@ -1,0 +1,16 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "git",
+    "apply",
+    "--check",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-probe-proposal/standalone-probe.patch"
+  ],
+  "exitStatus": 0,
+  "stdout": "",
+  "stderr": "",
+  "sourceUnchanged": true,
+  "optionalPatchSHA256": "a0a7c61cea7b2e51e5db139f72610dfc90e1a59baf32e30696068408abc080e3",
+  "compilerCheck": "Not run; proposal only"
+}

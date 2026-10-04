@@ -1,0 +1,129 @@
+{
+  "captures": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-0-active-plus-0.25.png",
+      "sha256": "3ec86e78e7a1229ec0551f006e7c97740b4d8b1481dc35fd98b6dfd08541bfd7",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:07",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-0-active-plus-1.png",
+      "sha256": "632393338ecc1fb605f05792e2ed4869711c93238306f153af51bd6c1af319e9",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:06",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-0-active-plus-3.png",
+      "sha256": "3cf6319961f2d3a47ff3c85b408ea6b350113ead48fbbf7190a6092b4bfbf584",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:04",
+      "handsVisible": true,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-0-active-plus-5.png",
+      "sha256": "4ca1142e638464f3ad051ff6f3a51f651d72f5ba4db8a1eef21c968d0097319b",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:02",
+      "handsVisible": true,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-1-preview-plus-0.25.png",
+      "sha256": "14e7a4f09ecc7870155e58747f5784d8d99fac8e84d40fcd911c255532b6a523",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "timer": "03:00",
+      "handsVisible": true,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-1-preview-plus-1.png",
+      "sha256": "2bd6044efa35979b49ce1013cd2bdc2c33ee858d8202336e67b95b469ee16e26",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "timer": "02:59",
+      "handsVisible": true,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-1-preview-plus-3.png",
+      "sha256": "f6e35cd1991fb0f167ccb0f2b1b3d6688d4ccb33b823995d715921862ddbc9e2",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "timer": "02:57",
+      "handsVisible": true,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-1-preview-plus-5.png",
+      "sha256": "6899840cfbf4ba92984fe46c9b5a7ab5b474863d2ae704ee225d7e4301f711d1",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "blue",
+      "timer": "02:55",
+      "handsVisible": true,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "8d25b23b97c30cfd01fd945431b4a5cea999fb36f58c7c4bc9031620207eee17",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "timer": "00:07",
+      "handsVisible": true,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-2-active-plus-1.png",
+      "sha256": "6806ee0b4b98b43655ad0ad4d5fddbd3fc87b019b838331c64cde1331fee4602",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "timer": "00:06",
+      "handsVisible": true,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-2-active-plus-3.png",
+      "sha256": "12503cd51b4196dc9d8b8b15bbc477c1ff784b12660964c8aa9d0daa0a5afdaa",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "timer": "00:04",
+      "handsVisible": true,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/phase-2-active-plus-5.png",
+      "sha256": "67ae3730d936cd8e150128749f9bcc743988bba99f75f7ad8b32f948bf18823b",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "timer": "00:02",
+      "handsVisible": true,
+      "runningPauseControlVisible": true
+    }
+  ],
+  "all12DirectlyViewed": true,
+  "visualFailureReproduced": true,
+  "allHandsVisible": false,
+  "separateHandPresentationDefect": "Hands absent initial +0.25/+1, visible from +3 and in all Rest/next-Hang frames.",
+  "result": "Rest red at +0.25/+1/+3, blue at +5; next Hang blue all four measured times."
+}

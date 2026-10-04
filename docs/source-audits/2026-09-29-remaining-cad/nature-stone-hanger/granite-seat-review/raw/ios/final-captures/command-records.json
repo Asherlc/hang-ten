@@ -1,0 +1,1619 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "edge-front-15mm-incut"
+    },
+    "startedMonotonic": 436855.197863916,
+    "exitCode": 0,
+    "elapsedSeconds": 0.30117170902667567,
+    "outputSHA256": "90724bde33ec3912c72758b033fb7505b5bd62d20dea1932770cbd716412a128",
+    "output": "com.hangten.training: 78764\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436855.4995395,
+    "exitCode": 0,
+    "elapsedSeconds": 5.210146875004284,
+    "outputSHA256": "088e3010690fbbe32f635ffbb5c1cdee78c7262db8c4c4194a5468ba0c39c636"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/01-edge-front-15mm-incut.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436861.514945958,
+    "exitCode": 0,
+    "elapsedSeconds": 1.3328883750364184,
+    "outputSHA256": "8a1a0ad78bd6ed561ba43dd46922345a6e2b6e0e0d535fb7f89d04ccb80622f5",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/01-edge-front-15mm-incut.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "edge-front-15mm-flat"
+    },
+    "startedMonotonic": 436862.848613333,
+    "exitCode": 0,
+    "elapsedSeconds": 0.5413764999830164,
+    "outputSHA256": "c648c7dc3db6c050fc13186eaf13b990591317ea634b14c172ccd9dab96d30c9",
+    "output": "com.hangten.training: 78823\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436863.390510416,
+    "exitCode": 0,
+    "elapsedSeconds": 4.321123417001218,
+    "outputSHA256": "61191b9e4aba3ebf0b4e169d73c704b0d9484f33957d8dc6218cfc29e6ae9dcd"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/02-edge-front-15mm-flat.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436868.523629166,
+    "exitCode": 0,
+    "elapsedSeconds": 0.4884172090096399,
+    "outputSHA256": "ed831c5f5ad03f7f5f07b63455f92ba5bfe5686a0d11ba3870eb1992354e10fc",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/02-edge-front-15mm-flat.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "edge-front-20mm-wood-flat"
+    },
+    "startedMonotonic": 436869.012637416,
+    "exitCode": 0,
+    "elapsedSeconds": 0.3960713749984279,
+    "outputSHA256": "2c819228299213a2e02ad044e3f208ab13ef211afe93081293e751a8957deaaa",
+    "output": "com.hangten.training: 78962\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436869.409290833,
+    "exitCode": 0,
+    "elapsedSeconds": 4.286478125024587,
+    "outputSHA256": "8ca412e936e5ee3cec1b2fbc8b0b143e7ed7991774974528d24da25fe812beeb"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/03-edge-front-20mm-wood-flat.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436874.504971041,
+    "exitCode": 0,
+    "elapsedSeconds": 0.5516745839850046,
+    "outputSHA256": "ba10fdf819f754d714832897632f20906e189dbd7e6abc4d9fc8ea0c062b3084",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/03-edge-front-20mm-wood-flat.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "edge-front-20mm-granite"
+    },
+    "startedMonotonic": 436875.057189791,
+    "exitCode": 0,
+    "elapsedSeconds": 0.35624437499791384,
+    "outputSHA256": "5e60ffc3279fe2acc6df86e42ffc90b60521d8eaee5a109740d779286b67cb6f",
+    "output": "com.hangten.training: 79166\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436875.414171208,
+    "exitCode": 0,
+    "elapsedSeconds": 4.2689592920360155,
+    "outputSHA256": "66f4af95432ae6ee1a89654ea9552877d2924c6f022cd99fac8bcc0ac3fd2e2b"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/04-edge-front-20mm-granite.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436880.496151208,
+    "exitCode": 0,
+    "elapsedSeconds": 1.60792387498077,
+    "outputSHA256": "e55480e5da69d086139059aaf354ee013dc943d6b1a2e2b7201311c7febc916e",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/04-edge-front-20mm-granite.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "edge-reverse-10mm-incut"
+    },
+    "startedMonotonic": 436882.104763458,
+    "exitCode": 0,
+    "elapsedSeconds": 0.3859363329829648,
+    "outputSHA256": "d508799631da1ea8c060dd4b4c75c7c39647584e251b92e7b1f25501e9c9e9b3",
+    "output": "com.hangten.training: 79208\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436882.491442583,
+    "exitCode": 0,
+    "elapsedSeconds": 4.4498272920027375,
+    "outputSHA256": "05ff05f45b44b5fcd79cf83be19c2b69576958c8fc1eeae9cffeac11f1d05c70"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/05-edge-reverse-10mm-incut.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436887.743663125,
+    "exitCode": 0,
+    "elapsedSeconds": 0.5153786250157282,
+    "outputSHA256": "86f4d9f598737ab28f7759a6b7eca861ddc896a8c91d9586d4f896dddbc4fe34",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/05-edge-reverse-10mm-incut.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "edge-reverse-10mm-flat"
+    },
+    "startedMonotonic": 436888.259691083,
+    "exitCode": 0,
+    "elapsedSeconds": 0.36788866703864187,
+    "outputSHA256": "efe71280e8d6d26908b47cabcdeb452e38d162265f24a8f53e8bb0ebc3c961a1",
+    "output": "com.hangten.training: 79284\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436888.628417375,
+    "exitCode": 0,
+    "elapsedSeconds": 4.5050992500036955,
+    "outputSHA256": "024d8e7acdb8d3a9ebc4b965a18a48611021a6d970fe41d5b3d1dcfdf90db18e"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/06-edge-reverse-10mm-flat.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436893.941967333,
+    "exitCode": 0,
+    "elapsedSeconds": 0.6266677079838701,
+    "outputSHA256": "25c0f55d0b684b720387bf619603d5d5d1483c0fd98c1cbcfd22ebda284af6fd",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/06-edge-reverse-10mm-flat.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "edge-reverse-06mm-flat"
+    },
+    "startedMonotonic": 436894.569327333,
+    "exitCode": 0,
+    "elapsedSeconds": 0.41400333296041936,
+    "outputSHA256": "5be6068250c651f86f23475a2820912a601831d7704a957761ddb1a87d008ba2",
+    "output": "com.hangten.training: 79329\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436894.984095083,
+    "exitCode": 0,
+    "elapsedSeconds": 4.582115707977209,
+    "outputSHA256": "300c9c2551a11d5939b3362c5548d1f0997638567e39521b362f1b1b37a776d3"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/07-edge-reverse-06mm-flat.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436900.369653958,
+    "exitCode": 0,
+    "elapsedSeconds": 0.5286375000141561,
+    "outputSHA256": "3926d09111b67d6d16a23a0d84fe4f58cf18b35b526ec49e8dd2f7a24e166d43",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/07-edge-reverse-06mm-flat.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "edge-reverse-06mm-incut"
+    },
+    "startedMonotonic": 436900.8990895,
+    "exitCode": 0,
+    "elapsedSeconds": 0.39401645795442164,
+    "outputSHA256": "f2bb905f120a91680eced4e4d5a1d8f3b1a349f3ae88cea03dcdcf991573e8f5",
+    "output": "com.hangten.training: 79399\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436901.294069875,
+    "exitCode": 0,
+    "elapsedSeconds": 4.462291000003461,
+    "outputSHA256": "de8c5bd49cc48b4f017aaaa6b573bb1f52e2d7494d47b99e7c7fa3e7dd39a70c"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/08-edge-reverse-06mm-incut.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436906.565960625,
+    "exitCode": 0,
+    "elapsedSeconds": 0.7391317500150762,
+    "outputSHA256": "a57ffc6970134e6cc1dff5e528cad86770ff6e182131b860c4886b9fbcca6487",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/08-edge-reverse-06mm-incut.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_TELEPHOTO": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "edge-front-20mm-granite"
+    },
+    "startedMonotonic": 436907.306053333,
+    "exitCode": 0,
+    "elapsedSeconds": 0.43544158298755065,
+    "outputSHA256": "fd6af7176b0cfe3d3d3e8049fd26f852cee8104ab4de188014fa0c3e80dc0034",
+    "output": "com.hangten.training: 79556\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436907.742178333,
+    "exitCode": 0,
+    "elapsedSeconds": 4.33149933302775,
+    "outputSHA256": "579ef520c2dc3b2a8acf9de52f3408e2d872e2ff62c673f5a6b958feedc4a3b4"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-left-front.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436912.880964666,
+    "exitCode": 0,
+    "elapsedSeconds": 0.5096649169572629,
+    "outputSHA256": "d03afd9c7044b5a06d0697720401c485beab6d6fd12c95261f0327b770cb1d63",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-left-front.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "110.82000000000004",
+      "--start-y",
+      "425.70000000000005",
+      "--end-x",
+      "311.22",
+      "--end-y",
+      "375.6",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436913.391472541,
+    "exitCode": 0,
+    "elapsedSeconds": 1.9383521669660695,
+    "outputSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output": ""
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436915.330458375,
+    "exitCode": 0,
+    "elapsedSeconds": 0.7099165410036221,
+    "outputSHA256": "c28cb90fb428d988e0affa02cf4b49f939bfd7ed45ccfe0ce9b6470ed09f6279"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436916.042487666,
+    "exitCode": 0,
+    "elapsedSeconds": 0.6278487090021372,
+    "outputSHA256": "dfd16c1f33043d967f6f3f5d94bbaf8b10adeef01a9d285ac55e9a50060869e0"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-left-oblique.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436917.474290875,
+    "exitCode": 0,
+    "elapsedSeconds": 1.322839375003241,
+    "outputSHA256": "ea3df110910f7791cb53d528b50e49dd9b81d23c9e5fc23568085fc403480ae0",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-left-oblique.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "110.82000000000004",
+      "--start-y",
+      "409.0",
+      "--end-x",
+      "311.22",
+      "--end-y",
+      "409.0",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436918.797785375,
+    "exitCode": 0,
+    "elapsedSeconds": 1.8494880830403417,
+    "outputSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output": ""
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436920.647957208,
+    "exitCode": 0,
+    "elapsedSeconds": 0.7736609579878859,
+    "outputSHA256": "448837fc1a95cd3a56059e37af49a6b1f5d1f2d9fe157e62cf8f72e11a00696e"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436921.424028166,
+    "exitCode": 0,
+    "elapsedSeconds": 0.6531843750271946,
+    "outputSHA256": "d1c8eab1483f9c01dd6c92617af249a44368137d99e7b81397bac60bc5df74f1"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-left-side.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436922.880981166,
+    "exitCode": 0,
+    "elapsedSeconds": 0.9854944590479136,
+    "outputSHA256": "f6ea958ff6eb24a287017ea20b47916016c2054037960729b7ac1e1bccec5828",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-left-side.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_TELEPHOTO": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "edge-front-20mm-granite"
+    },
+    "startedMonotonic": 436923.867378666,
+    "exitCode": 0,
+    "elapsedSeconds": 0.3803292089723982,
+    "outputSHA256": "f81287cca186bd83c37fc1dd29bca58eeaedec682f9e39d122849376838751bc",
+    "output": "com.hangten.training: 80094\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436924.255672791,
+    "exitCode": 0,
+    "elapsedSeconds": 4.521930042013992,
+    "outputSHA256": "d119da4e43e28614ecf6a4dc26aae16cf36bdec37009e198ec3f3532be858a58"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-right-front.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436929.589634875,
+    "exitCode": 0,
+    "elapsedSeconds": 0.47313037497224286,
+    "outputSHA256": "eb43907f1dfa840194ff894d0611a1a2ea1c3ae0ef5aed8036260331bf781f9d",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-right-front.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "311.22",
+      "--start-y",
+      "425.70000000000005",
+      "--end-x",
+      "110.82000000000004",
+      "--end-y",
+      "375.6",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436930.063743625,
+    "exitCode": 0,
+    "elapsedSeconds": 2.061057624989189,
+    "outputSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output": ""
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436932.126504083,
+    "exitCode": 0,
+    "elapsedSeconds": 0.7875402080244385,
+    "outputSHA256": "e649f2539da114722a2975e063fa344981ac709eca3148c4ac90f5bca5ea5957"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436932.91644225,
+    "exitCode": 0,
+    "elapsedSeconds": 0.856380540993996,
+    "outputSHA256": "03a98884f21e38eb46a8cbb4f843d7cc0d0f0f02698ccd7bad6ec5823609fd05"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-right-oblique.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436934.582842916,
+    "exitCode": 0,
+    "elapsedSeconds": 0.5011390839936212,
+    "outputSHA256": "74f13fbe992ae0488242789810ec8ebbc59b8728b2b7ed5b79405761fbca3170",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-right-oblique.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "311.22",
+      "--start-y",
+      "409.0",
+      "--end-x",
+      "110.82000000000004",
+      "--end-y",
+      "409.0",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436935.08517625,
+    "exitCode": 0,
+    "elapsedSeconds": 1.9078611249569803,
+    "outputSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output": ""
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436936.993902083,
+    "exitCode": 0,
+    "elapsedSeconds": 0.7650419999845326,
+    "outputSHA256": "5f0d487ea5797b664168eb4cbae90cbb0611883454488a6e61d59001f717dc83"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436937.761567291,
+    "exitCode": 0,
+    "elapsedSeconds": 0.6999533750349656,
+    "outputSHA256": "c05acf1fe41bbb5fc37857aa9c1e0c9f7530239c6c2b72896cf0654969f65f8c"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-right-side.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436939.267269125,
+    "exitCode": 0,
+    "elapsedSeconds": 1.0598954580491409,
+    "outputSHA256": "ab59636592739ec71ce1d7dfd0f1bc2cd87fd0cb6578e6a7589685dccfa1e95c",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-upright-granite-right-side.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_TELEPHOTO": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "edge-front-20mm-wood-flat"
+    },
+    "startedMonotonic": 436940.32824275,
+    "exitCode": 0,
+    "elapsedSeconds": 0.42131558299297467,
+    "outputSHA256": "f4ccf2011a104e8192af78137758bc243ad0561bb05117c3ffdf4bb70bfb2249",
+    "output": "com.hangten.training: 81722\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436940.750544333,
+    "exitCode": 0,
+    "elapsedSeconds": 4.381355749967042,
+    "outputSHA256": "33b0a28d4879a648374f8f2e3e737e6e292bc757c8a9a6dc96fa1a8b3e2ed5d9"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-left-front.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436945.937896375,
+    "exitCode": 0,
+    "elapsedSeconds": 0.6645122499903664,
+    "outputSHA256": "dba2f80fc706417fba7262b3b5b69d4ff2daf2a426a2a5af7dfedbdbadf295a3",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-left-front.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "110.82000000000004",
+      "--start-y",
+      "425.70000000000005",
+      "--end-x",
+      "311.22",
+      "--end-y",
+      "375.6",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436946.603261916,
+    "exitCode": 0,
+    "elapsedSeconds": 1.9257563749561086,
+    "outputSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output": ""
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436948.529948541,
+    "exitCode": 0,
+    "elapsedSeconds": 0.6968786249635741,
+    "outputSHA256": "7a599d2542621ec552a207e78509cf9a65a5aeab1d5c15687b1bd516e7b3752f"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436949.229010625,
+    "exitCode": 0,
+    "elapsedSeconds": 0.5939982910058461,
+    "outputSHA256": "bedfe79d8e1c7395131fbd01376412d7ab3811c75945a349ca566feb2692bfd9"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-left-oblique.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436950.633222,
+    "exitCode": 0,
+    "elapsedSeconds": 0.4495836250134744,
+    "outputSHA256": "caf8469bb7ddbaf78b309782e5a26004a35b8ad9ff612fbd6d30b8f48a6c4590",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-left-oblique.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "110.82000000000004",
+      "--start-y",
+      "409.0",
+      "--end-x",
+      "311.22",
+      "--end-y",
+      "409.0",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436951.083848541,
+    "exitCode": 0,
+    "elapsedSeconds": 1.8899242089828476,
+    "outputSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output": ""
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436952.974627166,
+    "exitCode": 0,
+    "elapsedSeconds": 0.6831170840305276,
+    "outputSHA256": "39951a7556a9766d1df325ec957a74aa4ebe6ee48fb5ae9d20915d6259e56e65"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436953.660269166,
+    "exitCode": 0,
+    "elapsedSeconds": 0.6584482920006849,
+    "outputSHA256": "192ef11daf1a5db94798dc8d2fb8497394284f09cea2fe09b5461b712e94e634"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-left-side.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436955.121574166,
+    "exitCode": 0,
+    "elapsedSeconds": 0.4775017090141773,
+    "outputSHA256": "12d82401e379b99fab71e91ba6920f42da65cc7ee7179b5a80fde45d9000c635",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-left-side.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_TELEPHOTO": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "edge-front-20mm-wood-flat"
+    },
+    "startedMonotonic": 436955.600092416,
+    "exitCode": 0,
+    "elapsedSeconds": 0.34808758401777595,
+    "outputSHA256": "45b891ac6b5b214c4c8deb1670b53a1a9ec23e401a63a712e5aaafe743afc60a",
+    "output": "com.hangten.training: 84615\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436955.949364166,
+    "exitCode": 0,
+    "elapsedSeconds": 4.296145999978762,
+    "outputSHA256": "0956fcf681ec1fd82634eed5c5da97fc48201af42caac3725ea9e939967a5744"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-right-front.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436961.051702625,
+    "exitCode": 0,
+    "elapsedSeconds": 1.2260479159886017,
+    "outputSHA256": "e078ee94daead11a8c64d1b5f18612190d13889991e00f28902b4c2b641665e8",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-right-front.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "311.22",
+      "--start-y",
+      "425.70000000000005",
+      "--end-x",
+      "110.82000000000004",
+      "--end-y",
+      "375.6",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436962.278872833,
+    "exitCode": 0,
+    "elapsedSeconds": 2.0086952919955365,
+    "outputSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output": ""
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436964.288564708,
+    "exitCode": 0,
+    "elapsedSeconds": 0.6303125419653952,
+    "outputSHA256": "daec05ace3340b86d3ad39c330a13ee81d7725fe85e63d358f1639e8f8215fb3"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436964.921272166,
+    "exitCode": 0,
+    "elapsedSeconds": 0.676106124999933,
+    "outputSHA256": "5bebc37cecbf727ce55f67c87afa9ba64768e6da98216556fa71020e2e69c857"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-right-oblique.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436966.402831166,
+    "exitCode": 0,
+    "elapsedSeconds": 1.5839825840084814,
+    "outputSHA256": "006656027c1f813b01ae788c986176da15b4854e0479edb4a878894aa37465d3",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-right-oblique.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "311.22",
+      "--start-y",
+      "409.0",
+      "--end-x",
+      "110.82000000000004",
+      "--end-y",
+      "409.0",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436967.987742041,
+    "exitCode": 0,
+    "elapsedSeconds": 1.9657582090003416,
+    "outputSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output": ""
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436969.954863541,
+    "exitCode": 0,
+    "elapsedSeconds": 0.625167042016983,
+    "outputSHA256": "6bfc9bda1b4d10849c47207a85af853f92637d0f281467726febf0fb2f0bc84f"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436970.582591791,
+    "exitCode": 0,
+    "elapsedSeconds": 0.7316826250171289,
+    "outputSHA256": "ac1d71d757b4fcb9716c1d39134045a08feaa4e3f98b78c54c07edde6806f4b6"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-right-side.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436972.118250833,
+    "exitCode": 0,
+    "elapsedSeconds": 7.13268020801479,
+    "outputSHA256": "2e89701c0aa9b4f68240751c8cd61fe4a7179a4c3002c1494dccd737f2a584f8",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/close-inverted-wood-flat-right-side.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_TELEPHOTO": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "edge-front-20mm-granite"
+    },
+    "startedMonotonic": 436979.251977291,
+    "exitCode": 0,
+    "elapsedSeconds": 0.39416795899160206,
+    "outputSHA256": "d24a584cb0457e65b212f5492ba9fba800491df0615eab319d25531d1070518b",
+    "output": "com.hangten.training: 85036\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436979.647501083,
+    "exitCode": 0,
+    "elapsedSeconds": 4.385352542041801,
+    "outputSHA256": "9083bcea4fb9481f04c469aebd2e44ad2d734c66689b76a211bde87841e7e423"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/granite-selected-before-change.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436984.843057791,
+    "exitCode": 0,
+    "elapsedSeconds": 0.611005374987144,
+    "outputSHA256": "0b1522d1ff51673d2ef6bce82e87a56af7a251fce0221f36fdffbfb1ea251fa6",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/granite-selected-before-change.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "385",
+      "--start-y",
+      "740",
+      "--end-x",
+      "385",
+      "--end-y",
+      "390",
+      "--duration",
+      "0.6",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436985.455504958,
+    "exitCode": 0,
+    "elapsedSeconds": 1.5822358329896815,
+    "outputSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output": ""
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "--id",
+      "boardDetail.holdLegend.edge-front-20mm-wood-flat",
+      "--tap-style",
+      "physical",
+      "--post-delay",
+      "1",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436987.038868541,
+    "exitCode": 0,
+    "elapsedSeconds": 2.823829458968248,
+    "outputSHA256": "c8ad177ebbd4a04cf52badc7bf7de4cdfafeab8b73e7e4fb052e297bf0709e21",
+    "output": "\u2713 Tap at resolved tap point at (115.50000000000003, 647.3333333333333) completed successfully\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436989.86379925,
+    "exitCode": 0,
+    "elapsedSeconds": 0.6686907910043374,
+    "outputSHA256": "9fcab19f0a3da25c377dabd17d1061ea07a7e2382f62af5651c1d5d345880194"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "385",
+      "--start-y",
+      "320",
+      "--end-x",
+      "385",
+      "--end-y",
+      "740",
+      "--duration",
+      "0.6",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436990.534487041,
+    "exitCode": 0,
+    "elapsedSeconds": 1.4190657919971272,
+    "outputSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output": ""
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436991.9546515,
+    "exitCode": 0,
+    "elapsedSeconds": 0.7259524160181172,
+    "outputSHA256": "82a4f69fff3fc8f22d5121f4c6cb5bc3a255e052385c00a3991981c754a6d92c"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/granite-deselected-same-instance.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436993.486047208,
+    "exitCode": 0,
+    "elapsedSeconds": 0.6678504580049776,
+    "outputSHA256": "acb59e868786f375b6255fe9753da1f6fa6aba1da3c2b6a6af3e8650410f899f",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/granite-deselected-same-instance.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "110.82000000000004",
+      "--start-y",
+      "427.36666666666673",
+      "--end-x",
+      "311.22",
+      "--end-y",
+      "377.2666666666667",
+      "--duration",
+      "1.0",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436994.155282375,
+    "exitCode": 0,
+    "elapsedSeconds": 1.7920507499948144,
+    "outputSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output": ""
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436995.948542875,
+    "exitCode": 0,
+    "elapsedSeconds": 0.671102374966722,
+    "outputSHA256": "163c2c8a56f54445a524793823b24ea71a02b7cc9d2cce0f42ebc11c3150ffbb"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436996.62223275,
+    "exitCode": 0,
+    "elapsedSeconds": 0.5968419159762561,
+    "outputSHA256": "2bb45b696befaae1a31beba1b74a67caecafe8c4d76f470a057ec2b819406a72"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/granite-deselected-same-instance-orbit.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436998.025606416,
+    "exitCode": 0,
+    "elapsedSeconds": 0.4563855840242468,
+    "outputSHA256": "e00bfd9ae75a84fbf52ed546ccfa48a02f32370d13cf2fc43c476ce5a13f6677",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/granite-deselected-same-instance-orbit.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger"
+    },
+    "startedMonotonic": 436998.483313,
+    "exitCode": 0,
+    "elapsedSeconds": 0.36187358299503103,
+    "outputSHA256": "d0b0b00ad2c5d477b0a5a4cd8dd709ea8184f532afb986a49acd952e2cb71a93",
+    "output": "com.hangten.training: 85615\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 436998.846330708,
+    "exitCode": 0,
+    "elapsedSeconds": 4.020627749967389,
+    "outputSHA256": "2d1a58914b17be876962413e8f261ebb0ac7ad363fe212b01dc5dfa8e97e15e1"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/unselected-train.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 437003.678916291,
+    "exitCode": 0,
+    "elapsedSeconds": 0.473633959016297,
+    "outputSHA256": "b495fb5137a9defa16ed3860e52c8f9e4a33d5fd1ff058f81499094a03a31819",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/unselected-train.png\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_TELEPHOTO": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "edge-front-20mm-granite"
+    },
+    "startedMonotonic": 437004.153964958,
+    "exitCode": 0,
+    "elapsedSeconds": 0.36968633299693465,
+    "outputSHA256": "67981be2cc53461b57e917795af7589a49e4a27739a3d06760c2a07a02076e68",
+    "output": "com.hangten.training: 85777\n"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "3605A048-8145-4869-8035-D92E82F7A056"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 437004.524961583,
+    "exitCode": 0,
+    "elapsedSeconds": 4.312490082986187,
+    "outputSHA256": "713a1658589841b88cbdd807d668e8c86af2a76bc62780efd09c348f2519f30e"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "3605A048-8145-4869-8035-D92E82F7A056",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/granite-reopened.png"
+    ],
+    "reviewEnvironment": {},
+    "startedMonotonic": 437009.648171125,
+    "exitCode": 0,
+    "elapsedSeconds": 0.54782904102467,
+    "outputSHA256": "ce04c17c13c34900d8deadd2317a91ac37f9ad434acf5b8c7dae90bc5513dc04",
+    "output": "Detected file type from extension: PNG\nNote: No display specified. Defaulting to display: BE19E2D5-5763-4DF6-AFA7-E61883D61DD1 (screenID: 1, name: LCD)\nWrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/ios/final-captures/granite-reopened.png\n"
+  }
+]

@@ -1,0 +1,113 @@
+{
+  "passed": true,
+  "owner": "placid-badger",
+  "date": "2026-09-30",
+  "package": "captain-fingerfood-unlevel",
+  "suspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+  "generatedManifestSHA256": "34678d8121b0795267fe0468fd8ef6337c469fdb46d2e216b080a71f4ef3db07",
+  "nativeVerification": "verification.json",
+  "python": {
+    "command": [
+      "rtk",
+      "proxy",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+      "-m",
+      "pytest",
+      "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+      "Tools/HangboardPackages/tests/test_model_delivery_lock.py",
+      "-q"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.9824729170068167,
+    "fileSHA256": {
+      "Tools/HangboardCAD/native_cord_routes.py": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+      "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "31a4896a3e423f23199907fabd8d63481d1890beca90307394e28c1cfac20661",
+      "Hangboards/captain-fingerfood-unlevel/suspension.json": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e"
+    },
+    "sourceUnchangedDuringRun": true,
+    "summary": "31 passed in 0.23s",
+    "scope": "Sidecar authoring/private-runtime boundary and complete delivery-lock behavior; exact native route reproduction separately validates actual UNLEVEL geometry."
+  },
+  "iOS": {
+    "passed": 1258,
+    "skipped": 3,
+    "failed": 0,
+    "total": 1261,
+    "simulator": "5E4F7561-42C9-488E-A4C2-638A628BE300",
+    "device": "iPhone 17 Pro",
+    "runtime": "iOS 26.5",
+    "buildCommand": [
+      "xcodebuild",
+      "-project",
+      "HangTen.xcodeproj",
+      "-scheme",
+      "HangTen",
+      "-configuration",
+      "Debug",
+      "-destination",
+      "platform=iOS Simulator,id=5E4F7561-42C9-488E-A4C2-638A628BE300",
+      "-derivedDataPath",
+      ".context/DerivedData",
+      "build-for-testing"
+    ],
+    "testCommand": [
+      "xcodebuild",
+      "-project",
+      "HangTen.xcodeproj",
+      "-scheme",
+      "HangTen",
+      "-configuration",
+      "Debug",
+      "-destination",
+      "platform=iOS Simulator,id=5E4F7561-42C9-488E-A4C2-638A628BE300",
+      "-derivedDataPath",
+      ".context/DerivedData",
+      "-parallel-testing-enabled",
+      "NO",
+      "-only-testing:HangTenTests",
+      "-collect-test-diagnostics",
+      "never",
+      "-resultBundlePath",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/unlevel-review/placid-badger-unlevel-front-entry-tests.xcresult",
+      "test-without-building"
+    ],
+    "xcodebuildExitCode": 0
+  },
+  "app": {
+    "canonicalPoses": 4,
+    "selectedContactsVisible": true,
+    "cordAccessibilityAbsent": true,
+    "physicalOrbitVerified": false,
+    "captureProvenance": "app-review/validation.json"
+  },
+  "installedDelivery": {
+    "bundledPackages": 64,
+    "modelPackages": 58,
+    "ODRModelAssets": 60
+  },
+  "cleanup": {
+    "simulator": "5E4F7561-42C9-488E-A4C2-638A628BE300",
+    "cleanupStatus": 0,
+    "derivedDataRemoved": true,
+    "simulatorDeletionVerified": true,
+    "resultBundleRemoved": true
+  },
+  "independentReview": "final-independent-review.json",
+  "humanReview": "Current source-backed front-entry revision awaiting UNLEVEL one-by-one review.",
+  "limits": [
+    "Only canonical app captures are claimed; physical UNLEVEL UI orbit remains unverified.",
+    "Cord dimensions remain display estimates; complete hidden threading is unspecified."
+  ],
+  "evidenceSHA256": {
+    "verification.json": "690832bf531d9c309fe9cd459495f1d4f007a1f32715a9b1967944f729ada703",
+    "native-route-report.json": "136f3256918b5b283a8871352a6dfe569021e4868a2b909d25e3763845d9e82c",
+    "native-route-check.json": "136f3256918b5b283a8871352a6dfe569021e4868a2b909d25e3763845d9e82c",
+    "package-validation.json": "06964d05adeeb927daeacebc14c85070fb513f3941c75c84354b614c328a124e",
+    "ios-summary.json": "ba687afa83b5a8bb4a7599eddcc2bf25d06848420a377e793f3265420278e1b5",
+    "ios-tests.log": "b117348d751b3b554dd92659e4b77c399d24597273aaf57a77db304066676750",
+    "resource-cleanup.json": "d63ee0281baee9b81eaae4d6a19a7fafa12f0f2c39ee75cd53476c6a546aa545",
+    "app-review/validation.json": "3192a020a4234b5d045309cfcdb03415bdb7ce9208cb5f152665c1d93fb700f1",
+    "final-independent-review.json": "dd951e246a0c27134160509f671700ef69790d91f729922ee45b7fdd9510af0d",
+    "fresh-reproducibility-result.json": "c99a09a0dd9d6f9a4113f2745487215e396ae89a7905243778d7371b4d3d77a4"
+  }
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/A85B45B8-5695-4C33-B334-AFC1BE15213E/Documents/HighlightDiagnostic-placid-badger-cad-second-half-host-arview-a/events-CAF26003-3B1B-46C7-9B5D-0647D60D4D41.jsonl",
+    "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/host-arview-a-landscape/events-CAF26003-3B1B-46C7-9B5D-0647D60D4D41.jsonl",
+    "sha256": "f9d233864cc99499c30a6381155fd434a4346cbdf7418241e903ae39864e3cc0",
+    "copyEpoch": 1790968700.619214,
+    "records": 74,
+    "newlineComplete": true,
+    "allComplete": true,
+    "contiguousSequences": true,
+    "limitReached": false
+  },
+  {
+    "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/A85B45B8-5695-4C33-B334-AFC1BE15213E/Documents/HighlightDiagnostic-placid-badger-cad-second-half-host-arview-a/arview-host-468C997F-2FC6-4E6F-9BAB-D59B640875FC.jsonl",
+    "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/host-arview-a-landscape/arview-host-468C997F-2FC6-4E6F-9BAB-D59B640875FC.jsonl",
+    "sha256": "e930ce9b1cb5ff01f32bb2e1bf4df5d71adf680eb5b7b4a3882e855433d3d632",
+    "copyEpoch": 1790968700.619603,
+    "records": 5,
+    "newlineComplete": true,
+    "allComplete": true,
+    "contiguousSequences": true,
+    "limitReached": false
+  },
+  {
+    "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/A85B45B8-5695-4C33-B334-AFC1BE15213E/Documents/HighlightDiagnostic-placid-badger-cad-second-half-host-arview-a/arview-host-81D648FE-B131-404C-88E0-C0EBA55338C7.jsonl",
+    "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/host-arview-a-landscape/arview-host-81D648FE-B131-404C-88E0-C0EBA55338C7.jsonl",
+    "sha256": "37c391329dbf3bcbd2f1e82bcb0f1757451e90198c4d2dd2607ad7ebf6917db3",
+    "copyEpoch": 1790968700.619819,
+    "records": 3,
+    "newlineComplete": true,
+    "allComplete": true,
+    "contiguousSequences": true,
+    "limitReached": false
+  }
+]

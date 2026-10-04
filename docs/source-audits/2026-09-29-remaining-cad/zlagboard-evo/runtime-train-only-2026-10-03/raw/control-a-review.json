@@ -1,0 +1,24 @@
+{
+  "arm": "control-a",
+  "runtimeValid": true,
+  "allWholeImagesReviewed": true,
+  "reviewedBy": [
+    "root",
+    "evo_orientation_judgment"
+  ],
+  "visualResult": "FAIL",
+  "nextArmAuthorized": "action",
+  "binarySHA256": "45fb07606a423a5e29e125e0179ff414bbc221d93554990c10c3e26d6831f26b",
+  "sourceReferenceSHA256": "10f29f79d5d1db033acb5d52690bd20b9cd8f8e95d6a8a4d085291cbd23f1684",
+  "findings": [
+    "EarlyRest010\u2013018redwrong,090blue.",
+    "SecondHang190\u2013196bluewrong; followingRest197\u2013207blue.",
+    "Handsabsent004/005,present006onward."
+  ],
+  "scope": "44 scheduled whole images plus Train setup reviewed; tail independently confirmed in worker message before report finalized.",
+  "CPUBracketsAvailable": false,
+  "limitations": [
+    "Muted awake Simulator normal deep-link route only.",
+    "No causal mechanism or completed repair asserted."
+  ]
+}

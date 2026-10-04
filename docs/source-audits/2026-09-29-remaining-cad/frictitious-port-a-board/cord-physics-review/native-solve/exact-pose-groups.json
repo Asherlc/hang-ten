@@ -1,0 +1,16 @@
+{
+  "((0, 0, 0, 1), 0, 0)": [
+    "front-upright",
+    "outer-upper",
+    "pinch-side"
+  ],
+  "((0, 0, 1, 0), 0, 0)": [
+    "front-inverted"
+  ],
+  "((0, 1, 0, 0), 0, 0)": [
+    "reverse-upright"
+  ],
+  "((1, 0, 0, 0), 0, 0)": [
+    "reverse-inverted"
+  ]
+}

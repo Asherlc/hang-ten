@@ -1,0 +1,54 @@
+{
+  "timestampUTC": "2026-10-02T14:33:33.953875+00:00",
+  "scope": "Read-only source/retained evidence investigation; no device commands, code edits, package edits or test execution.",
+  "evidenceSHA256": {
+    "HangTen/Views/BoardModelView.swift": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+    "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "HangTen/Views/RootView.swift": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+    "HangTen/Views/BoardMapView.swift": "911fba863c2b7dbc66a48c9c70937fb47ecd422e83e761751e662d756aac6b95",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02-independent/workout-landscape-highlight/candidate-one-with-ordering-trace.patch": "9661b96cecce33713966566c8bab7f029eb7e2902e982a2f8cdb4a041d44c0bf",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02-independent/workout-landscape-highlight/candidate-two-production.patch": "d411037f541261c0177317bab32d8ef892a19174dae79676e08c2e6304dfb2c1",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02-independent/workout-landscape-highlight/candidate-three-production.patch": "758c00c5fe25e27933dfd9bfe2f269baa22ca3a085f9974cd4c5d56191b506c6",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02-independent/workout-landscape-highlight/candidate-four-component-assignment.patch": "75df12f08fb6cda9293b3aaf4a6dd166d55af5340d8343c43a87b099a6980e9b",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02-independent/workout-landscape-highlight/scene-only-highlight-trace.patch": "b16885953c42fb1384d6929d60947977818bb8d7199ec0334f783bb3416cf844",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/scene-trace-a-landscape/console-stdout.log": "fcac16a581728a0f3bca66b1e5d71e7cedebf6935867f593f99724cb7ec26f20",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/scene-trace-a-landscape/following-rest-settled.png": "eac34b95d89fa7544bcf3d5db152997afe0008a33743c4f0d6e4614f90ec245c",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/scene-trace-a-landscape/validation.json": "148f6ad9d936b69223873d05f5e70d2abb073d615f395aaec4a862d25cf3377f"
+  },
+  "confirmed": [
+    "Actual whole scene-trace screenshot visibly shows red bilateral pockets during Rest02:56 with Next hold preview.",
+    "Scene trace records active then preview blue values on scene0x148f41800, with attached=true; another scene0x1113f3900 also appears earlier.",
+    "Trace stdout is exactly4096 bytes and ends mid preview-after line; no later trace or second active transition is retained. Flushed completeness was not established.",
+    "Production propagates boardCue mode through BoardMapView/BoardModelSurface; scene cache guard includes both contact IDs and mode. Loader constructs a fresh mutable scene per load.",
+    "Four failed candidates already cover explicit semantic onChange, single external selection writer, State bridge read in RealityView update, and explicit whole ModelComponent assignment. Those should not be rerun as new fixes."
+  ],
+  "notEstablished": [
+    "Correct CPU tint persisted until the screenshot on the exact scene backing the visible RealityView. attached=true alone does not identify the visible viewport.",
+    "A GPU-material bug, SwiftUI closure race, duplicated visible entity or Simulator-wide rendering failure.",
+    "Successful hosted material-property checks establish correct rendered frames."
+  ],
+  "newFalsifiableHypothesis": {
+    "name": "The visible drawable or visible scene identity is stale despite one successful CPU material write.",
+    "whyNew": "Existing candidates change selection delivery and component write-back, but none discriminates scene-wide redraw from contact-material refresh or proves that the logged entity is the one being displayed.",
+    "alternative": "A later write/scene change omitted from buffered logs restored the prior color before capture.",
+    "status": "Unproven; requires the controlled diagnostic below, not another production fix."
+  },
+  "minimalReproducerPlan": [
+    "After root coordinates shared reservation, create a temporary diagnostic harness using the unchanged actual Zlagboard Evo package and normal BoardMapView/BoardModelSurface path. Keep viewport, position and two selected contact IDs fixed. Hold each phase until explicitly advanced, eliminating seven-second timing windows.",
+    "PhaseA selects active red; phaseB changes only mode to preview blue; phaseC changes only mode back to active. Retain full screenshots and CPU state at each settled checkpoint. No direct scene.highlight calls from test assertions. Require visual failure before adding a diagnostic perturbation.",
+    "Persist a bounded newline-complete state record directly to a dedicated diagnostic file (or explicitly flush every line) containing wallclock+uptime, phase sequence, RealityView identity, scene/root IDs, selected entity IDs and ancestor IDs, materials, isEnabled and attachment state. Capture before and after the screenshot window; records must include the final active phase. Avoid SwiftUI-body print instrumentation that changed reproduction timing previously.",
+    "When blue CPU/red screen is present, perform one controlled same-scene transform perturbation through the existing orbit path or a diagnostic visible marker. If the board visibly moves and pockets remain red while CPU stays blue, global drawable staleness is falsified and material-specific synchronization becomes the lead hypothesis. If neither moves, suspect render scheduling/viewport identity.",
+    "In a separate repeat, temporarily disable the exact logged selected entities, then restore. If colored contacts remain visible, the logged entities are not the displayed drawables or a stale frame persists. If they disappear, identity is established and their material transition can be isolated. This is diagnostic state only; no package geometry changes.",
+    "Only after identity/redraw are established, compare a generated PBR cube with the imported contact in the same RealityView under the same phase changes. If cube tint updates while imported contact does not, investigate imported mesh/material state; if both fail, investigate render scheduling/material pipeline. An Unlit versus PBR comparison can then isolate the material path."
+  ],
+  "decisionRules": {
+    "laterWrongWriteOrNewScene": "Return to scene/lifecycle ownership; do not claim CPU/GPU mismatch.",
+    "wholeSceneDoesNotMove": "Investigate visible RealityView retention/render invalidation, using exact scene correlation.",
+    "sceneMovesTargetDisappearsButTintStale": "Investigate material-specific synchronization; consider constant shader-family selection only after this discriminator.",
+    "allSimpleHarnessPhasesPass": "Harness is nonreproducing; retain as diagnostic and move same bounded checkpoints into real workout. No fix demonstrated."
+  },
+  "testGap": "Previous hosted tests inspect ModelEntity.materials with a different wood fixture, not the visible actual Evo workout and rendered red/blue/red frames.",
+  "recommendedImmediateAction": "Keep production unchanged; prepare the bounded visual/state diagnostic after reservation. Do not repeat the four failed production candidates or claim a rendering-framework cause from the incomplete trace.",
+  "sourceEdits": [],
+  "packageEdits": []
+}

@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/check-finger-probes.py",
+    ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior/assets/primary.usdz",
+    ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior/assets/primary.model.json",
+    ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior-finger-probes.json",
+    "prior"
+  ],
+  "script": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/check-finger-probes.py",
+  "arguments": [
+    ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior/assets/primary.usdz",
+    ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior/assets/primary.model.json",
+    ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior-finger-probes.json",
+    "prior"
+  ],
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-prior-pad-probes-config",
+    "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-prior-pad-probes-cache",
+    "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-prior-pad-probes-tmp",
+    "FREECAD_USER_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-prior-pad-probes-config",
+    "QT_QPA_PLATFORM": "offscreen",
+    "HANGTEN_CAD_PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311"
+  }
+}

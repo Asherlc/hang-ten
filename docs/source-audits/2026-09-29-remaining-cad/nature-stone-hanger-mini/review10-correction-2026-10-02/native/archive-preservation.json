@@ -1,0 +1,20 @@
+{
+  "changedMembers": [
+    "Document.xml",
+    "nature_pinch.Shape.brp",
+    "nature_pinch.Shape.Map.txt",
+    "nature_jug.Shape.brp",
+    "nature_jug.Shape.Map.txt"
+  ],
+  "newMembers": [],
+  "changedExistingObjectProperties": {
+    "nature_pinch": [
+      "Support"
+    ],
+    "nature_jug": [
+      "Support",
+      "AdditionalContactIDs"
+    ]
+  },
+  "allOtherEmbeddedGeometryMembersByteIdentical": true
+}

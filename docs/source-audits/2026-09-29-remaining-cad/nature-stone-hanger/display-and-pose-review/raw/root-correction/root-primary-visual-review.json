@@ -1,0 +1,32 @@
+{
+  "status": "pass-primary-shape-interpretation",
+  "atUTC": "2026-10-01T22:41:58.760871+00:00",
+  "method": "Direct whole-image visual judgment; no pixel measurement, tracing, cropping, registration, or segmentation.",
+  "userCorrection": "there is 1 vertical groove on either side that the cord nestles into",
+  "retain": "All three transverse adjustment notches per side.",
+  "add": "One longitudinal native-Z cord seat along each left/right side-face centerline, connecting visibly to the existing side hole.",
+  "sources": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/evidence/Stone_Hanger_Granite_3.jpg",
+      "sha256": "905103e785b884af1a56abc203010cac92ade82d9e3a9e97d67d3427de4c9bc2",
+      "judgment": "Whole side photograph: one centered longitudinal groove spans side height; the upper visible cord runs in it and enters the middle side opening. Three transverse adjustment notches intersect the longitudinal groove."
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/evidence/StonehangerTechDrawing_Draft1.jpg",
+      "sha256": "57287e539da523b0366c3cf5a0d1c0b551a0ee65f2fddae202c9c4614bc1d7ee",
+      "judgment": "Whole manufacturer drawing independently shows the centered vertical groove in its side view, three transverse adjustment notches, and symmetric side openings in both front/reverse views."
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/evidence/Stone_Hanger_Granite_4.jpg",
+      "sha256": "56d7f7312d42222f66bd01cfd7e77a5c9f711dd55dea3cfc885ce5094f322576",
+      "judgment": "Whole retained oblique photograph shows cord lying along the side-face center and turning into the middle opening; all three transverse notches remain visible."
+    }
+  ],
+  "unsupportedNumericFacts": [
+    "Groove radius and depth",
+    "Cord diameter and length",
+    "Exact board pose and support offset"
+  ],
+  "hiddenConnectivity": "Not established and must not be inferred.",
+  "humanAcceptance": "pending"
+}

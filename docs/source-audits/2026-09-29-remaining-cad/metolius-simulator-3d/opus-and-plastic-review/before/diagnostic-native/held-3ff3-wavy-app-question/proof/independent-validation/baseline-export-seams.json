@@ -1,0 +1,671 @@
+{
+  "status": "requires-review",
+  "blockingFindings": [
+    "body_board_001 degenerate triangle or inconsistent authored normal"
+  ],
+  "modelSHA256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+  "meshes": [
+    {
+      "node": "body_board_001",
+      "triangles": 238821,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 18168,
+      "minimumNormalWindingCosine": -0.9999999999998592,
+      "trianglesWithOpposingCornerNormal": 14712,
+      "opposingCornerTriangleAreaMM2": 21.82501579575594,
+      "totalAreaMM2": 241641.86794318017,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_4_left",
+      "triangles": 466,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996617102998868,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 4300.5846310853285,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_5_left",
+      "triangles": 547,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9985987086682153,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 5435.909389616509,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_6_left",
+      "triangles": 434,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996534289967691,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 4197.580867617414,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_7_left",
+      "triangles": 472,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9994965598940904,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 7300.193114167234,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_8_left",
+      "triangles": 435,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996732303668621,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 2516.519688787901,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_9_left",
+      "triangles": 585,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9973627161591383,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 5512.606529386335,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_10_left",
+      "triangles": 462,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996538306020348,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 2934.754894800018,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_11_left",
+      "triangles": 434,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996759440309619,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 2752.184187155478,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_12_left",
+      "triangles": 456,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.999595208826503,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 3346.7578700628383,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_13_left",
+      "triangles": 583,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9966382961542082,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 1618.8136718117541,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_15_center",
+      "triangles": 619,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9979179151882406,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 7699.3425383507765,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_16_center",
+      "triangles": 479,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9988788704064149,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 5919.852627769574,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_17_center",
+      "triangles": 610,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9972598245287794,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 4337.104618155259,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_18_center",
+      "triangles": 477,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9986242495705095,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 4264.442342559415,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_13_right",
+      "triangles": 573,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9972008025770436,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 1618.8151493649202,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_12_right",
+      "triangles": 463,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9984373414477881,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 3346.762205301099,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_11_right",
+      "triangles": 445,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996876675595752,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 2752.1850727162864,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_10_right",
+      "triangles": 476,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9979679242517234,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 2934.7592297173537,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_9_right",
+      "triangles": 572,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9973627161591383,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 5512.600218657366,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_8_right",
+      "triangles": 454,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996789577152927,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 2516.5228832606567,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_7_right",
+      "triangles": 475,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9991103501469341,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 7300.1993763824885,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_6_right",
+      "triangles": 444,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996810655059168,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 4197.581417368214,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_5_right",
+      "triangles": 544,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9985988566543855,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 5435.909676182614,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_4_right",
+      "triangles": 467,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996136436071448,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 4300.097302535704,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_jug_14_center",
+      "triangles": 1872,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9762241716724618,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 7885.658260488252,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_round_sloper_3_center",
+      "triangles": 188,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996928409633894,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 9202.292329885297,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_flat_sloper_2_left",
+      "triangles": 314,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9310846277195637,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 5196.719046730904,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_jug_1_left",
+      "triangles": 761,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9789310322497086,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 9025.25744752063,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_flat_sloper_2_right",
+      "triangles": 296,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9309330875342299,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 5196.6669815344185,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_jug_1_right",
+      "triangles": 737,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9874818533582728,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 9024.843911036112,
+      "usdOrientation": "rightHanded"
+    }
+  ],
+  "weldedWholeExportTopology": [
+    {
+      "mode": "exactStoredPositions",
+      "uniqueVertices": 127712,
+      "uniqueEdges": 382682,
+      "boundaryEdges": 591,
+      "nonManifoldEdges": 110,
+      "inconsistentPairedEdgeWinding": 0,
+      "watertight": false,
+      "windingConsistentOnPairedEdges": true
+    },
+    {
+      "mode": "rounded0.0001mm",
+      "uniqueVertices": 127684,
+      "uniqueEdges": 382626,
+      "boundaryEdges": 591,
+      "nonManifoldEdges": 166,
+      "inconsistentPairedEdgeWinding": 28,
+      "watertight": false,
+      "windingConsistentOnPairedEdges": false
+    }
+  ],
+  "boundarySeamSpacing": {
+    "method": "Five interior fractions per edge; nearest other boundary segment with abs(direction dot)>0.8. Diagnostic estimate of semantic seam spacing, not a certified global Hausdorff distance.",
+    "boundaryEdgeCount": 591,
+    "totalBoundaryLengthMM": 1238.2086100912384,
+    "maximumSampledDistanceMM": 103.63394553536703,
+    "edgesAboveDeflection028MM": 317,
+    "worstEdges": [
+      {
+        "startRuntimeM": [
+          -0.35529735684394836,
+          0.13699999451637268,
+          0.0060000000521540945
+        ],
+        "endRuntimeM": [
+          -0.3496033251285553,
+          0.13699999451637268,
+          9.999999975056628e-07
+        ],
+        "lengthMM": 8.271033720259933,
+        "maxSampledNearestParallelBoundaryDistanceMM": 103.63394553536703
+      },
+      {
+        "startRuntimeM": [
+          0.3496033251285553,
+          0.13699999451637268,
+          9.999999975056628e-07
+        ],
+        "endRuntimeM": [
+          0.35529735684394836,
+          0.13699999451637268,
+          0.0060000000521540945
+        ],
+        "lengthMM": 8.271033720259933,
+        "maxSampledNearestParallelBoundaryDistanceMM": 103.63394553536703
+      },
+      {
+        "startRuntimeM": [
+          0.35497385263442993,
+          0.13886703550815582,
+          0.006000000052154095
+        ],
+        "endRuntimeM": [
+          0.35518813133239746,
+          0.13773185014724731,
+          0.0060000000521540945
+        ],
+        "lengthMM": 1.155232082320968,
+        "maxSampledNearestParallelBoundaryDistanceMM": 8.244040869065113
+      },
+      {
+        "startRuntimeM": [
+          0.025540579110383987,
+          0.2031083106994629,
+          9.999999975203417e-07
+        ],
+        "endRuntimeM": [
+          0.03151976689696312,
+          0.19566506147384644,
+          9.999999975186891e-07
+        ],
+        "lengthMM": 9.547389466331465,
+        "maxSampledNearestParallelBoundaryDistanceMM": 4.7736947331657325
+      },
+      {
+        "startRuntimeM": [
+          -0.25768110156059265,
+          0.16174612939357758,
+          0.05096337944269184
+        ],
+        "endRuntimeM": [
+          -0.2561294734477997,
+          0.16091576218605042,
+          0.050306335091590916
+        ],
+        "lengthMM": 1.8785012054985633,
+        "maxSampledNearestParallelBoundaryDistanceMM": 4.315471503166184
+      },
+      {
+        "startRuntimeM": [
+          0.2561294734477997,
+          0.16091576218605042,
+          0.050306335091590916
+        ],
+        "endRuntimeM": [
+          0.25768110156059265,
+          0.16174612939357758,
+          0.05096337944269184
+        ],
+        "lengthMM": 1.8785012054985633,
+        "maxSampledNearestParallelBoundaryDistanceMM": 4.315471503166184
+      },
+      {
+        "startRuntimeM": [
+          -0.257999986410141,
+          0.16161498427391052,
+          0.05499999970197681
+        ],
+        "endRuntimeM": [
+          -0.257999986410141,
+          0.1638023406267166,
+          0.027481617406010662
+        ],
+        "lengthMM": 27.605178717065105,
+        "maxSampledNearestParallelBoundaryDistanceMM": 4.156537430831156
+      },
+      {
+        "startRuntimeM": [
+          0.257999986410141,
+          0.16161498427391052,
+          0.05499999970197681
+        ],
+        "endRuntimeM": [
+          0.257999986410141,
+          0.1638023406267166,
+          0.027481617406010662
+        ],
+        "lengthMM": 27.605178717065105,
+        "maxSampledNearestParallelBoundaryDistanceMM": 4.156537430831156
+      },
+      {
+        "startRuntimeM": [
+          -0.02990405075252056,
+          0.1976550966501236,
+          9.999999975191309e-07
+        ],
+        "endRuntimeM": [
+          -0.02500355802476406,
+          0.2037605345249176,
+          9.999999975204865e-07
+        ],
+        "lengthMM": 7.828869689665519,
+        "maxSampledNearestParallelBoundaryDistanceMM": 3.9144348448327597
+      },
+      {
+        "startRuntimeM": [
+          -0.257999986410141,
+          0.1638023406267166,
+          0.027481617406010662
+        ],
+        "endRuntimeM": [
+          -0.257999986410141,
+          0.16556119918823242,
+          0.0053584892302751905
+        ],
+        "lengthMM": 22.192935446205357,
+        "maxSampledNearestParallelBoundaryDistanceMM": 3.865757092074946
+      },
+      {
+        "startRuntimeM": [
+          0.257999986410141,
+          0.1638023406267166,
+          0.027481617406010662
+        ],
+        "endRuntimeM": [
+          0.257999986410141,
+          0.16556119918823242,
+          0.0053584892302751905
+        ],
+        "lengthMM": 22.192935446205357,
+        "maxSampledNearestParallelBoundaryDistanceMM": 3.865757092074946
+      },
+      {
+        "startRuntimeM": [
+          -0.2550901770591736,
+          0.1622038036584854,
+          0.032010592520237004
+        ],
+        "endRuntimeM": [
+          -0.2540452182292938,
+          0.16087721288204193,
+          0.040610976517200505
+        ],
+        "lengthMM": 8.76460991371062,
+        "maxSampledNearestParallelBoundaryDistanceMM": 3.7681576340919958
+      },
+      {
+        "startRuntimeM": [
+          0.2540452182292938,
+          0.16087721288204193,
+          0.040610976517200505
+        ],
+        "endRuntimeM": [
+          0.2550901770591736,
+          0.1622038036584854,
+          0.032010592520237004
+        ],
+        "lengthMM": 8.76460991371062,
+        "maxSampledNearestParallelBoundaryDistanceMM": 3.7681576340919958
+      },
+      {
+        "startRuntimeM": [
+          -0.2550901770591736,
+          0.16508080065250397,
+          0.0038868982810527455
+        ],
+        "endRuntimeM": [
+          -0.2540452182292938,
+          0.16376528143882751,
+          0.014021469280123747
+        ],
+        "lengthMM": 10.272879785771204,
+        "maxSampledNearestParallelBoundaryDistanceMM": 3.5358789990599533
+      },
+      {
+        "startRuntimeM": [
+          0.2540452182292938,
+          0.16376528143882751,
+          0.014021469280123747
+        ],
+        "endRuntimeM": [
+          0.2550901770591736,
+          0.16508080065250397,
+          0.0038868982810527455
+        ],
+        "lengthMM": 10.272879785771204,
+        "maxSampledNearestParallelBoundaryDistanceMM": 3.5358789990599533
+      },
+      {
+        "startRuntimeM": [
+          -0.2561294734477997,
+          0.16091576218605042,
+          0.050306335091590916
+        ],
+        "endRuntimeM": [
+          -0.2540452182292938,
+          0.16087721288204193,
+          0.040610976517200505
+        ],
+        "lengthMM": 9.91693419110534,
+        "maxSampledNearestParallelBoundaryDistanceMM": 3.2635938051944344
+      },
+      {
+        "startRuntimeM": [
+          0.2540452182292938,
+          0.16087721288204193,
+          0.040610976517200505
+        ],
+        "endRuntimeM": [
+          0.2561294734477997,
+          0.16091576218605042,
+          0.050306335091590916
+        ],
+        "lengthMM": 9.91693419110534,
+        "maxSampledNearestParallelBoundaryDistanceMM": 3.2635938051944344
+      },
+      {
+        "startRuntimeM": [
+          -0.25086188316345215,
+          0.15782086551189423,
+          0.054886758327484166
+        ],
+        "endRuntimeM": [
+          -0.25086188316345215,
+          0.158107727766037,
+          0.052691500633955037
+        ],
+        "lengthMM": 2.213921022496218,
+        "maxSampledNearestParallelBoundaryDistanceMM": 3.14354616969721
+      },
+      {
+        "startRuntimeM": [
+          0.25086188316345215,
+          0.15782086551189423,
+          0.054886758327484166
+        ],
+        "endRuntimeM": [
+          0.25086188316345215,
+          0.158107727766037,
+          0.052691500633955037
+        ],
+        "lengthMM": 2.213921022496218,
+        "maxSampledNearestParallelBoundaryDistanceMM": 3.14354616969721
+      },
+      {
+        "startRuntimeM": [
+          0.35468408465385437,
+          0.14008595049381256,
+          0.01803921163082126
+        ],
+        "endRuntimeM": [
+          0.35479262471199036,
+          0.13965871930122375,
+          0.011466123163700135
+        ],
+        "lengthMM": 6.587852414310884,
+        "maxSampledNearestParallelBoundaryDistanceMM": 2.9262301141897034
+      }
+    ]
+  },
+  "actualNativeEnvelopeXYZMM": [
+    711.0000252723694,
+    94.11818308581132,
+    222.00000286102295
+  ],
+  "limits": [
+    "Exact-coordinate topology is reported independently of normals and material gates.",
+    "The secondary0.0001mm positional weld is diagnostic only; it does not repair or rewrite the model.",
+    "No triangle self-intersection/global manufacturing certificate is claimed."
+  ]
+}

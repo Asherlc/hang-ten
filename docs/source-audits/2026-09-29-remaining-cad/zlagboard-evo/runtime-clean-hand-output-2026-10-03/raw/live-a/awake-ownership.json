@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "resourceName": "placid-badger-cad-second-half-hand-output-live-a-idle-sleep-assertion",
+  "pid": 61622,
+  "parentPID": 61619,
+  "command": [
+    "placid-badger-cad-second-half-hand-output-live-a-idle-sleep-assertion",
+    "-i",
+    "-w",
+    "61619",
+    "-t",
+    "300"
+  ],
+  "executable": "/usr/bin/caffeinate",
+  "registeredImmediately": true
+}

@@ -1,0 +1,5 @@
+69821 56631 69821       25:10 rtk proxy zsh .context/placid-badger/nature-stone-mini-review10/completion/ios/ios-session.zsh
+69822 69821 69821       25:09 /opt/homebrew/bin/zsh .context/placid-badger/nature-stone-mini-review10/completion/ios/ios-session.zsh
+88144     1 88144    01:14:52 /Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Resources/debugserver --native-regs --setsid --fd=7
+91145 87552 91145       08:17 /Users/asherlc/Library/Developer/CoreSimulator/Devices/E9D3D8B4-1440-4417-862B-3023AF3841FA/data/Containers/Bundle/Application/30CFD1E3-2EFA-4F44-8446-FBD301509430/HangTen.app/HangTen
+97155     1 97155       00:39 /Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Resources/debugserver --native-regs --setsid --fd=14

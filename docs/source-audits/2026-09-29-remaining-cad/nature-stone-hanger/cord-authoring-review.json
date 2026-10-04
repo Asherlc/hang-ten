@@ -1,0 +1,65 @@
+{
+  "sourceSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+  "entries": [
+    {
+      "presentationID": "primary",
+      "type": "cadRoutedCord",
+      "strands": [
+        {
+          "id": "left-lead",
+          "kind": "lead",
+          "restLength": 0.55,
+          "radius": 0.0015,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred. Cord radius 1.5 mm is an operator display estimate reviewed against retained manufacturer Stone_Hanger_Granite_3.jpg, replacing the previous 2 mm estimate to fit the unchanged native 2 mm radius visible mouth with 0.2 mm clearance. It is not a published rope specification."
+        },
+        {
+          "id": "right-lead",
+          "kind": "lead",
+          "restLength": 0.55,
+          "radius": 0.0015,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred. Cord radius 1.5 mm is an operator display estimate reviewed against retained manufacturer Stone_Hanger_Granite_3.jpg, replacing the previous 2 mm estimate to fit the unchanged native 2 mm radius visible mouth with 0.2 mm clearance. It is not a published rope specification."
+        }
+      ],
+      "terminalsByStrandID": {
+        "left-lead": {
+          "points": [
+            [
+              -0.0525,
+              -0.0024,
+              0
+            ]
+          ],
+          "planeNormal": [
+            0,
+            0,
+            1
+          ]
+        },
+        "right-lead": {
+          "points": [
+            [
+              0.0525,
+              -0.0024,
+              0
+            ]
+          ],
+          "planeNormal": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "clearanceMeters": 0.0002,
+      "poses": [
+        "front",
+        "reverse"
+      ],
+      "routeCachePresent": true
+    }
+  ],
+  "authoringRule": "Terminal stations are deliberately selected actual native mouth/bearing points. Routes and hanging height are generated, never authored by hand. Hidden connectivity is omitted unless retained evidence supports it. Measured cylindrical void lengths are separately retained in native-channel-measurements.json where applicable.",
+  "lengthPolicy": "Penta retains the manufacturer 60 cm loop; other lengths/radii are carried display estimates and do not imply a manufacturer load or installation specification."
+}

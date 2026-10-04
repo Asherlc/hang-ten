@@ -1,0 +1,89 @@
+{
+  "sourceSHA256": "8a8e4957b044d01c76c49ee1b0c07f88f388bac05cff36b31d655c0e6d4ae8fb",
+  "modelSHA256": "92e0e754d888a5ab6976f22197b11f9f55353309ef6648a9307c45c404d4dabe",
+  "descriptorSHA256": "54a24c155967b3349be34fb3918e1c22be8acc8f7117772a15b347e251d99383",
+  "sourceBytes": 674459,
+  "realFCStdZIP": true,
+  "archiveMemberCount": 332,
+  "objectTypeCounts": {
+    "Part::Common": 1,
+    "Part::Compound": 1,
+    "Part::Cut": 1,
+    "Part::Extrusion": 8,
+    "Part::Loft": 14,
+    "Part::MultiFuse": 1,
+    "PartDesign::Feature": 1,
+    "PartDesign::SubShapeBinder": 21,
+    "Sketcher::SketchObject": 78
+  },
+  "allPackageFilesExactInitialMigration": {
+    "Hangboards/zlagboard-evo/zlagboard-evo.FCStd": true,
+    "Hangboards/zlagboard-evo/assets/primary.usdz": true,
+    "Hangboards/zlagboard-evo/assets/primary.model.json": true
+  },
+  "historicalProofCoverage": {
+    "compileSourceExact": true,
+    "compileModelExact": true,
+    "nativeMeaningfulEditSourceExact": true,
+    "reproductionSourceExact": true,
+    "reproductionAssetExact": true,
+    "reproductionDescriptorExact": true
+  },
+  "all21ContactFactsExactOriginalBaseline": true,
+  "sourceEvidence": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/sources/product-01.png",
+      "snapshotSHA256Matches": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/sources/product-02.png",
+      "snapshotSHA256Matches": true
+    }
+  ],
+  "nativeEdit": {
+    "parameter": "Depth_edge_20_left",
+    "before": 20.0,
+    "after": 22.0,
+    "changedContacts": [
+      "edge-20-left"
+    ],
+    "bodyVolumeChanged": true,
+    "restored": true
+  },
+  "nativeDepths": {
+    "edge-30-left": 30.000000200000002,
+    "sloper-edge-30-left": 30.000000200000002,
+    "sloper-edge-25-left": 25.000000200000006,
+    "edge-35-center": 35.0000002,
+    "sloper-edge-25-right": 25.000000200000006,
+    "sloper-edge-30-right": 30.000000200000002,
+    "edge-30-right": 30.000000200000002,
+    "edge-20-left": 20.000000200000006,
+    "sloper-edge-25-lower-left": 25.000000200000006,
+    "edge-30-inner-left": 30.000000200000002,
+    "sloper-edge-30-center": 30.000000200000002,
+    "edge-30-inner-right": 30.000000200000002,
+    "sloper-edge-25-lower-right": 25.000000200000006,
+    "edge-20-right": 20.000000200000006
+  },
+  "manifestDisplay": {
+    "camera": {
+      "type": "orthographic",
+      "viewDirection": [
+        0,
+        0,
+        -1
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ],
+      "fitPadding": 0.08
+    }
+  },
+  "explicitPositions": null,
+  "suspensionSidecarPresent": false,
+  "materialRecommendation": "Set existing display.surfaceFinish to wood only; actual model contains wooden body and contacts, documented phone/mounting plate/hardware omitted. No USD materials.",
+  "scope": "Read-only; reused exact hash-bound native/compile/reproduction proofs rather than expensive export."
+}

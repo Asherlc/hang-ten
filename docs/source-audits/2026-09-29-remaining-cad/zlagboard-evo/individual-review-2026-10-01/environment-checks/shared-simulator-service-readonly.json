@@ -1,0 +1,12 @@
+{
+  "purpose": "Read-only identification of a possible later recovery action; no signal sent. Restart would affect other workspaces and requires explicit user authorization.",
+  "services": [
+    {
+      "pid": 23795,
+      "uid": 502,
+      "executable": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/XPCServices/com.apple.CoreSimulator.CoreSimulatorService.xpc/Contents/MacOS/com.apple.CoreSimulator.CoreSimulatorService",
+      "ownership": "shared system service; not workspace-owned",
+      "actionTaken": "none"
+    }
+  ]
+}

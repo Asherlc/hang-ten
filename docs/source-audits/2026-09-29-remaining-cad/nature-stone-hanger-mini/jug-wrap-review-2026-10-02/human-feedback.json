@@ -1,0 +1,21 @@
+{
+  "owner": "placid-badger",
+  "reviewNumber": 10,
+  "boardID": "nature.stone-hanger-mini",
+  "recordedUTC": "2026-10-03T05:39:07.158951+00:00",
+  "rawFeedback": "Jokes should wrap all the way around like other ones do.",
+  "clarification": {
+    "question": "By “Jokes should wrap all the way around,” do you mean the jug highlight should wrap around the top rail onto its front and back?",
+    "answer": "Yes, the jug highlight"
+  },
+  "interpretation": "Extend existing upper-rail jug contact continuously over the front and back rolls and rounded ends.",
+  "priorShownCommit": "1acbb5ba98a2246d5ba31efe8ff5dea7a754f242",
+  "priorShownIdentity": {
+    "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
+    "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+    "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
+    "sidecarSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1"
+  },
+  "currentHumanAcceptance": "pending",
+  "earlierOverallBodyApprovalPreserved": true
+}

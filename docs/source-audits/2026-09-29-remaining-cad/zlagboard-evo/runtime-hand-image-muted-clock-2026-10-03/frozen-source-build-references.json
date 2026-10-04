@@ -1,0 +1,180 @@
+{
+  "scope": "Exact previously retained same-binary neutral applied source/build/install/parity; no app bundle copied",
+  "files": [
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-applied/full-diagnostic.patch",
+      "sha256": "78faa173551bbbe6e2b7bffdf193e35a983d8a0fce8e77a897c0d8ab8afd60e3",
+      "bytes": 155209
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-applied/root-application.json",
+      "sha256": "e7869aa56ed883ca31c3c48458b567616f03473c306e3b4d6334b1be97c2f228",
+      "bytes": 1499
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "37f32c3c9e45b85da06978aca49cb0f1066f092d3b62a1ac114e1dd3a90cf361",
+      "bytes": 119305
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-applied/source/HangTen/Views/BoardModelView.swift",
+      "sha256": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97",
+      "bytes": 25768
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-applied/source/HangTen/Views/GripHandModelView.swift",
+      "sha256": "66f77336b6bc1533e467c6165d7c35d330b1a817afddf8229f3b2bb7090fb542",
+      "bytes": 69779
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-applied/source/HangTen/Views/RootView.swift",
+      "sha256": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d",
+      "bytes": 157139
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-applied/source/HangTen/Views/TrainView.swift",
+      "sha256": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba",
+      "bytes": 27742
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/authorization-input.json",
+      "sha256": "3986277ab16b5bedf64a907f56d746981d36d338b394712340813acfdb13318a",
+      "bytes": 1186
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/build-install-result.json",
+      "sha256": "958f18f8b6290847498740db815ca145a9a42980206d2df3be72ff28ff371317",
+      "bytes": 118
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/built-mach-o.json",
+      "sha256": "1190d3beedff8b3fb117d6b2b252b78f6cb8564dcb2caf5c7971db5333138ccb",
+      "bytes": 701
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/completed-build-reference.json",
+      "sha256": "926059361ac512eb47284fa56e9635bc9a4bee8c4e629aea624a4c267042f64d",
+      "bytes": 317
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/controller-preflight.json",
+      "sha256": "b2ae76546f18beef6475c6bfe33f1e5ce65830b0fc606651670cdf08e2cea547",
+      "bytes": 243
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/controller-preflight.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/controller-preflight.stdout",
+      "sha256": "35292a343c3b3abbe0dc9c5cc9c928b16c91e85f351d96bdbd775253cdd38fbf",
+      "bytes": 117
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/device-preflight.json",
+      "sha256": "514c4358f3b9152c64d71bbe3e18f3ecbd1334ceb9c7e494b75b442f7f146253",
+      "bytes": 293
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/device-preflight.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/device-preflight.stdout",
+      "sha256": "b6b302a6604a11536c175e36dd9a9640d4af0bc99bc6feb3aa043a9be305b7dd",
+      "bytes": 1086
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/install-command.json",
+      "sha256": "fb33fee25160d990aa60a7f5ee746c764e3deb8f5dc8675a4817d4291fd2d25c",
+      "bytes": 519
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/install-command.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/install-command.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/installed-container.json",
+      "sha256": "ed1ebc1322477beb8ccb2722a34fd69b8c723c8a98a32243c77a6954e74832ec",
+      "bytes": 316
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/installed-container.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/installed-container.stdout",
+      "sha256": "6468283cbfebc9396fe0097f581814f45b2b98a85f8f9ba3205b3967fe51b7c8",
+      "bytes": 176
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/installed-mach-o.json",
+      "sha256": "1190d3beedff8b3fb117d6b2b252b78f6cb8564dcb2caf5c7971db5333138ccb",
+      "bytes": 701
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/parity.json",
+      "sha256": "68aba21e7e3344c1e3d6eb682a7f9d22bb0c8aebd25b9a5825a3d8e5dc870d6a",
+      "bytes": 13671
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/prior-build-command.json",
+      "sha256": "144e4de3d0f8fbcfdaff6e669dc158c949d434b84e395edfec7603131a6eae54",
+      "bytes": 534
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/prior-build-command.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/prior-build-command.stdout",
+      "sha256": "23822951f1cb786130e449d108da94c0163c673fcdb323d13bac42127b4c1cd8",
+      "bytes": 293097
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "37f32c3c9e45b85da06978aca49cb0f1066f092d3b62a1ac114e1dd3a90cf361",
+      "bytes": 119305
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/source/HangTen/Views/BoardModelView.swift",
+      "sha256": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97",
+      "bytes": 25768
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/source/HangTen/Views/GripHandModelView.swift",
+      "sha256": "66f77336b6bc1533e467c6165d7c35d330b1a817afddf8229f3b2bb7090fb542",
+      "bytes": 69779
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/source/HangTen/Views/RootView.swift",
+      "sha256": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d",
+      "bytes": 157139
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/source/HangTen/Views/TrainView.swift",
+      "sha256": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba",
+      "bytes": 27742
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/source-after-build.json",
+      "sha256": "570f09d53b613511a76d7bde68f8c91c05fe531c45210ad3ff440a4a11a0c1f0",
+      "bytes": 1349
+    },
+    {
+      "path": "../runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-build/source-before.json",
+      "sha256": "570f09d53b613511a76d7bde68f8c91c05fe531c45210ad3ff440a4a11a0c1f0",
+      "bytes": 1349
+    }
+  ]
+}

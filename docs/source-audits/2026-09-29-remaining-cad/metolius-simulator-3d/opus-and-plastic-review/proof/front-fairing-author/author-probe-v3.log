@@ -1,0 +1,54 @@
+{
+  "sourceSHA256": "7750992f4afb3a6127cafe34ecb26445f1907078dd830fde69bbc53a28a6edfd",
+  "beforeSourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "status": "native-shape-probe-pass-contacts-pending",
+  "frontFairingStationsYZAndDyDz": [
+    [
+      -72.128,
+      135.0,
+      -0.528
+    ],
+    [
+      -65.0,
+      117.0,
+      -0.35
+    ],
+    [
+      -55.0,
+      87.0,
+      -0.364
+    ],
+    [
+      -44.0,
+      59.0,
+      -0.394
+    ],
+    [
+      -32.0,
+      29.0,
+      -0.414
+    ],
+    [
+      -18.0,
+      -4.0,
+      -0.43
+    ]
+  ],
+  "upperProtectedZMinimumMM": 135,
+  "upperBodyBidirectionalDifferenceVolumesMM3": [
+    0.0,
+    0.0
+  ],
+  "finalSolidValid": true,
+  "solidCount": 1,
+  "volumeMM3": 5740248.833095984,
+  "fullyConstrainedRelief": true,
+  "rawManifestUnchanged": true,
+  "displayEstimate": "Author-selected shared slopes; original depth station positions retained. Complete primary images reviewed without measurement.",
+  "existingGripFeatures": "Unchanged above Z135; same forward sloper profiles, center crest/return/nose, roof joins and semantic bounds."
+}
+
+								
+								
+								
+								

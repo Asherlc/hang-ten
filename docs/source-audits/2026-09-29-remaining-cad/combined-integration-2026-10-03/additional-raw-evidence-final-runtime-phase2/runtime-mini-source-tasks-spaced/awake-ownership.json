@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-idle-sleep-assertion",
+  "pid": 68927,
+  "parentPID": 68923,
+  "command": [
+    "rtk",
+    "proxy",
+    "caffeinate",
+    "-i",
+    "-w",
+    "68923",
+    "-t",
+    "420"
+  ],
+  "executable": "rtk proxy caffeinate",
+  "registeredImmediately": true
+}

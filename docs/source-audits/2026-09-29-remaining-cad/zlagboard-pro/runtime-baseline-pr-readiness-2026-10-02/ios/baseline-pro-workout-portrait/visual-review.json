@@ -1,0 +1,36 @@
+{
+  "installedBaselineHead": "7a6867151307170dd0993a6d6492500d3fd46467",
+  "reviewer": "baguette_review_prep",
+  "visuallyReviewed": true,
+  "workflowPassed": false,
+  "states": [
+    {
+      "file": "active-settled.png",
+      "sha256": "d022bc1803c521d2521efeb63d79cf151d361ef8360998e58ede6a42c88f3b90",
+      "phase": "Step1 Hang",
+      "timer": "00:05",
+      "boardPocketColor": "red",
+      "expected": "red",
+      "passes": true
+    },
+    {
+      "file": "following-rest-settled.png",
+      "sha256": "e0d4346ae7a463168d873cbcecea87a27e23df618be8b29d6755735de14a8f07",
+      "phase": "Step2 Rest",
+      "timer": "02:56",
+      "boardPocketColor": "red",
+      "expected": "blue",
+      "passes": false
+    },
+    {
+      "file": "next-active-timed-2.png",
+      "sha256": "1b8c9c0d17b2d846e81ecfff1be47f2328bc4319861641db8b0f07afbf125ca2",
+      "phase": "Step3 Hang",
+      "timer": "00:06",
+      "boardPocketColor": "red",
+      "expected": "red",
+      "passes": true
+    }
+  ],
+  "interpretation": "Active bilateral20 highlighting correct; settled rest remains red instead of blue. No renderer fix installed. Routine unchanged."
+}

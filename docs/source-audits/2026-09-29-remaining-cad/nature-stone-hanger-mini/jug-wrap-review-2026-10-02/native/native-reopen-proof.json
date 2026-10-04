@@ -1,0 +1,52 @@
+{
+  "passed": true,
+  "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
+  "bodyEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "pinchEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "manifestIdentical": true,
+  "badStates": {},
+  "changedArchiveMembers": [
+    "Document.xml",
+    "StringHasher.Table.txt",
+    "nature_pinch.Shape.brp",
+    "nature_pinch.Shape.Map.txt",
+    "nature_jug.Shape.brp",
+    "nature_jug.Shape.Map.txt"
+  ],
+  "allNonContactGeometryBytesIdentical": true,
+  "dimensionEdit": {
+    "property": "LeftFrontOpenGroove.Radius",
+    "from": 1.7,
+    "to": 1.8,
+    "badStates": {},
+    "volumeBefore": 115393.28351132889,
+    "volumeAfter": 115365.95048687907,
+    "endContactAreaBefore": 614.6956123014903,
+    "endContactAreaAfter": 613.271363732571,
+    "offBodyArea": {
+      "nature_wood": 0.0,
+      "nature_stone": 0.0,
+      "nature_jug": 0.0,
+      "nature_pinch": 0.0,
+      "nature_jug_ends": 0.0
+    }
+  },
+  "restoredBodyEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "editSaved": false,
+  "sourceBytesUnchanged": true
+}

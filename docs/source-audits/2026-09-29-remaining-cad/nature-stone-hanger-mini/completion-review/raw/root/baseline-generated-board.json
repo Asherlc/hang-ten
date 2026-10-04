@@ -1,0 +1,447 @@
+{
+  "schemaVersion": 3,
+  "id": "nature.stone-hanger-mini",
+  "manufacturer": "Nature Climbing",
+  "name": "Stone Hanger Mini",
+  "subtitle": "Compact lifting edge with granite, wood, pinch, and jug contacts.",
+  "productURL": "https://natureclimbing.com/products/stone-hanger-mini-oak",
+  "dimensions": "10 × 6 × 2.5 cm",
+  "aspectRatio": 1.0,
+  "handCapacity": 1,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "3D model",
+      "aspectRatio": 1.0,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.12
+          }
+        },
+        "suspension": {
+          "type": "cadRoutedCord",
+          "bodyNodeID": "nature_body",
+          "strands": [
+            {
+              "id": "left-lead",
+              "kind": "lead",
+              "restLength": 0.2,
+              "radius": 0.001,
+              "material": "matteCord",
+              "provenance": "Retained side view shows one exposed vertical lead seated in this end groove. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+            },
+            {
+              "id": "left-cross-return",
+              "kind": "segment",
+              "restLength": 0.04,
+              "radius": 0.001,
+              "material": "matteCord",
+              "provenance": "Retained side view shows the transverse exterior return between the two cross-groove intersections. The route stops there; no concealed connection is asserted. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+            },
+            {
+              "id": "right-lead",
+              "kind": "lead",
+              "restLength": 0.2,
+              "radius": 0.001,
+              "material": "matteCord",
+              "provenance": "Retained side view shows one exposed vertical lead seated in this end groove. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+            },
+            {
+              "id": "right-cross-return",
+              "kind": "segment",
+              "restLength": 0.04,
+              "radius": 0.001,
+              "material": "matteCord",
+              "provenance": "Retained side view shows the transverse exterior return between the two cross-groove intersections. The route stops there; no concealed connection is asserted. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+            }
+          ],
+          "anchor": {
+            "offsetFromBoardBounds": [
+              0,
+              0.1,
+              0
+            ],
+            "visibility": "invisible",
+            "provenance": "Display support location only. Source-visible route graph retained; native solver derives clearance and settled height."
+          },
+          "canonicalPoses": {
+            "front-upright": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                -0.062643076,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  -0.3,
+                  -1
+                ],
+                "fitPadding": 0.12
+              },
+              "wrappedRoutes": {
+                "left-lead": [
+                  [
+                    -0.049468897,
+                    0.027199461,
+                    0.00625
+                  ],
+                  [
+                    -0.049499199,
+                    0.026931528,
+                    0.00625
+                  ],
+                  [
+                    -0.05,
+                    0.0,
+                    0.00625
+                  ]
+                ],
+                "left-cross-return": [
+                  [
+                    -0.05,
+                    0.0,
+                    0.00625
+                  ],
+                  [
+                    -0.05,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    -0.05,
+                    0.0,
+                    -0.00625
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    0.04946894,
+                    0.027199425,
+                    0.00625
+                  ],
+                  [
+                    0.049499245,
+                    0.026931479,
+                    0.00625
+                  ],
+                  [
+                    0.05,
+                    0.0,
+                    0.00625
+                  ]
+                ],
+                "right-cross-return": [
+                  [
+                    0.05,
+                    0.0,
+                    0.00625
+                  ],
+                  [
+                    0.05,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.05,
+                    0.0,
+                    -0.00625
+                  ]
+                ]
+              }
+            },
+            "wood-inverted": {
+              "rotation": [
+                0,
+                0,
+                1,
+                0
+              ],
+              "translation": [
+                0,
+                -0.062642874,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0.3,
+                  -1
+                ],
+                "fitPadding": 0.12
+              },
+              "wrappedRoutes": {
+                "left-lead": [
+                  [
+                    -0.049468897,
+                    -0.027199461,
+                    0.00625
+                  ],
+                  [
+                    -0.049499199,
+                    -0.026931528,
+                    0.00625
+                  ],
+                  [
+                    -0.05,
+                    0.0,
+                    0.00625
+                  ]
+                ],
+                "left-cross-return": [
+                  [
+                    -0.05,
+                    0.0,
+                    0.00625
+                  ],
+                  [
+                    -0.05,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    -0.05,
+                    0.0,
+                    -0.00625
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    0.049469838,
+                    -0.027198305,
+                    0.00625
+                  ],
+                  [
+                    0.04950014,
+                    -0.026930332,
+                    0.00625
+                  ],
+                  [
+                    0.05,
+                    0.0,
+                    0.00625
+                  ]
+                ],
+                "right-cross-return": [
+                  [
+                    0.05,
+                    0.0,
+                    0.00625
+                  ],
+                  [
+                    0.05,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.05,
+                    0.0,
+                    -0.00625
+                  ]
+                ]
+              }
+            },
+            "pinch-side": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                -0.062643076,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  -0.3,
+                  -1
+                ],
+                "fitPadding": 0.12
+              },
+              "wrappedRoutes": {
+                "left-lead": [
+                  [
+                    -0.049468897,
+                    0.027199461,
+                    0.00625
+                  ],
+                  [
+                    -0.049499199,
+                    0.026931528,
+                    0.00625
+                  ],
+                  [
+                    -0.05,
+                    0.0,
+                    0.00625
+                  ]
+                ],
+                "left-cross-return": [
+                  [
+                    -0.05,
+                    0.0,
+                    0.00625
+                  ],
+                  [
+                    -0.05,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    -0.05,
+                    0.0,
+                    -0.00625
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    0.04946894,
+                    0.027199425,
+                    0.00625
+                  ],
+                  [
+                    0.049499245,
+                    0.026931479,
+                    0.00625
+                  ],
+                  [
+                    0.05,
+                    0.0,
+                    0.00625
+                  ]
+                ],
+                "right-cross-return": [
+                  [
+                    0.05,
+                    0.0,
+                    0.00625
+                  ],
+                  [
+                    0.05,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.05,
+                    0.0,
+                    -0.00625
+                  ]
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "pull-up-jug",
+      "equipmentObjectID": "primary",
+      "name": "Smooth pull-up jug",
+      "kind": "jug",
+      "handCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "wood-edge-15-incut",
+      "equipmentObjectID": "primary",
+      "name": "15 mm incut wood edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "granite-edge-15",
+      "equipmentObjectID": "primary",
+      "name": "15 mm granite edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "pinch-60",
+      "equipmentObjectID": "primary",
+      "name": "60 mm pinch",
+      "kind": "pinch",
+      "handCapacity": 1,
+      "depth": {
+        "range": {
+          "minimum": 60,
+          "maximum": 60
+        }
+      },
+      "gripTypes": []
+    }
+  ],
+  "positions": [
+    {
+      "id": "front-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pull-up-jug",
+        "granite-edge-15"
+      ]
+    },
+    {
+      "id": "wood-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "wood-edge-15-incut"
+      ]
+    },
+    {
+      "id": "pinch-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-60"
+      ]
+    }
+  ]
+}

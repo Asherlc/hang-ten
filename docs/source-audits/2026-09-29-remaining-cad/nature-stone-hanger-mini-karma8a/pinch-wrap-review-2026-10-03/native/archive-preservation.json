@@ -1,0 +1,193 @@
+{
+  "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+  "priorSourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+  "members": [
+    {
+      "member": "BodyOutline.InternalShape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "currentSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "BodyOutline.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "fef0a3713e63e5081537c63fbeb393f829bc0e936ed4b432e53dde10b52384b9",
+      "currentSHA256": "fef0a3713e63e5081537c63fbeb393f829bc0e936ed4b432e53dde10b52384b9"
+    },
+    {
+      "member": "BodyExtrusion.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "55fec3bf0fb49f0962e23ab66d89bbfdb9ee0b2d0b33dd0d67a0c63b981fee38",
+      "currentSHA256": "55fec3bf0fb49f0962e23ab66d89bbfdb9ee0b2d0b33dd0d67a0c63b981fee38"
+    },
+    {
+      "member": "OuterRimRound.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "eb59642656a4f60edf93d675cdefc5e5aec6f4885f9fbee6ac3f36e4086abf8b",
+      "currentSHA256": "eb59642656a4f60edf93d675cdefc5e5aec6f4885f9fbee6ac3f36e4086abf8b"
+    },
+    {
+      "member": "RecessOutline.InternalShape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "currentSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "RecessOutline.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "6bc22badc30d82c2811da2f0348d1f791be3a166272a1fd01d40e09c9ed3dd1d",
+      "currentSHA256": "6bc22badc30d82c2811da2f0348d1f791be3a166272a1fd01d40e09c9ed3dd1d"
+    },
+    {
+      "member": "RecessDepth15.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "31a8b7809006a364f724b81df49c58cf0d50d53c2b04f38dafd08a649dee3231",
+      "currentSHA256": "31a8b7809006a364f724b81df49c58cf0d50d53c2b04f38dafd08a649dee3231"
+    },
+    {
+      "member": "WoodRecess.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "5f1914108c1250cdf8dc961030effe42b073adb3029ce93cc289c508845cd181",
+      "currentSHA256": "5f1914108c1250cdf8dc961030effe42b073adb3029ce93cc289c508845cd181"
+    },
+    {
+      "member": "CavityMouthRound.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "41e1a9cef0a9df167708f77fe8d77a1dc5c3fed8c27aab3fb20a1330e2586100",
+      "currentSHA256": "41e1a9cef0a9df167708f77fe8d77a1dc5c3fed8c27aab3fb20a1330e2586100"
+    },
+    {
+      "member": "LeftFrontOpenGroove.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "03f0c5eed42a90d803922f7cf00e288be3f0478a35a1f5a09c2ad366e5edcd30",
+      "currentSHA256": "03f0c5eed42a90d803922f7cf00e288be3f0478a35a1f5a09c2ad366e5edcd30"
+    },
+    {
+      "member": "LeftFrontGrooveCut.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "2554b94e477de0141fb029b19da4f0325ec8ac9b1eeef53d1d0d39d75d513c3b",
+      "currentSHA256": "2554b94e477de0141fb029b19da4f0325ec8ac9b1eeef53d1d0d39d75d513c3b"
+    },
+    {
+      "member": "LeftBackOpenGroove.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "1ee87d2096d22f7724c7e42ffb749bc342e9955c2f7144eea81c2283b7d43114",
+      "currentSHA256": "1ee87d2096d22f7724c7e42ffb749bc342e9955c2f7144eea81c2283b7d43114"
+    },
+    {
+      "member": "LeftBackGrooveCut.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "5d6cde762458a1234b5127bb4145820e6e034db2ed9f13544fb8625dab3ec003",
+      "currentSHA256": "5d6cde762458a1234b5127bb4145820e6e034db2ed9f13544fb8625dab3ec003"
+    },
+    {
+      "member": "LeftTransverseOpenGroove.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "91d899d92fff77903a1bc9fb112ac8e59cb782d068f367a5cb11262808e14d81",
+      "currentSHA256": "91d899d92fff77903a1bc9fb112ac8e59cb782d068f367a5cb11262808e14d81"
+    },
+    {
+      "member": "LeftCrossGrooveCut.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "54328bebeec24e3d68fdf232673dc65b0d9929596152401383ed84e6c6a0a8eb",
+      "currentSHA256": "54328bebeec24e3d68fdf232673dc65b0d9929596152401383ed84e6c6a0a8eb"
+    },
+    {
+      "member": "RightFrontOpenGroove.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "03d58ca1bcac0d2d28171c2f07ac3cb702a55f5e49f7460aa726fab41be2145f",
+      "currentSHA256": "03d58ca1bcac0d2d28171c2f07ac3cb702a55f5e49f7460aa726fab41be2145f"
+    },
+    {
+      "member": "RightFrontGrooveCut.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "c088314977c72ef91c0d7af5d9fec16752f916eaa3bfa970323cd25a16195a72",
+      "currentSHA256": "c088314977c72ef91c0d7af5d9fec16752f916eaa3bfa970323cd25a16195a72"
+    },
+    {
+      "member": "RightBackOpenGroove.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "13cb14184d455e95fe53787cd5835364108f31c40a9ef8ab0e038d6d81b0746e",
+      "currentSHA256": "13cb14184d455e95fe53787cd5835364108f31c40a9ef8ab0e038d6d81b0746e"
+    },
+    {
+      "member": "RightBackGrooveCut.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "075ee87a352c225486ba0cd1bcd3018e5f2447c04ba4bfa93fa4a3901d1255b2",
+      "currentSHA256": "075ee87a352c225486ba0cd1bcd3018e5f2447c04ba4bfa93fa4a3901d1255b2"
+    },
+    {
+      "member": "RightTransverseOpenGroove.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "42f78ceeb295fff97331ec3284ddb46444e345ae0904abd5b786829d833e9c22",
+      "currentSHA256": "42f78ceeb295fff97331ec3284ddb46444e345ae0904abd5b786829d833e9c22"
+    },
+    {
+      "member": "RightCrossGrooveCut.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "70110d0b1f92a985daebd6bf83fd11b6020bffe9e221476ead0dc76ea8e393c2",
+      "currentSHA256": "70110d0b1f92a985daebd6bf83fd11b6020bffe9e221476ead0dc76ea8e393c2"
+    },
+    {
+      "member": "GraniteOutline.InternalShape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "currentSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "GraniteOutline.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "91be52f9e3131adb0d7b563d9e646afc42b7a76e65d288269713a3eda6dbf3fd",
+      "currentSHA256": "91be52f9e3131adb0d7b563d9e646afc42b7a76e65d288269713a3eda6dbf3fd"
+    },
+    {
+      "member": "GraniteInsert.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "ac5c10942c050b0c238b899bef7718afd35d97bd6a72bef8824e6688a2f05aac",
+      "currentSHA256": "ac5c10942c050b0c238b899bef7718afd35d97bd6a72bef8824e6688a2f05aac"
+    },
+    {
+      "member": "FinalSolid.Shape.brp",
+      "bytesIdentical": false,
+      "priorSHA256": "b5ecee24e3a5cd494b21e22e61acbf583d67fe4d2638db1d34a4d9cf436e608b",
+      "currentSHA256": "6de8278e121ca6173e9896da94b6ad561abb3b7ee502c73e5169caaeeaff9868"
+    },
+    {
+      "member": "nature_wood.Shape.brp",
+      "bytesIdentical": false,
+      "priorSHA256": "62db5425aa38275f248c9b0a24c610ba3c928eca376d0e17d0683589d6734d9a",
+      "currentSHA256": "70ab1bbd338fca00100b0bfb489556cb7cdd016300f4b90353bd47b7d434b7ad"
+    },
+    {
+      "member": "nature_stone.Shape.brp",
+      "bytesIdentical": false,
+      "priorSHA256": "ffc44b98eb3667d6c96f7f385cb5fe64709ff147fc77bbfef685a06dfebd1eb8",
+      "currentSHA256": "eae39455280982068ce23e97aee31a7a196c7aa796737740bce119d2d39117e4"
+    },
+    {
+      "member": "nature_pinch.Shape.brp",
+      "bytesIdentical": false,
+      "priorSHA256": "9f864d61a219775c73b2840d71a4997a3d9d7fa5ceb6da85f2763d4eeb12e5fa",
+      "currentSHA256": "ee323bda80d50170dbaf25320cfb1d164c98d87f7c37f932c624e63ee8bfee43"
+    },
+    {
+      "member": "GraniteSeatLowerRailFill.Shape.brp",
+      "bytesIdentical": true,
+      "priorSHA256": "3500eb62f3356fea1121e7dc931e55db5e3bb649096b2358650f826237902bac",
+      "currentSHA256": "3500eb62f3356fea1121e7dc931e55db5e3bb649096b2358650f826237902bac"
+    },
+    {
+      "member": "WoodWithGraniteLowerRail.Shape.brp",
+      "bytesIdentical": false,
+      "priorSHA256": "2966cc9608b6be1e86740ad4d766397860b5cf2029e5b3ae446f12bafdecb09e",
+      "currentSHA256": "c3daecaabf843f4f80547cd59f7aabb50a3bfed8af51ef38b0436c4681fa988f"
+    },
+    {
+      "member": "GraniteFittedSeat.Shape.brp",
+      "bytesIdentical": false,
+      "priorSHA256": "b9d8abd0831f0c254c90e6848680b92d81650c0322b020e5df40fd8c8e7724b7",
+      "currentSHA256": "e19f7ffeaea137e685c079232e0fef04b7267abb84ddee56811ade0cbbed8d44"
+    }
+  ],
+  "allOriginalBRepMembersIdentical": false
+}

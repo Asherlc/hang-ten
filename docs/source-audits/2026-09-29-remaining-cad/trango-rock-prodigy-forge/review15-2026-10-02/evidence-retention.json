@@ -1,0 +1,1177 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "artifactCount": 167,
+  "artifacts": [
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/installation-proof.json",
+      "retainedPath": "installation-proof.json",
+      "sha256": "53761e6174627094fad049398a607e02b347d4308dd19780f7f31ada5b913f2e",
+      "role": "Root identity and scoped installation evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/validated-delivery-lock.json",
+      "retainedPath": "validated-delivery-lock.json",
+      "sha256": "a0e2703cc295cf82809363c64e91b2ecce00d614a1ee041349c80a4da8a18f73",
+      "role": "Root identity and scoped installation evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/lock-update.json",
+      "retainedPath": "lock-update.json",
+      "sha256": "2a165361ca9266b8832a76ea3f5269486dcaef524c2c09110e760b011ac0c1c4",
+      "role": "Root identity and scoped installation evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/generated-board.json",
+      "retainedPath": "generated-board.json",
+      "sha256": "2a8d9e959dbc7f09544049d8523d2cf1ee1a37f1da8fdaea157a51b40c714d6a",
+      "role": "Root identity and scoped installation evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/root-baseline.json",
+      "retainedPath": "root-baseline.json",
+      "sha256": "94143f70133bfd4b76c2774947d48b4e779ad78c27a340b0f64c88a6537ab08a",
+      "role": "Root identity and scoped installation evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/install-inputs.json",
+      "retainedPath": "install-inputs.json",
+      "sha256": "8d3e6b2233aca510349c02ea84f04526aa205057a09d35a6eb32c380d856619c",
+      "role": "Root identity and scoped installation evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/install-guard-failure.json",
+      "retainedPath": "install-guard-failure.json",
+      "sha256": "a1e14c27b304816680e7d1df10e42fbb234122d00aaf08db301e0440dd3e07ff",
+      "role": "Root identity and scoped installation evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/verification-startup-failure.json",
+      "retainedPath": "verification-startup-failure.json",
+      "sha256": "38e7c46d0781bd9c84f1f59161251dc6d1d4b8396a06c8ab000d972ca3658d6f",
+      "role": "Root identity and scoped installation evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/saved-source-binding-hold.json",
+      "retainedPath": "saved-source-binding-hold.json",
+      "sha256": "c8e4081f5aa02356d03246ba9dcf6909630b973ddb973b1a9d309d352cfa78cd",
+      "role": "Root identity and scoped installation evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/prior-delivery-checksums.txt",
+      "retainedPath": "prior-delivery-checksums.txt",
+      "sha256": "b3b0b9bc93b07f3bed5df3888a3b106f30fededbad25d37743bcb37f97814bb9",
+      "role": "Immutable prior delivery boundary",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/final-verification-authorization.json",
+      "retainedPath": "verification-authorization.json",
+      "sha256": "f98020bbc09b00287ba15bddc2d5b447fb6a96ff749739ffe8f7b9f06774f078",
+      "role": "Immutable static/build inputs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/baseline.json",
+      "retainedPath": "preflight/baseline.json",
+      "sha256": "4fd2190650111c519c809762ad0ad7690d5878a070b801863f2416d037ecc25d",
+      "role": "Independent baseline/recipe evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/current-embedded-board.json",
+      "retainedPath": "preflight/current-embedded-board.json",
+      "sha256": "8ea4c951e289bcf522e65b607ad27d5913b03078276ce9837c8842f7b4cb562b",
+      "role": "Independent baseline/recipe evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/current-native-archive-inventory.json",
+      "retainedPath": "preflight/current-native-archive-inventory.json",
+      "sha256": "e12e89c5e515a94f4b45ad029a802a2d7627bb5ba8da420a386bf94fe0b3bd89",
+      "role": "Independent baseline/recipe evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/retained-evidence-index.json",
+      "retainedPath": "preflight/retained-evidence-index.json",
+      "sha256": "02dd3dd021373d206d8fdcdceea5eb4823b25c5320cd9652302f93bc75b25611",
+      "role": "Independent baseline/recipe evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/verification-recipe.json",
+      "retainedPath": "preflight/verification-recipe.json",
+      "sha256": "d3c6cd31b324ed83150b2dced4ead17f06b777ad2c6236e9a543c19a83e19814",
+      "role": "Independent baseline/recipe evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/verification-recipe-face-coverage.json",
+      "retainedPath": "preflight/verification-recipe-face-coverage.json",
+      "sha256": "78fb77d06e1cc8e0af12d972eebb632d4f3dada75abc95903d2d37e95a905527",
+      "role": "Independent baseline/recipe evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/verification-recipe-stable-bindings.json",
+      "retainedPath": "preflight/verification-recipe-stable-bindings.json",
+      "sha256": "1bd072c7da6ed4caddd39257ac4492383b0a048fb24b7bc373ac5c102802a1d9",
+      "role": "Independent baseline/recipe evidence",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/independent-shape/shape-verdict.json",
+      "retainedPath": "historical-shape/shape-verdict.json",
+      "sha256": "09871b3220ddef89d0699b7b545433489193a5e9e5376df3d916a8e782a9a6db",
+      "role": "Initial rejected wing geometry review",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/independent-shape/shape-verdict.md",
+      "retainedPath": "historical-shape/shape-verdict.md",
+      "sha256": "f6a884241d8cc8a4a85b7e392b36769ddcf8380a8e30bdb828974d8f6bfb041c",
+      "role": "Initial rejected wing geometry review",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/independent-shape/ownership.json",
+      "retainedPath": "historical-shape/ownership.json",
+      "sha256": "1bb2ab5304a099e77b569e4a877762d4501fe6488a45b6ea58a1c30ed10cd175",
+      "role": "Initial rejected wing geometry review",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/independent-shape/final-shape-verdict.json",
+      "retainedPath": "independent-shape/final-shape-verdict.json",
+      "sha256": "502f45e38f4dd559c39c747cae5059564821e833417008774f21dbe217bb7d6f",
+      "role": "Final actual-export shape gate",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/independent-shape/final-shape-verdict.md",
+      "retainedPath": "independent-shape/final-shape-verdict.md",
+      "sha256": "9e1c7b7ac4b1639a2dda88df51016ee3be05a7670aa5861d3081adda76a8cd91",
+      "role": "Final actual-export shape gate",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/final-lifecycle-verification.json",
+      "retainedPath": "native-author/final-lifecycle-verification.json",
+      "sha256": "4366ab7d1aedb5f71dfbe048fe0177162e33897e79c746ab6007e9e4e108c898",
+      "role": "All exact author/render jobs cleaned",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/runtime-validation.json",
+      "retainedPath": "runtime-validation.json",
+      "sha256": "203c7a0191a3ae0d42b23f6f9c8708a7a933878b217e25bd51f13c933c548e61",
+      "role": "Current static/build report; zero current app frames",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/delivery-validation.json",
+      "retainedPath": "package-delivery-validation.json",
+      "sha256": "80e4422216022d3ae9898cfe9d3ae19312f9001eabd76c1551326f14a8e92f1d",
+      "role": "Current static/build report; zero current app frames",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/prior-records/0-model-delivery-lock.json",
+      "retainedPath": "prior-records/0-model-delivery-lock.json",
+      "sha256": "6cb5cd319d85b6850451c13722a72f5aa6af42626e74053a89481ca49c7c04e7",
+      "role": "Prior global/audit records before correction",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/prior-records/1-review-queue.json",
+      "retainedPath": "prior-records/1-review-queue.json",
+      "sha256": "fe8cc96364194cabaf4aa057e2d4a3ed8874d1494f4de4ccc4bf3aa343e14a0a",
+      "role": "Prior global/audit records before correction",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/prior-records/2-batch-validation.json",
+      "retainedPath": "prior-records/2-batch-validation.json",
+      "sha256": "3a261fab5ed09f539b90b400e70e371d321368345793526050e3dfcd242be83d",
+      "role": "Prior global/audit records before correction",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/prior-records/3-delivery-checksums.txt",
+      "retainedPath": "prior-records/3-delivery-checksums.txt",
+      "sha256": "b3b0b9bc93b07f3bed5df3888a3b106f30fededbad25d37743bcb37f97814bb9",
+      "role": "Prior global/audit records before correction",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/prior-records/4-delivery-validation.json",
+      "retainedPath": "prior-records/4-delivery-validation.json",
+      "sha256": "1a7a7e836510c301ffbe5eb5ad23afd2965c7efadfb24a129db2babc6240172a",
+      "role": "Prior global/audit records before correction",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/root/prior-records/5-source-audit.md",
+      "retainedPath": "prior-records/5-source-audit.md",
+      "sha256": "577c861f0a614af05c62ddf415a299c0ce7e273ea4a01e60608f27ce6d8bb0f4",
+      "role": "Prior global/audit records before correction",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-final-handoff/artifact-index.json",
+      "retainedPath": "preflight/final-handoff/artifact-index.json",
+      "sha256": "4ca7fb1c9d00c28e28949208e6d1ba8480402a38d7e0487bf8032b27b4040471",
+      "role": "Final immutable three-file handoff, scoped preservation and lifecycle",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-final-handoff/final-handoff.json",
+      "retainedPath": "preflight/final-handoff/final-handoff.json",
+      "sha256": "9f5591544e41eccfcdf778aca15bef7624af35dcfeb48419dea99c412cd5c8be",
+      "role": "Final immutable three-file handoff, scoped preservation and lifecycle",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-final-handoff/final-lifecycle-receipt.json",
+      "retainedPath": "preflight/final-handoff/final-lifecycle-receipt.json",
+      "sha256": "96c4407a1f1331d1c26f8052b546e6a861a753dee17f3635bac1e7e6c507ca9f",
+      "role": "Final immutable three-file handoff, scoped preservation and lifecycle",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-final-handoff/final-normal-disposition.json",
+      "retainedPath": "preflight/final-handoff/final-normal-disposition.json",
+      "sha256": "7dc6bfa50310e57d0d99e7e15c74431afe2cbf0bf9a559b15260935a07389c21",
+      "role": "Final immutable three-file handoff, scoped preservation and lifecycle",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-final-handoff/generated-board.json",
+      "retainedPath": "preflight/final-handoff/generated-board.json",
+      "sha256": "2a8d9e959dbc7f09544049d8523d2cf1ee1a37f1da8fdaea157a51b40c714d6a",
+      "role": "Final immutable three-file handoff, scoped preservation and lifecycle",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-final-handoff/scope-preservation.json",
+      "retainedPath": "preflight/final-handoff/scope-preservation.json",
+      "sha256": "2f7832afa6d4e55cce0595054f3d8df9b935dd479c2f4db4964a4a1f898cda9e",
+      "role": "Final immutable three-file handoff, scoped preservation and lifecycle",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/cleanup-receipt.json",
+      "retainedPath": "rejected-verification/20261003T012743/cleanup-receipt.json",
+      "sha256": "a696750a6a417f2362d630213c21944f1a9f39963e277d697c933c54b93b3612",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/commands.json",
+      "retainedPath": "rejected-verification/20261003T012743/commands.json",
+      "sha256": "4fc032d923d2d561f1628237d76cf03e9e4831b9483b2e110d49dc7d9d42a161",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/completed-before-stop-guard.json",
+      "retainedPath": "rejected-verification/20261003T012743/completed-before-stop-guard.json",
+      "sha256": "a397b09b6a5d43f6ff0b255e685a2451de1a00d1d10201fe18c6833287c25113",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/failure.json",
+      "retainedPath": "rejected-verification/20261003T012743/failure.json",
+      "sha256": "923b04213c11c5a83d7a8902498f25346e776e4e28938436a53df468f5d55d3c",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/metadata-proof.json",
+      "retainedPath": "rejected-verification/20261003T012743/metadata-proof.json",
+      "sha256": "bdafe8abe00576fab8e58459d32f5324c2b723e8ab09844ce45edb30d6ff18aa",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/native-check.json",
+      "retainedPath": "rejected-verification/20261003T012743/native-check.json",
+      "sha256": "b7b8ef4c4b8315156aed10faae0a381c9deb5c24f001397bbc6d8b469ad89791",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/native-gate-readonly-status.json",
+      "retainedPath": "rejected-verification/20261003T012743/native-gate-readonly-status.json",
+      "sha256": "4f1fe03946066e381d9cb58b92b149d6d89e6d89d13612d131f3b2a60d9c3844",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/native-gate-sample-ownership.json",
+      "retainedPath": "rejected-verification/20261003T012743/native-gate-sample-ownership.json",
+      "sha256": "ce47907673af74154e82cb8d5d106d5c613a6bc962025afb2e0be6804faa6297",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/native-gate-sample-receipt.json",
+      "retainedPath": "rejected-verification/20261003T012743/native-gate-sample-receipt.json",
+      "sha256": "c0d33e71a2704044d8ff674b3abc731aaf75713f3c4da7dffdd38b9c34639c9c",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/native-gate.stderr.log",
+      "retainedPath": "rejected-verification/20261003T012743/native-gate.stderr.log",
+      "sha256": "13ca913e22b5e53212473d55768ba6e84beeca9362078994f92ef906765d32de",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/native-gate.stdout.log",
+      "retainedPath": "rejected-verification/20261003T012743/native-gate.stdout.log",
+      "sha256": "cab20cc9263f859dc34fccad1a03fc986e3154188846e5653d471781798cbe59",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/ownership.json",
+      "retainedPath": "rejected-verification/20261003T012743/ownership.json",
+      "sha256": "05faf62ec903ddb8f0d4e07c671fe4a73a94a6e6d11b24747d1aa44aff34365e",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/phase.json",
+      "retainedPath": "rejected-verification/20261003T012743/phase.json",
+      "sha256": "e51567374a9425a5a8addf10e4d7d530380935f7d184d298fc327ad3cf72d016",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/placid-badger-native-gate-owned-status.txt",
+      "retainedPath": "rejected-verification/20261003T012743/placid-badger-native-gate-owned-status.txt",
+      "sha256": "9d3ff6052553e940a2dd77f8dcdf4d36868d435fac41392e6b27e2c0d57bf528",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/placid-badger-native-gate-stack-sample.txt",
+      "retainedPath": "rejected-verification/20261003T012743/placid-badger-native-gate-stack-sample.txt",
+      "sha256": "8dc7bf28c2597f3e8cf3c4dbc7f04a64b6ae76c096ea5826719c1d97c6041929",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/retained-tool-hashes.json",
+      "retainedPath": "rejected-verification/20261003T012743/retained-tool-hashes.json",
+      "sha256": "9cbd7de601d12ebad46307ab45b91141bcc8cbb66e55be315536f377cdff21ba",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/cleanup-receipt.json",
+      "retainedPath": "rejected-verification/20261003T014220/cleanup-receipt.json",
+      "sha256": "815e18c28aa30a80ea1870e781ff77059866177e3310b3a5b80dfc60e6ea4770",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/commands.json",
+      "retainedPath": "rejected-verification/20261003T014220/commands.json",
+      "sha256": "e40b3e39836bb7d67545187cb48c02b9dba3d87b7db5351a9b1e910e4e436abe",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/failure.json",
+      "retainedPath": "rejected-verification/20261003T014220/failure.json",
+      "sha256": "52e243cd31cc784270782858184f637ba58a8e1beaf0db4d589ed401dd3d18c2",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/flushed-binding-failure.json",
+      "retainedPath": "rejected-verification/20261003T014220/flushed-binding-failure.json",
+      "sha256": "c44bcf411e7dcac68975f8ce08829ff102d043eed5724a19028cc77d0c6e0c1a",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/metadata-proof.json",
+      "retainedPath": "rejected-verification/20261003T014220/metadata-proof.json",
+      "sha256": "bdafe8abe00576fab8e58459d32f5324c2b723e8ab09844ce45edb30d6ff18aa",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/native-check.json",
+      "retainedPath": "rejected-verification/20261003T014220/native-check.json",
+      "sha256": "b4bfdac2f79bf3b8a01b0668dbb2d8a995d9dde5137b8c5cec31d385536b990b",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/native-gate.stderr.log",
+      "retainedPath": "rejected-verification/20261003T014220/native-gate.stderr.log",
+      "sha256": "651ef26ea2bf55eb92d17d5cd51119dcbecab57e936e11d26f79156662b9cae6",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/native-gate.stdout.log",
+      "retainedPath": "rejected-verification/20261003T014220/native-gate.stdout.log",
+      "sha256": "2fed922426af9767f1a1a8adef1ffa2c68a0e53e24c0ca3095d9255f165e5b03",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/ownership.json",
+      "retainedPath": "rejected-verification/20261003T014220/ownership.json",
+      "sha256": "aad2dba7f0935d6347fd7432f42cd0b8794bb25d1f6f1e339d60554a74733922",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/phase.json",
+      "retainedPath": "rejected-verification/20261003T014220/phase.json",
+      "sha256": "4eb722f28f212351ad3d2f6a60d419ae8aba830fa17fc3b711fc1a4e9ec65e50",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/retained-tool-hashes.json",
+      "retainedPath": "rejected-verification/20261003T014220/retained-tool-hashes.json",
+      "sha256": "9cbd7de601d12ebad46307ab45b91141bcc8cbb66e55be315536f377cdff21ba",
+      "role": "Completed preflight failure retained unchanged",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/actual-reimport-meshes.json",
+      "retainedPath": "preflight/final-native-export/actual-reimport-meshes.json",
+      "sha256": "22ab4af94efaca7f8b457fc0dc68f6c4363c76f84b7027f9d7450f411c83281b",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/cleanup-receipt.json",
+      "retainedPath": "preflight/final-native-export/cleanup-receipt.json",
+      "sha256": "57fe4873bc21ae5595ff403d74a4bf2ab921c6aee4576aaaffc0f8523dbd9dd8",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/commands.json",
+      "retainedPath": "preflight/final-native-export/commands.json",
+      "sha256": "a0da8f00574a50836379969bb3951ac4a3bc857f55a3079e4a9dcfd5f92ee7b6",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/compile-1.json",
+      "retainedPath": "preflight/final-native-export/compile-1.json",
+      "sha256": "c8d03c07a333244d868ec3af4adb17d4488435372f2c15071ba53f8c2bb75a9e",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/compile-1.stderr.log",
+      "retainedPath": "preflight/final-native-export/compile-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/compile-1.stdout.log",
+      "retainedPath": "preflight/final-native-export/compile-1.stdout.log",
+      "sha256": "a4145b2cbca244ab6bd06ac5e0f20152a954f91cba17b38211d606805448f7d9",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/compile-2.json",
+      "retainedPath": "preflight/final-native-export/compile-2.json",
+      "sha256": "73d21e7c06c3878e3aa6368516429c9d4cbd0f56e6f20d80928cbd1a2e09bd15",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/compile-2.stderr.log",
+      "retainedPath": "preflight/final-native-export/compile-2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/compile-2.stdout.log",
+      "retainedPath": "preflight/final-native-export/compile-2.stdout.log",
+      "sha256": "02c95f9d28ac5c7b875b8698e96b1731423fd3e743fc82a2abf2b066d26ec9bc",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/deterministic-export.json",
+      "retainedPath": "preflight/final-native-export/deterministic-export.json",
+      "sha256": "aadcb33caa9ff1eb241901fd46f7629a7aa3d38463aac16ec6fdbe51dc0d5ee2",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/failure.json",
+      "retainedPath": "preflight/final-native-export/failure.json",
+      "sha256": "ed56f0ba06a83243b58efe140b8d582387045a2e4606f2e18444aa0216b5eddd",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/first-export.json",
+      "retainedPath": "preflight/final-native-export/first-export.json",
+      "sha256": "adf026fb858d7c17d3a34eb38228c597481039d550bf6769432af6a7f3691d10",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/fresh-reimport.stderr.log",
+      "retainedPath": "preflight/final-native-export/fresh-reimport.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/fresh-reimport.stdout.log",
+      "retainedPath": "preflight/final-native-export/fresh-reimport.stdout.log",
+      "sha256": "5ba908e4d20a33cbbcb5331eefe16227780e9108c29770cbcbb7f4fbf0de3923",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/metadata-proof.json",
+      "retainedPath": "preflight/final-native-export/metadata-proof.json",
+      "sha256": "73e3fe8361e94954f9fe9fb958c4b00a157d2497ed70d74b024413437290b55b",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/native-check.json",
+      "retainedPath": "preflight/final-native-export/native-check.json",
+      "sha256": "2429d2682b4459bb7ae7ee618cea3452ae5c6b01bf9dcd427755656ecaf3896c",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/native-gate.stderr.log",
+      "retainedPath": "preflight/final-native-export/native-gate.stderr.log",
+      "sha256": "f99b28b6bb20aae7a3cdeff5ce3e16491e8b760990fe7d3084e7dea73a574ec7",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/native-gate.stdout.log",
+      "retainedPath": "preflight/final-native-export/native-gate.stdout.log",
+      "sha256": "dfa3c38226061dcb308b0524b91fcae5cfa968f82d53ba8186353170989b96d2",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/native-normal-check.json",
+      "retainedPath": "preflight/final-native-export/native-normal-check.json",
+      "sha256": "46a4ccceb2d7c4c3424f3e2beb14859a8eb54b52fdff13ae409fa836217c373d",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/native-normals.stderr.log",
+      "retainedPath": "preflight/final-native-export/native-normals.stderr.log",
+      "sha256": "491adcadc965c6c8188b34983040b52393eb90e11c090121a9733c2877c7096a",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/native-normals.stdout.log",
+      "retainedPath": "preflight/final-native-export/native-normals.stdout.log",
+      "sha256": "24f298bb8d1fb2898626d13e55391191c039ac5354145611a10cbc70cfe979c2",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/ownership.json",
+      "retainedPath": "preflight/final-native-export/ownership.json",
+      "sha256": "5c75d3306e0ca22235da067345c0b8a61ca9a0ae09368ff28923ad047d85246f",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/phase.json",
+      "retainedPath": "preflight/final-native-export/phase.json",
+      "sha256": "7b787cc061b0ab5125c0dfb733c9bd0f1ffdc85f7ec5b30f9b0b411bb241aa8c",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/reimport-check.json",
+      "retainedPath": "preflight/final-native-export/reimport-check.json",
+      "sha256": "17b9090b0da67705efca42336f20c09dfddd6c8a990cd66e86aa8d2c710f3a93",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/retained-tool-hashes.json",
+      "retainedPath": "preflight/final-native-export/retained-tool-hashes.json",
+      "sha256": "9cbd7de601d12ebad46307ab45b91141bcc8cbb66e55be315536f377cdff21ba",
+      "role": "Passed native/repro/import gates and preserved inverse-normal probe failure",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/cleanup-receipt.json",
+      "retainedPath": "preflight/full-precision-normal-witness/cleanup-receipt.json",
+      "sha256": "0e9112a2670bfe9dfe31f4a752d7cfd7103fcbd8f34a1faa8944fa1e3949c036",
+      "role": "Independent source-face/full-point/UV normal disposition",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/command.json",
+      "retainedPath": "preflight/full-precision-normal-witness/command.json",
+      "sha256": "8fdb3d59d49682d96faba7ecd0fa6df2048a7a81d68873d941161229dcb02580",
+      "role": "Independent source-face/full-point/UV normal disposition",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/diagnostic.stderr.log",
+      "retainedPath": "preflight/full-precision-normal-witness/diagnostic.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "role": "Independent source-face/full-point/UV normal disposition",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/diagnostic.stdout.log",
+      "retainedPath": "preflight/full-precision-normal-witness/diagnostic.stdout.log",
+      "sha256": "0630a9d7c61ec47b53478129ddae5dd51127e7052d54e204b77070f3b62c5691",
+      "role": "Independent source-face/full-point/UV normal disposition",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/flagged-native-normal-diagnostic.json",
+      "retainedPath": "preflight/full-precision-normal-witness/flagged-native-normal-diagnostic.json",
+      "sha256": "4e2fda16c258d4099ae955bdc8aef874a585f1244edc19c6dfdc2479c60ad662",
+      "role": "Independent source-face/full-point/UV normal disposition",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/ownership.json",
+      "retainedPath": "preflight/full-precision-normal-witness/ownership.json",
+      "sha256": "2bd6ca9453c078ba47bdbc2dc83bc1390b1492b4639f594254d70c6740988e77",
+      "role": "Independent source-face/full-point/UV normal disposition",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/result.json",
+      "retainedPath": "preflight/full-precision-normal-witness/result.json",
+      "sha256": "4e0f6a8029084f4f535fc83611b5a107ad741094238a6fe9f9bf8f6cf22c95a3",
+      "role": "Independent source-face/full-point/UV normal disposition",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/author-report.json",
+      "retainedPath": "native-author/jobs/author-report.json",
+      "sha256": "4bf58737f5ed8940aca7b4ea1ad8260d65dd6bd3821b682265f912724a41ab78",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/final-lifecycle-verification.json",
+      "retainedPath": "native-author/jobs/final-lifecycle-verification.json",
+      "sha256": "4366ab7d1aedb5f71dfbe048fe0177162e33897e79c746ab6007e9e4e108c898",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/finish-metadata-proof.json",
+      "retainedPath": "native-author/jobs/finish-metadata-proof.json",
+      "sha256": "117a094efcbc452a0e90d6d39f66b912fc6698ca765850cb23fcee11b937279c",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/ownership.json",
+      "retainedPath": "native-author/jobs/ownership.json",
+      "sha256": "29eee2857625aa44c7bad73e24d34ae155ff4fdeb4bb830f685914203c18749c",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v1-command.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-author-v1-command.json",
+      "sha256": "be70bf3ecc1ba3a7937a9ad9a59c4a1ddeefb42f775421efd8d3de1ec2315188",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v1.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-author-v1.json",
+      "sha256": "0a5acab1391214870e4f3652f6757203ffcf45ae0d265c7e3ebe11041f6e46b3",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v1.log",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-author-v1.log",
+      "sha256": "4991f04528bf8a0eec33ce5152be3f037e1c8ef6505c1c8de99ca578d9cea706",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v2-command.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-author-v2-command.json",
+      "sha256": "888a0f7768c13736cc452ebda34d0b076017799a602c01517bcb0842dfe76c7e",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v2.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-author-v2.json",
+      "sha256": "6a6bfe00686c1de60c42829f261e4787cd5b09fa58f94591d1b25bfa7765e775",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v2.log",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-author-v2.log",
+      "sha256": "b2c52992a72d6063480537cb149d18e22150097b0ea196ac8b7a034ffc655b78",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v3-setback-command.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-author-v3-setback-command.json",
+      "sha256": "86803688128e712a8dc00e600267bb96d0a08ef5fefd7b3d6510ead117635555",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v3-setback.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-author-v3-setback.json",
+      "sha256": "dd550edcd31998d6f7164eb2b739cadf8c84767ddc7e4c57b1cfc89076364ae9",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v3-setback.log",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-author-v3-setback.log",
+      "sha256": "549f2768500b263444869d846251429b15160d6f2481b08b2f652a8f5fe26d74",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v4-stable-command.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-author-v4-stable-command.json",
+      "sha256": "a1e81858adad3fbeaed0fc9b10bb3aeb8c60642077efe13c5af74567636f5e1b",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v4-stable.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-author-v4-stable.json",
+      "sha256": "c034b3596b3f8628dc9eb0278af78c76cf1a2c3f8428d9a7bc074e8ad1be35fb",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v4-stable.log",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-author-v4-stable.log",
+      "sha256": "b0c2239696ea8a355ac5317e69eaf8f2a4cb09fc9fbd7a0d5cc0b5eab0b4a639",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-final-export-render-command.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-final-export-render-command.json",
+      "sha256": "836105849caba5f1d4c0315d2a31c83b3f8347fee05b68e1b0d25246aea1fb7e",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-final-export-render.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-final-export-render.json",
+      "sha256": "d1e469d0bf1b3c81cdd2bcbb05abcc91b7c16443ae96d7c046df08accc8cce7c",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-final-export-render.log",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-final-export-render.log",
+      "sha256": "38b2972db5b766f9e87dfd90edfcdf65ab00c59272293ef1ea76a15b289002d1",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-native-whole-render-command.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-native-whole-render-command.json",
+      "sha256": "845cd902b926242a1f8a6fcf2134c6cffbe29c30ea44f0dc38909a8141447278",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-native-whole-render.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-native-whole-render.json",
+      "sha256": "3e006f034843cb897dbccfa628b0c4e4ea4005e7d86fef8a3552ec9434bde9cf",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-native-whole-render.log",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-native-whole-render.log",
+      "sha256": "b6cab707aa8e4d424c0bb743b1fe52ab8be689b7dbc2e806e682072caf1f6d57",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-setback-whole-render-command.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-setback-whole-render-command.json",
+      "sha256": "9a6154c93d202bc4fe6803123546d961d114d2d87fb819739cbcebae72931b42",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-setback-whole-render.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-setback-whole-render.json",
+      "sha256": "38695526d490c3b5e2cb55933a0321751b15ebe0778d1017b4f0e9186a21de1b",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-setback-whole-render.log",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-setback-whole-render.log",
+      "sha256": "bd2101a5c6af900104554164ddc724069879103d442794dcc7b4d4e7d0cbc3c2",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-stable-fresh-check-command.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-stable-fresh-check-command.json",
+      "sha256": "91b2efcae6918e2c84f659f66ea3bc92170e5241c2ff65d8372a001f79362536",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-stable-fresh-check.json",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-stable-fresh-check.json",
+      "sha256": "e5f0cf031bb09dd21b649cc9fbabd1f5db9991aff288241bf03a3ab021aa491b",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-stable-fresh-check.log",
+      "retainedPath": "native-author/jobs/placid-badger-forge15-stable-fresh-check.log",
+      "sha256": "6851ba2e014850b089b22d0c4a86766f87d7bd45cee28a87cb925b703fc6da92",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/superseded-source-notice.json",
+      "retainedPath": "native-author/jobs/superseded-source-notice.json",
+      "sha256": "ab2809c80c86a88720b365b59545daaee319a2ea0cdc4497581459874780bf7c",
+      "role": "All historical/final author command receipts and raw logs",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/setback-correction/author-notes.md",
+      "retainedPath": "native-author/historical-setback/author-notes.md",
+      "sha256": "5993faa67150d2ede5e0ebaff161b931c36adb8b9742779d84f4adf6677e7096",
+      "role": "Historical pre-save author evidence; later failed fresh binding",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/setback-correction/author-report.json",
+      "retainedPath": "native-author/historical-setback/author-report.json",
+      "sha256": "5c452371d9c7b3b4a4a98f3e91b7b2fb962be87d3742eb13d4b4a5275003a5d9",
+      "role": "Historical pre-save author evidence; later failed fresh binding",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/setback-correction/finish-metadata-proof.json",
+      "retainedPath": "native-author/historical-setback/finish-metadata-proof.json",
+      "sha256": "d6c9a061af9506f754d11f33ece46c7d6bd68309806f40757be9fcbb3605b64e",
+      "role": "Historical pre-save author evidence; later failed fresh binding",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/setback-correction/native-shape-handoff.json",
+      "retainedPath": "native-author/historical-setback/native-shape-handoff.json",
+      "sha256": "6fbd76612d6f2105004f9ced98940d9f213ff3bacb5f36a265e8934a14b78656",
+      "role": "Historical pre-save author evidence; later failed fresh binding",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/setback-correction/native-stage-cleanup.json",
+      "retainedPath": "native-author/historical-setback/native-stage-cleanup.json",
+      "sha256": "eb90d062c349d580c7cb5759458b61bacd70690f3bc6521a5e1b857bf42500bd",
+      "role": "Historical pre-save author evidence; later failed fresh binding",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/author-notes.md",
+      "retainedPath": "native-author/final/author-notes.md",
+      "sha256": "27d68e203564225f106494867eba4d3cb1a7314c31df61a7ba10b8a5078e1f4a",
+      "role": "Final native source checks, stable bindings and sole plastic finish diff",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/author-report.json",
+      "retainedPath": "native-author/final/author-report.json",
+      "sha256": "7ef37944ba21c5d48645c270e854197878fc72d822b5f932e006585058508a3e",
+      "role": "Final native source checks, stable bindings and sole plastic finish diff",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/exact-export-copy-provenance.json",
+      "retainedPath": "native-author/final/exact-export-copy-provenance.json",
+      "sha256": "861c82b6b5d0c11fd10c083c4dac6861bd31d1abf39b4272d9a7e5e97ca2f012",
+      "role": "Final native source checks, stable bindings and sole plastic finish diff",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/export-bound-package/Hangboards/trango-rock-prodigy-forge/assets/primary.model.json",
+      "retainedPath": "native-author/final/export-bound-package/Hangboards/trango-rock-prodigy-forge/assets/primary.model.json",
+      "sha256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+      "role": "Final native source checks, stable bindings and sole plastic finish diff",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/finish-metadata-proof.json",
+      "retainedPath": "native-author/final/finish-metadata-proof.json",
+      "sha256": "18b9e4a6de0cc99f7416da84fd0c16a49a5f101a71e6af948f758fd7addf7b6f",
+      "role": "Final native source checks, stable bindings and sole plastic finish diff",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/fresh-native-check.json",
+      "retainedPath": "native-author/final/fresh-native-check.json",
+      "sha256": "0144f0c3e81a2a69d41fcfc60891396a1222c3875748dc5caf923751310799ec",
+      "role": "Final native source checks, stable bindings and sole plastic finish diff",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/native-shape-handoff.json",
+      "retainedPath": "native-author/final/native-shape-handoff.json",
+      "sha256": "c70616117e46a7540bb94ad0648e416b04930f37cfa4b41d20e347ea7fa11e50",
+      "role": "Final native source checks, stable bindings and sole plastic finish diff",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-front-side-top.png",
+      "retainedPath": "views/comparison-front-side-top.png",
+      "sha256": "5825f930e0e1d19b490effbbf4e1ac4ce7157e8d080a5c4d8a819f22a1f94499",
+      "role": "Whole exact exported asset comparison views",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-front.png",
+      "retainedPath": "views/comparison-front.png",
+      "sha256": "9c6029be098330c4b51b652faf16179c73ef7284f2c4395dd61241a46157e4a5",
+      "role": "Whole exact exported asset comparison views",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-oblique.png",
+      "retainedPath": "views/comparison-oblique.png",
+      "sha256": "3e03057919a1adcbdc3e47a089ad82a0a4c8ccace12d1b58c7ec9717eeba0cdb",
+      "role": "Whole exact exported asset comparison views",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-side.png",
+      "retainedPath": "views/comparison-side.png",
+      "sha256": "e27f857ab47463de48bd05df56b9d362db6f4f2936744d38970a7117b2737bce",
+      "role": "Whole exact exported asset comparison views",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-top.png",
+      "retainedPath": "views/comparison-top.png",
+      "sha256": "392ce11893b46e2dc6f4bf1b1485669e2c4a515083909d34ff5a507cbe04d7f2",
+      "role": "Whole exact exported asset comparison views",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/current-front.png",
+      "retainedPath": "views/current-front.png",
+      "sha256": "1d7d62b5ace0787175f1a43351391ade1b8817cf2ab825755268d334c3e880f2",
+      "role": "Whole exact exported asset comparison views",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/current-oblique.png",
+      "retainedPath": "views/current-oblique.png",
+      "sha256": "d23a02ed3722f65cf0090469f3a362083bddc87ea0a34080b9711391725dbac3",
+      "role": "Whole exact exported asset comparison views",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/current-side.png",
+      "retainedPath": "views/current-side.png",
+      "sha256": "6c6717f142ba5688cae2724a707f4b8efefc9ee8ed404eee558506539d2fd19e",
+      "role": "Whole exact exported asset comparison views",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/current-top.png",
+      "retainedPath": "views/current-top.png",
+      "sha256": "fd33a3a5040c0efa04c59dc55fb0902160e7c9d829c356b8ef26ceb8d9c57d65",
+      "role": "Whole exact exported asset comparison views",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/render-provenance.json",
+      "retainedPath": "views/render-provenance.json",
+      "sha256": "3f54498e7a00687033d5a73cb5c3ea4495a15b8d61bb2c4fcbb1bd56f98239b7",
+      "role": "Whole exact exported asset comparison views",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/android-staging.log",
+      "retainedPath": "integration/android-staging.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/build-time-git-binary-diff.log",
+      "retainedPath": "integration/build-time-git-binary-diff.log",
+      "sha256": "aeb8ee985392fca32edc71e9690139f5a3b0e7a0e3feaef83d99d3360d163668",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/build-time-git-head.log",
+      "retainedPath": "integration/build-time-git-head.log",
+      "sha256": "bec55191e2be9100f3a5e05feab6adee3bf0ccffadcd03a2073475dce35d4222",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/build-time-git-status.log",
+      "retainedPath": "integration/build-time-git-status.log",
+      "sha256": "acd65e631890c7d3e393929e7e736f60b596225c739ec92e9f9e7b40e932b833",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/cleanup-receipt.json",
+      "retainedPath": "integration/cleanup-receipt.json",
+      "sha256": "40456526d174598095247735f3c88b92a80d508ec34cef714887ecd76773f271",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/commands.json",
+      "retainedPath": "integration/commands.json",
+      "sha256": "aeface0b566dc25f4a10849851849350c5ed10fc2c7b094ff3aa25c07ad7bb08",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/delivery-validation.json",
+      "retainedPath": "integration/delivery-validation.json",
+      "sha256": "80e4422216022d3ae9898cfe9d3ae19312f9001eabd76c1551326f14a8e92f1d",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/delivery-validation.log",
+      "retainedPath": "integration/delivery-validation.log",
+      "sha256": "80e4422216022d3ae9898cfe9d3ae19312f9001eabd76c1551326f14a8e92f1d",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/focused-python-tests.log",
+      "retainedPath": "integration/focused-python-tests.log",
+      "sha256": "4172b184b38cbc844aa9616afaf23f720c7e7dc5fdfe51711db946d0a815eb2c",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/generated-board.json",
+      "retainedPath": "integration/generated-board.json",
+      "sha256": "2a8d9e959dbc7f09544049d8523d2cf1ee1a37f1da8fdaea157a51b40c714d6a",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/generic-ios-build.log",
+      "retainedPath": "integration/generic-ios-build.log",
+      "sha256": "d8419c5b0c69f1072d1ff9902492a3625fafd38c2fd15d90c6c416780aec899b",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/git-head.log",
+      "retainedPath": "integration/git-head.log",
+      "sha256": "bec55191e2be9100f3a5e05feab6adee3bf0ccffadcd03a2073475dce35d4222",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/ownership.json",
+      "retainedPath": "integration/ownership.json",
+      "sha256": "1650f5fe759b145554bbaf1de8ee5c604f17bc1e03b01fd0fb473ca3c5d95593",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/package-validation.log",
+      "retainedPath": "integration/package-validation.log",
+      "sha256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/python-junit.xml",
+      "retainedPath": "integration/python-junit.xml",
+      "sha256": "7b53d2fdb5a4c76bffc9c9f2e9b138149ce5b9384dc9666ce295220d8e9ec09a",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/reserved-path-hash-proof.json",
+      "retainedPath": "integration/reserved-path-hash-proof.json",
+      "sha256": "67bfe64026c4efc2e942dfb2e7b705a06797a1fa4f141a5cde20232650afa9b7",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/runtime-validation.json",
+      "retainedPath": "integration/runtime-validation.json",
+      "sha256": "203c7a0191a3ae0d42b23f6f9c8708a7a933878b217e25bd51f13c933c548e61",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/staging-parity.json",
+      "retainedPath": "integration/staging-parity.json",
+      "sha256": "3d30cce1456185d7e30c180767015b8a17743b36ddafe7db1600abfe03b317bb",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    },
+    {
+      "sourcePath": ".context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/xcode-staging.log",
+      "retainedPath": "integration/xcode-staging.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "role": "One final catalog/staging/focused-test/generic-build run",
+      "byteIdentical": true
+    }
+  ],
+  "parallelWorkspaceInspectedOrMerged": false
+}

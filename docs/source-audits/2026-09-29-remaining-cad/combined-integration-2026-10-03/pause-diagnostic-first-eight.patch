@@ -1,0 +1,160 @@
+--- a/HangTen/Models/LiveRopeController.swift
++++ b/HangTen/Models/LiveRopeController.swift
+@@ -53,22 +53,36 @@
+     private var solver: RopeDynamicsSolver?
+     init(solver: RopeDynamicsSolver) { self.solver = solver }
+     func advance(steps: Int, target: simd_quatd, settleImmediately: Bool) throws -> RopeFrameSnapshot? {
+-        try Task.checkCancellation()
+-        guard var candidate = solver else { return nil }
+-        var frame: RopeFrameSnapshot?
+-        if settleImmediately {
+-            frame = try candidate.settled(targetOrientation: target, maxDuration: 5)
+-        } else {
+-            guard (0...8).contains(steps) else { throw RopePhysicsError.invalid("Unbounded display step") }
+-            for _ in 0..<steps {
+-                try Task.checkCancellation()
+-                frame = try candidate.step(dt: 1.0/240, targetOrientation: target)
+-                if frame?.settled == true { break }
++        #if DEBUG
++        let diagnosticStart = ProcessInfo.processInfo.systemUptime
++        print("HANGTEN_PAUSE_DIAGNOSTIC worker.enter uptime=\(diagnosticStart) steps=\(steps) immediate=\(settleImmediately) mainThread=\(Thread.isMainThread)")
++        #endif
++        do {
++            try Task.checkCancellation()
++            guard var candidate = solver else { return nil }
++            var frame: RopeFrameSnapshot?
++            if settleImmediately {
++                frame = try candidate.settled(targetOrientation: target, maxDuration: 5)
++            } else {
++                guard (0...8).contains(steps) else { throw RopePhysicsError.invalid("Unbounded display step") }
++                for _ in 0..<steps {
++                    try Task.checkCancellation()
++                    frame = try candidate.step(dt: 1.0/240, targetOrientation: target)
++                    if frame?.settled == true { break }
++                }
+             }
++            try Task.checkCancellation()
++            solver = candidate
++            #if DEBUG
++            print("HANGTEN_PAUSE_DIAGNOSTIC worker.complete uptime=\(ProcessInfo.processInfo.systemUptime) elapsed=\(ProcessInfo.processInfo.systemUptime-diagnosticStart) frame=\(frame != nil) settled=\(frame?.settled ?? false) geometryAccepted=\(frame?.metrics.geometryAccepted ?? false)")
++            #endif
++            return frame
++        } catch {
++            #if DEBUG
++            print("HANGTEN_PAUSE_DIAGNOSTIC worker.error uptime=\(ProcessInfo.processInfo.systemUptime) elapsed=\(ProcessInfo.processInfo.systemUptime-diagnosticStart) error=\(error)")
++            #endif
++            throw error
+         }
+-        try Task.checkCancellation()
+-        solver = candidate
+-        return frame
+     }
+     /// Clock-independent numerical interface for lifecycle and instance tests.
+     func advanceExactly(steps: Int, target: simd_quatd) throws -> [RopeFrameSnapshot] {
+--- a/HangTen/Models/RopeDynamicsSolver.swift
++++ b/HangTen/Models/RopeDynamicsSolver.swift
+@@ -1,4 +1,7 @@
+ import simd
++#if DEBUG
++import Foundation
++#endif
+ 
+ /// Inextensible chain with a coupled mass-metric nonlinear projection. The scalar
+ /// board-height degree of freedom participates in the same solve as the rope.
+@@ -224,14 +227,26 @@
+     }
+ 
+     mutating func settled(targetOrientation:simd_quatd,maxDuration:Double) throws -> RopeFrameSnapshot {
++        #if DEBUG
++        let diagnosticStart = ProcessInfo.processInfo.systemUptime
++        print("HANGTEN_PAUSE_DIAGNOSTIC settled.enter uptime=\(diagnosticStart) simulationTime=\(time) maxDuration=\(maxDuration)")
++        defer {
++            print("HANGTEN_PAUSE_DIAGNOSTIC settled.exit uptime=\(ProcessInfo.processInfo.systemUptime) elapsed=\(ProcessInfo.processInfo.systemUptime-diagnosticStart) simulationTime=\(time)")
++        }
++        #endif
+         guard maxDuration.isFinite,maxDuration>0 else{throw RopePhysicsError.invalid("Invalid settling duration")}
+         let requestedSteps=ceil(maxDuration*240)
+         guard requestedSteps.isFinite,let steps=Int(exactly:requestedSteps) else {
+             throw RopePhysicsError.invalid("Invalid settling step count")
+         }
+-        for _ in 0..<steps {
++        for stepIndex in 0..<steps {
+             try Task.checkCancellation()
+             let frame=try step(dt:1.0/240,targetOrientation:targetOrientation)
++            #if DEBUG
++            if stepIndex < 8 || (stepIndex+1) % 120 == 0 {
++                print("HANGTEN_PAUSE_DIAGNOSTIC settled.progress uptime=\(ProcessInfo.processInfo.systemUptime) elapsed=\(ProcessInfo.processInfo.systemUptime-diagnosticStart) stepIndex=\(stepIndex) simulationTime=\(time) speed=\(frame.metrics.maximumSpeed) displacement=\(frame.metrics.boardDisplacement) strain=\(frame.metrics.maximumLocalStrain) clearanceMargin=\(frame.metrics.minimumClearanceMargin) settled=\(frame.settled)")
++            }
++            #endif
+             if frame.settled {return frame}
+         }
+         throw RopePhysicsError.invalid("Rope did not converge within \(maxDuration) seconds")
+--- a/HangTenTests/LiveRopeControllerTests.swift
++++ b/HangTenTests/LiveRopeControllerTests.swift
+@@ -87,7 +87,13 @@
+ 
+     @MainActor
+     func testReduceMotionDeliversOnlyAcceptedSettledFrame() async throws {
++        #if DEBUG
++        print("HANGTEN_PAUSE_DIAGNOSTIC controllerTest.fixtureStart uptime=\(ProcessInfo.processInfo.systemUptime)")
++        #endif
+         let solver = try Self.solverFixture.get()
++        #if DEBUG
++        print("HANGTEN_PAUSE_DIAGNOSTIC controllerTest.fixtureReady uptime=\(ProcessInfo.processInfo.systemUptime)")
++        #endif
+         let q = solver.state.orientation
+         let ready=expectation(description:"Accepted settled frame")
+         var count=0
+@@ -97,8 +103,17 @@
+             ready.fulfill()
+         },failure:{ error in XCTFail(String(describing:error));ready.fulfill() })
+         controller.settleImmediately=true
++        #if DEBUG
++        print("HANGTEN_PAUSE_DIAGNOSTIC controllerTest.advance uptime=\(ProcessInfo.processInfo.systemUptime)")
++        #endif
+         controller.advance(elapsed:1.0/60)
++        #if DEBUG
++        print("HANGTEN_PAUSE_DIAGNOSTIC controllerTest.waitBegin uptime=\(ProcessInfo.processInfo.systemUptime)")
++        #endif
+         await fulfillment(of:[ready],timeout:30)
++        #if DEBUG
++        print("HANGTEN_PAUSE_DIAGNOSTIC controllerTest.waitEnd uptime=\(ProcessInfo.processInfo.systemUptime)")
++        #endif
+         XCTAssertEqual(count,1)
+         controller.advance(elapsed:100)
+         XCTAssertEqual(count,1)
+--- a/HangTenTests/BoardModelRealityTests.swift
++++ b/HangTenTests/BoardModelRealityTests.swift
+@@ -596,7 +596,13 @@
+     @MainActor
+     func testLiveScenePausesThenPublishesAcceptedSettledFrame() async throws {
+         let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:"clavellium-training-block"))
++        #if DEBUG
++        print("HANGTEN_PAUSE_DIAGNOSTIC sceneTest.loadBegin uptime=\(ProcessInfo.processInfo.systemUptime)")
++        #endif
+         let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation,useLivePhysics:true)
++        #if DEBUG
++        print("HANGTEN_PAUSE_DIAGNOSTIC sceneTest.loadReady uptime=\(ProcessInfo.processInfo.systemUptime)")
++        #endif
+         XCTAssertTrue(scene.select(positionID:try XCTUnwrap(board.positions.first?.id)))
+         let initial=try XCTUnwrap(scene.liveFramesForTesting.first)
+         var frameNotifications=0
+@@ -607,9 +613,18 @@
+         XCTAssertEqual(scene.liveFramesForTesting.first?.boardHeight,initial.boardHeight)
+         scene.configureLiveMotion(reduceMotion:true,displayOnly:false)
+         scene.setLiveActivity(true)
++        #if DEBUG
++        print("HANGTEN_PAUSE_DIAGNOSTIC sceneTest.advance uptime=\(ProcessInfo.processInfo.systemUptime)")
++        #endif
+         scene.advanceLiveRopes(elapsed:1.0/60)
+         let accepted=expectation(for:NSPredicate { _,_ in scene.liveFramesForTesting.first?.settled == true },evaluatedWith:nil)
++        #if DEBUG
++        print("HANGTEN_PAUSE_DIAGNOSTIC sceneTest.waitBegin uptime=\(ProcessInfo.processInfo.systemUptime)")
++        #endif
+         await fulfillment(of:[accepted],timeout:30)
++        #if DEBUG
++        print("HANGTEN_PAUSE_DIAGNOSTIC sceneTest.waitEnd uptime=\(ProcessInfo.processInfo.systemUptime)")
++        #endif
+         let final=try XCTUnwrap(scene.liveFramesForTesting.first)
+         XCTAssertTrue(final.metrics.geometryAccepted);XCTAssertTrue(final.settled)
+         XCTAssertEqual(frameNotifications,1,"Projected hold controls must refresh with the physical frame")

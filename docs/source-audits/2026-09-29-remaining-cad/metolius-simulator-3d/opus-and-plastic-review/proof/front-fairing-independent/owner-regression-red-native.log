@@ -1,0 +1,16 @@
+test_exact_native_facet_owner_takes_precedence_over_nearby_centroid_plane (uv_node_normal_checks.UVNodeNormalTests.test_exact_native_facet_owner_takes_precedence_over_nearby_centroid_plane) ... FAIL
+
+======================================================================
+FAIL: test_exact_native_facet_owner_takes_precedence_over_nearby_centroid_plane (uv_node_normal_checks.UVNodeNormalTests.test_exact_native_facet_owner_takes_precedence_over_nearby_centroid_plane)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/tests/uv_node_normal_checks.py", line 138, in test_exact_native_facet_owner_takes_precedence_over_nearby_centroid_plane
+    self.assertLess((actual - expected).Length, 1e-6)
+AssertionError: 0.2993174295487893 not less than 1e-06
+
+----------------------------------------------------------------------
+Ran 1 test in 0.009s
+
+FAILED (failures=1)
+
+

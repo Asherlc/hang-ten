@@ -1,0 +1,34 @@
+{
+  "attribution": "Independent root whole-image review delivered via collaboration message; recorded by diagnostic worker.",
+  "scope": "Four nextHang images only; no claim root viewed first8.",
+  "captures": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "48ef79e4b629eb536c3a27d12e8247d8022fdf83f266f81b6e70ab9990e44860",
+      "rootObservedBoardColor": "red",
+      "timer": "00:07",
+      "handsVisible": false
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-landscape/phase-2-active-plus-1.png",
+      "sha256": "3e36aa9fb496e465892442c81106880893e4a745d3f02446c1bacc5d4871a260",
+      "rootObservedBoardColor": "red",
+      "timer": "00:06",
+      "handsVisible": false
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-landscape/phase-2-active-plus-3.png",
+      "sha256": "ef5870afce7ec2ae72429f893d4bc77c8491b39c6975dcb937bb626e28b4dc8d",
+      "rootObservedBoardColor": "red",
+      "timer": "00:04",
+      "handsVisible": false
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-landscape/phase-2-active-plus-5.png",
+      "sha256": "40c4a0ae4e6993ea6040ae8eb34b96bb956649f7ba60f42bf74fdbae825879a6",
+      "rootObservedBoardColor": "red",
+      "timer": "00:02",
+      "handsVisible": false
+    }
+  ]
+}

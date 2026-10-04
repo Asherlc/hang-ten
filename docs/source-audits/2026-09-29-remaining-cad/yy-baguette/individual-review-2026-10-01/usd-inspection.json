@@ -1,0 +1,59 @@
+{
+  "modelSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+  "usdVersion": [
+    0,
+    26,
+    8
+  ],
+  "meshes": [
+    {
+      "path": "/root/yy_body",
+      "name": "yy_body",
+      "faceCount": 84790
+    },
+    {
+      "path": "/root/yy_tray",
+      "name": "yy_tray",
+      "faceCount": 346
+    },
+    {
+      "path": "/root/yy_edge_20",
+      "name": "yy_edge_20",
+      "faceCount": 784
+    },
+    {
+      "path": "/root/yy_edge_25",
+      "name": "yy_edge_25",
+      "faceCount": 1316
+    },
+    {
+      "path": "/root/yy_edge_10",
+      "name": "yy_edge_10",
+      "faceCount": 652
+    },
+    {
+      "path": "/root/yy_edge_15",
+      "name": "yy_edge_15",
+      "faceCount": 1040
+    },
+    {
+      "path": "/root/yy_edge_30",
+      "name": "yy_edge_30",
+      "faceCount": 650
+    }
+  ],
+  "materials": [],
+  "shaders": [],
+  "materialBindingRelationships": [],
+  "descriptorNodeIDs": [
+    "yy_body",
+    "yy_edge_10",
+    "yy_edge_15",
+    "yy_edge_20",
+    "yy_edge_25",
+    "yy_edge_30",
+    "yy_tray"
+  ],
+  "meshIDsMatchDescriptor": true,
+  "unboundMaterialFree": true
+}

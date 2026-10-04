@@ -1,0 +1,30 @@
+{
+  "owner": "placid-badger",
+  "xcode": "Xcode 27.0\nBuild version 27A266a",
+  "axeVersion": "1.8.0",
+  "deviceType": {
+    "productFamily": "iPhone",
+    "bundlePath": "/Library/Developer/CoreSimulator/Profiles/DeviceTypes/iPhone 17 Pro.simdevicetype",
+    "maxRuntimeVersion": 4294967295,
+    "maxRuntimeVersionString": "65535.255.255",
+    "identifier": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+    "modelIdentifier": "iPhone18,1",
+    "minRuntimeVersionString": "26.0.0",
+    "minRuntimeVersion": 1703936,
+    "name": "iPhone 17 Pro"
+  },
+  "runtime": {
+    "name": "iOS 26.5",
+    "identifier": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+    "version": "26.5",
+    "buildversion": "23F77",
+    "isAvailable": true
+  },
+  "resourcesCreated": false,
+  "testMethods": {
+    "BoardModelTests": 8,
+    "BoardModelRealityTests": 22,
+    "BoardPackageStoreTests": 161,
+    "SuspendedBoardPresentationTests": 68
+  }
+}

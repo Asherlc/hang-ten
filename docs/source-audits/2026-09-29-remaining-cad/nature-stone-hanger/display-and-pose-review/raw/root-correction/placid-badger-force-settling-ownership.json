@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "placid-badger-force-settling",
+  "script": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/probe_force_settling.py",
+  "timeoutSeconds": 180,
+  "startedUTC": "2026-10-01T23:25:13.348165+00:00",
+  "ownedProcessGroup": 15909,
+  "elapsedSeconds": 20.29128641699208,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

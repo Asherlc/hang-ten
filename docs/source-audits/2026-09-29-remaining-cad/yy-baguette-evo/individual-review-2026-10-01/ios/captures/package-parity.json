@@ -1,0 +1,44 @@
+[
+  {
+    "stage": "staged",
+    "relativePath": "Hangboards/yy-baguette-evo/board.json",
+    "sha256": "7cae67e392b19c4eb5deb2d3e56034d03c84801ea975bd347ecfa9fcb496b0aa",
+    "expectedSHA256": "7cae67e392b19c4eb5deb2d3e56034d03c84801ea975bd347ecfa9fcb496b0aa",
+    "bytesEqual": true
+  },
+  {
+    "stage": "staged",
+    "relativePath": "Hangboards/yy-baguette-evo/assets/primary.model.json",
+    "sha256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+    "expectedSHA256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+    "bytesEqual": true
+  },
+  {
+    "stage": "staged",
+    "relativePath": "OnDemandResources/com.hangten.training.hang-ten-model-yy-baguette-evo-30a72b4a2c8033a0b1d5e73794501801.assetpack/Hangboards/yy-baguette-evo/assets/primary.usdz",
+    "sha256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+    "expectedSHA256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "Hangboards/yy-baguette-evo/board.json",
+    "sha256": "7cae67e392b19c4eb5deb2d3e56034d03c84801ea975bd347ecfa9fcb496b0aa",
+    "expectedSHA256": "7cae67e392b19c4eb5deb2d3e56034d03c84801ea975bd347ecfa9fcb496b0aa",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "Hangboards/yy-baguette-evo/assets/primary.model.json",
+    "sha256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+    "expectedSHA256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "OnDemandResources/com.hangten.training.hang-ten-model-yy-baguette-evo-30a72b4a2c8033a0b1d5e73794501801.assetpack/Hangboards/yy-baguette-evo/assets/primary.usdz",
+    "sha256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+    "expectedSHA256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+    "bytesEqual": true
+  }
+]

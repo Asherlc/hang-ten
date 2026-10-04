@@ -1,0 +1,335 @@
+{
+  "status": "EXACT_PUBLISHED_SNAPSHOT_PREPARATION_ONLY_NOT_PR_READY",
+  "refs": {
+    "base": "9399160729fcc418cedf47344b41163d244b5d96",
+    "own": "014c2596d54eaea6301ec46eb917eb45b3a07b57",
+    "parent": "5eae12bb9c0493c7b29f982d92ab855ac7f5696c"
+  },
+  "publishedRefsProof": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-published-counter-era/published-refs.json",
+    "sha256": "1168e8b9c8f7e7a778480748a6503d870a5a01644799bba185d79b845515c7f4"
+  },
+  "fetchNeeded": false,
+  "conflicts": [
+    {
+      "file": "Tools/HangboardCAD/native_cord_routes.py",
+      "mergeFileExitStatus": 1
+    },
+    {
+      "file": "Tools/HangboardPackages/src/hangboard_packages/cad_source.py",
+      "mergeFileExitStatus": 0
+    },
+    {
+      "file": "docs/HANGBOARD_CORD_AUTHORING.md",
+      "mergeFileExitStatus": 0
+    },
+    {
+      "file": "docs/model-delivery-lock.json",
+      "mergeFileExitStatus": 2
+    },
+    {
+      "file": "docs/source-audits/2026-09-29-remaining-cad/review-queue.json",
+      "mergeFileExitStatus": 0
+    }
+  ],
+  "changedPathCounts": {
+    "own": 12146,
+    "parent": 1993
+  },
+  "checks": {
+    "all21CompleteQueueRowsFromOwner": true,
+    "accepted1to8ExactBaseline": true,
+    "all57LockPackageRecordsPreserved": true,
+    "allOwnAndParentReviewRevisionRecordsRetained": true,
+    "sharedSolverParserAndDocExactPreviouslyTestedResolution": true,
+    "all87PythonOverlayBytesExact": true,
+    "requiredHistoricalCommitsAncestorsBothBranches": true
+  },
+  "queueOwners": [
+    {
+      "number": 1,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "c733630a2a1c66a371f6093a446171479aea965accab76c62a9048b01d972d6e"
+    },
+    {
+      "number": 2,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "2d471a2574ae20eeaff9cd0337c320b1160dff1bcadeccac1f4b04e974df22ad"
+    },
+    {
+      "number": 3,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "7d47228618ae438536ff3290f0aede2b6170028346579e650c1d4c3b2b5c2528"
+    },
+    {
+      "number": 4,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "d00a909d25bae336067d9c5f29f8663f382cb9b510c4e7a14ea4eddae8885cda"
+    },
+    {
+      "number": 5,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "7d663da55477b11604b055f66ec6e4fa4a5a74d205c3e2cfb8f5e92becce8b65"
+    },
+    {
+      "number": 6,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "5671102fce91e2fa5c14d4260c2026416927880912f5ec2612b656f96a98dfb1"
+    },
+    {
+      "number": 7,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "1a0fd0bd50d77aaee5814014c9274ec539cfa21a1bd8aefac92e952ee854828b"
+    },
+    {
+      "number": 8,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "78b815a95f91ad527a5e2f05054cfea28b4f197605b2b714b6e9e72e1fa00b4c"
+    },
+    {
+      "number": 9,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "1ec069876c29815f1163773ce0aaa11c6d5186ed014925b32b88ba9f452bd11b"
+    },
+    {
+      "number": 10,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "0fa6e64c7c546e761729734ba301f9f8ace899a48d3504c5049f460916d311e3"
+    },
+    {
+      "number": 11,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "4854b9e9502ad6b1f56f51ababc48552882fb3793d8b37321a8fa4df5dc07950"
+    },
+    {
+      "number": 12,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "eaff1a9c4f10609d336d237f86dd28fd9ab2d845c1f8aeb044ebc14a2ffa25ec"
+    },
+    {
+      "number": 13,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "1d838e996a2c0984435dafa3043b0f57bd359ad306d40fb5c7f45310010d9b15"
+    },
+    {
+      "number": 14,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "6e833edfb0e53cc31d2918fbc9991515d9818dcd5e40389aadacc349e7186440"
+    },
+    {
+      "number": 15,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "5b56e9f8981733c5962242424a475e0d3f91b717c726f391476f1ff1d74907f1"
+    },
+    {
+      "number": 16,
+      "owner": "own",
+      "fullRecordExact": true,
+      "sha256": "6df3fee07f5daddb5134461be4b39b244dd1b0a8608910e08da81806f80d76a2"
+    },
+    {
+      "number": 17,
+      "owner": "own",
+      "fullRecordExact": true,
+      "sha256": "c9df42ed8b47bbde534a284c606d18d209833ec3a528e120ad2e0ff0bd0a49ad"
+    },
+    {
+      "number": 18,
+      "owner": "own",
+      "fullRecordExact": true,
+      "sha256": "bf4c4720d139eb39ffab6f7192c4116884be7414161075940854efc4cbede2c0"
+    },
+    {
+      "number": 19,
+      "owner": "own",
+      "fullRecordExact": true,
+      "sha256": "71f5069046e2c54b984ea5afa51c38cf2c63ef0c20ef875e3ff726dff6e97a6d"
+    },
+    {
+      "number": 20,
+      "owner": "own",
+      "fullRecordExact": true,
+      "sha256": "1280553d368af449a1be315a4ad6b70eb1458347add42f4ef900e65bc83c3667"
+    },
+    {
+      "number": 21,
+      "owner": "own",
+      "fullRecordExact": true,
+      "sha256": "c92926669bb36bfda2ea33c59f9608a5054bfddc9594ab8655e9f36b391e723a"
+    }
+  ],
+  "sharedAppCommittedChanges": {
+    "own": [
+      "HangTen/Models/WorkoutActivityRecording.swift",
+      "HangTenTests/BoardModelTests.swift",
+      "HangTenTests/BoardTargetSubstitutionTests.swift"
+    ],
+    "parent": []
+  },
+  "historyPreservation": [
+    {
+      "requested": "e60142f3e",
+      "resolved": "e60142f3ef60456248054bf3cf917c7ab81bf5e6",
+      "ancestorOf": {
+        "own": true,
+        "parent": true
+      }
+    },
+    {
+      "requested": "1e09ed9be",
+      "resolved": "1e09ed9be2c690fe98c0a69aa92125a66127f9e0",
+      "ancestorOf": {
+        "own": true,
+        "parent": true
+      }
+    },
+    {
+      "requested": "583a2d08e",
+      "resolved": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
+      "ancestorOf": {
+        "own": true,
+        "parent": true
+      }
+    }
+  ],
+  "oldResolutionAssessment": {
+    "algorithmStillApplicable": true,
+    "sharedCodeResolutionExact": true,
+    "oldStaticQueueLockNotCurrent": true,
+    "reason": "Previously proposed resolver successfully reproduced current snapshots. Source_metadata forwarding and groove dispatch/mutual exclusion coexist with terminalsByPoseID exactly as previously tested. Old queue/lock artifacts would drop newer parent Flash Board/Forge review/package records; use freshly resolved full owner records and rebuilt aggregate instead.",
+    "newParentCanonicalPackages": [
+      "tension-flash-board",
+      "trango-rock-prodigy-forge"
+    ],
+    "newCombinedDeliverySHA256": "0eea96648ca3ce48d55f7c71cd2cb81dae7de89d9327679c00d862302ec3c33c"
+  },
+  "focusedTests": {
+    "rerun": false,
+    "reason": "All87 Python source/test/fixture overlay files byte-identical to previously passing integration snapshot; source inputs unchanged on both sides.",
+    "previousPassed": 84,
+    "resultPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/focused-tests-final.json",
+    "resultSHA256": "296caeb0dd6eb31966ae69dd6286650e60436104c70f9258336feca688db80db",
+    "rawLogSHA256": "ff62d481e44fba103257314095effa541c7808f91558ab872990b6e61a1b0bfd"
+  },
+  "overlayHashes": {
+    "Tools/HangboardCAD/export_rope_collision_solid.py": "b0ccac8584d701c645befb8d049c8e0202326a43e906a603f0ddba8f0bda3152",
+    "Tools/HangboardCAD/set_board_manifest.py": "fb3fcab44cf4ecf0aeec7df2ac6c3a1f6c0dd2931971e17928394aa733b81287",
+    "Tools/HangboardCAD/presentation_targets.py": "25a3136d0bc1c5d8651d1ad60b99e804e576bdb1668192719102e0f36f856f15",
+    "Tools/HangboardCAD/preview.py": "f6e47c2d6d68f595bada962fd048ba47e7dcbd0cbd4099d1576dc76bff8b0a14",
+    "Tools/HangboardCAD/native_cord_guides.py": "2001cb8f4eb141d50146a2f426aa0cc086e729e0e737b4224e7f9dcf0a6fa191",
+    "Tools/HangboardCAD/prepare_assets.py": "ed2f8e2b8eede2321ca7fc2c9cbbf404a7a31fa02f524320772ded39e5616251",
+    "Tools/HangboardCAD/use_hangboard_packages.py": "897951984c2b741e48e115c6b4c7e14620d14f37aa41744c2b9cd34bc9a41738",
+    "Tools/HangboardCAD/native_cord_features.py": "dbf57a10bef757087ee263fef7b883ec660c5d2e45655dab1f98e40e8b4971c4",
+    "Tools/HangboardCAD/board_manifest.py": "8dc5b35e61231d21d36a719c13b0609f829332b9aa26e42fe0829efc0269fbfe",
+    "Tools/HangboardCAD/run_freecad.py": "b5c030eec4b3f22e1e2ecc93c21e18880b1bdcdb66e1eaaa24cdb1f167816350",
+    "Tools/HangboardCAD/usdz_writer.py": "1d222c1b5483e94288587e4fbb13e8773b00cdaab715a39dac7cf6d69ee4f1af",
+    "Tools/HangboardCAD/photo_grid.py": "dc342d879ebe077862987a8a9ab18e25c0871f55d48c2232e412c40fdef20b3a",
+    "Tools/HangboardCAD/compile_board.py": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+    "Tools/HangboardCAD/verify_reproducible.py": "5dba947d12ad284d286e7c87682d7d09010ae41c4b66e8f96755574b6033690a",
+    "Tools/HangboardCAD/reference.py": "a2566255ebab2658478cfe85d75b210af5fad496a5f7b9c38e1610884dc35a44",
+    "Tools/HangboardCAD/solve_threaded_rope.py": "bcd7531950cc198ce8e5ad146d999dca3b11e7901076a8af2d08b5b1bf638f71",
+    "Tools/HangboardCAD/contract.py": "e92e39ed8eb802d7f0d33645aade64c274ff5f1b2769e3621fedd462933ed102",
+    "Tools/HangboardCAD/measure_channel_spines.py": "05cc1c99e4c47fa995304cc65c2d8788af4747482a72cc420742cd69afaefa1f",
+    "Tools/HangboardCAD/native_cord_routes.py": "a7285ef5dfaa8fa358ff956010e613ab891ad8536090455dc024ccdb08e90f18",
+    "Tools/HangboardPackages/tests/test_board_geometry.py": "defa71d372e91798944ebf3e41b546d46c9c05ba93d664d4d71c533f9f5a89aa",
+    "Tools/HangboardPackages/tests/test_cord_paths.py": "9f22e39dae3f8fcb9e6f4efe2bc6e9ba605449b8b8e6fe56456068210d2e1f4a",
+    "Tools/HangboardPackages/tests/conftest.py": "a44c828d34bc0ffa57e2e4cba0cad8d57565990aa6fe4dfd72d579a16b1ba14c",
+    "Tools/HangboardPackages/tests/_board_package_helpers.py": "993afcc8b218feb94268ed1e601c7419be55182fc07d08bf404d34e081d2fb05",
+    "Tools/HangboardPackages/tests/test_cord_audit_reusable_instances.py": "cfd0aea588ffbbd479fa84661daa895ec8936c40880973e1801d2a42c7e5e029",
+    "Tools/HangboardPackages/tests/test_trango_rock_prodigy_training_center_board_package.py": "c37eae3756ef4134d7bdeb7f03609239cfcf63ecdd231a2ab4d06e848ec4c436",
+    "Tools/HangboardPackages/tests/test_model_delivery_lock.py": "eae8e80ffeac3c35518634d129bba6ed7c1872a333ca9f26d7e38ac8c5d0d9aa",
+    "Tools/HangboardPackages/tests/test_model_first_packages.py": "5784e35ecc4116a925bf6971e8b8c09dea093cb6f7c8ea4dbf6ed9cab9b76d10",
+    "Tools/HangboardPackages/tests/test_ci_xctest_contract.py": "6e6f08d39e743a38774a6095ac4157105fa4cdf7033868e4a8ed7798714a800f",
+    "Tools/HangboardPackages/tests/test_shared_contact_membership_package.py": "43d0a17c4b93ec522fdb3488094b619de8c753ea282ae142307953cc228180e8",
+    "Tools/HangboardPackages/tests/test_board_package_staging.py": "94fc0cc37523d012112ef55108d35b02d872bd758cd9b936845179374a1e9056",
+    "Tools/HangboardPackages/tests/test_cad_routed_cord.py": "fbf01b3c3a5cf2140222307414c2a07b78da2dc4b9fad7a314716d23636a0e78",
+    "Tools/HangboardPackages/tests/test_cord_audit_source_tiers.py": "2869c900b33ebe512051f0410a35266776dc3f3657ba7c5ecc5fc2b4b4ab0699",
+    "Tools/HangboardPackages/tests/test_configured_depths.py": "9fd42c7032d0b319922e97d098c62697a511d0645f812b65396e2abdb3270a9b",
+    "Tools/HangboardPackages/tests/presentation_remediation_helpers.py": "633615be0846aa7c7cc693a650b075b7330d0d031567988cc22d4056fa446767",
+    "Tools/HangboardPackages/tests/test_pose_camera_facing.py": "2883c115b0a73a22eda80bb6e5596ac4606256346b81b5966df5bb967a9b4191",
+    "Tools/HangboardPackages/tests/test_board_geometry_schema.py": "2024ea1e131141eb5594f0503bab0b3f1bb02522668e2f90508e0d2897346420",
+    "Tools/HangboardPackages/tests/test_board_catalog.py": "551012d7cf8e1c7cbe0b6cc56d8f37fb06c9716eb7960be556f047fe2e25e118",
+    "Tools/HangboardPackages/tests/test_cli.py": "7f3cb4aecc4baba31c212ee9963795d860bf96d96dfd86593f4c48033521f282",
+    "Tools/HangboardPackages/tests/test_remove_primary_backdrops.py": "268f8e5098e9b21b820c39519029b2878996cdfea56982bcceb92d42318c9b19",
+    "Tools/HangboardPackages/tests/test_complete_catalog_source_audit.py": "093a90e823443ac8f26cf9ca4a6aab53db9b818a1b9b277508c82763a328f615",
+    "Tools/HangboardPackages/tests/test_coderabbit_mirrored_geometry.py": "4bb8c11126f0649de6fc7cb90b50c9bb34e901c669a31f77ee1e7b170c8ffd34",
+    "Tools/HangboardPackages/tests/test_moon_armstrong_geometry_repair.py": "185ff45ae1519eff23a40b2e17268a57ee8f250e11855d7b4d38a52740d1bb8c",
+    "Tools/HangboardPackages/scripts/remove_primary_backdrops.py": "35237694c4ef8c10bbc6c7068ba69f02f8c4709bc28a062dc67665f0472001ee",
+    "Tools/HangboardPackages/src/hangboard_packages/geometry_cleanup.py": "ca4245827b502a163b13d05f940c26b7300558b4124ea38a8d4a41e35c506671",
+    "Tools/HangboardPackages/src/hangboard_packages/board_geometry_schema.py": "254d46bfc24a2da427f6fd3f0a4cdd4f6c829f6baab00920e4cb484e8a363582",
+    "Tools/HangboardPackages/src/hangboard_packages/metadata_audit.py": "feed34d015aa2fdab44767198ceab0a1c45a78ff2af8416ed2f2ec01a0792501",
+    "Tools/HangboardPackages/src/hangboard_packages/usd_mesh_chain.py": "ebf68d38861dcd289e4a81f2d2db5ced2c660739aa3a9a3bd8ec5e92337eb736",
+    "Tools/HangboardPackages/src/hangboard_packages/presentation_remediation_audit.py": "716d55aa68e1c91ebdb7d267e9f2df2bfb1d901ba40bad3fb2bfcba04997661a",
+    "Tools/HangboardPackages/src/hangboard_packages/cli.py": "70630ea53b766457b3ffd66f0e08075f676d34c1afce36bad45f8575db24e2d6",
+    "Tools/HangboardPackages/src/hangboard_packages/cord_paths.py": "d0c6dcacc8e1ad129e8d03580a43e9e20b547879a127bb912582b19c7a683250",
+    "Tools/HangboardPackages/src/hangboard_packages/cord_audit.py": "c84365ff292584467a0df31c827c6c73dc787358319014492e294004ed32b189",
+    "Tools/HangboardPackages/src/hangboard_packages/board_geometry.py": "e1dbb6738094e8c0faa63b24bfe68253020b11b36029d150bdb12057d0620a09",
+    "Tools/HangboardPackages/src/hangboard_packages/board_catalog.py": "54af5c45627f76128e7629c601822d37903c57f4260ee81fdc668bf922140172",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "2cb13d2ee37217b6836262c1c3c5f8273f37b0709b549ad2060ad966510df9dd",
+    "Tools/HangboardCAD/tests/whetstone_native_source_checks.py": "fead62badda706b0ec87672eaed643a256d9f2f7c86ccd54377f737fcbd786b6",
+    "Tools/HangboardCAD/tests/native_source_checks.py": "391f49a390a47fcbff9828b9e030c80f49920e072640668099bd2d1f02a0e3d3",
+    "Tools/HangboardCAD/tests/test_usdz_writer.py": "b8eeddd9197404250d22a5fe1dc7ea4c4fd7dd45473daadf265cf1891f2cd0e3",
+    "Tools/HangboardCAD/tests/test_shared_contact_membership_cad.py": "896b26f48dc2b11cb092320d64bb54b10e157022f253598a16931ac858726015",
+    "Tools/HangboardCAD/tests/test_native_cord_routes.py": "8e7890dcb013f06fc3e9d1844459b1c952955bf8405d7dcfe951aa5a1ac26c36",
+    "Tools/HangboardCAD/tests/test_native_pose_terminals.py": "c2bd4c3a0d5849d6845a6aef0fcc4c4dd9c76bae01a80fcd8c84a43572c86761",
+    "Tools/HangboardCAD/tests/test_foundry_native.py": "6fd234f5634ceeb4a4f0b482ef73313b185c85ba9f99aba464d39b264ae64840",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py": "f757edde7afff4a987009fc3fe54916d75bb4023e152378a126193b7f249ea2b",
+    "Tools/HangboardCAD/tests/test_native_cord_feature_extraction.py": "0c8e7f829e6ffb1ad93ac41738776b0857f642c2d0bf946b1375a3ef421591b9",
+    "Tools/HangboardCAD/tests/test_presentations.py": "9e43d1b269f6972a5e7c7898aa37cf2d0ade031ca80aec57a2313c70dbff527b",
+    "Tools/HangboardCAD/tests/test_native_path_search.py": "9900386900a1fa6ef0409b2dbe54605ee2c2b21b2a436ac56b454836d1dcd87d",
+    "Tools/HangboardCAD/tests/test_native_cord_tightening.py": "362679227649f45dbfab39a7eda39a7c648de4e928d3904e93750e51f2ab60e7",
+    "Tools/HangboardCAD/tests/test_native_clearance_budget.py": "8ca5f987ddaaabe4b0b9e4012da4907ae983c4b58833046c90518f2d38142fff",
+    "Tools/HangboardCAD/tests/compare_exports.py": "8096775d94291967514a8bfb5c4116f94e39336606a2fecfae3f42fb04154a6b",
+    "Tools/HangboardCAD/tests/test_prime_rib_native.py": "815b4c641169e1f4d858e255a9bd5176bb6e09227c4524af61f478fcf86763b0",
+    "Tools/HangboardCAD/tests/native_cord_feature_checks.py": "50c360624c021da6b55001a8ac4aa5dca2cef801160e6265228201f020ea4743",
+    "Tools/HangboardCAD/tests/test_compile_v2_depths.py": "f449b9e2fa1aebc5ce82e4d961f378c6c6ad3a76b183e7d36d0b7eeb8a7d69e6",
+    "Tools/HangboardCAD/tests/foundry_native_source_checks.py": "1686e7904b7767a0306d97a691fb28e638ffd35ba4e6a287ad2fc0d80eb7d601",
+    "Tools/HangboardCAD/tests/test_contract.py": "b20d377127fc4b9190b7a0aedc8d8986ab2efb1d1795a6ec2e82186f2c018b4c",
+    "Tools/HangboardCAD/tests/test_board_manifest.py": "7c70dc34e22c425e25eb3e5cf3f135debd9cb82a499577605e9d996812a0a1df",
+    "Tools/HangboardCAD/tests/test_uv_node_normals.py": "829e79fc508ac55c28ab17c859ffaca4fa92c29438533f699f96cc308fd05f2f",
+    "Tools/HangboardCAD/tests/prime_rib_native_source_checks.py": "2bf343d8435b6e24a1abf08b6cbc10d9c0492b6cb73e93c0ea670898cbc3dcd3",
+    "Tools/HangboardCAD/tests/test_metolius_native.py": "bafaf0a7fd36377b2c690281fc8cad10ce469bf823bcee95b96435b25d3799f1",
+    "Tools/HangboardCAD/tests/test_native_cord_guides.py": "88c708aa16e459a4fec701535da5f2d1d9fa51df18d340c8815a3d610d534341",
+    "Tools/HangboardCAD/tests/native_broken_source_check.py": "cff516b3db124f94c0209aeb6097a0463511cfd29e063f0adc2c1f47bf572c74",
+    "Tools/HangboardCAD/tests/test_integration_dispatch.py": "53e5f8fdd40b5226c1a1c65534df4bf8757b84d9ef772478499259e089aa9fd6",
+    "Tools/HangboardCAD/tests/test_pilot_native.py": "35375ad3456eddffdcfccf5571f46fe26a181a69b94599d843490421bf5da811",
+    "Tools/HangboardCAD/tests/metolius_native_source_checks.py": "423d6ff41d730b6d6307c3d54ea228adbacfd2faf7a82673c955852b52386895",
+    "Tools/HangboardCAD/tests/test_whetstone_package.py": "e47a78a63d4a49f87fec05ec140e4677e5f2ae13c3af6a2a4176887ee969ef86",
+    "Tools/HangboardCAD/tests/test_cli_guards.py": "984bf28a436f8e0f75d2e23fa6e56039d93d4f98d84a8ff29adc800a3bd187ed",
+    "Tools/HangboardCAD/tests/uv_node_normal_checks.py": "684998bb8ca409e7ee07a46f572865a40d5bb1cd7fc86fe49da0419e0e38a8e7",
+    "Tools/HangboardCAD/migration/author_soill_iron_palm_2.py": "f8120f87d91e0921e757ca394d61339f14b7b9e9b3124bb72cfeef0103bbc880",
+    "Tools/HangboardCAD/tests/fixtures/native_groove_material_normals.json": "caa316ef2e7c35b3091f87c47a63644061b3a64b1b9f82d8941d4497ca60055c"
+  },
+  "resolvedFiles": {
+    "docs/HANGBOARD_CORD_AUTHORING.md": "219d470b7a261157338d4f931a2fad1538ce05faf5bb8a9bcb9f1a2812d4a4cb",
+    "docs/model-delivery-lock.json": "00d1416e979e1fe9bed5678f943d89fa20dc3c2594a07536cc26e05599b71cb2",
+    "Tools/HangboardCAD/native_cord_routes.py": "a7285ef5dfaa8fa358ff956010e613ab891ad8536090455dc024ccdb08e90f18",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "2cb13d2ee37217b6836262c1c3c5f8273f37b0709b549ad2060ad966510df9dd",
+    "docs/source-audits/2026-09-29-remaining-cad/review-queue.json": "3cfbe630932183148200bb967cfdb350b520887e4d04230cd30a2e1a4a2bf2af"
+  },
+  "resolverPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/resolve_snapshot.py",
+  "resolverSHA256": "060734406bce70c1f83b95018f0f1f22071cd1552c4d321d5a0d6ce1ebcdc292",
+  "blockersAndLimits": [
+    "No merge/cherry-pick/checkout/index/ref/source or other-workspace operation performed; only Git-object reads, read-only remote refs and scratch merge-file text preview.",
+    "Current temporary runtime diagnostic source is not part of committed snapshot; settle final production source and refresh exact published refs before any integration.",
+    "New parent Flash Board and Forge assets require final integrated package/source/LFS/staging validation appropriate to their changed bytes; Git pointer payload OIDs here do not replace actual native/runtime validation.",
+    "Own20 workout behavior remains unresolved;21 fresh-app human acceptance remains pending. Snapshot preparation is not PR readiness.",
+    "Full21 owner rows,57lock records and historical commits preserved. No human status was revised.",
+    "Published refs represent one ls-remote observation; parent may continue advancing."
+  ]
+}

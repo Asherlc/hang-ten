@@ -1,0 +1,83 @@
+{
+  "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+  "modelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+  "sidecarBeforeSHA256": "8f6de683212d1083583a9795852f6b3458d8a4db63e11ce6de44d10d6b64a8da",
+  "sidecarAfterSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+  "solverSHA256": "40d23e454d8790fd4769a7e6713a831e810a1ae3756c786776203b915cc6ffd1",
+  "permittedChangeCheck": "passed: only mouthAxis and generated route/translation Y changed",
+  "entryDirectionByPose": {
+    "curved-lip-front": {
+      "left-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      },
+      "right-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      }
+    },
+    "exterior-jug-back": {
+      "left-lead": {
+        "beforeApproachZMM": 1.555635,
+        "afterApproachZMM": 22.2
+      },
+      "right-lead": {
+        "beforeApproachZMM": 1.555635,
+        "afterApproachZMM": 22.2
+      }
+    },
+    "left-pocket-vertical": {
+      "left-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      },
+      "right-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      }
+    },
+    "straight-lip-inverted": {
+      "left-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      },
+      "right-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      }
+    }
+  },
+  "reproducibilityCheck": "passed",
+  "continuousClearanceAndTubeValidation": "passed",
+  "applyReportSHA256": "552769af7d7d680d6f59c404816cd830b0b7c97ec746a9a7eb5ab82fdba90cb8",
+  "checkReportSHA256": "552769af7d7d680d6f59c404816cd830b0b7c97ec746a9a7eb5ab82fdba90cb8",
+  "testSourceSHA256": "3517ccefd0db22167057fa64cd38073d8dddb7093ac55981353ab3d2f3fd5efd",
+  "pythonTests": {
+    "passed": 569,
+    "deselected": 1,
+    "reasonForDeselection": "Unchanged full-catalog native byte rebuild already independently proved; source, USDZ and descriptor remain exact.",
+    "report": "front-mouth-review/full-python.log",
+    "reportSHA256": "a0abfbe55c6e060fcb1f3b4f7017a7bbc58ef75990a0db879d2174c26fda45d8"
+  },
+  "otherCollarPackage": {
+    "package": "yy-baguette-evo",
+    "exactCacheCheck": "passed all five poses",
+    "preservedFileHashes": {
+      "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+      "Hangboards/yy-baguette-evo/suspension.json": "a8268c4df7ce4eced116b692ad92276394d064aa858b83e5c00b84fd43f75678",
+      "Hangboards/yy-baguette-evo/assets/primary.usdz": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+      "Hangboards/yy-baguette-evo/assets/primary.model.json": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921"
+    },
+    "report": "front-mouth-review/baguette-final-unchanged-check.json"
+  },
+  "appReview": {
+    "canonicalPoseCapture": "passed all four current-source poses",
+    "iOSTests": "1258 passed, 3 skipped, 0 failed",
+    "physicalUIOrbit": "unverified; failed capture attempts excluded",
+    "runtimeReport": "cord-entry-runtime-validation.json",
+    "humanReview": "pending revised DUAL user review"
+  },
+  "status": "passed",
+  "scope": "Native route generation, exact regeneration, continuous clearance, whole-path tube checks and Python regressions. Human app review is separate.",
+  "sidecarSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8"
+}

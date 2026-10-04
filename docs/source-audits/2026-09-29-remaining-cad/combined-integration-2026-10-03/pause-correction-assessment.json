@@ -1,0 +1,122 @@
+{
+  "workspaceOwner": "placid-badger-cad-second-half",
+  "scope": "Read-only measured correction assessment; no code edits/builds/runtime actions",
+  "evidence": {
+    "timingLog": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/pause-timing-controller/tests.stdout",
+    "timingLogSHA256": "ed58ffc9213cd2a7b16ba8bc7a40b478176c6e593e3ed75468bf1df5204ad9bc",
+    "samplePath": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/pause-timing-controller-fixture-sample/placid-badger-cad-second-half-fixture.sample.txt",
+    "sampleSHA256": "65382c00b369cfaa8dc5667e0a54bb4a9928b82cfbe0c18aa2b0566238a53558"
+  },
+  "measured": {
+    "coldFixtureWallSeconds": 44.54328524999332,
+    "workerStartDelayAfterWaitBeginSeconds": 0.05888441667705774,
+    "workerMainThread": false,
+    "firstFixedStepWallSeconds": 2.1248272083321353,
+    "eightStepsWallSeconds": 28.280847666668706,
+    "simulationTimeAfterEightSteps": 0.03333333333333333,
+    "maximumSpeedAfterEightSteps": 0.00026617257141562365,
+    "boardDisplacementAfterEightSteps": 0.000816799133120244,
+    "settledAfterEightSteps": false,
+    "failureCallbackObserved": false,
+    "completionObserved": false
+  },
+  "rootCauseBoundary": "Observed worker numerical progress is too slow in unoptimized Debug for30wallseconds to reach the required physical settling history. This explains timeout boundary, but successful actual convergence/delivery is still unproven.",
+  "physicalCriteriaRetained": [
+    "target orientation arrived",
+    "simulated time>=0.5seconds",
+    "maximumSpeed<0.001",
+    "boardDisplacement<0.0001 over trailing0.5second history",
+    "all geometry acceptance thresholds/topology/material lengths unchanged",
+    "exactly one settled accepted frame publication"
+  ],
+  "importantInference": "Speed already falls below0.001 bystep5, but displacement history retains early transient~0.817mm. It cannot settle merely because instantaneous speed falls; solver must advance full history to at least0.5seconds. Predicting completion from last-frame speed would weaken the existing physical requirement.",
+  "sampleScope": {
+    "firstFilenameMislabelsPhase": "Despite fixture filename, first sample contains LiveRopeWorker.advance\u2192settled\u2192step and worker thread2033samples. It is a numerical-worker sample, not evidence that seed generation dominates this sampling window.",
+    "secondSample": "Not used for active-test or phase percentages because it spans near timeout/test teardown boundary. No claim it sampled an ongoing accepted-settle test.",
+    "inclusiveCounts": [
+      {
+        "symbol": "LiveRopeWorker.advance",
+        "inclusiveSamples": 2033,
+        "workerSamples": 2033,
+        "percent": 100.0
+      },
+      {
+        "symbol": "RopeDynamicsSolver.correctConstraints",
+        "inclusiveSamples": 1780,
+        "workerSamples": 2033,
+        "percent": 87.56
+      },
+      {
+        "symbol": "RopeDynamicsSolver.merit",
+        "inclusiveSamples": 920,
+        "workerSamples": 2033,
+        "percent": 45.25
+      },
+      {
+        "symbol": "RopeDynamicsSolver.contactCorrection",
+        "inclusiveSamples": 195,
+        "workerSamples": 2033,
+        "percent": 9.59
+      },
+      {
+        "symbol": "RopeDynamicsSolver.constraintBackbone",
+        "inclusiveSamples": 42,
+        "workerSamples": 2033,
+        "percent": 2.07
+      },
+      {
+        "symbol": "RopeSimulationMetrics.contacts",
+        "inclusiveSamples": 662,
+        "workerSamples": 2033,
+        "percent": 32.56
+      },
+      {
+        "symbol": "RopeTriangleCollider.segmentContacts",
+        "inclusiveSamples": 941,
+        "workerSamples": 2033,
+        "percent": 46.29
+      },
+      {
+        "symbol": "RopeSimulationMetrics.measure",
+        "inclusiveSamples": 130,
+        "workerSamples": 2033,
+        "percent": 6.39
+      },
+      {
+        "symbol": "RopeMotionSweep.selfContactValid",
+        "inclusiveSamples": 67,
+        "workerSamples": 2033,
+        "percent": 3.3
+      },
+      {
+        "symbol": "RopeTriangleCollider.sweptSegmentContact",
+        "inclusiveSamples": 53,
+        "workerSamples": 2033,
+        "percent": 2.61
+      }
+    ],
+    "percentCaveat": "Percentages are inclusive counts relative to2033sampled worker stacks in one short observation window. Nested categories overlap; never sum them to100or interpret as whole-run CPU percentages."
+  },
+  "profileFinding": "87.56% of sampled worker stacks lie in correctConstraints; geometry segmentContacts46.29% and self-contact enumeration32.56% dominate this window. Merit accounts45.25% inclusive. Contact linear solve9.59%, banded backbone2.07%; source-only linear algebra changes are not the first evidence-backed optimization target.",
+  "recommendedNextGates": [
+    "Same Debug conditional code, same instrumentation and same30second assertions with SWIFT_OPTIMIZATION_LEVEL=-O as single-variable compiler comparison; parent is executing this. Preserve its exact binary/build flags separately from defaultDebug.",
+    "Require worker.complete with settled=true+geometryAccepted=true and exactlyone observed delivery before declaring accepted convergence. For scene require its unchanged mesh application/camera framing assertions too.",
+    "If optimized run does not complete, use separate explicit diagnostic bounded by native1200steps/5simulated seconds and600wallseconds; carry full physical assertions. This is evidence gathering, not final timeout repair.",
+    "After measured defaultDebug native convergence, use wall budget justified by actual runtime+headroom in retained native integration; keep numerical1200step bound and explicit failure diagnostics/deferred stop.",
+    "Only if optimizer comparison still exhibits materially poor runtime or release-relevant profile proves it, optimize exact geometry/contact hot path with equivalence tests. Current evidence does not justify changing dynamics/physical criteria."
+  ],
+  "testArchitectureAssessment": {
+    "controllerUnit": "A small explicitly synthetic solver fixture may test asynchronous pause/resume, stale delivery rejection, one publication and terminal cleanup cheaply while retaining the real solver and accepted physics metrics. Alternatively an injected deterministic worker tests controller behavior, but requires a larger production seam. Do not manufacture a native-product claim from synthetic data.",
+    "nativeIntegration": "Keep actual Clavellium scene pause test and actual native solver/accepted settled frame coverage. Do not remove or replace the native test solely because a synthetic controller test passes.",
+    "preferredMinimalRepairAfterProof": "If native solver completes accepted within measured larger budget and optimized unchanged test succeeds, a documented numerical integration wait allowance is proportionate. Existing30second native timeout is a wall-clock assumption, distinct from every physical assertion. Moving or splitting controller tests is optional test architecture work, not necessary proof of source fix.",
+    "fixturePreparation": "Raw controller fixture differs from scene accepted prepareDisplay seed. Preparing accepted seed can improve fixture consistency, but current raw steps remain geometry accepted; this change alone cannot explain or fix cost of waiting0.5simseconds."
+  },
+  "claimsNotYetSupported": [
+    "All native settling converges",
+    "Production performance is repaired",
+    "A solver numerical bug exists",
+    "A lifecycle token bug exists",
+    "MainActor blocks during worker loop",
+    "30seconds can be safely raised without acceptedcompletion evidence"
+  ]
+}

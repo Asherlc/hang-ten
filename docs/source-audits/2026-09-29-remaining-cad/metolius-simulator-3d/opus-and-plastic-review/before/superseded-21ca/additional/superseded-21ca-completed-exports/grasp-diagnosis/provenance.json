@@ -1,0 +1,12 @@
+{
+  "sourceSHA256": "21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d",
+  "status": "intermediate candidate rejected by new user feedback; diagnosis only",
+  "method": "Direct native CAD sections; no reference-image measurements",
+  "files": {
+    "native-grasp-sections.png": "67abc6b3625dc6d808242ef0a18ff82c3aba093ba33f7fb6ac5de1431fd1ca7b",
+    "rear-center.png": "d0fa62bbbc3b9df6d96941c6cd98eb480e91e5e47d947486594cec84fbe155a2",
+    "rear-oblique.png": "b82b30590f66282661ba0225ce5cdec78016dec559a26ab9b07ac9df1763705b",
+    "high-front.png": "3b97bdb97f06e5aafc363c391561a6b40a39a271f7931056bdc22eb92cd3a821",
+    "native-sections.json": "50b9e83c5ade7fba963e140475c5cb822b5c1c38a0037f224827b48608628f0c"
+  }
+}

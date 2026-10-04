@@ -1,0 +1,46 @@
+{
+  "owner": "placid-badger",
+  "number": 15,
+  "boardID": "trango.rock-prodigy-forge",
+  "sourceSHA256": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124",
+  "presentations": {
+    "primary": {
+      "modelSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+      "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6"
+    }
+  },
+  "sourcePlanID": "research.abrahangs",
+  "workStep": 17,
+  "naturalRestStep": 18,
+  "routineDurationsOrTasksChanged": false,
+  "technicalCapturedWorkflowPassed": true,
+  "automationResult": "Captured Hang/Rest passed; later driver command failed and is retained.",
+  "frames": [
+    {
+      "image": "screenshots/15-landscape-hang.png",
+      "sourceArtifact": "app-captures/15-workout-landscape-natural-work-highlight.png",
+      "sha256": "d1be6cc70fda568d268ff4ca4dae4dc34ccee196c7af0a06929a45e492c5e94e",
+      "orientation": "landscape",
+      "observedHighlight": "red",
+      "wholeFrameInspected": true,
+      "boardAndCordsVisible": true,
+      "handPreviewVisible": true
+    },
+    {
+      "image": "screenshots/15-landscape-rest.png",
+      "sourceArtifact": "app-captures/15-workout-landscape-natural-rest-live.png",
+      "sha256": "a3d523bbca611f54f1aee5e605eb0a479c0d33ddfd68d3526758255878c10c44",
+      "orientation": "landscape",
+      "observedHighlight": "blue",
+      "wholeFrameInspected": true,
+      "boardAndCordsVisible": true,
+      "handPreviewVisible": true
+    }
+  ],
+  "geometryAndSuspensionUnchanged": true,
+  "bodyHumanApprovalUnchanged": true,
+  "currentAppHumanAcceptance": "pending",
+  "limits": "Hang and natural Rest whole frames pass. The subsequent physical Rest Pause command failed because AXe could not query the rotated Simulator orientation. No successful paused-Rest command is claimed. No continuous or hardware GPU timing claim.",
+  "priorTouchAndContactCoverage": "10 representative categories across the native pair; not all 20 left/right contacts.",
+  "priorTouchRecord": "runtime-final-2026-10-03/boards/15.json"
+}

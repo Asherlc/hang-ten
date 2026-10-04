@@ -1,0 +1,7 @@
+{
+  "scope": "Exact app and own awake direct child only; persistent Simulator/DD remain controller-owned",
+  "awakeChildReaped": true,
+  "awakeExitStatus": null,
+  "awakePIDAbsent": true,
+  "passed": true
+}

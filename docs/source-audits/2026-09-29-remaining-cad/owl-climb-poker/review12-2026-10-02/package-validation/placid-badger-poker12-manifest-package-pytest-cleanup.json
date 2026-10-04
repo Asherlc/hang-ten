@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger",
+  "jobName": "placid-badger-poker12-manifest-package-pytest",
+  "resources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-manifest-package-pytest-TMP",
+      "absent": true
+    }
+  ],
+  "errors": [],
+  "remainingProcesses": [],
+  "processGroupAbsent": true,
+  "allResourcesAbsent": true,
+  "passed": true,
+  "finishedUTC": "2026-10-02T15:30:07.384310+00:00"
+}

@@ -1,0 +1,124 @@
+{
+  "owner": "placid-badger",
+  "composition": "Complete image rectangles, uniform aspect-ratio fit and letterbox only. No crop, tracing, registration, pixel measurement or content edits.",
+  "placements": [
+    {
+      "output": "front-side-top-comparison.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/previews/comparison-front.png",
+      "inputSHA256": "ad3cf8344224619334b13cc6982043260004ce5c84c66a8706ad0df234b79791",
+      "originalSize": [
+        2400,
+        700
+      ],
+      "placedSize": [
+        1749,
+        510
+      ],
+      "position": [
+        25,
+        130
+      ],
+      "uniformScale": 0.7285714285714285,
+      "crop": false
+    },
+    {
+      "output": "front-side-top-comparison.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/previews/comparison-side.png",
+      "inputSHA256": "4546d712b72dacf7a94fbe9216567adb8c0bf758e5e264d936995a2bcaef7f0c",
+      "originalSize": [
+        2400,
+        700
+      ],
+      "placedSize": [
+        1749,
+        510
+      ],
+      "position": [
+        25,
+        650
+      ],
+      "uniformScale": 0.7285714285714285,
+      "crop": false
+    },
+    {
+      "output": "front-side-top-comparison.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/previews/comparison-top.png",
+      "inputSHA256": "b9c44c7f01e3ee5bcad815d2dd5e464e4ed7f389a4b1bffb8bbffaef77a41f04",
+      "originalSize": [
+        2400,
+        700
+      ],
+      "placedSize": [
+        1749,
+        510
+      ],
+      "position": [
+        25,
+        1170
+      ],
+      "uniformScale": 0.7285714285714285,
+      "crop": false
+    },
+    {
+      "output": "app-before-after.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/before/app/pinch-left-orbit.png",
+      "inputSHA256": "3b7f162dfb00714326a5ff48951f6804b4789d438c40e462ccbb1116e7f48ce3",
+      "originalSize": [
+        1206,
+        2622
+      ],
+      "placedSize": [
+        630,
+        1370
+      ],
+      "position": [
+        20,
+        217
+      ],
+      "uniformScale": 0.5223880597014925,
+      "crop": false
+    },
+    {
+      "output": "app-before-after.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/app/pinch-left-orbit.png",
+      "inputSHA256": "47cf8bfd8cb493c818054d21a7464b9109ffcd9359ce2ed1a37a4ef04a61a3ca",
+      "originalSize": [
+        1206,
+        2622
+      ],
+      "placedSize": [
+        630,
+        1370
+      ],
+      "position": [
+        670,
+        217
+      ],
+      "uniformScale": 0.5223880597014925,
+      "crop": false
+    },
+    {
+      "output": "app-before-after.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/app/pinch-right-orbit.png",
+      "inputSHA256": "4cca98f82320a7382fde36654ea668ab14fae2a67e9e1a377ccc5a5415d45766",
+      "originalSize": [
+        1206,
+        2622
+      ],
+      "placedSize": [
+        630,
+        1370
+      ],
+      "position": [
+        1320,
+        217
+      ],
+      "uniformScale": 0.5223880597014925,
+      "crop": false
+    }
+  ],
+  "outputSHA256": {
+    "front-side-top-comparison.png": "2a560543415ba8a57f20d808ce5eacc2204032e5365064156033465dc06f1450",
+    "app-before-after.png": "e69fa9373664962212088d609502e98ec82702a781a4f9989c4e4073e1375af6"
+  }
+}

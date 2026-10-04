@@ -1,0 +1,44 @@
+{
+  "owner": "placid-badger",
+  "jobName": "placid-badger-plateau13-canonical-cli",
+  "status": "cleaned",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-canonical-cli-TMP"
+  ],
+  "processGroup": 35744,
+  "registeredUTC": "2026-10-02T19:12:42.221217+00:00",
+  "simulatorsCreated": 0,
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "hangboard_packages.cli",
+    "validate",
+    "--root",
+    "Hangboards",
+    "--final-inventory"
+  ],
+  "timeoutSeconds": 180,
+  "logPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-canonical-cli.log",
+  "startedUTC": "2026-10-02T19:12:42.223450+00:00",
+  "exitCode": 0,
+  "elapsedSeconds": 2.2414470829971833,
+  "logSHA256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc",
+  "cleanup": {
+    "owner": "placid-badger",
+    "jobName": "placid-badger-plateau13-canonical-cli",
+    "resources": [
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-canonical-cli-TMP",
+        "absent": true
+      }
+    ],
+    "errors": [],
+    "remainingProcesses": [],
+    "processGroupAbsent": true,
+    "allResourcesAbsent": true,
+    "passed": true,
+    "finishedUTC": "2026-10-02T19:12:44.609976+00:00"
+  }
+}

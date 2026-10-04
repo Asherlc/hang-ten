@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "reviewer": "workspace main agent",
+  "views": [
+    "ios/review-montages/selections.png",
+    "ios/review-montages/orbits.png",
+    "ios/app-review.png",
+    "comparison/original-prior-corrected-views.png",
+    "ios-runtime-retry/workout-settled/active-settled.png",
+    "ios-runtime-retry/workout-settled/following-rest.png",
+    "ios-runtime-retry/workout-rest-settled/view.png"
+  ],
+  "observations": "Correct unit selected across14 contacts; seven loadable orientations and visible cords/wood. Rear10 enclosed. Active bilateral20 red; settled rest bilateral20 blue. Whole original/prior/corrected front/side/top/rear comparison reviewed.",
+  "acceptance": "Pending user reply, not implied by this review."
+}

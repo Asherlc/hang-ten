@@ -1,0 +1,34 @@
+{
+  "owner": "placid-badger",
+  "externalResources": [],
+  "processes": [
+    {
+      "name": "placid-badger-author",
+      "pid": 98803,
+      "processGroup": 98803,
+      "state": "exited",
+      "exitCode": 0
+    },
+    {
+      "name": "placid-badger-compile-1",
+      "pid": 3293,
+      "processGroup": 3293,
+      "state": "exited",
+      "exitCode": 0
+    }
+  ],
+  "temporaryDirectories": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/native-correction-2026-10-02/placid-badger-tmp-author",
+      "state": "deleted",
+      "deletionVerified": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/native-correction-2026-10-02/placid-badger-tmp-compile-1",
+      "state": "deleted",
+      "deletionVerified": true
+    }
+  ],
+  "cleanupVerified": true,
+  "allProcessGroupsAbsent": true
+}

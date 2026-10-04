@@ -1,0 +1,153 @@
+{
+  "status": "READ_ONLY_SOURCE_AUDIT_COMPLETE",
+  "inputs": {
+    "HangTen/Models/WorkoutAudioCoach.swift": "0dc1b736e0b8c1207e310fc8b665b203762fd717cacf23794d635c9e7293effa",
+    "HangTen/Models/CountdownAudioScheduler.swift": "71ec106325e87c4112b6301289d1cec2c5b64ad24b5545040c6d63af671f6d3a",
+    "HangTen/Views/RootView.swift": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d"
+  },
+  "runtimeEvidenceBasis": "Parent reported latest action has19records and final startup-audio-prepare-before at appearance+0.0077s, no after within30s. This audit did not access the active/completed device or reread those raw outputs.",
+  "conclusion": "No obvious app-owned blocking wait is present on the preferred bundled preparation path. However, prepareCountdownAudio is synchronous on MainActor and performs actual synchronous file decoding plus AVFoundation engine construction/connection/preparation, so the call is not guaranteed cheap or nonblocking. The outer bracket alone does not localize the missing return or prove deadlock.",
+  "callChain": [
+    {
+      "step": 1,
+      "ref": "WorkoutAudioCoach.swift:300",
+      "operation": "Guard idle/failed, call beginCountdownPrewarm synchronously on MainActor."
+    },
+    {
+      "step": 2,
+      "ref": "WorkoutAudioCoach.swift:451",
+      "operation": "Publish preparing, increment generation, countdownSchedulerIfNeeded; default factory may run for first call."
+    },
+    {
+      "step": 3,
+      "ref": "WorkoutAudioCoach.swift:240 / CountdownAudioScheduler.swift:259,481",
+      "operation": "Create CountdownAudioScheduler/System backend; select bundled buffers before invoking prewarm."
+    },
+    {
+      "step": 4,
+      "ref": "CountdownAudioScheduler.swift:133,153",
+      "operation": "For phrases1/2/3 sorted: bundle URL, AVAudioFile(forReading), processingFormat/length, PCM allocation, file.read into buffer, validate. Synchronous I/O/decoder framework boundary; no app timeout."
+    },
+    {
+      "step": 5,
+      "ref": "CountdownAudioScheduler.swift:439,501",
+      "operation": "Bundled backend creates AVAudioEngine/AVAudioPlayerNode and attaches player in initialization."
+    },
+    {
+      "step": 6,
+      "ref": "CountdownAudioScheduler.swift:252,337,342,448",
+      "operation": "prewarm resolves buffers/format, engine.connect(to mainMixerNode), engine.prepare; completion invoked synchronously for bundled path."
+    },
+    {
+      "step": 7,
+      "ref": "WorkoutAudioCoach.swift:457",
+      "operation": "Completion immediately updates ready/failed via MainActor.assumeIsolated if on main; otherwise enqueues Task. No semaphore to wait for callback."
+    }
+  ],
+  "waitAndSharedStateFindings": {
+    "bundledPath": "No DispatchSemaphore/group wait, dispatch sync, lock acquisition, blocking sleep, busy wait, retry loop, or explicit run-loop drain in inspected preferred bundled call chain. Synchronous resource decoding is genuine work, not an asynchronous preload.",
+    "schedulerLock": "CountdownAudioScheduler NSLock protects schedule admission and stop (lines280\u2013302), not prewarm itself. These are not normally entered by the initial Root prepare call.",
+    "fallbackLock": "Apple speech fallback uses NSLock via withStateLock at823; lock can contend in principle. Inspected critical sections contain state/dictionary manipulation and occasional logger calls, not synchronous dispatch, await, speech write, completion invocation or engine.prepare. No source-evidenced nested acquisition cycle found.",
+    "fallbackWaitCase": "preparePlaybackIfBuffersResolved Resolution.wait simply returns; missing speech buffers can leave preparation asynchronously pending without holding the caller until they arrive.",
+    "frameworkSharedInitialization": "Per-coach lazy scheduler owns its backend/playback/engine. No app-global once/semaphore cache was found in this preparation chain. Framework engine/audio/speech services may have internal shared initialization; no such behavior or latency is established by these sources.",
+    "coachInitializationBeforeCall": "AVSpeechSynthesizer and AVAudioSession.sharedInstance are created by coach convenience init, before an existing coach reaches prepareCountdownAudio. Default prepare itself does not directly set audio-session category/active.",
+    "reentrantCompletionCaveat": "A pending request created by startCountdown can cause prewarm completion to synchronously call startPreparedCountdown, which configures/activates session and starts playback. Root requestCountdownStart explicitly invokes prepare first and only later startCountdown; do not automatically attribute setActive/engine.start to this initial prepare bracket."
+  },
+  "fallbackFrameworkBoundaries": [
+    "If bundle loading/validation fails, AppleCountdownAudioSchedulingBackend initializes synthesizer/playback and calls render for3/2/1 synchronously.",
+    "render constructs utterance, enumerates installed speech voices, sets voice and invokes synthesizer.write. Completion is callback driven; three empty-render retries are scheduled with main.asyncAfter, not an inline wait.",
+    "Eventual playback preparation still uses the same engine.connect/prepare. Whether bundled or fallback was selected in the failed run is not identified by the outer startup marker."
+  ],
+  "sourceReferences": [
+    {
+      "path": "HangTen/Models/WorkoutAudioCoach.swift",
+      "lines": [
+        195,
+        196,
+        225,
+        250,
+        300,
+        306,
+        451,
+        499
+      ],
+      "meaning": "MainActor coach; default factory constructs scheduler lazily; prepare starts prewarm; completion can finish synchronously when already on main thread."
+    },
+    {
+      "path": "HangTen/Models/CountdownAudioScheduler.swift",
+      "lines": [
+        133,
+        139,
+        153,
+        197
+      ],
+      "meaning": "Backend selection attempts all three bundled MP3 resources synchronously; URL lookup, AVAudioFile open/decode/read, PCM allocation/format/length validation; fallback only on nil result."
+    },
+    {
+      "path": "HangTen/Models/CountdownAudioScheduler.swift",
+      "lines": [
+        252,
+        271,
+        337,
+        356,
+        439,
+        454,
+        481,
+        520
+      ],
+      "meaning": "Default scheduler constructs selected backend; bundled playback engine/player initialization/attach and connect/prepare are synchronous framework calls before completion."
+    },
+    {
+      "path": "HangTen/Models/CountdownAudioScheduler.swift",
+      "lines": [
+        531,
+        617,
+        718,
+        783,
+        822,
+        826
+      ],
+      "meaning": "Speech fallback constructor renders three phrases; short NSLock sections guard data, callbacks and playback preparation occur outside state lock. Resolution.wait returns immediately, not a blocking wait."
+    },
+    {
+      "path": "HangTen/Models/WorkoutAudioCoach.swift",
+      "lines": [
+        34,
+        49,
+        363,
+        388,
+        417,
+        430,
+        475,
+        488
+      ],
+      "meaning": "Fallback voice enumeration; activation/start occur in startPreparedCountdown. Initial Root prepare path has no pending request; other startCountdown usage can reenter prepared scheduling from completion."
+    }
+  ],
+  "resourcePresence": [
+    {
+      "path": "HangTen/Resources/CountdownAudio/countdown-1.mp3",
+      "size": 27514,
+      "sha256": "9157273de38a68d1c7bf82cd645bd7525f617c506e9d3cf3a9fcfa4216626e55"
+    },
+    {
+      "path": "HangTen/Resources/CountdownAudio/countdown-2.mp3",
+      "size": 29603,
+      "sha256": "595855a28d61bd8e9daf410bdab20d1bfd5d7ccc770850407fab7e60d9184354"
+    },
+    {
+      "path": "HangTen/Resources/CountdownAudio/countdown-3.mp3",
+      "size": 30439,
+      "sha256": "5b0535d8fc64eeffe50f80a4c54a17d7f84bd90e1e3f795ec0f09995a36caad4"
+    }
+  ],
+  "limits": [
+    "Source-level findings only; no runtime stack, framework-internal wait diagnosis, device inspection, reproduction, build or source change.",
+    "Resource files exist in this checkout; this is not proof those resources decoded successfully or which backend was chosen in the installed failing process.",
+    "The before-marker is emitted before the call; absence of after records is compatible with delay anywhere in/around the synchronous boundary, including framework work or diagnostic recording. It does not prove a deadlock or even identify a specific function that did not return.",
+    "No fix, scheduling change, source patch or next-run proposal is made."
+  ],
+  "checks": {
+    "sourceBytesUnchanged": true
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "placid-badger-flash14-relief-author-v2",
+  "command": [
+    "python3",
+    "Tools/HangboardCAD/run_freecad.py",
+    ".context/placid-badger/flash-board-review14/shape-review/native-refinement/author_relief_v2.py"
+  ],
+  "timeoutSeconds": 240
+}

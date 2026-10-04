@@ -1,0 +1,14 @@
+{
+  "owner": "placid-badger",
+  "head": "7e12907150374f722446a0e8725123d1bc52b650",
+  "sha256": {
+    "HangTen/Models/CustomRoutineStore.swift": "119ab754ad1a79c091fbc5d3cc4e8ec1a0f23747b2067b7ee49ad16f4fe236af",
+    "HangTen/Models/WorkoutActivityRecording.swift": "8266e4b93eba50e3c1887d0742658f2e1645c6ea6a876cb92b64822aeb0639c5",
+    "HangTenTests/CustomRoutineStoreTests.swift": "45837061ac038a6c558d6a6a091f43a06fa2eb5770c1f0c0d06e521225749454",
+    "HangTenTests/WorkoutActivityRecordingTests.swift": "16e74c6f797d453d090e612ce7291f178876657f10d566449ee34efb3effe03d",
+    "HangTenTests/SuspendedBoardPresentationTests.swift": "6905770234743a0e7747765e67fde7d5d7ef54a9784906fb8ba2930fae819df5",
+    ".github/workflows/ci.yml": "a10d59f89e069b629136268b81dd7f06c034a119f4c89366f1e0797f1af4c18c"
+  },
+  "configuration": "Debug, -O, -assert-config Debug",
+  "simulatorUUID": "39548DD5-880E-4F33-82E3-E8A14AB72569"
+}

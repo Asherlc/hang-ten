@@ -1,0 +1,5 @@
+{
+  "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-standalone-timing.py",
+  "sha256": "db13d8b8b0d378d654f95481059c3b0c97126e754aa89fc33878b063d9f856c4",
+  "change": "Require exactly one public ARView across each of40 snapshot censuses; existing board-scene matching remains."
+}

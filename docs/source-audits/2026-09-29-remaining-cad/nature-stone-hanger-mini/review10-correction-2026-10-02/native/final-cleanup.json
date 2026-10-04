@@ -1,0 +1,477 @@
+{
+  "owner": "placid-badger",
+  "verifiedAt": "2026-10-03T03:44:35.385098+00:00",
+  "processGroups": [
+    {
+      "pgid": 56512,
+      "absent": true
+    },
+    {
+      "pgid": 57471,
+      "absent": true
+    },
+    {
+      "pgid": 65526,
+      "absent": true
+    },
+    {
+      "pgid": 76382,
+      "absent": true
+    },
+    {
+      "pgid": 79129,
+      "absent": true
+    },
+    {
+      "pgid": 80506,
+      "absent": true
+    },
+    {
+      "pgid": 54658,
+      "absent": true
+    },
+    {
+      "pgid": 65375,
+      "absent": true
+    },
+    {
+      "pgid": 68467,
+      "absent": true
+    },
+    {
+      "pgid": 76368,
+      "absent": true
+    },
+    {
+      "pgid": 79122,
+      "absent": true
+    },
+    {
+      "pgid": 80811,
+      "absent": true
+    },
+    {
+      "pgid": 82195,
+      "absent": true
+    },
+    {
+      "pgid": 83309,
+      "absent": true
+    },
+    {
+      "pgid": 91801,
+      "absent": true
+    },
+    {
+      "pgid": 80484,
+      "absent": true
+    },
+    {
+      "pgid": 80678,
+      "absent": true
+    },
+    {
+      "pgid": 81506,
+      "absent": true
+    },
+    {
+      "pgid": 84404,
+      "absent": true
+    },
+    {
+      "pgid": 58145,
+      "absent": true
+    },
+    {
+      "pgid": 83604,
+      "absent": true
+    },
+    {
+      "pgid": 90593,
+      "absent": true
+    }
+  ],
+  "temporaryPaths": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-author-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-author-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-author-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-author2-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-author2-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-author2-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-compile1-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-compile1-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-compile1-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-compile2-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-compile2-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-compile2-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-compile3-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-compile3-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-compile3-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-compile4-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-compile4-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-compile4-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-inspect-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-inspect-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-inspect-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-manifest-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-manifest-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-manifest-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen2-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen2-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen2-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen3-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen3-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen3-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen4-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen4-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen4-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen5-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen5-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen5-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen6-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen6-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-native-reopen6-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-orientation-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-orientation-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-orientation-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-previews-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-previews-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-previews-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-previews2-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-previews2-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-previews2-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-reimport-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-reimport-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-reimport-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-reimport-final-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-reimport-final-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-reimport-final-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-shared-author-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-shared-author-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-shared-author-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-tests-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-tests-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-tests-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-versions-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-versions-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/placid-badger-versions-tmp",
+      "absent": true
+    }
+  ],
+  "allExactOwnedResourcesAbsent": true,
+  "externalResources": [],
+  "simulatorsOrServersCreated": false,
+  "unknownOrSharedResourcesModified": false,
+  "retainedReviewArtifacts": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author",
+  "receipts": [
+    {
+      "path": "author-cleanup.json",
+      "sha256": "50585845e04146eadd16cab1417cea2be4ec2eb2117218af79a197f4cadf94db",
+      "exitCode": 3
+    },
+    {
+      "path": "author2-cleanup.json",
+      "sha256": "b846bf2b771246df2aa1840e864fe550c96f5da0a05dd833ae2e3e55c1fe08df",
+      "exitCode": 0
+    },
+    {
+      "path": "compile1-cleanup.json",
+      "sha256": "b41afa449b8b8028d654e216d6ebd5ba4dd8a3286a5d30a56f5743cc383400e8",
+      "exitCode": 0
+    },
+    {
+      "path": "compile2-cleanup.json",
+      "sha256": "3cb5bcfa46283aa8c04e39bb941f3418e7a8fbfd648b296578cebb9fde29999e",
+      "exitCode": -15
+    },
+    {
+      "path": "compile3-cleanup.json",
+      "sha256": "7749056812d8212645bbb44f721a7f566e8f35666541304ddeb2f5722f8273cb",
+      "exitCode": 0
+    },
+    {
+      "path": "compile4-cleanup.json",
+      "sha256": "e9e2291ff8f1188e65e8e1e040f96a97212cf4356189c369704935c75be2fe26",
+      "exitCode": 0
+    },
+    {
+      "path": "inspect-cleanup.json",
+      "sha256": "63b9890bee1d77330ac340fb7f9440a4b20be009dfa53bdcb98ba91112ab6ec8",
+      "exitCode": 0
+    },
+    {
+      "path": "manifest-cleanup.json",
+      "sha256": "6f252c1dbe252f5c21ba3b374c8b85257254064915b5bc0fcec5da5584a55b33",
+      "exitCode": 0
+    },
+    {
+      "path": "native-reopen-cleanup.json",
+      "sha256": "78e7c3c5863d96043b8f049753c775c108dee211d9ade7efd277269614b6d3df",
+      "exitCode": 3
+    },
+    {
+      "path": "native-reopen2-cleanup.json",
+      "sha256": "0b9606ac1ff6ff23fe0e8637f73dfa16930bf995bb670c07dfa8d35ff4829a7e",
+      "exitCode": -15
+    },
+    {
+      "path": "native-reopen3-cleanup.json",
+      "sha256": "a02c208e47bc8e7b3432f869ee79b1866600b8a736c26135a40899b596440e05",
+      "exitCode": 3
+    },
+    {
+      "path": "native-reopen4-cleanup.json",
+      "sha256": "99ea89927c99c4efae75e2e8a8554d6bd4bc8b41089d4461163d41d035afe4a3",
+      "exitCode": 0
+    },
+    {
+      "path": "native-reopen5-cleanup.json",
+      "sha256": "4bc1bed06edf4cddbe49429d18a97b8860f3373e8ef57cf694b496220d862393",
+      "exitCode": 3
+    },
+    {
+      "path": "native-reopen6-cleanup.json",
+      "sha256": "8357f39de3bcc709355c7100122f41d395cafe3c35a2faa0a4e265b974c1c2a2",
+      "exitCode": 0
+    },
+    {
+      "path": "orientation-cleanup.json",
+      "sha256": "9956f07cb58a48a8c35b21c3eb948a8a1a2fd1f593e3b6612b1b4af242843cd1",
+      "exitCode": 0
+    },
+    {
+      "path": "previews-cleanup.json",
+      "sha256": "b6d8cb2276d3353bd6f6b0a816fac5d8e18bf3aea9d5956d2b3073678bf20362",
+      "exitCode": 1
+    },
+    {
+      "path": "previews2-cleanup.json",
+      "sha256": "87252d03db791d5656061f1de434d2052f51446b6ca6bb23202c2e216946e830",
+      "exitCode": 0
+    },
+    {
+      "path": "reimport-cleanup.json",
+      "sha256": "09a54802e368070e273bb2d2f5194eb3cd51b2c7ae552ed031a49c3e3b6657cb",
+      "exitCode": 0
+    },
+    {
+      "path": "reimport-final-cleanup.json",
+      "sha256": "060c31546fc1a3a4e3d7ee20ced1361e25dc5b270b104e9c3e58ea39665dbc22",
+      "exitCode": 0
+    },
+    {
+      "path": "shared-author-cleanup.json",
+      "sha256": "eed0ceb77f033e2b2a32314c74f1689deaad5972c10974f12c7cea53a1f50ce2",
+      "exitCode": 0
+    },
+    {
+      "path": "tests-cleanup.json",
+      "sha256": "deffa9d62518a94dbcfb46bad433b946aac61ce78e84ff9314fde5561f6366d0",
+      "exitCode": 0
+    },
+    {
+      "path": "versions-cleanup.json",
+      "sha256": "617afb9e1271078961c4edfeed8d42c021d7a6734d3b107b7cc97823ccc1ad42",
+      "exitCode": 0
+    }
+  ]
+}

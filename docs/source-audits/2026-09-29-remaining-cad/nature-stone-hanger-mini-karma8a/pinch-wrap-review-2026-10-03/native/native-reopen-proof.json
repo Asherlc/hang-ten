@@ -1,0 +1,236 @@
+{
+  "passed": true,
+  "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+  "bodyEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "manifestIdentical": true,
+  "initial": {
+    "badStates": {},
+    "bodyVolume": 153347.63483658596,
+    "cutoffMm": 19.5,
+    "nativeLipZMax": 19.5,
+    "pressureAreaMm2": 5267.4871382356805,
+    "pressureZMin": 19.5,
+    "lowerCutoffMm": -18.0,
+    "lowerBandZMax": -17.999999999999744,
+    "exportArea": 24913.066680671913,
+    "bodyArea": 24913.066680671924,
+    "pressureOffBodyArea": 0.0
+  },
+  "originalContactEquality": {
+    "nature_wood": {
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0,
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0
+    },
+    "nature_stone": {
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0,
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0
+    },
+    "nature_pinch": {
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0,
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0
+    }
+  },
+  "pressurePhysicalSpanProof": {
+    "analyticBBoxZ": [
+      -30.0,
+      30.00000000000001
+    ],
+    "outsidePhysical60mmSlabArea": 0.0,
+    "tessellatedZExtrema": [
+      -30.0,
+      30.00000000000001
+    ],
+    "nativeWitnesses": [
+      [
+        44.5,
+        0.0,
+        -30.0
+      ],
+      [
+        44.5,
+        0.0,
+        30.0
+      ]
+    ],
+    "witnessDistances": [
+      0.0,
+      0.0
+    ],
+    "witnessSpanMm": 60.0,
+    "witnessExpressions": "[('.HangTenGripDepthEnd.x', 'nature_pinch.Shape.BoundBox.XMax'), ('.HangTenGripDepthEnd.z', 'nature_pinch.Shape.BoundBox.ZMax'), ('.HangTenGripDepthStart.x', 'nature_pinch.Shape.BoundBox.XMax'), ('.HangTenGripDepthStart.z', 'nature_pinch.Shape.BoundBox.ZMin')]"
+  },
+  "retainedCompilerDepthGate": {
+    "wood-edge-15": 15.0,
+    "granite-edge-15": 15.0,
+    "pinch-60": 60.0
+  },
+  "mouthRadiusEdit": {
+    "property": "CavityMouthRound.Edges",
+    "before": [
+      [
+        37,
+        1.5,
+        1.5
+      ],
+      [
+        38,
+        1.5,
+        1.5
+      ],
+      [
+        39,
+        1.5,
+        1.5
+      ],
+      [
+        40,
+        1.5,
+        1.5
+      ],
+      [
+        41,
+        1.5,
+        1.5
+      ],
+      [
+        42,
+        1.5,
+        1.5
+      ],
+      [
+        43,
+        1.5,
+        1.5
+      ],
+      [
+        44,
+        1.5,
+        1.5
+      ]
+    ],
+    "edited": [
+      [
+        37,
+        1.55,
+        1.55
+      ],
+      [
+        38,
+        1.55,
+        1.55
+      ],
+      [
+        39,
+        1.55,
+        1.55
+      ],
+      [
+        40,
+        1.55,
+        1.55
+      ],
+      [
+        41,
+        1.55,
+        1.55
+      ],
+      [
+        42,
+        1.55,
+        1.55
+      ],
+      [
+        43,
+        1.55,
+        1.55
+      ],
+      [
+        44,
+        1.55,
+        1.55
+      ]
+    ],
+    "state": {
+      "badStates": {},
+      "bodyVolume": 153343.0775769024,
+      "cutoffMm": 19.55,
+      "nativeLipZMax": 19.55,
+      "pressureAreaMm2": 5254.881740065659,
+      "pressureZMin": 19.549999999999997,
+      "lowerCutoffMm": -18.0,
+      "lowerBandZMax": -17.99999999999998,
+      "exportArea": 24910.68723270665,
+      "bodyArea": 24910.687232706656,
+      "pressureOffBodyArea": 0.0
+    }
+  },
+  "afterMouthRestore": {
+    "badStates": {},
+    "bodyVolume": 153347.63483372613,
+    "cutoffMm": 19.5,
+    "nativeLipZMax": 19.5,
+    "pressureAreaMm2": 5267.487138229056,
+    "pressureZMin": 19.5,
+    "lowerCutoffMm": -18.0,
+    "lowerBandZMax": -17.999999999999744,
+    "exportArea": 24913.066680494918,
+    "bodyArea": 24913.066680494932,
+    "pressureOffBodyArea": 0.0
+  },
+  "mouthRestoreBodyEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "grooveRadiusEdit": {
+    "property": "LeftFrontOpenGroove.Radius",
+    "beforeMm": 1.7,
+    "editedMm": 1.8,
+    "state": {
+      "badStates": {},
+      "bodyVolume": 153320.30190177658,
+      "cutoffMm": 19.5,
+      "nativeLipZMax": 19.5,
+      "pressureAreaMm2": 5263.338514325018,
+      "pressureZMin": 19.5,
+      "lowerCutoffMm": -18.0,
+      "lowerBandZMax": -17.999999999999744,
+      "exportArea": 24918.13798237618,
+      "bodyArea": 24918.1379823762,
+      "pressureOffBodyArea": 0.0
+    }
+  },
+  "restoredBodyEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "restored": {
+    "badStates": {},
+    "bodyVolume": 153347.63483372613,
+    "cutoffMm": 19.5,
+    "nativeLipZMax": 19.5,
+    "pressureAreaMm2": 5267.487138229056,
+    "pressureZMin": 19.5,
+    "lowerCutoffMm": -18.0,
+    "lowerBandZMax": -17.999999999999744,
+    "exportArea": 24913.066680494918,
+    "bodyArea": 24913.066680494932,
+    "pressureOffBodyArea": 0.0
+  },
+  "editSaved": false,
+  "sourceBytesUnchanged": true
+}

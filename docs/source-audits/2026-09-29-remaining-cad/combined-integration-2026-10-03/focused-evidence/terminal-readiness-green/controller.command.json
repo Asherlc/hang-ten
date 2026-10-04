@@ -1,0 +1,14 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "ps",
+    "-p",
+    "37186",
+    "-o",
+    "pid=,command="
+  ],
+  "pid": 28988,
+  "boundSeconds": 5,
+  "startedEpoch": 1791069528.916617
+}

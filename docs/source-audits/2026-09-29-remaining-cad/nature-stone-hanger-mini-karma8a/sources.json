@@ -1,0 +1,95 @@
+{
+  "approvalRecord": "docs/superpowers/specs/2026-09-20-hangboards-batch-03-3d-migration-design.md#appendix-a-approved-exact-revision-manufacturer-evidence",
+  "sources": [
+    {
+      "ref": "NK-1",
+      "publisher": "Nature Climbing \u2014 KARMA8A product page",
+      "url": "https://natureclimbing.com/products/mini-hanger",
+      "snapshotSHA256": "b962a7df9b6169c12993aa86b8c7d189941cad4acc373fac4f6064987bc04666",
+      "supportClaim": "Exact KARMA8A identity and only three supported families: 15 mm granite, 15 mm wood, and 60 mm pinch; no separate jug.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/nature-stone-hanger-mini-karma8a/product-page.html",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/nature-stone-hanger-mini-karma8a/product-page.html",
+      "actualSHA256": "a7cf62fef322e5a7b5fb0c1ff439ddda4e529b8fc0b8f8bf40a703107df37d8a",
+      "approvedHashMatches": false,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/evidence/product-page-current.html",
+      "humanApproval": {
+        "approved": false,
+        "researchAuthorized": true,
+        "authorizationDate": "2026-09-29",
+        "notes": "Exact September20 HTML bytes were unavailable; this current primary HTML snapshot differs from the approved historical SHA. User expressly authorized additional primary research on September29. Approval of the exact unchanged visual sources is separate."
+      }
+    },
+    {
+      "ref": "NK-2",
+      "publisher": "Nature Climbing \u2014 front visual",
+      "url": "https://natureclimbing.com/cdn/shop/files/Untitled_design_a3abac48-3dbc-4913-bc3e-15c8b2a9e85d.png?v=1774607004",
+      "snapshotSHA256": "3267c96f30e9576b1b66f769d83722cac6c55322c9ad6491cda82ea3910f7743",
+      "supportClaim": "Dark-oak front, stone insert, wooden recessed edge, 15 mm marking, collaboration art, and cord exits.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/nature-stone-hanger-mini-karma8a/front-original.png",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/nature-stone-hanger-mini-karma8a/front-original.png",
+      "actualSHA256": "3267c96f30e9576b1b66f769d83722cac6c55322c9ad6491cda82ea3910f7743",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/evidence/front-original.png",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "NK-3",
+      "publisher": "Nature Climbing \u2014 reverse visual",
+      "url": "https://natureclimbing.com/cdn/shop/files/Untitled_design_1.png?v=1774607067",
+      "snapshotSHA256": "412059dc91cb4b564d450b4065fdf467618d1d981c9568cb5346983ae7653de0",
+      "supportClaim": "Solid reverse, collaboration branding, rounded body, and side cord exits.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/nature-stone-hanger-mini-karma8a/reverse-original.png",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/nature-stone-hanger-mini-karma8a/reverse-original.png",
+      "actualSHA256": "412059dc91cb4b564d450b4065fdf467618d1d981c9568cb5346983ae7653de0",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/evidence/reverse-original.png",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "NK-4",
+      "publisher": "Nature Climbing \u2014 oblique/side visual",
+      "url": "https://natureclimbing.com/cdn/shop/files/P11_efb30f02-ff67-4d8d-a247-80a40873e358.jpg?v=1774607067",
+      "snapshotSHA256": "95292e0c642c3a3de255e66e0c09cd8b8ddcd6802a724a8bbd429d7647b58cbf",
+      "supportClaim": "Both faces, board thickness, pinchable outer nodes, and paired leads in open side grooves.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/nature-stone-hanger-mini-karma8a/oblique-original.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/nature-stone-hanger-mini-karma8a/oblique-original.jpg",
+      "actualSHA256": "95292e0c642c3a3de255e66e0c09cd8b8ddcd6802a724a8bbd429d7647b58cbf",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/evidence/oblique-original.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "NK-5",
+      "publisher": "Nature Climbing \u2014 in-use visual",
+      "url": "https://natureclimbing.com/cdn/shop/files/2_8414fdb3-da87-4e09-bfd7-acd77452106c.png?v=1774607067",
+      "snapshotSHA256": "a962fc997461aed38bfaee08071681b27b12f671406c216947f7b21ce6bb2df8",
+      "supportClaim": "Wooden recessed-edge use, scale, hanging orientation, and paired leads around an overhead support.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/nature-stone-hanger-mini-karma8a/in-use-original.png",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/nature-stone-hanger-mini-karma8a/in-use-original.png",
+      "actualSHA256": "a962fc997461aed38bfaee08071681b27b12f671406c216947f7b21ce6bb2df8",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/evidence/in-use-original.png",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    }
+  ]
+}

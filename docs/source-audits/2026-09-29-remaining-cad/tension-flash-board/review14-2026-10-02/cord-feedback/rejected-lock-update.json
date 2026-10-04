@@ -1,0 +1,24 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "package": "tension-flash-board",
+  "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+  "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+  "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+  "suspensionSHA256": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+  "generatedManifestSHA256": "9285d4a38d703c80e9109553e688ea3e94095021207f02ef26001471cb98bc7e",
+  "lockedFiles": 135,
+  "newManifestSHA256": "5d9950bab01d9004754a96f4130b10403509306618b4d65c6e8757f5499f91d1",
+  "priorManifestSHA256": "44758ac3a2b242182833edb770b0b715c0be703b958f513061830c0e606127d7",
+  "onlyChangedLockedFiles": [
+    "Hangboards/tension-flash-board/assets/primary.model.json",
+    "Hangboards/tension-flash-board/suspension.json",
+    "Hangboards/tension-flash-board/tension-flash-board.FCStd"
+  ],
+  "unchangedLockedFiles": 132,
+  "allLockedFileHashesMatch": true,
+  "otherPackageFilesVerifiedUnchanged": 202,
+  "modelPackages": 58,
+  "sharedCodeChanged": false,
+  "parallelWorkspaceInspectedOrMerged": false
+}

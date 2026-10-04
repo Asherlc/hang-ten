@@ -1,0 +1,686 @@
+{
+  "schemaVersion": 3,
+  "id": "captain-fingerfood.unlevel",
+  "manufacturer": "Captain Fingerfood",
+  "name": "UNLEVEL",
+  "subtitle": "Compact board with two curved edge depths plus an outer jug.",
+  "productURL": "https://en.captainfingerfood.rocks/products/unlevel-hangboard",
+  "dimensions": "12 \u00d7 7 \u00d7 3 cm",
+  "aspectRatio": 1.7142857142857142,
+  "handCapacity": 1,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "aspectRatio": 1.7142857142857142,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          },
+          "surfaceFinish": "wood"
+        },
+        "suspension": {
+          "type": "cadRoutedCord",
+          "bodyNodeID": "Body_EditableSkin_001",
+          "strands": [
+            {
+              "id": "left-lead",
+              "kind": "lead",
+              "restLength": 0.4,
+              "radius": 0.002,
+              "material": "matteCord",
+              "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+            },
+            {
+              "id": "right-lead",
+              "kind": "lead",
+              "restLength": 0.4,
+              "radius": 0.002,
+              "material": "matteCord",
+              "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+            }
+          ],
+          "anchor": {
+            "offsetFromBoardBounds": [
+              0,
+              0.15,
+              0
+            ],
+            "visibility": "invisible",
+            "provenance": "displayEstimate; compact shared overhead convergence shortened 50% after user visual review"
+          },
+          "canonicalPoses": {
+            "edge20-front": {
+              "rotation": [
+                0.207911694,
+                0,
+                0,
+                0.9781476
+              ],
+              "translation": [
+                0,
+                -0.193097215,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              },
+              "wrappedRoutes": {
+                "left-lead": [
+                  [
+                    -0.026404928,
+                    0.034203661,
+                    0.01650783
+                  ],
+                  [
+                    -0.026445098,
+                    0.033698932,
+                    0.016721289
+                  ],
+                  [
+                    -0.026501556,
+                    0.032908174,
+                    0.016962592
+                  ],
+                  [
+                    -0.02652808,
+                    0.032521798,
+                    0.01700839
+                  ],
+                  [
+                    -0.027125249,
+                    0.024061852,
+                    0.017035828
+                  ],
+                  [
+                    -0.027144042,
+                    0.023785341,
+                    0.017007477
+                  ],
+                  [
+                    -0.027164133,
+                    0.02347757,
+                    0.016942669
+                  ],
+                  [
+                    -0.027176539,
+                    0.023279344,
+                    0.016877965
+                  ],
+                  [
+                    -0.027198471,
+                    0.022911908,
+                    0.01671237
+                  ],
+                  [
+                    -0.027213061,
+                    0.022704316,
+                    0.016552495
+                  ],
+                  [
+                    -0.029,
+                    0.0,
+                    -0.0067
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    0.026404928,
+                    0.034203661,
+                    0.01650783
+                  ],
+                  [
+                    0.026445098,
+                    0.033698932,
+                    0.016721289
+                  ],
+                  [
+                    0.026501556,
+                    0.032908174,
+                    0.016962592
+                  ],
+                  [
+                    0.02652808,
+                    0.032521798,
+                    0.01700839
+                  ],
+                  [
+                    0.027125098,
+                    0.024069956,
+                    0.017035821
+                  ],
+                  [
+                    0.027143982,
+                    0.023791743,
+                    0.017008082
+                  ],
+                  [
+                    0.027164139,
+                    0.023481894,
+                    0.016944643
+                  ],
+                  [
+                    0.027176591,
+                    0.023282202,
+                    0.016880694
+                  ],
+                  [
+                    0.027198529,
+                    0.022913312,
+                    0.016716917
+                  ],
+                  [
+                    0.027213129,
+                    0.022705246,
+                    0.016557364
+                  ],
+                  [
+                    0.029,
+                    0.0,
+                    -0.0067
+                  ]
+                ]
+              }
+            },
+            "edge25-inverted": {
+              "rotation": [
+                9e-09,
+                0.207911694,
+                -0.9781476,
+                4.3e-08
+              ],
+              "translation": [
+                0,
+                -0.193113789,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              },
+              "wrappedRoutes": {
+                "left-lead": [
+                  [
+                    -0.027218115,
+                    -0.033948717,
+                    0.016648296
+                  ],
+                  [
+                    -0.027264403,
+                    -0.033452739,
+                    0.016827141
+                  ],
+                  [
+                    -0.027342159,
+                    -0.032595718,
+                    0.016985974
+                  ],
+                  [
+                    -0.027362073,
+                    -0.032348586,
+                    0.017009104
+                  ],
+                  [
+                    -0.027936918,
+                    -0.02420819,
+                    0.017037814
+                  ],
+                  [
+                    -0.027969012,
+                    -0.0238035,
+                    0.01697961
+                  ],
+                  [
+                    -0.028008434,
+                    -0.023358139,
+                    0.016847014
+                  ],
+                  [
+                    -0.028026905,
+                    -0.023091913,
+                    0.016701266
+                  ],
+                  [
+                    -0.028067211,
+                    -0.022042092,
+                    0.015824633
+                  ],
+                  [
+                    -0.02809414,
+                    -0.021371441,
+                    0.015208402
+                  ],
+                  [
+                    -0.028887894,
+                    -0.002506432,
+                    -0.00385129
+                  ],
+                  [
+                    -0.029,
+                    0.0,
+                    -0.0067
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    0.027218112,
+                    -0.033948717,
+                    0.016648296
+                  ],
+                  [
+                    0.027264416,
+                    -0.033452741,
+                    0.016827141
+                  ],
+                  [
+                    0.027342241,
+                    -0.032595723,
+                    0.016985977
+                  ],
+                  [
+                    0.027362192,
+                    -0.032348594,
+                    0.017009109
+                  ],
+                  [
+                    0.027936784,
+                    -0.024237325,
+                    0.017037808
+                  ],
+                  [
+                    0.027969378,
+                    -0.023830245,
+                    0.016982053
+                  ],
+                  [
+                    0.028009628,
+                    -0.02339533,
+                    0.016854953
+                  ],
+                  [
+                    0.028023612,
+                    -0.023184084,
+                    0.01674655
+                  ],
+                  [
+                    0.028030604,
+                    -0.023053019,
+                    0.016659405
+                  ],
+                  [
+                    0.028083873,
+                    -0.021670163,
+                    0.015491074
+                  ],
+                  [
+                    0.028888577,
+                    -0.002496448,
+                    -0.003862854
+                  ],
+                  [
+                    0.029,
+                    0.0,
+                    -0.0067
+                  ]
+                ]
+              }
+            },
+            "jug-reverse": {
+              "rotation": [
+                9e-09,
+                0.9781476,
+                0.207911694,
+                4.3e-08
+              ],
+              "translation": [
+                0,
+                -0.208857751,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              },
+              "wrappedRoutes": {
+                "left-lead": [
+                  [
+                    -0.027087266,
+                    0.023000522,
+                    0.016768351
+                  ],
+                  [
+                    -0.027112974,
+                    0.022691423,
+                    0.016556719
+                  ],
+                  [
+                    -0.027128794,
+                    0.022501197,
+                    0.016396674
+                  ],
+                  [
+                    -0.029,
+                    0.0,
+                    -0.0067
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    0.027087297,
+                    0.022995433,
+                    0.016768204
+                  ],
+                  [
+                    0.027113003,
+                    0.022686382,
+                    0.016556582
+                  ],
+                  [
+                    0.027128823,
+                    0.022496192,
+                    0.016396541
+                  ],
+                  [
+                    0.029,
+                    0.0,
+                    -0.0067
+                  ]
+                ]
+              }
+            },
+            "pocket-right-end": {
+              "rotation": [
+                0.147015774,
+                0.147015759,
+                -0.691654772,
+                0.691654831
+              ],
+              "translation": [
+                0,
+                -0.167817989,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              },
+              "wrappedRoutes": {
+                "left-lead": [
+                  [
+                    -0.059405513,
+                    2e-09,
+                    0.016410198
+                  ],
+                  [
+                    -0.059115043,
+                    2e-09,
+                    0.016560476
+                  ],
+                  [
+                    -0.058661491,
+                    2e-09,
+                    0.016751396
+                  ],
+                  [
+                    -0.05793553,
+                    2e-09,
+                    0.016929368
+                  ],
+                  [
+                    -0.057444546,
+                    2e-09,
+                    0.016997507
+                  ],
+                  [
+                    -0.054423413,
+                    0.0,
+                    0.017100772
+                  ],
+                  [
+                    -0.053845706,
+                    0.0,
+                    0.017038297
+                  ],
+                  [
+                    -0.053289574,
+                    0.0,
+                    0.016892686
+                  ],
+                  [
+                    -0.05313892,
+                    0.0,
+                    0.016830968
+                  ],
+                  [
+                    -0.052744225,
+                    0.0,
+                    0.016590623
+                  ],
+                  [
+                    -0.052494256,
+                    0.0,
+                    0.016415553
+                  ],
+                  [
+                    -0.029,
+                    0.0,
+                    -0.0067
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    -0.059507984,
+                    0.004330432,
+                    0.016344619
+                  ],
+                  [
+                    -0.058992722,
+                    0.004323479,
+                    0.016609604
+                  ],
+                  [
+                    -0.05816679,
+                    0.004273279,
+                    0.016901347
+                  ],
+                  [
+                    -0.057730439,
+                    0.004241955,
+                    0.016984554
+                  ],
+                  [
+                    -0.057435916,
+                    0.004221226,
+                    0.017010089
+                  ],
+                  [
+                    -0.053204408,
+                    0.004010409,
+                    0.017010609
+                  ],
+                  [
+                    -0.05256355,
+                    0.003978937,
+                    0.016965209
+                  ],
+                  [
+                    -0.051611031,
+                    0.003932995,
+                    0.016814288
+                  ],
+                  [
+                    0.026608718,
+                    0.000250477,
+                    -0.004780058
+                  ],
+                  [
+                    0.027010063,
+                    0.000231605,
+                    -0.004969152
+                  ],
+                  [
+                    0.027256743,
+                    0.000211638,
+                    -0.005139228
+                  ],
+                  [
+                    0.029,
+                    0.0,
+                    -0.0067
+                  ]
+                ]
+              }
+            }
+          }
+        },
+        "orientation": {
+          "pivot": "modelBoundsCenter",
+          "rotations": {
+            "edge20-front": [
+              0.207911694,
+              0.0,
+              0.0,
+              0.9781476
+            ],
+            "edge25-inverted": [
+              9e-09,
+              0.207911694,
+              -0.9781476,
+              4.3e-08
+            ],
+            "jug-reverse": [
+              9e-09,
+              0.9781476,
+              0.207911694,
+              4.3e-08
+            ],
+            "pocket-right-end": [
+              0.147015774,
+              0.147015759,
+              -0.691654772,
+              0.691654831
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "positions": [
+    {
+      "id": "edge20-front",
+      "presentationID": "primary",
+      "contactIDs": [
+        "curved-edge-20"
+      ]
+    },
+    {
+      "id": "edge25-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "curved-edge-25"
+      ]
+    },
+    {
+      "id": "jug-reverse",
+      "presentationID": "primary",
+      "contactIDs": [
+        "outer-jug"
+      ]
+    },
+    {
+      "id": "pocket-right-end",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pocket-end-wall-20-25"
+      ]
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "curved-edge-20",
+      "equipmentObjectID": "primary",
+      "name": "20 mm curved edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "outer-jug",
+      "equipmentObjectID": "primary",
+      "name": "Outer jug",
+      "kind": "jug",
+      "handCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "curved-edge-25",
+      "equipmentObjectID": "primary",
+      "name": "25 mm curved edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-end-wall-20-25",
+      "equipmentObjectID": "primary",
+      "name": "25/20 mm Pocket \u2014 short end-wall",
+      "kind": "pocket",
+      "handCapacity": 1,
+      "gripTypes": []
+    }
+  ]
+}

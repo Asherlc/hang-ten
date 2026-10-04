@@ -1,0 +1,174 @@
+{
+  "scope": "Read-only current-source hierarchy comparison while standalone Timeline A/B/C executes; no runtime outcome assumed, no production fix proposed, no source/device/build changes.",
+  "sourceSnapshot": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "4fdc38991e7904f37ed106bc74ed7320e1b6ca96f334938e09f669b2712b8554",
+      "ranges": [
+        [
+          193,
+          231
+        ],
+        [
+          1866,
+          1877
+        ],
+        [
+          1950,
+          2088
+        ],
+        [
+          2260,
+          2283
+        ],
+        [
+          2369,
+          2442
+        ],
+        [
+          3778,
+          3864
+        ],
+        [
+          3889,
+          3907
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "sha256": "911fba863c2b7dbc66a48c9c70937fb47ecd422e83e761751e662d756aac6b95",
+      "ranges": [
+        [
+          558,
+          605
+        ],
+        [
+          650,
+          721
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "9e5bf2e01d9686069201179e45f7e95266752efe37605c8ba841a36f1ae56312",
+      "ranges": [
+        [
+          16,
+          82
+        ],
+        [
+          103,
+          145
+        ],
+        [
+          161,
+          176
+        ],
+        [
+          190,
+          282
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99",
+      "ranges": [
+        [
+          46,
+          56
+        ],
+        [
+          88,
+          98
+        ],
+        [
+          139,
+          159
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Views/WorkoutAccessGate.swift",
+      "sha256": "a5f98213be6ada0f2e509b8097006e4d85730b8aee90e8e63e1dabfd9decb179",
+      "ranges": [
+        [
+          28,
+          56
+        ]
+      ]
+    }
+  ],
+  "hierarchy": {
+    "standalone": "RootView.swift:201\u2013205 bypasses normalBody -> StandaloneBoardHighlightProbe:3796\u20133800 -> A fixedContent directly or B/C TimelineView:3811\u20133819 -> VStack:3834 -> BoardModelSurface:3843\u20133848 at exact fixed viewport. Same BoardModelSurface -> BoardModelRealityView -> GeometryReader -> RealityView as production.",
+    "production": "RootView.swift:213\u2013231 TabView -> TrainView.swift:47 NavigationStack -> navigation route/access gate (TrainView:92\u201395; WorkoutAccessGate:28\u201344) -> WorkoutView RootView:1951 GeometryReader -> :1952 TimelineView -> :1996 orientation Group -> landscapeSession or portraitSession -> BoardMapView (:2419 or :2275) -> BoardMapView.swift:607 VStack/Group -> :651 BoardModelSurface -> shared lower renderer.",
+    "sharedLowerBoundary": "BoardModelView.swift:23 retains ResultState; :103 task keyed by :131\u2013137 board/presentation/model SHA; :117 stores ready scene; :126\u2013127 clears on disappearance. Both pass onContactTap=nil/isDisplayOnly=false and reach same AX identifier branch:75\u201376. BoardModelRealityView:255 keys RealityView only by scene identity. Make/update both call applySync(:226,:240) -> camera/frame/select/highlight(:265\u2013276). No mode-based remount in ordinary path."
+  },
+  "smallestRemainingDifferencesIfAllABCFramesPass": [
+    {
+      "boundary": "BoardMapView only",
+      "refs": [
+        "BoardMapView.swift:567\u2013598",
+        "BoardMapView.swift:650\u2013721",
+        "RootView.swift:3838\u20133848"
+      ],
+      "fact": "Standalone constructs semantic contact IDs, mode and contact-containing position directly, then fixes pixel-independent point viewport. Production stores presentationSelection and selectedPositionID in State, forwards highlightMode directly, adds aspectRatio and animation keyed to highlightedHoldIDs, and updates selection state only when IDs/activeHold/presentation/board change. Mode-only transition intentionally does not invoke these selection callbacks; this is a difference, not evidence of a fault.",
+      "discriminator": "If authorized after A/B/C result, substitute BoardMapView into the same successful standalone layout with identical requested presentation/active hold/IDs/mode. Retain exact observed leaf viewport, position and scene identities. This isolates one wrapper without bringing navigation/workout logic."
+    },
+    {
+      "boundary": "Layout and SwiftUI transaction",
+      "refs": [
+        "RootView.swift:3834\u20133862",
+        "RootView.swift:2414\u20132442",
+        "RootView.swift:2272\u20132282",
+        "BoardMapView.swift:668\u2013670"
+      ],
+      "fact": "Standalone changing phase Text plus fixed-size surface sits in VStack spacing24. Landscape has constant preview label whose opacity changes, HStack side cue slots, flexible width, height caps132/149 and aspect-fit board. Portrait conditionally inserts preview label above the board inside ScrollView. The standalone text may change intrinsic width and cause layout work absent from constant landscape label even when board viewport remains fixed. Production animation is keyed to IDs, not mode.",
+      "discriminator": "Keep proven semantic driver and renderer fixed; reproduce constant-label/opacity and production aspect/constraints separately. Matching final viewport alone does not prove identical layout/transaction propagation."
+    },
+    {
+      "boundary": "Navigation/other live scene lifetime",
+      "refs": [
+        "RootView.swift:193\u2013231",
+        "TrainView.swift:47\u201350",
+        "TrainView.swift:139\u2013159",
+        "WorkoutAccessGate.swift:28\u201344",
+        "BoardModelView.swift:126\u2013127"
+      ],
+      "fact": "Standalone replaces TabView/navigation entirely. Production Train root includes selectedBoardCard -> BoardMapView. Navigation may retain ancestor SwiftUI state, but source does not establish that its RealityView remains attached/rendering after workout navigation; onDisappear resets BoardModelSurface result. Other tabs/routes may also retain state. Do not infer active renderer count from source.",
+      "discriminator": "Record actual make/disappear and scene/root attachment identities for every board host in the workout route; compare standalone wrapped in the same navigation shell only after closer BoardMap/layout boundaries. No need to change renderer architecture to test this."
+    },
+    {
+      "boundary": "Semantic driver and changing siblings",
+      "refs": [
+        "RootView.swift:1953\u20131978",
+        "RootView.swift:2035\u20132083",
+        "RootView.swift:3815\u20133830",
+        "RootView.swift:3891\u20133906"
+      ],
+      "fact": "C derives phases from monotonic uptime as production does, but uses a fixed once-established epoch and hardcoded IDs. Production combines timeline.boardCue, session countdown/skip state, contact and hold-cue resolvers, plus changing countdown/progress/controls and onChange callbacks. Prior CPU/frame mismatch proves at least some production semantic updates reached actual materials; therefore do not label all failures stale upstream mode. Standalone semantic onChange at3849 logs explicit input; production has no equivalent at that exact parent boundary.",
+      "discriminator": "Compare actual requested IDs/mode/position, leaf viewport, attachment and scene identity at the same settled phases. If leaf values/materials already match, a resolver rewrite would not address that observed case."
+    },
+    {
+      "boundary": "Hands and host count",
+      "refs": [
+        "RootView.swift:2383\u20132401",
+        "RootView.swift:2283\u20132299"
+      ],
+      "fact": "Production has conditional hand hosts, standalone none. Root has now verified failure with hands OFF during rest and next hang. The prior OFF next-active success was not full workflow success and no longer supports removal as a fix.",
+      "discriminator": "Keep hands absent for minimal context isolation; do not prioritize hand-image/shared-host rewrites on the withdrawn evidence."
+    }
+  ],
+  "negativeFindings": [
+    "No .equatable(), drawingGroup or compositingGroup wrapper found in the inspected RootView/BoardMapView/BoardModelView sources.",
+    "Both paths use the same package loader/material setup and lower scene-identity key; no distinct standalone material implementation.",
+    "DEBUG semantic host, ARView, virtual camera and telephoto flags exist in shared lower source. Comparisons must bind launch environments and exclude unintended differences; current source is diagnostic, not committed production-only.",
+    "A/B/C pass would narrow the reproduction boundary, not prove TimelineView harmless in every parent layout. Do not predeclare those results."
+  ],
+  "retainedContext": [
+    "R/architecture-check/report.json: lower loader/scene/lifecycle map",
+    "R/hand-image-feasibility/report.json: remains feasibility only; no longer motivated by a proved hand-host-removal workflow repair"
+  ],
+  "limits": "Line references bind the captured current diagnostic source hashes; another worker may subsequently change line numbers. No runtime logs or device inspected and no causal fix claim."
+}

@@ -1,0 +1,257 @@
+{
+  "checks": {
+    "openingFlag": true,
+    "suppressionAbsent": true,
+    "cameraEvidencePresent": true,
+    "everyConfiguredCameraHasReset": true,
+    "oneConfiguredCameraPerConstructedScene": true,
+    "componentMatchesFlag": true,
+    "noFitRejected": true,
+    "unchangedClips": true,
+    "finiteDepthsInsideClips": true,
+    "validFOVorScale": true
+  },
+  "perspective": false,
+  "configuredCameraCount": 2,
+  "observedKinds": [
+    "pair"
+  ],
+  "cameraRecords": [
+    {
+      "cameraEvent": "configured",
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "complete": true,
+      "epoch": 1790983522.655108,
+      "event": "hand-camera",
+      "far": 100,
+      "handCameraID": "ObjectIdentifier(0x0000000115c148c0)",
+      "handKind": "pair",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 1,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "near": 0.10000000149011612,
+      "orthographicPresent": true,
+      "orthographicScale": 3.200000047683716,
+      "perspectivePresent": false,
+      "sequence": 4,
+      "uptime": 66597.14464408334
+    },
+    {
+      "allDepthsFinite": true,
+      "allDepthsInsideUnchangedClips": true,
+      "cameraEvent": "reset-fitted",
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.959770917892456,
+        -0.28078407049179077,
+        0,
+        0,
+        0.28078407049179077,
+        0.959770917892456,
+        0,
+        0,
+        3.961261034011841,
+        9.515283584594727,
+        1
+      ],
+      "complete": true,
+      "epoch": 1790983522.7547278,
+      "event": "hand-camera",
+      "far": 100,
+      "framingVertexCount": 37284,
+      "handCameraID": "ObjectIdentifier(0x0000000115c148c0)",
+      "handKind": "pair",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 1,
+        "pair.make-entry": 1,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "maximumDepth": 10.936546325683594,
+      "minimumDepth": 8.617655754089355,
+      "near": 0.10000000149011612,
+      "orthographicPresent": true,
+      "orthographicScale": 1.7647740840911865,
+      "perspectivePresent": false,
+      "sequence": 6,
+      "uptime": 66597.24426458334
+    },
+    {
+      "cameraEvent": "configured",
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "complete": true,
+      "epoch": 1790983525.2567248,
+      "event": "hand-camera",
+      "far": 100,
+      "handCameraID": "ObjectIdentifier(0x0000000118be0bc0)",
+      "handKind": "pair",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 2,
+        "pair.make-entry": 1,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "near": 0.10000000149011612,
+      "orthographicPresent": true,
+      "orthographicScale": 3.200000047683716,
+      "perspectivePresent": false,
+      "sequence": 17,
+      "uptime": 66599.74626862501
+    },
+    {
+      "allDepthsFinite": true,
+      "allDepthsInsideUnchangedClips": true,
+      "cameraEvent": "reset-fitted",
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.959770917892456,
+        -0.28078407049179077,
+        0,
+        0,
+        0.28078407049179077,
+        0.959770917892456,
+        0,
+        0,
+        3.961261034011841,
+        9.515283584594727,
+        1
+      ],
+      "complete": true,
+      "epoch": 1790983525.328011,
+      "event": "hand-camera",
+      "far": 100,
+      "framingVertexCount": 37284,
+      "handCameraID": "ObjectIdentifier(0x0000000118be0bc0)",
+      "handKind": "pair",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 2,
+        "pair.make-entry": 2,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "maximumDepth": 10.936546325683594,
+      "minimumDepth": 8.617655754089355,
+      "near": 0.10000000149011612,
+      "orthographicPresent": true,
+      "orthographicScale": 1.7647740840911865,
+      "perspectivePresent": false,
+      "sequence": 19,
+      "uptime": 66599.817555
+    }
+  ],
+  "creationOrder": [
+    {
+      "event": "hand-lifecycle",
+      "detail": "constructor-entry",
+      "kind": "pair",
+      "sequence": 3,
+      "epoch": 1790983522.6548982
+    },
+    {
+      "event": "hand-camera",
+      "detail": "configured",
+      "kind": "pair",
+      "sequence": 4,
+      "epoch": 1790983522.655108
+    },
+    {
+      "event": "hand-lifecycle",
+      "detail": "make-entry",
+      "kind": "pair",
+      "sequence": 5,
+      "epoch": 1790983522.698748
+    },
+    {
+      "event": "hand-camera",
+      "detail": "reset-fitted",
+      "kind": "pair",
+      "sequence": 6,
+      "epoch": 1790983522.7547278
+    },
+    {
+      "event": "view-make",
+      "detail": "active",
+      "kind": null,
+      "sequence": 10,
+      "epoch": 1790983523.356505
+    },
+    {
+      "event": "hand-lifecycle",
+      "detail": "constructor-entry",
+      "kind": "pair",
+      "sequence": 16,
+      "epoch": 1790983525.256672
+    },
+    {
+      "event": "hand-camera",
+      "detail": "configured",
+      "kind": "pair",
+      "sequence": 17,
+      "epoch": 1790983525.2567248
+    },
+    {
+      "event": "hand-lifecycle",
+      "detail": "make-entry",
+      "kind": "pair",
+      "sequence": 18,
+      "epoch": 1790983525.272887
+    },
+    {
+      "event": "hand-camera",
+      "detail": "reset-fitted",
+      "kind": "pair",
+      "sequence": 19,
+      "epoch": 1790983525.328011
+    }
+  ],
+  "limits": [
+    "Only actually constructed scenes have runtime camera evidence; unconstructed single-hand path is not runtime exercised.",
+    "No gestures used; orbit behavior is source-reviewed only.",
+    "Perspective preserves camera transform and fits geometry with1.08 margin; projected appearance is not photometrically identical."
+  ]
+}

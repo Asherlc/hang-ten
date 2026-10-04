@@ -1,0 +1,31 @@
+# Plateau Lifting Edge — review #13, October 2
+
+The loop now seats against the lower metal curl and wraps its actual end lips. The original axis stations forced sharp unsupported bends about 4.5 mm away from the metal. New stations derive from the native inner floor; the existing CAD solver generates the routes and hanging height. The manufacturer states a 6 mm cord diameter. Total loop length remains the prior 420 mm display estimate, and the invisible support now aligns with the native curl plane.
+
+The original physical board shape and all grip triangles remain unchanged. Five native surface binders separate exposed metal and blocker from the oak. The package selects the shared wood finish only for `plateau_body` and `plateau_edge_18`; metal and blocker remain neutral, non-pickable attachments. The blocker is described as 3D printed, with no polymer-specific finish claimed. All three USDZs are unbound and contain no materials or textures.
+
+One physical `edge-18` remains the underside and front round of the oak rail. The base exposes 18 mm, and the reversible blocker exposes 15 or 10 mm of that same grip. The complete under-oblique previews show the grip ownership clearly. Orange denotes the contact; tan denotes the oak finish selector. These colors are diagnostic CAD/export colors and do not demonstrate runtime texture or highlights.
+
+[Open the whole-image review](index.html): all five complete approved manufacturer photos, all three final grip configurations and whole prior/current front, side, top and oblique views. No source photo was processed, measured or traced. The [source register](../sources.json) distinguishes five byte-identical approved visuals from separately authorized refreshed PL-1 HTML, which supports the stated cord diameter and component materials.
+
+Independent reopening proves all 75 original non-Document native payloads and all 47 original XML feature definitions preserve. Fresh native edit/restore checks pass for all three configurations. Actual imported physical triangle unions and contact triangles are exact matches to the prior exports, with no duplicates: 924 triangles in the 18 mm asset and 948 in each blocker asset. Descriptors reconstruct exactly; measured contact depth spans are 18/15/10 mm within export precision.
+
+All three final source/model-bound cord caches pass the existing solver's strict checks. Exact untessellated native minimum centerline distance is 3.184591175 mm against a 3 mm radius. Every meaningful bend has a surface gap no greater than 0.200000465 mm. The continuous certificate's conservative lower bound is 2.999005445 mm under the unchanged 0.01 mm numerical tolerance; it is not a sampled minimum. Whole route length is 420.000006174 mm, within the existing 1e-6 relative tolerance. Astra independently reviewed the final hashes, whole images, loadable contact, support alignment and geometry, with no remaining technical shape blocker.
+
+The retained host results contain 191 passing Python tests, validation of all 64 canonical packages, and exact three-model/descriptor/generated-manifest Android staging parity. One generic iOS Simulator build-for-testing passed with all three current descriptors and ODR models at frozen hashes. **Zero iOS unit cases, guest operations or current app frames were produced.** Existing Simulator startup failures are recorded with #10; no new Plateau Simulator boot was attempted. Historical Plateau images lack build-binary provenance and do not establish this revision's app appearance, picking, highlighting or workout behavior.
+
+Only 18/15/10 mm grip depths and the 6 mm cord diameter are sourced numerical dimensions. Envelope, curl and rail profiles, edge rounds, blocker shape beyond effective depths, station clearance, support placement and total loop length remain display estimates. The user accepted the shown CAD shape and seated cord on October 2 with **“Y”** to “Does the shape and cord look right?”; [the exact acceptance record](human-acceptance.json) binds the shown images and assets. Current app appearance and workflow remain unverified. Raw technical reports retain their pending-at-validation historical state. Native-author jobs retain a disclosed historical PID/PGID evidence gap; known transient directories and exact-script process absence were freshly checked, while the material and build lanes retain exact process-group cleanup proof.
+
+| Current file | SHA-256 |
+| --- | --- |
+| assets/depth-10mm.model.json | `ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e` |
+| assets/depth-10mm.usdz | `4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431` |
+| assets/depth-15mm.model.json | `f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b` |
+| assets/depth-15mm.usdz | `d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad` |
+| assets/primary.model.json | `9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55` |
+| assets/primary.usdz | `9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb` |
+| plateau-lifting-edge.FCStd | `b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986` |
+| suspension.json | `b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80` |
+| Generated manifest | `5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4` |
+
+Evidence: [native preservation](material-partition/native-preservation-and-finish-proof.json), [fresh native reopen](material-partition/fresh-native-preservation-proof.json), [independent actual exports](independent-export-validation.json), [native grip edit/restore](native-shape/final-native-liveness.json), [final source/cache handoff](native-shape/final-candidate-handoff.json), [independent shape review](independent-shape/shape-verdict.md), [render provenance](native-shape/final-render-provenance.json), [runtime/build scope](runtime-validation.json), [package/build proof](package-validation/final-verification.json), [delivery lock](delivery-check.json), [delivery verifier](delivery-verifier.json), [fresh scope and cleanup](completion-scope-and-cleanup.json), [native lifecycle limits](native-shape/resource-lifecycle.json), [script hashes](throwaway-script-provenance.json), and [artifact hashes](artifact-sha256.json).

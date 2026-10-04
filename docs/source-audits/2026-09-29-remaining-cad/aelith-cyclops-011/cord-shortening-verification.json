@@ -1,0 +1,93 @@
+{
+  "package": "aelith-cyclops-011",
+  "request": "User: cord is way too long (2026-09-30). Shorter presentation remains a display estimate, not a manufacturer length.",
+  "measurements": {
+    "before": {
+      "supportToEyeVerticalSpanMM": 167.52184900000026,
+      "supportToEyeEuclideanSpanMM": 167.55157503799796,
+      "freeSupportToBoardTopVerticalSpanMM": 163.47392100000002,
+      "supportOffsetMM": 100.0,
+      "loopRestLengthMM": 360.0,
+      "solvedLengthMM": 359.99999731736307,
+      "certifiedMinimumClearanceMM": 1.0481449992370062,
+      "radiusMM": 1.0,
+      "tubeIntersectionsPassed": true,
+      "runtimePolylineVertices": 11,
+      "supportInBoardSpace": [
+        2.710000000013396e-07,
+        0.18952184900000002,
+        -0.0025000000000000005
+      ],
+      "eyeStationMidpointInBoardSpace": [
+        0.0,
+        0.021999999999999777,
+        0.0006560109729752224
+      ]
+    },
+    "after": {
+      "supportToEyeVerticalSpanMM": 56.478332000000236,
+      "supportToEyeEuclideanSpanMM": 56.56644226780779,
+      "freeSupportToBoardTopVerticalSpanMM": 52.43040400000002,
+      "supportOffsetMM": 25.0,
+      "loopRestLengthMM": 140.0,
+      "solvedLengthMM": 139.99999844122752,
+      "certifiedMinimumClearanceMM": 1.0402227502920915,
+      "radiusMM": 1.0,
+      "tubeIntersectionsPassed": true,
+      "runtimePolylineVertices": 12,
+      "supportInBoardSpace": [
+        2.710000000013396e-07,
+        0.07847833200000001,
+        -0.0025000000000000005
+      ],
+      "eyeStationMidpointInBoardSpace": [
+        0.0,
+        0.021999999999999777,
+        0.0006560109729752224
+      ]
+    }
+  },
+  "spanRatio": 0.3371400944840344,
+  "boardHeightMM": 53.892595,
+  "sourceGraphUnchanged": true,
+  "immutableBefore": {
+    "aelith-cyclops-011.FCStd": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+    "assets/primary.usdz": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d",
+    "assets/primary.model.json": "33d6dd4256955ea603098f98f1d8ae95dab4ec15df7f3e042db3439c344a0ef7"
+  },
+  "immutableAfter": {
+    "aelith-cyclops-011.FCStd": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+    "assets/primary.usdz": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d",
+    "assets/primary.model.json": "33d6dd4256955ea603098f98f1d8ae95dab4ec15df7f3e042db3439c344a0ef7"
+  },
+  "sidecarBeforeSHA256": "19c51a321555a387beeb5ad735987ff0bae6a9a45d2a12f72e0f94432267a53e",
+  "sidecarAfterSHA256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d",
+  "collisionFixtureSHA256": "d8f950d61706b5b727f3d50eb268bb92e47f3685493b3ec5f452f223a05026f4",
+  "algorithmsSHA256": {
+    "Tools/HangboardCAD/native_cord_routes.py": "309cffb89d3955298aefab71bc1e57098fbc7beb14596aef1b8064cf83b77171",
+    "Tools/HangboardPackages/src/hangboard_packages/cord_paths.py": "d0c6dcacc8e1ad129e8d03580a43e9e20b547879a127bb912582b19c7a683250"
+  },
+  "packageSchemaPassed": true,
+  "cacheApplyAndCheckPassed": true,
+  "roundedRuntimeContinuousClearancePassed": true,
+  "tubeSelfIntersectionPassed": true,
+  "nativeGeometryAndModelBytesUnchanged": true,
+  "focusedTests": {
+    "command": "python -m pytest Tools/HangboardPackages/tests/test_cord_paths.py Tools/HangboardPackages/tests/test_cord_audit_reusable_instances.py -q",
+    "passed": 17,
+    "failed": 0
+  },
+  "comparisonImagesSHA256": {
+    "review/shorter-cord-comparison-front.png": "25e2ffc345c8cb36a771edf331f8d247f36058f91e561287d3f8ea935225973d",
+    "review/shorter-cord-comparison-side.png": "7b86d322e182b1be1ab7de9de18456394a288c96c548d6ed3e916251df16292d",
+    "review/shorter-cord-comparison-top.png": "1e3a500ffe24913252cef19b97924dfa642990875811227864ffe35142c86bb0"
+  },
+  "technicalViewsInspected": [
+    "front",
+    "side",
+    "top"
+  ],
+  "appReview": "app-review/validation.json",
+  "priorSidecarMatchesGitHEAD": true,
+  "runtimeValidation": "shorter-cord-runtime-validation.json"
+}

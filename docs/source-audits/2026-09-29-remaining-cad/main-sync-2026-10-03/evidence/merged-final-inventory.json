@@ -1,0 +1,16 @@
+{
+  "command": [
+    ".context/placid-badger-cad-second-half/yy-baguette/venv/bin/python",
+    "-m",
+    "hangboard_packages",
+    "validate",
+    "--root",
+    "Hangboards",
+    "--final-inventory"
+  ],
+  "environment": {
+    "PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardPackages/src"
+  },
+  "exitCode": 1,
+  "duration": 0.0353541374206543
+}

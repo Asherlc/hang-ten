@@ -1,0 +1,9 @@
+{
+  "status": "failed-before-app-validation",
+  "stage": "Stage Board Packages",
+  "error": "board.json.presentations[0].media.orientation.rotations must be sorted by position ID",
+  "buildExitStatus": 65,
+  "testsRun": false,
+  "capturesRun": false,
+  "cleanup": "verified in cleanup-verification.json"
+}

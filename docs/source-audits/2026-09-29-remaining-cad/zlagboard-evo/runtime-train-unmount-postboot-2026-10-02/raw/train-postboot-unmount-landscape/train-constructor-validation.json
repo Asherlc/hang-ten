@@ -1,0 +1,6312 @@
+{
+  "checks": {
+    "completeContiguous": true,
+    "openingBeforeConstructors": true,
+    "uniqueConstructorTokens": true,
+    "exactlyOneWorkoutConstructor": true,
+    "exactlyOneWorkoutMake": true,
+    "allSceneRecordsHaveConstructor": true,
+    "markerGateMatches": true,
+    "strictHandsEnabled": true,
+    "observedPredecessorConstruction": true
+  },
+  "suppressed": false,
+  "workoutToken": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+  "constructors": [
+    {
+      "cameraID": "ObjectIdentifier(0x00000001162477a0)",
+      "complete": true,
+      "epoch": 1790992272.984116,
+      "event": "board-scene-constructed",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 0,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "rootID": "ObjectIdentifier(0x0000000116247740)",
+      "sceneID": "ObjectIdentifier(0x000000010c2f6d80)",
+      "sceneLifecycleToken": "931087AC-4127-4A68-A733-4FF0F4681C2C",
+      "sequence": 3,
+      "trainBoardSuppressionRequested": false,
+      "uptime": 75347.507598125
+    },
+    {
+      "cameraID": "ObjectIdentifier(0x000000010c303200)",
+      "complete": true,
+      "epoch": 1790992274.0998812,
+      "event": "board-scene-constructed",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 0,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "rootID": "ObjectIdentifier(0x000000010c302d60)",
+      "sceneID": "ObjectIdentifier(0x000000014b757100)",
+      "sceneLifecycleToken": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "sequence": 13,
+      "trainBoardSuppressionRequested": false,
+      "uptime": 75348.62336570834
+    }
+  ],
+  "makes": [
+    {
+      "applicationCensus": {
+        "applicationState": 0,
+        "standaloneGate": false,
+        "windowScenes": [
+          {
+            "activationState": 0,
+            "interfaceOrientation": 3,
+            "sceneID": "ObjectIdentifier(0x0000000106d7ee00)",
+            "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+            "windows": [
+              {
+                "alpha": 1,
+                "bounds": [
+                  874,
+                  402
+                ],
+                "hidden": false,
+                "key": true,
+                "rendererNamedViewClasses": {},
+                "rendererPlacements": [],
+                "windowID": "ObjectIdentifier(0x0000000105f44800)"
+              }
+            ]
+          }
+        ]
+      },
+      "boardDetachTrial": {
+        "detachRequested": true,
+        "hosts": [
+          {
+            "attachmentObserved": true,
+            "cameraActualSceneID": "ObjectIdentifier(0x0000000106eccf00)",
+            "cameraParentID": "ObjectIdentifier(0x0000000117ad11c0)",
+            "currentOwner": true,
+            "detached": false,
+            "disappeared": false,
+            "invalid": "nil",
+            "modelRetainedForTrial": true,
+            "ownerToken": "23B39E9C-B331-4EC8-B0F7-24FCB88F2A34",
+            "reattachedAfterDetach": false,
+            "recordedActualSceneID": "ObjectIdentifier(0x0000000106eccf00)",
+            "recordedParentID": "ObjectIdentifier(0x0000000117ad11c0)",
+            "rootActualSceneID": "ObjectIdentifier(0x0000000106eccf00)",
+            "rootParentID": "ObjectIdentifier(0x0000000117ad11c0)",
+            "sceneLifecycleToken": "931087AC-4127-4A68-A733-4FF0F4681C2C",
+            "trainMarked": true,
+            "viewToken": "4C8E719A-0B0A-45F7-9BFE-4B10034D3568"
+          }
+        ]
+      },
+      "boardLifetimeCensus": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x00000001162477a0)",
+            "isActive": true,
+            "parentEntityID": "ObjectIdentifier(0x0000000117ad11c0)",
+            "realitySceneID": "ObjectIdentifier(0x0000000106eccf00)"
+          },
+          "constructedIDs": {
+            "cameraID": "ObjectIdentifier(0x00000001162477a0)",
+            "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+            "rootID": "ObjectIdentifier(0x0000000116247740)",
+            "wrapperID": "ObjectIdentifier(0x000000010c2f6d80)"
+          },
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x0000000116247740)",
+            "isActive": true,
+            "parentEntityID": "ObjectIdentifier(0x0000000117ad11c0)",
+            "realitySceneID": "ObjectIdentifier(0x0000000106eccf00)"
+          },
+          "sceneLifecycleToken": "931087AC-4127-4A68-A733-4FF0F4681C2C",
+          "wrapperAlive": true
+        }
+      ],
+      "boardRenderMembership": {
+        "cameraActive": true,
+        "cameraEntityID": "ObjectIdentifier(0x00000001162477a0)",
+        "cameraRealitySceneID": "ObjectIdentifier(0x0000000106eccf00)",
+        "cameraTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.9438583850860596,
+          -0.33035042881965637,
+          0,
+          0,
+          0.33035042881965637,
+          0.9438583850860596,
+          0,
+          0,
+          0.10610384494066238,
+          0.3241538405418396,
+          1
+        ],
+        "far": 1000,
+        "near": 0.0010000000474974513,
+        "orthographic": false,
+        "perspective": true,
+        "rootActive": true,
+        "rootEntityID": "ObjectIdentifier(0x0000000116247740)",
+        "rootRealitySceneID": "ObjectIdentifier(0x0000000106eccf00)",
+        "verticalFOVDegrees": 30
+      },
+      "cachedIDs": [],
+      "cachedMode": "active",
+      "cameraID": "ObjectIdentifier(0x00000001162477a0)",
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ],
+      "complete": true,
+      "contentContainsRegisteredRoot": true,
+      "contentRootIDs": [
+        "ObjectIdentifier(0x0000000116247740)",
+        "ObjectIdentifier(0x00000001162477a0)"
+      ],
+      "epoch": 1790992273.550756,
+      "event": "view-make",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 0,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "requestedMode": "active",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "rootAttached": true,
+      "rootEnabled": true,
+      "rootID": "ObjectIdentifier(0x0000000116247740)",
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "sceneID": "ObjectIdentifier(0x000000010c2f6d80)",
+      "sceneLifecycleToken": "931087AC-4127-4A68-A733-4FF0F4681C2C",
+      "selectedIDs": [],
+      "sequence": 7,
+      "surfaces": [],
+      "uptime": 75348.07423925001,
+      "viewportPoints": [
+        674,
+        115.54285714285714
+      ],
+      "viewToken": "4C8E719A-0B0A-45F7-9BFE-4B10034D3568"
+    },
+    {
+      "applicationCensus": {
+        "applicationState": 0,
+        "standaloneGate": false,
+        "windowScenes": [
+          {
+            "activationState": 0,
+            "interfaceOrientation": 3,
+            "sceneID": "ObjectIdentifier(0x0000000106d7ee00)",
+            "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+            "windows": [
+              {
+                "alpha": 1,
+                "bounds": [
+                  874,
+                  402
+                ],
+                "hidden": false,
+                "key": true,
+                "rendererNamedViewClasses": {},
+                "rendererPlacements": [],
+                "windowID": "ObjectIdentifier(0x0000000105f44800)"
+              }
+            ]
+          }
+        ]
+      },
+      "boardDetachTrial": {
+        "detachRequested": true,
+        "hosts": [
+          {
+            "attachmentObserved": true,
+            "cameraActualSceneID": "nil",
+            "cameraParentID": "nil",
+            "currentOwner": true,
+            "detached": true,
+            "disappeared": true,
+            "invalid": "nil",
+            "modelRetainedForTrial": true,
+            "ownerToken": "23B39E9C-B331-4EC8-B0F7-24FCB88F2A34",
+            "reattachedAfterDetach": false,
+            "recordedActualSceneID": "nil",
+            "recordedParentID": "nil",
+            "rootActualSceneID": "nil",
+            "rootParentID": "nil",
+            "sceneLifecycleToken": "931087AC-4127-4A68-A733-4FF0F4681C2C",
+            "trainMarked": true,
+            "viewToken": "4C8E719A-0B0A-45F7-9BFE-4B10034D3568"
+          },
+          {
+            "attachmentObserved": true,
+            "cameraActualSceneID": "ObjectIdentifier(0x0000000106de5900)",
+            "cameraParentID": "ObjectIdentifier(0x000000014d5fbfe0)",
+            "currentOwner": true,
+            "detached": false,
+            "disappeared": false,
+            "invalid": "nil",
+            "modelRetainedForTrial": true,
+            "ownerToken": "06C98008-BE55-4180-B84D-BE88F040178B",
+            "reattachedAfterDetach": false,
+            "recordedActualSceneID": "ObjectIdentifier(0x0000000106de5900)",
+            "recordedParentID": "ObjectIdentifier(0x000000014d5fbfe0)",
+            "rootActualSceneID": "ObjectIdentifier(0x0000000106de5900)",
+            "rootParentID": "ObjectIdentifier(0x000000014d5fbfe0)",
+            "sceneLifecycleToken": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+            "trainMarked": false,
+            "viewToken": "D13C25AC-3129-46E4-BD62-3AA644102364"
+          }
+        ]
+      },
+      "boardLifetimeCensus": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x00000001162477a0)",
+            "isActive": false,
+            "parentEntityID": "nil",
+            "realitySceneID": "nil"
+          },
+          "constructedIDs": {
+            "cameraID": "ObjectIdentifier(0x00000001162477a0)",
+            "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+            "rootID": "ObjectIdentifier(0x0000000116247740)",
+            "wrapperID": "ObjectIdentifier(0x000000010c2f6d80)"
+          },
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x0000000116247740)",
+            "isActive": false,
+            "parentEntityID": "nil",
+            "realitySceneID": "nil"
+          },
+          "sceneLifecycleToken": "931087AC-4127-4A68-A733-4FF0F4681C2C",
+          "wrapperAlive": true
+        },
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000010c303200)",
+            "isActive": true,
+            "parentEntityID": "ObjectIdentifier(0x000000014d5fbfe0)",
+            "realitySceneID": "ObjectIdentifier(0x0000000106de5900)"
+          },
+          "constructedIDs": {
+            "cameraID": "ObjectIdentifier(0x000000010c303200)",
+            "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+            "rootID": "ObjectIdentifier(0x000000010c302d60)",
+            "wrapperID": "ObjectIdentifier(0x000000014b757100)"
+          },
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000010c302d60)",
+            "isActive": true,
+            "parentEntityID": "ObjectIdentifier(0x000000014d5fbfe0)",
+            "realitySceneID": "ObjectIdentifier(0x0000000106de5900)"
+          },
+          "sceneLifecycleToken": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+          "wrapperAlive": true
+        }
+      ],
+      "boardRenderMembership": {
+        "cameraActive": true,
+        "cameraEntityID": "ObjectIdentifier(0x000000010c303200)",
+        "cameraRealitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+        "cameraTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.9438583850860596,
+          -0.33035042881965637,
+          0,
+          0,
+          0.33035042881965637,
+          0.9438583850860596,
+          0,
+          0,
+          0.10610384494066238,
+          0.3241538405418396,
+          1
+        ],
+        "far": 1000,
+        "near": 0.0010000000474974513,
+        "orthographic": false,
+        "perspective": true,
+        "rootActive": true,
+        "rootEntityID": "ObjectIdentifier(0x000000010c302d60)",
+        "rootRealitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+        "verticalFOVDegrees": 30
+      },
+      "cachedIDs": [],
+      "cachedMode": "active",
+      "cameraID": "ObjectIdentifier(0x000000010c303200)",
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ],
+      "complete": true,
+      "contentContainsRegisteredRoot": true,
+      "contentRootIDs": [
+        "ObjectIdentifier(0x000000010c302d60)",
+        "ObjectIdentifier(0x000000010c303200)"
+      ],
+      "epoch": 1790992274.260826,
+      "event": "view-make",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 0,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "requestedMode": "active",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "rootAttached": true,
+      "rootEnabled": true,
+      "rootID": "ObjectIdentifier(0x000000010c302d60)",
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "sceneID": "ObjectIdentifier(0x000000014b757100)",
+      "sceneLifecycleToken": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "selectedIDs": [],
+      "sequence": 17,
+      "surfaces": [],
+      "uptime": 75348.78431075001,
+      "viewportPoints": [
+        410,
+        70.28571428571429
+      ],
+      "viewToken": "D13C25AC-3129-46E4-BD62-3AA644102364"
+    }
+  ],
+  "otherConstructors": [
+    {
+      "cameraID": "ObjectIdentifier(0x00000001162477a0)",
+      "complete": true,
+      "epoch": 1790992272.984116,
+      "event": "board-scene-constructed",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 0,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "rootID": "ObjectIdentifier(0x0000000116247740)",
+      "sceneID": "ObjectIdentifier(0x000000010c2f6d80)",
+      "sceneLifecycleToken": "931087AC-4127-4A68-A733-4FF0F4681C2C",
+      "sequence": 3,
+      "trainBoardSuppressionRequested": false,
+      "uptime": 75347.507598125
+    }
+  ],
+  "allRendererPlacementCensuses": [
+    {
+      "sequence": 5,
+      "epoch": 1790992273.547158,
+      "event": "highlight-before",
+      "recordScene": "931087AC-4127-4A68-A733-4FF0F4681C2C",
+      "placements": []
+    },
+    {
+      "sequence": 6,
+      "epoch": 1790992273.5485601,
+      "event": "highlight-after",
+      "recordScene": "931087AC-4127-4A68-A733-4FF0F4681C2C",
+      "placements": []
+    },
+    {
+      "sequence": 7,
+      "epoch": 1790992273.550756,
+      "event": "view-make",
+      "recordScene": "931087AC-4127-4A68-A733-4FF0F4681C2C",
+      "placements": []
+    },
+    {
+      "sequence": 12,
+      "epoch": 1790992273.882162,
+      "event": "workout-probe-appear-before-autostart",
+      "recordScene": null,
+      "placements": []
+    },
+    {
+      "sequence": 15,
+      "epoch": 1790992274.258075,
+      "event": "highlight-before",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": []
+    },
+    {
+      "sequence": 16,
+      "epoch": 1790992274.259479,
+      "event": "highlight-after",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": []
+    },
+    {
+      "sequence": 17,
+      "epoch": 1790992274.260826,
+      "event": "view-make",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": []
+    },
+    {
+      "sequence": 18,
+      "epoch": 1790992275.304154,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 19,
+      "epoch": 1790992276.348164,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 20,
+      "epoch": 1790992277.131347,
+      "event": "highlight-before",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 21,
+      "epoch": 1790992277.142147,
+      "event": "highlight-after",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 24,
+      "epoch": 1790992277.3843498,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 25,
+      "epoch": 1790992278.414458,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 26,
+      "epoch": 1790992279.482129,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 27,
+      "epoch": 1790992280.533372,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 28,
+      "epoch": 1790992281.601392,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 29,
+      "epoch": 1790992282.648402,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 30,
+      "epoch": 1790992283.6911302,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 31,
+      "epoch": 1790992284.187047,
+      "event": "highlight-before",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 32,
+      "epoch": 1790992284.193413,
+      "event": "highlight-after",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 35,
+      "epoch": 1790992284.729641,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 36,
+      "epoch": 1790992285.7962031,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 37,
+      "epoch": 1790992286.861668,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 38,
+      "epoch": 1790992287.927411,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 39,
+      "epoch": 1790992288.9857411,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 40,
+      "epoch": 1790992290.030251,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 41,
+      "epoch": 1790992291.098137,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 42,
+      "epoch": 1790992292.165137,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 43,
+      "epoch": 1790992293.21848,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 44,
+      "epoch": 1790992294.262048,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 45,
+      "epoch": 1790992295.273025,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 46,
+      "epoch": 1790992296.339524,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 47,
+      "epoch": 1790992297.382711,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 48,
+      "epoch": 1790992298.449579,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 49,
+      "epoch": 1790992299.468264,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 50,
+      "epoch": 1790992300.535155,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 51,
+      "epoch": 1790992301.602584,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 52,
+      "epoch": 1790992302.638351,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 53,
+      "epoch": 1790992303.702229,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 54,
+      "epoch": 1790992304.760336,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 55,
+      "epoch": 1790992305.787837,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 56,
+      "epoch": 1790992306.836344,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 57,
+      "epoch": 1790992307.902956,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 58,
+      "epoch": 1790992308.959484,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 59,
+      "epoch": 1790992310.031075,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 60,
+      "epoch": 1790992311.088845,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 61,
+      "epoch": 1790992312.096246,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 62,
+      "epoch": 1790992313.1375031,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 63,
+      "epoch": 1790992314.206304,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 64,
+      "epoch": 1790992315.218818,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 65,
+      "epoch": 1790992316.2727408,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 66,
+      "epoch": 1790992317.3289719,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 67,
+      "epoch": 1790992318.38115,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 68,
+      "epoch": 1790992319.445572,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 69,
+      "epoch": 1790992320.468776,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 70,
+      "epoch": 1790992321.528739,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 71,
+      "epoch": 1790992322.5947409,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 72,
+      "epoch": 1790992323.6506948,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 73,
+      "epoch": 1790992324.7207232,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 74,
+      "epoch": 1790992325.7650352,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 75,
+      "epoch": 1790992326.831143,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 76,
+      "epoch": 1790992327.899641,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 77,
+      "epoch": 1790992328.967247,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 78,
+      "epoch": 1790992330.0336452,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 79,
+      "epoch": 1790992331.0453029,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 80,
+      "epoch": 1790992332.098524,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 81,
+      "epoch": 1790992333.133833,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 82,
+      "epoch": 1790992334.1487541,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 83,
+      "epoch": 1790992335.218204,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 84,
+      "epoch": 1790992336.259146,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 85,
+      "epoch": 1790992337.32606,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 86,
+      "epoch": 1790992338.3841429,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 87,
+      "epoch": 1790992339.437171,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 88,
+      "epoch": 1790992340.504736,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 89,
+      "epoch": 1790992341.514237,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 90,
+      "epoch": 1790992342.517767,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 91,
+      "epoch": 1790992343.5764031,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 92,
+      "epoch": 1790992344.645128,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 93,
+      "epoch": 1790992345.7105742,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 94,
+      "epoch": 1790992346.765583,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 95,
+      "epoch": 1790992347.833785,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 96,
+      "epoch": 1790992348.8469281,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 97,
+      "epoch": 1790992349.903895,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 98,
+      "epoch": 1790992350.950341,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 99,
+      "epoch": 1790992352.015465,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 100,
+      "epoch": 1790992353.081553,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 101,
+      "epoch": 1790992354.0982819,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 102,
+      "epoch": 1790992355.149637,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 103,
+      "epoch": 1790992356.218502,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 104,
+      "epoch": 1790992357.288404,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 105,
+      "epoch": 1790992358.3593202,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 106,
+      "epoch": 1790992359.3821769,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 107,
+      "epoch": 1790992360.397615,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 108,
+      "epoch": 1790992361.4027119,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 109,
+      "epoch": 1790992362.437731,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 110,
+      "epoch": 1790992363.466907,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 111,
+      "epoch": 1790992364.525326,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 112,
+      "epoch": 1790992365.5947971,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 113,
+      "epoch": 1790992366.6652188,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 114,
+      "epoch": 1790992367.731003,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 115,
+      "epoch": 1790992368.7980828,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 116,
+      "epoch": 1790992369.865993,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 117,
+      "epoch": 1790992370.8985472,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 118,
+      "epoch": 1790992371.907662,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 119,
+      "epoch": 1790992372.920967,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 120,
+      "epoch": 1790992373.9876041,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 121,
+      "epoch": 1790992375.022994,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 122,
+      "epoch": 1790992376.080441,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 123,
+      "epoch": 1790992377.097585,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 124,
+      "epoch": 1790992378.16873,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 125,
+      "epoch": 1790992379.218744,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 126,
+      "epoch": 1790992380.253014,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 127,
+      "epoch": 1790992381.322016,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 128,
+      "epoch": 1790992382.387484,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 129,
+      "epoch": 1790992383.4573479,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 130,
+      "epoch": 1790992384.4664412,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 131,
+      "epoch": 1790992385.505034,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 132,
+      "epoch": 1790992386.572799,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 133,
+      "epoch": 1790992387.606865,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 134,
+      "epoch": 1790992388.6754289,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 135,
+      "epoch": 1790992389.7426682,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 136,
+      "epoch": 1790992390.807183,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 137,
+      "epoch": 1790992391.8643332,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 138,
+      "epoch": 1790992392.921771,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 139,
+      "epoch": 1790992393.9904342,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 140,
+      "epoch": 1790992395.0484161,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 141,
+      "epoch": 1790992396.078649,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 142,
+      "epoch": 1790992397.098938,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 143,
+      "epoch": 1790992398.1694422,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 144,
+      "epoch": 1790992399.1926441,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 145,
+      "epoch": 1790992400.219229,
+      "event": "sample",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 147,
+      "epoch": 1790992464.256829,
+      "event": "highlight-before",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 148,
+      "epoch": 1790992464.267147,
+      "event": "highlight-after",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 151,
+      "epoch": 1790992471.184912,
+      "event": "highlight-before",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    },
+    {
+      "sequence": 152,
+      "epoch": 1790992471.195002,
+      "event": "highlight-after",
+      "recordScene": "BB26BE6C-FE6D-4006-8ECC-937E3519CE80",
+      "placements": [
+        {
+          "alpha": 1,
+          "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x0000000116313900)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000106de5900)",
+          "viewID": "ObjectIdentifier(0x000000014d438380)"
+        },
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARRenderView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "viewID": "ObjectIdentifier(0x000000014d413b80)"
+        }
+      ]
+    }
+  ],
+  "scope": "Markers identify completed native board-scene initialization before async USDZ loading, not every possible loader attempt or active rendering. Predecessor placement in history does not alone establish overlapping lifetime. All renderer census rows retained.",
+  "traceSHA256": "40b5f6bd364e7cf889ccb1f07a7c3b62fb10bdd1c17b2ddcf1882c86a70296db"
+}

@@ -1,0 +1,94 @@
+{
+  "exactManifestTextPreserved": true,
+  "contacts": [
+    {
+      "id": "three-edge-left",
+      "equipmentObjectID": "primary",
+      "name": "Left edge on three-edge surface",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "three-edge-center",
+      "equipmentObjectID": "primary",
+      "name": "Center edge on three-edge surface",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "three-edge-right",
+      "equipmentObjectID": "primary",
+      "name": "Right edge on three-edge surface",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "two-edge-left",
+      "equipmentObjectID": "primary",
+      "name": "Left edge on two-edge surface",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "two-edge-right",
+      "equipmentObjectID": "primary",
+      "name": "Right edge on two-edge surface",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "small-crimp-left",
+      "equipmentObjectID": "primary",
+      "name": "Left small crimp",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "small-crimp-right",
+      "equipmentObjectID": "primary",
+      "name": "Right small crimp",
+      "kind": "edge",
+      "gripTypes": []
+    }
+  ],
+  "positions": [
+    {
+      "id": "three-edge-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "three-edge-left",
+        "three-edge-center",
+        "three-edge-right"
+      ]
+    },
+    {
+      "id": "three-edge-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "three-edge-left",
+        "three-edge-center",
+        "three-edge-right"
+      ]
+    },
+    {
+      "id": "two-edge-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "two-edge-left",
+        "two-edge-right",
+        "small-crimp-left",
+        "small-crimp-right"
+      ]
+    },
+    {
+      "id": "two-edge-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "two-edge-left",
+        "two-edge-right",
+        "small-crimp-left",
+        "small-crimp-right"
+      ]
+    }
+  ]
+}

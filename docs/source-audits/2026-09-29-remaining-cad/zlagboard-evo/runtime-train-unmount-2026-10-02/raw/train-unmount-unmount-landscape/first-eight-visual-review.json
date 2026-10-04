@@ -1,0 +1,93 @@
+{
+  "captures": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/phase-0-active-plus-0.25.png",
+      "sha256": "841ce2e16c875f80536742cce0e5f3e168ee19cda1e1c60a1df548fd07ccb584",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:07",
+      "handsVisible": false,
+      "runningPauseControlVisible": true,
+      "artifact": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/phase-0-active-plus-1.png",
+      "sha256": "99d58d47cadb9fcffa632cea9ebd86c4f056f5e47d7c974a1e0888aed85cdea3",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:06",
+      "handsVisible": false,
+      "runningPauseControlVisible": true,
+      "artifact": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/phase-0-active-plus-3.png",
+      "sha256": "597904ff4cf885db1d70d625bf7a05d3ee0519de2083cf27133974c8215f1967",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:04",
+      "handsVisible": false,
+      "runningPauseControlVisible": true,
+      "artifact": "Black rounded capsule at far left; no cause/input inference"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/phase-0-active-plus-5.png",
+      "sha256": "46508c2c745492ddca17a3b51de8576fd4cdaee5f311c30bba580d5cc960aca3",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:02",
+      "handsVisible": false,
+      "runningPauseControlVisible": true,
+      "artifact": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/phase-1-preview-plus-0.25.png",
+      "sha256": "06ae95d70ad7f07acc65b7244dafc0bc4c24074bebd886d153a187dc79f13172",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "blue",
+      "timer": "03:00",
+      "handsVisible": false,
+      "runningPauseControlVisible": true,
+      "artifact": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/phase-1-preview-plus-1.png",
+      "sha256": "51d2a14985efff42d9dc32dbff63700e7f582a813f1adb168eeca3b987e08477",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "blue",
+      "timer": "02:59",
+      "handsVisible": false,
+      "runningPauseControlVisible": true,
+      "artifact": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/phase-1-preview-plus-3.png",
+      "sha256": "7abb75b1a66839f84be694e8167cee4e706f71fd388067b00cb3233b5c443b41",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "blue",
+      "timer": "02:57",
+      "handsVisible": false,
+      "runningPauseControlVisible": true,
+      "artifact": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/phase-1-preview-plus-5.png",
+      "sha256": "960e8624279761069e2f81989cd8413b973d8dcc64413743a5e02ee9a114c39c",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "blue",
+      "timer": "02:55",
+      "handsVisible": false,
+      "runningPauseControlVisible": true,
+      "artifact": null
+    }
+  ],
+  "scope": "First eight whole originals directly viewed; no crops/pixel measurement; next Hang pending."
+}

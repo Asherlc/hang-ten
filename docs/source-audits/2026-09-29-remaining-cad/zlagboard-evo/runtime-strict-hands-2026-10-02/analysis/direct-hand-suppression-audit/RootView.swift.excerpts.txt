@@ -1,0 +1,227 @@
+193: struct RootView: View {
+194:     @EnvironmentObject private var store: AppStore
+195:     @StateObject private var workoutAudioCoach = WorkoutAudioCoach()
+196:     @StateObject private var deepLinkManager = DeepLinkManager()
+197:     @State private var selectedTab = RootTab.initial(
+198:         environment: ProcessInfo.processInfo.environment
+199:     )
+200: 
+201:     var body: some View {
+202:         #if DEBUG
+203:         if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STANDALONE_BOARD"] == "1" {
+204:             StandaloneBoardHighlightProbe()
+205:         } else if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_WORKOUT_AT_ROOT"] == "1" {
+206:             diagnosticRootWorkout
+207:         } else {
+208:             normalBody
+209:         }
+210:         #else
+211:         normalBody
+212:         #endif
+213:     }
+214: 
+215:     #if DEBUG
+216:     @ViewBuilder
+217:     private var diagnosticRootWorkout: some View {
+218:         let environment = ProcessInfo.processInfo.environment
+219:         if environment["HANGTEN_REVIEW_PLAN_ID"] == "research.max-hangs",
+220:            environment["HANGTEN_REVIEW_BOARD_ID"] == "zlagboard.evo",
+221:            let plan = store.plans.first(where: { $0.id == "research.max-hangs" }),
+222:            store.selectedBoard.id == "zlagboard.evo",
+223:            store.board(for: plan).id == "zlagboard.evo" {
+224:             Group {
+225:                 if environment["HANGTEN_REVIEW_ROOT_NAVIGATION_STACK"] == "1" {
+226:                     NavigationStack {
+227:                         WorkoutAccessGate(plan: plan)
+228:                     }
+229:                 } else {
+230:                     WorkoutAccessGate(plan: plan)
+231:                 }
+232:             }
+233:                 .environmentObject(workoutAudioCoach)
+234:                 .environmentObject(deepLinkManager)
+235:                 .onAppear {
+236:                     let orientationMask: UIInterfaceOrientationMask?
+237:                     if environment["HANGTEN_REVIEW_LANDSCAPE"] == "1" {
+238:                         orientationMask = .landscapeRight
+239:                     } else if environment["HANGTEN_REVIEW_PORTRAIT"] == "1" {
+240:                         orientationMask = .portrait
+241:                     } else {
+242:                         orientationMask = nil
+243:                     }
+244:                     guard let orientationMask,
+245:                           let windowScene = UIApplication.shared.connectedScenes
+246:                             .compactMap({ $0 as? UIWindowScene }).first else { return }
+247:                     windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: orientationMask))
+248:                 }
+249:         } else {
+250:             Text("Root workout diagnostic: exact Evo/Max Hangs inputs unavailable")
+251:         }
+
+1176:             BoardMapView(
+1177:                 board: board,
+1178:                 highlightedHoldIDs: firstStepHoldIDs,
+1179:                 activeHoldID: firstStepHold?.id
+1180:             )
+1181:                 .padding(.horizontal, 12)
+1182:             if let firstStepHoldCue, let hold = firstStepHoldCue.hold {
+1183:                 GripDiagramView(
+1184:                     hold: hold,
+1185:                     gripType: firstStepHoldCue.gripType,
+1186:                     fingerConfiguration: firstStepHoldCue.fingerConfiguration
+1187:                 )
+1188:             }
+
+2012: 				let isResting = boardCue.isResting
+2013: 				let highlightedStep = boardCue.step
+2014: 				let resolvedHighlightedStep = highlightedStep
+2015: 				let previewHoldIDs = resolvedHighlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
+2016: 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
+2017: 				let highlightMode = boardCue.mode
+2018: 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
+2019: 				let activeHold = resolvedHighlightedStep.flatMap { WorkoutHighlightResolver.contacts(for: $0, on: board).first }
+2020: 				let holdCue = WorkoutHoldCuePolicy.resolve(step: resolvedHighlightedStep, hold: activeHold, on: board)
+2021: 				let isLandscape = geometry.size.width > geometry.size.height
+2022: 				let audioMoment = audioMoment(
+2023: 					step: step,
+2024: 					stepElapsed: stepElapsed,
+2025: 					elapsed: elapsed,
+2026: 					countdown: countdown,
+2027: 					isTimedResting: isTimedResting,
+2028: 					isComplete: isComplete
+2029: 				)
+2030: 				let audioCountdownStartUptime = audioCountdownStartUptime(
+2031: 					step: step,
+2032: 					elapsed: elapsed,
+2033: 					countdown: countdown,
+2034: 					isTimedResting: isTimedResting,
+2035: 					moment: audioMoment
+2036: 				)
+2037: 
+2038: 				Group {
+2039: 					if isLandscape {
+2040: 						landscapeSession(
+2041: 							step: presentedStep,
+2042: 							stepElapsed: stepElapsed,
+2043: 							elapsed: elapsed,
+2044: 							monotonicTime: monotonicTime,
+2045: 							countdown: countdown,
+2046: 							canNavigate: canNavigate,
+2047: 							isResting: isResting,
+2048: 							isComplete: isComplete,
+2049: 							highlightedHoldIDs: highlightedHoldIDs,
+2050: 							highlightMode: highlightMode,
+2051: 							showsHoldPreview: showsHoldPreview,
+2052: 							holdCue: holdCue,
+2053: 							cueStep: resolvedHighlightedStep,
+2054: 							isSkipCountdown: sessionState.countdownKind == .skip
+2055: 						)
+2056: 					} else {
+2057: 						portraitSession(
+2058: 							step: presentedStep,
+2059: 							stepElapsed: stepElapsed,
+2060: 							elapsed: elapsed,
+2061: 							monotonicTime: monotonicTime,
+2062: 							countdown: countdown,
+2063: 							canNavigate: canNavigate,
+2064: 							isResting: isResting,
+2065: 							isComplete: isComplete,
+2066: 							highlightedHoldIDs: highlightedHoldIDs,
+2067: 							highlightMode: highlightMode,
+2068: 							showsHoldPreview: showsHoldPreview,
+2069: 							holdCue: holdCue,
+2070: 							cueStep: resolvedHighlightedStep,
+2071: 							isSkipCountdown: sessionState.countdownKind == .skip
+2072: 						)
+2073: 					}
+
+2332: 				if let holdCue, WorkoutHoldCueVisibilityPolicy.showsCue(
+2333: 					holdCue: holdCue,
+2334: 					countdown: countdown,
+2335: 					isComplete: isComplete,
+2336: 					isSkipCountdown: isSkipCountdown
+2337: 				) {
+2338: 					if let hold = holdCue.hold {
+2339: 						GripDiagramView(
+2340: 							hold: hold,
+2341: 							gripType: holdCue.gripType,
+2342: 							fingerConfiguration: holdCue.fingerConfiguration,
+2343: 							resolvedHandSide: resolvedHandSide(for: step)
+2344: 						)
+2345: 					} else {
+2346: 						portraitHandCueCards(holdCue: holdCue, cueStep: cueStep)
+2347: 					}
+2348: 				}
+
+2371: 	@ViewBuilder
+2372: 	private func portraitHandCueCards(holdCue: WorkoutHoldCue, cueStep: WorkoutStep?) -> some View {
+2373: 		let showsLeft = WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: cueStep)
+2374: 		let showsRight = WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: cueStep)
+2375: 		if showsLeft && showsRight {
+2376: 			GripHandPairCueCards(posture: holdCue.gripType,
+2377: 								fingerConfiguration: holdCue.fingerConfiguration)
+2378: 		} else {
+2379: 			HStack(spacing: 12) {
+2380: 				if showsLeft {
+2381: 					GripHandCueCard(posture: holdCue.gripType,
+2382: 									fingerConfiguration: holdCue.fingerConfiguration, side: .left)
+2383: 				}
+2384: 				if showsRight {
+2385: 					GripHandCueCard(posture: holdCue.gripType,
+2386: 									fingerConfiguration: holdCue.fingerConfiguration, side: .right)
+2387: 				}
+2388: 			}
+2389: 		}
+
+2431: 			VStack(spacing: 2) {
+2432: 				if showsPairedHandCue, let holdCue {
+2433: 					Group {
+2434: 						#if DEBUG
+2435: 						if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_WORKOUT_HAND_HOST"] == "1" {
+2436: 							Color.clear
+2437: 						} else if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAIN_SECOND_HOST"] == "1" {
+2438: 							WorkoutPlainSecondHostProbe(posture: holdCue.gripType,
+2439: 								fingerConfiguration: holdCue.fingerConfiguration)
+2440: 						} else {
+2441: 							GripHandPairModelView(posture: holdCue.gripType,
+2442: 								fingerConfiguration: holdCue.fingerConfiguration)
+2443: 						}
+2444: 						#else
+2445: 						GripHandPairModelView(posture: holdCue.gripType,
+2446: 							fingerConfiguration: holdCue.fingerConfiguration)
+2447: 						#endif
+2448: 					}
+2449: 						.frame(height: 68)
+2450: 						.accessibilityHidden(true)
+
+2533: 	private func landscapeHandCueSlot(
+2534: 		holdCue: WorkoutHoldCue?,
+2535: 		cueStep: WorkoutStep?,
+2536: 		countdown: Int,
+2537: 		isComplete: Bool,
+2538: 		isSkipCountdown: Bool,
+2539: 		side: GripCueSide,
+2540: 		usesSharedPairPreview: Bool = false
+2541: 	) -> some View {
+2542: 		ZStack {
+2543: 			Color.clear
+2544: 				.accessibilityHidden(true)
+2545: 			if let holdCue, WorkoutLandscapeHandCuePolicy.showsHandCue(
+2546: 				for: side == .left ? .left : .right,
+2547: 				holdCue: holdCue,
+2548: 				cueStep: cueStep,
+2549: 				countdown: countdown,
+2550: 				isComplete: isComplete,
+2551: 				isSkipCountdown: isSkipCountdown
+2552: 			) {
+2553: 				GripHandCueCard(
+2554: 					posture: holdCue.gripType,
+2555: 					fingerConfiguration: holdCue.fingerConfiguration,
+2556: 					side: side,
+2557: 					usesSharedPairPreview: usesSharedPairPreview
+2558: 				)
+2559: 			}
+2560: 		}
+2561: 		.frame(width: LandscapeLayout.sideCueSlotWidth)
+2562: 		.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
+2563: 	}

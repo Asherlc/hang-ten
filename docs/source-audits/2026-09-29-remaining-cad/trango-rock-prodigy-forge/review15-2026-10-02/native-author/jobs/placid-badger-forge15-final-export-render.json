@@ -1,0 +1,12 @@
+{
+  "name": "placid-badger-forge15-final-export-render",
+  "command": [
+    ".context/placid-badger/venv/bin/python",
+    ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-depth-render.py",
+    "--current-model",
+    ".context/placid-badger/forge-review15/native-author/stable-bindings/export-bound-package/Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
+    "--out",
+    ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views"
+  ],
+  "timeoutSeconds": 300
+}

@@ -1,0 +1,69 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B",
+  "runtime": "26.4",
+  "control": "existing raster board ordinary Train route; detail/hold/FOV/plan review variables cleared",
+  "commands": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "launch",
+        "--terminate-running-process",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B",
+        "com.hangten.training"
+      ],
+      "timeoutSeconds": 30,
+      "startedUTC": "2026-10-02T04:26:09.846718+00:00",
+      "timedOut": true,
+      "elapsedSeconds": 30.004511500010267
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "attempt": 0,
+      "timeoutSeconds": 6,
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "attempt": 1,
+      "timeoutSeconds": 6,
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "attempt": 2,
+      "timeoutSeconds": 6,
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    }
+  ]
+}

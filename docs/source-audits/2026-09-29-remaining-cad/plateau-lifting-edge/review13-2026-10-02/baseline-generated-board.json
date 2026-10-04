@@ -1,0 +1,456 @@
+{
+  "schemaVersion": 3,
+  "id": "plateau.lifting-edge",
+  "manufacturer": "Plateau Climbing",
+  "name": "Lifting Edge",
+  "subtitle": "Aluminium lifting-edge base kit with wood edge and two blocker faces.",
+  "productURL": "https://www.plateauclimbing.com/products/plateau-lifting-edge",
+  "aspectRatio": 1.5,
+  "handCapacity": 1,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "depth-18mm",
+      "name": "18 mm configuration",
+      "aspectRatio": 1.5,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.12
+          }
+        },
+        "suspension": {
+          "type": "cadRoutedCord",
+          "bodyNodeID": "plateau_body",
+          "strands": [
+            {
+              "id": "curl-loop",
+              "kind": "loop",
+              "restLength": 0.42,
+              "radius": 0.002,
+              "material": "matteCord",
+              "provenance": "Retained front and oblique views show one loop through the exposed ends of the open C curl and an exterior return below the board. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+            }
+          ],
+          "anchor": {
+            "offsetFromBoardBounds": [
+              0,
+              -0.15,
+              0
+            ],
+            "visibility": "invisible",
+            "provenance": "Display support location only. Source-visible route graph retained; native solver derives clearance and settled height."
+          },
+          "canonicalPoses": {
+            "depth-18mm": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                0.068968462,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0.3,
+                  -1
+                ],
+                "fitPadding": 0.12
+              },
+              "wrappedRoutes": {
+                "curl-loop": [
+                  [
+                    -0.052032535,
+                    -0.040841904,
+                    0.012
+                  ],
+                  [
+                    -0.052157728,
+                    -0.040429199,
+                    0.012
+                  ],
+                  [
+                    -0.0522,
+                    -0.04,
+                    0.012
+                  ],
+                  [
+                    -0.0525,
+                    -0.031,
+                    0.012
+                  ],
+                  [
+                    0.0,
+                    -0.031,
+                    0.012
+                  ],
+                  [
+                    0.0525,
+                    -0.031,
+                    0.012
+                  ],
+                  [
+                    0.0522,
+                    -0.04,
+                    0.012
+                  ],
+                  [
+                    0.052157728,
+                    -0.040429199,
+                    0.012
+                  ],
+                  [
+                    0.052032535,
+                    -0.040841904,
+                    0.012
+                  ]
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "depth-15mm",
+      "name": "15 mm configuration",
+      "aspectRatio": 1.5,
+      "isDefault": false,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/depth-15mm.usdz",
+        "descriptorPath": "assets/depth-15mm.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.12
+          }
+        },
+        "suspension": {
+          "type": "cadRoutedCord",
+          "bodyNodeID": "plateau_body",
+          "strands": [
+            {
+              "id": "curl-loop",
+              "kind": "loop",
+              "restLength": 0.42,
+              "radius": 0.002,
+              "material": "matteCord",
+              "provenance": "Retained front and oblique views show one loop through the exposed ends of the open C curl and an exterior return below the board. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+            }
+          ],
+          "anchor": {
+            "offsetFromBoardBounds": [
+              0,
+              -0.15,
+              0
+            ],
+            "visibility": "invisible",
+            "provenance": "Display support location only. Source-visible route graph retained; native solver derives clearance and settled height."
+          },
+          "canonicalPoses": {
+            "depth-15mm": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                0.068968462,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0.3,
+                  -1
+                ],
+                "fitPadding": 0.12
+              },
+              "wrappedRoutes": {
+                "curl-loop": [
+                  [
+                    -0.052032535,
+                    -0.040841904,
+                    0.012
+                  ],
+                  [
+                    -0.052157728,
+                    -0.040429199,
+                    0.012
+                  ],
+                  [
+                    -0.0522,
+                    -0.04,
+                    0.012
+                  ],
+                  [
+                    -0.0525,
+                    -0.031,
+                    0.012
+                  ],
+                  [
+                    0.0,
+                    -0.031,
+                    0.012
+                  ],
+                  [
+                    0.0525,
+                    -0.031,
+                    0.012
+                  ],
+                  [
+                    0.0522,
+                    -0.04,
+                    0.012
+                  ],
+                  [
+                    0.052157728,
+                    -0.040429199,
+                    0.012
+                  ],
+                  [
+                    0.052032535,
+                    -0.040841904,
+                    0.012
+                  ]
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "depth-10mm",
+      "name": "10 mm configuration",
+      "aspectRatio": 1.5,
+      "isDefault": false,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/depth-10mm.usdz",
+        "descriptorPath": "assets/depth-10mm.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.12
+          }
+        },
+        "suspension": {
+          "type": "cadRoutedCord",
+          "bodyNodeID": "plateau_body",
+          "strands": [
+            {
+              "id": "curl-loop",
+              "kind": "loop",
+              "restLength": 0.42,
+              "radius": 0.002,
+              "material": "matteCord",
+              "provenance": "Retained front and oblique views show one loop through the exposed ends of the open C curl and an exterior return below the board. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+            }
+          ],
+          "anchor": {
+            "offsetFromBoardBounds": [
+              0,
+              -0.15,
+              0
+            ],
+            "visibility": "invisible",
+            "provenance": "Display support location only. Source-visible route graph retained; native solver derives clearance and settled height."
+          },
+          "canonicalPoses": {
+            "depth-10mm": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                0.068968462,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0.3,
+                  -1
+                ],
+                "fitPadding": 0.12
+              },
+              "wrappedRoutes": {
+                "curl-loop": [
+                  [
+                    -0.052032535,
+                    -0.040841904,
+                    0.012
+                  ],
+                  [
+                    -0.052157728,
+                    -0.040429199,
+                    0.012
+                  ],
+                  [
+                    -0.0522,
+                    -0.04,
+                    0.012
+                  ],
+                  [
+                    -0.0525,
+                    -0.031,
+                    0.012
+                  ],
+                  [
+                    0.0,
+                    -0.031,
+                    0.012
+                  ],
+                  [
+                    0.0525,
+                    -0.031,
+                    0.012
+                  ],
+                  [
+                    0.0522,
+                    -0.04,
+                    0.012
+                  ],
+                  [
+                    0.052157728,
+                    -0.040429199,
+                    0.012
+                  ],
+                  [
+                    0.052032535,
+                    -0.040841904,
+                    0.012
+                  ]
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "edge-18",
+      "equipmentObjectID": "primary",
+      "name": "Wood edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "depth": {
+        "range": {
+          "minimum": 18,
+          "maximum": 18
+        }
+      },
+      "gripTypes": []
+    }
+  ],
+  "positions": [
+    {
+      "id": "depth-18mm",
+      "presentationID": "depth-18mm",
+      "contactIDs": [
+        "edge-18"
+      ],
+      "effectiveDepths": {
+        "edge-18": {
+          "range": {
+            "minimum": 18,
+            "maximum": 18
+          }
+        }
+      }
+    },
+    {
+      "id": "depth-15mm",
+      "presentationID": "depth-15mm",
+      "contactIDs": [
+        "edge-18"
+      ],
+      "effectiveDepths": {
+        "edge-18": {
+          "range": {
+            "minimum": 15,
+            "maximum": 15
+          }
+        }
+      }
+    },
+    {
+      "id": "depth-10mm",
+      "presentationID": "depth-10mm",
+      "contactIDs": [
+        "edge-18"
+      ],
+      "effectiveDepths": {
+        "edge-18": {
+          "range": {
+            "minimum": 10,
+            "maximum": 10
+          }
+        }
+      }
+    }
+  ]
+}

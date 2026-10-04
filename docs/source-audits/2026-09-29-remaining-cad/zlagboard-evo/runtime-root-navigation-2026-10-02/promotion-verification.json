@@ -1,0 +1,13 @@
+{
+  "createdUTC": "2026-10-02T22:35:24.851528+00:00",
+  "copiedRawFiles": 157,
+  "allRawHashesMatch": true,
+  "previousPacketFilesCheckedUnchanged": 3278,
+  "manifestSHA256": "8f58fe96c2a8ed6d0549dadf477c3c57a2ed17e1f3a64cf504bb4ddf7050cd3d",
+  "aggregateSHA256": {
+    "root-navigation-findings.json": "3e56c57e278d8c4a565681e4ff3302875295782172211163b444b33fc6172af6",
+    "root-navigation-repeat-findings.json": "9460dbc8e6e08698fbc9f7c989e5342a12260b09ddb3e324d2dd2439db98a8d6"
+  },
+  "frozenPatchSHA256": "c0b64c8cbad3b6b89f73d24bbde69791eaa3766201fa5d867633e03f015737eb",
+  "sourceIndexCommitDeviceMutation": false
+}

@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-independent-export-tmp/hangten-freecad-ixf9m9d2/run.py", line 5, in <module>
+    exec(compile(open(path).read(), path, 'exec'), {'__name__': '__main__', '__file__': path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/check_export.py", line 29, in <module>
+    distances=[region.distToShape(Part.makeVertex(native(p)))[0] for p in granite['points_m']]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/check_export.py", line 29, in <listcomp>
+    distances=[region.distToShape(Part.makeVertex(native(p)))[0] for p in granite['points_m']]
+                                  ^^^^^^^^^^^^^^^
+AttributeError: module 'Part' has no attribute 'makeVertex'
+
+
+								
+								
+								

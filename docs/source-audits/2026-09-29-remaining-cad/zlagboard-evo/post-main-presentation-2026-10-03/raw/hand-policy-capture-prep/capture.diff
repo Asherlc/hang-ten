@@ -1,0 +1,11 @@
+--- capture-candidate-console-prep/capture.py
++++ hand-policy-capture-prep/capture.py
+@@ -10,7 +10,7 @@
+ assert g['boardID'] in ('zlagboard.evo','zlagboard.pro') and g['arm'] in ('control','action','reversal')
+ assert g['runID']==OWNER+'-post-main-'+g['boardID'].replace('.','-')+'-'+g['arm']
+ expectedFlags={'HANGTEN_REVIEW_BOARD_ID':g['boardID'],'HANGTEN_REVIEW_PLAN_ID':'research.max-hangs','HANGTEN_REVIEW_LANDSCAPE':'1'}
+-if g['arm'] in ('control','reversal'):expectedFlags['HANGTEN_REVIEW_SKIP_NONINTERACTIVE_PRESENTATION']='1'
++if g['arm'] in ('control','reversal'):expectedFlags['HANGTEN_REVIEW_SKIP_HAND_PRESENTATION']='1'
+ assert g['launchReviewFlags']==expectedFlags, 'Only the arm-specific skip flag is permitted'
+ assert g['helperSHA256']==sha(__file__) and g['scheduleSHA256']==sha(D/'schedule.json') and g['sourceReferenceSHA256']==sha(g['sourceReferencePath'])
+ source=json.loads(Path(g['sourceReferencePath']).read_text());schedule=json.loads((D/'schedule.json').read_text())

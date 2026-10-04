@@ -1,0 +1,35 @@
+{
+  "status": "pass",
+  "workspaceOwner": "placid-badger",
+  "completedUTC": "2026-10-01T18:55:16.269542+00:00",
+  "jobs": [
+    {
+      "name": "compile",
+      "processGroup": 12559,
+      "processGroupAbsent": true,
+      "tempDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/compile-tmp",
+      "tempDirectoryDeleted": true,
+      "retainedTempFileHashes": {},
+      "ownershipReportSHA256": "efb1a77dc62a64f4526a437790dc6741bb7386da047058fa2f9a09014e5c5aa0"
+    },
+    {
+      "name": "reproduce",
+      "processGroup": 12569,
+      "processGroupAbsent": true,
+      "tempDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/reproduce-tmp",
+      "tempDirectoryDeleted": true,
+      "retainedTempFileHashes": {},
+      "ownershipReportSHA256": "68c40a57d32cc0b31626c4a2c01f4a38bf6d04cfb25639b64c3aa821fc808744"
+    },
+    {
+      "name": "compile-check",
+      "processGroup": 12575,
+      "processGroupAbsent": true,
+      "tempDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/compile-check-tmp",
+      "tempDirectoryDeleted": true,
+      "retainedTempFileHashes": {},
+      "ownershipReportSHA256": "2346f183a3b2bf782ec8039c3a27cc490136d78ba3f090200ba1063c4c1b3d95"
+    }
+  ],
+  "scope": "Only exact final-export owned process groups and directories; prior cleanup reports remain unchanged."
+}

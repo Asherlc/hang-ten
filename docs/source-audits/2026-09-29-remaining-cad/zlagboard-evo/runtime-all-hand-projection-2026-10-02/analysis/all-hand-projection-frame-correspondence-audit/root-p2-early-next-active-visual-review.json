@@ -1,0 +1,20 @@
+{
+  "scope": "Root directly opened only P2 next-Hang +.25 and+1 whole screenshots in this report",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-p2-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "13d9bff2900d8de3099faec398fe35bfb2769195c3e18c9901ce72a968915932",
+      "observation": "Selected outer lower pockets red, board and hand cues visible"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-p2-landscape/phase-2-active-plus-1.png",
+      "sha256": "c47b3937a6c2f94642d5b9dab8d3760f538b1fe8b210bbcfe0505664687a4b6b",
+      "observation": "Selected outer lower pockets red, board and hand cues visible"
+    }
+  ],
+  "limits": [
+    "No pixel measurements",
+    "No assertion original exact-frame-set check passed",
+    "No production repair claim"
+  ]
+}

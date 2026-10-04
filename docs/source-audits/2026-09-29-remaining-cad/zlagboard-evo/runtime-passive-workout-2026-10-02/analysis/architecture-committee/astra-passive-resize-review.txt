@@ -1,0 +1,93 @@
+Showing 7 of 92 activities (limited to 7)
+
+**Yes. C → D → E is a sensible bounded order.** The passing Timeline comparisons substantially narrow the search: both task-driven and monotonic timeline-derived semantics can render correctly in isolation. They do not explain the workout failure.
+
+The proposed comparisons separate two remaining differences:
+
+| Comparison | Changed condition | Interpretation if failure appears |
+|---|---|---|
+| C → D | Changing caption becomes constant | Unrelated changing UI/layout activity may be helping presentation |
+| D → E | Direct Surface becomes normal BoardMapView | The wrapper introduces a relevant difference |
+
+Keep these safeguards:
+
+- **Run C in the new comparison binary.** Prior passing captures remain evidence, but are not its same-binary control.
+- **Keep the caption present in D**, changing only its content to a constant value. Removing it or simultaneously changing its frame would broaden the intervention.
+- **Record leaf placement as well as size**, sparsely. A 210 × 36 viewport can remain unchanged while its screen position or ancestor layout changes. Stable geometry also would not exclude a caption-triggered invalidation effect.
+- **For E, verify resolved inputs at BoardModelSurface.** Matching requested presentation and active hold is insufficient if BoardMapView resolves a different position during neutral or selected phases. Preserve its normal resolution path; classify any mismatch as an additional difference rather than silently overriding it.
+- Preserve the driver, epoch, capture schedule, host lifetime, and absence of sampler/counter throughout.
+
+A D failure would show dependence on the changing-caption condition in this reproduction—not prove that intrinsic sizing specifically caused it. Caption changes also affect SwiftUI invalidation and compositing.
+
+An E failure would implicate the **wrapper as a bundle**: selection state, change handlers, aspect-ratio layout, and animation transaction. It would justify separating those contributions afterward, not immediately selecting one as the cause.
+
+Because captions and potentially wrapper chrome differ, old whole-file hashes will not necessarily transfer across these arms. Establish visually reviewed references for each arm, then use exact correspondence within compatible presentations. Continue evaluating every phase and capture.
+
+If D fails, stop escalating into E until that narrower result is confirmed. If C/D/E all pass, **capture the fresh actual workout in the same binary and stop adding isolated context**. That provides the missing current failing boundary—or establishes that the current reproduction changed.
+
+The original uninstrumented failure removes the 1 Hz sampler as a necessary cause of the historical defect. It can remain excluded; there is no reason to prioritize a sampler experiment now. No production fix or framework root cause follows from the current results.
+[User] Read-only causal review, no tools that mutate/runtime. C/D/E all60 captures pass. D/E full-image bytes identical, actual Surface primary/primary IDs/mode/isDisplayOnly=false, stable leaf [332,166,210,36], one host. R/evo/caption-cde-findings.json SHA56c7f949ec78a90fda20ed885514324a595e1f4f5527e2477cc0ec67dbe788ed. Fresh same-binary real-workout run is authorized next. Important newly explicit protocol confound: failing normal workflow (R/evo/workout-projection-probe.py and related) repeatedly calls AXe describe-ui during Hang/Rest, then physically taps Skip after settled Rest, followed by timed next-Hang screenshots. Passing isolated probes deliberately have zero AX/touches during measurement. I initially requested no AX in fresh real workout, then corrected to preserve old known protocol first; no second run yet. After a new real-workout failure, would a bounded AX-observer OFF/ON comparison on existing passing constant-caption BoardMap E be higher information than adding navigation/workout layout? It tests a previously unisolated observation difference, with same fixture/timing, no production fix claim. Skip itself remains another separate difference. Do not assume AX causes this; assess minimal order and report. No broad research or architecture rewrite.
+**Yes—after reproducing the real-workout failure with the established protocol, an AX-observer OFF/ON comparison on passing fixture E is a higher-information next step than adding navigation or workout layout.** It isolates a previously uncontrolled intervention while preserving a fixture that reliably renders correctly.
+
+C/D/E’s success shows that caption changes and BoardMapView containment are individually insufficient to reproduce the failure under the isolated protocol. It does not establish equivalence to the observed workout workflow.
+
+**Recommended bounded order**
+
+1. **Run the fresh real workout with the known protocol first**, including its existing AX queries and Skip action. Preserve timestamps for queries, tap, semantic mutations, and captures. Changing the observation protocol now would weaken the reproduction comparison.
+2. **If failure reproduces, compare E with AX observation OFF/ON**, leaving Skip absent.
+3. Use **OFF/ON/ON/OFF**, with fresh launches, identical scripted phases, fixed viewport, captures, and diagnostic settings. Stop after those four runs.
+
+For ON, use the same AXe `describe-ui` operation and target selection as the failing protocol, at a predetermined, bounded cadence representative of that protocol. Record query start/end times externally. Query results must not control phase timing, trigger retries indefinitely, or cause taps. OFF retains the identical semantic and screenshot schedule without the queries.
+
+This tests the AX observation procedure as a whole—including any activation or scheduling effects—not merely accessibility-property reads.
+
+| Result | Supported interpretation |
+|---|---|
+| OFF passes; ON fails repeatedly | AX observation is sufficient to expose failure in E under these conditions |
+| Both pass | AX observation alone is insufficient in E; it remains possible that workout context or Skip interacts with it |
+| Both fail or results vary | No clean AX discriminator; do not assign causality |
+
+**The main limitation is the accessibility-tree difference.** E has a much smaller tree than the workout. Therefore, an ON failure is highly informative, while an ON pass does not clear AX observation in the real workflow.
+
+Keep Skip separate. In particular, identify the **earliest wrong frame** in the fresh workout: if Rest is already incorrectly red before Skip, that tap cannot explain that earlier failure. It could still affect subsequent next-Hang behavior.
+
+If the E comparison passes throughout, I would next compare observation protocols **in the actual workout**, before introducing more synthetic navigation/layout combinations. Hold the Skip policy constant across those runs; separately vary Skip afterward if the remaining failure requires that transition. Where practical, use a natural phase transition to remove Skip from that separate comparison.
+
+No causal claim should come from AX timing merely preceding a stale image. The useful evidence would be a reproducible outcome difference under the bounded comparison. None of this currently justifies a production change or renderer rewrite.
+[User] Evidence correction before recommending AX test: I just read R/evo/capture-visibility.py. That actual-workout visibility probe launches/openurls then takes40 timed screenshots with NO AX calls/touches/skip at all; selected entities disappeared but remained invisible after CPU restoration. Thus AX is not necessary for that demonstrated stale visibility failure. It remains unisolated for ordinary color-only failure, but do not overprioritize or imply necessary causality. Please weigh this against a proposed E+AX contrast; fresh normal workflow still running as agreed. No source/runtime actions.
+**That lowers the priority of E+AX.** The visibility probe establishes a stale-rendering failure without AX, touches, or Skip. AX therefore cannot be a necessary explanation for the broader defect.
+
+The distinction remains:
+
+- **Visibility failure:** reproduced without AX or input, although the deliberate visibility mutation is itself an intervention.
+- **Ordinary color-only failure:** AX remains an uncontrolled difference in the known workflow; the visibility result does not settle its contribution there.
+- These failures may share a mechanism, but that is not proven.
+
+Finish the fresh normal workflow unchanged. Then prioritize according to its earliest failure:
+
+1. **If color is wrong before Skip**, Skip is unnecessary for that failure. A bounded real-workout run without AX or touches, capturing the same naturally reachable phases, would be more informative than E+AX.
+2. **If failure appears only after Skip**, separate that transition from observation before attributing it to either.
+3. **If the fresh workflow passes**, do not launch an AX experiment on the assumption that the current failing boundary is established.
+
+E+AX remains a valid sufficiency test: an ON-only failure would show that observation can expose the defect in E. But a pass would say little about the larger workout context, and neither result explains away the no-input visibility failure.
+
+I would therefore keep E+AX as a secondary discriminator, behind establishing whether the **actual workout’s ordinary colors fail under passive observation**. The next comparison should preserve workout context and remove observation/input differences, rather than add another condition to the already-passing isolated fixture. No architecture change is supported yet.
+[User] Progress/evidence update, read-only brief advice only: passive actual-workout run now shows ordinary color failure without AX/tap/Skip after launch/openurl. Root opened R/evo/caption-passive-normal-workout-landscape/phase-0-active-plus-5.png (Hang00:03 RED correct) and phase-1-preview-plus-5.png (Rest02:55 RED wrong). Still waiting full natural180s Rest for next Hang; no source/build changes, same binary57b71dd0…. Do not claim completed whole passive sequence yet. Current next concrete boundary: normal initial leaf410×70.2857 shrinks210×36 when68pt cue strip appears, with actual intermediate UIKit frame [306.18,225.11,261.64,44.78] then stable[332,240,210,36]. Isolated E started210×36 and passed. R/initial-resize-audit/report.json maps718−2*142−2*12=410, heightconstraint then210; handOFF preserves68ptColor.clear so same transition. Sparse evidence doesn't prove animation source or duration. Proposed next controlled single-host E: same semantic C driver/constantcaption/BoardMap; fixed210 reference, instantaneous410→210 resize on initialselection, explicit0.18 animated same resize; retain one scene and later mode-only changes, verify actual placement transition. No production change selected. Does resize-before-navigation now make sense? No edits, runtime, broad research, or lengthy rehash.
+**Yes—resize before navigation is now the stronger next boundary.** Passive workout evidence already shows ordinary Rest color failure without AX or input. The full natural sequence remains pending.
+
+The proposed three arms are well targeted:
+
+- Fixed 210 × 36 reference.
+- Initial-selection resize from 410 × 70.2857 to 210 × 36, with animation explicitly suppressed.
+- The same resize with an explicit 0.18-second animation.
+
+Keep semantics, caption, BoardMapView, scene identity, and later mode-only transitions identical. Verify the **actual leaf size and placement**, including intermediate frames; an intended instantaneous resize may otherwise inherit a transaction.
+
+Two cautions:
+
+- Treat 0.18 seconds as an experimental parameter, not the established duration or source of the workout transition.
+- If the fixture reproduces size change but not the workout’s placement change, describe that narrower scope. A negative result would not exclude the full layout transition.
+
+If only the animated arm fails, investigate the animated layout/update interaction. If both resize arms fail, animation is unnecessary. If all pass, the reproduced resize alone is insufficient—then advance to surrounding layout/containment.
+
+No production change follows until a stable passing/failing distinction exists.

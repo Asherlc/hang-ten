@@ -1,0 +1,30 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 12,
+    "boardID": "owl-climb.poker",
+    "package": "owl-climb-poker",
+    "contactID": "face-a-right-outer-slot",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "owl-climb.poker",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "face-a-left-outer-slot",
+      "BOARD_TELEPHOTO": "1"
+    },
+    "launchedAt": 1791056251.676558
+  },
+  "image": "12-left-restored-right-selected-same-scene.png",
+  "imageSHA256": "4968e36f9191a45c99fd58e088f674849d60bb21118feecbc7b4a01e500896c9",
+  "accessibilitySHA256": "9b310619f82eeec490e1c095adcbd4fbfbbff3a36900d77cc4c828294fffc5e3",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-a-right-outer-slot;tapRevision=1;pickedContact=face-a-left-outer-slot",
+  "visualInspection": "Pending whole-frame inspection",
+  "sameSceneLegendSelection": true,
+  "contactID": "face-a-right-outer-slot"
+}

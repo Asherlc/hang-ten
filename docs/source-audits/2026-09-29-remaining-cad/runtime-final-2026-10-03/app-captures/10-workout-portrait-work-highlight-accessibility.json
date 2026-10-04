@@ -1,0 +1,422 @@
+[
+  {
+    "type": "Application",
+    "AXLabel": "Hang Ten",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "x": 0
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": null,
+    "AXUniqueId": "Session",
+    "AXValue": null,
+    "frame": {
+      "width": 402,
+      "height": 54,
+      "y": 62,
+      "x": 0
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Train",
+    "AXUniqueId": "BackButton",
+    "AXValue": null,
+    "frame": {
+      "width": 44,
+      "height": 44,
+      "y": 62,
+      "x": 16
+    }
+  },
+  {
+    "type": "Heading",
+    "AXLabel": "Session",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 62.33333333333334,
+      "y": 73.66666666666666,
+      "height": 20.66666666666667,
+      "x": 72
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Turn off spoken cues",
+    "AXUniqueId": "speaker.wave.2.fill",
+    "AXValue": null,
+    "frame": {
+      "width": 45,
+      "height": 36,
+      "y": 66,
+      "x": 223
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Turn off spoken cues",
+    "AXUniqueId": "speaker.wave.2.fill",
+    "AXValue": null,
+    "frame": {
+      "width": 45,
+      "y": 66,
+      "height": 36,
+      "x": 223
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "workout.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "width": 43.666666666666686,
+      "height": 36,
+      "y": 66,
+      "x": 284
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "workout.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "y": 66,
+      "height": 36,
+      "width": 43.666666666666686,
+      "x": 284
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "End",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 66,
+      "height": 36,
+      "width": 38.333333333333314,
+      "x": 343.6666666666667
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "End",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 66,
+      "width": 38.333333333333314,
+      "height": 36,
+      "x": 343.6666666666667
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "STEP 17 OF 20",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 98.66666666666666,
+      "height": 13.333333333333314,
+      "y": -404.5,
+      "x": 20
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Hang",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 30.666666666666686,
+      "y": -405,
+      "height": 14.333333333333314,
+      "x": 341.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Routine, current step 17: Abrahang \u00b7 Middle-two crimp \u00b7 rep 1 of 1",
+    "AXUniqueId": "workout.routinePicker",
+    "AXValue": null,
+    "frame": {
+      "y": -371.3333333333334,
+      "width": 49.33333333333333,
+      "height": 15.666666666666686,
+      "x": 20
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Abrahang \u00b7 Middle-two crimp \u00b7 rep 1 of 1",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": -342.66666666666674,
+      "height": 81.66666666666663,
+      "width": 321,
+      "x": 20
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Hang \u2022 Both hands",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": -247.66666666666663,
+      "width": 118.66666666666666,
+      "height": 15.666666666666686,
+      "x": 20
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "00:04",
+    "AXUniqueId": "workout.timer",
+    "AXValue": null,
+    "frame": {
+      "y": -218.99999999999994,
+      "height": 55,
+      "width": 138.33333333333331,
+      "x": 20
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Resume",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 362,
+      "height": 51.333335876464844,
+      "y": -127.33333587646484,
+      "x": 20
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "Play",
+    "AXUniqueId": "play.fill",
+    "AXValue": null,
+    "frame": {
+      "width": 13,
+      "height": 14.666666984558105,
+      "y": -109.00000000000011,
+      "x": 160.66666666666666
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Resume",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 61.66666666666666,
+      "height": 19.333333333333314,
+      "y": -110.33333333333343,
+      "x": 181.83333333333334
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Skip step 17: Abrahang \u00b7 Middle-two crimp \u00b7 rep 1 of 1",
+    "AXUniqueId": "workout.skipStep",
+    "AXValue": null,
+    "frame": {
+      "width": 362,
+      "height": 38,
+      "y": -65.00000000000011,
+      "x": 20
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "Forward",
+    "AXUniqueId": "forward.fill",
+    "AXValue": null,
+    "frame": {
+      "width": 22,
+      "height": 12.333333969116211,
+      "y": -52.000000000000114,
+      "x": 153.33333333333331
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Skip step",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 18,
+      "width": 97.50001525878906,
+      "x": 153.3333282470703,
+      "y": -54.33333206176758
+    }
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": "Stone Hanger Mini hangboard",
+    "AXUniqueId": "boardModel.3d",
+    "AXValue": "15 mm granite edge",
+    "frame": {
+      "height": 358,
+      "width": 358,
+      "x": 22,
+      "y": -7.333333333333371
+    }
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": "Board renderer diagnostic",
+    "AXUniqueId": "boardModel.renderDiagnostic",
+    "AXValue": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=0;pickedContact=",
+    "frame": {
+      "height": 1,
+      "width": 1,
+      "x": 22,
+      "y": -6.666666666666629
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Use two boards, one hand on each.",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666629,
+      "width": 212,
+      "x": 20,
+      "y": 370.33333333333337
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "15 mm granite edge, Grip not specified, Exact fingers: middle and ring, right hand",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 184.33333333333326,
+      "width": 362,
+      "x": 20,
+      "y": 405.6666666666665
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "15 MM GRANITE EDGE",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 12,
+      "width": 135.3333333333333,
+      "x": 133.33333333333334,
+      "y": 415.6666666666665
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Grip not specified",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 19.33333333333337,
+      "width": 131.66666666666669,
+      "x": 135.16666666666669,
+      "y": 435.6666666666665
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Grip not specified, Exact fingers: middle and ring",
+    "AXUniqueId": "workout.gripCue.right",
+    "AXValue": null,
+    "frame": {
+      "height": 118,
+      "width": 343,
+      "x": 29.5,
+      "y": 463.16666666666663
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Grip not specified",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 12,
+      "width": 90.66666666666666,
+      "x": 155.66666666666669,
+      "y": 561.6666666666666
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "INSTRUCTIONS",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 13.333333333333258,
+      "width": 103,
+      "x": 38,
+      "y": 628.1666666666665
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Hang",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 14.333333333333258,
+      "width": 31.666666666666686,
+      "x": 332.3333333333333,
+      "y": 628.3333333333333
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Keep your feet on the ground. Use 30\u201340% of the effort needed to lift off on the middle-two crimp. Load for 10 seconds, then rest for 50 seconds. Stretch your pinky fingers during the rest.",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 103.33333333333326,
+      "width": 325.66666666666663,
+      "x": 38,
+      "y": 653.6666666666665
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Feet supported \u00b7 10s work \u00b7 50s rest \u00b7 30\u201340%",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 14.333333333333258,
+      "width": 274.66666666666663,
+      "x": 38,
+      "y": 767.9999999999998
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": null,
+    "AXUniqueId": "AdditionalDimmingOverlay",
+    "AXValue": null,
+    "frame": {
+      "height": 332,
+      "width": 642,
+      "x": -120,
+      "y": -166
+    }
+  }
+]

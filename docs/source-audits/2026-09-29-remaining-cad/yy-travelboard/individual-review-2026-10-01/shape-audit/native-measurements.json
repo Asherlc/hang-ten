@@ -1,0 +1,1353 @@
+{
+  "sourceSHA256Before": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+  "sourceSHA256After": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+  "valid": true,
+  "solids": 1,
+  "volumeMM3": 695184.441553621,
+  "contacts": [
+    {
+      "contactID": "",
+      "nodeID": "yy_tray",
+      "areaMM2": 10459.752039526185,
+      "offSkinAreaMM2": 0.0,
+      "faces": [
+        {
+          "areaMM2": 8424.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -3.552713678800501e-15,
+            50.0
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -8.881784197001252e-16,
+            -2.9551121494960954e-15,
+            50.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 1017.8760197630929,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            0.0,
+            -14.4142135623731,
+            49.41421356237309
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            -0.7071067811865477,
+            0.7071067811865474
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            0.7071067811865474,
+            0.7071067811865477
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -3.9580236035990435e-15,
+            -14.273239544735166,
+            49.27323954473516
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 1017.8760197630929,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            0.0,
+            14.41421356237309,
+            49.41421356237309
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.7071067811865477,
+            0.7071067811865474
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.7071067811865474,
+            -0.7071067811865477
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -3.9580236035990435e-15,
+            14.273239544735157,
+            49.27323954473516
+          ],
+          "bodyFaceIDs": []
+        }
+      ]
+    },
+    {
+      "contactID": "",
+      "nodeID": "yy_edge_25",
+      "areaMM2": 23296.366972399926,
+      "offSkinAreaMM2": 0.0,
+      "faces": [
+        {
+          "areaMM2": 6674.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -1.7500000000000036,
+            9.5
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -2.553512956637861e-15,
+            -1.7500000000000056,
+            9.5
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 406.05085047648083,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            149.77817459305203,
+            -1.7500000000000053,
+            12.72182540694797
+          ],
+          "outwardNormalNative": [
+            -0.7071067811865478,
+            1.555634918610404e-16,
+            0.7071067811865472
+          ],
+          "outwardNormalRuntime": [
+            -0.7071067811865478,
+            0.7071067811865472,
+            -1.555634918610404e-16
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            149.00281749604338,
+            -1.7500000000000044,
+            13.497182503956598
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 406.0508504764808,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            -149.77817459305203,
+            -1.7500000000000036,
+            12.721825406947971
+          ],
+          "outwardNormalNative": [
+            0.7071067811865479,
+            1.5556349186104036e-16,
+            0.7071067811865471
+          ],
+          "outwardNormalRuntime": [
+            0.7071067811865479,
+            0.7071067811865471,
+            -1.5556349186104036e-16
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -149.0028174960434,
+            -1.750000000000004,
+            13.4971825039566
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 23.500000000000007,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            153.0,
+            -1.7500000000000036,
+            21.0
+          ],
+          "outwardNormalNative": [
+            -1.0,
+            -0.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            153.0,
+            -1.750000000000003,
+            21.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 23.5,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -153.0,
+            -1.7500000000000036,
+            21.0
+          ],
+          "outwardNormalNative": [
+            1.0,
+            0.0,
+            -0.0
+          ],
+          "outwardNormalRuntime": [
+            1.0,
+            -0.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -153.0,
+            -1.7500000000000022,
+            21.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 406.0508504764809,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            149.77817459305203,
+            -1.7500000000000018,
+            29.27817459305202
+          ],
+          "outwardNormalNative": [
+            -0.7071067811865479,
+            -1.5556349186104034e-16,
+            -0.707106781186547
+          ],
+          "outwardNormalRuntime": [
+            -0.7071067811865479,
+            -0.707106781186547,
+            1.5556349186104034e-16
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            149.0028174960434,
+            -1.7500000000000013,
+            28.502817496043395
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 406.05085047648083,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            -149.77817459305203,
+            -1.7500000000000018,
+            29.27817459305202
+          ],
+          "outwardNormalNative": [
+            0.7071067811865478,
+            -1.555634918610404e-16,
+            -0.7071067811865472
+          ],
+          "outwardNormalRuntime": [
+            0.7071067811865478,
+            -0.7071067811865472,
+            1.555634918610404e-16
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -149.00281749604338,
+            -1.7500000000000018,
+            28.502817496043395
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 6674.000000000001,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -1.7500000000000018,
+            32.5
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            -0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            -1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            2.553512956637861e-15,
+            -1.7500000000000018,
+            32.5
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 6934.132711084365,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            1.07e-15,
+            10.0,
+            21.0
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            -1.0,
+            2.3e-16
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            2.3e-16,
+            1.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -1.5083629786417888e-15,
+            10.0,
+            21.000000000000004
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 669.1592352146258,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            0.0,
+            -14.560660171779826,
+            9.060660171779821
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.7071067811865475,
+            0.7071067811865477
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.7071067811865477,
+            0.7071067811865475
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -1.130863886742584e-14,
+            -14.454929658551377,
+            8.954929658551372
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 2.3561944901923444,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            153.43933982822017,
+            -14.560660171779826,
+            21.0
+          ],
+          "outwardNormalNative": [
+            -0.7071067811865477,
+            -0.7071067811865475,
+            -0.0
+          ],
+          "outwardNormalRuntime": [
+            -0.7071067811865477,
+            -0.0,
+            0.7071067811865475
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            153.54507034144862,
+            -14.454929658551377,
+            21.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 2.356194490192342,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            -153.43933982822017,
+            -14.560660171779826,
+            21.0
+          ],
+          "outwardNormalNative": [
+            0.7071067811865477,
+            -0.7071067811865475,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.7071067811865477,
+            0.0,
+            0.7071067811865475
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -153.54507034144862,
+            -14.454929658551375,
+            21.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 669.1592352146258,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            0.0,
+            -14.560660171779826,
+            32.93933982822018
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.7071067811865475,
+            -0.7071067811865477
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -0.7071067811865477,
+            0.7071067811865475
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            1.130863886742584e-14,
+            -14.454929658551377,
+            33.04507034144863
+          ],
+          "bodyFaceIDs": []
+        }
+      ]
+    },
+    {
+      "contactID": "",
+      "nodeID": "yy_edge_15",
+      "areaMM2": 12545.415745669776,
+      "offSkinAreaMM2": 0.0,
+      "faces": [
+        {
+          "areaMM2": 4974.15926535898,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -3.5e-16,
+            -3.552713678800501e-15,
+            -25.0
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            -1.0,
+            2.4e-16
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            2.4e-16,
+            1.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -3.931143947138323e-15,
+            -3.552713678800501e-15,
+            -25.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 494.80084294039233,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            0.0,
+            -14.560660171779826,
+            -36.43933982822018
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.7071067811865475,
+            0.7071067811865477
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            0.7071067811865477,
+            0.7071067811865475
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -4.24073957528469e-15,
+            -14.454929658551377,
+            -36.54507034144863
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 4.712388980384689,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            115.43933982822018,
+            -14.560660171779826,
+            -25.0
+          ],
+          "outwardNormalNative": [
+            -0.7071067811865477,
+            -0.7071067811865475,
+            -0.0
+          ],
+          "outwardNormalRuntime": [
+            -0.7071067811865477,
+            -0.0,
+            0.7071067811865475
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            115.54507034144865,
+            -14.454929658551377,
+            -25.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 4.712388980384686,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            -115.43933982822018,
+            -14.560660171779826,
+            -25.0
+          ],
+          "outwardNormalNative": [
+            0.7071067811865477,
+            -0.7071067811865475,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.7071067811865477,
+            0.0,
+            0.7071067811865475
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -115.54507034144864,
+            -14.454929658551377,
+            -25.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 494.80084294039233,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            0.0,
+            -14.560660171779826,
+            -13.560660171779821
+          ],
+          "outwardNormalNative": [
+            0.0,
+            -0.7071067811865475,
+            -0.7071067811865477
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -0.7071067811865477,
+            0.7071067811865475
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            4.24073957528469e-15,
+            -14.454929658551377,
+            -13.454929658551372
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 2835.0000000000005,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -6.7500000000000036,
+            -36.0
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            3.3306690738754696e-16,
+            -6.750000000000005,
+            -36.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 212.05750411731117,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            112.07106781186548,
+            -6.750000000000005,
+            -33.071067811865476
+          ],
+          "outwardNormalNative": [
+            -0.7071067811865475,
+            1.5556349186104046e-16,
+            0.7071067811865476
+          ],
+          "outwardNormalRuntime": [
+            -0.7071067811865475,
+            0.7071067811865476,
+            -1.5556349186104046e-16
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            111.3661977236758,
+            -6.7500000000000036,
+            -32.36619772367582
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 212.0575041173111,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            -112.07106781186548,
+            -6.7500000000000036,
+            -33.071067811865476
+          ],
+          "outwardNormalNative": [
+            0.7071067811865475,
+            1.5556349186104048e-16,
+            0.7071067811865476
+          ],
+          "outwardNormalRuntime": [
+            0.7071067811865475,
+            0.7071067811865476,
+            -1.5556349186104048e-16
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -111.36619772367581,
+            -6.750000000000004,
+            -32.36619772367582
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 27.000000000000018,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            115.0,
+            -6.7500000000000036,
+            -25.0
+          ],
+          "outwardNormalNative": [
+            -1.0,
+            -0.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            114.99999999999999,
+            -6.7500000000000036,
+            -25.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 27.0,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -115.0,
+            -6.7500000000000036,
+            -25.0
+          ],
+          "outwardNormalNative": [
+            1.0,
+            0.0,
+            -0.0
+          ],
+          "outwardNormalRuntime": [
+            1.0,
+            -0.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -115.0,
+            -6.750000000000002,
+            -25.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 212.0575041173112,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            112.07106781186548,
+            -6.750000000000002,
+            -16.928932188134528
+          ],
+          "outwardNormalNative": [
+            -0.7071067811865475,
+            -1.5556349186104048e-16,
+            -0.7071067811865476
+          ],
+          "outwardNormalRuntime": [
+            -0.7071067811865475,
+            -0.7071067811865476,
+            1.5556349186104048e-16
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            111.36619772367581,
+            -6.750000000000003,
+            -17.63380227632419
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 212.0575041173112,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            -112.07106781186548,
+            -6.750000000000002,
+            -16.928932188134524
+          ],
+          "outwardNormalNative": [
+            0.7071067811865475,
+            -1.5556349186104046e-16,
+            -0.7071067811865476
+          ],
+          "outwardNormalRuntime": [
+            0.7071067811865475,
+            -0.7071067811865476,
+            1.5556349186104046e-16
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -111.36619772367581,
+            -6.750000000000003,
+            -17.63380227632419
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 2835.000000000001,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            -6.750000000000002,
+            -14.0
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            -0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            -1.0,
+            0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -3.33066907387547e-16,
+            -6.75,
+            -14.0
+          ],
+          "bodyFaceIDs": []
+        }
+      ]
+    },
+    {
+      "contactID": "",
+      "nodeID": "yy_edge_10",
+      "areaMM2": 9674.13259050695,
+      "offSkinAreaMM2": 0.0,
+      "faces": [
+        {
+          "areaMM2": 471.2388980384689,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            0.0,
+            14.560660171779816,
+            -36.43933982822018
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            0.7071067811865476,
+            0.7071067811865475
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            0.7071067811865475,
+            -0.7071067811865476
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -6.596706005998406e-16,
+            14.454929658551366,
+            -36.54507034144863
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 4.712388980384689,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            -110.43933982822018,
+            14.560660171779816,
+            -25.0
+          ],
+          "outwardNormalNative": [
+            0.7071067811865477,
+            0.7071067811865475,
+            -0.0
+          ],
+          "outwardNormalRuntime": [
+            0.7071067811865477,
+            -0.0,
+            -0.7071067811865475
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -110.54507034144862,
+            14.454929658551364,
+            -25.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 4.712388980384686,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            110.43933982822018,
+            14.560660171779816,
+            -25.0
+          ],
+          "outwardNormalNative": [
+            -0.7071067811865477,
+            0.7071067811865475,
+            -0.0
+          ],
+          "outwardNormalRuntime": [
+            -0.7071067811865477,
+            -0.0,
+            -0.7071067811865475
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            110.54507034144864,
+            14.454929658551368,
+            -25.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 471.2388980384689,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            0.0,
+            14.560660171779816,
+            -13.560660171779821
+          ],
+          "outwardNormalNative": [
+            -0.0,
+            0.7071067811865475,
+            -0.7071067811865477
+          ],
+          "outwardNormalRuntime": [
+            -0.0,
+            -0.7071067811865477,
+            -0.7071067811865475
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            6.596706005998406e-16,
+            14.454929658551366,
+            -13.454929658551372
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 133.51768777756618,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            -107.07106781186548,
+            9.249999999999996,
+            -33.071067811865476
+          ],
+          "outwardNormalNative": [
+            0.7071067811865475,
+            1.5556349186104048e-16,
+            0.7071067811865476
+          ],
+          "outwardNormalRuntime": [
+            0.7071067811865475,
+            0.7071067811865476,
+            -1.5556349186104048e-16
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -106.36619772367581,
+            9.249999999999996,
+            -32.36619772367581
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 1699.9999999999986,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            9.249999999999996,
+            -36.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -1.7763568394002505e-15,
+            9.249999999999995,
+            -36.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 16.999999999999993,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -110.0,
+            9.249999999999998,
+            -25.0
+          ],
+          "outwardNormalNative": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            1.0,
+            0.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -110.0,
+            9.249999999999998,
+            -25.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 133.51768777756612,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            107.07106781186548,
+            9.249999999999995,
+            -33.071067811865476
+          ],
+          "outwardNormalNative": [
+            -0.7071067811865475,
+            1.5556349186104046e-16,
+            0.7071067811865476
+          ],
+          "outwardNormalRuntime": [
+            -0.7071067811865475,
+            0.7071067811865476,
+            -1.5556349186104046e-16
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            106.36619772367581,
+            9.249999999999995,
+            -32.36619772367581
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 133.51768777756612,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            -107.07106781186548,
+            9.249999999999998,
+            -16.928932188134524
+          ],
+          "outwardNormalNative": [
+            0.7071067811865475,
+            -1.5556349186104046e-16,
+            -0.7071067811865476
+          ],
+          "outwardNormalRuntime": [
+            0.7071067811865475,
+            -0.7071067811865476,
+            1.5556349186104046e-16
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -106.36619772367581,
+            9.249999999999998,
+            -17.633802276324186
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 16.999999999999982,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            110.0,
+            9.249999999999996,
+            -25.0
+          ],
+          "outwardNormalNative": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            -1.0,
+            0.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            110.0,
+            9.249999999999996,
+            -25.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 1699.9999999999986,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            0.0,
+            9.249999999999998,
+            -14.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            1.7763568394002505e-15,
+            9.25,
+            -14.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 133.5176877775661,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            107.07106781186548,
+            9.249999999999996,
+            -16.928932188134524
+          ],
+          "outwardNormalNative": [
+            -0.7071067811865475,
+            -1.5556349186104046e-16,
+            -0.7071067811865475
+          ],
+          "outwardNormalRuntime": [
+            -0.7071067811865475,
+            -0.7071067811865475,
+            1.5556349186104046e-16
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            106.36619772367581,
+            9.249999999999996,
+            -17.633802276324186
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 4754.15926535898,
+          "type": "<class 'Part.Plane'>",
+          "sampleNativeMM": [
+            -2.07e-15,
+            5.0,
+            -25.0
+          ],
+          "outwardNormalNative": [
+            0.0,
+            1.0,
+            -2.4e-16
+          ],
+          "outwardNormalRuntime": [
+            0.0,
+            -2.4e-16,
+            -1.0
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -7.269592106263112e-15,
+            5.0,
+            -25.0
+          ],
+          "bodyFaceIDs": []
+        }
+      ]
+    },
+    {
+      "contactID": "",
+      "nodeID": "yy_mono_left",
+      "areaMM2": 2207.9418673908795,
+      "offSkinAreaMM2": 0.0,
+      "faces": [
+        {
+          "areaMM2": 170.91791557927135,
+          "type": "<class 'Part.Toroid'>",
+          "sampleNativeMM": [
+            -154.43933982822017,
+            14.560660171779816,
+            -24.999999999999993
+          ],
+          "outwardNormalNative": [
+            0.7071067811865474,
+            0.7071067811865476,
+            -4.596194077712558e-16
+          ],
+          "outwardNormalRuntime": [
+            0.7071067811865474,
+            -4.596194077712558e-16,
+            -0.7071067811865476
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -143.0,
+            14.471880045433371,
+            -25.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 1866.1060362323367,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            -154.0,
+            -7.105427357601002e-15,
+            -25.000000000000004
+          ],
+          "outwardNormalNative": [
+            1.0,
+            -2.694222958124177e-32,
+            -1.2246467991473532e-16
+          ],
+          "outwardNormalRuntime": [
+            1.0,
+            -1.2246467991473532e-16,
+            2.694222958124177e-32
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -143.0,
+            -4.840742930743726e-15,
+            -25.000000000000004
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 170.91791557927135,
+          "type": "<class 'Part.Toroid'>",
+          "sampleNativeMM": [
+            -154.43933982822017,
+            -14.560660171779826,
+            -25.0
+          ],
+          "outwardNormalNative": [
+            0.7071067811865474,
+            -0.7071067811865476,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.7071067811865474,
+            0.0,
+            0.7071067811865476
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            -143.0,
+            -14.471880045433382,
+            -25.0
+          ],
+          "bodyFaceIDs": []
+        }
+      ]
+    },
+    {
+      "contactID": "",
+      "nodeID": "yy_mono_right",
+      "areaMM2": 2207.9418673908795,
+      "offSkinAreaMM2": 0.0,
+      "faces": [
+        {
+          "areaMM2": 170.91791557927135,
+          "type": "<class 'Part.Toroid'>",
+          "sampleNativeMM": [
+            131.56066017177983,
+            14.560660171779816,
+            -24.999999999999993
+          ],
+          "outwardNormalNative": [
+            0.7071067811865474,
+            0.7071067811865476,
+            -4.596194077712558e-16
+          ],
+          "outwardNormalRuntime": [
+            0.7071067811865474,
+            -4.596194077712558e-16,
+            -0.7071067811865476
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            143.0,
+            14.471880045433371,
+            -25.0
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 1866.1060362323367,
+          "type": "<class 'Part.Cylinder'>",
+          "sampleNativeMM": [
+            132.0,
+            -7.105427357601002e-15,
+            -25.000000000000004
+          ],
+          "outwardNormalNative": [
+            1.0,
+            -2.694222958124177e-32,
+            -1.2246467991473532e-16
+          ],
+          "outwardNormalRuntime": [
+            1.0,
+            -1.2246467991473532e-16,
+            2.694222958124177e-32
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            143.0,
+            -4.840742930743726e-15,
+            -25.000000000000004
+          ],
+          "bodyFaceIDs": []
+        },
+        {
+          "areaMM2": 170.91791557927135,
+          "type": "<class 'Part.Toroid'>",
+          "sampleNativeMM": [
+            131.56066017177983,
+            -14.560660171779826,
+            -25.0
+          ],
+          "outwardNormalNative": [
+            0.7071067811865474,
+            -0.7071067811865476,
+            0.0
+          ],
+          "outwardNormalRuntime": [
+            0.7071067811865474,
+            0.0,
+            0.7071067811865476
+          ],
+          "insidePlus": false,
+          "insideMinus": true,
+          "centerNativeMM": [
+            143.0,
+            -14.471880045433382,
+            -25.0
+          ],
+          "bodyFaceIDs": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "ownedPID": 11794,
+  "verifiedParentPID": 11622,
+  "durationSeconds": 2,
+  "subprocessTimeoutSeconds": 15,
+  "result": "diagnostic sample command timed out; subprocess.run killed diagnostic sample process, not sampled target; no stack output created",
+  "secondPID12425SampleAttempted": false
+}

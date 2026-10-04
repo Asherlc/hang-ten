@@ -1,0 +1,329 @@
+{
+  "owner": "placid-badger",
+  "beforeSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+  "afterSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+  "afterPath": "Hangboards/captain-fingerfood-dual/suspension.json",
+  "immutablePackageFiles": {
+    "captain-fingerfood-dual.FCStd": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+    "assets/primary.usdz": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+    "assets/primary.model.json": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699"
+  },
+  "rendererSourceSHA256": "5fcd7994fe78ec8cee8fbba57f08483bd29b51cd6db8677793c9d3e1c2855d9f",
+  "nativeZBufferHelperSHA256": "e90232263554453be7412f6f5421828187a71fdc59a09be7a1d8a8ea2e4f9cea",
+  "canonicalPoseComparisons": [
+    {
+      "poseID": "curved-lip-front",
+      "view": "front",
+      "mode": "detail",
+      "image": "curved-lip-front-front-detail.png",
+      "sha256": "a40523ff7611218390fcbdccc10f67b43554008dacffc08f28690244cab3d11e",
+      "commonViewportLimitsMM": [
+        -74.99999865889549,
+        74.99999865889549,
+        -52.17436084060247,
+        52.17436084060247
+      ]
+    },
+    {
+      "poseID": "curved-lip-front",
+      "view": "front",
+      "mode": "full",
+      "image": "curved-lip-front-front-full.png",
+      "sha256": "8f844ad48b17ea0aa588e1b40883a854e3bcb0b636c112275bb5ad47eefe9686",
+      "commonViewportLimitsMM": [
+        -59.99999865889549,
+        59.99999865889549,
+        -37.17436084060247,
+        383.4469570399202
+      ]
+    },
+    {
+      "poseID": "curved-lip-front",
+      "view": "side",
+      "mode": "detail",
+      "image": "curved-lip-front-side-detail.png",
+      "sha256": "17f02dc782df614289980080027a4a64d644117bf64b42e62bfe8bc1fa462d1c",
+      "commonViewportLimitsMM": [
+        -40.220910012445415,
+        40.220910012445415,
+        -52.17436084060247,
+        52.17436084060247
+      ]
+    },
+    {
+      "poseID": "curved-lip-front",
+      "view": "side",
+      "mode": "full",
+      "image": "curved-lip-front-side-full.png",
+      "sha256": "04a88e6c1b52872a55395e1f469e7f0ffa2700ad1c4c8a0b61e7ce534c56d617",
+      "commonViewportLimitsMM": [
+        -29.419756910843976,
+        25.22091001244541,
+        -37.17436084060247,
+        383.4469570399202
+      ]
+    },
+    {
+      "poseID": "curved-lip-front",
+      "view": "top",
+      "mode": "detail",
+      "image": "curved-lip-front-top-detail.png",
+      "sha256": "ef8caeea6e85d66746288fc543a08abf53595dcf77bff12003c2cc1fdc26b637",
+      "commonViewportLimitsMM": [
+        -74.99999865889549,
+        74.99999865889549,
+        -40.220910012445415,
+        40.220910012445415
+      ]
+    },
+    {
+      "poseID": "curved-lip-front",
+      "view": "top",
+      "mode": "full",
+      "image": "curved-lip-front-top-full.png",
+      "sha256": "c26f5f1c64821341101fba6076ef94860c201d72ea48c66b04809da585647f27",
+      "commonViewportLimitsMM": [
+        -59.99999865889549,
+        59.99999865889549,
+        -29.419756910843976,
+        25.22091001244541
+      ]
+    },
+    {
+      "poseID": "exterior-jug-back",
+      "view": "front",
+      "mode": "detail",
+      "image": "exterior-jug-back-front-detail.png",
+      "sha256": "488f9bcfba9235470cad6516ce73abc7c22c0ba4208f31c10fbff6eed59fa6f8",
+      "commonViewportLimitsMM": [
+        -74.99999865889549,
+        74.99999865889549,
+        -52.17436085248634,
+        52.17436085248634
+      ]
+    },
+    {
+      "poseID": "exterior-jug-back",
+      "view": "front",
+      "mode": "full",
+      "image": "exterior-jug-back-front-full.png",
+      "sha256": "c026e2e0c9e1a9e97cc5e5ad0f5369f5cb3814f8d044374ef532c014ad0b2fee",
+      "commonViewportLimitsMM": [
+        -59.99999865889549,
+        59.99999865889549,
+        -37.17436085248634,
+        394.1861956342868
+      ]
+    },
+    {
+      "poseID": "exterior-jug-back",
+      "view": "side",
+      "mode": "detail",
+      "image": "exterior-jug-back-side-detail.png",
+      "sha256": "9c2c7d2ebe48e35fbe24b28f3f9c0f63dda733545b0d2ca170aac01d98882e6f",
+      "commonViewportLimitsMM": [
+        -40.22090750611751,
+        40.22090750611751,
+        -52.17436085248634,
+        52.17436085248634
+      ]
+    },
+    {
+      "poseID": "exterior-jug-back",
+      "view": "side",
+      "mode": "full",
+      "image": "exterior-jug-back-side-full.png",
+      "sha256": "91133ee4df2d49813c0d916442eb675fe21696495e235bd88f980881832e20f5",
+      "commonViewportLimitsMM": [
+        -25.220907506117516,
+        25.220907506117516,
+        -37.17436085248634,
+        394.1861956342868
+      ]
+    },
+    {
+      "poseID": "exterior-jug-back",
+      "view": "top",
+      "mode": "detail",
+      "image": "exterior-jug-back-top-detail.png",
+      "sha256": "b31d3be7d5eac94093257d490a4bbf2f666270f42d19cc46f42d45e41aaddc3f",
+      "commonViewportLimitsMM": [
+        -74.99999865889549,
+        74.99999865889549,
+        -40.22090750611751,
+        40.22090750611751
+      ]
+    },
+    {
+      "poseID": "exterior-jug-back",
+      "view": "top",
+      "mode": "full",
+      "image": "exterior-jug-back-top-full.png",
+      "sha256": "50f7b7639b0545ce561cb7e550aecf759c2abfe9a27cb07e2e3256b7121084ea",
+      "commonViewportLimitsMM": [
+        -59.99999865889549,
+        59.99999865889549,
+        -25.220907506117516,
+        25.220907506117516
+      ]
+    },
+    {
+      "poseID": "left-pocket-vertical",
+      "view": "front",
+      "mode": "detail",
+      "image": "left-pocket-vertical-front-detail.png",
+      "sha256": "b2e90691345448f4e38c5694299efb28530e8ab16216978eeeb5ecbdcda96278",
+      "commonViewportLimitsMM": [
+        -50.00000015883765,
+        50.00000015883765,
+        -75.66667534420651,
+        75.66667534420651
+      ]
+    },
+    {
+      "poseID": "left-pocket-vertical",
+      "view": "front",
+      "mode": "full",
+      "image": "left-pocket-vertical-front-full.png",
+      "sha256": "783c5765e8e6934a1c96641185362ce12284a5fec6f8b980cf76ac9c92a9bdb7",
+      "commonViewportLimitsMM": [
+        -35.00000015883765,
+        35.00000015883765,
+        -60.6666753442065,
+        359.4391795748985
+      ]
+    },
+    {
+      "poseID": "left-pocket-vertical",
+      "view": "side",
+      "mode": "detail",
+      "image": "left-pocket-vertical-side-detail.png",
+      "sha256": "1cb18b54cccb060bcab487693b6bb4f3f7305b5f76a49ebb50dcf86e7cf2d537",
+      "commonViewportLimitsMM": [
+        -48.771413801851054,
+        48.771413801851054,
+        -75.66667534420651,
+        75.66667534420651
+      ]
+    },
+    {
+      "poseID": "left-pocket-vertical",
+      "view": "side",
+      "mode": "full",
+      "image": "left-pocket-vertical-side-full.png",
+      "sha256": "ad109f71a1fe16fdfa50ec75b095d68a2dd85786e9cc594161acf4b8cdf2bec7",
+      "commonViewportLimitsMM": [
+        -37.97098083970764,
+        33.771413801851054,
+        -60.6666753442065,
+        359.4391795748985
+      ]
+    },
+    {
+      "poseID": "left-pocket-vertical",
+      "view": "top",
+      "mode": "detail",
+      "image": "left-pocket-vertical-top-detail.png",
+      "sha256": "ec5c70a56b6e4a2522143057a35e6358656302848b371e77ff6a7e09ee3ef4e7",
+      "commonViewportLimitsMM": [
+        -50.00000015883765,
+        50.00000015883765,
+        -48.771413801851054,
+        48.771413801851054
+      ]
+    },
+    {
+      "poseID": "left-pocket-vertical",
+      "view": "top",
+      "mode": "full",
+      "image": "left-pocket-vertical-top-full.png",
+      "sha256": "9d339dfdb3c4cd4de74b6128ddc869514b44217bbcb862f9cb6f5d366eade420",
+      "commonViewportLimitsMM": [
+        -35.00000015883765,
+        35.00000015883765,
+        -37.97098083970764,
+        33.771413801851054
+      ]
+    },
+    {
+      "poseID": "straight-lip-inverted",
+      "view": "front",
+      "mode": "detail",
+      "image": "straight-lip-inverted-front-detail.png",
+      "sha256": "c5ed3b005a88d991088e048692e2a150c31021c8d588b2b6025fe55dd148a727",
+      "commonViewportLimitsMM": [
+        -75.00000097301134,
+        75.00000097301134,
+        -52.17436506681283,
+        52.17436506681283
+      ]
+    },
+    {
+      "poseID": "straight-lip-inverted",
+      "view": "front",
+      "mode": "full",
+      "image": "straight-lip-inverted-front-full.png",
+      "sha256": "6912db9fb0fc3600200f334d92d909b57bdf7706414edd4a8e5f7a9f642af7d0",
+      "commonViewportLimitsMM": [
+        -60.00000097301134,
+        60.00000097301134,
+        -37.17436506681283,
+        381.19494423549986
+      ]
+    },
+    {
+      "poseID": "straight-lip-inverted",
+      "view": "side",
+      "mode": "detail",
+      "image": "straight-lip-inverted-side-detail.png",
+      "sha256": "1806143cb8060051558f3049cd4ae69b64218196ccf83aced1399782ea44876a",
+      "commonViewportLimitsMM": [
+        -40.220911608359984,
+        40.220911608359984,
+        -52.17436506681283,
+        52.17436506681283
+      ]
+    },
+    {
+      "poseID": "straight-lip-inverted",
+      "view": "side",
+      "mode": "full",
+      "image": "straight-lip-inverted-side-full.png",
+      "sha256": "778f848dc04dd66a9fc5705740bba8b27363ba2f2459056449a559ecb73168eb",
+      "commonViewportLimitsMM": [
+        -29.419758620452477,
+        25.22091160835998,
+        -37.17436506681283,
+        381.19494423549986
+      ]
+    },
+    {
+      "poseID": "straight-lip-inverted",
+      "view": "top",
+      "mode": "detail",
+      "image": "straight-lip-inverted-top-detail.png",
+      "sha256": "683c5df46700a798e26b500830c0e5567ba5c8b44591f7da4bdc5ffaae92e8cd",
+      "commonViewportLimitsMM": [
+        -75.00000097301134,
+        75.00000097301134,
+        -40.220911608359984,
+        40.220911608359984
+      ]
+    },
+    {
+      "poseID": "straight-lip-inverted",
+      "view": "top",
+      "mode": "full",
+      "image": "straight-lip-inverted-top-full.png",
+      "sha256": "40d67369783ca0d80274e6a34d39063529193b6c785bd527ba4b720c98f4aa89",
+      "commonViewportLimitsMM": [
+        -60.00000097301134,
+        60.00000097301134,
+        -29.419758620452477,
+        25.22091160835998
+      ]
+    }
+  ],
+  "method": "Actual unchanged USDZ triangles and exact cached cord paths, including fixed world support. Numeric native z-buffer projections, body-centered identical paired scales. No reference-image tracing, processing or registration.",
+  "humanApproval": "Native candidate authorized for rendering; final user visual acceptance is separate."
+}

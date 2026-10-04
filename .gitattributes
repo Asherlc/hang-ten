@@ -5,3 +5,5 @@ Hangboards/*/assets/*.usdz filter=lfs diff=lfs merge=lfs -text
 # driver once per clone (see Tools/HangboardCAD/README.md):
 #   git config diff.hangten-fcstd.textconv "python3 Tools/HangboardCAD/board_manifest.py --dump-file"
 Hangboards/*/*.FCStd filter=lfs diff=hangten-fcstd merge=lfs -text
+# Retained exact Xcode result bundles.
+*.xcresult.zip filter=lfs diff=lfs merge=lfs -text

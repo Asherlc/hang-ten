@@ -1,0 +1,44 @@
+[
+  {
+    "sequence": 3,
+    "event": "startup-board-load-call",
+    "epoch": 1791003463.3476481,
+    "hostFirstObservedEpoch": 1791003464.197991
+  },
+  {
+    "sequence": 5,
+    "event": "startup-board-load-return",
+    "epoch": 1791003463.996992,
+    "hostFirstObservedEpoch": 1791003464.197991
+  },
+  {
+    "sequence": 6,
+    "event": "startup-board-ready-published",
+    "epoch": 1791003463.9971519,
+    "hostFirstObservedEpoch": 1791003464.197991
+  },
+  {
+    "sequence": 16,
+    "event": "startup-context-appear",
+    "epoch": 1791003464.505221,
+    "hostFirstObservedEpoch": 1791003464.517644
+  },
+  {
+    "sequence": 17,
+    "event": "workout-probe-appear-before-autostart",
+    "epoch": 1791003464.506013,
+    "hostFirstObservedEpoch": 1791003464.517644
+  },
+  {
+    "sequence": 18,
+    "event": "startup-request-entry",
+    "epoch": 1791003464.513554,
+    "hostFirstObservedEpoch": 1791003464.517644
+  },
+  {
+    "sequence": 19,
+    "event": "startup-audio-prepare-before",
+    "epoch": 1791003464.5137172,
+    "hostFirstObservedEpoch": 1791003464.517644
+  }
+]

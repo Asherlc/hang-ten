@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "rawFiles": 135,
+  "rawBytes": 8095838,
+  "originalFrozenFilesVerified": 134,
+  "previousPacketFilesUnchanged": 8783,
+  "wholePhaseImages": 12,
+  "parentDirectVisualScope": 3,
+  "retentionManifestSHA256": "e0d757577e25194affe44e919692717451455b82963dfe060156f09287851b4d",
+  "editorialTrailingWhitespaceCheck": [
+    "README.md",
+    "index.md"
+  ],
+  "rawWhitespace": "Not normalized or claimed clean; only exact bytes verified",
+  "unstagedGitDiffCheckUsed": false,
+  "sourceOrRuntimeChanged": false,
+  "stagedOrCommitted": false
+}

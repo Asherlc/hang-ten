@@ -1,0 +1,18 @@
+{
+  "pid": 36270,
+  "command": [
+    "rtk",
+    "proxy",
+    "ps",
+    "-p",
+    "36270",
+    "-o",
+    "pid=,args="
+  ],
+  "exitStatus": 1,
+  "stdout": "",
+  "stderr": "",
+  "absent": true,
+  "epoch": 1790992573.528678,
+  "scope": "Exact owned app only; registered Simulator/DD lifecycle remains with root."
+}

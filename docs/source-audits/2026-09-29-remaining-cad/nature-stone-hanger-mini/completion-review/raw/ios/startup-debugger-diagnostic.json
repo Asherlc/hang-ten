@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "simulatorUUID": "E9D3D8B4-1440-4417-862B-3023AF3841FA",
+  "appPID": 91145,
+  "attach": {
+    "content": [
+      {
+        "type": "text",
+        "text": "\n🐛 Attach Debugger\n\nErrors (1):\n\n  ✗ DAP request timed out after 30000ms (attach)\n\n❌ Failed to attach debugger.\n"
+      }
+    ],
+    "structuredContent": {
+      "schema": "xcodebuildmcp.output.debug-session-action",
+      "schemaVersion": "2",
+      "didError": true,
+      "error": "Failed to attach debugger.",
+      "data": {
+        "diagnostics": {
+          "warnings": [],
+          "errors": [
+            {
+              "message": "DAP request timed out after 30000ms (attach)"
+            }
+          ]
+        },
+        "action": "attach",
+        "artifacts": {
+          "simulatorId": "E9D3D8B4-1440-4417-862B-3023AF3841FA",
+          "processId": 91145
+        }
+      }
+    },
+    "isError": true
+  },
+  "noTrustworthyStackObtained": true,
+  "failedSampleTimeoutSeconds": 15,
+  "ownedDebugserverPID": 97155
+}

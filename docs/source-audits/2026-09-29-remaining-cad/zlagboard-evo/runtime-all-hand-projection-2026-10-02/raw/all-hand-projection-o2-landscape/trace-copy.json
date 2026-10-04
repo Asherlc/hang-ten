@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/F362CAFF-EC14-41AC-A592-BD3A993A63FC/Documents/HighlightDiagnostic-placid-badger-cad-second-half-all-hand-projection-o2/events-19503AE4-ADA4-4784-AD09-0CE600BF2783.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o2-landscape/events-19503AE4-ADA4-4784-AD09-0CE600BF2783.jsonl",
+      "sha256": "dd6f10fb4ffbb424ef710410a8663c81d74e39e0e8e45269ea059943ecc008f5"
+    }
+  ],
+  "records": 151,
+  "completeContiguous": true,
+  "copiedEpoch": 1790985044.560259,
+  "includesSamplerEnd": true
+}

@@ -1,0 +1,35 @@
+{
+  "owner": "placid-badger",
+  "atUTC": "2026-10-03T03:59:22.032634+00:00",
+  "exitTrapInstalledBeforeResources": true,
+  "allRecordedProcessGroups": [
+    {
+      "owner": "placid-badger",
+      "job": "station-boundary-diagnostic",
+      "action": "read-only",
+      "pid": 31038,
+      "processGroupID": 31038,
+      "createdNewSession": true,
+      "atUTC": "2026-10-03T03:59:17.591073+00:00",
+      "actionsDuringFinalCleanup": [],
+      "processGroupAbsent": true
+    }
+  ],
+  "temporaryCacheConfigResources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/placid-badger-mini10-diagnostic-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/placid-badger-mini10-diagnostic-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/placid-badger-mini10-diagnostic-tmp",
+      "absent": true
+    }
+  ],
+  "allRecordedGroupsAbsent": true,
+  "allOwnedTemporaryResourcesAbsent": true,
+  "unknownOrSharedResourcesTouched": false
+}

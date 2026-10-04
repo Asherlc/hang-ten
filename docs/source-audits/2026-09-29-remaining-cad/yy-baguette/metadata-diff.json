@@ -1,0 +1,39 @@
+{
+  "addedContacts": [],
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineManifestSHA256": "f9b6d63c29b2ba5c84179be9f282cf70daf2cfd309b6a1ecbda17d5f73236c9e",
+  "boardFieldChanges": {},
+  "changedContacts": {},
+  "humanAcceptance": "pending one-by-one review",
+  "package": "yy-baguette",
+  "positionsAfter": [
+    {
+      "contactIDs": [
+        "edge-20",
+        "edge-25"
+      ],
+      "id": "front-20-25",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-30",
+        "edge-15",
+        "edge-10"
+      ],
+      "id": "reverse-10-15-30",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "tray"
+      ],
+      "id": "outer-upper",
+      "presentationID": "primary"
+    }
+  ],
+  "positionsBefore": [],
+  "removedContacts": [],
+  "sourceAudit": "yy-baguette/native-authoring.md",
+  "sourceSHA256": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57"
+}

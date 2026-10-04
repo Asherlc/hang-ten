@@ -1,0 +1,18 @@
+{
+  "arm": "control-a",
+  "runtimeValid": true,
+  "allWholeImagesReviewed": true,
+  "visualResult": "FAIL",
+  "nextArmAuthorized": "on-demand",
+  "binarySHA256": "a942935be9ee125e31bdf6809519e1516246f20dda7b845b91fd26cd308ee0c3",
+  "sourceReferenceSHA256": "672ec890e68056cb767c644074f75f70d605cece091c8bc4c551068cb500e188",
+  "reviews": {
+    "control-lit-first-independent.json": "66c08fcc312aa53c8c3b3d90eec51575789d7aa5d465a3200cd3c9d8105c83ca",
+    "control-lit-tail-independent.json": "fce5df6163f03834b4b850138b200958a4336eadd99437ff7a6b09e9ee28f6ab",
+    "control-lit-root-tail.json": "da0591d9cc597094d191e95d6778127f2203cc4297337bbf9d2484e739bc6e53"
+  },
+  "wholeImageCount": 45,
+  "CPUBracketsAvailable": false,
+  "actualAppPhaseBoundariesMeasured": false,
+  "summary": "Rest010\u2013018 red wrong; next Hang190\u2013196 blue wrong. Initial livehandlatency004\u2013005 remains a separate limitation."
+}

@@ -1,0 +1,22 @@
+{
+  "package": "tension-flash-board",
+  "independentFreshCompileCheck": true,
+  "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+  "actualAssetSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+  "descriptorModelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+  "compilerReturnedModelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+  "compilerReport": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/compile-final-check.json",
+  "compilerReportSHA256": "2efb45316aabb97d6a194bf3905f52b6d3bcb95abecaa449e4a917f33c98aa5b",
+  "sourceAssetDescriptorBefore": {
+    "tension-flash-board.FCStd": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+    "primary.usdz": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+    "primary.model.json": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e"
+  },
+  "sourceAssetDescriptorAfter": {
+    "tension-flash-board.FCStd": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+    "primary.usdz": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+    "primary.model.json": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e"
+  },
+  "elapsedSeconds": 43.832,
+  "closure": "passed"
+}

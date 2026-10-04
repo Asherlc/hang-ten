@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "files": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "diagnosticSHA256": "37f32c3c9e45b85da06978aca49cb0f1066f092d3b62a1ac114e1dd3a90cf361",
+      "headAndPristineSHA256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+      "headEqualsPristine": true,
+      "backup": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/HangTen/Models/BoardModelRealityTypes.swift"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "diagnosticSHA256": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97",
+      "headAndPristineSHA256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+      "headEqualsPristine": true,
+      "backup": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/HangTen/Views/BoardModelView.swift"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "diagnosticSHA256": "66f77336b6bc1533e467c6165d7c35d330b1a817afddf8229f3b2bb7090fb542",
+      "headAndPristineSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+      "headEqualsPristine": true,
+      "backup": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/HangTen/Views/GripHandModelView.swift"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "diagnosticSHA256": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d",
+      "headAndPristineSHA256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+      "headEqualsPristine": true,
+      "backup": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/HangTen/Views/RootView.swift"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "diagnosticSHA256": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba",
+      "headAndPristineSHA256": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99",
+      "headEqualsPristine": true,
+      "backup": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/HangTen/Views/TrainView.swift"
+    }
+  ],
+  "restoredFrom": "HEAD",
+  "preservedCommittedSource": true
+}

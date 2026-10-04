@@ -1,0 +1,27 @@
+{
+  "owner": "placid-badger",
+  "boardNumber": 14,
+  "boardID": "tension.flash-board",
+  "scope": "Read-only addendum to 14-visual-audit.json linking the completed root-owned intrinsic contact-side audit. No new app captures, resources or native changes.",
+  "visualAuditPath": "14-visual-audit.json",
+  "sourceConventionReportPaths": ["flash-hand-convention.json", "flash-hand-convention.md"],
+  "sourceConventionReportsModified": false,
+  "intrinsicMapping": "The completed source audit confirms stable left=low model X and right=high model X contact associations. No descriptor/contact-ID swap is present, and retained manufacturer evidence does not prescribe fixed screen-side or hand labels.",
+  "wholeFrameObservation": "Both supplied front faces show left-named logical contacts on viewer-right; selected cards and chips repeat the corresponding logical names. This observation remains valid.",
+  "poseInterpretation": {
+    "twoEdgeFace": "Viewer-right intrinsic left is consistent with two-edge-upright under the stored +Z camera contract.",
+    "threeEdgeFace": "Viewer-right intrinsic left is consistent with three-edge-inverted under the stored camera contract. The receipt lacks active pose ID/world camera direction, so this interpretation is not established as the actual runtime pose."
+  },
+  "sourceBackedBlocker": false,
+  "mappingDefectEstablished": false,
+  "runtimePresentationExplanationComplete": false,
+  "semanticScreenSidePassClaimed": false,
+  "allSavedPosesPassClaimed": false,
+  "recommendedNativeIDSwap": false,
+  "recommendation": "Retain the immutable contacts and factual labels. The source mapping question has supporting evidence; complete runtime orientation explanation remains limited by missing active-pose evidence. Do not infer or claim a semantic screen-side correction or all-pose pass from these screenshots.",
+  "appWorkflowPassed": false,
+  "realWorkoutAudit": "NOT_EXECUTED_REPORTED_BY_ROOT",
+  "currentAppUserAcceptance": "PENDING",
+  "productionOrCanonicalChanges": false,
+  "appOrSimulatorOperationsByThisAgent": false
+}

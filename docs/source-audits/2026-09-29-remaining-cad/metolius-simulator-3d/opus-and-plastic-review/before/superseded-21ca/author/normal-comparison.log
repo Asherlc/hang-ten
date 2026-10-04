@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-opus-corrections/normal-comparison-tmp/hangten-freecad-njjt5t4r/run.py", line 5, in <module>
+    exec(compile(open(path).read(), path, 'exec'), {'__name__': '__main__', '__file__': path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-opus-corrections/compare_final_uv_normals.py", line 3, in <module>
+    w=Path(__file__).resolve().parent;sys.path.insert(0,str(Path.cwd()/'Tools/HangboardCAD'));import compile_board as c
+                                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/compile_board.py", line 66, in <module>
+    import usdz_writer  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/usdz_writer.py", line 29, in <module>
+    from pxr import Gf, Sdf, Usd, UsdGeom, UsdShade, UsdUtils, Vt
+ModuleNotFoundError: No module named 'pxr'
+
+

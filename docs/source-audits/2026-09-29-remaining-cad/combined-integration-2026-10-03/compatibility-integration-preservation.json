@@ -1,0 +1,415 @@
+{
+  "importedParentRef": "aae31a6159bbbb57ce59f882000889fcc366c63e",
+  "canonical81Preserved": true,
+  "ownAllPosePentaMethodBytePreserved": true,
+  "ownStrictPairResolverMethodBytePreserved": true,
+  "parentIndependentCameraRegressionPresent": true,
+  "restPassthroughPresent": true,
+  "checks": [
+    {
+      "path": "Hangboards/aelith-cyclops-011/aelith-cyclops-011.FCStd",
+      "sha256": "6caa7db79f8c92ff3801c15e7cf42016b92808ac312dbb99b7e3dbfedf4e32da",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/aelith-cyclops-011/assets/primary.model.json",
+      "sha256": "33d6dd4256955ea603098f98f1d8ae95dab4ec15df7f3e042db3439c344a0ef7",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/aelith-cyclops-011/assets/primary.usdz",
+      "sha256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/aelith-cyclops-011/suspension.json",
+      "sha256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/assets/primary.model.json",
+      "sha256": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/assets/primary.usdz",
+      "sha256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/captain-fingerfood-dual.FCStd",
+      "sha256": "10b254fc3e2ad3c3b4c25b2876c2c0fc086d9ed4f634025d42397352e0e5cd8e",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/suspension.json",
+      "sha256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/assets/primary.model.json",
+      "sha256": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/assets/primary.usdz",
+      "sha256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/captain-fingerfood-unlevel.FCStd",
+      "sha256": "b4e8941017237f1196ab8c29632e0c19b7c9301ed92b5fd2011bb3229cb05e87",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/suspension.json",
+      "sha256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/frictitious-nug/assets/primary.model.json",
+      "sha256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/frictitious-nug/assets/primary.usdz",
+      "sha256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/frictitious-nug/frictitious-nug.FCStd",
+      "sha256": "b01c9692af21073b1e0a67af4fd7fcea350decd87fe24fbced569ce3a830e2fa",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/frictitious-nug/suspension.json",
+      "sha256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/assets/primary.model.json",
+      "sha256": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/assets/primary.usdz",
+      "sha256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/frictitious-port-a-board.FCStd",
+      "sha256": "45ca78a21b1f0f25f1c471a0e1244bfd8a77ca57abac37dcc99cde034e29a289",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/suspension.json",
+      "sha256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/mammut-diamond-finger/assets/primary.model.json",
+      "sha256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/mammut-diamond-finger/assets/primary.usdz",
+      "sha256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/mammut-diamond-finger/mammut-diamond-finger.FCStd",
+      "sha256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/metolius-contact/assets/primary.model.json",
+      "sha256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/metolius-contact/assets/primary.usdz",
+      "sha256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/metolius-contact/metolius-contact.FCStd",
+      "sha256": "732ee95e7b434e188708b96f974bd3afdacdd62fedc93d382f66e7401a480be1",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/metolius-simulator-3d/assets/primary.model.json",
+      "sha256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/metolius-simulator-3d/assets/primary.usdz",
+      "sha256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/metolius-simulator-3d/metolius-simulator-3d.FCStd",
+      "sha256": "ac957ebf25e5134ab2875e9b06d9c23831f35b0b8bcbc64730d6a626b7f8588e",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/assets/primary.model.json",
+      "sha256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/assets/primary.usdz",
+      "sha256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd",
+      "sha256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/suspension.json",
+      "sha256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+      "sha256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+      "sha256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/suspension.json",
+      "sha256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.model.json",
+      "sha256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.usdz",
+      "sha256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd",
+      "sha256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/suspension.json",
+      "sha256": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/owl-climb-poker/assets/primary.model.json",
+      "sha256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/owl-climb-poker/assets/primary.usdz",
+      "sha256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/owl-climb-poker/owl-climb-poker.FCStd",
+      "sha256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json",
+      "sha256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz",
+      "sha256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json",
+      "sha256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz",
+      "sha256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/primary.model.json",
+      "sha256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/primary.usdz",
+      "sha256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+      "sha256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/suspension.json",
+      "sha256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/tension-flash-board/assets/primary.model.json",
+      "sha256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/tension-flash-board/assets/primary.usdz",
+      "sha256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/tension-flash-board/suspension.json",
+      "sha256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/tension-flash-board/tension-flash-board.FCStd",
+      "sha256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-forge/assets/primary.model.json",
+      "sha256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
+      "sha256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd",
+      "sha256": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-baguette/assets/primary.model.json",
+      "sha256": "75be5cf44e996606261dfd942f3004058d6cc9cd5bfe66e1c159ceaf1578f934",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-baguette/assets/primary.usdz",
+      "sha256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-baguette/suspension.json",
+      "sha256": "c69c11dc9708bc1e2dc9f235004f55a7c0ecd524fdf5b073c40dda1d9b0c956f",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-baguette/yy-baguette.FCStd",
+      "sha256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/assets/primary.model.json",
+      "sha256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/assets/primary.usdz",
+      "sha256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/suspension.json",
+      "sha256": "4d0aa10c8914bd41fd79cc825d094ffc5a785aae64aef5406ade19778102a282",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd",
+      "sha256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/assets/primary.model.json",
+      "sha256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/assets/primary.usdz",
+      "sha256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/suspension.json",
+      "sha256": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
+      "sha256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.model.json",
+      "sha256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.usdz",
+      "sha256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/suspension.json",
+      "sha256": "7af15a7f897baa87a4da89fcf62c8123dbb7544d8c3cb0bced71474bf9d044e4",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/yy-travelboard.FCStd",
+      "sha256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/assets/primary.model.json",
+      "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/assets/primary.usdz",
+      "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/zlagboard-evo.FCStd",
+      "sha256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.model.json",
+      "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.usdz",
+      "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+      "equal": true
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/zlagboard-pro.FCStd",
+      "sha256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "equal": true
+    }
+  ]
+}

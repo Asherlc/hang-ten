@@ -1,0 +1,1 @@
+AttributeError: Part.Compound has no attribute CenterOfMass. Corrected read-only audit harness to use area-weighted face centers. No source changes.

@@ -1,0 +1,527 @@
+{
+  "owner": "placid-badger",
+  "files": [
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/handoff.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/handoff.json",
+      "sha256": "684550cfb3fc1e41620c11f256d073a763d448502fe20985fa07233f37d5809a"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/recommendation.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/recommendation.json",
+      "sha256": "fe36d6f4b77309d1971070d31c6548ec04860accb83dc95fb61cccc08891a42e"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/authoring-notes.md",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/authoring-notes.md",
+      "sha256": "2bf77bb4983cc4749310a876b9bb3545da630a18ce19a7227d146d41aa76b99c"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/native-author-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/native-author-proof.json",
+      "sha256": "d37289389c61762871da3672f027319ad6cebb440fe3f32365dba37a5caa6a85"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/native-reopen-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/native-reopen-proof.json",
+      "sha256": "24d21e491dfeb6b69cdb8dfac2b956337a7d16e8582e408d6ab261a00ec496b7"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/collider-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/collider-proof.json",
+      "sha256": "7522a426cb439886cea866ed06ae7fbb2b4e66f4aa10d71e322210e21b16d42e"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/compile1-report.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/compile1-report.json",
+      "sha256": "0166ddf9e679b8b55a06c19aa418360c912a16256c93e856f48a376b1344ad75"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/compile2-report.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/compile2-report.json",
+      "sha256": "a05147a4529c7d386fce7f875614566e870314f8fb189434cdbde42e3d65b02f"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/deterministic-export.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/deterministic-export.json",
+      "sha256": "a914c442d158bd933a02bd6c68936a954674f0d7eb0b2079f52f4c7d7f6fcb32"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/reimport-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/reimport-proof.json",
+      "sha256": "2a0748cfd88f74cbfc25ec6517ae5e74fbec8183835097952bce8f7db5562d6f"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/preview-provenance.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/preview-provenance.json",
+      "sha256": "9d72646df18df49189ffaddbd2f6d049144c7a59569d95670f207bfacbe06d24"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/final-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/final-cleanup.json",
+      "sha256": "ce3078f2334f0ff7b5817afff958169a50d0109de42e68d891b02f2551941372"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/author-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/author-ownership.json",
+      "sha256": "9a99bc4c7a652b6c25822e58689803c0615a89072bb49b20ec4b344dbb415869"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/collider-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/collider-ownership.json",
+      "sha256": "3d61f6835c5f99d4fd959826e23d90f6772c09e2557dfe04708b5d112bd8f1a6"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/compile1-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/compile1-ownership.json",
+      "sha256": "e306033e4a1a1ab1651c35aa47739dbb0e0ee70247e0f62017e9d597b8e5be21"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/compile2-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/compile2-ownership.json",
+      "sha256": "cc21a772149c4e4bdca1cb59dbfe27e72b7b8c33810ac59dae69420a22252d6d"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/inspect-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/inspect-ownership.json",
+      "sha256": "547d23e3104d3d442b568c02958268d0c8e465b9df745934c1d4137b1f3b00ad"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/native-reopen-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/native-reopen-ownership.json",
+      "sha256": "c05895fc5474825d507a1fd372cec5a8944bfb8eaa883ee29bd0712f4847b9c0"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/previews-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/previews-ownership.json",
+      "sha256": "569f4849dde31346191dd16120ce67a23380b49587372438c42255d125cd36bd"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/previews2-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/previews2-ownership.json",
+      "sha256": "6b01ec8f5ed511252e984032a8cfc788e05aee8ae27f2eb8ee91ddfb08b3f460"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/reimport-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/reimport-ownership.json",
+      "sha256": "fefecb1b31f1527c58d7e2279fceebfd0d65e56f9025f29c2cd7c9dc48205ae5"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/reimport2-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/reimport2-ownership.json",
+      "sha256": "36aa027dbe0e2ba5fde5f6709fb6a8a7f1a73f1b6b8c4ab52cef7e68220fc5de"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/author-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/author-cleanup.json",
+      "sha256": "92876d51aef0edc03aac0b70c6beb3978dbf7db9ca12006eac82ffd8c9285778"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/collider-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/collider-cleanup.json",
+      "sha256": "323adcc0cc54369433974ea5d48fbb9240cc4f4dd8b5760a3c4b89e9b0b0be5b"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/compile1-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/compile1-cleanup.json",
+      "sha256": "151f5225080ca9269f9812ea2c5fe5b2305f1a5faaa8d38364390b71d83747ec"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/compile2-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/compile2-cleanup.json",
+      "sha256": "d276b6ca84e0de721cf0f028cc272c38cbb159103f7968e5b065f156d2a41fde"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/inspect-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/inspect-cleanup.json",
+      "sha256": "25a95a4b3c416dcfe75e8ebf5d19f80d668b3170f4502bf2caaa6db6d331a2d3"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/native-reopen-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/native-reopen-cleanup.json",
+      "sha256": "52741f6dddcc2fda3f631e9512a0bbe53aed9be7285fc017aa9de81fbcb2fbbe"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/previews-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/previews-cleanup.json",
+      "sha256": "739e5b7a2748e80b7aa5b80766e877c8ade5bfd1a0ba28f99358688123501d88"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/previews2-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/previews2-cleanup.json",
+      "sha256": "b2cbbaf33eff8af842d774b35647562078fafb65ec182f460a6c166791668c25"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/reimport-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/reimport-cleanup.json",
+      "sha256": "5d498fa8e0f54c9bffaaffb6ce58594c36ae9379c8977ab928c323f68ebee90e"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/reimport2-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/reimport2-cleanup.json",
+      "sha256": "6982c24b49733fbaa293deab4fc2a69f7de09242bc94139715bab1691173d660"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/author-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/author-command.json",
+      "sha256": "8fef4f7110257d2cd4f244003c4008773990400d4a4d4cec414944278d4ef94c"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/collider-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/collider-command.json",
+      "sha256": "ec3942265fb423a5f3699bf5d279227a364a29f13d697f5fcd8f0f7a2cb54a81"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/compile1-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/compile1-command.json",
+      "sha256": "23f0be6edf01d972dfa6917e395a0aad3019e80b2134351d9c2d042e931411de"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/compile2-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/compile2-command.json",
+      "sha256": "420e598c6bb3debb516aa6dfc2989a547da87b382481cefe1e9bf516053febd3"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/inspect-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/inspect-command.json",
+      "sha256": "9c7237fa647bec2079d212cdd3ef51f6db3c4dba4b82a967a000eb7d7eeae1e8"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/native-reopen-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/native-reopen-command.json",
+      "sha256": "a877ee4aec19fc7def890c35e8ccec504dab60a69af6ef7832e4fec034d18f1a"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/previews-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/previews-command.json",
+      "sha256": "8f654ae4268b3069e55c5910174834245cc798390a9953e3fd6b2d779d3ae330"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/previews2-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/previews2-command.json",
+      "sha256": "fce357a55667e34bf4099bc1fbfc7faf3d2001a5b3beceaaee6507371b92c065"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/reimport-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/reimport-command.json",
+      "sha256": "7a4f2d6f2bd8429cab4ea7c02638834e627889eb6ae6a11f1101692f3faef843"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/reimport2-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/raw/reimport2-command.json",
+      "sha256": "e3471f09e989d82ef745cceb581c6e1310b2a74b682cd464dbe462d5a9df745e"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-neutral-front-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-neutral-front-oblique.png",
+      "sha256": "8aca1c7ee5d8f313a49e5e241722e6300c1ca266adb078158fa33b849de0500c"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-neutral-front.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-neutral-front.png",
+      "sha256": "28a806520e4a1e09f2786eef61e5b71685a146245b251025cf0d34ad8dfc22dc"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-neutral-reverse-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-neutral-reverse-oblique.png",
+      "sha256": "14372604b1cf7422eef0b10cb571387b244eb149fe30dc3e8f60976e24416a4f"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-neutral-side.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-neutral-side.png",
+      "sha256": "0a712c1748fc39bf15d0479f6fe27d7b42aea46f52bcb08cfd5847bed9550a78"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-neutral-top.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-neutral-top.png",
+      "sha256": "33288d87c8d3f46d7efa144b7be6bdc4cd498b844c5fc329d597dab973e3c9b9"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pinch-60-front-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-pinch-60-front-oblique.png",
+      "sha256": "e58eec4ce9c564bd0d7761283632512f39e63aea94a2bcafdcb7d03795b6eaae"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pinch-60-front.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-pinch-60-front.png",
+      "sha256": "7278b3b2dba8ea9118e3b58ff58ac353d1638d4d893cf4d31fa9d931aad88d8b"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pinch-60-reverse-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-pinch-60-reverse-oblique.png",
+      "sha256": "f12132aabfa04d28f0b471d4069502b378816c43be436cf8da7b0e3dd8f234e1"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pinch-60-side.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-pinch-60-side.png",
+      "sha256": "542884c76a8a81355780cd492b68923e477e451513e7e678a6903dbef99dfc0c"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pinch-60-top.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-pinch-60-top.png",
+      "sha256": "a8d66a6ce145943707190069a5df37f9cf974baeff52a3e94ce4d6f859e18be7"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pull-up-jug-front-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-pull-up-jug-front-oblique.png",
+      "sha256": "cd5cce933a4a451a6bcb9848175fd11af4c45033563ae0cd28b6da3270f5da7b"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pull-up-jug-front.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-pull-up-jug-front.png",
+      "sha256": "ebe3eb7befec3d22f372587eea62bc0fa972f465c0a095b357e499186235833d"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pull-up-jug-reverse-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-pull-up-jug-reverse-oblique.png",
+      "sha256": "6d083d60c7749e51d78121774b1972628d0dd45099a72f6ba66b918e8c919a4c"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pull-up-jug-side.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-pull-up-jug-side.png",
+      "sha256": "830164f235959eab56aa24ed02e45c5e15c213790860401c73c8bc66085a31e4"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pull-up-jug-top.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/native/views/comparison-pull-up-jug-top.png",
+      "sha256": "9b788542d7fbcbb7ab5096ebe14dfe9e4a396944f38184eacd5bf2b16fd7328b"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/baseline.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/baseline.json",
+      "sha256": "8da1bc7c5911d04bcb9a5694d4298648d6e887175697d545a1bb411eeace5463"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/promotion.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/promotion.json",
+      "sha256": "bee9d62f41c2be6b336c878a0dc6e1b89714bb404306c0b6f89144ee4cdb0b58"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/independent-candidate-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/independent-candidate-verification.json",
+      "sha256": "89add258e242e8c05559a1b3fb13740593eff409a6e63cf8bb9eb4a773b67efd"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/generated-board-final.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/generated-board-final.json",
+      "sha256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/native-route-check.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/native-route-check.json",
+      "sha256": "2bc49005a68cfbff07f6b2c3559de3283bac977d8cee7f788549a0971e28020f"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/final-catalog.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/final-catalog.json",
+      "sha256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/catalog-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/catalog-command.json",
+      "sha256": "6b1ee130e45d66d6daf2e68ba8e054849879a2583eeb96dafe3de97fbc9d8031"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/delivery-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/delivery-verification.json",
+      "sha256": "8ceb58010e28427b31e4e4f57a5092ea913b93d636717f3be5d6ec48f98e195e"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/staging-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/staging-ownership.json",
+      "sha256": "15991f9b03160befb29834847cb0b89a9e49fd382f90301feae552a4adb3b0eb"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/staging-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/staging-verification.json",
+      "sha256": "21340ec4ba6617c80bfe0a9ac36f13593c7841928a8e29214cc91ace479e3dcc"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/staging-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/staging-cleanup.json",
+      "sha256": "cf069db4e35dad102e633ff1f519371f0cbb8120a9e0f3199c824795cc69b9a3"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/pytest-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/pytest-command.json",
+      "sha256": "d32f26f7fc1911e1c323d35c88cf5b52a52b622c93b8ff9d1122b409e3edaf77"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/final-tests.xml",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/final-tests.xml",
+      "sha256": "09d8a5042edfc582e6ccfe179fb5d4c85290ab2d2c1f77ee1a254b24e041f69e"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/final-test-summary.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/final-test-summary.json",
+      "sha256": "16d166d1cf3fd773cbded19b8edcf8ec20bdc18a55efe1b57bac8a5782ac4319"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/preview-provenance.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/preview-provenance.json",
+      "sha256": "136ed1a82a9e4a12555915b527c5fdf05d8f27701d9fb1b07f1dc09e929782db"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/resource-cleanup-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/resource-cleanup-verification.json",
+      "sha256": "99552c2875a203de97cecb2860065aaf6c4737cf61b4a55821bec28e845cfe6b"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/preservation-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/preservation-verification.json",
+      "sha256": "5393f62b2899770eff17e5b826d65dddba0973b23fc3305037e8db21d33c02f9"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/final-checks-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/final-checks-ownership.json",
+      "sha256": "1672b8c6a96fac0cf1492a04c190e554cdc76bdc24a34d6b5bcf4f0a97ecfe06"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/native-route-check-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/native-route-check-ownership.json",
+      "sha256": "d139bd765ef41ee63e365593ac09caddb3d48be4992568b2af727b55b02af1a6"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/promote-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/promote-ownership.json",
+      "sha256": "90be17030279fdb09dfefeffcb75395e1bcd38c6e3e7beba0c2c288fd4f29f18"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/render-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/render-ownership.json",
+      "sha256": "68aceb40976c8a2124e62d2978da40c98044757900872f3a1217d4b915095097"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/staging-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/staging-ownership.json",
+      "sha256": "15991f9b03160befb29834847cb0b89a9e49fd382f90301feae552a4adb3b0eb"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/verify-candidate-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/verify-candidate-ownership.json",
+      "sha256": "2122f9914b2e1775afee35853bf3e106cd208c1cecb0cea37d51cd50b24c575c"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/verify-candidate-rerun-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/verify-candidate-rerun-ownership.json",
+      "sha256": "a810e24ab0989987b670f96a77a0f7cefb867705c9b48eac4664fc3503d7bd3c"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/final-checks-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/final-checks-cleanup.json",
+      "sha256": "7d036fec70e6cba06f139d5935dc23036e783705d3b1294e99a8e01c0b3d2e91"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/native-route-check-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/native-route-check-cleanup.json",
+      "sha256": "e58e8f42c69a9a1bd73f148b844baf9eb89b56dc783502088d6653688524620e"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/promote-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/promote-cleanup.json",
+      "sha256": "dd39dc7124f9956f19a3ea152b6d00361e723621cd96769195c9548fbd321c92"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/render-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/render-cleanup.json",
+      "sha256": "f0b564fc91ba4387ec1005502ee4f03528f240416d037553fa74fe72881c732c"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/staging-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/staging-cleanup.json",
+      "sha256": "cf069db4e35dad102e633ff1f519371f0cbb8120a9e0f3199c824795cc69b9a3"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/verify-candidate-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/verify-candidate-cleanup.json",
+      "sha256": "67f8a380f6c0150d8779ea081276d135cbe5e2d94d1c89ba81a88ef6ad922c6f"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/verify-candidate-rerun-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/verify-candidate-rerun-cleanup.json",
+      "sha256": "66203cef948283c9b4954a369e304f34237c0a2244a21022b16387731e4887f6"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/catalog-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/catalog-command.json",
+      "sha256": "6b1ee130e45d66d6daf2e68ba8e054849879a2583eeb96dafe3de97fbc9d8031"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/final-checks-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/final-checks-command.json",
+      "sha256": "876c7b0b7a3e4667f6e5e3d316b4cb3c05a5279173e0d27fa44e8e81b15954f4"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/native-route-check-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/native-route-check-command.json",
+      "sha256": "96e690ad5562516ff9523fb02fd03ae908a9141d48db5031e3ad57844502b40c"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/promote-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/promote-command.json",
+      "sha256": "f29d08d248e31ca2eea95a31dec034692562434fe8d05a28fd9adc4111cd2e48"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/pytest-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/pytest-command.json",
+      "sha256": "d32f26f7fc1911e1c323d35c88cf5b52a52b622c93b8ff9d1122b409e3edaf77"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/render-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/render-command.json",
+      "sha256": "762f9593bf4136508542bf7dd2cf531f77961679e2ed67e514d03de3a4e8aee0"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/verify-candidate-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/verify-candidate-command.json",
+      "sha256": "cabbba4cf1d25a8d4d57203d76e904004ad046f550d50c90545a47804d82b884"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/verify-candidate-rerun-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/root-verification/raw/verify-candidate-rerun-command.json",
+      "sha256": "47dcfdbce0c77768b574ba0aeb9879030afdedf16d361a28b3597794ea74d37b"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/mini-wrapped-granite-loaded.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-granite-loaded.png",
+      "sha256": "5046017a43e0f8ea70da75442f7fb1127f611ffaf5f1261bbf286d54c61de9ce"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/mini-wrapped-jug-loaded-back.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-jug-loaded-back.png",
+      "sha256": "1e74cbd990dc83ec8a814d0ce01a5639d59ba0adc8385fdb93072869ad3a865d"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/mini-wrapped-jug-loaded-front.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-jug-loaded-front.png",
+      "sha256": "edf3ebb8bf062da3fbf693485fa79ef3bfb573a243290e6526a607432dc86171"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/mini-wrapped-pinch-loaded.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-pinch-loaded.png",
+      "sha256": "f604a0ab139228435133bf11b5e57e0163acd7f75db49a3bac12f69fa24bfdd6"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/mini-wrapped-wood-loaded.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/mini-wrapped-wood-loaded.png",
+      "sha256": "a58fe98e504e9479f63ce16feae25aae2345276f5b9eeb31c04c0b66d5170321"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/prior-current-jug-front-side-top.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/views/prior-current-jug-front-side-top.png",
+      "sha256": "0ece7b9e03c007e4c2cb0f3dfd266ba662f0d30d663c48871cefc2fbc838a1d6"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/prior-delivery-checksums.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/prior-delivery-checksums.txt",
+      "sha256": "205a0dee4db2b87087643f76abc6c2e75038231e4090d371186dd34d62795ec2"
+    },
+    {
+      "source": ".context/placid-badger/mini-jug-wrap-2026-10-02/root/current-delivery-checksums.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/jug-wrap-review-2026-10-02/current-delivery-checksums.txt",
+      "sha256": "0fbef266b074158c46cca88817965c972406e3835414505b669c465fc1d18f8b"
+    }
+  ],
+  "nativeAssets": "Canonical package only; no duplicate source or USDZ committed here.",
+  "collider": "Source-bound export retained in owned scratch. Native collider proof shows exact geometry/features equality to prior; CLI rerun verifies current source binding."
+}

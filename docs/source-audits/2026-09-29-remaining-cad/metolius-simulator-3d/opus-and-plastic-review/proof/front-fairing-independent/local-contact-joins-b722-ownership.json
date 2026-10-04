@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "local-contact-joins-b722",
+  "timeoutSeconds": 240,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_local_contact_and_joins.py",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/metolius-simulator-3d.FCStd",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/local-contact-joins-b722.json"
+  ],
+  "ownedProcessGroup": 70949,
+  "exitCode": 0,
+  "elapsedSeconds": 23.74406654201448,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

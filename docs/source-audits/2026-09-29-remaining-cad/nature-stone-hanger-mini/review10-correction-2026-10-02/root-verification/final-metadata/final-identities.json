@@ -1,0 +1,12 @@
+{
+  "owner": "placid-badger",
+  "recordedUTC": "2026-10-03T04:30:53.378470+00:00",
+  "identity": {
+    "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
+    "modelSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+    "descriptorSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268",
+    "sidecarSHA256": "57af5c6e132ac569767402e8e3701aaa1e6707faf45ac7eae279440ac92750e1"
+  },
+  "generatedManifestSHA256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d",
+  "deliveryChecksum": "205a0dee4db2b87087643f76abc6c2e75038231e4090d371186dd34d62795ec2"
+}

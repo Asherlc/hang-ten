@@ -1,0 +1,20 @@
+[
+  [
+    "rtk",
+    "proxy",
+    "/opt/homebrew/bin/axe",
+    "describe-ui",
+    "--udid",
+    "B404FE03-AE3E-4295-88F7-D63D384E3E58"
+  ],
+  [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "io",
+    "B404FE03-AE3E-4295-88F7-D63D384E3E58",
+    "screenshot",
+    ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-rest-settled/view.png"
+  ]
+]

@@ -1,0 +1,103 @@
+{
+  "createdAt": "2026-10-01T01:22:14.121495+00:00",
+  "status": "runtime trace complete; geometry-authoring correction recommended",
+  "blockingFindings": [
+    {
+      "scope": "saved native route quality, not Swift rendering",
+      "finding": "Fixed X routing plane plus actual center support produces a sudden approximately12.258degree off-plane seam at the first cached point. Native cache and app depict the same seam.",
+      "evidence": "All24 lead/pose combinations contain the seam; first seam is each path maximum interior turn."
+    }
+  ],
+  "runtimeTrace": [
+    {
+      "file": "HangTen/Models/BoardPackageStore.swift",
+      "line": 1786,
+      "behavior": "Anchor derived from bounds centerX/Z and maxY plus offset; actual anchor[0,.17,0]. The .1 value is offset, not worldY."
+    },
+    {
+      "file": "HangTen/Views/SuspendedBoardPresentation.swift",
+      "line": 443,
+      "behavior": "Canonical rigid transform is applied to cached body routes."
+    },
+    {
+      "file": "HangTen/Views/SuspendedBoardPresentation.swift",
+      "line": 460,
+      "behavior": "Lead receives fixed-world anchor as first point, no projection or additional bend authored by runtime."
+    },
+    {
+      "file": "HangTen/Views/SuspendedBoardPresentation.swift",
+      "line": 467,
+      "behavior": "Checks finite/nonzero spans and restLength, then validates intersections. Does not impose local force equilibrium or smooth contact tangency."
+    },
+    {
+      "file": "HangTen/Models/BoardModelRealityTypes.swift",
+      "line": 951,
+      "behavior": "Each adjacent pair becomes a straight cylinder. No spline smoothing or independent cord solve. Transient renderer material and non-pickable policy unchanged."
+    }
+  ],
+  "nativeCause": [
+    {
+      "file": "Tools/HangboardCAD/native_cord_routes.py",
+      "line": 634,
+      "behavior": "Absent sectionPlane defaults fixed, as current Port-A-Board sidecar."
+    },
+    {
+      "file": "Tools/HangboardCAD/native_cord_routes.py",
+      "line": 664,
+      "behavior": "Fixed sections are constructed from mouth and normal[1,0,0], so generated contacts remain at each mouth X=\u00b1.05."
+    },
+    {
+      "file": "Tools/HangboardCAD/native_cord_routes.py",
+      "line": 116,
+      "behavior": "Route search projects actual support into 2D section; to_world emits section vertices then path[0] is restored to actual off-plane support at line144."
+    },
+    {
+      "file": "Tools/HangboardCAD/native_cord_routes.py",
+      "line": 704,
+      "behavior": "Cache strips support; runtime restores same real support, faithfully preserving authored seam."
+    }
+  ],
+  "quantitative": {
+    "poses": 6,
+    "strandsTotal": 24,
+    "seamTurnDegreeRange": [
+      12.257561470607286,
+      12.25756344092162
+    ],
+    "supportWorld": [
+      0.0,
+      0.17,
+      0.0
+    ],
+    "supportSpanMM": 235.5636782161353,
+    "incomingOutOfSectionDegree": 12.254641222723137,
+    "projectedYZSeamTurnDegree": 0.26961749316921796,
+    "pathLengthMMRange": [
+      300.00000097361936,
+      300.00000097362135
+    ]
+  },
+  "recommendations": [
+    "Keep Swift unchanged; it accurately reconstructs and renders native metadata.",
+    "Use a native section containing real support and actual mouth (existing sectionPlane=anchor capability), with source-backed mouth-entry constraint if source warrants; certify full solid and coupled tubes and re-settle height from retained rest lengths.",
+    "If supported-plane routes retain unnecessary free-space corners, use evidence-tested coupled3D local tightening with current closed gates, never aesthetic smoothing in Swift.",
+    "Numeric regression should measure first cached seam from actual support and quantify certifiable local shortening/clearance on the native body. A blanket angle cutoff alone would wrongly reject legitimate rim bearings."
+  ],
+  "limits": [
+    "No native solid distance or changed-route certification performed in this runtime lane; seam proximity/support must be evaluated by native geometry lane.",
+    "Existing clearance and length certificates establish collision/length constraints, not unrestricted stationarity or physical equilibrium.",
+    "Small cylinder joints may make the turn visually sharper but cannot account for the measured12.26degree direction change already in input geometry.",
+    "No code/package modifications, simulator operations, native solving, tests or new external resources."
+  ],
+  "fileSHA256": {
+    "Hangboards/frictitious-port-a-board/suspension.json": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305",
+    "Hangboards/frictitious-port-a-board/assets/primary.model.json": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+    "HangTen/Models/BoardPackageStore.swift": "af66408a5ea48e0381a5b443790367f7cc2a2712d44dc5c6ecfb992ef797639a",
+    "HangTen/Views/SuspendedBoardPresentation.swift": "dda582178a34701fe8c94ca5f89ae9367e1c89f4e2bea4e4c2825cdf9d4c0ca6",
+    "HangTen/Models/BoardModelRealityTypes.swift": "07cd4392567103ae157c2bea2d5470d45bac8824b3a946911b14a13bbb7c9e7f",
+    "HangTen/Models/SuspensionProfiles.swift": "f31abdc44591127fe10277b1d71c7d24247175578b9ed8d9e6fa23eff9a2a6e1",
+    "Tools/HangboardCAD/native_cord_routes.py": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17"
+  },
+  "metricsFile": "seam-metrics.json",
+  "metricsSHA256": "b96926bcd5981dc577a98661ba2c651609abd6138ce9a427461e739c03b2b528"
+}

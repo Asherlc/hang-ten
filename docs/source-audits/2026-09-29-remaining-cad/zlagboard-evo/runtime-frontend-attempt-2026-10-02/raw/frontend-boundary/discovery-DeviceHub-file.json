@@ -1,0 +1,14 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "file",
+    "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/MacOS/DeviceHub"
+  ],
+  "exitStatus": 0,
+  "selectedStaticOutput": [
+    "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/MacOS/DeviceHub: Mach-O 64-bit executable arm64e"
+  ],
+  "stderr": "",
+  "executedTarget": false
+}

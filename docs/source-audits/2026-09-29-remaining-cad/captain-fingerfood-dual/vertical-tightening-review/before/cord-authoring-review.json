@@ -1,0 +1,146 @@
+{
+  "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+  "entries": [
+    {
+      "presentationID": "primary",
+      "equipmentObjectID": null,
+      "type": "cadRoutedCord",
+      "strands": [
+        {
+          "id": "left-lead",
+          "kind": "lead",
+          "restLength": 0.4,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+        },
+        {
+          "id": "right-lead",
+          "kind": "lead",
+          "restLength": 0.4,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+        }
+      ],
+      "terminalsByStrandID": {
+        "left-lead": {
+          "points": [
+            [
+              -0.026,
+              0.001,
+              -0.005
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ],
+          "planeAxis": [
+            0,
+            0,
+            1
+          ],
+          "mouthAxis": [
+            0,
+            0,
+            1
+          ]
+        },
+        "right-lead": {
+          "points": [
+            [
+              0.026,
+              0.001,
+              -0.005
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ],
+          "planeAxis": [
+            0,
+            0,
+            1
+          ],
+          "mouthAxis": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "clearanceMeters": 0.0002,
+      "poses": [
+        "curved-lip-front",
+        "exterior-jug-back",
+        "left-pocket-vertical",
+        "straight-lip-inverted"
+      ],
+      "routeCachePresent": true,
+      "sectionPlane": "anchor"
+    }
+  ],
+  "authoringRule": "Terminal stations are deliberately selected actual native mouth/bearing points. Routes and hanging height are generated, never authored by hand. Hidden connectivity is omitted unless retained evidence supports it. Measured cylindrical void lengths are separately retained in native-channel-measurements.json where applicable.",
+  "lengthPolicy": "Penta retains the manufacturer 60 cm loop; other lengths/radii are carried display estimates and do not imply a manufacturer load or installation specification.",
+  "sidecarSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+  "frontEntryEvidence": "Captain Fingerfood retained title image and DualP1 show the two visible leads descending into the front recess floor openings.",
+  "frontEntryAxes": {
+    "left-lead": [
+      0,
+      0,
+      1
+    ],
+    "right-lead": [
+      0,
+      0,
+      1
+    ]
+  },
+  "entryDirectionByPose": {
+    "curved-lip-front": {
+      "left-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      },
+      "right-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      }
+    },
+    "exterior-jug-back": {
+      "left-lead": {
+        "beforeApproachZMM": 1.555635,
+        "afterApproachZMM": 22.2
+      },
+      "right-lead": {
+        "beforeApproachZMM": 1.555635,
+        "afterApproachZMM": 22.2
+      }
+    },
+    "left-pocket-vertical": {
+      "left-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      },
+      "right-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      }
+    },
+    "straight-lip-inverted": {
+      "left-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      },
+      "right-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      }
+    }
+  },
+  "boundedSectionOrientationRecovery": "Only after strict conflict, try bounded native section rotations about the support-to-generated-collar chord; each candidate is settled and certified. No authored route points or hidden connection."
+}

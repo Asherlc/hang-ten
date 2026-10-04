@@ -1,0 +1,26 @@
+[
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/capture.py",
+    "sha256": "92c39f3c28e1fc940ae3aa8f1251098c68d4efe671d2638b5ce755dd3faf4466"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-static-runtime-prep/v8/prototype_schema.py",
+    "sha256": "90a51d6a15937152be3fc94d1e5fde7ddf693a2c7cf10af67d3107899a8c7a46"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-static-runtime-prep/v8/event-schema.json",
+    "sha256": "67f947eeed4bb423d6d6d10a08eb31dce2c8811dac67e50b557a27f83cf47e88"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-static-runtime-prep/v6/capture.py",
+    "sha256": "3351ba3cc9e05f360779f766e17f9bbf62dd4a102cfdf6e2711f79ce663ee6e4"
+  },
+  {
+    "path": "HangTen/Views/GripHandModelView.swift",
+    "sha256": "66f77336b6bc1533e467c6165d7c35d330b1a817afddf8229f3b2bb7090fb542"
+  },
+  {
+    "path": "HangTen/Resources/PlanLibrary.json",
+    "sha256": "b203917f19e792e2d39abf15bbac96a6119ca0a7aa5384618fd1bb3978de2c6b"
+  }
+]

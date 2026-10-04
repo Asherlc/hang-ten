@@ -1,0 +1,138 @@
+553:     }
+554: 
+555:     @MainActor
+556:     func testLiveScenePausesThenPublishesAcceptedSettledFrame() async throws {
+557:         let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:"clavellium-training-block"))
+558:         let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation,useLivePhysics:true)
+559:         XCTAssertTrue(scene.select(positionID:try XCTUnwrap(board.positions.first?.id)))
+560:         let initial=try XCTUnwrap(scene.liveFramesForTesting.first)
+561:         var frameNotifications=0
+562:         scene.onLiveFrame = { frameNotifications += 1 }
+563:         scene.setLiveActivity(false)
+564:         scene.advanceLiveRopes(elapsed:100)
+565:         try await Task.sleep(for:.milliseconds(50))
+566:         XCTAssertEqual(scene.liveFramesForTesting.first?.boardHeight,initial.boardHeight)
+567:         scene.configureLiveMotion(reduceMotion:true,displayOnly:false)
+568:         scene.setLiveActivity(true)
+569:         scene.advanceLiveRopes(elapsed:1.0/60)
+570:         let accepted=expectation(for:NSPredicate { _,_ in scene.liveFramesForTesting.first?.settled == true },evaluatedWith:nil)
+571:         await fulfillment(of:[accepted],timeout:30)
+572:         let final=try XCTUnwrap(scene.liveFramesForTesting.first)
+573:         XCTAssertTrue(final.metrics.geometryAccepted);XCTAssertTrue(final.settled)
+574:         XCTAssertEqual(frameNotifications,1,"Projected hold controls must refresh with the physical frame")
+575:         var camera=scene.camera.camera
+576:         camera.fieldOfViewInDegrees=30;camera.fieldOfViewOrientation = .vertical
+577:         scene.camera.camera=camera
+578:         scene.frame(in:CGSize(width:800,height:500))
+579:         let view=simd_inverse(scene.camera.transform.matrix)
+580:         var points=final.ropes.flatMap { $0.positions }.map { SIMD3<Float>(Float($0.x),Float($0.y),Float($0.z)) }
+581:         let bounds=try XCTUnwrap(scene.instanceEntities.first).visualBounds(relativeTo:scene.root)
+582:         for x in [bounds.min.x,bounds.max.x] {for y in [bounds.min.y,bounds.max.y] {for z in [bounds.min.z,bounds.max.z] {points.append(SIMD3(x,y,z))}}}
+583:         for point in points {
+584:             let projected=view*SIMD4(point,1),depth = -projected.z
+585:             XCTAssertGreaterThan(depth,0)
+586:             XCTAssertLessThanOrEqual(abs(projected.x/depth/tan(Float.pi/12)/1.6),1)
+587:             XCTAssertLessThanOrEqual(abs(projected.y/depth/tan(Float.pi/12)),1)
+588:         }
+589:         scene.stopLiveRopes()
+
+1223:     func testSharedContactMeshUsesPrimaryPickingAndUnionHighlight() async throws {
+1224:         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.contact"))
+1225:         let presentation = board.defaultPresentation
+1226:         guard case .model(let media) = presentation.media else { return XCTFail("model") }
+1227:         XCTAssertEqual(media.descriptor.schemaVersion, 1)
+1228:         XCTAssertNil(media.instances)
+1229:         let ids = media.descriptor.contacts.keys.sorted()
+1230:         let primaryID = try XCTUnwrap(ids.first)
+1231:         let secondaryID = try XCTUnwrap(ids.dropFirst().first)
+1232:         let originalPrimary = try XCTUnwrap(media.descriptor.contacts[primaryID])
+1233:         XCTAssertEqual(originalPrimary.nodeIDs.count, 1)
+1234:         let sharedNode = try XCTUnwrap(originalPrimary.nodeIDs.first)
+1235:         let originalSecondary = try XCTUnwrap(media.descriptor.contacts[secondaryID])
+1236:         let minimum = zip(originalPrimary.facePlaneAABB.minimum, originalSecondary.facePlaneAABB.minimum)
+1237:             .map { min($0, $1) }
+1238:         let maximum = zip(originalPrimary.facePlaneAABB.maximum, originalSecondary.facePlaneAABB.maximum)
+1239:             .map { max($0, $1) }
+1240:         var contacts = media.descriptor.contacts
+1241:         contacts[secondaryID] = BoardModelContactDescriptor(
+1242:             nodeIDs: (originalSecondary.nodeIDs + [sharedNode]).sorted(),
+1243:             facePlaneAABB: BoardModelFacePlaneAABB(minimum: minimum, maximum: maximum),
+1244:             center: zip(minimum, maximum).map { ($0 + $1) / 2 })
+1245:         let nodes = media.descriptor.nodes.map { node in
+1246:             node.nodeID == sharedNode
+1247:                 ? BoardModelNodeDescriptor(nodeID: node.nodeID, role: node.role,
+1248:                                            contactID: node.contactID, additionalContactIDs: [secondaryID])
+1249:                 : node
+1250:         }
+1251:         let descriptor = BoardModelDescriptor(
+1252:             schemaVersion: media.descriptor.schemaVersion,
+1253:             coordinateFrame: media.descriptor.coordinateFrame,
+1254:             modelSHA256: media.descriptor.modelSHA256, modelBounds: media.descriptor.modelBounds,
+1255:             nodes: nodes, contacts: contacts)
+1256:         let loadedSource = try await BoardModelRealityCache.source(
+1257:             for: BoardModelRealityKey(boardID: board.id, presentationID: presentation.id,
+1258:                                       modelSHA256: descriptor.modelSHA256),
+1259:             media: media, board: board, presentationID: presentation.id,
+1260:             store: BoardCatalog.packageStore, resourceAccess: .live)
+1261:         let source = try XCTUnwrap(loadedSource)
+1262:         let scene = BoardModelRealityScene(descriptor: descriptor, display: media.display,
+1263:             suspension: nil, orientation: nil, allowedPositionIDs: [], resourceLease: source.resourceLease)
+1264:         try await scene.load(usdzURL: source.resourceLease.url)
+1265:         let primary = try XCTUnwrap(scene.contactEntities[primaryID])
+1266:         let secondary = try XCTUnwrap(scene.contactEntities[secondaryID])
+1267:         let shared = try XCTUnwrap(primary.first { entity in secondary.contains { $0 === entity } })
+1268:         let secondaryOnly = try XCTUnwrap(secondary.first { entity in !primary.contains { $0 === entity } })
+1269:         XCTAssertEqual(scene.contactID(for: shared), primaryID)
+1270:         XCTAssertEqual(scene.contactID(for: secondaryOnly), secondaryID)
+1271:         XCTAssertNotNil(shared.collision)
+1272:         XCTAssertNotNil(shared.components[InputTargetComponent.self])
+1273:         XCTAssertEqual(Set(secondary.map(ObjectIdentifier.init)).count, secondary.count)
+1274:         func roughness(_ entity: ModelEntity) throws -> Float {
+1275:             try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial).roughness.scale
+1276:         }
+1277:         scene.highlight([secondaryID], mode: .active)
+1278:         XCTAssertEqual(try roughness(shared), 0.8, accuracy: 0.0001)
+1279:         XCTAssertEqual(try roughness(secondaryOnly), 0.8, accuracy: 0.0001)
+1280:         scene.highlight([primaryID], mode: .active)
+1281:         XCTAssertEqual(try roughness(shared), 0.8, accuracy: 0.0001)
+1282:         XCTAssertEqual(try roughness(secondaryOnly), 0.5, accuracy: 0.0001)
+1283:         scene.highlight([primaryID, secondaryID], mode: .active)
+1284:         XCTAssertEqual(try roughness(shared), 0.8, accuracy: 0.0001)
+1285:         scene.highlight([], mode: .active)
+1286:         XCTAssertEqual(try roughness(shared), 0.5, accuracy: 0.0001)
+1287:         XCTAssertEqual(try roughness(secondaryOnly), 0.5, accuracy: 0.0001)
+1288:     }
+
+1415:     func testPlasticContactsHighlightAndRestoreMintMaterial() async throws {
+1416:         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+1417:         let scene = try await BoardModelRealityLoader.load(board: board,
+1418:                                                           presentation: board.defaultPresentation)
+1419:         let contactID = try XCTUnwrap(scene.contactEntities.keys.sorted().first)
+1420:         let entities = try XCTUnwrap(scene.contactEntities[contactID])
+1421:         XCTAssertFalse(entities.isEmpty)
+1422:         var baselineTints: [Entity: UIColor] = [:]
+1423:         for entity in entities {
+1424:             let material = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial,
+1425:                                          "Plastic contacts must receive the mint resin finish")
+1426:             let tint = UIColor(cgColor: material.baseColor.__tint)
+1427:             var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+1428:             XCTAssertTrue(tint.getRed(&red, green: &green, blue: &blue, alpha: &alpha))
+1429:             XCTAssertGreaterThan(green, red, "Plastic must use mint rather than the wood finish")
+1430:             XCTAssertGreaterThan(blue, red)
+1431:             baselineTints[entity] = tint
+1432:         }
+1433:         for mode: BoardHighlightMode in [.active, .preview] {
+1434:             scene.highlight([contactID], mode: mode)
+1435:             for entity in entities {
+1436:                 XCTAssertTrue(entity.model?.materials.first is PhysicallyBasedMaterial,
+1437:                               "Selected plastic grips must use the solid highlight")
+1438:             }
+1439:             scene.highlight([], mode: mode)
+1440:             for entity in entities {
+1441:                 let restored = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial,
+1442:                                              "Clearing selection must restore the mint resin finish")
+1443:                 XCTAssertEqual(UIColor(cgColor: restored.baseColor.__tint), baselineTints[entity])
+1444:             }
+1445:         }
+1446:     }
+1447: 

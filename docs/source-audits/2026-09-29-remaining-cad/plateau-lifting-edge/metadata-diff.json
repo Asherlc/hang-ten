@@ -1,0 +1,70 @@
+{
+  "addedContacts": [],
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineManifestSHA256": "a3cfd68121b7559917749fae921a7d60a42f45a0ee5b28eb18c86038c20c9ed6",
+  "boardFieldChanges": {},
+  "changedContacts": {
+    "edge-18": {
+      "name": {
+        "after": "Wood edge",
+        "before": "18 mm wood edge"
+      }
+    }
+  },
+  "humanAcceptance": "pending one-by-one review",
+  "package": "plateau-lifting-edge",
+  "positionsAfter": [
+    {
+      "contactIDs": [
+        "edge-18"
+      ],
+      "effectiveDepths": {
+        "edge-18": {
+          "range": {
+            "maximum": 18,
+            "minimum": 18
+          }
+        }
+      },
+      "id": "depth-18mm",
+      "presentationID": "depth-18mm"
+    },
+    {
+      "contactIDs": [
+        "edge-18"
+      ],
+      "effectiveDepths": {
+        "edge-18": {
+          "range": {
+            "maximum": 15,
+            "minimum": 15
+          }
+        }
+      },
+      "id": "depth-15mm",
+      "presentationID": "depth-15mm"
+    },
+    {
+      "contactIDs": [
+        "edge-18"
+      ],
+      "effectiveDepths": {
+        "edge-18": {
+          "range": {
+            "maximum": 10,
+            "minimum": 10
+          }
+        }
+      },
+      "id": "depth-10mm",
+      "presentationID": "depth-10mm"
+    }
+  ],
+  "positionsBefore": [],
+  "removedContacts": [
+    "blocker-edge-10",
+    "blocker-edge-15"
+  ],
+  "sourceAudit": "plateau-lifting-edge/native-authoring.md",
+  "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f"
+}

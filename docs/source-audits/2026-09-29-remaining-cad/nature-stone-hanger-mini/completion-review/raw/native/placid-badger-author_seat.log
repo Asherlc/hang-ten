@@ -1,0 +1,101 @@
+{
+  "status": "pass",
+  "priorSourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+  "sourceSHA256BeforeMetadata": "f5a7063ce8e4db72dfabe1d1326bb409dba2a8876ca476c6c370c98efb5bf150",
+  "manifestRawPreservedByGeometryAuthor": true,
+  "contacts": {
+    "wood-edge-15-incut": {
+      "valid": true,
+      "areaMM2": 1151.538758905897,
+      "depthYMM": 15.000000000000096,
+      "oldMinusNewAreaMM2": 0.0,
+      "newMinusOldAreaMM2": 0.0
+    },
+    "granite-edge-15": {
+      "valid": true,
+      "areaMM2": 1980.8141502220528,
+      "depthYMM": 15.000000000000002,
+      "oldMinusNewAreaMM2": 0.0,
+      "newMinusOldAreaMM2": 870.8141502220527
+    },
+    "pinch-60": {
+      "valid": true,
+      "areaMM2": 4679.468914507713,
+      "depthYMM": 25.000000000000014,
+      "oldMinusNewAreaMM2": 0.0,
+      "newMinusOldAreaMM2": 0.0
+    },
+    "pull-up-jug": {
+      "valid": true,
+      "areaMM2": 2158.247779607694,
+      "depthYMM": 0.0,
+      "oldMinusNewAreaMM2": 0.0,
+      "newMinusOldAreaMM2": 0.0
+    }
+  },
+  "faceBindings": {
+    "nature_wood": [
+      "Face7",
+      "Face15",
+      "Face17",
+      "Face20",
+      "Face21",
+      "Face22"
+    ],
+    "nature_pinch": [
+      "Face23",
+      "Face30",
+      "Face31",
+      "Face43",
+      "Face44",
+      "Face69"
+    ],
+    "nature_jug": [
+      "Face6"
+    ],
+    "nature_stone": [
+      "Face1",
+      "Face4",
+      "Face5",
+      "Face10"
+    ]
+  },
+  "woodStoneOverlapMM3": 0.0,
+  "graniteWoodSurfaceOverlapMM2": 0.0,
+  "gapWitnessMaterialMM3": 62.0,
+  "gapWitnessTotalMM3": 62,
+  "nativeEnvelopeMM": [
+    100.0000002,
+    25.00000020000001,
+    60.00000020000002
+  ],
+  "sideRegionSymmetricDifference": {
+    "left": {
+      "removedMM3": 0.0,
+      "addedMM3": 0.0
+    },
+    "right": {
+      "removedMM3": 0.0,
+      "addedMM3": 0.0
+    }
+  },
+  "removedCombinedMaterialMM3": 0.0,
+  "addedCombinedMaterialMM3": 34.105693266271636,
+  "allNativeSketchesConstrained": true,
+  "estimates": "Native fill box 82x15x11 at(-41,-12.5,-21) only restores existing lower rail under the insert. Stone dimensions, placement, upper cavity, outer silhouette and grooves unchanged. Fill top z=-10 equals the existing lower limit of upper wood/jug contact surfaces. Exact stone is subtracted from wood seat.",
+  "unsavedNativeEditTest": {
+    "parameter": "GraniteOutline.Placement.Base.z",
+    "deltaMM": 0.25,
+    "bodyVolumeDeltaMM3": 292.5000911337702,
+    "graniteCenterDeltaZMM": 0.24999999999999822,
+    "bodyValid": true,
+    "graniteValid": true
+  }
+}
+
+								
+								
+								
+								
+								
+								

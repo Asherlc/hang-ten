@@ -1,0 +1,21 @@
+# Lower native front fairing
+
+The inherited `ContinuousFrontRelief` used repeated cubic S transitions across the full board width. The source profile repeatedly forced its slope to zero at the row heights, producing genuine broad horizontal bands. Complete manufacturer product-01 and product-03 references support rounded local hold rims and gentler broad face transitions; their pixels were neither measured nor processed.
+
+The correction retains every original depth station and the exact profile above Z 135 mm. Below that boundary, directly authored cubic spans share deliberate nonzero tangents through the existing anchors. This gives a smooth monotonic lower taper without repeated row-by-row flattening. The lower span joins are C1 by their native endpoint/tangent construction; this makes no blanket G1 claim about unchanged upper roof transitions.
+
+The new tangent values are display estimates. Face dimensions, pocket/edge depths and sloper support spans remain sourced facts. Overall thickness remains the existing approximately 94 mm display estimate. The forward center crest, descending rear return, rolled nose, front-reaching slopers, front rolls, roof joins and outer outline are preserved. The protected upper geometry comparison uses bidirectional native Boolean differences above Z 135, not image similarity.
+
+Native Boolean construction required a local dependency repair: the complex upper roof carriers interfered with the original whole-shell compound cavity subtraction. Both compound and sequential failed probes remain under diagnostic folders. The final construction partitions the source shell at Z 135, subtracts the same 24 native cavity cutters from lower and upper shells separately, then fuses the two pocketed pieces into final `BodySolid`. No fuzzy tolerance or contact-selection relaxation was introduced. The existing rounded mouth profiles remain native and editable; scalar floor positions were corrected for the changed physical front to preserve the exact published spans. Every final contact is rebound to actual final-shell faces using the prior native binder/clip contract.
+
+The plastic embedded manifest, all 30 IDs and UV-native analytic normal settings remain unchanged. Final native previews compare original committed 9449, frozen 3ff3 and the corrected source using the same neutral technical renderer. Native profile/normal and actual solid sections demonstrate the geometric change independently of shading.
+
+Independent native/contact/depth/void/edit-restore checks, root/Opus native review, compiler export and actual-app acceptance are separate gates. No exports or canonical promotion were performed during this native authoring stage. Failed probes, logs and scripts are retained.
+
+## Export review
+
+The frozen b722 source subsequently passed the fresh independent native gates and root/Opus native visual review. Two normal exports are byte-identical, and an isolated staged compiler check reproduces the same model. The unchanged f4 compiler uses 0.28 mm tessellation and creates 31 unbound semantic meshes (30 contacts plus the body), totaling 75,174 triangles and 1,908,779 bytes. The three jobs completed in 491–493 seconds, and their exact process groups and temporary directories were verified absent/deleted.
+
+The 192-corner normal comparison retains one 7.161516 degree difference from the legacy heuristic. Independent native evidence establishes that the UV path uses the unique actual facet owner, whose UV and inverse-evaluated normals agree exactly; the legacy heuristic chose a neighboring face 0.200909 mm away. The supplemental actual-owner gate passes without widening any angular or positional tolerance. The raw comparison and stopped preliminary export evidence remain unchanged.
+
+The exported front/side/top/oblique/raking previews include all 31 meshes and compare the original committed 9449 asset, frozen 3ff3 asset and final export. Exact exported grasp sections and high-front/rear views are also retained. The dark lower-center mark in CPU rear-oblique shading is not a missing rear facet or reversed exported rear normal: all 583 native rear facets correspond exactly after the writer's float32 conversion, and every exported rear facet and corner normal faces the wall. Actual-app material, orbit and selection review remains separate, as does human acceptance.

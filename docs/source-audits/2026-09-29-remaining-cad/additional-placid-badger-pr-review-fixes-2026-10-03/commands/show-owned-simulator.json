@@ -1,0 +1,19 @@
+{
+  "owner": "placid-badger",
+  "label": "show-owned-simulator",
+  "command": [
+    "open",
+    "-a",
+    "Simulator",
+    "--args",
+    "-CurrentDeviceUDID",
+    "7774F2CB-D5DF-45EA-A5ED-FFACBEAED21B"
+  ],
+  "timeoutSeconds": 20.0,
+  "ownedProcessGroup": 60442,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 0.2886748749879189
+}

@@ -1,0 +1,58 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "990DFC2B-D415-4490-B070-95D4EAD9B5C8",
+        "deviceName" : "Hang Ten Paseo placid-badger DUAL vertical Review",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 0,
+      "passedTests" : 1258,
+      "skippedTests" : 3,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "HangTen · Built with macOS 27.0",
+  "expectedFailures" : 0,
+  "failedTests" : 0,
+  "finishTime" : 1790794361.863,
+  "passedTests" : 1258,
+  "result" : "Passed",
+  "runtimeWarnings" : [
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/HangTenTests/WorkoutSessionStoreTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/HangTenTests/WorkoutSessionStoreTests.swift"
+    }
+  ],
+  "skippedTests" : 3,
+  "startTime" : 1790794246.307,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+
+  ],
+  "title" : "Test - HangTen",
+  "topInsights" : [
+    {
+      "category" : "Longest Test Runs",
+      "impact" : "79% of duration",
+      "text" : "1 longest test run with outlier durations exceeding 7.19s (three standard deviations)"
+    }
+  ],
+  "totalTestCount" : 1261
+}

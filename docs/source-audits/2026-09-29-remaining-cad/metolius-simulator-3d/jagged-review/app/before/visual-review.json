@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "owner": "placid-badger",
+  "phase": "before",
+  "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+  "completeFramesVisuallyInspected": true,
+  "findings": [
+    "Actual app reproduces abrupt triangular shoulder seams and angular outer/lower corners.",
+    "Jug, flat sloper, both round shoulders, shallow edge and deep pocket highlights are visible; selection remains after three real drag rotations."
+  ],
+  "images": {
+    "jug-left.png": "bca62c7799a1293ae0294694e4183a711eb0bb2d49c582aea2af9dfed6d7cbc3",
+    "jug-left-orbit.png": "c78d6b653f69b869a63d5feb688127b00a378bd0ea5420ed54c563dc159396ca",
+    "flat-left.png": "08995ed10934820dc4cb0a84208dffc3e9b19f5096eb9572efbf18eaa2a6b7fc",
+    "flat-left-orbit.png": "fae8726667af71c6d867d594187aa568f5c9f0609532239c6a6d357459e19fca",
+    "round-center.png": "bf2f2a05761337595471a8813a756cb262f774f68dbf93d56495007d5f85f205",
+    "round-center-orbit.png": "3daada4312a94aee98f45f8d6405ef5550818ae49f754d322c618a6619a510ee",
+    "shallow-edge.png": "1c3c66235c0445f26ce1fbc852842d9aeb102630a22023792ae363c5e55d925f",
+    "deep-pocket.png": "2e605da10eb58826ec1e3d11d544b68dd793f086d28bc798a3489ac5fa6f0f02"
+  },
+  "scope": "Baseline reproduction only; no revised geometry or human acceptance."
+}

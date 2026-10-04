@@ -1,0 +1,73 @@
+{
+  "scope": "Read-only diagnostic proposal; no patch applied, production change, build/device activity or repair claim.",
+  "inputs": {
+    "source": "HangTen/Views/RootView.swift",
+    "sha256": "c1063ed42a466853d2c69a2df4900f7b5e318886bba4aaf8461d4ca748b3353d",
+    "lineRanges": [
+      [
+        1950,
+        1978
+      ],
+      [
+        2370,
+        2380
+      ],
+      [
+        2516,
+        2572
+      ],
+      [
+        2702,
+        2729
+      ],
+      [
+        3549,
+        3557
+      ],
+      [
+        3579,
+        3582
+      ],
+      [
+        3817,
+        3827
+      ],
+      [
+        3840,
+        3890
+      ]
+    ],
+    "runtimeStatusFromParent": "E2/F2/G2 all60 visually correct; G2 one final after-end CPU bracket absent. Passive normal workout still stale red Rest/blue Hang. No reinterpretation of raw proofs."
+  },
+  "exactDifference": [
+    {
+      "refs": "RootView.swift:1952\u20131958,2379\u20132380,2547\u20132557,3579\u20133581",
+      "fact": "Workout already reevaluates every0.25s. Determinate ProgressView receives elapsed/sessionDuration on every tick; timer is plain Text(timeLabel(...)), not Text(timerInterval:) or an internal timer. timeLabel rounds up to integerseconds, so visible timer content normally changes1Hz while progress value changes4Hz."
+    },
+    {
+      "refs": "RootView.swift:3817\u20133827,3840\u20133888",
+      "fact": "E uses the same0.25s Timeline cadence but fixed caption/controls/board inputs remain visually constant within each8s phase. Thus mere Timeline reevaluation already has a passing control; continuously changing sibling presentation is an additional variable."
+    },
+    {
+      "refs": "RootView.swift:2516\u20132572,3549\u20133557",
+      "fact": "Full landscapeHeader is not a pure reusable timer: it reads activeSteps.count, planNeedsHandChoice and bindings for Routine/menu actions; timer remaining is derived from WorkoutStep/session state. Importing that full private method or constructing WorkoutView would add hidden state/environment and navigation dependencies. The exact leaf timer Text+font+foreground and determinate ProgressView+tint are pure value-driven presentation and can be copied into a DEBUG-only probe without those dependencies."
+    }
+  ],
+  "recommendedBoundedTwoArms": {
+    "common": "Retain E fixed210x36 BoardMap, constant caption, same monotonic scriptEpoch/phase schedule and all semantic observers/sparse captures. Add identical small timer/progress presentation in both arms in an overlay of the already full-size root container, outside the board frame. Fixed-size210x54 top-aligned panel in both arms; it contributes no size proposal to the existing base layout. Verify its actual non-overlapping placement and unchanged board UIKit frame rather than assuming overlay has no consequences.",
+    "staticControl": "H0 renders Text(\"00:08\") in exact production34pt heavy rounded monospaced-digit hangInk styling plus ProgressView(value:0,total:40).tint(hangGreenDark). Both controls remain mounted and visible for the entire run.",
+    "liveSibling": "H1 uses same controls/style/frame but derives display values from the SAME uptime read already used for monotonic board phase. Progress=min(max(uptime-scriptEpoch,0),40); timer is ceiling-formatted remaining time within current8s diagnostic phase,0afterend. These8/40 values describe existing probe windows, not a new training plan. No new Timer, TimelineView, Task or State; no internal animated timer style.",
+    "structuralConstraint": "Use the same sibling view structure for H0/H1; only numeric/string leaf values are frozen versus live. Compute board phase once exactly as E and pass unchanged. Do not wrap the board in a new variable .id, conditional host, drawingGroup/compositingGroup or animation. Apply overlay after the common full-size frame so it cannot shrink the board VStack.",
+    "instrumentation": "Use unchanged snapshots/capture schedule in both arms, record displayed timer/progress intent as passive harness metadata if needed without new observed state. Require constant210x36 actual board UIKit frame, identical center/scene/root/camera identity, correct requested/cached/material mode, and whole displayed board colors at all20 captures. Confirm H1 visible timer/progress actually advances.",
+    "order": "Run H0 then H1 once each under the same binary/environment. If H0 fails, added panel/layout context is itself confounded and no live-value conclusion follows. If H0 passes/H1 fails, bounded follow-up freezes timer only versus progress only (two additional arms) to isolate which changing sibling is sufficient. If both pass, stop this standalone expansion and return to production-specific context; do not suppress real timers as an unproven fix."
+  },
+  "whyNotNormalSuppressionFirst": "Pure existing leaf presentation can be reproduced without WorkoutView hidden state. A normal-workout suppression arm would change screenshot phase witnesses and risk mutating elapsed/countdown semantics if placed too high. If later necessary, freeze only final Text string and ProgressView value at their presentation callsites; never freeze monotonicTime/currentElapsed/boardCue/session state. Keep same controls/fonts/frames and retain actual phase evidence separately.",
+  "confoundersAndLimits": [
+    "Adding overlay changes composition context even with stable layout; H0 is necessary and historical E alone is not a matched control.",
+    "Copy exact visual leaves, not full production header. Standalone overlay position/compositing is intentionally simpler than normal siblings in VStack; a pass excludes only this bounded reproduction.",
+    "Changing values passed through SwiftUI can introduce dependency invalidations and may mask rather than reproduce the production defect. A pass cannot prove sibling activity irrelevant in the full workout.",
+    "Default determinate ProgressView may animate/interpolate internally differently across OS versions; record actual display behavior, do not describe4Hz value changes as4 GPU renders or add explicit animation.",
+    "Live timer resets each8s phase; production uses different durations. Identical phase and timer boundaries may confound transition coincidence; only if reproduction occurs should a shifted display-only timer epoch be used as a separate follow-up.",
+    "Board image colors require actual whole-frame review; CPU RGBA and successful build are insufficient. Existing resized-arm success does not authorize any production resize/animation fix."
+  ]
+}

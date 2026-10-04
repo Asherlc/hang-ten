@@ -1,0 +1,171 @@
+{
+  "scope": "Direct whole-image review of the 12 assigned early action frames and train-setup; root reviews other early frames separately.",
+  "reviewedAtUTC": "2026-10-03T10:37:02.573612+00:00",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/train-setup.png",
+      "sha256": "3d5fa471e8accf158fc9f5cd465f8034e144316933a9528df82748c77f521356",
+      "bytes": 718932,
+      "directWholeImageReviewed": true,
+      "visiblePhase": "Train setup",
+      "visibleTimer": null,
+      "selectedBoardPocketColor": "neutral wood",
+      "boardVisible": true,
+      "bothHandsVisible": false,
+      "boardColorMatchesVisiblePhase": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-001s.png",
+      "sha256": "1d7832059c9dc017dd5a88737ec11dcaef06bae69df80f95f615e716ed62f7a7",
+      "bytes": 323791,
+      "directWholeImageReviewed": true,
+      "visiblePhase": "Ready",
+      "visibleTimer": "00:02",
+      "selectedBoardPocketColor": "not visible",
+      "boardVisible": false,
+      "bothHandsVisible": false,
+      "boardColorMatchesVisiblePhase": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-002s.png",
+      "sha256": "0b8d6d38b8f00f4b1ba0d5a369499fee63dfe08a3b304fdf0720031e3309cad6",
+      "bytes": 216189,
+      "directWholeImageReviewed": true,
+      "visiblePhase": "Ready",
+      "visibleTimer": "00:02",
+      "selectedBoardPocketColor": "not visible",
+      "boardVisible": false,
+      "bothHandsVisible": false,
+      "boardColorMatchesVisiblePhase": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-003s.png",
+      "sha256": "123bb018f0c96a54221abe6dc2680c14b7d849988bade1d29f2694e6541baaf2",
+      "bytes": 205696,
+      "directWholeImageReviewed": true,
+      "visiblePhase": "Ready",
+      "visibleTimer": "00:01",
+      "selectedBoardPocketColor": "not visible",
+      "boardVisible": false,
+      "bothHandsVisible": false,
+      "boardColorMatchesVisiblePhase": null
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-007s.png",
+      "sha256": "1834f6e15bfbc9e1e602dfd83356c77d4aa5d1d3554bfd7535d4eb6f84eff09b",
+      "bytes": 335562,
+      "directWholeImageReviewed": true,
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:03",
+      "selectedBoardPocketColor": "red",
+      "boardVisible": true,
+      "bothHandsVisible": true,
+      "boardColorMatchesVisiblePhase": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-008s.png",
+      "sha256": "6a3f16b1575fae543b1da2f0cbd3894ccc415f708cb133fdd3afedac7936acea",
+      "bytes": 334738,
+      "directWholeImageReviewed": true,
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:02",
+      "selectedBoardPocketColor": "red",
+      "boardVisible": true,
+      "bothHandsVisible": true,
+      "boardColorMatchesVisiblePhase": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-009s.png",
+      "sha256": "8f02c3ddaa4e1c4da41dab40eeb5694d7973132e2d90176a3b46d0b61ed2f58c",
+      "bytes": 333349,
+      "directWholeImageReviewed": true,
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:01",
+      "selectedBoardPocketColor": "red",
+      "boardVisible": true,
+      "bothHandsVisible": true,
+      "boardColorMatchesVisiblePhase": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-012s.png",
+      "sha256": "5353b003a3ddd6b5eb5528e5a05f9b5cc1141b10b9f4f04da8e872049575fb1a",
+      "bytes": 305273,
+      "directWholeImageReviewed": true,
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:58",
+      "selectedBoardPocketColor": "red",
+      "boardVisible": true,
+      "bothHandsVisible": true,
+      "boardColorMatchesVisiblePhase": false
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-013s.png",
+      "sha256": "c4a8be88e7d28f49e7754f19cb30d181fc883d31743af2aa2de924673eedf09e",
+      "bytes": 303368,
+      "directWholeImageReviewed": true,
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:57",
+      "selectedBoardPocketColor": "red",
+      "boardVisible": true,
+      "bothHandsVisible": true,
+      "boardColorMatchesVisiblePhase": false
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-014s.png",
+      "sha256": "4ba1d3457b83d7f9fc38b3e963e3144a6438e6f106dfff9d58b041b287d2e317",
+      "bytes": 304958,
+      "directWholeImageReviewed": true,
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:56",
+      "selectedBoardPocketColor": "red",
+      "boardVisible": true,
+      "bothHandsVisible": true,
+      "boardColorMatchesVisiblePhase": false
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-015s.png",
+      "sha256": "962f5987a4892509283aa8e2422fa73673ebe555a21f8ecaf8ea78f683d36309",
+      "bytes": 302179,
+      "directWholeImageReviewed": true,
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:55",
+      "selectedBoardPocketColor": "red",
+      "boardVisible": true,
+      "bothHandsVisible": true,
+      "boardColorMatchesVisiblePhase": false
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-016s.png",
+      "sha256": "c81c5d79fbb71f255fc465b9cb08da7476ca82230bd652188bd7e5f4640869fd",
+      "bytes": 303628,
+      "directWholeImageReviewed": true,
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:54",
+      "selectedBoardPocketColor": "red",
+      "boardVisible": true,
+      "bothHandsVisible": true,
+      "boardColorMatchesVisiblePhase": false
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action/elapsed-017s.png",
+      "sha256": "88f4fc1c1715824cecb19be34d0187a9d8641a0777d5cdc25c32560e5662ddcc",
+      "bytes": 304838,
+      "directWholeImageReviewed": true,
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:53",
+      "selectedBoardPocketColor": "red",
+      "boardVisible": true,
+      "bothHandsVisible": true,
+      "boardColorMatchesVisiblePhase": false
+    }
+  ],
+  "finding": "Reviewed Hang frames 007\u2013009 show red selected pockets and both hands. Every reviewed Rest frame 012\u2013017 shows red selected pockets despite Rest and NEXT HOLD PREVIEW, a visible color mismatch. Both hands are visible in all reviewed Hang and Rest frames. Ready frames 001\u2013003 show neither board nor hands.",
+  "limitations": [
+    "Only these 13 whole images were independently inspected for this report; frames 004\u2013006,010\u2013011,018 and later frames are outside scope.",
+    "No CPU/material trace, runtime interaction, pixel measurement, cropping, segmentation, or inferred continuous-state claim.",
+    "Filename elapsed values and visible countdown labels are not exact semantic mutation timestamps.",
+    "Full action tail was not reviewed for this report; no complete-run pass or causal mechanism claimed."
+  ],
+  "completeRunPassClaimed": false,
+  "humanAcceptanceClaimed": false
+}

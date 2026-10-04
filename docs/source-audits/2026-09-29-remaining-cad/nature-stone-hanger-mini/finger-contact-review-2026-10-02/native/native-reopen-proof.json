@@ -1,0 +1,204 @@
+{
+  "passed": true,
+  "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+  "bodyEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "manifestIdentical": true,
+  "initial": {
+    "badStates": {},
+    "bodyVolume": 115393.28351132889,
+    "cutoffMm": 19.82417332780598,
+    "nativeLipZMax": 19.82417332780598,
+    "pressureAreaMm2": 1524.059875078127,
+    "pressureZMin": 19.82417332780598,
+    "exportArea": 22499.998372909842,
+    "bodyArea": 22499.99837290986,
+    "pressureOffBodyArea": 0.0
+  },
+  "originalContactEquality": {
+    "nature_wood": {
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0,
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0
+    },
+    "nature_stone": {
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0,
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0
+    },
+    "nature_jug": {
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0,
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0
+    },
+    "nature_pinch": {
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0,
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0
+    },
+    "nature_jug_ends": {
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0,
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0
+    }
+  },
+  "mouthRadiusEdit": {
+    "property": "CavityMouthRound.Edges",
+    "before": [
+      [
+        37,
+        1.5,
+        1.5
+      ],
+      [
+        38,
+        1.5,
+        1.5
+      ],
+      [
+        39,
+        1.5,
+        1.5
+      ],
+      [
+        40,
+        1.5,
+        1.5
+      ],
+      [
+        41,
+        1.5,
+        1.5
+      ],
+      [
+        42,
+        1.5,
+        1.5
+      ],
+      [
+        43,
+        1.5,
+        1.5
+      ],
+      [
+        44,
+        1.5,
+        1.5
+      ]
+    ],
+    "edited": [
+      [
+        37,
+        1.55,
+        1.55
+      ],
+      [
+        38,
+        1.55,
+        1.55
+      ],
+      [
+        39,
+        1.55,
+        1.55
+      ],
+      [
+        40,
+        1.55,
+        1.55
+      ],
+      [
+        41,
+        1.55,
+        1.55
+      ],
+      [
+        42,
+        1.55,
+        1.55
+      ],
+      [
+        43,
+        1.55,
+        1.55
+      ],
+      [
+        44,
+        1.55,
+        1.55
+      ]
+    ],
+    "state": {
+      "badStates": {},
+      "bodyVolume": 115388.2082638364,
+      "cutoffMm": 19.880812438732843,
+      "nativeLipZMax": 19.880812438732843,
+      "pressureAreaMm2": 1510.9134863995853,
+      "pressureZMin": 19.880812438732843,
+      "exportArea": 22496.820244596896,
+      "bodyArea": 22496.820244596904,
+      "pressureOffBodyArea": 0.0
+    }
+  },
+  "afterMouthRestore": {
+    "badStates": {},
+    "bodyVolume": 115393.28350952138,
+    "cutoffMm": 19.82417332780598,
+    "nativeLipZMax": 19.82417332780598,
+    "pressureAreaMm2": 1524.059875078127,
+    "pressureZMin": 19.82417332780598,
+    "exportArea": 22499.998372789785,
+    "bodyArea": 22499.9983727898,
+    "pressureOffBodyArea": 0.0
+  },
+  "mouthRestoreBodyEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "grooveRadiusEdit": {
+    "property": "LeftFrontOpenGroove.Radius",
+    "beforeMm": 1.7,
+    "editedMm": 1.8,
+    "state": {
+      "badStates": {},
+      "bodyVolume": 115365.95048687907,
+      "cutoffMm": 19.82417332780598,
+      "nativeLipZMax": 19.82417332780598,
+      "pressureAreaMm2": 1523.624709743688,
+      "pressureZMin": 19.82417332780598,
+      "exportArea": 22505.069675610222,
+      "bodyArea": 22505.069675610233,
+      "pressureOffBodyArea": 0.0
+    }
+  },
+  "restoredBodyEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "restored": {
+    "badStates": {},
+    "bodyVolume": 115393.28350952138,
+    "cutoffMm": 19.82417332780598,
+    "nativeLipZMax": 19.82417332780598,
+    "pressureAreaMm2": 1524.059875078127,
+    "pressureZMin": 19.82417332780598,
+    "exportArea": 22499.998372789785,
+    "bodyArea": 22499.9983727898,
+    "pressureOffBodyArea": 0.0
+  },
+  "editSaved": false,
+  "sourceBytesUnchanged": true
+}

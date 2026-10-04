@@ -1,0 +1,96 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "mode": "prior",
+  "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+  "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+  "selectedContactID": "pinch-60",
+  "nodeIDs": [
+    "nature_pinch"
+  ],
+  "probeAuthoring": "Operator-selected native z=+24/-24 mm centers of the exterior front/back wood rails, independent of the chosen band cutoffs; native coordinates, not pixels.",
+  "probes": [
+    {
+      "name": "front upper finger pad",
+      "modelPointM": [
+        0,
+        0.024,
+        0.015
+      ],
+      "distanceFromFullExteriorM": 3.352761211022908e-10,
+      "distanceFromPinchM": 0.0034999998509884,
+      "coveredWithin1Micrometre": false
+    },
+    {
+      "name": "rear upper finger pad",
+      "modelPointM": [
+        0,
+        0.024,
+        -0.015
+      ],
+      "distanceFromFullExteriorM": 3.352761315106312e-10,
+      "distanceFromPinchM": 0.003499999850988407,
+      "coveredWithin1Micrometre": false
+    },
+    {
+      "name": "front lower finger pad",
+      "modelPointM": [
+        0,
+        -0.024,
+        0.015
+      ],
+      "distanceFromFullExteriorM": 3.3527613151063123e-10,
+      "distanceFromPinchM": 0.003499999850988407,
+      "coveredWithin1Micrometre": false
+    },
+    {
+      "name": "rear lower finger pad",
+      "modelPointM": [
+        0,
+        -0.024,
+        -0.015
+      ],
+      "distanceFromFullExteriorM": 3.352761211022905e-10,
+      "distanceFromPinchM": 0.0034999998509884,
+      "coveredWithin1Micrometre": false
+    }
+  ],
+  "excludedProbes": [
+    {
+      "name": "middle rear wood panel",
+      "modelPointM": [
+        0,
+        0,
+        -0.015
+      ],
+      "distanceFromFullExteriorM": 3.3527612630646075e-10,
+      "distanceFromPinchM": 0.027499999850988385
+    },
+    {
+      "name": "granite front face",
+      "modelPointM": [
+        0,
+        -0.013,
+        0.015
+      ],
+      "distanceFromFullExteriorM": 3.352761297759077e-10,
+      "distanceFromPinchM": 0.014499999850988396,
+      "existingContactID": "granite-edge-15",
+      "distanceFromExistingContactM": 3.352761297759077e-10
+    },
+    {
+      "name": "wood cavity back wall",
+      "modelPointM": [
+        0,
+        0,
+        0
+      ],
+      "distanceFromFullExteriorM": 3.0555900139724785e-18,
+      "distanceFromPinchM": 0.029999999329447746,
+      "existingContactID": "wood-edge-15",
+      "distanceFromExistingContactM": 3.0555900139724785e-18
+    }
+  ],
+  "manufacturerFingerFootprintClaim": false,
+  "runtimeVerified": false
+}

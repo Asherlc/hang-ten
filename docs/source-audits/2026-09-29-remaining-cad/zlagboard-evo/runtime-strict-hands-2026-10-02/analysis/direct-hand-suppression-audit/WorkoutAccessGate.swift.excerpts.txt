@@ -1,0 +1,54 @@
+27: 
+28:     var body: some View {
+29:         Group {
+30:             if launchesOnAppear {
+31:                 if showsWorkout, let pendingPlan {
+32:                     WorkoutView(plan: pendingPlan, initialWeight: pendingInitialWeight)
+33:                 } else {
+34:                     Color.clear
+35:                 }
+36:             } else {
+37:                 Button(action: requestLaunch) {
+38:                     label
+39:                 }
+40:                 .navigationDestination(isPresented: $showsWorkout) {
+41:                     if let pendingPlan {
+42:                         WorkoutView(plan: pendingPlan, initialWeight: pendingInitialWeight)
+43:                     }
+44:                 }
+45:             }
+46:         }
+47:         .sheet(isPresented: $showsPaywall, onDismiss: continuePendingLaunchIfAllowed) {
+48:             LifetimeUnlockPaywall(
+49:                 purchaseManager: store.purchaseManager,
+50:                 onAccessChange: accessDecisionDidChange
+51:             )
+52:         }
+53:         .task {
+54:             guard launchesOnAppear, pendingPlan == nil else { return }
+55:             requestLaunch()
+56:         }
+57:     }
+58: 
+59:     private func requestLaunch() {
+60:         pendingPlan = plan
+61:         pendingInitialWeight = initialWeight
+62: 
+
+97:         ) {
+98:             EmptyView()
+99:         }
+100:     }
+101: }
+102: 
+103: struct LifetimeUnlockPaywall: View {
+104:     @Environment(\.dismiss) private var dismiss
+105:     @ObservedObject var purchaseManager: PurchaseManager
+106:     let onAccessChange: () -> Void
+107:     @State private var cancellationMessage: String?
+108: 
+109:     var body: some View {
+110:         NavigationStack {
+111:             ScrollView {
+112:                 VStack(spacing: 24) {
+113:                     Image(systemName: "infinity.circle.fill")

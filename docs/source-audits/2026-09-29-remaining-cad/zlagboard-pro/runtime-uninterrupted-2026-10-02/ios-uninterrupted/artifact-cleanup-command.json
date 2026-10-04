@@ -1,0 +1,16 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "rm",
+    "-rf",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/runtime-resume-2026-10-02/ios-uninterrupted/DerivedData-placid-badger-cad-second-half",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/runtime-resume-2026-10-02/ios-uninterrupted/build-placid-badger-cad-second-half.xcresult",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/runtime-resume-2026-10-02/ios-uninterrupted/tests-placid-badger-cad-second-half.xcresult"
+  ],
+  "boundSeconds": 120.0,
+  "timedOut": false,
+  "interruptedBySignal": null,
+  "exitStatus": 0,
+  "elapsedSeconds": 0.012501583005359862
+}

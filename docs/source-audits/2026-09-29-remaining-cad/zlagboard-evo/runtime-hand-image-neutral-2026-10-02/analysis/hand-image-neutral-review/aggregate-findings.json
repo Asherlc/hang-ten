@@ -1,0 +1,18 @@
+{
+  "scope": "Static neutral hand-image feasibility only",
+  "creamFindings": {
+    "path": "findings.json",
+    "sha256": "3d3bcf049785c235cd7823d9b455c375757fd87855a7540afc524b20b1825669"
+  },
+  "darkFindings": {
+    "path": "dark-backing-findings.json",
+    "sha256": "513f28fd436c338b1fbdddeb68720524c7a62c1e0e3708ddab73c3326f34a64a"
+  },
+  "staticPairReadabilityPassed": true,
+  "wholeLightDarkCompositionPassed": true,
+  "appearanceEquivalentToLive": false,
+  "historicalOrientationOnlyAppearanceFailurePreserved": true,
+  "workoutPassed": false,
+  "productionReady": false,
+  "humanAccepted": false
+}

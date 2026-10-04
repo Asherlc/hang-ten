@@ -1,0 +1,27 @@
+{
+  "reviewer": "/root",
+  "scope": "Parent reported direct whole-image inspection of these two images only.",
+  "captures": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-landscape/phase-1-preview-plus-1.png",
+      "sha256": "f89720fdecdc4cbb8b0698254ee99732f4c7b54ce09b4328bd3e9cceec94c8b6",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "timer": "02:59",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-landscape/phase-2-active-plus-5.png",
+      "sha256": "ab8874f90ad3ea34e1fbe6fabf6d61636ac0e368b99fe902db441c0c47a37d67",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "timer": "00:02",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    }
+  ],
+  "limitation": "Source branch observation is not proof of framework host destruction."
+}

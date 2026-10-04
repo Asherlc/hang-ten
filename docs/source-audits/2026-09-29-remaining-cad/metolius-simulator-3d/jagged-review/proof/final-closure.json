@@ -1,0 +1,42 @@
+{
+  "verifiedAtUTC": "2026-10-01T15:25:25.582985+00:00",
+  "status": "passed",
+  "owner": "placid-badger",
+  "sourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+  "modelSHA256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+  "descriptorSHA256": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d",
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "unrelatedPackageFilesUnchanged": 203,
+  "unchangedRawManifest": true,
+  "firstSevenHumanReviewFilesUnchanged": {
+    "aelith-cyclops-011": "bfaaee30076f228cd5b948a694b8d76fff3a540cc08401ca0d73d346d076b454",
+    "captain-fingerfood-dual": "2c7d657333eb420ffffe9ddca78daa00d82de0ddd79a73f0323dfd8ab6af6b84",
+    "captain-fingerfood-unlevel": "af02e6725f388c530ddb50b9b77e7b284df166992cba3abbad2abad0c0069c70",
+    "frictitious-nug": "f8b4880a0877036af0d8bcf7dc8e5c6fc651b5ad2affde95eba8c1c68ca96ac1",
+    "frictitious-port-a-board": "147cbed50888c4056c05229a48ccebc2a0a5ff155b72da0b0ad6c61c3484acec",
+    "mammut-diamond-finger": "50f98d46c897cfee12ee4ef9fb2372654b9fb7d04be04b4120bb1f344857dd69",
+    "metolius-contact": "715b50284f9207b8c115604e04d4a1a757962033a7011cf51d58a8b23fbdc5b7"
+  },
+  "migrationOnlyQueueEntries": 21,
+  "onlyUVOptInSource": [
+    "Hangboards/metolius-simulator-3d/metolius-simulator-3d.FCStd"
+  ],
+  "deliveryModels": 58,
+  "lockedFiles": 135,
+  "deliveryDigest": "c24ef14e8b83e68824313e7350f9aaf4420ba07f12477483196f7b16883cd3b1",
+  "pythonSummary": "706 passed, 11 skipped in 130.44s (0:02:10)",
+  "iOSPassed": 1278,
+  "iOSSkipped": 3,
+  "separateNativeRegressionCases": 9,
+  "packageParity": {
+    "bundledPackages": 64,
+    "modelPackages": 58,
+    "ODRModelAssets": 60
+  },
+  "retainedPacketHashesVerified": true,
+  "shownImageHashesVerified": true,
+  "exactOwnedSimulatorDeleted": "5DBF7406-93EC-474A-9320-931FC57FA394",
+  "derivedDataAndTestBundleRemoved": true,
+  "humanAcceptance": "pending revised #8",
+  "nextBoardNotAdvanced": true
+}

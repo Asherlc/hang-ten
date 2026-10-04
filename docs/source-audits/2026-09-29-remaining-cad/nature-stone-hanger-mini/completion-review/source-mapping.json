@@ -1,0 +1,18 @@
+{
+  "evidenceRoot": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini",
+  "sourcesRegister": "sources.json",
+  "sourceFacts": {
+    "fourContactsAndDepths": "NS-1 manufacturer text; four original factual contact records unchanged. Granite15mm, incutwood15mm, pinch60mm, smooth pull-up jug with no numerical depth.",
+    "frontFit": "NS-2 evidence/front-original.jpg and evidence/in-use-original.jpg: visual fit of lower granite against wood rail, approved whole images reviewed without pixel measurements.",
+    "sideRouting": "evidence/oblique-original.jpg: two exposed vertical grooves and transverse return; no hidden connection asserted."
+  },
+  "operatorEstimates": {
+    "seat": "82x15x11mm analytic lower rail box placed(-41,-12.5,-21), then subtract exact unchanged GraniteInsert; restores only34.1056932663mm3 to existing rail. Accepted exterior, groove voids, stone dimensions and placement unchanged.",
+    "finish": "Existing runtime display surfaceFinish wood and graniteNodeIDs nature_stone. No USDZ materials.",
+    "cord": "110mm lead lengths and15mm starting anchor offset are compact display estimates, not manufacturer measurements. Native solver computes final routes and heights. Cross-return terminals and40mm segment allowance unchanged.",
+    "jugPose": "Existing broad recessed wall pitched -90 degrees about model X so its normal is world up and existing15mm rim supplies positive lip. Operator-selected display adaptation, not sourced hand placement or angle. Existing contact and solid shape unchanged.",
+    "solverSection": "Supported planeAxis [0,1,0] follows native vertical groove axis; anchor section with aStar and0.6mm generation margin. Final fullradius continuous clearance and tautness gates unchanged."
+  },
+  "compileMetadata": "nature_pinch.HangTenDepthAxis=Z added; directly validates sourced60mm opposition span instead of legacy fallback Y25. No shape or manifest change from this field.",
+  "exposedStoneOwnership": "nature_stone retains original top plane and adds exposed front plus upper corner round faces. HangTenUseBodyTriangles=true ensures exact shared body tessellation partition; no duplicate/coincident wood face."
+}

@@ -1,0 +1,272 @@
+3: enum TrainReviewDestination: Hashable {
+4:     case plan
+5:     case settings
+6:     case boardDetail
+7:     case boardPicker
+8: 
+9:     static func initial(environment: [String: String]) -> Self? {
+10:         #if DEBUG
+11:         if environment["HANGTEN_REVIEW_PLAN"] == "1" {
+12:             return .plan
+13:         }
+14:         if environment["HANGTEN_REVIEW_SETTINGS"] == "1"
+15:             || environment["HANGTEN_REVIEW_HEALTH"] == "1"
+16:             || environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1" {
+17:             return .settings
+18:         }
+19:         if environment["HANGTEN_REVIEW_BOARD_DETAIL"] == "1" {
+20:             return .boardDetail
+21:         }
+22:         if environment["HANGTEN_REVIEW_BOARD_PICKER"] == "1" {
+23:             return .boardPicker
+24:         }
+25:         #endif
+26:         return nil
+27:     }
+
+30: struct TrainView: View {
+31:     @EnvironmentObject private var store: AppStore
+32:     @EnvironmentObject private var deepLinkManager: DeepLinkManager
+33:     @State private var showsDeepLinkedBoardDetail = false
+34:     @State private var showsDeepLinkedWorkout = false
+35:     @State private var deepLinkedWorkoutPlan: TrainingPlan?
+36:     private let onBrowsePlans: () -> Void
+37:     @State private var reviewDestination = TrainReviewDestination.initial(
+38:         environment: ProcessInfo.processInfo.environment
+39:     )
+40:     @State private var showsFreeWorkout = false
+41: 
+42:     init(onBrowsePlans: @escaping () -> Void) {
+43:         self.onBrowsePlans = onBrowsePlans
+44:     }
+45: 
+46:     var body: some View {
+47:         NavigationStack {
+48:             ScrollView(showsIndicators: false) {
+49:                 VStack(alignment: .leading, spacing: 22) {
+50:                     selectedBoardCard
+51:                     favoritesSection
+52:                 }
+53:                 .padding(.horizontal, 20)
+54:                 .padding(.top, 18)
+55:                 .padding(.bottom, 30)
+56:             }
+57:             .background(Color.hangBackground)
+58:             .toolbar {
+59:                 ToolbarItem(placement: .topBarTrailing) {
+60:                     NavigationLink {
+61:                         AppSettingsView()
+62:                     } label: {
+63:                         Image(systemName: "gearshape")
+64:                     }
+65:                     .accessibilityLabel("Settings")
+66:                     .accessibilityIdentifier("train.settings")
+67:                 }
+68:             }
+69:             .navigationDestination(item: $reviewDestination) { destination in
+70:                 switch destination {
+71:                 case .plan:
+72:                     if let plan = reviewPlan {
+73:                         PlanDetailView(plan: plan)
+74:                     } else {
+75:                         noCompatiblePlan
+76:                     }
+77:                 case .settings:
+78:                     AppSettingsView()
+79:                 case .boardDetail:
+80:                     BoardDetailView(
+81:                         board: store.selectedBoard,
+82:                         initialHoldID: ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_HOLD_ID"]
+83:                     )
+84:                 case .boardPicker:
+85:                     BoardPickerView()
+86:                 }
+87:             }
+88:             .navigationDestination(isPresented: $showsDeepLinkedBoardDetail) {
+89:                 BoardDetailView(board: store.selectedBoard, initialHoldID: deepLinkManager.pendingHoldID)
+90:                     .onAppear { deepLinkManager.clearPending() }
+91:             }
+92:             .navigationDestination(isPresented: $showsDeepLinkedWorkout) {
+93:                 if let plan = deepLinkedWorkoutPlan {
+94:                     WorkoutAccessGate(plan: plan)
+95:                 } else {
+96:                     noCompatiblePlan
+97:                 }
+98:             }
+99:             .onChange(of: deepLinkManager.pendingBoardID, initial: true) { _, boardID in
+100:                 guard boardID != nil else { return }
+101:                 showsDeepLinkedBoardDetail = true
+102:             }
+103:             .onChange(of: deepLinkManager.pendingWorkoutPlanID, initial: true) { _, planID in
+104:                 guard let planID else { return }
+105:                 guard let plan = store.plans.first(where: { $0.id == planID })
+106:                         ?? PlanCatalog.plan(id: planID) else {
+107:                     deepLinkManager.clearPending()
+108:                     return
+109:                 }
+110:                 if let boardID = plan.boardID,
+111:                    let board = BoardCatalog.all.first(where: { $0.id == boardID }) {
+112:                     store.selectBoard(board)
+113:                 }
+114:                 switch PlanStartAvailabilityPolicy.availability(
+115:                     for: plan,
+116:                     metadata: store.metadata(for: plan)
+117:                 ) {
+118:                 case .available:
+119:                     break
+120:                 case .unavailable:
+121:                     deepLinkManager.clearPending()
+122:                     return
+123:                 }
+124:                 deepLinkedWorkoutPlan = plan
+125:                 showsDeepLinkedWorkout = true
+126:                 deepLinkManager.clearPending()
+127:             }
+128:             .sheet(isPresented: $showsFreeWorkout) {
+129:                 FreeWorkoutStartSheet(isPresented: $showsFreeWorkout)
+130:                     .environmentObject(store)
+131:             }
+132:         }
+133:     }
+134: 
+135:     private var reviewPlan: TrainingPlan? {
+136:         store.featuredPlan
+137:     }
+138: 
+139:     private var selectedBoardCard: some View {
+140:         VStack(alignment: .leading, spacing: 16) {
+141:             BoardMapView(board: store.selectedBoard)
+142:                 .cardPreviewStyle()
+143: 
+144:             VStack(alignment: .leading, spacing: 5) {
+145:                 SectionLabel(title: "Your board")
+146:                 Text(store.selectedBoard.name)
+147:                     .font(.system(size: 21, weight: .bold, design: .rounded))
+148:                     .foregroundStyle(Color.hangInk)
+149:                 if let dimensions = store.selectedBoard.dimensions {
+150:                     Text(dimensions)
+151:                         .font(.system(size: 13, weight: .medium, design: .rounded))
+152:                         .foregroundStyle(Color.hangMuted)
+153:                 }
+154:             }
+155: 
+156:             HStack(spacing: 16) {
+157:                 Link(destination: store.selectedBoard.productURL) {
+158:                     Label("Product page", systemImage: "arrow.up.right")
+159:                 }
+160: 
+161:                 Spacer()
+162: 
+163:                 NavigationLink("Change board") {
+164:                     BoardPickerView()
+165:                 }
+166:                 .accessibilityIdentifier("train.changeBoard")
+167: 
+168:                 NavigationLink("View hold specs") {
+169:                     BoardDetailView(board: store.selectedBoard)
+170:                 }
+171:                 .accessibilityIdentifier("train.boardDetails")
+172:             }
+173:             .font(.system(size: 13, weight: .bold, design: .rounded))
+174:             .foregroundStyle(Color.hangGreenDark)
+175:         }
+176:         .hangCard()
+177:         .accessibilityIdentifier("train.board")
+
+180:     @ViewBuilder
+181:     private var favoritesSection: some View {
+182:         if store.favoritePlans.isEmpty {
+183:             VStack(alignment: .leading, spacing: 17) {
+184:                 SectionLabel(title: "Favorites")
+185:                 Text("Favorite routines from Plans to keep them handy here.")
+186:                     .font(.system(size: 16, weight: .bold, design: .rounded))
+187:                     .foregroundStyle(Color.hangInk)
+188:                 Text("Your favorites will appear here when they are compatible with your selected board.")
+189:                     .font(.system(size: 13, weight: .medium, design: .rounded))
+190:                     .foregroundStyle(Color.hangMuted)
+191:                 Button("Browse plans", action: onBrowsePlans)
+192:                     .buttonStyle(.borderedProminent)
+193:                     .tint(.hangGreenDark)
+194:                     .accessibilityIdentifier("train.browsePlans")
+195:                 Button("Start Free Workout") {
+196:                     showsFreeWorkout = true
+197:                 }
+198:                 .buttonStyle(.borderedProminent)
+199:                 .tint(.hangGreenDark)
+200:                 .accessibilityIdentifier("train.freeWorkout")
+201:             }
+202:             .hangCard()
+203:         } else {
+204:             VStack(alignment: .leading, spacing: 12) {
+205:                 SectionLabel(title: "Favorites")
+206:                 ForEach(store.favoritePlans) { plan in
+207:                     FavoritePlanCard(
+208:                         plan: plan,
+209:                         board: store.board(for: plan),
+210:                         labels: store.metadata(for: plan).athleteFacingLabels,
+211:                         isFavorite: store.isFavorite(plan),
+212:                         isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
+213:                     ) {
+214:                         store.toggleFavorite(plan)
+215:                     }
+216:                 }
+217:                 Button("Start Free Workout") {
+218:                     showsFreeWorkout = true
+219:                 }
+220:                 .buttonStyle(.borderedProminent)
+221:                 .tint(.hangGreenDark)
+222:                 .accessibilityIdentifier("train.freeWorkout")
+223:             }
+224:         }
+
+282:     var body: some View {
+283:         ScrollView(showsIndicators: false) {
+284:             VStack(alignment: .leading, spacing: isCompactHeight ? compactContentSpacing : 20) {
+285:                 VStack(alignment: .leading, spacing: isCompactHeight ? 2 : 5) {
+286:                     SectionLabel(title: board.manufacturer)
+287:                     Text(board.name)
+288:                         .font(.system(size: isCompactHeight ? 22 : 28, weight: .bold, design: .rounded))
+289:                         .foregroundStyle(Color.hangInk)
+290:                     if let dimensions = board.dimensions {
+291:                         Text(dimensions)
+292:                             .font(.system(size: 14, weight: .medium, design: .rounded))
+293:                             .foregroundStyle(Color.hangMuted)
+294:                     }
+295:                 }
+296:                 .overlay {
+297:                     GeometryReader { summary in
+298:                         Color.clear.preference(
+299:                             key: BoardDetailCompactMetricsPreferenceKey.self,
+300:                             value: BoardDetailCompactMetrics(summaryHeight: summary.size.height)
+301:                         )
+302:                     }
+303:                     .allowsHitTesting(false)
+304:                 }
+305: 
+306:                 BoardDetailMapView(
+307:                     board: board,
+308:                     selectedHoldID: $selectedHoldID,
+309:                     selectedPositionID: $selectedPositionID,
+310:                     maximumMapHeight: compactMaximumMapHeight,
+311:                     selectedHoldContent: selectedHold.map { AnyView(selectedHoldCard($0)) }
+312:                 )
+313:                 .hangCard(padding: isCompactHeight ? compactCardPadding : 14)
+
+558: private struct BoardPickerCard: View {
+559:     let board: BoardRevision
+560:     let isSelected: Bool
+561:     let isFavorite: Bool
+562:     let onSelect: () -> Void
+563:     let onToggleFavorite: () -> Void
+564: 
+565:     var body: some View {
+566:         VStack(alignment: .leading, spacing: 12) {
+567:             ZStack(alignment: .topTrailing) {
+568:                 Button(action: onSelect) {
+569:                     VStack(alignment: .leading, spacing: 14) {
+570:                         BoardMapView(board: board, isDisplayOnly: true)
+571:                             .cardPreviewStyle()
+572: 
+573:                         HStack(alignment: .top, spacing: 12) {
+574:                             VStack(alignment: .leading, spacing: 4) {
+575:                                 Text(board.name)

@@ -1,0 +1,66 @@
+{
+  "LeftOuterBore": {
+    "nativeMouthsMM": [
+      [
+        17,
+        -74.6606055596,
+        48
+      ],
+      [
+        17,
+        -1.3393944404,
+        48
+      ]
+    ],
+    "axisLengthMM": 73.3212111192,
+    "method": "measure_channel_spines.py channel_samples + station_on_spine on native Part::Cylinder"
+  },
+  "LeftInnerBore": {
+    "nativeMouthsMM": [
+      [
+        31,
+        -74.6606055596,
+        48
+      ],
+      [
+        31,
+        -1.3393944404,
+        48
+      ]
+    ],
+    "axisLengthMM": 73.3212111192,
+    "method": "measure_channel_spines.py channel_samples + station_on_spine on native Part::Cylinder"
+  },
+  "RightInnerBore": {
+    "nativeMouthsMM": [
+      [
+        469,
+        -74.6606055596,
+        48
+      ],
+      [
+        469,
+        -1.3393944404,
+        48
+      ]
+    ],
+    "axisLengthMM": 73.3212111192,
+    "method": "measure_channel_spines.py channel_samples + station_on_spine on native Part::Cylinder"
+  },
+  "RightOuterBore": {
+    "nativeMouthsMM": [
+      [
+        483,
+        -74.6606055596,
+        48
+      ],
+      [
+        483,
+        -1.3393944404,
+        48
+      ]
+    ],
+    "axisLengthMM": 73.3212111192,
+    "method": "measure_channel_spines.py channel_samples + station_on_spine on native Part::Cylinder"
+  }
+}

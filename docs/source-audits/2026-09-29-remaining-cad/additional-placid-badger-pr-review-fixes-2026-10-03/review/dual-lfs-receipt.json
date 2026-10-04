@@ -1,0 +1,19 @@
+{
+  "path": "Hangboards/captain-fingerfood-dual/assets/primary.usdz",
+  "oidSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+  "localSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+  "objectBytes": 406675,
+  "committedPointerSHA256": "8ae770f7f0ecbdb286fe97ec0aceb6f2f73a292612661700f5ad68cf620bb497",
+  "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe\nsize 406675\n",
+  "gitAttributes": {
+    "diff": "lfs",
+    "merge": "lfs",
+    "text": "unset",
+    "filter": "lfs"
+  },
+  "localObjectIsZIP": true,
+  "ignoredByCurrentPatterns": false,
+  "checkIgnoreOutput": "",
+  "descriptorModelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+  "botSuggestedSHA256IsPointerTextSHA256": true
+}

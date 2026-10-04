@@ -1,0 +1,234 @@
+{
+  "copied": [
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/README.md",
+      "retained": "native/README.md",
+      "sha256": "cd8358454b6c8934a11afbcf255851f8dfec50131aa6c5ee7d9f6dabdf6341a4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/bearing-invariants.json",
+      "retained": "native/bearing-invariants.json",
+      "sha256": "425e34593146fb1002379caef49bc62ea344cbdf631ff2546996df2fe8559252"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/before-after-front-side-top.png",
+      "retained": "native/before-after-front-side-top.png",
+      "sha256": "878167fb54b4b6fac0157f26a8b5d119eac1ba9aa3269c58873d7e619d70e931"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/candidate-authoring.json",
+      "retained": "native/candidate-authoring.json",
+      "sha256": "18aaf85cd4bb3d936fa91fc91033b4201f16e74cc83a7965a8e020f8b5637000"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/candidate-mesh.json",
+      "retained": "native/candidate-mesh.json",
+      "sha256": "396e742960f0bec8e4c8288b003c7fd7386b12aafc9a6855ef978621f4f0d73c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/candidate-verification.json",
+      "retained": "native/candidate-verification.json",
+      "sha256": "90bf9fea5a3a39db65a4961e2a3968bba48ce007623e72e807bd341ed7c408ee"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/native-collider.json",
+      "retained": "native/native-collider.json",
+      "sha256": "b28691bb2c358ee354435fd64935ff4e1aa719343c95c3aabad543528ae85211"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/native-front.png",
+      "retained": "native/native-front.png",
+      "sha256": "635a17625329f4759c19e422889ac34111b9d009a356a1cb0374143330ac8207"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/native-oblique.png",
+      "retained": "native/native-oblique.png",
+      "sha256": "710cce07f6eb5d742c802bc347a138c7f0c0980f4d3f25e44c6368fe52bc7e4d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/native-rear-oblique.png",
+      "retained": "native/native-rear-oblique.png",
+      "sha256": "b7d87044aca2acd6e344651afea92b4c1c926e32677cead3ed76c0f631dc618e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/native-rear.png",
+      "retained": "native/native-rear.png",
+      "sha256": "dd4527182598034d48e8a15580fe1a490fd2895d7a9cd0214517b29f0d675b16"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/native-side.png",
+      "retained": "native/native-side.png",
+      "sha256": "c374083b427651b10450420449ae299587c64bbcd1307f45b225ab02912d7d3c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/native-six-whole-views.png",
+      "retained": "native/native-six-whole-views.png",
+      "sha256": "e585b7d2f824a4f21543c7482b0da6ca964f4f632618da6d30f1852a606eee30"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/native-top.png",
+      "retained": "native/native-top.png",
+      "sha256": "dd45c803f2ed41ba525192fa3c6e7e972bc4e8d50e67833a01f8a76285710caa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/render-native.log",
+      "retained": "native/render-native.log",
+      "sha256": "3ed9afed28b3cff2305af83a9551b53a3d02e506cec982a7047d050aaa842a80"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/render-rounded.log",
+      "retained": "native/render-rounded.log",
+      "sha256": "3ed9afed28b3cff2305af83a9551b53a3d02e506cec982a7047d050aaa842a80"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/resource-cleanup.json",
+      "retained": "native/resource-cleanup.json",
+      "sha256": "99652c6355d88cca0da8c411e56d595e0382b5c44cf6295412e5d51dd6dc7f78"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/rounded-front.png",
+      "retained": "native/rounded-front.png",
+      "sha256": "cfb1b6e2ac1b8d55312051f8263e47277ea0f74fb05207a5ef26e5f58b227503"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/rounded-oblique.png",
+      "retained": "native/rounded-oblique.png",
+      "sha256": "6847c4f024be1e5e4d007b7ca060bd962bdd880946f8f25eaa53fe7b9ca86ae6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/rounded-rear-oblique.png",
+      "retained": "native/rounded-rear-oblique.png",
+      "sha256": "dc6a461f434e51c9035bfdef30cbe1a45e5670e4c35734c63fc5d49e38f07f7a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/rounded-rear.png",
+      "retained": "native/rounded-rear.png",
+      "sha256": "770d253ef77754b7a637be048b991e19a40e9964bd2e9d6611e2485d28c22a16"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/rounded-side.png",
+      "retained": "native/rounded-side.png",
+      "sha256": "34da93a9b5fc3558e881314080390ecd9e9756fc91f32e51355a0ac906120157"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/rounded-six-whole-views.png",
+      "retained": "native/rounded-six-whole-views.png",
+      "sha256": "81a286403aa61ef860a2643a71343a5f47440fe51dffd8f3f48c7e63e2c71011"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/rounded-top.png",
+      "retained": "native/rounded-top.png",
+      "sha256": "ff2525d37965c463e6d362192a596a9994e4d72abe89c7d1c103d6d81310d8bb"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/scratch-completion.json",
+      "retained": "native/scratch-completion.json",
+      "sha256": "2040580f4cba10cd99f5f5c779441363ef3f3b61c56199ce6a56f260de104e55"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/verify-candidate.log",
+      "retained": "native/verify-candidate.log",
+      "sha256": "27b272eb11dd6396cc4f0a50e5ef65139c205a548c82dad9a7dff79acc29d0fc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/promotion-2026-10-02/manifest-after.json",
+      "retained": "promotion/manifest-after.json",
+      "sha256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/promotion-2026-10-02/manifest-before.json",
+      "retained": "promotion/manifest-before.json",
+      "sha256": "ee8f779269fe40604f56fb4068066ab3f18e7c5cd217d5e9ca2e8178a77907aa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/promotion-2026-10-02/metadata-geometry-bridge.json",
+      "retained": "promotion/metadata-geometry-bridge.json",
+      "sha256": "c26fd846bb198fb60efe89c9b61408b2a123d353804a851e98b410d2bc2859e8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/promotion-2026-10-02/root-shape-review.json",
+      "retained": "promotion/root-shape-review.json",
+      "sha256": "89c913c5104268cd3aadf33c04206a3df4e702e434f1b69995bf441d8bac9a7b"
+    }
+  ],
+  "scratchProvenance": [
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/author-rounded.py",
+      "sha256": "f98c2a2e08e2375bc3a28df74972c4fc9c97cf381ec90b99be67969b9ec45e9d",
+      "bytes": 5297,
+      "reason": "Native source/intermediate or throwaway authoring script retained in owned scratch; canonical finalsource and provenance retained."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/render-native.py",
+      "sha256": "9cd8a93357dda17bd3c7487daf82c3e77048fd862dfe1dddbc9fd6cccc5d37e2",
+      "bytes": 3121,
+      "reason": "Native source/intermediate or throwaway authoring script retained in owned scratch; canonical finalsource and provenance retained."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/render-rounded.py",
+      "sha256": "b18c004c589dbe77db259e9c59773b6bbdab3ce708f4023c0f701813b4fba606",
+      "bytes": 3123,
+      "reason": "Native source/intermediate or throwaway authoring script retained in owned scratch; canonical finalsource and provenance retained."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/rounded.20261001-125815.FCBak",
+      "sha256": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
+      "bytes": 984600,
+      "reason": "Native source/intermediate or throwaway authoring script retained in owned scratch; canonical finalsource and provenance retained."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/rounded.FCStd",
+      "sha256": "0a03a478d96ad7690cabd91c13cd3e4978434c964bc13442e4407e5a9e27994b",
+      "bytes": 1389661,
+      "reason": "Native source/intermediate or throwaway authoring script retained in owned scratch; canonical finalsource and provenance retained."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/verify-candidate.py",
+      "sha256": "33dae4ea7bb0d693b6033d6c268354c3052d673bbbf779c73372065880e07c0d",
+      "bytes": 3166,
+      "reason": "Native source/intermediate or throwaway authoring script retained in owned scratch; canonical finalsource and provenance retained."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/promotion-2026-10-02/delivery-lock-before.json",
+      "sha256": "8e88252ce6d59b0bbbeb38f24f04f0250cc8a3594b8519bb385bbb094d8a47d7",
+      "bytes": 166027,
+      "reason": "Native source/intermediate or throwaway authoring script retained in owned scratch; canonical finalsource and provenance retained."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/promotion-2026-10-02/historical-proofs-before.json",
+      "sha256": "ff1c4e0718b787d61c59d20b414c151b44c2e6798ec643cafc4aba2f30ee95f0",
+      "bytes": 2698,
+      "reason": "Native source/intermediate or throwaway authoring script retained in owned scratch; canonical finalsource and provenance retained."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/promotion-2026-10-02/out-of-scope-before.json",
+      "sha256": "d59a0e9a45d4204705990d47b3dfd76b0806ca8d4ace95049ec1103458375503",
+      "bytes": 44804,
+      "reason": "Native source/intermediate or throwaway authoring script retained in owned scratch; canonical finalsource and provenance retained."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/promotion-2026-10-02/prior.FCStd",
+      "sha256": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
+      "bytes": 984600,
+      "reason": "Native source/intermediate or throwaway authoring script retained in owned scratch; canonical finalsource and provenance retained."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/promotion-2026-10-02/queue-before.json",
+      "sha256": "0c19e3680b0907e01af5b80a2204fbc2e47e7554c6a57db822492d0537fe77d9",
+      "bytes": 33685,
+      "reason": "Native source/intermediate or throwaway authoring script retained in owned scratch; canonical finalsource and provenance retained."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/promotion-2026-10-02/review-draft.md",
+      "sha256": "2aeadd7bb4216ec11d6191098bffa1279bb73e6fb276c8aaf64b89389ebd4c47",
+      "bytes": 2170,
+      "reason": "Native source/intermediate or throwaway authoring script retained in owned scratch; canonical finalsource and provenance retained."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/promotion-2026-10-02/zlagboard-pro.FCStd",
+      "sha256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "bytes": 1412874,
+      "reason": "Native source/intermediate or throwaway authoring script retained in owned scratch; canonical finalsource and provenance retained."
+    }
+  ]
+}

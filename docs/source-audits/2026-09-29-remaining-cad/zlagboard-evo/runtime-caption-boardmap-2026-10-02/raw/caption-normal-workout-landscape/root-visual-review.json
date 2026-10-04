@@ -1,0 +1,54 @@
+{
+  "screenshots": [
+    {
+      "file": "active-settled.png",
+      "sha256": "12e918c6190d82bc332fb3a57eefd9ee3ac9fb0539e38dc03e39870a3951153f",
+      "wholeImageOpenedByRoot": true,
+      "visibleUI": "Step 1 Hang 00:05",
+      "visibleHighlight": "red",
+      "visualVerdict": "correct"
+    },
+    {
+      "file": "following-rest.png",
+      "sha256": "14e7a4f09ecc7870155e58747f5784d8d99fac8e84d40fcd911c255532b6a523",
+      "wholeImageOpenedByRoot": true,
+      "visibleUI": "Step 2 Rest 03:00",
+      "visibleHighlight": "red",
+      "visualVerdict": "early stale color; actual mutation timing must be correlated"
+    },
+    {
+      "file": "following-rest-settled.png",
+      "sha256": "a875000ec1c3d8b569060cef233c365ca6c63d980d0fd924979608d401267388",
+      "wholeImageOpenedByRoot": true,
+      "visibleUI": "Step 2 Rest 02:52",
+      "visibleHighlight": "blue",
+      "visualVerdict": "correct settled rest"
+    },
+    {
+      "file": "next-active-timed-0.png",
+      "sha256": "dc0821a4506d380a4697ddc317ea024c4d81618fa36de1f452bcf413c12837f7",
+      "wholeImageOpenedByRoot": true,
+      "visibleUI": "Get Ready 00:02",
+      "visibleHighlight": "blue",
+      "visualVerdict": "correct preview"
+    },
+    {
+      "file": "next-active-timed-1.png",
+      "sha256": "16bbfe5b3839e6ea2b21df7867df19b39bdde8c3c244e0821a41e55f9dc0fa58",
+      "wholeImageOpenedByRoot": true,
+      "visibleUI": "Step 3 Hang 00:07",
+      "visibleHighlight": "blue",
+      "visualVerdict": "wrong for visible active phase"
+    },
+    {
+      "file": "next-active-timed-2.png",
+      "sha256": "2e0cc983ca6fdbedf33517bfbd7015d50c79311135934937c7880ebb13a6f3b0",
+      "wholeImageOpenedByRoot": true,
+      "visibleUI": "Step 3 Hang 00:05",
+      "visibleHighlight": "blue",
+      "visualVerdict": "wrong for visible active phase"
+    }
+  ],
+  "fullWorkflowVerdict": "FAIL: next active Hang remains blue. Settled Rest is correct; do not classify the whole Rest interval as failed.",
+  "scope": "Visual review; CPU/application/scene brackets are separate diagnostic evidence. Workflow includes AX observation and visible Skip; not touch-free."
+}

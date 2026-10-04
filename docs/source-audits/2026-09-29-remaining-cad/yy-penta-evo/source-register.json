@@ -1,0 +1,39 @@
+{
+  "package": "yy-penta-evo",
+  "publisher": "YY Vertical",
+  "status": "Source set approved; native CAD authored. See per-board geometry and validation artifacts for completion gates.",
+  "observations": "Two byte-exact approved originals show front/reverse of one asymmetric unit and close-up rounded recesses. Seven slots map to 14 contacts through two identical unreflected instances. Two strands wrap the upper band through the existing central opening; there is no evidence for a small hidden channel. Exact original binary URLs remain unknown; the product page is a reference URL only.",
+  "sources": [
+    {
+      "path": "evidence/yy-penta-evo-front-reverse.webp",
+      "publisher": "YY Vertical",
+      "sourceURL": "https://www.yyvertical.com/en/products/penta-evo",
+      "binaryURL": null,
+      "sha256": "83b95adc297d634659654f6f27bb43ebae1c53b171b747568ac5e022754e6571",
+      "bytes": 124425,
+      "supports": "PE-RESTORED full front/reverse original: two exterior strands around top band and through central ring; binary URL unknown, product URL is reference only",
+      "retention": "git 8f2bfcffd^:docs/source-audits/2026-09-13-model-cord-snapshots/yy-penta-evo-front-reverse.webp",
+      "approvalStatus": "approved exact set in batch-04 design"
+    },
+    {
+      "path": "evidence/yy-penta-evo-close-up.webp",
+      "publisher": "YY Vertical",
+      "sourceURL": "https://www.yyvertical.com/en/products/penta-evo",
+      "binaryURL": null,
+      "sha256": "1107039ef6d2877cd68a293683c72ec93f3166633199d45484f58c13b48aa2fc",
+      "bytes": 1542797,
+      "supports": "PE-RESTORED intact close-up original: uninterrupted lower band and retaining concavities; binary URL unknown, product URL is reference only",
+      "retention": "git 8f2bfcffd^:docs/source-audits/2026-09-13-model-cord-snapshots/yy-penta-evo-close-up.webp",
+      "approvalStatus": "approved exact set in batch-04 design"
+    }
+  ],
+  "approval": {
+    "state": "historical exact set reused",
+    "source": "docs/superpowers/specs/2026-09-20-hangboards-batch-04-3d-migration-design.md"
+  },
+  "constraints": [
+    "Images are visual evidence only; no tracing, segmentation, alignment, masking, cropping, or pixel-derived geometry.",
+    "CAD remains a display approximation with native analytic feature history.",
+    "Cord connectivity must be supported before geometry or topology is changed."
+  ]
+}

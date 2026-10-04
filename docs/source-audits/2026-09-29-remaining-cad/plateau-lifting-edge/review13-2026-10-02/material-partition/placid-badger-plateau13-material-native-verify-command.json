@@ -1,0 +1,23 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+    "--user-cfg",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-native-verify-tmp/placid-badger-FreeCAD-user.cfg",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-verify-restored-native.py"
+  ],
+  "startedUTC": "2026-10-02T19:01:23.938992+00:00",
+  "timeoutSeconds": 120,
+  "ownedTemporaryDirectory": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-native-verify-tmp",
+  "ownedExtraDirectories": [],
+  "status": "pass",
+  "ownedProcessGroup": 22187,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "ownedExtraDirectoriesAbsent": [],
+  "exitCode": 0,
+  "elapsedSeconds": 1.4434580830056802,
+  "logSHA256": "07fc2e27662b4ccbd820ba4faeec257ce61c38f52952e26c1c11dfe66fe6e4c9"
+}

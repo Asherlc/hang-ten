@@ -1,0 +1,119 @@
+{
+  "phaseFinalsIndividuallyViewed": true,
+  "expectedColors": [
+    "neutral wood",
+    "red",
+    "blue",
+    "red",
+    "blue"
+  ],
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-0-clear-plus-0.25.png",
+      "sha256": "4bf522219bee5bca8bb491208a3a7c02094abc0910a9f72988a671434812aa8f",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-0-clear-plus-1.png",
+      "sha256": "92082cd3b8eade02e2742650e53db7d405a421978e75a945ac2caf86d209289d",
+      "equalsPhaseFinal": false
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-0-clear-plus-3.png",
+      "sha256": "4bf522219bee5bca8bb491208a3a7c02094abc0910a9f72988a671434812aa8f",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-0-clear-plus-7.png",
+      "sha256": "4bf522219bee5bca8bb491208a3a7c02094abc0910a9f72988a671434812aa8f",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-1-active-plus-0.25.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-1-active-plus-1.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-1-active-plus-3.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-1-active-plus-7.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-2-preview-plus-0.25.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-2-preview-plus-1.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-2-preview-plus-3.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-2-preview-plus-7.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-3-active-plus-0.25.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-3-active-plus-1.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-3-active-plus-3.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-3-active-plus-7.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-4-preview-plus-0.25.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-4-preview-plus-1.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-4-preview-plus-3.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "equalsPhaseFinal": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-4-preview-plus-7.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "equalsPhaseFinal": true
+    }
+  ],
+  "G2Limit": "Final capture lacks after-end CPU bracket; before/during blue exists; no full20 bracket claim",
+  "distinctImageReview": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f2/phase-0-clear-plus-1.png",
+    "wholeImageViewed": true,
+    "board": "correct neutral wood",
+    "artifact": "far-left black capsule; cause unproven"
+  }
+}

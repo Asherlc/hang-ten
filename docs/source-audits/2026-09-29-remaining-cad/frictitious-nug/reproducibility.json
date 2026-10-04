@@ -1,0 +1,28 @@
+{
+  "verification": "Fresh pinned FreeCAD process compiled each presentation from current native source; runtime output compared against checked-in package assets.",
+  "sourceSHA256Before": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+  "sourceSHA256After": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+  "sourceUnchanged": true,
+  "command": "Tools/HangboardCAD/verify_reproducible.py --package frictitious-nug --freecad /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd --extra-python-path .context/placid-badger/pxr311 --keep-rebuild .context/placid-badger/cad-raster-boards/reproducibility",
+  "verifierSHA256": "5dba947d12ad284d286e7c87682d7d09010ae41c4b66e8f96755574b6033690a",
+  "result": {
+    "assetMatches": true,
+    "bytes": 762613,
+    "committedAssetSHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+    "descriptorBindsCommittedAsset": true,
+    "descriptorMatches": true,
+    "package": "frictitious-nug",
+    "presentations": [
+      {
+        "assetMatches": true,
+        "bytes": 762613,
+        "committedAssetSHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+        "descriptorBindsCommittedAsset": true,
+        "descriptorMatches": true,
+        "presentationID": "primary",
+        "rebuiltAssetSHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f"
+      }
+    ],
+    "rebuiltAssetSHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f"
+  }
+}

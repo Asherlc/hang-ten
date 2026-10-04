@@ -1,0 +1,15 @@
+{
+  "timestampUTC": "2026-10-02T06:04:44.379622+00:00",
+  "reviewer": "root Astra",
+  "sourceSHA256": "632889aa0b46571b1e6f52786d0014ff1a204b97e4cabbf85563b2b8cb9eb7b0",
+  "change": "One selection observer outside GeometryReader consumes explicit current scene/contact IDs/mode/position; make/update frame only. Identity equality includes scene replacement.",
+  "checks": [
+    "No competing make/update highlight writes remain",
+    "No mode-based view remount or asset reload",
+    "Pose changes preserve original camera/projection invalidation and unavailable reporting",
+    "RootView and scene/material/loader implementation unchanged",
+    "Hosted clock fixture now retains constant label geometry; direct-state fixture asserts a nonzero orbit remains unchanged"
+  ],
+  "limitations": "Underlying framework callback mechanism not proven by diagnostic runs, which showed correct output. Actual uninstrumented app failures justify testing this synchronization boundary. Normal app A/B visible transitions still pending.",
+  "humanAccepted": false
+}

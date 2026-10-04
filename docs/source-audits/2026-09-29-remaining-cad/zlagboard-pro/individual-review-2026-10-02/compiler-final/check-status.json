@@ -1,0 +1,12 @@
+{
+  "stage": "check",
+  "childExitCode": 0,
+  "reportExists": true,
+  "sourceSHA256Before": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+  "sourceSHA256After": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+  "sourceUnchanged": true,
+  "elapsedSeconds": 315.6473004170002,
+  "innerStatusExists": true,
+  "innerExitCode": 0,
+  "passed": true
+}

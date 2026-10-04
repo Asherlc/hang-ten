@@ -1,0 +1,92 @@
+{
+  "workspaceOwner": "placid-badger-cad-second-half",
+  "scope": "Read-only diagnosis; no app/test/source edits, refs, build or Simulator resources created",
+  "auditedRefs": {
+    "parent": "4d010a76003a24c8f6d22f02e5b159eea1ee7d92",
+    "own": "1ead8834f744fcaba2ce4d53b07545841b2d6927"
+  },
+  "exactSameAcrossRefs": [
+    "failing test body",
+    "HangTen/Models/LiveRopeController.swift",
+    "HangTen/Models/RopeDynamicsSolver.swift",
+    "Hangboards/clavellium-training-block/assets/primary.physics.json",
+    "Hangboards/clavellium-training-block/suspension.json"
+  ],
+  "locations": {
+    "test": "HangTenTests/BoardModelRealityTests.swift:580",
+    "predicateTimeout": "HangTenTests/BoardModelRealityTests.swift:594",
+    "sceneAdvance": "HangTen/Models/BoardModelRealityTypes.swift:1022",
+    "sceneDeliveryGate": "HangTen/Models/BoardModelRealityTypes.swift:940",
+    "sceneApplyFrame": "HangTen/Models/BoardModelRealityTypes.swift:958",
+    "workerSettling": "HangTen/Models/LiveRopeController.swift:58",
+    "controllerDeliveryGate": "HangTen/Models/LiveRopeController.swift:126",
+    "numericalSettling": "HangTen/Models/RopeDynamicsSolver.swift:226",
+    "numericalSettledCriterion": "HangTen/Models/RopeDynamicsSolver.swift:221",
+    "independentControllerTest": "HangTenTests/LiveRopeControllerTests.swift:89"
+  },
+  "retainedFailures": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/xctest-integration.stdout",
+      "lines": [
+        3491,
+        3492,
+        3493,
+        3494,
+        3495
+      ],
+      "totalSeconds": 75.261,
+      "waitSeconds": 30,
+      "frameNotifications": 0
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/xctest-affected.stdout",
+      "lines": [
+        3119,
+        3120,
+        3121,
+        3122,
+        3123
+      ],
+      "totalSeconds": 73.502,
+      "waitSeconds": 30,
+      "frameNotifications": 0
+    }
+  ],
+  "additionalEvidence": {
+    "noLiveTestFailureInRequestedPostMainRaw": "Only shared-test-pivot-reservation-2026-10-03.json mentions test; substantive failure logs retained under main-sync evidence",
+    "neighborLiveInitialLoadSeconds": 45.588,
+    "collisionMesh": {
+      "vertices": 5096,
+      "triangles": 10200
+    },
+    "initialFrame": "projectInitialization explicitly returns settled=false",
+    "settledCriterion": "orientation arrived && simulatedTime>=0.5 && maximumSpeed<0.001 && boardDisplacement<0.0001",
+    "settledLoopBound": 1200,
+    "pauseRace": "No worker advance occurred before pause/configure/resume; current identity is captured after all invalidations",
+    "rendererBoundary": "Test loads scene without installing RealityView/SceneEvents; it explicitly advances controller once"
+  },
+  "hypothesis": {
+    "status": "Unconfirmed; requires focused runtime evidence",
+    "primary": "Expensive numerical settle remains running after30 wall seconds; debug asset initial preparation alone takes~45 seconds. Physical loop needs~120 or more fixed steps and up to1200.",
+    "alternatives": [
+      "Solver throws numerical failure hidden by predicate-only expectation",
+      "Worker returns but identity/generation rejects delivery; source idle sequence provides no apparent reason",
+      "Accepted frame mesh update throws; would trigger scene onLiveFailure"
+    ],
+    "cannotClaim": "No root cause or fix confirmed from old timeout logs alone"
+  },
+  "smallestDiagnosticGates": [
+    "Run unchanged exact failing method alone on root-owned isolated Simulator; preserve raw xcresult/log/status.",
+    "Observe scene onLiveFailure and exact error; observe worker settling start/end elapsed time and per-step progress, plus geometry metrics if numerical solve throws.",
+    "If worker returns, log identity accept and scene generation/selection accept before mesh application and callback.",
+    "Compare independent controller ReduceMotion test using same fixture/target; both failures localize below RealityKit rendering.",
+    "Test one hypothesis with one targeted change; preserve geometry limits, exact material length, topology and existing accepted-frame contract."
+  ],
+  "testImprovementGates": [
+    "Add defer scene.stopLiveRopes() immediately after load so early throws clean up exact scene controller.",
+    "Register failure callback before advance; opaque settled predicate alone cannot distinguish numerical failure from timeout.",
+    "Drive expectation from accepted settled callback while keeping exactly-one publication and camera-framing assertions.",
+    "Do not extend timeout as final repair absent measured convergence/cost evidence; do not replace native physics fixture or loosen metrics simply to pass."
+  ],
+  "hardware": "No physical iPhone available; all proposed verification is Simulator/host only"
+}

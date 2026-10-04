@@ -1,0 +1,254 @@
+{
+  "schemaVersion": 2,
+  "entries": [
+    {
+      "presentationID": "depth-18mm",
+      "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "suspension": {
+        "type": "cadRoutedCord",
+        "bodyNodeID": "plateau_body",
+        "strands": [
+          {
+            "id": "curl-loop",
+            "kind": "loop",
+            "restLength": 0.42,
+            "radius": 0.003,
+            "material": "matteCord",
+            "provenance": "Retained exact manufacturer front and oblique photos support one continuous loop through the exposed ends of the open lower curl. Authorized refreshed maker HTML PL-1 explicitly specifies 6 mm Edelrid PES cord (3 mm radius); unknown loop length remains a 420 mm display estimate. Native inner-floor bearing stations are derived from the actual curl solid at cord radius plus 0.2 mm solver clearance; the native solver generates all paths and settled height."
+          }
+        ],
+        "anchor": {
+          "offsetFromBoardBounds": [0, -0.15, 0.003001399],
+          "visibility": "invisible",
+          "provenance": "Invisible downward support is a display estimate. Its depth aligns with the native curl bearing plane, derived from the native curl axis minus descriptor bounds center; nativeRoutes solves the full route and settled height. No supplied support or manufacturer length claim."
+        },
+        "canonicalPoses": {
+          "depth-18mm": {
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "translation": [0, 0.072342332, 0],
+            "camera": {
+              "viewDirection": [0, 0.3, -1],
+              "fitPadding": 0.12
+            },
+            "wrappedRoutes": {
+              "curl-loop": [
+                [-0.052956415, -0.041224587, 0.012],
+                [-0.053138513, -0.040624289, 0.012],
+                [-0.0532, -0.04, 0.012],
+                [-0.0532, -0.037, 0.012],
+                [-0.053138513, -0.036375711, 0.012],
+                [-0.052956415, -0.035775413, 0.012],
+                [-0.052660703, -0.035222175, 0.012],
+                [-0.052262742, -0.034737258, 0.012],
+                [-0.051777825, -0.034339297, 0.012],
+                [-0.051224587, -0.034043585, 0.012],
+                [-0.050624289, -0.033861487, 0.012],
+                [-0.05, -0.0338, 0.012],
+                [-0.0468, -0.033799999, 0.012],
+                [0.0, -0.033799999, 0.012],
+                [0.0468, -0.033799999, 0.012],
+                [0.05, -0.0338, 0.012],
+                [0.050624289, -0.033861487, 0.012],
+                [0.051224587, -0.034043585, 0.012],
+                [0.051777825, -0.034339297, 0.012],
+                [0.052262742, -0.034737258, 0.012],
+                [0.052660703, -0.035222175, 0.012],
+                [0.052956415, -0.035775413, 0.012],
+                [0.053138513, -0.036375711, 0.012],
+                [0.0532, -0.037, 0.012],
+                [0.0532, -0.04, 0.012],
+                [0.053138513, -0.040624289, 0.012],
+                [0.052956415, -0.041224587, 0.012]
+              ]
+            }
+          }
+        }
+      },
+      "ropeSolver": {
+        "method": "nativeRoutes",
+        "clearance": 0.0002,
+        "terminalsByStrandID": {
+          "curl-loop": {
+            "points": [
+              [-0.046799999999999994, -0.033799999, 0.012],
+              [0.046799999999999994, -0.033799999, 0.012]
+            ],
+            "planeNormal": [0, 0, 1]
+          }
+        },
+        "supportDirection": -1
+      }
+    },
+    {
+      "presentationID": "depth-15mm",
+      "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+      "suspension": {
+        "type": "cadRoutedCord",
+        "bodyNodeID": "plateau_body",
+        "strands": [
+          {
+            "id": "curl-loop",
+            "kind": "loop",
+            "restLength": 0.42,
+            "radius": 0.003,
+            "material": "matteCord",
+            "provenance": "Retained exact manufacturer front and oblique photos support one continuous loop through the exposed ends of the open lower curl. Authorized refreshed maker HTML PL-1 explicitly specifies 6 mm Edelrid PES cord (3 mm radius); unknown loop length remains a 420 mm display estimate. Native inner-floor bearing stations are derived from the actual curl solid at cord radius plus 0.2 mm solver clearance; the native solver generates all paths and settled height."
+          }
+        ],
+        "anchor": {
+          "offsetFromBoardBounds": [0, -0.15, 0.003001399],
+          "visibility": "invisible",
+          "provenance": "Invisible downward support is a display estimate. Its depth aligns with the native curl bearing plane, derived from the native curl axis minus descriptor bounds center; nativeRoutes solves the full route and settled height. No supplied support or manufacturer length claim."
+        },
+        "canonicalPoses": {
+          "depth-15mm": {
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "translation": [0, 0.072342332, 0],
+            "camera": {
+              "viewDirection": [0, 0.3, -1],
+              "fitPadding": 0.12
+            },
+            "wrappedRoutes": {
+              "curl-loop": [
+                [-0.052956415, -0.041224587, 0.012],
+                [-0.053138513, -0.040624289, 0.012],
+                [-0.0532, -0.04, 0.012],
+                [-0.0532, -0.037, 0.012],
+                [-0.053138513, -0.036375711, 0.012],
+                [-0.052956415, -0.035775413, 0.012],
+                [-0.052660703, -0.035222175, 0.012],
+                [-0.052262742, -0.034737258, 0.012],
+                [-0.051777825, -0.034339297, 0.012],
+                [-0.051224587, -0.034043585, 0.012],
+                [-0.050624289, -0.033861487, 0.012],
+                [-0.05, -0.0338, 0.012],
+                [-0.0468, -0.033799999, 0.012],
+                [0.0, -0.033799999, 0.012],
+                [0.0468, -0.033799999, 0.012],
+                [0.05, -0.0338, 0.012],
+                [0.050624289, -0.033861487, 0.012],
+                [0.051224587, -0.034043585, 0.012],
+                [0.051777825, -0.034339297, 0.012],
+                [0.052262742, -0.034737258, 0.012],
+                [0.052660703, -0.035222175, 0.012],
+                [0.052956415, -0.035775413, 0.012],
+                [0.053138513, -0.036375711, 0.012],
+                [0.0532, -0.037, 0.012],
+                [0.0532, -0.04, 0.012],
+                [0.053138513, -0.040624289, 0.012],
+                [0.052956415, -0.041224587, 0.012]
+              ]
+            }
+          }
+        }
+      },
+      "ropeSolver": {
+        "method": "nativeRoutes",
+        "clearance": 0.0002,
+        "terminalsByStrandID": {
+          "curl-loop": {
+            "points": [
+              [-0.046799999999999994, -0.033799999, 0.012],
+              [0.046799999999999994, -0.033799999, 0.012]
+            ],
+            "planeNormal": [0, 0, 1]
+          }
+        },
+        "supportDirection": -1
+      }
+    },
+    {
+      "presentationID": "depth-10mm",
+      "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+      "suspension": {
+        "type": "cadRoutedCord",
+        "bodyNodeID": "plateau_body",
+        "strands": [
+          {
+            "id": "curl-loop",
+            "kind": "loop",
+            "restLength": 0.42,
+            "radius": 0.003,
+            "material": "matteCord",
+            "provenance": "Retained exact manufacturer front and oblique photos support one continuous loop through the exposed ends of the open lower curl. Authorized refreshed maker HTML PL-1 explicitly specifies 6 mm Edelrid PES cord (3 mm radius); unknown loop length remains a 420 mm display estimate. Native inner-floor bearing stations are derived from the actual curl solid at cord radius plus 0.2 mm solver clearance; the native solver generates all paths and settled height."
+          }
+        ],
+        "anchor": {
+          "offsetFromBoardBounds": [0, -0.15, 0.003001399],
+          "visibility": "invisible",
+          "provenance": "Invisible downward support is a display estimate. Its depth aligns with the native curl bearing plane, derived from the native curl axis minus descriptor bounds center; nativeRoutes solves the full route and settled height. No supplied support or manufacturer length claim."
+        },
+        "canonicalPoses": {
+          "depth-10mm": {
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "translation": [0, 0.072342332, 0],
+            "camera": {
+              "viewDirection": [0, 0.3, -1],
+              "fitPadding": 0.12
+            },
+            "wrappedRoutes": {
+              "curl-loop": [
+                [-0.052956415, -0.041224587, 0.012],
+                [-0.053138513, -0.040624289, 0.012],
+                [-0.0532, -0.04, 0.012],
+                [-0.0532, -0.037, 0.012],
+                [-0.053138513, -0.036375711, 0.012],
+                [-0.052956415, -0.035775413, 0.012],
+                [-0.052660703, -0.035222175, 0.012],
+                [-0.052262742, -0.034737258, 0.012],
+                [-0.051777825, -0.034339297, 0.012],
+                [-0.051224587, -0.034043585, 0.012],
+                [-0.050624289, -0.033861487, 0.012],
+                [-0.05, -0.0338, 0.012],
+                [-0.0468, -0.033799999, 0.012],
+                [0.0, -0.033799999, 0.012],
+                [0.0468, -0.033799999, 0.012],
+                [0.05, -0.0338, 0.012],
+                [0.050624289, -0.033861487, 0.012],
+                [0.051224587, -0.034043585, 0.012],
+                [0.051777825, -0.034339297, 0.012],
+                [0.052262742, -0.034737258, 0.012],
+                [0.052660703, -0.035222175, 0.012],
+                [0.052956415, -0.035775413, 0.012],
+                [0.053138513, -0.036375711, 0.012],
+                [0.0532, -0.037, 0.012],
+                [0.0532, -0.04, 0.012],
+                [0.053138513, -0.040624289, 0.012],
+                [0.052956415, -0.041224587, 0.012]
+              ]
+            }
+          }
+        }
+      },
+      "ropeSolver": {
+        "method": "nativeRoutes",
+        "clearance": 0.0002,
+        "terminalsByStrandID": {
+          "curl-loop": {
+            "points": [
+              [-0.046799999999999994, -0.033799999, 0.012],
+              [0.046799999999999994, -0.033799999, 0.012]
+            ],
+            "planeNormal": [0, 0, 1]
+          }
+        },
+        "supportDirection": -1
+      }
+    }
+  ]
+}

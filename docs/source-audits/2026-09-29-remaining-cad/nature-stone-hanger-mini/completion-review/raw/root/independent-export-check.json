@@ -1,0 +1,30 @@
+{
+  "status": "pass",
+  "owner": "placid-badger",
+  "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+  "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+  "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+  "semanticNodes": 5,
+  "triangles": 28842,
+  "materials": 0,
+  "boundMeshMaterials": 0,
+  "archiveMembers": [
+    "stage.usdc"
+  ],
+  "duplicateTriangles": 0,
+  "planarBoundaryChecks": {
+    "front": {
+      "graniteTriangles": 134,
+      "otherPlanarTriangles": 376,
+      "graniteAreaMM2": 776.5612478698549,
+      "actualMeshOverlapMM2": 0.0
+    },
+    "top": {
+      "graniteTriangles": 2,
+      "otherPlanarTriangles": 0,
+      "graniteAreaMM2": 1110.0000239536168,
+      "actualMeshOverlapMM2": 0.0
+    }
+  },
+  "graniteVertexMaximumNativeErrorMM": 1.7962569620788761e-06
+}

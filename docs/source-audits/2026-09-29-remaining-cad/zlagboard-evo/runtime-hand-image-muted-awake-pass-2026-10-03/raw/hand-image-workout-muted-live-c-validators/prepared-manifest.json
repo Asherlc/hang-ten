@@ -1,0 +1,231 @@
+{
+  "runtimeExecuted": false,
+  "validatorsExecuted": false,
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "cc1f35ffe0c7b2234e460110e3dd415dfec6fe15d5050f9d118a6ab209909766",
+      "bytes": 1176
+    },
+    {
+      "path": "adaptation-provenance.json",
+      "sha256": "be9d7a8c2cd53bcd10ac39c5494ef51d9128f06e9ea578d34964dca4cc64fe9f",
+      "bytes": 8642
+    },
+    {
+      "path": "branch_schema.py",
+      "sha256": "74c46aba9d095dbf2bdf65b5d5393cb81e245956c68386924973130a1c7646f3",
+      "bytes": 12042
+    },
+    {
+      "path": "branch_schema.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "clock_stability.py",
+      "sha256": "e86d95445bb738727d143a237dd92c38c97d410e6f7be8eab385ba48736abc3a",
+      "bytes": 3397
+    },
+    {
+      "path": "live/check-constructors.py",
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+      "bytes": 2828
+    },
+    {
+      "path": "live/check-constructors.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "live/check-cpu-semantics.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "bytes": 3958
+    },
+    {
+      "path": "live/check-cpu-semantics.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "live/check-frames.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "bytes": 3729
+    },
+    {
+      "path": "live/check-frames.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "live/check-muted-current-hands.py",
+      "sha256": "b0f2ebd0ca718d844d086b554bc343efd0447be6176e77f45085a199d628c0ea",
+      "bytes": 7268
+    },
+    {
+      "path": "live/check-muted-current-hands.py.diff",
+      "sha256": "d0bf6450259333b3a358319aaf46d666eadce07867175efffbb573318739502d",
+      "bytes": 800
+    },
+    {
+      "path": "live/check-navigation.py",
+      "sha256": "b40d058e1ed61a7b2ed2015088741ea50a5400847ff6db13e55b075aa5384d35",
+      "bytes": 4416
+    },
+    {
+      "path": "live/check-navigation.py.diff",
+      "sha256": "2b6c44a335ac73af4cea716b237be8b122bb9986ecdfb3ddda43c2312976c124",
+      "bytes": 3605
+    },
+    {
+      "path": "live/check-ownership.py",
+      "sha256": "371400a4f776ed085ed881183d7d625fb59ece799fe96c8abd6f568d4a309e93",
+      "bytes": 10073
+    },
+    {
+      "path": "live/check-ownership.py.diff",
+      "sha256": "0dfdfccd3ff704749fa6c2ba0d6d08732ed012e3400872415002146637bc4375",
+      "bytes": 5372
+    },
+    {
+      "path": "live/check-real-hands.py",
+      "sha256": "cea1d2f8a03d3b415491de8e3d27494dc46be0199c61da47369262392291127c",
+      "bytes": 5037
+    },
+    {
+      "path": "live/check-real-hands.py.diff",
+      "sha256": "1acbbc184c2032eff6cead5eefe09c531c3870f86a41baeb656b95f1955482fc",
+      "bytes": 710
+    },
+    {
+      "path": "live/check-sync-counters.py",
+      "sha256": "66324478259ac133e18e266cabd73446e9afef5ab2210a7f5541153d47cd5ca6",
+      "bytes": 5355
+    },
+    {
+      "path": "live/check-sync-counters.py.diff",
+      "sha256": "bdba10332fbe853d16f7a9463e91f1ba61238b2136e125de6db8aea0f901fe39",
+      "bytes": 1028
+    },
+    {
+      "path": "live/check-weak-hand-census.py",
+      "sha256": "10f1a25125fbc45c1d4428dc26284cf6e725b1be6224457cb9056bec73a9a89e",
+      "bytes": 6600
+    },
+    {
+      "path": "live/check-weak-hand-census.py.diff",
+      "sha256": "bb30b1a799991d942c8e468236c28235845e3f8a65cd0dd74630d949c9a45d6f",
+      "bytes": 734
+    },
+    {
+      "path": "marker-schema.json",
+      "sha256": "a4a9065f46d9a8f018dfd47ccf5a13c9d9c8eb4b6b22554e701e3fa678d23707",
+      "bytes": 10441
+    },
+    {
+      "path": "marker-schema.json.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "marker_correlations.py",
+      "sha256": "edfdd6480f5054c53607cc5bdbf2420feb80cf606138698a55551bb1b023a0cc",
+      "bytes": 5026
+    },
+    {
+      "path": "marker_correlations.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "muted_audio_schema.py",
+      "sha256": "538b6041f788d6903f680c2797f4be59c12278114deaf9cc9166f4a76be02948",
+      "bytes": 1609
+    },
+    {
+      "path": "muted_audio_schema.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "original/branch_schema.py",
+      "sha256": "74c46aba9d095dbf2bdf65b5d5393cb81e245956c68386924973130a1c7646f3",
+      "bytes": 12042
+    },
+    {
+      "path": "original/live/check-constructors.py",
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+      "bytes": 2828
+    },
+    {
+      "path": "original/live/check-cpu-semantics.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "bytes": 3958
+    },
+    {
+      "path": "original/live/check-frames.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "bytes": 3729
+    },
+    {
+      "path": "original/live/check-muted-current-hands.py",
+      "sha256": "e5c26ce2e1ccd88cdb87dc7fbfdd94265e8b3239bdba394af4753a459a733962",
+      "bytes": 7268
+    },
+    {
+      "path": "original/live/check-navigation.py",
+      "sha256": "3344a84fb789f513c10db76447658784e9fbdba5d89472aa16d76d3510b18d3a",
+      "bytes": 4416
+    },
+    {
+      "path": "original/live/check-ownership.py",
+      "sha256": "7f29f62292b15ac631d59da9dc70eb4f42f1725127d12db6dbe4836413870628",
+      "bytes": 10073
+    },
+    {
+      "path": "original/live/check-real-hands.py",
+      "sha256": "b2fb0be7c1fef86134bb1d743ff04edad34439d0bff7ad199d916ff05664e685",
+      "bytes": 5037
+    },
+    {
+      "path": "original/live/check-sync-counters.py",
+      "sha256": "c09bcb5c567fbacdbc2ee9d402c27f7fdd6261db6ccb1088d558e09fe6a639f2",
+      "bytes": 5355
+    },
+    {
+      "path": "original/live/check-weak-hand-census.py",
+      "sha256": "43822bafb7b6974d72caa5707cec98c19bafb640b0b740bdaf33c79309beb3ed",
+      "bytes": 6600
+    },
+    {
+      "path": "original/marker-schema.json",
+      "sha256": "a4a9065f46d9a8f018dfd47ccf5a13c9d9c8eb4b6b22554e701e3fa678d23707",
+      "bytes": 10441
+    },
+    {
+      "path": "original/marker_correlations.py",
+      "sha256": "edfdd6480f5054c53607cc5bdbf2420feb80cf606138698a55551bb1b023a0cc",
+      "bytes": 5026
+    },
+    {
+      "path": "original/muted_audio_schema.py",
+      "sha256": "538b6041f788d6903f680c2797f4be59c12278114deaf9cc9166f4a76be02948",
+      "bytes": 1609
+    },
+    {
+      "path": "original/validate.py",
+      "sha256": "c5cbff057d7e5aa53bb9b428ec34b6179d375c1c7715076458b9a99a69929894",
+      "bytes": 3990
+    },
+    {
+      "path": "validate.py",
+      "sha256": "46deea7c635a9136b3abfd8414baf7dc3e277abaee0d806909edc8dc72a40929",
+      "bytes": 4333
+    },
+    {
+      "path": "validate.py.diff",
+      "sha256": "d9249fd642e72f7484fc07c72ad4c56b0972ca017911c8b1a9852a3f02810e62",
+      "bytes": 704
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+Showing 3 of 69 activities (limited to 3)
+
+**This correction removes the evidentiary basis for prioritizing host consolidation as the repair.** My earlier FAIL/PASS/FAIL characterization was too broad: OFF passed the next-Hang checkpoint but failed the preceding Rest checkpoint. The full-workflow result was failure in all three runs.
+
+The earlier correction remains valid specifically for the next-active image. Preserving both reports and appending the explicit scope correction is appropriate.
+
+The revised evidence supports:
+
+- Correct CPU materials can coexist with stale displayed colors.
+- Visibility restoration can also fail visually, so the problem extends beyond tint.
+- Failure occurs without the **visible workout hand host**.
+- Both orthographic and perspective plain-box variants fail at next Hang, so the second host’s orthographic projection is not necessary for that failure.
+- Hidden retained hosts remain possible, but are unproven. They cannot be used to preserve the multi-host explanation by assumption.
+
+**Finish the fresh OFF capture, then stop the experiment.** Its result should be classified across the entire sequence:
+
+| Fresh OFF result | Meaning |
+|---|---|
+| Any settled phase is wrong | Confirms failure without the visible hand host |
+| Entire sequence is correct | Demonstrates variability relative to historical OFF; does not restore the old causal inference |
+| Missing phase, ambiguous image, or incomplete correspondence | Inconclusive |
+
+A full-sequence pass requires selected contacts visibly **red during initial Hang, blue during Rest preview, and red during following Hang**, with the correct contact set at each checkpoint. Missing geometry, blank views, or recovery only after interaction are failures. Review each whole screenshot individually and correlate it with the corresponding CPU state. Correctness at one checkpoint cannot compensate for another failure.
+
+**The next investigation should establish a genuinely single-host boundary before changing architecture.**
+
+First, audit the actual host lifecycle in the existing reproduction: which board and hand hosts were created, which disappeared, which entities remain attached to actual RealityKit scenes, and whether another screen or inspector remains mounted. Distinguish a retained scene object from an attached or rendering host; retention alone does not establish interference.
+
+Then, if that census cannot establish isolation, the highest-information controlled reproduction is a fresh-launch route that creates **only one board host and never constructs any hand or other RealityKit host**. Reuse the existing board loader, scene, materials, camera, and synchronization path. Drive the same contact/mode sequence without remounting or extra invalidations.
+
+Its interpretation is bounded:
+
+- **Isolated board fails:** visible sibling hosts are unnecessary. Focus on the board’s host/scene lifecycle and the rendering/presentation boundary.
+- **Isolated board passes while the workout fails:** the surrounding application context matters. Reintroduce one identified difference at a time—such as workout update delivery or retained navigation content—without assuming another renderer is responsible.
+- **Both vary:** improve reproducibility before selecting a production architecture.
+
+This is a future diagnostic recommendation, not a claim that isolation will repair anything. Physical-device confirmation remains necessary before generalizing the current Simulator findings.
+
+**Revised architecture recommendation**
+
+Defer both shared-host consolidation and hand-renderer replacement as remedies for the board blocker. They remain architectural options, but removing the visible hand host has already failed to guarantee correct board rendering.
+
+On-demand hand images still have the advantage you identified: they avoid the board collision-picking migration. However, they now lack evidence that they would fix this defect. They should not become the production repair merely because they are easier than replacing the board renderer.
+
+An explicit-submission board renderer remains a later feasibility option if an isolated board reproduces stale output, with its picking and presentation gates intact. It also remains unproven.
+
+The immediate objective is to locate the smallest context that still fails the **complete visual sequence**. That evidence should select the architecture; the current record does not yet select one.
+[User] Fresh OFF now fails both: projection-off-a-landscape active RED, Rest02:56 RED (exact historical OFF rest SHA4540ff67...), nextHang00:04 BLUE. O/P/OFF stopped at3. No reliable passing arm. Consider next information boundary a truly standalone root board host (bypass tabs/navigation/workout/hands) with explicit phase controls, plus sparse actualScene/frame/lifecycle census, before anyhostrewrite. Also device/renderer active-state/SceneEvents.Update counters could distinguish paused render loop from state ingestion; no perframe filelogging, avoid timingmask. CoreSimulator frontend may be shared across parallelworkspaces, exactUDID used but current window visibility/UIApplication state not yet established as confounder. No shared services/resources touched. Need assess, not guessingnewfix. This is analysis only. Do NOT edit, create, or delete any files. Do NOT write code.
+**Yes. A truly standalone root board host is now the best next information boundary.** With O, P, and fresh OFF all failing, there is no reliable passing arm supporting a host-count or projection-based repair. Stopping after those three runs was appropriate.
+
+Fresh OFF’s red → red → blue sequence also shows why every phase must be evaluated independently. It suggests delayed or stale presentation, but does not establish a consistent one-phase lag or its mechanism.
+
+The standalone experiment should have a deliberately narrow contract:
+
+- Launch directly into one board host, bypassing tabs, navigation, workout views, sheets, and hands entirely.
+- Reuse the existing loader, board entities, materials, camera, and synchronization path.
+- Keep one stable host and scene throughout.
+- Provide explicit Active / Preview / Clear controls, preserving the same selected contacts for the first red → blue → red comparison.
+- Make each control action produce one semantic state change. Avoid remounts, repeated assignments, camera nudges, and redraw timers.
+
+Explicit controls remove workout scheduling as a variable. **A standalone pass would therefore implicate surrounding context collectively—not identify which part caused the failure.** A later comparison could replay the original phase timing in that same standalone host.
+
+**Collect sparse evidence at three separate boundaries**
+
+| Boundary | Useful observations | What they establish |
+|---|---|---|
+| Application/environment | Exact UDID and app process; `UIApplication.applicationState`; relevant window-scene activation state; app-owned window visibility; foreground/background transitions | Whether the application was active and eligible to display during the checkpoint |
+| Entity/host ownership | Host make/disappear; actual `root.scene` and camera-scene identities; attachment ownership; ancestor enablement; entity `isActive`; viewport bounds | Whether the intended entities belong to the intended live scene |
+| Update delivery/output | In-memory `SceneEvents.Update` count and last timestamp; sparse counter snapshots around captures; complete screenshots | Whether scene updates continue, separately from whether displayed pixels change |
+
+Record those facts at control actions, lifecycle changes, and screenshot brackets—not every frame. Do not put counters in observable SwiftUI state or write files from update callbacks. Even a lightweight subscription can alter scheduling, so any apparent success needs confirmation with that subscription absent.
+
+**SceneEvents.Update cannot prove that a frame rendered or was presented.** Its diagnostic value is narrower:
+
+- Counter stops alongside inactive/background application state: investigate environment/lifecycle before scene ingestion.
+- Counter stops while the application appears active: investigate update delivery or host activation; this still does not prove a paused renderer.
+- Counter advances while CPU state is correct and pixels remain stale: simulation/update delivery continues; ingestion, rendering, or presentation remains unresolved.
+- Instrumented run passes while the uninstrumented run fails: instrumentation is a confounder, not a repair.
+
+Likewise, enabled or active entities do not certify GPU presentation.
+
+The CoreSimulator frontend deserves explicit accounting. Using the exact UDID establishes the command target; it does **not** establish which device the shared frontend displays or the app’s activation state. Record that context without changing shared services or other workspaces. Window visibility and application activation should be separate observations, not inferred from one another. A physical-device reproduction would provide an independent environment comparison when available.
+
+**Bound the decision**
+
+Use complete initial Active → Preview → following Active captures on the standalone host, with CPU-state brackets and fixed observation windows. No missing geometry, gesture-assisted recovery, or single-checkpoint success counts as a pass.
+
+- **Standalone fails while demonstrably active:** the surrounding workout and visible sibling hosts are unnecessary. Investigate the board host’s synchronization/presentation boundary before considering replacement.
+- **Standalone passes repeatedly:** reintroduce one difference at a time, beginning with the original phase-delivery schedule, then relevant application containment.
+- **Outcome depends on activation, frontend visibility, or instrumentation:** resolve that dependency before comparing rendering architectures.
+- **No stable distinction emerges:** preserve the bounded result and reassess; do not extend into an indefinite test loop.
+
+There is still no evidence-backed production host rewrite. This experiment would establish whether architecture replacement is addressing the failing boundary at all.

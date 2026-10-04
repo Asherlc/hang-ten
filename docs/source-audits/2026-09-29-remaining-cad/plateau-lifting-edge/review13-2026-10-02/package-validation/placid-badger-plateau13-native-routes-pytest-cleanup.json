@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger",
+  "jobName": "placid-badger-plateau13-native-routes-pytest",
+  "resources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-native-routes-pytest-TMP",
+      "absent": true
+    }
+  ],
+  "errors": [],
+  "remainingProcesses": [],
+  "processGroupAbsent": true,
+  "allResourcesAbsent": true,
+  "passed": true,
+  "finishedUTC": "2026-10-02T19:12:42.210215+00:00"
+}

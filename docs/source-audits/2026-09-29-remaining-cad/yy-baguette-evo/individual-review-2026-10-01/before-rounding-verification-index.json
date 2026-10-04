@@ -1,0 +1,18 @@
+{
+  "humanReview": "pending",
+  "unchangedAssets": {
+    "model": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+    "descriptor": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921"
+  },
+  "checks": {
+    "nativeReopenAndEdit": "package-checks/native-reopen.json",
+    "geometryBytePreservation": "package-checks/final/sorted-source-contract.json",
+    "nativeBearings": "orientation-audit/native-normals.json",
+    "selectedPoseCorrection": "orientation-audit/recommendation.json",
+    "contactFactsAndSource": "package-checks/pose-semantic-source-check.json",
+    "packageAndStaging": "package-checks/final/published-package-verification.json",
+    "sourceBoundCordCache": "pose-correction/final-sorted-cord-check.json",
+    "deliveryLock": "delivery-validation.json"
+  },
+  "historicalEvidence": "Original migration proofs and prior app screenshots remain unchanged outside this packet; intermediate and failed runs remain separately labeled inside it."
+}

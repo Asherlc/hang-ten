@@ -1,0 +1,83 @@
+{
+  "task": "Read-only diagnosis before any fresh #21 runtime attempt",
+  "capturedAtUTC": "Fri Oct  2 14:30:34 UTC 2026",
+  "host": {
+    "boot": "2026-10-02T04:55:32Z",
+    "macOS": "27.0.1 (26A434)",
+    "xcode": "27.0 (27A266a)",
+    "developerPath": "/Applications/Xcode.app/Contents/Developer",
+    "availableSpaceGiB": 48,
+    "coreSimulatorService": {
+      "pid": 26430,
+      "owner": "asherlc",
+      "startedUTC": "2026-10-02T05:08:42Z",
+      "identityRecord": "service-process.stdout"
+    },
+    "changedSinceLastAttempts": "No host reboot or CoreSimulator service replacement shown; no evidence of a runtime/Xcode change."
+  },
+  "runtimes": [
+    {
+      "name": "iOS 26.3",
+      "identifier": "com.apple.CoreSimulator.SimRuntime.iOS-26-3",
+      "version": "26.3.1",
+      "buildversion": "23D8133",
+      "isAvailable": true
+    },
+    {
+      "name": "iOS 26.4",
+      "identifier": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "version": "26.4",
+      "buildversion": "23E244",
+      "isAvailable": true
+    },
+    {
+      "name": "iOS 26.5",
+      "identifier": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+      "version": "26.5",
+      "buildversion": "23F77",
+      "isAvailable": true
+    }
+  ],
+  "oldOwnedResources": "Both failed #21 Simulator UUIDs absent from simctl list; no resources created during this diagnosis.",
+  "priorFailures": {
+    "26.4": {
+      "firstBoot": "180s timeout while AddressBook migration was still running; operator-bound timeout rather than OS-reported migration error",
+      "reboot": "one ordinary same-device reboot;480s timeout at Status4 Waiting on System App; black spinner; no usable AX",
+      "retainedServiceState": "SpringBoard running PID98691; runs2, last exit OS_REASON_RUNNINGBOARD. Cause not established."
+    },
+    "26.5": {
+      "firstBoot": "180s timeout while AddressBook migration was still running",
+      "reboot": "one ordinary same-device reboot;480s timeout at Status4",
+      "normalInstall": "exit0",
+      "normalLaunch": "40s timeout",
+      "screenshot": "40s timeout",
+      "getAppContainer": "20s timeout"
+    }
+  },
+  "targetedLogFindings": {
+    "raw": "owned-failure-hostlog.stdout",
+    "filter": "Only host log messages containing either exact former #21 UUID,06:40\u201307:13 local",
+    "derivedExcerpt": "selected-owned-error-lines.txt",
+    "finding": "Four pre-cleanup SimRenderServer errors say framebuffer config.json is absent and explicitly fall back to default settings. This does not prove causality. Most other failure messages coincide with our shutdown/cleanup and cannot explain the preceding startup stall."
+  },
+  "conclusion": "No concrete root cause or evidence-backed narrow repair established. Current simctl inventory calls respond promptly, runtime availability is true, and disk is not exhausted. Do not claim a fix or repeat identical180/480 recipe.",
+  "recoveryOptions": [
+    {
+      "option": "One uninterrupted first boot with a longer bound (suggest15minutes), no forced reboot at180seconds, build/install only after actualHome+AX",
+      "scope": "New exact owned Simulator only; parent authorization/gate required before creation",
+      "rationale": "Both latest first boots were interrupted during live migration, so completed uninterrupted migration was never observed. This is a changed validation condition, not a proven repair.",
+      "limitation": "Could still fail; use one attempt and retain exact timeout/cleanup, no blind loop."
+    },
+    {
+      "option": "Shared CoreSimulator service restart",
+      "scope": "Broader host/shared resource action; not performed",
+      "rationale": "Same service remained across both failures, but logs do not establish that it caused them. Root/user authorization needed if chosen; previous restart did not reliably solve historical stalls."
+    },
+    {
+      "option": "Different known working host/runtime environment",
+      "scope": "External validation environment",
+      "rationale": "Separates host startup failure from CAD/app behavior; requires available environment."
+    }
+  ],
+  "mutations": "Only workspace-owned diagnostic files written. No Simulator/build/service/process mutation, runtime reset, migration data edits, or shared cleanup."
+}

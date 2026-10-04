@@ -1,0 +1,22 @@
+{
+  "owner": "placid-badger",
+  "canonicalFiles": {
+    "nature-stone-hanger-mini.FCStd": {
+      "priorSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+      "finalSHA256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4"
+    },
+    "assets/primary.usdz": {
+      "priorSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+      "finalSHA256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
+    },
+    "assets/primary.model.json": {
+      "priorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+      "finalSHA256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+    }
+  },
+  "sidecarReadOnlySHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
+  "sidecarChangedByThisTask": false,
+  "generatedSourceOnlyManifestSHA256": "e710bb084c4061f1c5c2bd53ba7a89160796d18c7bbbd032548a1333fa97677e",
+  "noGitStageCommitPush": true,
+  "rootOwnsSuspensionAndIntegration": true
+}

@@ -1,0 +1,10 @@
+--- original/live/check-muted-current-hands.py
++++ live/check-muted-current-hands.py
+@@ -1,6 +1,6 @@
+ from pathlib import Path
+ import json,hashlib
+-P=Path('.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-b-landscape')
++P=Path('.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape')
+ read=lambda n:json.loads((P/n).read_text())
+ files=list(P.glob('events-*.jsonl'));assert len(files)==1
+ raw=files[0].read_bytes();rows=[json.loads(x) for x in raw.splitlines()];bySeq={r['sequence']:r for r in rows};env=read('launch-review-environment.json');weak=read('weak-hand-census-validation.json');hands=read('real-hand-lifetime-camera-validation.json');caps=read('captures.json');errors=[]

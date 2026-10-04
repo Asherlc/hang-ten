@@ -700,6 +700,285 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertNil(store.routines.first?.steps.first?.workRequirements.first?.contactID)
     }
 
+    func testLoadMigratesPlateauBlockerTargetsAndPreservesEditSaveRoundTrip() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer {
+            defaults.removePersistentDomain(forName: suite)
+            XCTAssertNil(defaults.persistentDomain(forName: suite))
+        }
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
+        let payload = legacyPlateauRoutinePayload()
+        let historical = try JSONDecoder().decode(CustomRoutineLibrary.self, from: payload).routines[0]
+        // Main d53c019c4 authored these exact one-hand targets, with no shape
+        // or finger-capacity constraint, before the native configurations.
+        XCTAssertEqual(historical.steps[0].workRequirements, [ContactRequirement(
+            contactID: "blocker-edge-10", kind: .edge,
+            depth: .range(.init(minimum: 10, maximum: 10)), handCapacity: 1
+        )])
+        XCTAssertEqual(historical.steps[2].workRequirements, [ContactRequirement(
+            contactID: "blocker-edge-15", kind: .edge,
+            depth: .range(.init(minimum: 15, maximum: 15)), handCapacity: 1
+        )])
+        defaults.set(payload, forKey: CustomRoutineStore.defaultKey)
+
+        let store = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+        let loaded = try XCTUnwrap(store.routines.first)
+        let expectedPayload = Data(String(decoding: payload, as: UTF8.self)
+            .replacingOccurrences(of: "blocker-edge-10", with: "edge-18")
+            .replacingOccurrences(of: "blocker-edge-15", with: "edge-18").utf8)
+        let expected = try JSONDecoder().decode(CustomRoutineLibrary.self, from: expectedPayload).routines[0]
+        XCTAssertNil(store.persistenceError)
+        XCTAssertEqual(loaded, expected, "Migration must change only the retired contact identities")
+        XCTAssertTrue(CustomRoutineValidator.issues(for: loaded, availableBoards: [board]).isEmpty)
+
+        let plan = try store.plan(for: loaded)
+        XCTAssertEqual(plan.boardID, board.id)
+        for (index, depth) in [(0, 10), (2, 15)] {
+            let step = plan.steps[index]
+            let selection = try ContactResolver.resolveSelection(step.workRequirements, step: step, board: board)
+            XCTAssertEqual(selection.contacts.map(\.id), ["edge-18"])
+            XCTAssertEqual(selection.contacts.first?.depth, .range(.init(minimum: Double(depth), maximum: Double(depth))))
+            XCTAssertEqual(selection.positionID, "depth-\(depth)mm")
+            XCTAssertEqual(WorkoutHighlightResolver.presentationID(for: step, on: board), "depth-\(depth)mm")
+        }
+        let snapshots = try WorkoutActivityRecorder().segments(for: plan, on: board).compactMap {
+            $0.target?.resolvedContactSnapshot
+        }
+        XCTAssertEqual(snapshots.map(\.contactIDs), [["edge-18"], ["edge-18"]])
+        XCTAssertEqual(snapshots.map(\.positionID), ["depth-10mm", "depth-15mm"])
+
+        var draft = CustomRoutineDraft(editing: loaded)
+        XCTAssertEqual(draft.definition(), expected)
+        draft.subtitle = "Edited saved subtitle"
+        let edited = draft.definition()
+        XCTAssertEqual(edited.steps, expected.steps)
+        XCTAssertEqual(edited.tags, expected.tags)
+        try store.save(edited)
+        let reloaded = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+        let saved = try XCTUnwrap(reloaded.routines.first)
+        XCTAssertEqual(saved, edited)
+        XCTAssertNoThrow(try reloaded.plan(for: saved))
+        XCTAssertEqual(defaults.data(forKey: CustomRoutineStore.defaultKey).map {
+            String(decoding: $0, as: UTF8.self).contains("blocker-edge-")
+        }, false)
+    }
+
+    func testLoadPinsHistoricPlateauDepthWhenTheSavedDepthIsAbsentOrBroad() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
+        let historical = try JSONDecoder().decode(
+            CustomRoutineLibrary.self, from: legacyPlateauRoutinePayload()
+        ).routines[0]
+        let depthCases: [[HoldDepth?]] = [
+            [nil, nil],
+            [.range(.init(minimum: 0, maximum: 25)), .range(.init(minimum: 0, maximum: 25))],
+            [.category(.small), .category(.medium)]
+        ]
+        for depths in depthCases {
+            let suite = ownedRoutineSuiteName()
+            let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+            defer {
+                defaults.removePersistentDomain(forName: suite)
+                XCTAssertNil(defaults.persistentDomain(forName: suite))
+            }
+            var draft = CustomRoutineDraft(editing: historical)
+            draft.steps[0].targets = [ContactRequirement(
+                contactID: "blocker-edge-10", kind: .edge, depth: depths[0], handCapacity: 1
+            )]
+            draft.steps[2].targets = [ContactRequirement(
+                contactID: "blocker-edge-15", kind: .edge, depth: depths[1], handCapacity: 1
+            )]
+            defaults.set(
+                try JSONEncoder().encode(CustomRoutineLibrary(routines: [draft.definition()])),
+                forKey: CustomRoutineStore.defaultKey
+            )
+
+            let store = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+            let loaded = try XCTUnwrap(store.routines.first)
+            draft.steps[0].targets = [ContactRequirement(
+                contactID: "edge-18", kind: .edge,
+                depth: .range(.init(minimum: 10, maximum: 10)), handCapacity: 1
+            )]
+            draft.steps[2].targets = [ContactRequirement(
+                contactID: "edge-18", kind: .edge,
+                depth: .range(.init(minimum: 15, maximum: 15)), handCapacity: 1
+            )]
+            XCTAssertNil(store.persistenceError)
+            XCTAssertEqual(loaded, draft.definition())
+            let plan = try store.plan(for: loaded)
+            for (index, depth) in [(0, 10), (2, 15)] {
+                let step = plan.steps[index]
+                let selection = try ContactResolver.resolveSelection(
+                    step.workRequirements, step: step, board: board
+                )
+                XCTAssertEqual(selection.positionID, "depth-\(depth)mm")
+                XCTAssertEqual(selection.contacts.first?.depth, .range(.init(
+                    minimum: Double(depth), maximum: Double(depth)
+                )))
+            }
+        }
+    }
+
+    func testLoadDoesNotMigrateContradictoryOrUnknownPlateauTargets() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
+        let historical = try JSONDecoder().decode(
+            CustomRoutineLibrary.self, from: legacyPlateauRoutinePayload()
+        ).routines[0]
+        let tenMillimeters = HoldDepth.range(.init(minimum: 10, maximum: 10))
+        let cases: [(String, ContactRequirement)] = [
+            ("contradictory 10 mm depth", .init(
+                contactID: "blocker-edge-10", kind: .edge,
+                depth: .range(.init(minimum: 9, maximum: 9)), handCapacity: 1
+            )),
+            ("contradictory 15 mm depth", .init(
+                contactID: "blocker-edge-15", kind: .edge,
+                depth: .range(.init(minimum: 14, maximum: 14)), handCapacity: 1
+            )),
+            ("contradictory depth category", .init(
+                contactID: "blocker-edge-10", kind: .edge, depth: .category(.large), handCapacity: 1
+            )),
+            ("contradictory kind", .init(
+                contactID: "blocker-edge-10", kind: .pocket, depth: tenMillimeters, handCapacity: 1
+            )),
+            ("unsupported shape", .init(
+                contactID: "blocker-edge-10", kind: .edge, shape: .flat,
+                depth: tenMillimeters, handCapacity: 1
+            )),
+            ("unsupported finger capacity", .init(
+                contactID: "blocker-edge-10", kind: .edge, depth: tenMillimeters,
+                fingerCapacity: 2, handCapacity: 1
+            )),
+            ("contradictory hand capacity", .init(
+                contactID: "blocker-edge-10", kind: .edge, depth: tenMillimeters, handCapacity: 2
+            )),
+            ("bilateral selection", .init(
+                contactID: "blocker-edge-10", kind: .edge, depth: tenMillimeters,
+                handCapacity: 1, selection: .bilateralPair
+            )),
+            ("unknown blocker", .init(
+                contactID: "blocker-edge-12", kind: .edge, depth: tenMillimeters, handCapacity: 1
+            )),
+            ("similar unknown ID", .init(
+                contactID: "blocker-edge-10-extra", kind: .edge, depth: tenMillimeters, handCapacity: 1
+            ))
+        ]
+        for (name, requirement) in cases {
+            let suite = ownedRoutineSuiteName()
+            let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+            defer {
+                defaults.removePersistentDomain(forName: suite)
+                XCTAssertNil(defaults.persistentDomain(forName: suite))
+            }
+            var draft = CustomRoutineDraft(editing: historical)
+            draft.steps[0].targets = [requirement]
+            let originalPayload = try JSONEncoder().encode(CustomRoutineLibrary(routines: [draft.definition()]))
+            defaults.set(originalPayload, forKey: CustomRoutineStore.defaultKey)
+
+            let store = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+            let loaded = try XCTUnwrap(store.routines.first)
+            draft.steps[2].targets = [ContactRequirement(
+                contactID: "edge-18", kind: .edge,
+                depth: .range(.init(minimum: 15, maximum: 15)), handCapacity: 1
+            )]
+            XCTAssertNil(store.persistenceError, name)
+            XCTAssertEqual(loaded, draft.definition(), name)
+            XCTAssertTrue(CustomRoutineValidator.issues(for: loaded, availableBoards: [board])
+                .contains(.unresolvableSegmentTargets(stepIndex: 0, segmentIndex: 0)), name)
+            XCTAssertThrowsError(try store.plan(for: loaded), name)
+            XCTAssertThrowsError(try store.save(loaded), name)
+            XCTAssertEqual(defaults.data(forKey: CustomRoutineStore.defaultKey), originalPayload, name)
+        }
+    }
+
+    func testLoadLimitsPlateauMigrationToItsSingleHandBoardSpecificTargets() throws {
+        let plateau = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
+        let otherBoard = BoardCatalog.defaultBoard
+        let historical = try JSONDecoder().decode(
+            CustomRoutineLibrary.self, from: legacyPlateauRoutinePayload()
+        ).routines[0]
+        let cases: [(CustomRoutineTargetMode, WorkoutHandUse, WorkoutSide)] = [
+            (.boardSpecific(boardID: otherBoard.id), .single, .left),
+            (.boardSpecific(boardID: plateau.id), .double, .both),
+            (.generic, .single, .left)
+        ]
+        for (targetMode, handUse, side) in cases {
+            let suite = ownedRoutineSuiteName()
+            let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+            defer {
+                defaults.removePersistentDomain(forName: suite)
+                XCTAssertNil(defaults.persistentDomain(forName: suite))
+            }
+            let scopedDefinition = CustomRoutineDefinition(
+                id: historical.id,
+                title: historical.title,
+                subtitle: historical.subtitle,
+                difficulty: historical.difficulty,
+                category: historical.category,
+                tags: historical.tags,
+                targetMode: targetMode,
+                steps: historical.steps
+            )
+            var draft = CustomRoutineDraft(editing: scopedDefinition)
+            draft.steps[0].handUse = handUse
+            draft.steps[0].side = side
+            draft.steps[2].handUse = handUse
+            draft.steps[2].side = side
+            let original = draft.definition()
+            defaults.set(
+                try JSONEncoder().encode(CustomRoutineLibrary(routines: [original])),
+                forKey: CustomRoutineStore.defaultKey
+            )
+
+            let store = CustomRoutineStore(defaults: defaults, availableBoards: [plateau, otherBoard])
+            let loaded = try XCTUnwrap(store.routines.first)
+            if case .generic = targetMode {
+                draft.steps[0].targets = draft.steps[0].targets.map { $0.strippingExactContactID() }
+                draft.steps[2].targets = draft.steps[2].targets.map { $0.strippingExactContactID() }
+                XCTAssertNoThrow(try store.plan(for: loaded))
+            } else {
+                XCTAssertThrowsError(try store.plan(for: loaded))
+            }
+            XCTAssertNil(store.persistenceError)
+            XCTAssertEqual(loaded, draft.definition())
+        }
+    }
+
+    func testLoadDoesNotPinCurrentOrUnpinnedPlateauTargetsToHistoricDepths() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
+        let historical = try JSONDecoder().decode(
+            CustomRoutineLibrary.self, from: legacyPlateauRoutinePayload()
+        ).routines[0]
+        for contactID in ["edge-18", nil] as [String?] {
+            let suite = ownedRoutineSuiteName()
+            let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+            defer {
+                defaults.removePersistentDomain(forName: suite)
+                XCTAssertNil(defaults.persistentDomain(forName: suite))
+            }
+            var draft = CustomRoutineDraft(editing: historical)
+            draft.steps[0].targets = [ContactRequirement(
+                contactID: contactID, kind: .edge,
+                depth: .range(.init(minimum: 0, maximum: 25)), handCapacity: 1
+            )]
+            defaults.set(
+                try JSONEncoder().encode(CustomRoutineLibrary(routines: [draft.definition()])),
+                forKey: CustomRoutineStore.defaultKey
+            )
+
+            let store = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+            let loaded = try XCTUnwrap(store.routines.first)
+            draft.steps[2].targets = [ContactRequirement(
+                contactID: "edge-18", kind: .edge,
+                depth: .range(.init(minimum: 15, maximum: 15)), handCapacity: 1
+            )]
+            XCTAssertEqual(loaded, draft.definition())
+            let step = try store.plan(for: loaded).steps[0]
+            XCTAssertEqual(try ContactResolver.resolveSelection(
+                step.workRequirements, step: step, board: board
+            ).positionID, "depth-18mm")
+        }
+    }
+
     func testBoardSpecificEitherHandSidedTapRemainsSaveableForBothSides() throws {
         let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -1061,6 +1340,98 @@ final class CustomRoutineStoreTests: XCTestCase {
 
         XCTAssertTrue(issues.contains(.invalidHandUseSide(stepIndex: 0)))
         XCTAssertTrue(issues.contains(.invalidActionRepetitions(stepIndex: 0)))
+    }
+
+    private func ownedRoutineSuiteName() -> String {
+        let worktreePath = ProcessInfo.processInfo.environment["PASEO_WORKTREE_PATH"]
+            ?? URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().path
+        let owner = URL(fileURLWithPath: worktreePath).lastPathComponent
+        return "CustomRoutineStoreTests.\(owner).\(UUID().uuidString)"
+    }
+
+    /// Literal v2 persistence shape from Main: already flattened custom rows,
+    /// tagged requirements and factual targets selected by a single-hand tap.
+    private func legacyPlateauRoutinePayload() -> Data {
+        Data(#"""
+        {
+          "routines": [{
+            "id": "custom.saved-plateau-blockers",
+            "title": "Saved Plateau routine",
+            "subtitle": "User-authored lifting rows",
+            "difficulty": "Custom difficulty",
+            "category": "strength",
+            "tags": ["custom", "lifting"],
+            "targetMode": {"kind": "boardSpecific", "boardID": "plateau.lifting-edge"},
+            "steps": [{
+              "id": "saved-ten",
+              "title": "Saved 10 mm lift",
+              "instruction": "Saved cue: retain my chosen fingers.",
+              "accessory": "Saved load and repetition note",
+              "duration": 6.75,
+              "phase": "pull",
+              "segments": [{
+                "kind": "work",
+                "target": {
+                  "kind": "requirements",
+                  "requirements": [{
+                    "contactID": "blocker-edge-10",
+                    "kind": "edge",
+                    "depth": {"range": {"minimum": 10, "maximum": 10}},
+                    "handCapacity": 1,
+                    "selection": "single"
+                  }]
+                },
+                "timing": "fixed",
+                "duration": 6.75
+              }],
+              "activeDuration": 6.75,
+              "handUse": "single",
+              "side": "left",
+              "action": "loadedLift",
+              "repetitions": 4,
+              "externalLoadKGF": 9.5
+            }, {
+              "id": "saved-rest",
+              "title": "Saved rest",
+              "instruction": "Saved recovery note.",
+              "accessory": "Saved rest note",
+              "duration": 7.25,
+              "phase": "rest",
+              "segments": [{"kind": "rest", "timing": "fixed", "duration": 7.25}],
+              "handUse": "double",
+              "side": "both",
+              "action": "hang"
+            }, {
+              "id": "saved-fifteen",
+              "title": "Saved 15 mm hang",
+              "instruction": "Saved cue: use the same finger choice.",
+              "accessory": "Saved 15 mm note",
+              "duration": 9.5,
+              "phase": "hang",
+              "segments": [{
+                "kind": "work",
+                "target": {
+                  "kind": "requirements",
+                  "requirements": [{
+                    "contactID": "blocker-edge-15",
+                    "kind": "edge",
+                    "depth": {"range": {"minimum": 15, "maximum": 15}},
+                    "handCapacity": 1,
+                    "selection": "single"
+                  }]
+                },
+                "timing": "fixed",
+                "duration": 9.5
+              }],
+              "activeDuration": 9.5,
+              "handUse": "single",
+              "side": "right",
+              "action": "hang",
+              "externalLoadKGF": 4.5
+            }]
+          }]
+        }
+        """#.utf8)
     }
 
     private func genericDefinition(

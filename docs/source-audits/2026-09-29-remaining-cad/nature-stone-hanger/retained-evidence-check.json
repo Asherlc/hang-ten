@@ -1,0 +1,36 @@
+{
+  "package": "nature-stone-hanger",
+  "allRetainedBytesAndHashesMatch": true,
+  "sources": [
+    {
+      "path": "evidence/nature-stone-hanger.html",
+      "bytes": 575904,
+      "sha256": "9724da3a1145da00c4d0e11afc268eb6f638d5ef5daf62e3e40bef7e7dde66ea"
+    },
+    {
+      "path": "evidence/nature-stone-hanger-granite-variant.html",
+      "bytes": 575996,
+      "sha256": "2154d6b87ae40bc5f4ad93b73122f2a732f777f6985fbd8ee79eedf22d93ef0a"
+    },
+    {
+      "path": "evidence/Stone_Hanger_Granite_1.jpg",
+      "bytes": 340996,
+      "sha256": "8e8df7719638e42d4018a43254b3dac0bf3bfb5ac0d6ba149e9c92f634254f40"
+    },
+    {
+      "path": "evidence/Stone_Hanger_Granite_3.jpg",
+      "bytes": 185000,
+      "sha256": "905103e785b884af1a56abc203010cac92ade82d9e3a9e97d67d3427de4c9bc2"
+    },
+    {
+      "path": "evidence/Stone_Hanger_Granite_4.jpg",
+      "bytes": 1093675,
+      "sha256": "56d7f7312d42222f66bd01cfd7e77a5c9f711dd55dea3cfc885ce5094f322576"
+    },
+    {
+      "path": "evidence/StonehangerTechDrawing_Draft1.jpg",
+      "bytes": 78855,
+      "sha256": "57287e539da523b0366c3cf5a0d1c0b551a0ee65f2fddae202c9c4614bc1d7ee"
+    }
+  ]
+}

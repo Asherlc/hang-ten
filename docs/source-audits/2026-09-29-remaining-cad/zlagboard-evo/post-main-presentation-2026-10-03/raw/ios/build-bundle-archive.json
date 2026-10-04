@@ -1,0 +1,44 @@
+{
+  "source": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/build-placid-badger-cad-second-half.xcresult",
+  "archive": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/build-placid-badger-cad-second-half.xcresult.zip",
+  "sha256": "3a0253795b2c1eb4bf9215e3ac25cde52223dbe027ce824d86e30898937bfc65",
+  "members": [
+    {
+      "path": "Data/data.0~VIqSmN0du-5x3Sfjw7zJhwuoQrhOLdhJ9N2fndwS69jT1aNNLgXhI8SEfFIPv-4RjeM6sGSrT3V5qIBcCnYGLw==",
+      "bytes": 2302,
+      "sha256": "07b7a57b5bafc39b406bb2b760bb0ae6e6620bad032d6a326c536309b43df41e"
+    },
+    {
+      "path": "Data/data.0~WbVh7TCvBSWk7y2D-6ySWas4PteFV-kf_oqEhgxfjXSw8IgxW_RljpURlxhJsyvvSmBjIYJ-qLl67EmUYKlwuA==",
+      "bytes": 82210,
+      "sha256": "06523c9fa203551cc7c701955214d2278197ee375be19746fb1ef283592b7bb7"
+    },
+    {
+      "path": "Data/data.0~vjwa7lvOvGKYUtei0fnBNiz-2uK_CHRhC0GepvfqdrNR1ESRG0K-3h_Zg2VtAVhWjFv5Bp6lais-urSGd_lz3Q==",
+      "bytes": 314,
+      "sha256": "8cba2e4a8890b49eb08991acea3dc3e386416c2baf353c4616c82fadf09ec117"
+    },
+    {
+      "path": "Data/refs.0~VIqSmN0du-5x3Sfjw7zJhwuoQrhOLdhJ9N2fndwS69jT1aNNLgXhI8SEfFIPv-4RjeM6sGSrT3V5qIBcCnYGLw==",
+      "bytes": 133,
+      "sha256": "573bd615ace96b94334475bc069d9be6753c319665372786532d4a7c072d7af8"
+    },
+    {
+      "path": "Data/refs.0~WbVh7TCvBSWk7y2D-6ySWas4PteFV-kf_oqEhgxfjXSw8IgxW_RljpURlxhJsyvvSmBjIYJ-qLl67EmUYKlwuA==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~vjwa7lvOvGKYUtei0fnBNiz-2uK_CHRhC0GepvfqdrNR1ESRG0K-3h_Zg2VtAVhWjFv5Bp6lais-urSGd_lz3Q==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Info.plist",
+      "bytes": 776,
+      "sha256": "da76dd170c2b3af1731d3018f23b4497d40a5bed741a4311c09b556115817a1a"
+    }
+  ],
+  "verified": true,
+  "scope": "Baseline raw result; no status rewrite. Original left for exact owned controller cleanup."
+}

@@ -1,0 +1,200 @@
+{
+  "scope": "Independent direct visual inspection of first 18 whole PNGs only; no crops, pixel measurements, app or runtime actions.",
+  "rows": [
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-001s.png",
+      "sha256": "9183b614240919e582485cb15c417374414e26d4de857df7a3b988faf670b1d4",
+      "directWholeImageViewed": true,
+      "phase": "Ready",
+      "visibleTimer": "00:02",
+      "board": "workout board not visible",
+      "pairedHandsVisible": false,
+      "notes": "Navigation transition with partial predecessor board at left edge"
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-002s.png",
+      "sha256": "bbf4e8f025305dcf672b13dfb9d00f25c5cef433826608ed3115df30bbfcb092",
+      "directWholeImageViewed": true,
+      "phase": "Ready",
+      "visibleTimer": "00:01",
+      "board": "workout board not visible",
+      "pairedHandsVisible": false,
+      "notes": ""
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-003s.png",
+      "sha256": "123bb018f0c96a54221abe6dc2680c14b7d849988bade1d29f2694e6541baaf2",
+      "directWholeImageViewed": true,
+      "phase": "Ready",
+      "visibleTimer": "00:01",
+      "board": "workout board not visible",
+      "pairedHandsVisible": false,
+      "notes": ""
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-004s.png",
+      "sha256": "0dca6990046bd55d9500e829f42f0c7f15ac25953a8ef925585de1864fcc680d",
+      "directWholeImageViewed": true,
+      "phase": "Hang set 1",
+      "visibleTimer": "00:06",
+      "board": "selected outer lower edges red",
+      "pairedHandsVisible": false,
+      "notes": "Hands absent during active Hang"
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-005s.png",
+      "sha256": "fffec8e090edd169857c3dbb9dcf31184e8cd08f7eca05ebd00ffe1df9594492",
+      "directWholeImageViewed": true,
+      "phase": "Hang set 1",
+      "visibleTimer": "00:05",
+      "board": "selected outer lower edges red",
+      "pairedHandsVisible": false,
+      "notes": "Hands absent during active Hang"
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-006s.png",
+      "sha256": "986bd7d21750958289d894bb9404e7f807e750bda9b65b3baa4052a4ce9588bd",
+      "directWholeImageViewed": true,
+      "phase": "Hang set 1",
+      "visibleTimer": "00:04",
+      "board": "selected outer lower edges red",
+      "pairedHandsVisible": true,
+      "notes": ""
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-007s.png",
+      "sha256": "1834f6e15bfbc9e1e602dfd83356c77d4aa5d1d3554bfd7535d4eb6f84eff09b",
+      "directWholeImageViewed": true,
+      "phase": "Hang set 1",
+      "visibleTimer": "00:03",
+      "board": "selected outer lower edges red",
+      "pairedHandsVisible": true,
+      "notes": ""
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-008s.png",
+      "sha256": "6a3f16b1575fae543b1da2f0cbd3894ccc415f708cb133fdd3afedac7936acea",
+      "directWholeImageViewed": true,
+      "phase": "Hang set 1",
+      "visibleTimer": "00:02",
+      "board": "selected outer lower edges red",
+      "pairedHandsVisible": true,
+      "notes": ""
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-009s.png",
+      "sha256": "8f02c3ddaa4e1c4da41dab40eeb5694d7973132e2d90176a3b46d0b61ed2f58c",
+      "directWholeImageViewed": true,
+      "phase": "Hang set 1",
+      "visibleTimer": "00:01",
+      "board": "selected outer lower edges red",
+      "pairedHandsVisible": true,
+      "notes": ""
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-010s.png",
+      "sha256": "030e52d6b20be2ca3bd73537ea7d0b7e59ae0c0072f60b64a9d914b0cb6f9e14",
+      "directWholeImageViewed": true,
+      "phase": "Rest",
+      "visibleTimer": "03:00",
+      "board": "board visible; selected edges appear neutral, no blue highlight visible",
+      "pairedHandsVisible": true,
+      "notes": "Preview caption present; transition frame lacks visible blue selection"
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-011s.png",
+      "sha256": "f6ed36980e7d9f75eea6a4220854660d6ca76f21bbca62f5c8555302aa073e01",
+      "directWholeImageViewed": true,
+      "phase": "Rest",
+      "visibleTimer": "02:59",
+      "board": "selected outer lower edges blue",
+      "pairedHandsVisible": true,
+      "notes": ""
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-012s.png",
+      "sha256": "f6ed36980e7d9f75eea6a4220854660d6ca76f21bbca62f5c8555302aa073e01",
+      "directWholeImageViewed": true,
+      "phase": "Rest",
+      "visibleTimer": "02:59",
+      "board": "selected outer lower edges blue",
+      "pairedHandsVisible": true,
+      "notes": ""
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-013s.png",
+      "sha256": "f6ed36980e7d9f75eea6a4220854660d6ca76f21bbca62f5c8555302aa073e01",
+      "directWholeImageViewed": true,
+      "phase": "Rest",
+      "visibleTimer": "02:59",
+      "board": "selected outer lower edges blue",
+      "pairedHandsVisible": true,
+      "notes": ""
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-014s.png",
+      "sha256": "b882fa169ddf3f273eb5aa0b48f1a686c4e693705549dda975cd17d81589335c",
+      "directWholeImageViewed": true,
+      "phase": "Rest",
+      "visibleTimer": "02:57",
+      "board": "selected outer lower edges blue",
+      "pairedHandsVisible": true,
+      "notes": ""
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-015s.png",
+      "sha256": "6fe9f0e70f1ee8abe0456ed0a20f01576c137792d514d20c21a2647e22f59d13",
+      "directWholeImageViewed": true,
+      "phase": "Rest",
+      "visibleTimer": "02:56",
+      "board": "selected outer lower edges blue",
+      "pairedHandsVisible": true,
+      "notes": ""
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-016s.png",
+      "sha256": "b73cc92a2620918a189e9ea44c99def3deb3ef05c297d671e4dc220fbfa6fe61",
+      "directWholeImageViewed": true,
+      "phase": "Rest",
+      "visibleTimer": "02:55",
+      "board": "selected outer lower edges blue",
+      "pairedHandsVisible": true,
+      "notes": ""
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-017s.png",
+      "sha256": "291ab959c83da3a944285f44ee73d2f7fd2b8d1982f3017e4dd99b85a8fce3d0",
+      "directWholeImageViewed": true,
+      "phase": "Rest",
+      "visibleTimer": "02:53",
+      "board": "selected outer lower edges blue",
+      "pairedHandsVisible": true,
+      "notes": ""
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-018s.png",
+      "sha256": "804bab1c41582dad93d177863ea35b26f2acec9c8819f67266f33ad0b36c4d78",
+      "directWholeImageViewed": true,
+      "phase": "Rest",
+      "visibleTimer": "02:52",
+      "board": "selected outer lower edges blue",
+      "pairedHandsVisible": true,
+      "notes": ""
+    }
+  ],
+  "findings": [
+    "Hands are absent in active-Hang captures elapsed-004s and elapsed-005s, then visible from elapsed-006s through elapsed-018s. This is an observed startup cue-visibility limitation.",
+    "All six visible initial-Hang board selections are red.",
+    "At elapsed-010s the UI reads Rest 03:00 and NEXT HOLD PREVIEW, but the board selection appears neutral; elapsed-011s through elapsed-018s show blue selected edges.",
+    "This is not a full-workflow pass; final tail and next Hang are outside this report."
+  ],
+  "limitations": [
+    "Filename elapsed values are capture labels, not measured semantic-transition times.",
+    "No CPU or scene-lifetime brackets are available in this pristine visual review.",
+    "No continuous visibility or exact hand appearance latency is inferred between screenshots.",
+    "Validation context is muted and awake; no audio-enabled or general repair claim."
+  ],
+  "fullWorkflowPassed": false,
+  "fullWorkflowEvaluated": false,
+  "humanAccepted": false
+}

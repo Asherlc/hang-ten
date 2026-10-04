@@ -1,0 +1,68 @@
+{
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "retainedContactFieldsUnchanged": false,
+  "contactFieldCorrections": [
+    {
+      "contactID": "edge-18",
+      "field": "name",
+      "before": "18 mm wood edge",
+      "after": "Wood edge",
+      "reason": "One physical edge has18/15/10mm effective configurations."
+    }
+  ],
+  "retainedContactIDs": [
+    "edge-18"
+  ],
+  "removedContactIDs": [
+    "blocker-edge-15",
+    "blocker-edge-10"
+  ],
+  "positions": [
+    {
+      "id": "depth-18mm",
+      "presentationID": "depth-18mm",
+      "contactIDs": [
+        "edge-18"
+      ],
+      "effectiveDepths": {
+        "edge-18": {
+          "range": {
+            "minimum": 18,
+            "maximum": 18
+          }
+        }
+      }
+    },
+    {
+      "id": "depth-15mm",
+      "presentationID": "depth-15mm",
+      "contactIDs": [
+        "edge-18"
+      ],
+      "effectiveDepths": {
+        "edge-18": {
+          "range": {
+            "minimum": 15,
+            "maximum": 15
+          }
+        }
+      }
+    },
+    {
+      "id": "depth-10mm",
+      "presentationID": "depth-10mm",
+      "contactIDs": [
+        "edge-18"
+      ],
+      "effectiveDepths": {
+        "edge-18": {
+          "range": {
+            "minimum": 10,
+            "maximum": 10
+          }
+        }
+      }
+    }
+  ],
+  "metadataDecision": "Removed blocker-edge-15 and blocker-edge-10 as independent contact identities. Three native presentations share edge-18 with exact position-scoped effectiveDepths18/15/10. Canonical name corrected from18 mm wood edge toWood edge so15/10mm configurations retain a truthful physical name; base depth18 and IDedge-18 remain unchanged. Hardware omitted; blocker is functional geometry and retained."
+}

@@ -1,0 +1,843 @@
+{
+  "package": "captain-fingerfood-dual",
+  "presentationID": "primary",
+  "modelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+  "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+  "method": "nativeRoutes",
+  "poses": {
+    "curved-lip-front": {
+      "height": -0.198244267,
+      "routes": {
+        "left-lead": [
+          [
+            -0.024196737,
+            0.034007019,
+            0.016609701
+          ],
+          [
+            -0.024239474,
+            0.033455592,
+            0.016801668
+          ],
+          [
+            -0.024289186,
+            0.032815119,
+            0.016959482
+          ],
+          [
+            -0.024323693,
+            0.032381859,
+            0.01701196
+          ],
+          [
+            -0.024611267,
+            0.028858325,
+            0.017009929
+          ],
+          [
+            -0.02462956,
+            0.028623893,
+            0.016983412
+          ],
+          [
+            -0.024654717,
+            0.028280532,
+            0.016893283
+          ],
+          [
+            -0.02503531,
+            0.022815995,
+            0.014837886
+          ],
+          [
+            -0.025045851,
+            0.02264988,
+            0.014753706
+          ],
+          [
+            -0.025059202,
+            0.022414178,
+            0.014600545
+          ],
+          [
+            -0.026,
+            0.001,
+            -0.005
+          ]
+        ],
+        "right-lead": [
+          [
+            0.024196737,
+            0.034007019,
+            0.016609701
+          ],
+          [
+            0.024239474,
+            0.033455592,
+            0.016801668
+          ],
+          [
+            0.024289186,
+            0.032815119,
+            0.016959482
+          ],
+          [
+            0.024323693,
+            0.032381859,
+            0.01701196
+          ],
+          [
+            0.024611267,
+            0.028858325,
+            0.017009929
+          ],
+          [
+            0.02462956,
+            0.028623893,
+            0.016983412
+          ],
+          [
+            0.024654717,
+            0.028280532,
+            0.016893283
+          ],
+          [
+            0.02503531,
+            0.022815995,
+            0.014837886
+          ],
+          [
+            0.025045851,
+            0.02264988,
+            0.014753706
+          ],
+          [
+            0.025059202,
+            0.022414178,
+            0.014600545
+          ],
+          [
+            0.026,
+            0.001,
+            -0.005
+          ]
+        ]
+      },
+      "minimumClearance": {
+        "left-lead": 0.0019900946945274165,
+        "right-lead": 0.0019900946945274165
+      },
+      "lengthRatios": {
+        "left-lead": 1.0000000012111148,
+        "right-lead": 1.0000000012111148
+      },
+      "coupledTightening": {
+        "converged": true,
+        "iterations": 2,
+        "passes": [
+          {
+            "converged": true,
+            "sweeps": 9,
+            "acceptedMoves": 114,
+            "candidateChecks": 1916,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.4000000011440806,
+              "right-lead": 0.40000000114404344
+            },
+            "lengthAfter": {
+              "left-lead": 0.3857925876153011,
+              "right-lead": 0.3857925876153011
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          },
+          {
+            "converged": true,
+            "sweeps": 1,
+            "acceptedMoves": 0,
+            "candidateChecks": 260,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.40000000048444595,
+              "right-lead": 0.40000000048444595
+            },
+            "lengthAfter": {
+              "left-lead": 0.40000000048444595,
+              "right-lead": 0.40000000048444595
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          }
+        ],
+        "initialHeight": -0.183959976,
+        "entryConstraint": "actual mouth, positive native-axis half-space, complete tube clearance",
+        "policy": "Generated native seed followed by bounded coupled local shortening and height settling; no equilibrium claim."
+      },
+      "initialMouthCollars": {
+        "left-lead": {
+          "sectionClearance": 0.0002,
+          "derivedExteriorPoint": [
+            -0.026,
+            0.001,
+            0.017200000000000017
+          ],
+          "attempt": 1
+        },
+        "right-lead": {
+          "sectionClearance": 0.0002,
+          "derivedExteriorPoint": [
+            0.026,
+            0.001,
+            0.017200000000000017
+          ],
+          "attempt": 1
+        }
+      }
+    },
+    "exterior-jug-back": {
+      "height": -0.209048812,
+      "routes": {
+        "left-lead": [
+          [
+            -0.02414774,
+            -0.024617406,
+            0.016841516
+          ],
+          [
+            -0.024261473,
+            -0.023044906,
+            0.016229366
+          ],
+          [
+            -0.024429211,
+            -0.020725638,
+            0.015209187
+          ],
+          [
+            -0.024498035,
+            -0.01977395,
+            0.01464593
+          ],
+          [
+            -0.024538525,
+            -0.019213973,
+            0.014175987
+          ],
+          [
+            -0.026,
+            0.001,
+            -0.005
+          ]
+        ],
+        "right-lead": [
+          [
+            0.024166544,
+            -0.024353523,
+            0.016753033
+          ],
+          [
+            0.024231022,
+            -0.023462044,
+            0.016402909
+          ],
+          [
+            0.024452611,
+            -0.020398236,
+            0.015033205
+          ],
+          [
+            0.024497129,
+            -0.01978268,
+            0.014649008
+          ],
+          [
+            0.024508935,
+            -0.019619434,
+            0.014522818
+          ],
+          [
+            0.026,
+            0.001,
+            -0.005
+          ]
+        ]
+      },
+      "minimumClearance": {
+        "left-lead": 0.00199008760989274,
+        "right-lead": 0.0019901322161759963
+      },
+      "lengthRatios": {
+        "left-lead": 1.000000000422343,
+        "right-lead": 0.9999971187222898
+      },
+      "coupledTightening": {
+        "converged": true,
+        "iterations": 2,
+        "passes": [
+          {
+            "converged": true,
+            "sweeps": 11,
+            "acceptedMoves": 69,
+            "candidateChecks": 1298,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.4000000018990609,
+              "right-lead": 0.4000000018990609
+            },
+            "lengthAfter": {
+              "left-lead": 0.38746798890870543,
+              "right-lead": 0.38746683738497234
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          },
+          {
+            "converged": true,
+            "sweeps": 1,
+            "acceptedMoves": 0,
+            "candidateChecks": 143,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.4000000001689372,
+              "right-lead": 0.39999884748891595
+            },
+            "lengthAfter": {
+              "left-lead": 0.4000000001689372,
+              "right-lead": 0.39999884748891595
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          }
+        ],
+        "initialHeight": -0.196485791,
+        "entryConstraint": "actual mouth, positive native-axis half-space, complete tube clearance",
+        "policy": "Generated native seed followed by bounded coupled local shortening and height settling; no equilibrium claim."
+      },
+      "initialMouthCollars": {
+        "left-lead": {
+          "sectionClearance": 0.0002,
+          "derivedExteriorPoint": [
+            -0.026,
+            0.001,
+            0.017200000000000017
+          ],
+          "attempt": 1
+        },
+        "right-lead": {
+          "sectionClearance": 0.0002,
+          "derivedExteriorPoint": [
+            0.026,
+            0.001,
+            0.017200000000000017
+          ],
+          "attempt": 1
+        }
+      }
+    },
+    "left-pocket-vertical": {
+      "height": -0.17420943,
+      "routes": {
+        "left-lead": [
+          [
+            0.059117434,
+            -0.003289888,
+            0.016548145
+          ],
+          [
+            0.05882491,
+            -0.00328225,
+            0.016681072
+          ],
+          [
+            0.058041344,
+            -0.003243171,
+            0.016931243
+          ],
+          [
+            0.057505277,
+            -0.003209716,
+            0.017011673
+          ],
+          [
+            0.053753122,
+            -0.003076114,
+            0.017009892
+          ],
+          [
+            0.052937132,
+            -0.003044336,
+            0.016966626
+          ],
+          [
+            0.051716713,
+            -0.002992713,
+            0.016837408
+          ],
+          [
+            0.048884309,
+            -0.00285908,
+            0.016319832
+          ],
+          [
+            0.047013495,
+            -0.002765752,
+            0.015898257
+          ],
+          [
+            -0.023747583,
+            0.000959275,
+            -0.003119166
+          ],
+          [
+            -0.024024911,
+            0.000970263,
+            -0.003254635
+          ],
+          [
+            -0.024193752,
+            0.000974984,
+            -0.003368786
+          ],
+          [
+            -0.026,
+            0.001,
+            -0.005
+          ]
+        ],
+        "right-lead": [
+          [
+            0.058956822,
+            0.000930941,
+            0.016623861
+          ],
+          [
+            0.058447212,
+            0.000932795,
+            0.016802923
+          ],
+          [
+            0.057857531,
+            0.000934957,
+            0.016953307
+          ],
+          [
+            0.057458535,
+            0.000936434,
+            0.017009716
+          ],
+          [
+            0.053897134,
+            0.000951189,
+            0.017012254
+          ],
+          [
+            0.053644143,
+            0.000952129,
+            0.016982943
+          ],
+          [
+            0.053363372,
+            0.00095305,
+            0.016916789
+          ],
+          [
+            0.053185816,
+            0.00095354,
+            0.016847883
+          ],
+          [
+            0.051664481,
+            0.000956874,
+            0.015995461
+          ],
+          [
+            0.050683919,
+            0.000958877,
+            0.015374061
+          ],
+          [
+            0.048122146,
+            0.00096367,
+            0.013534606
+          ],
+          [
+            0.032714736,
+            0.000989581,
+            0.000944801
+          ],
+          [
+            0.029994161,
+            0.000993938,
+            -0.001392756
+          ],
+          [
+            0.026,
+            0.001,
+            -0.005
+          ]
+        ]
+      },
+      "minimumClearance": {
+        "left-lead": 0.001990101936764046,
+        "right-lead": 0.0019904105817682505
+      },
+      "lengthRatios": {
+        "left-lead": 0.999999999336192,
+        "right-lead": 0.8808209557399228
+      },
+      "coupledTightening": {
+        "converged": true,
+        "iterations": 2,
+        "passes": [
+          {
+            "converged": true,
+            "sweeps": 19,
+            "acceptedMoves": 183,
+            "candidateChecks": 8118,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.399999997570735,
+              "right-lead": 0.3471398921620491
+            },
+            "lengthAfter": {
+              "left-lead": 0.3802889487037014,
+              "right-lead": 0.3326173103280929
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          },
+          {
+            "converged": true,
+            "sweeps": 2,
+            "acceptedMoves": 1,
+            "candidateChecks": 918,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.3999999997344768,
+              "right-lead": 0.35232942136226114
+            },
+            "lengthAfter": {
+              "left-lead": 0.3999999997344768,
+              "right-lead": 0.35232838229596913
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          }
+        ],
+        "initialHeight": -0.154356864,
+        "entryConstraint": "actual mouth, positive native-axis half-space, complete tube clearance",
+        "policy": "Generated native seed followed by bounded coupled local shortening and height settling; no equilibrium claim."
+      },
+      "initialMouthCollars": {
+        "left-lead": {
+          "sectionClearance": 0.0002,
+          "derivedExteriorPoint": [
+            -0.026,
+            0.001,
+            0.017200000000000017
+          ],
+          "attempt": 1
+        },
+        "right-lead": {
+          "sectionClearance": 0.0002,
+          "derivedExteriorPoint": [
+            0.026,
+            0.001,
+            0.017200000000000017
+          ],
+          "attempt": 1
+        }
+      },
+      "initialSectionOrientationRecovery": {
+        "initialConflict": "native cord tubes intersect: left-lead/0, right-lead/1",
+        "rotationsDegrees": {
+          "left-lead": -20
+        },
+        "rejectedCandidates": [
+          {
+            "rotationsDegrees": {
+              "left-lead": -5
+            },
+            "error": "native cord tubes intersect: left-lead/0, right-lead/1"
+          },
+          {
+            "rotationsDegrees": {
+              "left-lead": 5
+            },
+            "error": "native cord tubes intersect: left-lead/0, right-lead/1"
+          },
+          {
+            "rotationsDegrees": {
+              "right-lead": -5
+            },
+            "error": "native cord tubes intersect: left-lead/6, right-lead/24"
+          },
+          {
+            "rotationsDegrees": {
+              "right-lead": 5
+            },
+            "error": "native cord tubes intersect: left-lead/6, right-lead/29"
+          },
+          {
+            "rotationsDegrees": {
+              "left-lead": -5,
+              "right-lead": 5
+            },
+            "error": "native cord tubes intersect: left-lead/0, right-lead/1"
+          },
+          {
+            "rotationsDegrees": {
+              "left-lead": 5,
+              "right-lead": -5
+            },
+            "error": "native cord tubes intersect: left-lead/0, right-lead/1"
+          },
+          {
+            "rotationsDegrees": {
+              "left-lead": -10
+            },
+            "error": "native cord tubes intersect: left-lead/29, right-lead/32"
+          },
+          {
+            "rotationsDegrees": {
+              "left-lead": 10
+            },
+            "error": "native cord tubes intersect: left-lead/24, right-lead/29"
+          },
+          {
+            "rotationsDegrees": {
+              "right-lead": -10
+            },
+            "error": "native cord tubes intersect: left-lead/6, right-lead/27"
+          },
+          {
+            "rotationsDegrees": {
+              "right-lead": 10
+            },
+            "error": "native cord tubes intersect: left-lead/6, right-lead/27"
+          },
+          {
+            "rotationsDegrees": {
+              "left-lead": -10,
+              "right-lead": 10
+            },
+            "error": "native cord tubes intersect: left-lead/29, right-lead/25"
+          },
+          {
+            "rotationsDegrees": {
+              "left-lead": 10,
+              "right-lead": -10
+            },
+            "error": "native cord tubes intersect: left-lead/24, right-lead/25"
+          }
+        ],
+        "policy": "First certified candidate in bounded ascending maximum/total section deviation order; no global optimum claim."
+      }
+    },
+    "straight-lip-inverted": {
+      "height": -0.195993343,
+      "routes": {
+        "left-lead": [
+          [
+            -0.023610365,
+            -0.033957604,
+            0.016621026
+          ],
+          [
+            -0.023647172,
+            -0.033451141,
+            0.016802045
+          ],
+          [
+            -0.023688042,
+            -0.03286387,
+            0.01695684
+          ],
+          [
+            -0.023715554,
+            -0.032465689,
+            0.017008968
+          ],
+          [
+            -0.024210098,
+            -0.025257885,
+            0.01702783
+          ],
+          [
+            -0.024233042,
+            -0.024908826,
+            0.016955417
+          ],
+          [
+            -0.024526894,
+            -0.020214106,
+            0.014906187
+          ],
+          [
+            -0.02454611,
+            -0.019915914,
+            0.014735605
+          ],
+          [
+            -0.024574026,
+            -0.019496336,
+            0.014431194
+          ],
+          [
+            -0.026,
+            0.001,
+            -0.005
+          ]
+        ],
+        "right-lead": [
+          [
+            0.023610359,
+            -0.033957604,
+            0.016621026
+          ],
+          [
+            0.023647166,
+            -0.033451141,
+            0.016802045
+          ],
+          [
+            0.023688036,
+            -0.03286387,
+            0.01695684
+          ],
+          [
+            0.023715548,
+            -0.032465689,
+            0.017008968
+          ],
+          [
+            0.024210109,
+            -0.025257652,
+            0.01702783
+          ],
+          [
+            0.024233016,
+            -0.024909359,
+            0.016954785
+          ],
+          [
+            0.024541327,
+            -0.019989206,
+            0.014781594
+          ],
+          [
+            0.024550824,
+            -0.019842621,
+            0.01469404
+          ],
+          [
+            0.024564525,
+            -0.019638884,
+            0.014535625
+          ],
+          [
+            0.026,
+            0.001,
+            -0.005
+          ]
+        ]
+      },
+      "minimumClearance": {
+        "left-lead": 0.001990103544524604,
+        "right-lead": 0.001990102631960677
+      },
+      "lengthRatios": {
+        "left-lead": 0.9999999995006926,
+        "right-lead": 0.9999952083704877
+      },
+      "coupledTightening": {
+        "converged": true,
+        "iterations": 2,
+        "passes": [
+          {
+            "converged": true,
+            "sweeps": 8,
+            "acceptedMoves": 79,
+            "candidateChecks": 1827,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.39999999434992817,
+              "right-lead": 0.399999998490786
+            },
+            "lengthAfter": {
+              "left-lead": 0.38603500087405834,
+              "right-lead": 0.38603308441572687
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          },
+          {
+            "converged": true,
+            "sweeps": 1,
+            "acceptedMoves": 0,
+            "candidateChecks": 244,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.39999999980027706,
+              "right-lead": 0.3999980833481951
+            },
+            "lengthAfter": {
+              "left-lead": 0.39999999980027706,
+              "right-lead": 0.3999980833481951
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          }
+        ],
+        "initialHeight": -0.181953505,
+        "entryConstraint": "actual mouth, positive native-axis half-space, complete tube clearance",
+        "policy": "Generated native seed followed by bounded coupled local shortening and height settling; no equilibrium claim."
+      },
+      "initialMouthCollars": {
+        "left-lead": {
+          "sectionClearance": 0.0002,
+          "derivedExteriorPoint": [
+            -0.026,
+            0.001,
+            0.017200000000000017
+          ],
+          "attempt": 1
+        },
+        "right-lead": {
+          "sectionClearance": 0.0002,
+          "derivedExteriorPoint": [
+            0.026,
+            0.001,
+            0.017200000000000017
+          ],
+          "attempt": 1
+        }
+      }
+    }
+  }
+}

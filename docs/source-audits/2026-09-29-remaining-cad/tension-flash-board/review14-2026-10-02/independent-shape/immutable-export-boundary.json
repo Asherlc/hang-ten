@@ -1,0 +1,148 @@
+{
+  "status": "pass",
+  "stage": "exported source/model/descriptor only; cord pending",
+  "candidatePackage": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-20261002T145149/placid-badger-candidate-repository/Hangboards/tension-flash-board",
+  "files": {
+    "tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+    "assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755"
+  },
+  "changedNativeArchiveMembers": [
+    "Document.xml"
+  ],
+  "onlyManifestChange": "primary.media.display.surfaceFinish=wood",
+  "allNativeGeometryMembersExactlyPreservedFromReviewedRefinement": true,
+  "unboundMaterialPolicy": true,
+  "meshNodes": 8,
+  "uniqueTriangles": 49954,
+  "contacts": {
+    "three-edge-left": {
+      "nodeID": "flash_board_body_012",
+      "triangles": 8842,
+      "boundsRuntimeM": [
+        [
+          0.05530000105500221,
+          0.019950000569224344,
+          0.05400000140070916
+        ],
+        [
+          0.16869999468326569,
+          0.05420000106096266,
+          0.06800000369548799
+        ]
+      ]
+    },
+    "three-edge-center": {
+      "nodeID": "flash_board_body_011",
+      "triangles": 8842,
+      "boundsRuntimeM": [
+        [
+          0.19329999387264252,
+          0.019950000569224344,
+          0.05400000140070916
+        ],
+        [
+          0.3066999912261963,
+          0.05420000106096266,
+          0.06800000369548799
+        ]
+      ]
+    },
+    "three-edge-right": {
+      "nodeID": "flash_board_body_013",
+      "triangles": 8842,
+      "boundsRuntimeM": [
+        [
+          0.3312999904155731,
+          0.019950000569224344,
+          0.05400000140070916
+        ],
+        [
+          0.4447000026702881,
+          0.05420000106096266,
+          0.06800000369548799
+        ]
+      ]
+    },
+    "two-edge-left": {
+      "nodeID": "flash_board_body_014",
+      "triangles": 8842,
+      "boundsRuntimeM": [
+        [
+          0.06679999828338623,
+          0.016710000112652775,
+          0.009999999776482586
+        ],
+        [
+          0.18719999492168427,
+          0.050200000405311584,
+          0.024000000208616267
+        ]
+      ]
+    },
+    "two-edge-right": {
+      "nodeID": "flash_board_body_015",
+      "triangles": 8842,
+      "boundsRuntimeM": [
+        [
+          0.31279999017715454,
+          0.016710000112652775,
+          0.009999999776482586
+        ],
+        [
+          0.43320000171661377,
+          0.050200000405311584,
+          0.024000000208616267
+        ]
+      ]
+    },
+    "small-crimp-left": {
+      "nodeID": "flash_board_body_009",
+      "triangles": 419,
+      "boundsRuntimeM": [
+        [
+          0.13220000267028809,
+          0.058699999004602425,
+          0.0061329323798418175
+        ],
+        [
+          0.19580000638961792,
+          0.06449999660253525,
+          0.016000000759959235
+        ]
+      ]
+    },
+    "small-crimp-right": {
+      "nodeID": "flash_board_body_010",
+      "triangles": 420,
+      "boundsRuntimeM": [
+        [
+          0.3041999936103821,
+          0.058699999004602425,
+          0.0061329323798418175
+        ],
+        [
+          0.3677999973297119,
+          0.06449999660253525,
+          0.016000000759959235
+        ]
+      ]
+    }
+  },
+  "boundsRuntimeM": [
+    [
+      0.0,
+      -8.437694715835949e-18,
+      2.2102215098215106e-06
+    ],
+    [
+      0.5,
+      0.07599999755620955,
+      0.07598840445280076
+    ]
+  ],
+  "factualMetadataPreserved": true,
+  "appFrames": 0,
+  "cordAcceptance": "pending",
+  "humanAcceptance": "pending"
+}

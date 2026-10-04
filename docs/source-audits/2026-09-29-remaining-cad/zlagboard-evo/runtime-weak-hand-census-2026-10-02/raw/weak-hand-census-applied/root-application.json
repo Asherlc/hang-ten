@@ -1,0 +1,13 @@
+{
+  "patchSHA256": "1e861e0053311233d2a79670e1a3f48f6a54bf3555b0a1eaab3bd5dd62703aa5",
+  "inputs": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "a250e682072933af27187215451da6ee46981d44b9ef2946c3609d48baedcaa7",
+    "HangTen/Views/GripHandModelView.swift": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2"
+  },
+  "outputs": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "08aaaa6032cdf782f9d4659d3f0105655df282cc156f7c147597cd0f8aeeb0c9",
+    "HangTen/Views/GripHandModelView.swift": "3d8ffd568e1f99e33652eb77bfe4e0d2ce4c014889bfee3a166fe9601d7e136e"
+  },
+  "rootReview": "Weak references only, value-token callbacks, no lazy scene access in appearance callbacks, no scene/camera/selection mutation, census after existing dedup. Actual presenting host remains unmeasured.",
+  "status": "APPLIED_FOR_ONE_OBSERVATIONAL_REPRODUCTION"
+}

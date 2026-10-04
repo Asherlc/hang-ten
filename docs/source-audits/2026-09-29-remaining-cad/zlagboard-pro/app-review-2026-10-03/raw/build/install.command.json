@@ -1,0 +1,14 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "install",
+    "790E10AD-5154-463E-8232-288E28FA57D7",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/ios/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app"
+  ],
+  "pid": 85633,
+  "boundSeconds": 60,
+  "startedEpoch": 1791057584.4784288
+}

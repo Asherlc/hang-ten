@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-pinch-review/native-compile/placid-badger-compile-live.py"
+  ],
+  "timeoutSeconds": 1200,
+  "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+  "compilerSHA256": "34b0a92874d739c70b6bb48c63e8730297b6fda6f610f34c90ccb895c23fe167",
+  "pid": 5748,
+  "ownedProcessGroup": 5748,
+  "running": false,
+  "exitCode": 0,
+  "elapsedSeconds": 52.02347324998118,
+  "ownedProcessStopped": true
+}

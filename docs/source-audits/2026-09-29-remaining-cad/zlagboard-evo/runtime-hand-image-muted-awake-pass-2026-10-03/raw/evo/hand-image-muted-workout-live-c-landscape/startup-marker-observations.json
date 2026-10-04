@@ -1,0 +1,68 @@
+[
+  {
+    "sequence": 3,
+    "event": "startup-board-load-call",
+    "epoch": 1791020994.498414,
+    "hostFirstObservedEpoch": 1791020994.5085802
+  },
+  {
+    "sequence": 5,
+    "event": "startup-board-load-return",
+    "epoch": 1791020995.182833,
+    "hostFirstObservedEpoch": 1791020995.2085319
+  },
+  {
+    "sequence": 6,
+    "event": "startup-board-ready-published",
+    "epoch": 1791020995.1830359,
+    "hostFirstObservedEpoch": 1791020995.2085319
+  },
+  {
+    "sequence": 16,
+    "event": "startup-context-appear",
+    "epoch": 1791020995.784504,
+    "hostFirstObservedEpoch": 1791020995.7955399
+  },
+  {
+    "sequence": 17,
+    "event": "workout-probe-appear-before-autostart",
+    "epoch": 1791020995.786275,
+    "hostFirstObservedEpoch": 1791020995.7955399
+  },
+  {
+    "sequence": 18,
+    "event": "startup-request-entry",
+    "epoch": 1791020995.794186,
+    "hostFirstObservedEpoch": 1791020995.7955399
+  },
+  {
+    "sequence": 19,
+    "event": "startup-visible-countdown-before",
+    "epoch": 1791020995.794358,
+    "hostFirstObservedEpoch": 1791020995.7955399
+  },
+  {
+    "sequence": 20,
+    "event": "startup-visible-countdown-after",
+    "epoch": 1791020995.797974,
+    "hostFirstObservedEpoch": 1791020995.817332
+  },
+  {
+    "sequence": 21,
+    "event": "startup-board-load-call",
+    "epoch": 1791020995.7981439,
+    "hostFirstObservedEpoch": 1791020995.817332
+  },
+  {
+    "sequence": 30,
+    "event": "startup-board-load-return",
+    "epoch": 1791020996.8156118,
+    "hostFirstObservedEpoch": 1791020996.826299
+  },
+  {
+    "sequence": 31,
+    "event": "startup-board-ready-published",
+    "epoch": 1791020996.815781,
+    "hostFirstObservedEpoch": 1791020996.826299
+  }
+]

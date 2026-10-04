@@ -1,0 +1,19 @@
+{
+  "preparedOnly": true,
+  "releaseCreated": false,
+  "runtimeOrSourceActions": false,
+  "syntax": "Both Python AST parse PASS; neither executed",
+  "scope": "Expanded board policy ON in all arms; hand policy skipped only control/reversal",
+  "captureOnlyDelta": "SKIP_NONINTERACTIVE_PRESENTATION -> SKIP_HAND_PRESENTATION",
+  "validatorOnlyDeltas": [
+    "same strict flag replacement",
+    "new capture helper SHA binding"
+  ],
+  "scheduleRoutineBytePreserved": true,
+  "captureSHA256": "80850dcc61154263f178e7e4596cbb33d10c9ea77b899d825638d6ab817a4142",
+  "validatorSHA256": "206cabcc581e22647b1d163a8bb463c97898212679b2d926e41b45e39aa9e686",
+  "captureDiffSHA256": "907ef076f333c35bf78dcef1b540d5ed33fe03862eea17d9e45fa6b074b22bd7",
+  "validatorDiffSHA256": "310a36d5be1948a2708bab5346237f42edad83ce73b0a70d81136dcb9a9dfc97",
+  "sourceHelperSHA256": "db2b679301a8ead9a129647a50f366ecdded054b9c84d90b692b84fa264645f7",
+  "sourceValidatorSHA256": "19a33a272d2c55cfbfc9cc68693c41242305d6be717d8c9368d798e67e90fd06"
+}

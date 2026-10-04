@@ -1,0 +1,638 @@
+[
+  {
+    "type": "Application",
+    "AXLabel": "Hang Ten",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 874,
+      "width": 402,
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": null,
+    "AXUniqueId": "Hold specs",
+    "AXValue": null,
+    "frame": {
+      "height": 54,
+      "width": 402,
+      "x": 0,
+      "y": 62
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Back",
+    "AXUniqueId": "BackButton",
+    "AXValue": null,
+    "frame": {
+      "y": 62,
+      "width": 44,
+      "x": 16,
+      "height": 44
+    }
+  },
+  {
+    "type": "Heading",
+    "AXLabel": "Hold specs",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 73.66666666666666,
+      "width": 88.66666666666666,
+      "x": 156.66666666666666,
+      "height": 20.66666666666667
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "boardDetail.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "height": 36,
+      "width": 36,
+      "x": 346,
+      "y": 66
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "boardDetail.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "y": 66,
+      "width": 33.333333333333314,
+      "x": 347.3333333333333,
+      "height": 36
+    }
+  },
+  {
+    "type": "ScrollArea",
+    "AXLabel": null,
+    "AXUniqueId": "boardDetail.screen",
+    "AXValue": null,
+    "frame": {
+      "height": 874,
+      "width": 402,
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": null,
+    "AXUniqueId": "AdditionalDimmingOverlay",
+    "AXValue": null,
+    "frame": {
+      "height": 286,
+      "width": 642,
+      "x": -120,
+      "y": 731
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "FRICTITIOUS CLIMBING",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 134,
+      "width": 159,
+      "x": 20,
+      "height": 13.333333333333343
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "The NUG",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 33.666666666666686,
+      "width": 117,
+      "x": 20,
+      "y": 152.33333333333331
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "130 \u00d7 60 \u00d7 40 mm",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 17,
+      "width": 120.66666666666666,
+      "x": 20,
+      "y": 191
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "40 mm jug",
+    "AXUniqueId": "boardModel.contact.jug-40",
+    "AXValue": null,
+    "frame": {
+      "y": 360,
+      "width": 44,
+      "x": 179.00000000000006,
+      "height": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "8 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-8",
+    "AXValue": null,
+    "frame": {
+      "width": 44,
+      "height": 44,
+      "x": 179.00000000000006,
+      "y": 385
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "60 mm pinch",
+    "AXUniqueId": "boardModel.contact.pinch-60",
+    "AXValue": null,
+    "frame": {
+      "width": 44,
+      "x": 179.00000000000006,
+      "y": 386.66666666666663,
+      "height": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "20 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-20",
+    "AXValue": null,
+    "frame": {
+      "width": 44,
+      "height": 44,
+      "y": 400.66666666666663,
+      "x": 179.00000000000006
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "13 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-13",
+    "AXValue": null,
+    "frame": {
+      "width": 44,
+      "height": 44,
+      "x": 179.00000000000006,
+      "y": 416
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "25 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-25",
+    "AXValue": null,
+    "frame": {
+      "width": 44,
+      "x": 179.00000000000006,
+      "y": 430.3333333333333,
+      "height": 44
+    }
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": null,
+    "AXUniqueId": "boardDetail.map",
+    "AXValue": null,
+    "frame": {
+      "width": 334,
+      "height": 295.66666666666663,
+      "x": 34.00000000000006,
+      "y": 242
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": null,
+    "AXUniqueId": "boardDetail.selectedHold.jug-40",
+    "AXValue": null,
+    "frame": {
+      "width": 335,
+      "height": 182.6666717529297,
+      "y": 549.1666666666666,
+      "x": 33.50000000000006
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "SELECTED HOLD",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 111.66666666666666,
+      "x": 52,
+      "y": 567.7617442732085,
+      "height": 13.333333333333258
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "40 mm jug",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 104.66666666666666,
+      "x": 52,
+      "y": 595.0950776065417,
+      "height": 25.333333333333258
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Kind",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 27.666666666666657,
+      "x": 52,
+      "y": 635.428410939875,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Jug",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 25.666666666666686,
+      "x": 324.3333333333333,
+      "y": 634.428410939875,
+      "height": 17
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Depth",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 37.33333333333333,
+      "x": 52,
+      "height": 15.666666666666629,
+      "y": 666.428410939875
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "40 mm",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 47.666666666666686,
+      "height": 17,
+      "x": 302.33333333333337,
+      "y": 665.428410939875
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Hand capacity",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 87.33333333333331,
+      "x": 52,
+      "y": 697.428410939875,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "1",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 7.333333333333314,
+      "height": 17,
+      "y": 696.428410939875,
+      "x": 342.66666666666663
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "HOLD MAP",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 72,
+      "x": 34,
+      "y": 743.4284109398751,
+      "height": 13.333333333333371
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 1: 20 mm edge",
+    "AXUniqueId": "boardDetail.holdLegend.edge-20",
+    "AXValue": null,
+    "frame": {
+      "width": 163,
+      "x": 34.00000000000006,
+      "y": 768.6666666666666,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "1",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 6.333333333333336,
+      "x": 50.833333333333336,
+      "y": 780.5950776065418,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "20 mm edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 77.33333333333331,
+      "x": 74,
+      "y": 779.9284109398751,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 2: 25 mm edge",
+    "AXUniqueId": "boardDetail.holdLegend.edge-25",
+    "AXValue": null,
+    "frame": {
+      "width": 163,
+      "height": 38,
+      "y": 768.6666666666666,
+      "x": 205.00000000000006
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "2",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 8,
+      "height": 14.333333333333371,
+      "y": 780.5950776065418,
+      "x": 221
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "25 mm edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 77,
+      "height": 15.666666666666629,
+      "y": 779.9284109398751,
+      "x": 245
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 3: 8 mm edge",
+    "AXUniqueId": "boardDetail.holdLegend.edge-8",
+    "AXValue": null,
+    "frame": {
+      "width": 163,
+      "x": 34.00000000000006,
+      "height": 38,
+      "y": 814.6666666666666
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "3",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 8.333333333333336,
+      "height": 14.333333333333371,
+      "x": 49.833333333333336,
+      "y": 826.5950776065418
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "8 mm edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 69,
+      "height": 15.666666666666629,
+      "y": 825.9284109398751,
+      "x": 74
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 4: 13 mm edge",
+    "AXUniqueId": "boardDetail.holdLegend.edge-13",
+    "AXValue": null,
+    "frame": {
+      "width": 163,
+      "x": 205.00000000000006,
+      "y": 814.6666666666666,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "4",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 8.333333333333343,
+      "x": 220.83333333333334,
+      "height": 14.333333333333371,
+      "y": 826.5950776065418
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "13 mm edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 75.33333333333331,
+      "height": 15.666666666666629,
+      "x": 245,
+      "y": 825.9284109398751
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 5: 40 mm jug",
+    "AXUniqueId": "boardDetail.holdLegend.jug-40",
+    "AXValue": null,
+    "frame": {
+      "x": 34.00000000000006,
+      "width": 163,
+      "height": 38,
+      "y": 860.6666666666666
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "5",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 8.333333333333336,
+      "height": 14.333333333333371,
+      "x": 49.833333333333336,
+      "y": 872.5950776065418
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "40 mm jug",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 66,
+      "height": 15.666666666666629,
+      "y": 871.9284109398751,
+      "x": 74
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 6: 60 mm pinch",
+    "AXUniqueId": "boardDetail.holdLegend.pinch-60",
+    "AXValue": null,
+    "frame": {
+      "x": 205.00000000000006,
+      "width": 163,
+      "height": 38,
+      "y": 860.6666666666666
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "6",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 8.333333333333343,
+      "x": 220.83333333333334,
+      "height": 14.333333333333371,
+      "y": 872.5950776065418
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "60 mm pinch",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 81.33333333333331,
+      "height": 15.666666666666629,
+      "x": 245,
+      "y": 871.9284109398751
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Tab Bar",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 0,
+      "width": 402,
+      "height": 83,
+      "y": 791
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "Train",
+    "AXUniqueId": null,
+    "AXValue": 1,
+    "frame": {
+      "width": 94,
+      "height": 54,
+      "x": 68,
+      "y": 795
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "figure.climbing",
+    "AXUniqueId": "figure.climbing",
+    "AXValue": null,
+    "frame": {
+      "height": 35.66666666666663,
+      "width": 30,
+      "x": 100,
+      "y": 797
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "Plans",
+    "AXUniqueId": null,
+    "AXValue": 0,
+    "frame": {
+      "height": 54,
+      "width": 94,
+      "x": 154,
+      "y": 795
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "list.bullet.rectangle.portrait.fill",
+    "AXUniqueId": "list.bullet.rectangle.portrait.fill",
+    "AXValue": null,
+    "frame": {
+      "width": 25.333333333333343,
+      "x": 188,
+      "height": 28.66666666666663,
+      "y": 800.6666666666666
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "History",
+    "AXUniqueId": null,
+    "AXValue": 0,
+    "frame": {
+      "x": 240,
+      "height": 54,
+      "width": 94,
+      "y": 795
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "clock.arrow.trianglehead.counterclockwise.rotate.90",
+    "AXUniqueId": "clock.arrow.trianglehead.counterclockwise.rotate.90",
+    "AXValue": null,
+    "frame": {
+      "x": 272.66666666666663,
+      "height": 27.33333333333337,
+      "width": 27.666666666666686,
+      "y": 801.3333333333334
+    }
+  }
+]

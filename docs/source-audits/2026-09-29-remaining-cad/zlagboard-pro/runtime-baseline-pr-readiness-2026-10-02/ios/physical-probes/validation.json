@@ -1,0 +1,28 @@
+{
+  "contactFrameCount": 28,
+  "orbitChangedProjection": true,
+  "sameSelectedContactTapRestoredCanonicalProjection": true,
+  "picks": [
+    {
+      "directory": "04-pick-jug-right",
+      "expected": "top-jug-right",
+      "selectedConfirmed": true
+    },
+    {
+      "directory": "05-pick-flat15",
+      "expected": "edge-15-left",
+      "selectedConfirmed": true
+    },
+    {
+      "directory": "06-pick-incut15",
+      "expected": "edge-incut-15-left",
+      "selectedConfirmed": true
+    },
+    {
+      "directory": "07-pick-center-incut10",
+      "expected": "edge-incut-10-center",
+      "selectedConfirmed": true
+    }
+  ],
+  "cordProbe": "not applicable: fixed wallboard without suspension"
+}

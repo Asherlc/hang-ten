@@ -1,0 +1,124 @@
+{
+  "owner": "placid-badger",
+  "boardNumber": 11,
+  "boardID": "nature.stone-hanger-mini-karma8a",
+  "scope": "Read-only current app whole-frame visual audit, extended by three supplied frames showing one physical granite pick and same-scene wood/granite restoration. Source geometry was already accepted; current app user acceptance and real workout validation remain separate.",
+  "inspectionMethod": "view_image at original detail; complete supplied frames without cropping or pixel measurement",
+  "skill": ".agents/skills/validate-hang-ten-ios/SKILL.md",
+  "provenance": {
+    "path": "installed-app-provenance.json",
+    "fileSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+    "commit": "f9554600c1e5d94d027346ca5d6ca7343d71a7e7",
+    "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+    "builtAndInstalledBinarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+    "nativeModelSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+    "descriptorSHA256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+    "generatedManifestSHA256": "024c2c5df652271ae699487abfc963c33761a18e0c3dbd5d43aff0ac3cfe16a4",
+    "receiptCount": 14,
+    "allScreenshotByteHashesMatchReceipts": true,
+    "allReceiptBinaryHashesMatchInstalledProvenance": true,
+    "allReceiptProvenanceHashesMatchCurrentFile": true,
+    "allSuppliedCameraStatesSettled": true
+  },
+  "contactIDs": ["wood-edge-15", "granite-edge-15", "pinch-60"],
+  "findings": [
+    {
+      "check": "wood and granite materials",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "The body and unselected recessed wood surfaces appear warm tan with subtle wood shading. The granite rail appears dark and granular when inactive, including during wood and pinch selection. Unselected Train retains both distinct base appearances without red highlighting.",
+      "frames": ["11-live-hold-wood-edge-15.png", "11-live-hold-pinch-60.png", "11-live-unselected-train.png"],
+      "limitation": "The three-frame addendum below now covers the supplied same-scene wood/granite restoration sequence. Pinch restoration and full deselection are not claimed."
+    },
+    {
+      "check": "wood contact coverage",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "The wood selection highlights the broad rounded run-in, curved side returns, and lower shelf as a continuous contact region. The separate granite rail remains dark, and the surrounding exterior wood frame remains tan.",
+      "frames": ["11-live-hold-wood-edge-15.png"]
+    },
+    {
+      "check": "granite contact coverage",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "Granite selection highlights the separate horizontal rail and visible upper/front surfaces while retaining tan wood across the recessed panel and exterior frame. Highlight coverage stays on the rail in both front lenses and landscape.",
+      "frames": ["11-live-front.png", "11-live-hold-granite-edge-15.png", "11-live-normal-lens.png", "11-live-landscape.png"]
+    },
+    {
+      "check": "opposing pinch contact coverage",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "Pinch selection highlights upper and lower opposing rounded bands across the board, including their visible lips. The central wood panel and granite rail remain inactive. Top-oblique and touch-orbit views retain both opposing regions and expose their separation from the end-channel guides.",
+      "frames": ["11-live-hold-pinch-60.png", "11-live-top-oblique.png", "11-live-horizontal-orbit-1.png", "11-live-horizontal-orbit-2.png", "11-live-horizontal-orbit-3.png"],
+      "limitation": "The complete bottom underside is not exposed by these camera views."
+    },
+    {
+      "check": "native cord seating",
+      "status": "PASS_VISIBLE_ROUTE",
+      "observation": "Both lead legs and the upper join are present. Oblique and end-on views show the cord wrapping around the exterior end, with the cross-end section seated at the visible channels. Projected diagonal lead overlap in the front pinch view resolves into an exterior lead in the oblique view. No apparent visible solid penetration, missing segment, or detached route is present.",
+      "frames": ["11-live-front.png", "11-live-top-oblique.png", "11-live-horizontal-orbit-1.png", "11-live-horizontal-orbit-2.png", "11-live-horizontal-orbit-3.png"],
+      "limitation": "This visual audit does not recertify hidden passage clearance or prove transform invariance numerically."
+    },
+    {
+      "check": "ordinary touch camera orbit",
+      "status": "PASS_SUPPLIED_SETTLED_VIEWS",
+      "observation": "Successive touch-orbit frames show oblique, near-side, and end-on views while retaining pinch highlighting and the body/cord relationship. All supplied receipts report cameraSettled=true. The orbit diagnostic azimuth progresses approximately -0.54, -1.08, and -1.62 radians.",
+      "frames": ["11-live-horizontal-orbit-1.png", "11-live-horizontal-orbit-2.png", "11-live-horizontal-orbit-3.png"],
+      "limitation": "These are separate captured states; no claim is made about unseen intermediate animation frames or reset behavior."
+    },
+    {
+      "check": "selected hold UI",
+      "status": "PASS_SUPPLIED_PORTRAIT_CARDS",
+      "observation": "Cards correctly identify 15 mm wood edge / Edge / 15 mm, 15 mm granite edge / Edge / 15 mm, and 60 mm pinch block / Pinch / 60 mm. Each shows hand capacity 1. Cards match the visible highlight state and have readable titles and fields. The long board title wraps cleanly over two lines in portrait.",
+      "frames": ["11-live-hold-wood-edge-15.png", "11-live-hold-granite-edge-15.png", "11-live-hold-pinch-60.png"],
+      "limitation": "The hold-map chips are partly behind the floating tab bar in these scroll positions. One direct granite mesh pick is covered by the addendum; scrolling and chip interaction were not audited."
+    },
+    {
+      "check": "landscape map fit",
+      "status": "PASS_BOARD_AND_CORD_FIT",
+      "observation": "The entire board, both cord legs, and their upper join fit inside the landscape map with clear margins. Granite highlighting remains visible; the title fits on one line and navigation controls remain legible.",
+      "frames": ["11-live-landscape.png"],
+      "limitation": "The selected hold card begins below the captured viewport; its full landscape layout is not shown."
+    },
+    {
+      "check": "unselected Train and normal lens",
+      "status": "PASS_VISIBLE_RENDERING",
+      "observation": "Train shows a complete inactive thumbnail with tan wood, dark granite, both cord legs, and no residual red. The normal-lens detail frame keeps the model and cord unclipped with readable granite specs.",
+      "frames": ["11-live-unselected-train.png", "11-live-normal-lens.png"]
+    }
+  ],
+  "framesInspected": [
+    "11-live-front.png",
+    "11-live-hold-wood-edge-15.png",
+    "11-live-hold-granite-edge-15.png",
+    "11-live-hold-pinch-60.png",
+    "11-live-top-oblique.png",
+    "11-live-horizontal-orbit-1.png",
+    "11-live-horizontal-orbit-2.png",
+    "11-live-horizontal-orbit-3.png",
+    "11-live-landscape.png",
+    "11-live-normal-lens.png",
+    "11-live-unselected-train.png",
+    "11-granite-physical-mesh-pick.png",
+    "11-granite-restored-wood-selected-same-scene.png",
+    "11-wood-restored-granite-selected-same-scene.png"
+  ],
+  "interactionAddendum": {
+    "scope": "Three additional complete app frames, with matching screenshot, binary and installed-provenance hashes; all camera states settled.",
+    "physicalPick": {
+      "status": "PASS_ONE_SUPPLIED_GRANITE_PICK",
+      "frame": "11-granite-physical-mesh-pick.png",
+      "observation": "Red granite rail and selected card agree on granite-edge-15 / Edge / 15 mm / capacity 1. The receipt records actualPhysicalMeshPick=true, tapRevision=1 and pickedContact=granite-edge-15 after a before state with tapRevision=0."
+    },
+    "materialRestoration": {
+      "status": "PASS_SUPPLIED_SAME_SCENE_SEQUENCE",
+      "frames": ["11-granite-restored-wood-selected-same-scene.png", "11-wood-restored-granite-selected-same-scene.png"],
+      "observation": "Switching from selected granite to wood restores the granite rail's dark granular appearance and highlights the rounded wood bearing region. Switching back restores the wood region to tan and highlights only granite. Receipts retain the same launch timestamp, sameScene=true and tapRevision=1 while renderer revisions progress 2, 3, 4 with matching selected IDs.",
+      "limitation": "Contact changes use authored contact poses. The audit claims restored materials in one retained scene, not unchanged body pose between contact selections."
+    },
+    "remainingLimits": "Only the supplied front-view granite pick and wood/granite restoration sequence are audited. Wood/pinch physical picking, pinch restoration, full deselection and real workout phases are not claimed."
+  },
+  "sourceGeometryApproval": "Already accepted per root task context; this audit changes no geometry or approval.",
+  "currentAppUserAcceptance": "PENDING",
+  "physicalPickingAudit": "PASS_ONE_SUPPLIED_GRANITE_PICK",
+  "realWorkoutAudit": "NOT_AUDITED_SEPARATE_ROOT_CHECK",
+  "productionOrCanonicalChanges": false,
+  "appOrSimulatorOperationsByThisAgent": false,
+  "recommendation": "The supplied settled frames indicate no visible geometry or material correction. Present current app evidence for user acceptance while retaining the stated visual and interaction scope limits."
+}

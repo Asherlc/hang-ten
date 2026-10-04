@@ -1,5 +1,6 @@
 import RealityKit
 import SwiftUI
+import UIKit
 
 struct BoardModelSurface: View {
     enum ResultState {
@@ -11,6 +12,17 @@ struct BoardModelSurface: View {
             guard case .loading = self else { return nil }
             return "Downloading 3D model…"
         }
+
+        func preparationReadiness(hostID: UUID, preparationID: UUID?) -> WorkoutRendererReadiness {
+            guard let preparationID else { return .init() }
+            let status: WorkoutRendererReadiness.Renderer.Status
+            switch self {
+            case .loading: status = .loading
+            case .unavailable: status = .unavailable
+            case .ready: return .init() // The mounted host reports fresh CPU synchronization.
+            }
+            return .init(renderers: [hostID: .init(kind: .board, status: status, preparationID: preparationID)])
+        }
     }
 
     let board: BoardRevision
@@ -21,6 +33,8 @@ struct BoardModelSurface: View {
     let onContactTap: ((PhysicalContact) -> Void)?
     var isDisplayOnly = false
     @State private var result: ResultState = .loading
+    @State private var preparationHostID = UUID()
+    @Environment(\.workoutRendererPreparationID) private var preparationID
 
     init(
         board: BoardRevision,
@@ -55,7 +69,8 @@ struct BoardModelSurface: View {
                     highlightMode: highlightMode,
                     onContactTap: onContactTap,
                     onUnavailable: { result = .unavailable },
-                    isDisplayOnly: isDisplayOnly
+                    isDisplayOnly: isDisplayOnly,
+                    preparationHostID: preparationHostID
                 )
                 // Display-only picker cards wrap this in a Button; claiming
                 // SwiftUI hits here would intercept the card select tap even
@@ -88,6 +103,11 @@ struct BoardModelSurface: View {
             } else {
                 BoardModelUnavailableView()
             }
+        }
+        .transformPreference(WorkoutRendererReadinessKey.self) { readiness in
+            // Preserve the ready host's descendant report. Loading remains
+            // pending; terminal unavailability preserves the existing fallback.
+            readiness.renderers.merge(pendingPreparation.renderers) { _, pending in pending }
         }
         .task(id: loadIdentity) {
             guard !Task.isCancelled else { return }
@@ -130,6 +150,10 @@ struct BoardModelSurface: View {
             #endif
             result = .loading
         }
+    }
+
+    private var pendingPreparation: WorkoutRendererReadiness {
+        result.preparationReadiness(hostID: preparationHostID, preparationID: preparationID)
     }
 
     private var loadIdentity: BoardModelRealityKey? {
@@ -183,6 +207,24 @@ struct BoardModelRealityView: View {
     let onContactTap: ((PhysicalContact) -> Void)?
     let onUnavailable: (() -> Void)?
     var isDisplayOnly = false
+
+    var preparationHostID = UUID()
+    @Environment(\.workoutRendererPreparationID) private var preparationID
+    @State private var synchronizedPreparation: Preparation?
+
+    private struct Preparation: Equatable {
+        let modelID: ObjectIdentifier
+        let id: UUID
+        let size: CGSize
+        let positionID: String?
+        let contactIDs: Set<String>
+        let mode: BoardHighlightMode
+    }
+
+    private func currentPreparation(in size: CGSize) -> Preparation? {
+        preparationID.map { Preparation(modelID: ObjectIdentifier(model), id: $0, size: size, positionID: positionID,
+                                        contactIDs: highlightedContactIDs, mode: highlightMode) }
+    }
 
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -275,9 +317,7 @@ struct BoardModelRealityView: View {
             .overlay { accessibilityOverlay(size: size) }
             #if targetEnvironment(simulator)
             .background {
-                if onContactTap != nil {
-                    BoardSimulatorPresentation().allowsHitTesting(false)
-                }
+                SimulatorDrawablePresentation().allowsHitTesting(false)
             }
             #endif
             #if DEBUG
@@ -297,6 +337,10 @@ struct BoardModelRealityView: View {
             // A different scene needs a fresh RealityView make closure so its
             // root and camera replace the prior scene entities.
             .id(ObjectIdentifier(model))
+            .preference(key: WorkoutRendererReadinessKey.self, value: preparationID == nil
+                        ? .init() : .init(renderers: [preparationHostID: .init(
+                            kind: .board, isReady: synchronizedPreparation == currentPreparation(in: size),
+                            preparationID: preparationID)]))
         }
         // A display-only card is one element (its host Button owns the tap). An
         // interactive board exposes its contact elements instead, so the
@@ -347,6 +391,13 @@ struct BoardModelRealityView: View {
             Task { @MainActor in
                 cameraRevision &+= 1
             }
+        }
+        // content.add and this sync have completed. Scene attachment and GPU
+        // presentation may occur later; neither is certified by this milestone.
+        if let preparation = currentPreparation(in: size), synchronizedPreparation != preparation,
+           size.width.isFinite, size.height.isFinite, size.width > 0, size.height > 0,
+           positionID == nil || didSelect {
+            Task { @MainActor in synchronizedPreparation = preparation }
         }
         if let positionID, !didSelect {
             Task { @MainActor in
@@ -448,9 +499,13 @@ private struct BoardModelAccessibilityContainer: ViewModifier {
 #if targetEnvironment(simulator)
 import QuartzCore
 /// Keep Simulator drawable presentation independent of worker-thread CA transactions.
-private struct BoardSimulatorPresentation: UIViewRepresentable {
-    func makeUIView(context: Context) -> PresentationView { PresentationView() }
-    func updateUIView(_ view: PresentationView, context: Context) { view.scheduleConfiguration() }
+struct SimulatorDrawablePresentation: UIViewRepresentable {
+    func makeUIView(context: Context) -> PresentationView {
+        PresentationView()
+    }
+    func updateUIView(_ view: PresentationView, context: Context) {
+        view.scheduleConfiguration()
+    }
 
     final class PresentationView: UIView {
         private var pending: DispatchWorkItem?
@@ -523,9 +578,6 @@ private struct BoardSimulatorPresentation: UIViewRepresentable {
                     let layer = candidates[0]
                     layer.presentsWithTransaction = false
                     configuredLayer = layer
-                    #if DEBUG
-                    print("[BoardSimulatorPresentation] asynchronous=\(!layer.presentsWithTransaction) viewport=\(viewport)")
-                    #endif
                     attempts = 120
                     return
                 }

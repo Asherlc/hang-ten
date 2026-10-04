@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-mini10-final-xcode-stage",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-mini10-final-android-stage",
+      "absent": true
+    }
+  ]
+}

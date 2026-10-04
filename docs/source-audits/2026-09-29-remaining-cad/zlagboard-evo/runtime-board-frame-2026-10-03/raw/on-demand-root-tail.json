@@ -1,0 +1,61 @@
+{
+  "reviewer": "root",
+  "CPUBracketsAvailable": false,
+  "actualAppPhaseBoundariesMeasured": false,
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-191s.png",
+      "sha256": "8e5b3363b68dce737a7fe5e4926681f710ab8212552fb4611aa56e1ba3750006",
+      "visiblePhase": "Rest",
+      "boardContactColor": "blue",
+      "correct": true,
+      "handsVisible": true,
+      "appearance": "Dark and flat body; hold cavities not legible"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-192s.png",
+      "sha256": "0b95d000a0695c214fe60642f3a2454ac77991ecdb65713896e071e9cf78e9c0",
+      "visiblePhase": "Hang set 2",
+      "boardContactColor": "red",
+      "correct": true,
+      "handsVisible": true,
+      "appearance": "Dark and flat body; hold cavities not legible"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-193s.png",
+      "sha256": "c1644f1942aba62ac071d04ef706ea48320143b774d477ca9fb61fa12c84837e",
+      "visiblePhase": "Hang set 2",
+      "boardContactColor": "red",
+      "correct": true,
+      "handsVisible": true,
+      "appearance": "Dark and flat body; hold cavities not legible"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-194s.png",
+      "sha256": "29ce9f6580440e834502279bf449e9857eaf6abce06c4166d6cc953590fc7092",
+      "visiblePhase": "Hang set 2",
+      "boardContactColor": "red",
+      "correct": true,
+      "handsVisible": true,
+      "appearance": "Dark and flat body; hold cavities not legible"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-195s.png",
+      "sha256": "89d7a3627d896e0b21ea0e9e0b023a5bb43cd302a28b43c3018000c329e78c11",
+      "visiblePhase": "Hang set 2",
+      "boardContactColor": "red",
+      "correct": true,
+      "handsVisible": true,
+      "appearance": "Dark and flat body; hold cavities not legible"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-196s.png",
+      "sha256": "0b5143ebfdf4717a17ab72bfa8cb37140c2dea071697017a998a3d00357487d4",
+      "visiblePhase": "Hang set 2",
+      "boardContactColor": "red",
+      "correct": true,
+      "handsVisible": true,
+      "appearance": "Dark and flat body; hold cavities not legible"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "status": "Scratch recipe only; no source/build/install/runtime action authorized by this preparation.",
+  "helperSHA256": "bdaa3530021d126ff5fde61d8e083c47190c77917a1818d1cc10e1a29fa0f304",
+  "sourceHelper": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/workout-guarded-detach.py",
+    "sha256": "480220b28acb8f3ac4bf4e036fe2821989a2dcbb3053d7484305b56be6da322f"
+  },
+  "arms": [
+    "control",
+    "unmount"
+  ],
+  "startupProtocolChange": "Both fresh processes now wait for existing Train-tagged view-make plus exact attached/alive active root/camera ownership observation, max20seconds within unchanged300second total bound, before workout openurl. No fallback delay, AX, gesture or screenshot readiness check. Record readiness and openurl timestamps.",
+  "commonFlags": [
+    "HANGTEN_REVIEW_BOARD_DETACH_TRIAL=1",
+    "HANGTEN_REVIEW_DETACH_DISAPPEARING_BOARD_HOST=1",
+    "HANGTEN_REVIEW_PREDECESSOR_ATTACHMENT_CENSUS=1",
+    "HANGTEN_REVIEW_SUPPRESS_ALL_HAND_HOSTS=1"
+  ],
+  "actionOnlyFlag": "HANGTEN_REVIEW_UNMOUNT_TRAIN_FOR_WORKOUT=1",
+  "unchanged": "Original natural7second Hang/180second Rest/nextHang;12 captures at actualmutation+.25/+1/+3/+5 plus following-preview CPUtail. No explicitAUTOSTART, directroot, camera variants, counters, structural Train suppression at initial launch or frontend actions.",
+  "gates": [
+    "Root source/runtime release and reviewed source/binary parity before any launch.",
+    "New common control must validly reproduce color failure, including all12CPU brackets and actual workout host/frame/activation checks; otherwise stop.",
+    "Exactly one initial Train constructor/make in each arm, then exactly one workout constructor/make.",
+    "Ready Train actual attachment observed before openurl, then common guarded detach verified before first Hang; retained models/entities alive and detached through tail.",
+    "Forthcoming nav-state event must prove navigation true and structural request matches action flag; exact event schema and validator are pending source patch, not invented here.",
+    "Workout remains unmarked, actual frame/inputs/camera/ownership compared without layout compensation.",
+    "Weak recorded parent/Scene liveness recorded as point observations only, no backing-view-deallocation claim."
+  ],
+  "stopRule": "Control invalid/pass stops. Only valid control failure permits one unmount arm; stop after action regardless result. No retry, fallback or production adoption.",
+  "pending": [
+    "Structural gate patch and exact nav-state event schema",
+    "Source freeze/build/install/root execution release",
+    "Prospective final validator derived from check-trial.py with detachRequested true BOTH arms and separate structural flag/control decision"
+  ]
+}

@@ -1,0 +1,939 @@
+{
+  "reviewer": "baguette_review_prep",
+  "scope": "All40 final portrait whole screenshots individually opened; no montage substitution, crop, image processing or pixel measurement.",
+  "result": "PASS for captured static selection, physical-picking-supported identity, six yaw views and six fresh-view re-entries",
+  "humanAppAcceptance": "pending user reply; no approval recorded by this report",
+  "counts": {
+    "individualWholeImagesViewed": 40,
+    "uniquePNGHashes": 35,
+    "contactSelections": 28,
+    "yawOrbits": 6,
+    "freshViewReentries": 6
+  },
+  "images": [
+    {
+      "image": "captures-v4/top-jug-left.png",
+      "sha256": "23e5764556a99742dd1300db957086159487f8cc7f2ddde0f013acdba751488b",
+      "contactID": "top-jug-left",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Left outer top crest and visible rounded boundary red; neighboring sloper remains wood.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/top-jug-left-ax.json",
+        "sha256": "393d17a7046cc6bd455b68bbdd3c75950a0dd5d8925f69fe2da265dcda08ba21"
+      }
+    },
+    {
+      "image": "captures-v4/jug-orbit.png",
+      "sha256": "40af3313b37fcd3ca16d662a14a3b56bea3e146e5e163442802c5ccbc2ed012b",
+      "contactID": "top-jug-left",
+      "kind": "yaw orbit",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Left outer top crest and visible rounded boundary red; neighboring sloper remains wood.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Visible yaw changes perspective while selection remains red.",
+      "accessibilityRecord": {
+        "path": "captures-v4/jug-orbit-ax.json",
+        "sha256": "ada336648421d113d70020c82ac075d3272dae47f71f430ab7a305a9455fc133"
+      }
+    },
+    {
+      "image": "captures-v4/jug-fresh-view-reset.png",
+      "sha256": "23e5764556a99742dd1300db957086159487f8cc7f2ddde0f013acdba751488b",
+      "contactID": "top-jug-left",
+      "kind": "fresh-view re-entry",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Left outer top crest and visible rounded boundary red; neighboring sloper remains wood.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Returns to selected-contact initial framing, not a UI reset-button assertion.",
+      "accessibilityRecord": {
+        "path": "captures-v4/jug-fresh-view-reset-ax.json",
+        "sha256": "d0c2baba419f9bf9c06310342d6d1c78857fa4065bd85ef9416aada0cc3a3ce6"
+      }
+    },
+    {
+      "image": "captures-v4/top-jug-right.png",
+      "sha256": "95290a83b197c52f17a877b2b00cd2a23868517c68c3ccd841772b16914d54ff",
+      "contactID": "top-jug-right",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Right outer top crest and visible rounded boundary red; neighboring sloper remains wood.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/top-jug-right-ax.json",
+        "sha256": "01586b281b0379160e473b3fc7d3f721197f837641ca53d4cdf55720d62f9d59"
+      }
+    },
+    {
+      "image": "captures-v4/jug-right-orbit.png",
+      "sha256": "c248317288bea039bee6f0738416b8651180b29aba0fd0db3b0379c523ad3e05",
+      "contactID": "top-jug-right",
+      "kind": "yaw orbit",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Right outer top crest and visible rounded boundary red; neighboring sloper remains wood.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Visible yaw changes perspective while selection remains red.",
+      "accessibilityRecord": {
+        "path": "captures-v4/jug-right-orbit-ax.json",
+        "sha256": "1d523d2837a3a599f97f7ba18c80ff037992469b12409d423ab67826e99ece23"
+      }
+    },
+    {
+      "image": "captures-v4/jug-right-fresh-view-reset.png",
+      "sha256": "937e8e4662817d20497ebc5cbe4601755890b7c772191397a3739bd41279fbc3",
+      "contactID": "top-jug-right",
+      "kind": "fresh-view re-entry",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Right outer top crest and visible rounded boundary red; neighboring sloper remains wood.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Returns to selected-contact initial framing, not a UI reset-button assertion.",
+      "accessibilityRecord": {
+        "path": "captures-v4/jug-right-fresh-view-reset-ax.json",
+        "sha256": "c1c78907db46fc2bfe4653d01e3fab835bb81fbbdea7018e1520d74f91b800e9"
+      }
+    },
+    {
+      "image": "captures-v4/top-sloper-32-left.png",
+      "sha256": "cc3ce38eca6bc88c83f56ec2a8831c46a121faf22a57ab54b2bacac91ffb1936",
+      "contactID": "top-sloper-32-left",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Left outer recessed top slope red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/top-sloper-32-left-ax.json",
+        "sha256": "36e703d6411d7fa250cd315aaadb1b6c02653489641c033902b161058a251b95"
+      }
+    },
+    {
+      "image": "captures-v4/sloper-orbit.png",
+      "sha256": "1fae3bd49abb1dcfb738c4771f03802eadfb6ccd9147f2597aba1f171126066e",
+      "contactID": "top-sloper-32-left",
+      "kind": "yaw orbit",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Left outer recessed top slope red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Visible yaw changes perspective while selection remains red.",
+      "accessibilityRecord": {
+        "path": "captures-v4/sloper-orbit-ax.json",
+        "sha256": "9dab729de08fdafd19a81a9797d8d7e5c28f8f0027f652293d066f2a72061975"
+      }
+    },
+    {
+      "image": "captures-v4/sloper-fresh-view-reset.png",
+      "sha256": "cc3ce38eca6bc88c83f56ec2a8831c46a121faf22a57ab54b2bacac91ffb1936",
+      "contactID": "top-sloper-32-left",
+      "kind": "fresh-view re-entry",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Left outer recessed top slope red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Returns to selected-contact initial framing, not a UI reset-button assertion.",
+      "accessibilityRecord": {
+        "path": "captures-v4/sloper-fresh-view-reset-ax.json",
+        "sha256": "767ffbdd1af0c225d14fa60e9bddec1f2d3131c7946338f31f56b0fc962ae7dc"
+      }
+    },
+    {
+      "image": "captures-v4/top-sloper-20-left.png",
+      "sha256": "e5712fd3109feb0ec2e69e8763a54bdbc850fafcaaa4a0e349bb0941e8ad46fb",
+      "contactID": "top-sloper-20-left",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Left inner top slope red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/top-sloper-20-left-ax.json",
+        "sha256": "7a7c26ef3af3b78da0614e3a9f959dbde81378c6b5a6982950d212acaf0cd170"
+      }
+    },
+    {
+      "image": "captures-v4/top-sloper-jug-center.png",
+      "sha256": "b949b07a7808c1d0247a04f98dcadca14ef9d4a60faed9c1a7fef5e53550ab1a",
+      "contactID": "top-sloper-jug-center",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Center broad top surface red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/top-sloper-jug-center-ax.json",
+        "sha256": "7ebbfb14b9c176a1846b2d08fb434b18e6c77182addb510ebb10b1470e8ddc50"
+      }
+    },
+    {
+      "image": "captures-v4/edge-20-left.png",
+      "sha256": "34e576b33be0fe5c1a2869d2da84479696d4a986469d5621c79d71c364b9f874",
+      "contactID": "edge-20-left",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Middle pocket row, outer left pocket red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/edge-20-left-ax.json",
+        "sha256": "2d61483bdc67d7e8f57e1e1efde469603bff9bbff948e1e0b7416081d0f37d46"
+      }
+    },
+    {
+      "image": "captures-v4/edge-15-left.png",
+      "sha256": "d554fe2f8b5f9984891137dafceed55cde38482047f8ef3c6fd9b31678aa3e66",
+      "contactID": "edge-15-left",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Bottom pocket row, second left flat15 red; neighboring outer incut remains wood.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/edge-15-left-ax.json",
+        "sha256": "24b960d213911afb84789d017cd544c90e520b4bd3318b553af960978db7527c"
+      }
+    },
+    {
+      "image": "captures-v4/flat-orbit.png",
+      "sha256": "03d73f5e27748dfc1286c5c7efae35b7cd17b923e9bf70d2f0011e1173a379b0",
+      "contactID": "edge-15-left",
+      "kind": "yaw orbit",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Bottom pocket row, second left flat15 red; neighboring outer incut remains wood.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Visible yaw changes perspective while selection remains red.",
+      "accessibilityRecord": {
+        "path": "captures-v4/flat-orbit-ax.json",
+        "sha256": "c399ca2f1ea16f2ab926fbed1ee4285ec636e8f4c8f87018f34d45257c97ec8f"
+      }
+    },
+    {
+      "image": "captures-v4/flat-fresh-view-reset.png",
+      "sha256": "d554fe2f8b5f9984891137dafceed55cde38482047f8ef3c6fd9b31678aa3e66",
+      "contactID": "edge-15-left",
+      "kind": "fresh-view re-entry",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Bottom pocket row, second left flat15 red; neighboring outer incut remains wood.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Returns to selected-contact initial framing, not a UI reset-button assertion.",
+      "accessibilityRecord": {
+        "path": "captures-v4/flat-fresh-view-reset-ax.json",
+        "sha256": "2992b55539807338c127f4c48b1971dc605910e8fa9f22dae051f1995cf1e8d1"
+      }
+    },
+    {
+      "image": "captures-v4/edge-incut-15-left.png",
+      "sha256": "d062d91cabc5522d185e058f2cba1daf286a1d6de0166492d30fb487c1bfc705",
+      "contactID": "edge-incut-15-left",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Bottom pocket row, outer left incut red; separate from adjacent flat15.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/edge-incut-15-left-ax.json",
+        "sha256": "6aa7e138b6437d11c1ec6e6e09f1b9a9497d52a91d4b4a854196a91691d77bed"
+      }
+    },
+    {
+      "image": "captures-v4/incut-orbit.png",
+      "sha256": "287b3768dbccbd4717c7b0e62e087f837668bed1169b5b5345c53ade27d1b472",
+      "contactID": "edge-incut-15-left",
+      "kind": "yaw orbit",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Bottom pocket row, outer left incut red; separate from adjacent flat15.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Visible yaw changes perspective while selection remains red.",
+      "accessibilityRecord": {
+        "path": "captures-v4/incut-orbit-ax.json",
+        "sha256": "2399b01e4305be9a77f4b9c1ca27a7f9983651fd0240eb4f556d9a1e68aa2f3e"
+      }
+    },
+    {
+      "image": "captures-v4/incut-fresh-view-reset.png",
+      "sha256": "d062d91cabc5522d185e058f2cba1daf286a1d6de0166492d30fb487c1bfc705",
+      "contactID": "edge-incut-15-left",
+      "kind": "fresh-view re-entry",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Bottom pocket row, outer left incut red; separate from adjacent flat15.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Returns to selected-contact initial framing, not a UI reset-button assertion.",
+      "accessibilityRecord": {
+        "path": "captures-v4/incut-fresh-view-reset-ax.json",
+        "sha256": "81ac497b62e48052f8fbade2b3744841c23f3f6f5b9e65f1113363fac92e5fe2"
+      }
+    },
+    {
+      "image": "captures-v4/edge-incut-10-center.png",
+      "sha256": "9eb6c48f381d3f5d31c5e62d961dca4e2bcdb8c727634af487d2bc35bbe565c4",
+      "contactID": "edge-incut-10-center",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Bottom pocket row, center shallow incut10 red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/edge-incut-10-center-ax.json",
+        "sha256": "dea1da75bcf6bb456b6ea878cf8b3a93f8a31b68efd848e49e1ee82935b672f6"
+      }
+    },
+    {
+      "image": "captures-v4/shallow-incut-orbit.png",
+      "sha256": "ac6b224c1462c98bcf5885c8e6becbe245f312ffd39112027c442410980a197a",
+      "contactID": "edge-incut-10-center",
+      "kind": "yaw orbit",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Bottom pocket row, center shallow incut10 red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Visible yaw changes perspective while selection remains red.",
+      "accessibilityRecord": {
+        "path": "captures-v4/shallow-incut-orbit-ax.json",
+        "sha256": "1dd43cb76e33f0bfa8d37feaf3707ee890aa49eee82e62562f8a0898ad66339e"
+      }
+    },
+    {
+      "image": "captures-v4/shallow-incut-fresh-view-reset.png",
+      "sha256": "9eb6c48f381d3f5d31c5e62d961dca4e2bcdb8c727634af487d2bc35bbe565c4",
+      "contactID": "edge-incut-10-center",
+      "kind": "fresh-view re-entry",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Bottom pocket row, center shallow incut10 red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Returns to selected-contact initial framing, not a UI reset-button assertion.",
+      "accessibilityRecord": {
+        "path": "captures-v4/shallow-incut-fresh-view-reset-ax.json",
+        "sha256": "96ee872891d1a29b59e6954fd683a5339f01c4eae72d2f8a5561b8e9bca64540"
+      }
+    },
+    {
+      "image": "captures-v4/edge-35-center.png",
+      "sha256": "7695a0c9e025a8fb28f0f984f5add11092371af8338d664ff13313a6bcacd313",
+      "contactID": "edge-35-center",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Top pocket row, center pocket red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/edge-35-center-ax.json",
+        "sha256": "6ec43c69f28338bb2d6d9639f0849c5d9f3edbc6ff2be978513ce26dae8ea811"
+      }
+    },
+    {
+      "image": "captures-v4/top-sloper-32-right.png",
+      "sha256": "cefaa4714eddd6c97eeee4c2a9117f54ea060333e7bd86b06c0535f707097471",
+      "contactID": "top-sloper-32-right",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Right outer recessed top slope red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/top-sloper-32-right-ax.json",
+        "sha256": "45cc74760bffa2a856b3ea7fd62baa05524173bd4e6b92894c802099f11596c3"
+      }
+    },
+    {
+      "image": "captures-v4/top-sloper-20-right.png",
+      "sha256": "80fc734028d402773ad867a0bc92bb843e2a7e0f257cb833332a78c9054cb29e",
+      "contactID": "top-sloper-20-right",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Right inner top slope red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/top-sloper-20-right-ax.json",
+        "sha256": "2cff2d21df0c94defdeb520b91014934680f455d9ea693e80d1562a7d2fe0d54"
+      }
+    },
+    {
+      "image": "captures-v4/edge-30-left.png",
+      "sha256": "15f3d5bade5a4928e115550282f4da6bbb13e2c63f8badc1fb89a36d21621697",
+      "contactID": "edge-30-left",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Top pocket row, outer left pocket red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/edge-30-left-ax.json",
+        "sha256": "324ac21a78c955f860940eeb5e6e18c46a6bdc4cf4a00512f633bfcbb4fb9fd2"
+      }
+    },
+    {
+      "image": "captures-v4/sloper-edge-30-left.png",
+      "sha256": "9ea038ce19ca10dc10b312cd1881b9485a15d7785fd8b44416fd2e9ac142db47",
+      "contactID": "sloper-edge-30-left",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Top pocket row, second left pocket red; contact-aware camera angled.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/sloper-edge-30-left-ax.json",
+        "sha256": "7e67319f50fab7d06668b4a854d14bfb1e3b11e8037a78bb5a089a6e7176d107"
+      }
+    },
+    {
+      "image": "captures-v4/sloper-edge-25-left.png",
+      "sha256": "dd2163853e056bcfcf91d897d0680effcf7c3d5bb8ad829d2aaf597f062b77ad",
+      "contactID": "sloper-edge-25-left",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Top pocket row, third left pocket red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/sloper-edge-25-left-ax.json",
+        "sha256": "0969afbeaf149e654c62973b5dbd59a87fa0ab52a7bada748bdea399ffca19c4"
+      }
+    },
+    {
+      "image": "captures-v4/sloper-edge-25-right.png",
+      "sha256": "59d377127fe49e7ac762d9e137ad53c644a56cd6e07310ca2b65fd3473f7fba9",
+      "contactID": "sloper-edge-25-right",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Top pocket row, third right pocket red; contact-aware camera angled.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/sloper-edge-25-right-ax.json",
+        "sha256": "7554339fc2d5caa7bac65f2fa7f09622e85de643b13dedf2db40dc72032bdc68"
+      }
+    },
+    {
+      "image": "captures-v4/sloper-edge-30-right.png",
+      "sha256": "a0d1d19868ff5a7dfd8ec5f7d7334feb1a1dad4c65dd52f86465d3a5049a1c43",
+      "contactID": "sloper-edge-30-right",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Top pocket row, second right pocket red; shallower viewing pitch.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/sloper-edge-30-right-ax.json",
+        "sha256": "f44de3395d6b3c683dba55969d49acc86d3d72bd7d2052af92d99ef31da2fc14"
+      }
+    },
+    {
+      "image": "captures-v4/edge-30-right.png",
+      "sha256": "079100475b2506d0adee124681bd8e2208174c8023c09ccdde89d2238b20b786",
+      "contactID": "edge-30-right",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Top pocket row, outer right pocket red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/edge-30-right-ax.json",
+        "sha256": "b34898b0712f53fbc55668d2db22a841f0e5b0acac1b4a86d729cc517bd04352"
+      }
+    },
+    {
+      "image": "captures-v4/sloper-edge-25-lower-left.png",
+      "sha256": "176f763017a700a0af2e90b85947bb9ab8d6fef9fe9671cd32ae3a5a1e589deb",
+      "contactID": "sloper-edge-25-lower-left",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Middle pocket row, second left pocket red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/sloper-edge-25-lower-left-ax.json",
+        "sha256": "1bf43f88a6d5135681ae1d442d0b53f4537bf19002580521cd0a7891ae88c4b7"
+      }
+    },
+    {
+      "image": "captures-v4/edge-30-inner-left.png",
+      "sha256": "909b8c36412cc30e598b55b358e81cc1f201dded5cdf2576cd58304317ec15c4",
+      "contactID": "edge-30-inner-left",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Middle pocket row, third left pocket red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/edge-30-inner-left-ax.json",
+        "sha256": "3ae651b9e7e23f521cdf318e7012936b7af290f77d14337f73cd9c1d29702ab1"
+      }
+    },
+    {
+      "image": "captures-v4/sloper-edge-30-center.png",
+      "sha256": "9a1e1273d2ef1017ec67f68de0b119c1f8d1b7c692edb8e33761403c24fdbf78",
+      "contactID": "sloper-edge-30-center",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Middle pocket row, center pocket red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/sloper-edge-30-center-ax.json",
+        "sha256": "25ab6a7d23f9b35f65de0ab37e1f396e1e10fb88c5929a2138cd19d6bcf83b15"
+      }
+    },
+    {
+      "image": "captures-v4/edge-30-inner-right.png",
+      "sha256": "6175f51e0172903adc92aa302ff411ed058d273296b03f98e9028168cb04086d",
+      "contactID": "edge-30-inner-right",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Middle pocket row, third right pocket red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/edge-30-inner-right-ax.json",
+        "sha256": "271fb18aa748ea487200990d9cc18121f67986967c46a1b1092e4d823c9cd047"
+      }
+    },
+    {
+      "image": "captures-v4/sloper-edge-25-lower-right.png",
+      "sha256": "73510fe4f0335aafe334f74ee43d4ac09458aae31df82e05bdbdb0972e83f864",
+      "contactID": "sloper-edge-25-lower-right",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Middle pocket row, second right pocket red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/sloper-edge-25-lower-right-ax.json",
+        "sha256": "06ebd6e51bd8793322a9e034241c98ded8760cd00de00d0d251487e93c5b6cc6"
+      }
+    },
+    {
+      "image": "captures-v4/edge-20-right.png",
+      "sha256": "ea3d2ed4e58c1049773701a03a8c304477b047c8f0b73b42be9615072096115b",
+      "contactID": "edge-20-right",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Middle pocket row, outer right pocket red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/edge-20-right-ax.json",
+        "sha256": "ab444a70140805d51d3afccb18b7b6d5c974343935541a780553288812a1990b"
+      }
+    },
+    {
+      "image": "captures-v4/edge-incut-30-left.png",
+      "sha256": "569279eee63b8046e0096fe993e0e527ee9ce3b1d6e67fb9378845674e5a84bc",
+      "contactID": "edge-incut-30-left",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Bottom pocket row, third left incut30 red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/edge-incut-30-left-ax.json",
+        "sha256": "d0f36a20cc20dcffedd2cd19b579c900fc734f44d95cea34e94f63f5366dea10"
+      }
+    },
+    {
+      "image": "captures-v4/edge-incut-30-right.png",
+      "sha256": "c941342d1f1945598ffcba5680ca8d691ea276810e2ebb67c77247f4d6475437",
+      "contactID": "edge-incut-30-right",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Bottom pocket row, third right incut30 red.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/edge-incut-30-right-ax.json",
+        "sha256": "13ff72af2f1c0b26e289d68bb89d67c90c8f063fe866940fe8d70a6015b70f37"
+      }
+    },
+    {
+      "image": "captures-v4/edge-15-right.png",
+      "sha256": "c7e79d1197d0a653db338ea07115557ecfc1ba5ceb8d7805a1c791139741520f",
+      "contactID": "edge-15-right",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Bottom pocket row, second right flat15 red; neighboring outer incut remains wood.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/edge-15-right-ax.json",
+        "sha256": "b8194e45cf666d4e039763557c52d5d33d699da1307749cdfc8c5a4f37f0ada9"
+      }
+    },
+    {
+      "image": "captures-v4/edge-incut-15-right.png",
+      "sha256": "48a64f319b57fdb00d60f45fa26007fd650d83d4dfd14ce84d9314b920a881be",
+      "contactID": "edge-incut-15-right",
+      "kind": "selected contact",
+      "individuallyWholeViewed": true,
+      "visibleSelectedTitleMatchesContact": true,
+      "highlightColor": "red",
+      "visibleCoverage": "Bottom pocket row, outer right incut15 red; separate from adjacent flat15.",
+      "adjacentContactsUnselected": true,
+      "woodAndCavitiesLegible": true,
+      "wholeBoardFits": true,
+      "missingGeometry": false,
+      "result": "PASS",
+      "viewObservation": "Contact-specific viewing camera; visible shape agrees with selected title.",
+      "accessibilityRecord": {
+        "path": "captures-v4/edge-incut-15-right-ax.json",
+        "sha256": "c0a855354af00282fc74da797eafef267fb4446d045036b29c93c34f704c43d2"
+      }
+    }
+  ],
+  "proofBindings": [
+    {
+      "path": "captures-v4/checks.json",
+      "sha256": "542bdca0d9f886391b7ef197a474d9de39ad4ad60fbab3658db9a072d236fdb7"
+    },
+    {
+      "path": "captures-v4/completion.json",
+      "sha256": "d5d48babd19e3932a0042c097f64bcb4337d9401c9cfa9bf8bab23708e12fa58"
+    },
+    {
+      "path": "captures-v4/cleanup.json",
+      "sha256": "8be260b9004778b729b4c5befa46f3f06b9ec4ff73aeeb567dfbb882115e6a9f"
+    },
+    {
+      "path": "captures-v4/commands.json",
+      "sha256": "d0a409550b624745ec77d88dbef43a3b956fc2e8c172ed5642d6207d3e42a6d9"
+    },
+    {
+      "path": "captures-v4/prospective-plan.json",
+      "sha256": "ca125e3edc1fb348a7ef116fe8c26d11b072ee63509ad8887a0b21db6398c090"
+    },
+    {
+      "path": "source-reference.json",
+      "sha256": "b2fb394ffcf6cae0ab4100a8d15a0113c9131d4bb5cb7b7d062c3b276a397b7a"
+    },
+    {
+      "path": "generated-board.json",
+      "sha256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8"
+    },
+    {
+      "path": "build/source-reference.json",
+      "sha256": "b2fb394ffcf6cae0ab4100a8d15a0113c9131d4bb5cb7b7d062c3b276a397b7a"
+    },
+    {
+      "path": "build/parity.json",
+      "sha256": "7acf8667aef1b05aba22875575777b5da0e427408f84b98f06286bcc79a63731"
+    },
+    {
+      "path": "build/build.exit.json",
+      "sha256": "b91d66320adb18cd6dbd44a4304dff8cc72625f7f5528991b038ed5f42756dad"
+    }
+  ],
+  "mechanicalCompletion": {
+    "completed": true,
+    "expectedContacts": 28,
+    "capturedContacts": 28,
+    "totalImages": 40,
+    "sourceAndPackageParityPreserved": true,
+    "visualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+    "error": null,
+    "cleanupPassed": true
+  },
+  "appCleanup": {
+    "owner": "placid-badger-cad-second-half",
+    "uuid": "790E10AD-5154-463E-8232-288E28FA57D7",
+    "allOwnedAppPIDsAbsent": true,
+    "appPIDs": [
+      4066,
+      4242,
+      4474,
+      4815,
+      4997,
+      5155,
+      5243,
+      5317,
+      7644,
+      8453,
+      8540,
+      8661,
+      8917,
+      9071,
+      9410,
+      9595,
+      9797,
+      9867,
+      10268,
+      10324,
+      10427,
+      10513,
+      10612,
+      10699,
+      10787,
+      10985,
+      11132,
+      11212,
+      11313,
+      12202,
+      12286,
+      12395,
+      12606,
+      15045
+    ],
+    "passed": true
+  },
+  "sourceAndBinary": {
+    "binaryDebugDylibSHA256": "d191ee271347c493138509232b6bdf4514832047ab3ae4c1ddeb6a3feb2846d7",
+    "buildInstalledParity": true,
+    "sourceReferenceFilesEqualPriorCleanBuild": true,
+    "sourceFileCount": 12,
+    "priorCleanSourceReference": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/clean-build/source-reference.json",
+    "priorCleanSourceReferenceSHA256": "7f77c0b2161c28e55f026b0e8fd72eda63a3f8e030a6b5554b63958255a6dbb6",
+    "priorWorkoutBinarySHA256": "97f7f90cc61f594cb75c4fe17e68dade07ffa90173cad7d3b3b986944fd69453",
+    "qualification": "These static40 use a different fresh build from earlier clean Pro landscape58 workflow, with the same12 frozen source hashes. This report does not relabel either binary as identical."
+  },
+  "limits": [
+    "Visible crest/corner coverage only; hidden backside coverage and exact manufacturing dimensions are not established by these yaw images.",
+    "Flat/incut contacts remain distinct and show expected separate red regions; screenshots do not measure bearing angles or depths.",
+    "All six gestures here are successful horizontal yaw; earlier failed diagonal probes remain failures, untouched.",
+    "Fresh-view reset means app detail re-entry after relaunch, not a reset button or same-contact toggle.",
+    "Selected title/specification text fits; long hold-map button titles are ellipsized and lower rows continue below the viewport/tab bar. No full scrolling legend review claimed.",
+    "System black status capsule appears in some raw images without obscuring board or selected title; no cause assigned.",
+    "App cleanup above does not assert Simulator/DD cleanup; root owns that lifecycle.",
+    "Only completed screenshots reviewed, no continuous-frame/GPU timing or physical-device claim.",
+    "Native source geometry remains previously accepted and unchanged; this independent review does not confer human app acceptance."
+  ],
+  "preservedHistory": {
+    "directories": [
+      "captures",
+      "captures-v2",
+      "captures-v3"
+    ],
+    "changed": false,
+    "rawVisualResultPendingPreserved": true
+  }
+}

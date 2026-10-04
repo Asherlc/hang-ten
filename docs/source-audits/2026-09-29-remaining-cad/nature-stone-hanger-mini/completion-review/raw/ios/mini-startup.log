@@ -1,0 +1,90 @@
+Timestamp               Ty Process[PID:TID]
+2026-10-01 20:51:58.264 Df HangTen[91145:22f186f] [com.apple.xpc:connection] [0x102e7f300] activating connection: mach=true listener=false peer=false name=com.apple.cfprefsd.daemon
+2026-10-01 20:51:58.271 Df HangTen[91145:22f186f] [com.apple.xpc:connection] [0x102e87d40] activating connection: mach=true listener=false peer=false name=com.apple.lsd.advertisingidentifiers
+2026-10-01 20:51:58.276 Df HangTen[91145:22f186f] [com.apple.network:] networkd_settings_read_from_file_locked initialized networkd settings by reading plist directly
+2026-10-01 20:51:58.276 Df HangTen[91145:22f186f] [com.apple.network:] networkd_settings_read_from_file_locked initialized networkd settings by reading plist directly
+2026-10-01 20:51:58.280 Df HangTen[91145:22f1896] [com.apple.BoardServices:XPCErrors] [C:1] Alloc com.apple.frontboard.systemappservices
+2026-10-01 20:51:58.280 Df HangTen[91145:22f1896] [com.apple.xpc:connection] [0x1035e4000] activating connection: mach=false listener=false peer=false name=(anonymous)
+2026-10-01 20:51:58.282 Df HangTen[91145:22f186f] (libMobileGestalt.dylib) No persisted cache on this platform.
+2026-10-01 20:51:58.326 Df HangTen[91145:22f186f] [com.apple.network:] -[NWConcrete_nw_resolver initWithEndpoint:parameters:path:log_str:] [R1] created for Hostname#996371f0:0 using: generic, attribution: developer
+2026-10-01 20:51:58.326 Df HangTen[91145:22f1896] [com.apple.network:] nw_resolver_set_update_handler_block_invoke [R1] started
+2026-10-01 20:51:58.326 Df HangTen[91145:22f186f] [com.apple.network:path] nw_path_evaluator_start [77ADC59B-BF1D-4CE7-87FB-73BA29A5D9F9 Hostname#996371f0:0 generic, attribution: developer]
+	path: satisfied (Path is satisfied), interface: en0[802.11], uses wifi, LQM: unknown
+2026-10-01 20:51:58.329 A  HangTen[91145:22f1899] (CoreFoundation) Loading Preferences From User Session CFPrefsD
+2026-10-01 20:51:58.329 Df HangTen[91145:22f1899] [com.apple.CFNetwork:Default] Task <9C108031-C6EF-48D3-8485-A3FFC9921680>.<1> finished with error [-999] Error Domain=NSURLErrorDomain Code=-999 UserInfo={NSErrorFailingURLStringKey=, NSErrorFailingURLKey=<private>, _NSURLErrorRelatedURLSessionTaskErrorKey=<private>, _NSURLErrorFailingURLSessionTaskErrorKey=<private>, NSLocalizedDescription=<private>}
+2026-10-01 20:51:58.345 A  HangTen[91145:22f189a] (CoreFoundation) Loading Preferences From User Session CFPrefsD
+2026-10-01 20:51:58.346 Df HangTen[91145:22f186f] [com.apple.UIKit:Application] Deactivation reason added: 10; deactivation reasons: 0 -> 1024; animating application lifecycle event: 0
+2026-10-01 20:51:58.346 Df HangTen[91145:22f1899] [com.apple.UIKit:BackgroundTask] Creating new assertion because there is no existing background assertion.
+2026-10-01 20:51:58.347 Df HangTen[91145:22f1899] [com.apple.UIKit:BackgroundTask] Creating new background assertion
+2026-10-01 20:51:58.347 Df HangTen[91145:22f186f] [com.apple.runningboard:connection] Initializing connection
+2026-10-01 20:51:58.347 Df HangTen[91145:22f186f] [com.apple.runningboard:process] Removing all cached process handles
+2026-10-01 20:51:58.347 Df HangTen[91145:22f1899] [com.apple.UIKit:BackgroundTask] Created new background assertion <BKSProcessAssertion: 0x103688280>
+2026-10-01 20:51:58.347 Df HangTen[91145:22f1896] [com.apple.runningboard:connection] Sending handshake request attempt #1 to server
+2026-10-01 20:51:58.347 Df HangTen[91145:22f186f] [com.apple.BoardServices:Injection] activating monitor for service com.apple.frontboard.open
+2026-10-01 20:51:58.347 Df HangTen[91145:22f1896] [com.apple.runningboard:connection] Creating connection to com.apple.runningboard
+2026-10-01 20:51:58.347 Df HangTen[91145:22f1896] [com.apple.xpc:connection] [0x1035e4500] activating connection: mach=true listener=false peer=false name=com.apple.runningboard
+2026-10-01 20:51:58.347 Df HangTen[91145:22f186f] [com.apple.BoardServices:Injection] activating monitor for service com.apple.frontboard.workspace-service
+2026-10-01 20:51:58.347 Df HangTen[91145:22f186f] [com.apple.FrontBoard:Common] FBSWorkspace registering source: com.apple.frontboard.systemappservices
+2026-10-01 20:51:58.347 A  HangTen[91145:22f189a] (RunningBoardServices) didChangeInheritances
+2026-10-01 20:51:58.347 Df HangTen[91145:22f1896] [com.apple.runningboard:connection] Handshake succeeded
+2026-10-01 20:51:58.347 Df HangTen[91145:22f1896] [com.apple.runningboard:connection] Identity resolved as app<com.hangten.training((null))>
+2026-10-01 20:51:58.348 Df HangTen[91145:22f186f] [com.apple.FrontBoard:Common] FBSWorkspace connected to endpoint : <BSServiceConnectionEndpoint: 0x10355e280; target: com.apple.frontboard.systemappservices; service: com.apple.frontboard.workspace-service>
+2026-10-01 20:51:58.348 Df HangTen[91145:22f186f] [com.apple.FrontBoard:Common] <FBSWorkspaceScenesClient:0x103529040 com.apple.frontboard.systemappservices> attempting immediate handshake from activate
+2026-10-01 20:51:58.348 Df HangTen[91145:22f186f] [com.apple.FrontBoard:Common] <FBSWorkspaceScenesClient:0x103529040 com.apple.frontboard.systemappservices> sent handshake
+2026-10-01 20:51:58.348 Df HangTen[91145:22f1899] [com.apple.UIKit:BackgroundTask] Incrementing reference count for background assertion <BKSProcessAssertion: 0x103688280>
+2026-10-01 20:51:58.348 Df HangTen[91145:22f1899] [com.apple.UIKit:BackgroundTask] Created background task <_UIBackgroundTaskInfo: 0x10366e100>: taskID = 1, taskName = Launch Background Task for Coalescing, creationTime = 441165 (elapsed = 0).
+2026-10-01 20:51:58.348 Df HangTen[91145:22f186f] [com.apple.runningboard:general] Added observer for process assertions expiration warning: <_RBSExpirationWarningClient: 0x10355e640>
+2026-10-01 20:51:58.348 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UIApplicationSceneKeyboardSettings on FBSSceneSettings
+2026-10-01 20:51:58.349 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneOcclusionSettings> on FBSSceneSettings
+2026-10-01 20:51:58.349 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneInterfaceProtectionSettings> on FBSSceneSettings
+2026-10-01 20:51:58.349 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneLayoutPreferencesHostSettingsExtension on FBSSceneSettings
+2026-10-01 20:51:58.349 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneSafeAreaSettingsExtension on FBSSceneSettings
+2026-10-01 20:51:58.349 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneLayoutPreferenceClientSettingsExtension on FBSSceneClientSettings
+2026-10-01 20:51:58.350 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UIHomeAffordanceHostSceneSettings> on FBSSceneSettings
+2026-10-01 20:51:58.350 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISystemShellSceneHostingEnvironmentSettings on FBSSceneSettings
+2026-10-01 20:51:58.350 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneRenderingEnvironmentSettings on FBSSceneSettings
+2026-10-01 20:51:58.350 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneRenderingEnvironmentClientSettings> on FBSSceneClientSettings
+2026-10-01 20:51:58.350 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneTransitioningHostSettings> on FBSSceneSettings
+2026-10-01 20:51:58.350 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneFocusSystemSettings> on FBSSceneSettings
+2026-10-01 20:51:58.350 Df HangTen[91145:22f186f] [com.apple.UIKit:UIScreen] Evaluated capturing state as 0 on <UIScreen: 0x1035e4780> for initial
+2026-10-01 20:51:58.350 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneOrientationSettingsExtension on FBSSceneSettings
+2026-10-01 20:51:58.351 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneOrientationClientSettingsExtension on FBSSceneClientSettings
+2026-10-01 20:51:58.351 Df HangTen[91145:22f186f] [com.apple.UIKit:UIScreen] Evaluated capturing state as 0 on <UIScreen: 0x1035e4780> for CADisplay KVO
+2026-10-01 20:51:58.351 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneWindowingControlClientSettings on FBSSceneClientSettings
+2026-10-01 20:51:58.351 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneHostingContentSizePreferenceClientSettings> on FBSSceneClientSettings
+2026-10-01 20:51:58.351 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension _UISceneHostingTraitCollectionPropagationSettings on FBSSceneSettings
+2026-10-01 20:51:58.351 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneHostingSheetPresentationSettings> on FBSSceneSettings
+2026-10-01 20:51:58.351 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneHostingSheetPresentationClientSettings> on FBSSceneClientSettings
+2026-10-01 20:51:58.351 Df HangTen[91145:22f186f] [com.apple.Accessibility:AXSupportCommon] Read CategoryName: per-app = 1, category name = (null)
+2026-10-01 20:51:58.351 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneHostingEventDeferringSettings> on FBSSceneSettings
+2026-10-01 20:51:58.352 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <UIKit__UITypedKeyValueSceneSettings> on FBSSceneSettings
+2026-10-01 20:51:58.352 Df HangTen[91145:22f186f] [com.apple.Accessibility:AXSupportCommon] Read CategoryName: per-app = 0, category name = (null)
+2026-10-01 20:51:58.352 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <UIKit__UITypedKeyValueSceneSettings> on FBSSceneClientSettings
+2026-10-01 20:51:58.352 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneHostingViewControllerPreferencePropagationClientSettings> on FBSSceneClientSettings
+2026-10-01 20:51:58.352 Df HangTen[91145:22f1899] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneZoomTransitionSettings> on FBSSceneSettings
+2026-10-01 20:51:58.432 A  HangTen[91145:22f18a6] (CoreFoundation) Updating Key-Value Observers Of Preferences
+2026-10-01 20:51:58.440 Df HangTen[91145:22f186f] [com.apple.dt.xctest:Default] Registering for test daemon availability notify post.
+2026-10-01 20:51:58.440 Df HangTen[91145:22f186f] [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-10-01 20:51:58.440 Df HangTen[91145:22f186f] [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-10-01 20:51:58.440 Df HangTen[91145:22f186f] [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-10-01 20:51:58.441 Df HangTen[91145:22f186f] [com.apple.UIKit:Application] Deactivation reason added: 11; deactivation reasons: 1024 -> 3072; animating application lifecycle event: 0
+2026-10-01 20:51:58.442 Df HangTen[91145:22f186f] [com.apple.UIKit:Application] Deactivation reason removed: 10; deactivation reasons: 3072 -> 2048; animating application lifecycle event: 0
+2026-10-01 20:51:58.442 Df HangTen[91145:22f186f] [com.apple.UIKit:EventBus] Event Timing Profile for Touch: not found, path="/System/Library/EventTimingProfiles/Sim.Touch.plist"
+2026-10-01 20:51:58.442 Df HangTen[91145:22f186f] [com.apple.UIKit:EventBus] Event Timing Profile for Pencil: not found, path="/System/Library/EventTimingProfiles/Sim.Pencil.plist"
+2026-10-01 20:51:58.442 Df HangTen[91145:22f186f] [com.apple.UIKit:UpdateScheduler] Selected display: name=LCD (PurpleMain), id=1
+2026-10-01 20:51:58.522 Df HangTen[91145:22f186f] (libMobileGestalt.dylib) Property isp[camera-front] found {length = 4, bytes = 0x01000000}
+2026-10-01 20:51:58.523 A  HangTen[91145:22f186f] (CoreFoundation) Updating Key-Value Observers Of Preferences
+2026-10-01 20:51:58.527 A  HangTen[91145:22f186f] (libsystem_containermanager.dylib) container_system_group_path_for_identifier
+2026-10-01 20:51:58.527 Df HangTen[91145:22f186f] [com.apple.containermanager:xpc] Requesting container lookup; class = 13, identifier = (null), group_identifier = systemgroup.com.apple.configurationprofiles, create = 1, temp = 0, euid = 502, uid = 502
+2026-10-01 20:51:58.527 A  HangTen[91145:22f186f] (libsystem_containermanager.dylib) container_query_t
+2026-10-01 20:51:58.527 Df HangTen[91145:22f186f] [com.apple.containermanager:xpc] Query; euid = 502, uid = 502, class = 13, identifier = [(null)](0), flags = 900000003
+2026-10-01 20:51:58.528 Df HangTen[91145:22f186f] [com.apple.containermanager:unspecified] _container_query_get_result_at_index: success
+2026-10-01 20:51:58.528 A  HangTen[91145:22f186f] (libsystem_containermanager.dylib) container_copy_object
+2026-10-01 20:51:58.528 Df HangTen[91145:22f186f] [com.apple.containermanager:unspecified] container_system_group_path_for_identifier: success
+2026-10-01 20:51:58.528 Df HangTen[91145:22f186f] [com.apple.ManagedConfiguration:MC] Got system group container path from MCM for systemgroup.com.apple.configurationprofiles: /Users/asherlc/Library/Developer/CoreSimulator/Devices/E9D3D8B4-1440-4417-862B-3023AF3841FA/data/Containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles
+2026-10-01 20:51:58.857 Df HangTen[91145:22f186f] [com.apple.Accessibility:AXCommon] Read Per-App on Init: Smart invert = (null)
+2026-10-01 20:51:59.358 Df HangTen[91145:22f18a0] [com.apple.UIKit:BackgroundTask] Ending background task with UIBackgroundTaskIdentifier: 1
+2026-10-01 20:51:59.358 Df HangTen[91145:22f18a0] [com.apple.UIKit:BackgroundTask] Ending task with identifier 1 and description: <_UIBackgroundTaskInfo: 0x10366e100>: taskID = 1, taskName = Launch Background Task for Coalescing, creationTime = 441165 (elapsed = 1), _expireHandler: (null)
+2026-10-01 20:51:59.358 Df HangTen[91145:22f18a0] [com.apple.UIKit:BackgroundTask] Decrementing reference count for assertion <BKSProcessAssertion: 0x103688280> (used by background task with identifier 1: <_UIBackgroundTaskInfo: 0x10366e100>: taskID = 1, taskName = Launch Background Task for Coalescing, creationTime = 441165 (elapsed = 1))
+2026-10-01 20:51:59.358 Df HangTen[91145:22f18a0] [com.apple.UIKit:BackgroundTask] Will invalidate assertion: <BKSProcessAssertion: 0x103688280> for task identifier: 1
+getpwuid_r did not find a match for uid 502

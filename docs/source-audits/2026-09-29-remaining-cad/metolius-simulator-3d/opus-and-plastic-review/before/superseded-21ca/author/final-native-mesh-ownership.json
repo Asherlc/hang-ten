@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "final-native-mesh",
+  "script": ".context/placid-badger/metolius-simulator-3d-opus-corrections/extract_final_native_mesh.py",
+  "timeoutSeconds": 120,
+  "startedUTC": "2026-10-01T15:59:06.053600+00:00",
+  "ownedProcessGroup": 43427,
+  "elapsedSeconds": 3.1418454999802634,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

@@ -1,0 +1,506 @@
+{
+  "silhouetteBezierSpansRightXZ": [
+    [
+      [
+        0,
+        139.5
+      ],
+      [
+        60,
+        139.5
+      ],
+      [
+        145,
+        139.5
+      ],
+      [
+        205,
+        137
+      ]
+    ],
+    [
+      [
+        205,
+        137
+      ],
+      [
+        235,
+        136
+      ],
+      [
+        253,
+        125
+      ],
+      [
+        280,
+        99
+      ]
+    ],
+    [
+      [
+        280,
+        99
+      ],
+      [
+        326,
+        53
+      ],
+      [
+        396,
+        -72
+      ],
+      [
+        413,
+        -105
+      ]
+    ],
+    [
+      [
+        413,
+        -105
+      ],
+      [
+        413,
+        -130
+      ],
+      [
+        400,
+        -139.5
+      ],
+      [
+        378,
+        -139.5
+      ]
+    ],
+    [
+      [
+        378,
+        -139.5
+      ],
+      [
+        355,
+        -139.5
+      ],
+      [
+        336,
+        -122
+      ],
+      [
+        310,
+        -119
+      ]
+    ],
+    [
+      [
+        310,
+        -119
+      ],
+      [
+        220,
+        -108
+      ],
+      [
+        70,
+        -111
+      ],
+      [
+        0,
+        -111
+      ]
+    ]
+  ],
+  "pockets": [
+    {
+      "contactID": "pocket-4-left",
+      "centerXZ": [
+        -215,
+        61
+      ],
+      "mouthWHR": [
+        87,
+        27,
+        11
+      ],
+      "angleDegrees": 3,
+      "depthMm": 30,
+      "frontEstimateMm": -63.542692574320135
+    },
+    {
+      "contactID": "pocket-4-right",
+      "centerXZ": [
+        215,
+        61
+      ],
+      "mouthWHR": [
+        87,
+        27,
+        11
+      ],
+      "angleDegrees": -3,
+      "depthMm": 30,
+      "frontEstimateMm": -63.542692574320135
+    },
+    {
+      "contactID": "pocket-5-left",
+      "centerXZ": [
+        -137,
+        65
+      ],
+      "mouthWHR": [
+        43,
+        27,
+        10
+      ],
+      "angleDegrees": 2,
+      "depthMm": 40,
+      "frontEstimateMm": -64.6288329072999
+    },
+    {
+      "contactID": "pocket-5-right",
+      "centerXZ": [
+        137,
+        65
+      ],
+      "mouthWHR": [
+        43,
+        27,
+        10
+      ],
+      "angleDegrees": -2,
+      "depthMm": 40,
+      "frontEstimateMm": -64.6288329072999
+    },
+    {
+      "contactID": "pocket-6-left",
+      "centerXZ": [
+        -290,
+        1
+      ],
+      "mouthWHR": [
+        63,
+        25,
+        9
+      ],
+      "angleDegrees": 6,
+      "depthMm": 20,
+      "frontEstimateMm": -51.628080025379866
+    },
+    {
+      "contactID": "pocket-6-right",
+      "centerXZ": [
+        290,
+        1
+      ],
+      "mouthWHR": [
+        63,
+        25,
+        9
+      ],
+      "angleDegrees": -6,
+      "depthMm": 20,
+      "frontEstimateMm": -51.628080025379866
+    },
+    {
+      "contactID": "pocket-7-left",
+      "centerXZ": [
+        -214,
+        10
+      ],
+      "mouthWHR": [
+        69,
+        27,
+        10
+      ],
+      "angleDegrees": 3,
+      "depthMm": 30,
+      "frontEstimateMm": -55.25427071360199
+    },
+    {
+      "contactID": "pocket-7-right",
+      "centerXZ": [
+        214,
+        10
+      ],
+      "mouthWHR": [
+        69,
+        27,
+        10
+      ],
+      "angleDegrees": -3,
+      "depthMm": 30,
+      "frontEstimateMm": -55.25427071360199
+    },
+    {
+      "contactID": "pocket-8-left",
+      "centerXZ": [
+        -138,
+        12
+      ],
+      "mouthWHR": [
+        42,
+        27,
+        10
+      ],
+      "angleDegrees": 1,
+      "depthMm": 32,
+      "frontEstimateMm": -55.41567898806287
+    },
+    {
+      "contactID": "pocket-8-right",
+      "centerXZ": [
+        138,
+        12
+      ],
+      "mouthWHR": [
+        42,
+        27,
+        10
+      ],
+      "angleDegrees": -1,
+      "depthMm": 32,
+      "frontEstimateMm": -55.41567898806287
+    },
+    {
+      "contactID": "pocket-9-left",
+      "centerXZ": [
+        -292,
+        -51
+      ],
+      "mouthWHR": [
+        67,
+        24,
+        9
+      ],
+      "angleDegrees": 4,
+      "depthMm": 20,
+      "frontEstimateMm": -41.686873472468996
+    },
+    {
+      "contactID": "pocket-9-right",
+      "centerXZ": [
+        292,
+        -51
+      ],
+      "mouthWHR": [
+        67,
+        24,
+        9
+      ],
+      "angleDegrees": -4,
+      "depthMm": 20,
+      "frontEstimateMm": -41.686873472468996
+    },
+    {
+      "contactID": "pocket-10-left",
+      "centerXZ": [
+        -214,
+        -46
+      ],
+      "mouthWHR": [
+        64,
+        24,
+        9
+      ],
+      "angleDegrees": 3,
+      "depthMm": 25,
+      "frontEstimateMm": -42.560620123680465
+    },
+    {
+      "contactID": "pocket-10-right",
+      "centerXZ": [
+        214,
+        -46
+      ],
+      "mouthWHR": [
+        64,
+        24,
+        9
+      ],
+      "angleDegrees": -3,
+      "depthMm": 25,
+      "frontEstimateMm": -42.560620123680465
+    },
+    {
+      "contactID": "pocket-11-left",
+      "centerXZ": [
+        -138,
+        -44
+      ],
+      "mouthWHR": [
+        41,
+        24,
+        9
+      ],
+      "angleDegrees": 1,
+      "depthMm": 25,
+      "frontEstimateMm": -42.66298123606082
+    },
+    {
+      "contactID": "pocket-11-right",
+      "centerXZ": [
+        138,
+        -44
+      ],
+      "mouthWHR": [
+        41,
+        24,
+        9
+      ],
+      "angleDegrees": -1,
+      "depthMm": 25,
+      "frontEstimateMm": -42.66298123606082
+    },
+    {
+      "contactID": "pocket-12-left",
+      "centerXZ": [
+        -293,
+        -97
+      ],
+      "mouthWHR": [
+        73,
+        24,
+        9
+      ],
+      "angleDegrees": 3,
+      "depthMm": 12,
+      "frontEstimateMm": -31.433458391749873
+    },
+    {
+      "contactID": "pocket-12-right",
+      "centerXZ": [
+        293,
+        -97
+      ],
+      "mouthWHR": [
+        73,
+        24,
+        9
+      ],
+      "angleDegrees": -3,
+      "depthMm": 12,
+      "frontEstimateMm": -31.433458391749873
+    },
+    {
+      "contactID": "pocket-13-left",
+      "centerXZ": [
+        -214,
+        -94
+      ],
+      "mouthWHR": [
+        66,
+        24,
+        9
+      ],
+      "angleDegrees": 2,
+      "depthMm": 17,
+      "frontEstimateMm": -32.094125569659404
+    },
+    {
+      "contactID": "pocket-13-right",
+      "centerXZ": [
+        214,
+        -94
+      ],
+      "mouthWHR": [
+        66,
+        24,
+        9
+      ],
+      "angleDegrees": -2,
+      "depthMm": 17,
+      "frontEstimateMm": -32.094125569659404
+    },
+    {
+      "contactID": "pocket-14-left",
+      "centerXZ": [
+        -138,
+        -91
+      ],
+      "mouthWHR": [
+        41,
+        24,
+        9
+      ],
+      "angleDegrees": 1,
+      "depthMm": 17,
+      "frontEstimateMm": -32.756579333237596
+    },
+    {
+      "contactID": "pocket-14-right",
+      "centerXZ": [
+        138,
+        -91
+      ],
+      "mouthWHR": [
+        41,
+        24,
+        9
+      ],
+      "angleDegrees": -1,
+      "depthMm": 17,
+      "frontEstimateMm": -32.756579333237596
+    },
+    {
+      "contactID": "edge-16-center",
+      "centerXZ": [
+        0,
+        88
+      ],
+      "mouthWHR": [
+        198,
+        25,
+        10
+      ],
+      "angleDegrees": 0,
+      "depthMm": 15,
+      "frontEstimateMm": -67.0000001
+    },
+    {
+      "contactID": "edge-17-center",
+      "centerXZ": [
+        0,
+        19
+      ],
+      "mouthWHR": [
+        214,
+        31,
+        10
+      ],
+      "angleDegrees": 0,
+      "depthMm": 35,
+      "frontEstimateMm": -56.1215001
+    },
+    {
+      "contactID": "edge-18-center",
+      "centerXZ": [
+        0,
+        -39
+      ],
+      "mouthWHR": [
+        218,
+        29,
+        10
+      ],
+      "angleDegrees": 0,
+      "depthMm": 28,
+      "frontEstimateMm": -43.08678446279297
+    },
+    {
+      "contactID": "edge-19-center",
+      "centerXZ": [
+        0,
+        -91
+      ],
+      "mouthWHR": [
+        214,
+        26,
+        10
+      ],
+      "angleDegrees": 0,
+      "depthMm": 23,
+      "frontEstimateMm": -32.94889805918368
+    }
+  ],
+  "publishedEnvelope": "32.5 \u00d7 11 \u00d7 2.625 in",
+  "allUnpublishedGeometry": "operator-authored display estimates from reviewed manufacturer form"
+}

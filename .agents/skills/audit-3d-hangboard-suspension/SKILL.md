@@ -41,15 +41,24 @@ route, through-bore, knot, supplied accessory, or safety property.
 Discover model packages at execution time. Every represented or excluded
 decision needs an independent `sourceFact`, retained exact-revision evidence,
 a ruling, and human approval. Current validated evidence outranks superseded
-assumptions; in particular, `yy.baguette-evo` intentionally retains its
-source-backed `twoBranchCord` alongside orientation metadata.
+assumptions; in particular, native `yy.baguette-evo` retains source-backed
+`cadRoutedCord` alongside orientation metadata. Its descriptor-bound
+`suspension.json` supplies the current suspension, authored with
+`ropeSolver.method: "nativeRoutes"`.
 
-For a CAD board (a package with `<slug>.FCStd`), use the standard method in
-[CAD cord authoring](../../../docs/HANGBOARD_CORD_AUTHORING.md): the cord
-passage is a CAD void, the topology is `twoBranchCord` with `internalLoop` in
-`suspension.json`, and `solve_threaded_rope.py` solves the routes. Replace a
-hand-authored `pairedLeadCord` when its board moves to CAD, and extend the
-solver instead of hand-placing routes when a board does not fit it.
+For a CAD board (a package with `<slug>.FCStd`), preserve the evidenced
+connection graph and use the native solver in
+[CAD cord authoring](../../../docs/HANGBOARD_CORD_AUTHORING.md). For evidenced
+connected internal mouth pairs, the standard method uses a CAD passage void,
+`twoBranchCord` (or the single-loop `threadedLoopCord`) with `internalLoop` in
+`suspension.json`, and a CAD-measured channel length. For independent visible
+leads, exterior wraps, or mouths whose hidden connection is unknown, use the
+documented `cadRoutedCord` / `ropeSolver.method: "nativeRoutes"` contract;
+do not invent a connecting channel. Generate every canonical pose against the
+actual native solid with `solve_threaded_rope.py --apply`, then reproduce it
+with `--check` and retain clearance, length, tube and topology checks. Replace
+hand-authored `pairedLeadCord` routes when a board moves to CAD, and extend the
+solver with evidence and tests instead of hand-placing routes.
 
 For older non-CAD packages, choose the narrowest supported topology: `singleCord` for one attachment,
 `pairedLeadCord` for two independent exterior leads, or `twoBranchCord` for
@@ -63,10 +72,24 @@ cord remains a display estimate: adjust its anchor geometry and rest length
 coherently, and keep `restLength` at least as long as every required solved
 route. Never shorten `restLength` alone to force less visible slack.
 
-For the current Captain Fingerfood DUAL, POCKET, and UNLEVEL revisions, retain
-the evidenced upper-lip-to-recess path as ordered paired-lead
-`contactPointsInModel`; do not collapse it into a front-floor hole or upgrade it
-to an unevidenced through-bore.
+For the native Captain Fingerfood DUAL revision, the retained maker title photo
+shows both visible leads entering the front cavity's floor openings. Preserve
+those front mouth centers and set authoring `mouthAxis: [0, 0, 1]` (runtime
+front) for each native lead, then regenerate every pose with the native solver.
+A clearance-valid approach through the rear opening contradicts this visible
+threading. Do not infer a hidden connection between the two holes. See the
+dated DUAL source audit and cord-entry review.
+
+Captain Fingerfood POCKET is already native CAD, with suspension embedded in
+its `HangTenBoardManifest`. Its retained `pairedLeadCord` and ordered
+`contactPointsInModel` are legacy metadata, not proof of a completed native
+solver migration. Retaining this pre-existing suspension is an intentional,
+POCKET-only legacy exception pending a separate evidence-backed cord revision;
+it does not permit `pairedLeadCord` on newly migrated CAD packages.
+Any cord revision must follow the evidence-matched native
+solver contract above and reproduce every canonical pose; a visible recess
+alone does not establish an additional through-bore or hidden connection.
+Native UNLEVEL uses its current CAD source audit and `nativeRoutes` metadata.
 
 ## Prove the result
 

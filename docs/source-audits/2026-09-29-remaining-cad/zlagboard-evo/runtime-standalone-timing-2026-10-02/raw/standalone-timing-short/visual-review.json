@@ -1,0 +1,153 @@
+{
+  "method": "Five whole final images directly viewed; full-file SHA/byte equality transfers their visual judgment to equal captures. No pixel analysis.",
+  "referencesDirectlyViewed": [
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-0-clear-plus-5.png",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-1-active-plus-5.png",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-2-preview-plus-5.png",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-3-active-plus-5.png",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-4-preview-plus-5.png"
+  ],
+  "captures": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-0-clear-plus-0.25.png",
+      "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-0-clear-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "clear"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-0-clear-plus-1.png",
+      "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-0-clear-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "clear"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-0-clear-plus-3.png",
+      "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-0-clear-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "clear"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-0-clear-plus-5.png",
+      "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-0-clear-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "clear"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-1-active-plus-0.25.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-1-active-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "red"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-1-active-plus-1.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-1-active-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "red"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-1-active-plus-3.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-1-active-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "red"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-1-active-plus-5.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-1-active-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "red"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-2-preview-plus-0.25.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-2-preview-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "blue"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-2-preview-plus-1.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-2-preview-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "blue"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-2-preview-plus-3.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-2-preview-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "blue"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-2-preview-plus-5.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-2-preview-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "blue"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-3-active-plus-0.25.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-3-active-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "red"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-3-active-plus-1.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-3-active-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "red"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-3-active-plus-3.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-3-active-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "red"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-3-active-plus-5.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-3-active-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "red"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-4-preview-plus-0.25.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-4-preview-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "blue"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-4-preview-plus-1.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-4-preview-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "blue"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-4-preview-plus-3.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-4-preview-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "blue"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-4-preview-plus-5.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "reference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-short/phase-4-preview-plus-5.png",
+      "wholeFileEqual": true,
+      "expectedColor": "blue"
+    }
+  ],
+  "all20MatchViewedCorrectStates": true
+}

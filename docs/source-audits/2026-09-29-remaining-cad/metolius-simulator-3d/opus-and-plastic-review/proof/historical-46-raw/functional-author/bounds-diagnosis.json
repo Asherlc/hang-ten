@@ -1,0 +1,146 @@
+[
+  {
+    "name": "UnpocketedShell",
+    "ymin": -94.0000001,
+    "ymax": 1.0000004855e-07,
+    "volume": 6427035.7694654595,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "RoundSloperRoof",
+    "ymin": -94.0000001,
+    "ymax": 1.0000002087e-07,
+    "volume": 310320.1882222222,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "FlatSloperRoof",
+    "ymin": -94.0000001,
+    "ymax": 1.0000001975999999e-07,
+    "volume": 262235.4718254658,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "ShellWithDistinctSlopers",
+    "ymin": -94.0000001,
+    "ymax": 1.0000004855e-07,
+    "volume": 6370203.06909577,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "ForwardCenterJug",
+    "ymin": -94.0000001,
+    "ymax": 1.0000004174e-07,
+    "volume": 114064.00021366263,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "ForwardJugEnvelope",
+    "ymin": -94.0,
+    "ymax": 0.0,
+    "volume": 752000.0,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "ForwardCenterJugWithinEnvelope",
+    "ymin": -94.0000001,
+    "ymax": 1.0000004174e-07,
+    "volume": 114064.00021366266,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "ShellWithoutRearJugRidge",
+    "ymin": -94.0000001,
+    "ymax": 1.0000004263e-07,
+    "volume": 6212832.2407163745,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "FunctionalShellBeforeBlends",
+    "ymin": -94.0000001,
+    "ymax": 1.0000004263e-07,
+    "volume": 6326882.144064547,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "CenterShoulderTransitionLoft",
+    "ymin": -94.02260007880409,
+    "ymax": 2.5043887172859476,
+    "volume": 50260.36308420307,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "CenterShoulderBoundedTransition",
+    "ymin": -94.00008907339122,
+    "ymax": 2.5043887172859476,
+    "volume": 50159.96407974807,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "RoundFlatBoundedTransition",
+    "ymin": -94.00000010000005,
+    "ymax": 1.0000002827999999e-07,
+    "volume": 237843.096505227,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "OuterShoulderBoundedTransition",
+    "ymin": -94.00000010000004,
+    "ymax": 1.0000003863999999e-07,
+    "volume": 97289.01152832758,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "ShoulderTransitionBandsRemoved",
+    "ymin": -94.00000010000055,
+    "ymax": 1.0000041166328947e-07,
+    "volume": 5564908.8872252,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "ShellWithContinuousShoulders",
+    "ymin": -94.00008907339122,
+    "ymax": 2.5043887172859476,
+    "volume": 6346849.362236086,
+    "state": [
+      "Up-to-date"
+    ]
+  },
+  {
+    "name": "BodySolid",
+    "ymin": -94.00008907339122,
+    "ymax": 2.5043887172859476,
+    "volume": 5739742.7923584785,
+    "state": [
+      "Up-to-date"
+    ]
+  }
+]

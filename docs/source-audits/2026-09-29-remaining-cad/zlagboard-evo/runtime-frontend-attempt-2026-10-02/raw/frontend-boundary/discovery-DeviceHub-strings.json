@@ -1,0 +1,27 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "strings",
+    "-a",
+    "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/MacOS/DeviceHub"
+  ],
+  "exitStatus": 0,
+  "selectedStaticOutput": [
+    "@(#)PROGRAM:DeviceHub  PROJECT:Devices-255.2.6",
+    "DeviceHub",
+    "DeviceHub/DevicesMenuExtraHandler.swift",
+    "DeviceHub.DevicesMenuLoginItemListObserver",
+    "_TtC9DeviceHub30DevicesMenuLoginItemController",
+    "_TtC9DeviceHubP33_8E6F42DD16C02F63A5667500F7BA757B32DevicesMenuLoginItemListObserver",
+    "_TtC9DeviceHub18DevicesAppDelegate",
+    "_TtC9DeviceHubP33_50E20C34C83E674C3EBF937496E991A519ResourceBundleClass",
+    "application:openURLs:",
+    "openURL:configuration:completionHandler:",
+    "<string>DeviceHub</string>",
+    "<string>DeviceHub</string>",
+    "<string>DeviceHub</string>"
+  ],
+  "stderr": "",
+  "executedTarget": false
+}

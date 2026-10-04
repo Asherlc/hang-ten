@@ -1,0 +1,19 @@
+{
+  "owner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "scripts/stage-board-packages.py",
+    "--repository-root",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+    "--destination",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mammut-wood-integration/placid-badger-android-staging/Hangboards",
+    "--target",
+    "android"
+  ],
+  "destination": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mammut-wood-integration/placid-badger-android-staging/Hangboards",
+  "timeoutSeconds": 180,
+  "exitCode": 0,
+  "elapsedSeconds": 2.166421249974519
+}

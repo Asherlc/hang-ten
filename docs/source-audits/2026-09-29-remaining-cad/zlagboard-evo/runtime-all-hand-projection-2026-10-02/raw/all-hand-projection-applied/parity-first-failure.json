@@ -1,0 +1,6 @@
+{
+  "command": "check-all-hand-projection-parity.py all-hand-projection-prelaunch-parity.json",
+  "exitStatus": 1,
+  "error": "FileNotFoundError: previous installed application container FC2F1294-E69F-48B3-A058-9641988D9312/HangTen.app/Hangboards/zlagboard-evo/board.json no longer exists after authorized reinstallation",
+  "limitation": "O1 launch began before corrected package parity completed; executable parity already passed. Corrected hash checks performed during O1 without changing application state."
+}

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "package": "zlagboard-pro",
+  "number": 21,
+  "reviewAnswer": "y",
+  "question": "Does #21 Pro look right now?",
+  "acceptedDate": "2026-10-03",
+  "reviewedCommit": "0c1ebae25a6c9a591b3c3dbb7d6627cded5b58fd",
+  "runtimeRepairCommit": "c42815f8cf4ac09d0d409e53e466d0e3ade92cb8",
+  "humanAppAccepted": true,
+  "humanRuntimeAccepted": true,
+  "acceptedScope": "Displayed Zlagboard.Pro 2.0 fresh jug and incut selection views, wood finish, and normal-workout red Hang / blue Rest preview / red following Hang with both hand cues visible, together with the linked fresh 28-contact review and original/prior/native front-side-top comparisons. Adds app acceptance to the prior native geometry approval; display-estimate limits remain.",
+  "appWorkflowPassed": true,
+  "workflowScope": "Reviewed normal-route Simulator Hang/Rest/following Hang sequence; no physical-device or combined-branch integration certification.",
+  "sourceSHA256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+  "presentations": {
+    "primary": {
+      "descriptorSHA256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+      "modelSHA256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684"
+    }
+  },
+  "displayedImages": [
+    {
+      "path": "raw/captures-v4/jug-orbit.png",
+      "sha256": "40af3313b37fcd3ca16d662a14a3b56bea3e146e5e163442802c5ccbc2ed012b"
+    },
+    {
+      "path": "raw/captures-v4/incut-orbit.png",
+      "sha256": "287b3768dbccbd4717c7b0e62e087f837668bed1169b5b5345c53ade27d1b472"
+    },
+    {
+      "path": "../../zlagboard-evo/post-main-presentation-2026-10-03/raw/clean-pro/elapsed-007s.png",
+      "sha256": "50f8d3bdd34e5c0e373a73dd309471608cc01e6cb5aa685c5f736f34a2900c26"
+    },
+    {
+      "path": "../../zlagboard-evo/post-main-presentation-2026-10-03/raw/clean-pro/elapsed-015s.png",
+      "sha256": "a0dfc904df97011c57a9510827c65b8caec7bfc987d7f9a621416a3e71757e89"
+    },
+    {
+      "path": "../../zlagboard-evo/post-main-presentation-2026-10-03/raw/clean-pro/elapsed-197s.png",
+      "sha256": "fcb62bb366ccc49bc932df462cc674ef9c83c6232d2fd65bbf94264e04ad7a82"
+    },
+    {
+      "path": "../individual-review-2026-10-02/comparison/comparison-front-side-top.png",
+      "sha256": "816e158f1df4fb51d89335d306caf4d763e1c7794bb2b9a5e2393d8f28bca20c"
+    }
+  ],
+  "linkedReviewPage": {
+    "path": "review.md",
+    "sha256": "8cff84dd21ed3951f827fba6a6113c064c1c3e86ff061b3ab6e688b5c49fc052"
+  },
+  "technicalValidation": {
+    "path": "validation.json",
+    "sha256": "cc4d25e3e5b5998930a659f8fa5cedb36b36cf80e55ee06e9b39d2c444707c70"
+  },
+  "staticWholeImageReport": {
+    "path": "raw/whole-image-review.json",
+    "sha256": "fb77d2b673708983f3bdf00712354fce5d58370c39bcda08546939ff80e76f08"
+  },
+  "workflowWholeImageReport": {
+    "path": "../../zlagboard-evo/post-main-presentation-2026-10-03/raw/clean-pro-whole-visual-review.json",
+    "sha256": "87bce82057a1665a4164cf1d046755716bb4f3fe1b11a22d87369b27e11dcea7"
+  },
+  "previousNativeHumanReview": "../human-review.json",
+  "historicalEvidenceUnchanged": true
+}

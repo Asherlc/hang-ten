@@ -1,0 +1,169 @@
+{
+  "owner": "placid-badger",
+  "scope": "Maker whole-frame evidence and Opus/Astra diagnosis of rejected short same-face links; not a corrected routing gate or runtime validation",
+  "allCopiesByteIdentical": true,
+  "sourcePhotoProcessing": false,
+  "hiddenContinuityObserved": false,
+  "files": [
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/placid-badger-flash14-maker-overview.mp4",
+      "retained": "cord-feedback/maker/placid-badger-flash14-maker-overview.mp4",
+      "sha256": "c3805a162b8a11f9f4c0e29b39a5927145ee617e8e536a611ad9c16a30730190"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/source-provenance.json",
+      "retained": "cord-feedback/maker/source-provenance.json",
+      "sha256": "05aeac23d1224724d7fa94e9881c72e014ff40d7988f94db8ab8a271d665e727"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/ownership.json",
+      "retained": "cord-feedback/maker/ownership.json",
+      "sha256": "556c938b4d6388bc0bdb858ff85a8386e23a00c496e2d58f59f63b292ebb6b59"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/extraction-ownership.json",
+      "retained": "cord-feedback/maker/extraction-ownership.json",
+      "sha256": "eaf8dc2e7a2c27da1d83fa18cfdb597cd718f59a239cadbbd8801e58f8341e5f"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/extraction-cleanup.json",
+      "retained": "cord-feedback/maker/extraction-cleanup.json",
+      "sha256": "bf00e440ea4ad14740e2e44468eafbea77eac4d879b56676dab8864a0e95579f"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/threading-extraction-ownership.json",
+      "retained": "cord-feedback/maker/threading-extraction-ownership.json",
+      "sha256": "d6ef6d013e070ae7ffdb65c4c2a8f06332049f9b6632402c90b45df55aab187a"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/threading-extraction-cleanup.json",
+      "retained": "cord-feedback/maker/threading-extraction-cleanup.json",
+      "sha256": "3eb2a2752960157b75dc1332164683ce7d3f5258e4c2061a7ca96e9a81cdbfe4"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames/placid-badger-maker-whole-t0.png",
+      "retained": "cord-feedback/maker/whole-frames/placid-badger-maker-whole-t0.png",
+      "sha256": "a2233f0bd7362b23e49bd5f89f7f7db347b3352d04c4d4d6f15727745f11563f"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames/placid-badger-maker-whole-t2.png",
+      "retained": "cord-feedback/maker/whole-frames/placid-badger-maker-whole-t2.png",
+      "sha256": "b65464c0b821b158635fa0d4b35508c953edceea58b4558db8a364f1d52d6f24"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames/placid-badger-maker-whole-t4.png",
+      "retained": "cord-feedback/maker/whole-frames/placid-badger-maker-whole-t4.png",
+      "sha256": "4b431c478fb0185db668db4fffc0bd502c8de193c73ec6a6c77d7376d46c5918"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames/placid-badger-maker-whole-t6.png",
+      "retained": "cord-feedback/maker/whole-frames/placid-badger-maker-whole-t6.png",
+      "sha256": "edd41ceaad4c86b18fcda64dbe9f6f3629f46873001f1ab9335134bb89a068a3"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames/whole-frame-provenance.json",
+      "retained": "cord-feedback/maker/whole-frames/whole-frame-provenance.json",
+      "sha256": "d28b463d81c7abe8c2011f83295d6535ff825626070060ad7825a08c3510a50f"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames-threading/placid-badger-maker-whole-t1.png",
+      "retained": "cord-feedback/maker/whole-frames-threading/placid-badger-maker-whole-t1.png",
+      "sha256": "856f5395d01f5b1e54d78d63256242b8f939ab8c7058706e4653deaaa5857d85"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames-threading/placid-badger-maker-whole-t1p5.png",
+      "retained": "cord-feedback/maker/whole-frames-threading/placid-badger-maker-whole-t1p5.png",
+      "sha256": "fa4ab068a6279e11b202da3287c5fb27ab323195b9be3091ff5bab356f2383ce"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames-threading/placid-badger-maker-whole-t2p5.png",
+      "retained": "cord-feedback/maker/whole-frames-threading/placid-badger-maker-whole-t2p5.png",
+      "sha256": "1d16e147cf8f283317d099b4b8d7012b4caa42a8ba5e62db9909ad5e33187577"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames-threading/placid-badger-maker-whole-t3.png",
+      "retained": "cord-feedback/maker/whole-frames-threading/placid-badger-maker-whole-t3.png",
+      "sha256": "f7aec4b89fdbfe1e7fea80a48a1e9beaabe0c6b3d293c36a9a28fb050afd169b"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames-threading/whole-frame-provenance.json",
+      "retained": "cord-feedback/maker/whole-frames-threading/whole-frame-provenance.json",
+      "sha256": "444fdb6b9475830a29a584d189ba65e3fe62de7f1c88aabe987ae636e2ca7e2c"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/opus-advisor/final-advisory.md",
+      "retained": "cord-feedback/opus/final-advisory.md",
+      "sha256": "43124de3dd3fa04c3b7966061ce1292985eb777d138502109a5d496556d622ce"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/opus-advisor/final-advisory-activity.json",
+      "retained": "cord-feedback/opus/final-advisory-activity.json",
+      "sha256": "0780056398dbc00e0283c69dfcc2679a5c633c7b9045cd78b2adc872951cca3a"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/opus-advisor/ownership.json",
+      "retained": "cord-feedback/opus/ownership.json",
+      "sha256": "9cf752231f7d8625533fe13db7942d1e1879a9a79cbcd2e1233dd7174cbec54b"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/opus-advisor/archive-receipt.json",
+      "retained": "cord-feedback/opus/archive-receipt.json",
+      "sha256": "541028eb673553ee6ea2da88c61467fbe53974cbb5ee3535ea35092ac965294e"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/opus-advisor/cleanup-receipt.json",
+      "retained": "cord-feedback/opus/cleanup-receipt.json",
+      "sha256": "4cbbf8a2b293fd9d794211280498401c663668e0aac49b39fa4b2f097770f2eb"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/diagnosis.json",
+      "retained": "cord-feedback/diagnosis/diagnosis.json",
+      "sha256": "00afc77145caf7d7e7457de777d0503eb713659dff412820b73f4de02a6ff999"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/diagnosis.md",
+      "retained": "cord-feedback/diagnosis/diagnosis.md",
+      "sha256": "d60784eabf893aeced11a4f73ef985ac39c0093a08e7b256e3713f2510db0cb8"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/video-source-assessment.json",
+      "retained": "cord-feedback/diagnosis/video-source-assessment.json",
+      "sha256": "0d6944e9a214ce29022f5de0e05b449928d3bb59fa2925b8ccea95caa3076101"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/video-source-assessment.md",
+      "retained": "cord-feedback/diagnosis/video-source-assessment.md",
+      "sha256": "353e51e6c443dfd4e4c4c3da4eecfe315e3606362a5cf6772af9540f642f2278"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/matched-depth-provenance.json",
+      "retained": "cord-feedback/diagnosis/matched-depth-provenance.json",
+      "sha256": "8ec472b80e6c824c95aebe5dd8940a636c7958d7e508bcc5b6481af99c31ceee"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/cleanup-verification.json",
+      "retained": "cord-feedback/diagnosis/cleanup-verification.json",
+      "sha256": "00631f71c9dc5b436cfdefc7acc251efb54c3c6c93afa10914b00890c47a10fd"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/three-edge-upright-reverse-oblique-matched-depth.png",
+      "retained": "cord-feedback/diagnosis/three-edge-upright-reverse-oblique-matched-depth.png",
+      "sha256": "4fcc304aef5c102757bc2fa9ac2948f43b8bdb3af7e82dc185889cd7f76595fb"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/independent-shape/cord-entry-followup/two-edge-upright-reverse-oblique-matched-depth.png",
+      "retained": "cord-feedback/diagnosis/two-edge-upright-reverse-oblique-matched-depth.png",
+      "sha256": "7749e06d287fa4027421c9c063d5cde463530b104893145489cb91d1ed44e9c1"
+    },
+    {
+      "source": ".context/placid-badger/flash-board-review14/cord-entry-followup/native-incidence.json",
+      "retained": "cord-feedback/diagnosis/native-incidence.json",
+      "sha256": "921a39e79475059567eed65ba02675ac84cefb268ba3ff17ce0ab222dfe04a10"
+    },
+    {
+      "source": "Hangboards/tension-flash-board/suspension.json",
+      "retained": "cord-feedback/rejected-stitch-suspension.json",
+      "sha256": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17"
+    }
+  ]
+}

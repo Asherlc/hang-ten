@@ -1,0 +1,25 @@
+{
+  "owner": "placid-badger",
+  "label": "karma-exact-app-errors",
+  "command": [
+    "xcrun",
+    "simctl",
+    "spawn",
+    "FAEA0F64-3EAE-4B4D-86F3-765AB5AE57E1",
+    "log",
+    "show",
+    "--last",
+    "15m",
+    "--style",
+    "compact",
+    "--predicate",
+    "process == \"ReportCrash\" OR (process == \"HangTen\" AND messageType == error)"
+  ],
+  "timeoutSeconds": 25.0,
+  "ownedProcessGroup": 11788,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 1.5641329159843735
+}

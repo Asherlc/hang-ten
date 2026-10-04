@@ -1,0 +1,60 @@
+{
+  "owner": "placid-badger",
+  "simulator": "990DFC2B-D415-4490-B070-95D4EAD9B5C8",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS 26.5",
+  "boardID": "captain-fingerfood.dual",
+  "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+  "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+  "presentations": {
+    "primary": {
+      "descriptorSHA256": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699",
+      "modelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe"
+    }
+  },
+  "builtBinarySHA256": "ac4efa2b8b24499f903d7c21f0cd75ea1f3788d436e7a3caef1fdcc770ad98ef",
+  "checks": [
+    {
+      "positionID": "curved-lip-front",
+      "contactID": "curved-edge-20",
+      "front": "curved-lip-front-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "straight-lip-inverted",
+      "contactID": "straight-edge-20",
+      "front": "straight-lip-inverted-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "left-pocket-vertical",
+      "contactID": "pocket-end-wall-20",
+      "front": "left-pocket-vertical-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "exterior-jug-back",
+      "contactID": "outer-jug",
+      "front": "exterior-jug-back-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    }
+  ],
+  "humanGeometryAcceptance": "pending revised DUAL review",
+  "limits": "App screenshots and accessibility checks establish current-source rendering; manufacturer fidelity remains under individual human review. Physical DUAL orbit capture remains unverified; only these canonical views are claimed.",
+  "captureSHA256": {
+    "curved-lip-front-front-accessibility.json": "956ada3e18e51c2c6875c76f3a4a5882ac16e2ddc40c93082bfcfee6a46b44ec",
+    "curved-lip-front-front.png": "51b58449b1fb6da4a9b88181679b1a339052bfb2f6a07f56d6f70efa88ec6c18",
+    "exterior-jug-back-front-accessibility.json": "4be41adbce72ba24358d5490abeb7cdcec3ffcc54e1a78fde1607bd0c87fa6f0",
+    "exterior-jug-back-front.png": "3c73614a23ccc23766465fa9ea5dd899167992cf0b23abba370f56eb25d6050a",
+    "left-pocket-vertical-front-accessibility.json": "6012ac55c37590da4f916859c7f57358f88e91c3896e0ab31218fec4d9601ca0",
+    "left-pocket-vertical-front.png": "5641270299cda24f23656e31be4a651d1c437de3710f906012fdc73f409f7bab",
+    "straight-lip-inverted-front-accessibility.json": "d9b844892f781c310b40af6fdf5fc5615e008c0a2be6936e5d17e7e4f804dc4d",
+    "straight-lip-inverted-front.png": "bc89ad450cd3236ed8af3fd7634acda5df971a6be70dae5d1232caf5986eb93f"
+  },
+  "physicalOrbitVerified": false,
+  "orbitCaptureStatus": "Unverified; canonical current-source views only."
+}

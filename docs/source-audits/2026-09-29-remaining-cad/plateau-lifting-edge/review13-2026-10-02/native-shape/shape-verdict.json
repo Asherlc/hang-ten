@@ -1,0 +1,115 @@
+{
+  "owner": "placid-badger",
+  "boardReviewNumber": 13,
+  "package": "plateau-lifting-edge",
+  "status": "technical-shape-and-cord-seating-pass",
+  "humanAcceptance": "pending",
+  "currentAppAcceptance": "not-run",
+  "canonicalMutationsByThisLane": false,
+  "physicalSolidAndContactTriangles": "Preserved exactly by material partition; root independent export/archive proof",
+  "allThreeCanonicalDepthsMM": [
+    18,
+    15,
+    10
+  ],
+  "onlyPhysicalContactID": "edge-18",
+  "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+  "sidecarSHA256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80",
+  "modelsAndDescriptors": {
+    "assets/depth-10mm.model.json": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+    "assets/depth-10mm.usdz": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+    "assets/depth-15mm.model.json": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+    "assets/depth-15mm.usdz": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+    "assets/primary.model.json": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+    "assets/primary.usdz": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb"
+  },
+  "cordDiameterMM": 6,
+  "cordDiameterEvidence": "Authorized retained refreshed manufacturer PL-1 HTML; root explicitly authorized use 2026-10-02. Not a claim about unavailable exact historical HTML.",
+  "loopLengthM": 0.42,
+  "loopLengthStatus": "displayEstimate, retained; no shortening justified by whole-source judgment",
+  "anchorPlacementStatus": "displayEstimate; depth derived to align support with native curl plane",
+  "nativeSeatingMetrics": {
+    "depth-18mm": {
+      "minimumExactNativeCenterlineDistanceMM": 3.184591174966126,
+      "radiusMM": 3.0,
+      "lengthMM": 420.0000061739696,
+      "maximumSurfaceGapAtMeaningfulBendMM": 0.2000004644990283,
+      "priorMaximumSurfaceGapAtMeaningfulBendMM": 4.5
+    },
+    "depth-15mm": {
+      "minimumExactNativeCenterlineDistanceMM": 3.184591174966126,
+      "radiusMM": 3.0,
+      "lengthMM": 420.0000061739696,
+      "maximumSurfaceGapAtMeaningfulBendMM": 0.2000004644990283,
+      "priorMaximumSurfaceGapAtMeaningfulBendMM": 4.5
+    },
+    "depth-10mm": {
+      "minimumExactNativeCenterlineDistanceMM": 3.184591174966126,
+      "radiusMM": 3.0,
+      "lengthMM": 420.0000061739696,
+      "maximumSurfaceGapAtMeaningfulBendMM": 0.2000004644990283,
+      "priorMaximumSurfaceGapAtMeaningfulBendMM": 4.5
+    }
+  },
+  "materialOwnership": {
+    "woodNodeIDs": [
+      "plateau_body",
+      "plateau_edge_18"
+    ],
+    "neutralAttachmentNodeIDs": [
+      "plateau_metal_exterior",
+      "plateau_blocker_exterior"
+    ],
+    "USDZMaterialBindings": false,
+    "USDZTextures": false,
+    "blockerPolymerClaim": null
+  },
+  "verification": {
+    "officialNativeSolverApplyAndCheck": "all3 pass, unchanged gates",
+    "nativeEditAndRestore": "all3 pass, original final source bytes unchanged",
+    "wholeImageReview": "whole source + actual final front/side/top/cord oblique + actual final under-oblique contact views inspected",
+    "continuousClearanceNumericalToleranceMM": 0.01,
+    "lengthRatioTolerance": 1e-06,
+    "exactOffsetBoundaryAdjustmentM": 1e-09,
+    "temporaryNativeResourceCleanup": "known owned jobs absent; own tmp/cache/config deleted; PID/PGID history not retained"
+  },
+  "proofs": {
+    "final-native-liveness.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-native-liveness.json",
+      "sha256": "7549ae6bef5506d0fc4e3d59266e671280bbab6f87814d12dbdff2f091dded1a"
+    },
+    "final-native-seating-inspection.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-native-seating-inspection.json",
+      "sha256": "cd530b2b823c26bfd67ac22fa8a05414677eda0fe67cdcc1269dc3cb5e542d35"
+    },
+    "final-station-derivation.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-station-derivation.json",
+      "sha256": "baf3f162dc8b7cdf48e8dc875e8f00bdd6f1c9d0a2e9f5664f8b4177fcbdb397"
+    },
+    "final-generated-board.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-generated-board.json",
+      "sha256": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4"
+    },
+    "final-render-provenance.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-render-provenance.json",
+      "sha256": "56b9f868a18127948548e7ac95f98bf6c5a59fe7bb512a3e1e98dc74bf4fb622"
+    },
+    "final-candidate-handoff.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-candidate-handoff.json",
+      "sha256": "b9537dd235edec635248a031f19f56b65b91608a70e68bcc884f55160242a334"
+    },
+    "inspected-original-frames.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/inspected-original-frames.json",
+      "sha256": "183b0fdb53688735d2889bcca04d04232283dcd798690edeeb57747550223664"
+    },
+    "resource-lifecycle.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/resource-lifecycle.json",
+      "sha256": "3b0f5ffecf6bae115696638d7afd5938e7dc2598caa5a2707eb1f3b5b85c7d8d"
+    },
+    "review-index.html": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/review-index.html",
+      "sha256": "bb2380c9e96b06d769e4fc1cb01c848da375041578d0c96fdd3fa05f63645dfd"
+    }
+  },
+  "remainingReview": "Root independent final gate/promotion and human acceptance; current app lane remains unavailable. No further physical reauthoring justified."
+}

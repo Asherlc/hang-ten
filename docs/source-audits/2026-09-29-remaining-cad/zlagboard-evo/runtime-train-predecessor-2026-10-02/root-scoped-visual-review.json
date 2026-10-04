@@ -1,0 +1,38 @@
+{
+  "reviewer": "/root",
+  "recordedBy": "/root/baguette_review_prep",
+  "basis": "Parent explicitly reported opening these five whole images in packaging authorization. No independent opening by recorder claimed.",
+  "scope": "Two PRESENT-A and three SUPPRESSED images only; worker full36 judgments are distinct.",
+  "images": [
+    {
+      "retained": "raw/train-host-present-a-landscape/phase-1-preview-plus-5.png",
+      "sha256": "5501e6d0debbfb7c3c4c8ca68fe9344a2f920f77bcc0dc3f2efd108dc903e90b",
+      "observedBoardColor": "red",
+      "correct": false
+    },
+    {
+      "retained": "raw/train-host-present-a-landscape/phase-2-active-plus-5.png",
+      "sha256": "ab8874f90ad3ea34e1fbe6fabf6d61636ac0e368b99fe902db441c0c47a37d67",
+      "observedBoardColor": "blue",
+      "correct": false
+    },
+    {
+      "retained": "raw/train-host-suppressed-landscape/phase-1-preview-plus-5.png",
+      "sha256": "960e8624279761069e2f81989cd8413b973d8dcc64413743a5e02ee9a114c39c",
+      "observedBoardColor": "blue",
+      "correct": true
+    },
+    {
+      "retained": "raw/train-host-suppressed-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "4841352df29a71adf8646ee93462683b596ece2b587475fa01d6e4e72707f9f3",
+      "observedBoardColor": "red",
+      "correct": true
+    },
+    {
+      "retained": "raw/train-host-suppressed-landscape/phase-2-active-plus-5.png",
+      "sha256": "26e003b8320d2f39151c4a622291d8ea7261ddf0105af6312c8a6d114d4baedc",
+      "observedBoardColor": "red",
+      "correct": true
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "startEpoch": 1791002056.452456,
+  "endEpoch": 1791002056.9998982,
+  "exists": true,
+  "sha256": "159ce67de800b7d621fce93c34a248096aff7eb7dd06cf452ea3e5cab01aa4e7",
+  "observationAnchorReset": false,
+  "command": {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-observation-action-landscape/launch-initial.png"
+    ],
+    "startEpoch": 1791002056.452467,
+    "startMonotonic": 85131.003964833,
+    "owner": "placid-badger-cad-second-half-startup-observation",
+    "commandLimitSeconds": 20,
+    "pid": 19105,
+    "parentPID": 18657,
+    "endEpoch": 1791002056.9984572,
+    "endMonotonic": 85131.549955833,
+    "exitStatus": 0,
+    "timeout": false,
+    "endedAfterObservationWindow": false
+  }
+}

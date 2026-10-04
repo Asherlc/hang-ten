@@ -4,6 +4,70 @@ import simd
 
 final class SuspendedBoardPresentationTests: XCTestCase {
 
+    func testNativeCADInstanceComposesCanonicalPoseAfterRotatedReflectedBase() throws {
+        let offCenterBounds = BoardModelBounds(minimum: [1, 2, 3], maximum: [3, 4, 5])
+        let center = SIMD3<Float>(2, 3, 4)
+        func translation(_ point: SIMD3<Float>) -> simd_float4x4 {
+            var matrix = matrix_identity_float4x4
+            matrix.columns.3 = SIMD4(point, 1)
+            return matrix
+        }
+        var reflection = matrix_identity_float4x4
+        reflection.columns.0.x = -1
+        let baseRotation = simd_quatf(angle: .pi / 2, axis: SIMD3<Float>(0, 0, 1))
+        let base = translation(SIMD3(0.4, 0.2, -0.3)) * translation(center)
+            * simd_float4x4(baseRotation) * reflection * translation(-center)
+        let canonical = BoardModelCanonicalPose(rotation: [0, 1, 0, 0], translation: [0.7, -0.2, 0.1],
+            camera: BoardModelCanonicalCamera(viewDirection: [0, 0, -1], fitPadding: 0.1),
+            wrappedRoutes: ["segment": [[1.2, 2.4, 3.6], [1.4, 2.5, 3.6], [1.6, 2.6, 3.6]]])
+        let suspension = BoardModelCADRoutedCord(bodyNodeID: "wood",
+            strands: [BoardModelCADCordStrand(id: "segment", kind: "segment", restLength: 2,
+                radius: 0.002, material: "matteCord", provenance: "displayEstimate")],
+            anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0],
+                visibility: "invisible", provenance: "displayEstimate", position: [0, 8, 0]),
+            canonicalPoses: ["primary": canonical])
+        let solved = try SuspendedBoardPresentation.solve(pose: canonical, suspension: suspension,
+            bounds: offCenterBounds, modelTransform: base)
+        let canonicalRotation = simd_quatf(ix: 0, iy: 1, iz: 0, r: 0)
+        let canonicalTranslation = SIMD3<Float>(0.7, -0.2, 0.1)
+        let sourcePoints = canonical.wrappedRoutes!["segment"]!
+        XCTAssertEqual(sourcePoints.count, solved.branches[0].centerlineSamples.count)
+        for (point, actual) in zip(sourcePoints, solved.branches[0].centerlineSamples) {
+            let source = SIMD3<Float>(point.map(Float.init))
+            let reflected = SIMD3<Float>(2 * center.x - source.x, source.y, source.z)
+            let placed = center + baseRotation.act(reflected - center) + SIMD3<Float>(0.4, 0.2, -0.3)
+            let expected = canonicalRotation.act(placed) + canonicalTranslation
+            XCTAssertLessThan(simd_distance(actual, expected), 0.000001)
+            let bodyPoint = solved.boardTransform * SIMD4(source, 1)
+            XCTAssertLessThan(simd_distance(SIMD3(bodyPoint.x, bodyPoint.y, bodyPoint.z), expected), 0.000001)
+        }
+        XCTAssertEqual(solved.fixedAnchor, SIMD3(0, 8, 0))
+    }
+
+    func testNativeCADPentaInstancesKeepTheirAuthoredPoseAndInextensibleLoop() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
+        guard case .model(let media) = board.defaultPresentation.media else {
+            return XCTFail("expected reusable Penta model")
+        }
+        let instances = try XCTUnwrap(media.instances)
+        XCTAssertEqual(instances.count, 2)
+        for instance in instances {
+            guard case .cadRoutedCord(let profile) = instance.suspension else {
+                return XCTFail("expected native Penta suspension")
+            }
+            for pose in profile.canonicalPoses.values {
+                let solved = try SuspendedBoardPresentation.solve(pose: pose, suspension: profile,
+                    bounds: media.descriptor.modelBounds, modelTransform: matrix_identity_float4x4)
+                let expectedTranslation = SIMD3<Float>(pose.translation.map(Float.init))
+                let actualTranslation = solved.boardTransform.columns.3
+                XCTAssertEqual(SIMD3(actualTranslation.x, actualTranslation.y, actualTranslation.z), expectedTranslation)
+                XCTAssertEqual(solved.fixedAnchor, SIMD3<Float>(profile.anchor.position.map(Float.init)))
+                XCTAssertLessThanOrEqual(try XCTUnwrap(solved.branches.first).arcLength,
+                    Float(try XCTUnwrap(profile.strands.first).restLength) + 0.00002)
+            }
+        }
+    }
+
     @MainActor
     func testSeatedPentaSourceLoadsInTheProductionScene() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
@@ -29,19 +93,77 @@ final class SuspendedBoardPresentationTests: XCTestCase {
                 }
             }
         }
-        for (positionID, xDirection) in [("primary", Float(1)), ("reverse", Float(-1))] {
-            XCTAssertTrue(scene.select(positionID: positionID))
+        // The native migration retains source-solved per-instance poses rather
+        // than the superseded exterior-lead fixture's two hard-coded flips.
+        for position in board.positions where position.presentationID == board.defaultPresentation.id {
+            XCTAssertTrue(scene.select(positionID: position.id), position.id)
             XCTAssertEqual(scene.instanceEntities.count, 2)
-            XCTAssertEqual(scene.instanceEntities[0].position.x, -0.15, accuracy: 1e-6)
-            XCTAssertEqual(scene.instanceEntities[1].position.x, 0.15, accuracy: 1e-6)
-            for entity in scene.instanceEntities {
-                XCTAssertEqual(entity.transform.matrix.columns.0.x, xDirection, accuracy: 1e-6)
+            for (entity, authored) in zip(scene.instanceEntities, instances) {
+                guard case .cadRoutedCord(let profile) = authored.suspension else {
+                    return XCTFail("expected native Penta route")
+                }
+                let pose = try XCTUnwrap(profile.canonicalPoses[position.id])
+                let expected = try SuspendedBoardPresentation.boardTransform(for: pose)
+                for column in 0..<4 {
+                    XCTAssertLessThan(simd_length(entity.transform.matrix[column] - expected[column]), 1e-6,
+                                      "\(authored.equipmentObjectID)/\(position.id)")
+                }
             }
-            XCTAssertEqual(scene.camera.position.x, 0, accuracy: 1e-6)
+            XCTAssertTrue(scene.camera.position.x.isFinite)
         }
+
     }
 
-    func testSeatedExteriorCatalogRoutesSolveEveryCachedPose() throws {
+    @MainActor
+    func testPentaProductionCameraCentersNativeBodyAndCordEnvelopeForEveryPose() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
+        guard case .model(let media) = board.defaultPresentation.media else {
+            return XCTFail("expected native Penta model")
+        }
+        let instances = try XCTUnwrap(media.instances)
+        let scene = try await BoardModelRealityLoader.load(
+            board: board, presentation: board.defaultPresentation)
+        scene.frame(in: CGSize(width: 800, height: 500))
+        XCTAssertEqual(scene.instanceEntities.count, instances.count)
+        var verifiedNonzeroCenter = false
+
+        for position in board.positions where position.presentationID == board.defaultPresentation.id {
+            XCTAssertTrue(scene.select(positionID: position.id), position.id)
+            scene.resetCamera(animated: false)
+            var horizontalEnvelope: [Float] = []
+            for (entity, instance) in zip(scene.instanceEntities, instances) {
+                guard case .cadRoutedCord(let profile) = instance.suspension else {
+                    return XCTFail("expected native Penta route")
+                }
+                let pose = try XCTUnwrap(profile.canonicalPoses[position.id])
+                let routes = try XCTUnwrap(pose.wrappedRoutes)
+                let transform = entity.transform.matrix
+                for x in [media.descriptor.modelBounds.minimum[0], media.descriptor.modelBounds.maximum[0]] {
+                    for y in [media.descriptor.modelBounds.minimum[1], media.descriptor.modelBounds.maximum[1]] {
+                        for z in [media.descriptor.modelBounds.minimum[2], media.descriptor.modelBounds.maximum[2]] {
+                            horizontalEnvelope.append((transform * SIMD4<Float>(
+                                Float(x), Float(y), Float(z), 1)).x)
+                        }
+                    }
+                }
+                for route in routes.values {
+                    for point in route {
+                        horizontalEnvelope.append((transform * SIMD4<Float>(
+                            Float(point[0]), Float(point[1]), Float(point[2]), 1)).x)
+                    }
+                }
+                horizontalEnvelope.append(Float(profile.anchor.position[0]))
+            }
+            let minimum = try XCTUnwrap(horizontalEnvelope.min())
+            let maximum = try XCTUnwrap(horizontalEnvelope.max())
+            let expectedCenter = (minimum + maximum) / 2
+            verifiedNonzeroCenter = verifiedNonzeroCenter || abs(expectedCenter) > 1e-6
+            XCTAssertEqual(scene.camera.position.x, expectedCenter, accuracy: 1e-6, position.id)
+        }
+        XCTAssertTrue(verifiedNonzeroCenter, "The authored bounds must catch incorrect origin centering")
+    }
+
+    func testSeatedCatalogRoutesSolveEveryCachedPose() throws {
         let boardIDs = ["captain-fingerfood.dual", "captain-fingerfood.unlevel",
                         "j-bryant.ftg-32", "metolius.light-rail-2", "yy.penta-evo"]
         for boardID in boardIDs {
@@ -53,30 +175,122 @@ final class SuspendedBoardPresentationTests: XCTestCase {
             let profiles = media.instances?.compactMap(\.suspension) ?? [media.suspension].compactMap { $0 }
             XCTAssertFalse(profiles.isEmpty, boardID)
             for suspension in profiles {
-                guard case .pairedLeadCord(let profile) = suspension else {
-                    XCTFail("expected exterior leads for \(boardID)")
-                    continue
-                }
-                for (positionID, pose) in profile.canonicalPoses {
-                    guard let routes = pose.cordContactPoints else {
-                        XCTFail("Missing cached contacts: \(boardID)/\(positionID)")
-                        continue
+                switch suspension {
+                case .cadRoutedCord(let profile):
+                    for (positionID, pose) in profile.canonicalPoses {
+                        let routes = try XCTUnwrap(pose.wrappedRoutes, "\(boardID)/\(positionID)")
+                        XCTAssertEqual(Set(routes.keys), Set(profile.strands.map(\.id)))
+                        let solved = try SuspendedBoardPresentation.solve(
+                            pose: pose, suspension: profile, bounds: media.descriptor.modelBounds)
+                        XCTAssertEqual(solved.branches.count, profile.strands.count)
+                        XCTAssertEqual(solved.fixedAnchor, SIMD3<Float>(profile.anchor.position.map(Float.init)))
+                        for (strand, branch) in zip(profile.strands, solved.branches) {
+                            if strand.kind == "lead" || strand.kind == "loop" {
+                                XCTAssertEqual(branch.centerlineSamples.first, solved.fixedAnchor)
+                            }
+                            if strand.kind == "loop" {
+                                XCTAssertEqual(branch.centerlineSamples.last, solved.fixedAnchor)
+                            }
+                            XCTAssertLessThanOrEqual(branch.arcLength, Float(strand.restLength) + 0.00002)
+                        }
                     }
-                    XCTAssertEqual(Set(routes.keys), Set(profile.attachments.map(\.id)))
-                    do {
+                case .pairedLeadCord(let profile):
+                    for (positionID, pose) in profile.canonicalPoses {
+                        let routes = try XCTUnwrap(pose.cordContactPoints, "\(boardID)/\(positionID)")
+                        XCTAssertEqual(Set(routes.keys), Set(profile.attachments.map(\.id)))
                         let solved = try SuspendedBoardPresentation.solve(
                             pose: pose, suspension: profile, bounds: media.descriptor.modelBounds)
                         XCTAssertEqual(solved.leads.count, 2, "\(boardID)/\(positionID)")
                         let anchor = SIMD3<Float>(profile.anchor.position.map(Float.init))
-                        for lead in solved.leads {
-                            XCTAssertEqual(lead.samples.first, anchor, "\(boardID)/\(positionID)")
-                        }
-                    } catch {
-                        XCTFail("\(boardID)/\(positionID): \(error)")
+                        for lead in solved.leads { XCTAssertEqual(lead.samples.first, anchor) }
                     }
+                default:
+                    XCTFail("expected seated CAD or paired leads for \(boardID)")
                 }
             }
         }
+    }
+
+    func testNativeCADRoutesKeepTheWorldSupportAndExactBodyPose() throws {
+        var transform = matrix_identity_float4x4
+        transform.columns.3 = SIMD4(3, 0, 0, 1)
+        let routes = ["lead": [[0.0, 0.5, 1.0], [0.0, 0.4, 1.0], [0.0, 0.3, 1.0]]]
+        let canonical = BoardModelCanonicalPose(rotation: [0, 0, 0, 1], translation: [0, 0, 0],
+            camera: BoardModelCanonicalCamera(viewDirection: [0, 0, -1], fitPadding: 0.1), wrappedRoutes: routes)
+        let suspension = BoardModelCADRoutedCord(bodyNodeID: "wood",
+            strands: [BoardModelCADCordStrand(id: "lead", kind: "lead", restLength: 4,
+                radius: 0.002, material: "matteCord", provenance: "displayEstimate")],
+            anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0],
+                visibility: "invisible", provenance: "displayEstimate", position: [3, 3, 0]),
+            canonicalPoses: ["primary": canonical])
+        guard case .twoBranch(let solved) = try SuspendedBoardPresentation.solveInstance(
+            pose: canonical, suspension: .cadRoutedCord(suspension), bounds: bounds, transform: transform) else {
+            return XCTFail("expected native CAD routes")
+        }
+        let strand = try XCTUnwrap(solved.branches.first)
+        XCTAssertEqual(solved.fixedAnchor, SIMD3(3, 3, 0))
+        XCTAssertEqual(strand.centerlineSamples.first, SIMD3(3, 3, 0))
+        XCTAssertEqual(strand.centerlineSamples.last, SIMD3(3, 0.3, 1))
+        XCTAssertEqual(strand.tangentSamples.count, strand.centerlineSamples.count)
+        XCTAssertEqual(strand.arcLength, sqrt(2.5 * 2.5 + 1) + 0.2, accuracy: 0.00001)
+    }
+
+    func testNativeCADRouteRejectsStretchInsteadOfMovingItsSupport() throws {
+        let canonical = BoardModelCanonicalPose(rotation: [0, 0, 0, 1], translation: [0, 0, 0],
+            camera: BoardModelCanonicalCamera(viewDirection: [0, 0, -1], fitPadding: 0.1),
+            wrappedRoutes: ["lead": [[0, 0.5, 1], [0, 0.4, 1], [0, 0.3, 1]]])
+        let suspension = BoardModelCADRoutedCord(bodyNodeID: "wood",
+            strands: [BoardModelCADCordStrand(id: "lead", kind: "lead", restLength: 0.1,
+                radius: 0.002, material: "matteCord", provenance: "displayEstimate")],
+            anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0],
+                visibility: "invisible", provenance: "displayEstimate", position: [0, 3, 0]),
+            canonicalPoses: ["primary": canonical])
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(pose: canonical, suspension: suspension, bounds: bounds))
+    }
+
+    func testNativeCADRouteRejectsSelfIntersection() throws {
+        let canonical = BoardModelCanonicalPose(rotation: [0, 0, 0, 1], translation: [0, 0, 0],
+            camera: BoardModelCanonicalCamera(viewDirection: [0, 0, -1], fitPadding: 0.1),
+            wrappedRoutes: ["return": [[-1, -1, 1], [1, 1, 1], [-1, 1, 1], [1, -1, 1]]])
+        let suspension = BoardModelCADRoutedCord(bodyNodeID: "wood",
+            strands: [BoardModelCADCordStrand(id: "return", kind: "segment", restLength: 20,
+                radius: 0.002, material: "matteCord", provenance: "displayEstimate")],
+            anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0],
+                visibility: "invisible", provenance: "displayEstimate", position: [0, 3, 0]),
+            canonicalPoses: ["primary": canonical])
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(pose: canonical, suspension: suspension, bounds: bounds)) {
+            XCTAssertEqual($0 as? SuspendedPresentationError, .selfIntersection)
+        }
+    }
+
+    func testNativeCADPathsRejectOverlappingLeadsButAllowTheSharedSupport() throws {
+        let left: [SIMD3<Float>] = [SIMD3(0, 1, 0), SIMD3(-1, 0, 0)]
+        let right: [SIMD3<Float>] = [SIMD3(0, 1, 0), SIMD3(1, 0, 0)]
+        XCTAssertNoThrow(try SuspendedCordSolver.validateNativeCordPaths([left, right]))
+        XCTAssertThrowsError(try SuspendedCordSolver.validateNativeCordPaths([left, left])) {
+            XCTAssertEqual($0 as? SuspendedPresentationError, .selfIntersection)
+        }
+    }
+
+    func testNativeCADPathsRejectCrossingAtInteriorSampleVertices() {
+        let horizontal: [SIMD3<Float>] = [SIMD3(-1, 0, 0), .zero, SIMD3(1, 0, 0)]
+        let vertical: [SIMD3<Float>] = [SIMD3(0, -1, 0), .zero, SIMD3(0, 1, 0)]
+        XCTAssertThrowsError(try SuspendedCordSolver.validateNativeCordPaths([horizontal, vertical])) {
+            XCTAssertEqual($0 as? SuspendedPresentationError, .selfIntersection)
+        }
+        // Ending one strand at another strand's interior station is still a
+        // physical intersection, even though both incident segments end there.
+        XCTAssertThrowsError(try SuspendedCordSolver.validateNativeCordPaths([horizontal, Array(vertical.prefix(2))])) {
+            XCTAssertEqual($0 as? SuspendedPresentationError, .selfIntersection)
+        }
+    }
+
+    func testNativeCADPathsAllowOnlyWholeStrandTerminalJoinsAndClosedLoops() {
+        let first: [SIMD3<Float>] = [SIMD3(-1, 0, 0), SIMD3(-0.5, 0, 0), .zero]
+        let second: [SIMD3<Float>] = [.zero, SIMD3(0, 0.5, 0), SIMD3(0, 1, 0)]
+        XCTAssertNoThrow(try SuspendedCordSolver.validateNativeCordPaths([first, second]))
+        let closed: [SIMD3<Float>] = [.zero, SIMD3(1, 0, 0), SIMD3(1, 1, 0), SIMD3(0, 1, 0), .zero]
+        XCTAssertNoThrow(try SuspendedCordSolver.validateNativeCordPaths([closed]))
     }
 
     func testSingleCachedThreadedLoopHasTwoSpansWithoutADuplicateLoop() throws {

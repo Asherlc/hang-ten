@@ -1,0 +1,164 @@
+{
+  "status": "pass",
+  "reviewer": "root",
+  "packageSHA256": {
+    "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+    "Hangboards/nature-stone-hanger/assets/primary.usdz": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+    "Hangboards/nature-stone-hanger/assets/primary.model.json": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
+    "Hangboards/nature-stone-hanger/suspension.json": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a"
+  },
+  "frames": [
+    {
+      "file": "app/01-edge-front-15mm-incut.png",
+      "sha256": "5f5fe4e22069958be048d5db26eab18de36d5b6f5e2cf22f33bdf2576780ef2b",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/02-edge-front-15mm-flat.png",
+      "sha256": "d3a8b436b111e3ff2173d5e5456b3add3fe40048898bd6bf3b6195c542401c72",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/03-edge-front-20mm-wood-flat.png",
+      "sha256": "053ea326b73ba01121212db9b1ef052ea05f928bdf4f93ac1e8dfdaaa3580ba0",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/04-edge-front-20mm-granite.png",
+      "sha256": "6d618e3c2e28c41c53e5c41f8e01f8396cb099b082b5045cf4d1112fd67ffa04",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/05-edge-reverse-10mm-incut.png",
+      "sha256": "3bd6ba54fef2c6078ea06d4f07a59be1c32c34ca1e2086a82381a749b046292c",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/06-edge-reverse-10mm-flat.png",
+      "sha256": "67adda21c0672dc3764249747cb8949a87c771687e26dcd4486421aa26d567e1",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/07-edge-reverse-06mm-flat.png",
+      "sha256": "816662369cd76c16c2b05570f3d94803b69be67738a28aa4ca36442a4dfa5c53",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/08-edge-reverse-06mm-incut.png",
+      "sha256": "7b361d47a4bf33a79b849bbeb862dd4d1bf837f06cb99f24ac0dc54b4a8453dd",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/close-inverted-wood-flat-left-front.png",
+      "sha256": "8ffd42f31937c3d9be3031048e568a3913ceb0c5cbd3dbf41e5f9d6c9b8c0f80",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/close-inverted-wood-flat-left-oblique.png",
+      "sha256": "86e6fd851218adedbb451034aceafd88413fd737329ed1bccc7391c2327bc33b",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/close-inverted-wood-flat-left-side.png",
+      "sha256": "2cd9263205e7cc595cfcbfc9293887fe243156fcd43148f71164338f76c2eb58",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/close-inverted-wood-flat-right-front.png",
+      "sha256": "233f60ea7bb254f1d50acb9c7b0e203137153601e969f69456324912672e3c98",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/close-inverted-wood-flat-right-oblique.png",
+      "sha256": "65e55cb7baabe30d2cb3db0933f0c84853c0e527fa36e9aadadcc84e3a66bb90",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/close-inverted-wood-flat-right-side.png",
+      "sha256": "2913fe33b0b40db3ad64883dd9c3bdb8be0efcec1c4ee3ca21ae07180fbb96c6",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/close-upright-granite-left-front.png",
+      "sha256": "d4c8af8abb005a1ba04bb70f049594589df22636f53fee72a037510558c75aaf",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/close-upright-granite-left-oblique.png",
+      "sha256": "a6a08ef847b56d815c12e44d0fa2c7782864afca07c427f5589e6fdd0f41362a",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/close-upright-granite-left-side.png",
+      "sha256": "af9e8f85860e55de49017edbb64b525abedd14f46771fb250678a598bec46635",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/close-upright-granite-right-front.png",
+      "sha256": "d4c8af8abb005a1ba04bb70f049594589df22636f53fee72a037510558c75aaf",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/close-upright-granite-right-oblique.png",
+      "sha256": "897a3dbac4ec55979692d28bc8fe56aa6cc4cd14c92ef22354ff52746ac41136",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/close-upright-granite-right-side.png",
+      "sha256": "89788a9b093e6319386d3cf9da39c701ac15d8f37f9a5fbd494297874f716fc4",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/granite-deselected-same-instance-orbit.png",
+      "sha256": "104c7590d50dd71ae12536e8c3d3719282489b1a923160fd39867d4f72c0e796",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/granite-deselected-same-instance.png",
+      "sha256": "503b0ffff3faccf2c7d126ae57f5a11d95217122849fc8b5bd495845311729d2",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/granite-reopened.png",
+      "sha256": "05bb8c187de49f62a167d882e7b25d1d1a58b5f672c28c01f6e624ab7729a761",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/granite-selected-before-change.png",
+      "sha256": "05bb8c187de49f62a167d882e7b25d1d1a58b5f672c28c01f6e624ab7729a761",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    },
+    {
+      "file": "app/unselected-train.png",
+      "sha256": "d1b788ab3b5b235715819d926b39a21a7893755f8bffe02dbc0def3786b2d075",
+      "wholeFrame": true,
+      "rootPhysicallyReviewed": true
+    }
+  ],
+  "wholeFramesReviewed": 25,
+  "finding": "Stone sits within the wood seat in upright and inverted front/oblique/side views. No visible interpenetration, granite highlight spill or seam gap. Generic granite and wood materials restore correctly on same-instance selection changes. Existing fine cord bend aliasing is outside this fit correction."
+}

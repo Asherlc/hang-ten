@@ -1,0 +1,23 @@
+{
+  "owner": "placid-badger",
+  "package": "metolius-simulator-3d",
+  "reviewNumber": 8,
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+  "originalHashes": {
+    "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+    "modelSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+    "descriptorSHA256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e"
+  },
+  "neutralHashes": {
+    "sourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+    "modelSHA256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+    "descriptorSHA256": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d"
+  },
+  "plasticTagIntermediateSHA256": "3c516ec27da90e124fd8397470cbba0f127d5929a1fa49c62c4c611992570777",
+  "originalFeedback": "Jagged",
+  "humanAcceptance": "pending",
+  "assemblyProgramSHA256": "9d78974f594aaf4a67b91743605469104d90c00a05e0883d465ad42f90b26859",
+  "createdAtUTC": "2026-10-01T19:27:21.191429+00:00"
+}

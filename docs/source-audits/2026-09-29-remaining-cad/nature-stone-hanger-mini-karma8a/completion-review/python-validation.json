@@ -1,0 +1,14 @@
+{
+  "status": "pass",
+  "affectedPythonPassed": 260,
+  "modelToolPassed": 24,
+  "totalPythonPassed": 284,
+  "failed": 0,
+  "skipped": 0,
+  "canonicalPackagesValidated": 64,
+  "receipts": [
+    "raw/root/placid-badger-karma8a-python-tests-command.json",
+    "raw/root/placid-badger-karma8a-model-tool-tests-command.json",
+    "raw/root/placid-badger-karma8a-package-validation-command.json"
+  ]
+}

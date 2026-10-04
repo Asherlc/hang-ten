@@ -1,0 +1,42 @@
+{
+  "owner": "placid-badger",
+  "task": "forge-review15/independent-native-export",
+  "recordedAt": "2026-10-03T01:42:20.157150+00:00",
+  "source": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/setback-correction/candidate-package/trango-rock-prodigy-forge.FCStd",
+    "sha256": "3befc7e58894d76f7f7f70bdab82c33f3bf9901bf61512b4aa555b495bf862a4"
+  },
+  "authorHandoff": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/setback-correction/native-shape-handoff.json",
+    "sha256": "6fbd76612d6f2105004f9ced98940d9f213ff3bacb5f36a265e8934a14b78656"
+  },
+  "baseline": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/baseline.json",
+    "sha256": "4fd2190650111c519c809762ad0ad7690d5878a070b801863f2416d037ecc25d"
+  },
+  "temporaryResources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/placid-badger-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/placid-badger-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/placid-badger-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 28191,
+      "pgid": 28191,
+      "phase": "native-gate",
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+        "--user-cfg",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/placid-badger-config/placid-badger-native-gate-user.cfg",
+        "--system-cfg",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/placid-badger-config/placid-badger-native-gate-system.cfg",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/placid-badger-tmp/placid-badger-native-gate-bootstrap.py"
+      ]
+    }
+  ],
+  "externalResources": [],
+  "canonicalMutation": false,
+  "rootOwnsPromotion": true
+}

@@ -1,0 +1,9 @@
+{
+  "runtimeAuthorized": true,
+  "arm": "observation",
+  "helperSHA256": "181e5daaba65f611c1ddffdede1843e75f8acc4e22f0ee2765f6d6626f8a919c",
+  "constructorMarkerAuditReady": true,
+  "previousArmGatePassed": true,
+  "binarySHA256": "ed1309f520d49a80db45346b8789a2aa10d0ffe58455afe56fd93fa978c49512",
+  "authorization": "Root authorizes exactly one Train-present strict-handsOFF weak census run; no conditional retry or mutation."
+}

@@ -1,0 +1,27 @@
+{
+  "owner": "placid-badger",
+  "simulator": "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD",
+  "sourceSHA256": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
+  "generatedBoardSHA256": "189e42b66f563818aa94538260cdb60aabb3536e8915842379d8097132800b90",
+  "packageChanged": false,
+  "apps": [
+    {
+      "kind": "builtApp",
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/DerivedData/Build/Products/Debug-iphonesimulator/HangTen.app",
+      "boardSHA256": "189e42b66f563818aa94538260cdb60aabb3536e8915842379d8097132800b90",
+      "descriptorSHA256": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7",
+      "modelSHA256": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+      "binarySHA256": "a367b7c76fb3b3f2f32f39db3e007c216878a40a477508fa1f0db5e491af91b2",
+      "generatedBoardBytesMatch": true
+    },
+    {
+      "kind": "installedApp",
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/5A6E15E8-F65C-4A6D-B3E8-99313FD525DD/data/Containers/Bundle/Application/4573EC55-9FE4-4132-A601-FA6FC5960DAE/HangTen.app",
+      "boardSHA256": "189e42b66f563818aa94538260cdb60aabb3536e8915842379d8097132800b90",
+      "descriptorSHA256": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7",
+      "modelSHA256": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+      "binarySHA256": "a367b7c76fb3b3f2f32f39db3e007c216878a40a477508fa1f0db5e491af91b2",
+      "generatedBoardBytesMatch": true
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "retainedContactFieldsUnchanged": true,
+  "contactFieldCorrections": [],
+  "retainedContactIDs": [
+    "tray",
+    "edge-25",
+    "edge-15",
+    "mono-left",
+    "mono-right",
+    "edge-10"
+  ],
+  "removedContactIDs": [],
+  "positions": [
+    {
+      "id": "front-25-15",
+      "presentationID": "primary",
+      "contactIDs": [
+        "tray",
+        "edge-25",
+        "edge-15",
+        "mono-left",
+        "mono-right"
+      ]
+    },
+    {
+      "id": "reverse-10",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-10"
+      ]
+    }
+  ],
+  "metadataDecision": "All six contact records unchanged. Finger-hole bores are actual visible voids; suspension wells are shallow and deliberately unconnected."
+}

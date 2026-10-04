@@ -1,0 +1,18 @@
+{
+  "sourceFiles": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "d1780cf3c9e8b8966b5273db4944e6116993b7569a966d8fb87b59c38773557a"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "305cd09b7a45b7179c513a4e78be2e772293fe6127514ca0fb7bcf98537adc90"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "ca5b573e45908edaa6cd3921a5f255df32804d3e0b562872961cd0cfab31cf08"
+    }
+  ],
+  "sourceFrozenByThisAgent": false,
+  "purpose": "Scratch patch base only; never applies automatically to later live source"
+}

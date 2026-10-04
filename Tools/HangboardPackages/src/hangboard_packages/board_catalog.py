@@ -33,6 +33,7 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
 
 try:  # The CAD source reader is stdlib only; same direct-file fallback as above.
     from . import cad_source
+    from .cord_paths import validate_cord_paths
 except ImportError:  # pragma: no cover - exercised by direct module consumers
     _cad_path = Path(__file__).with_name("cad_source.py")
     _cad_spec = importlib.util.spec_from_file_location("hangboard_cad_source", _cad_path)
@@ -42,6 +43,12 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
 
     sys.modules[_cad_spec.name] = cad_source
     _cad_spec.loader.exec_module(cad_source)
+    _cord_path = Path(__file__).with_name("cord_paths.py")
+    _cord_spec = importlib.util.spec_from_file_location("hangboard_cord_paths", _cord_path)
+    assert _cord_spec and _cord_spec.loader
+    _cord_module = importlib.util.module_from_spec(_cord_spec)
+    _cord_spec.loader.exec_module(_cord_module)
+    validate_cord_paths = _cord_module.validate_cord_paths
 
 try:
     from .rope_physics import load_rope_physics
@@ -669,10 +676,29 @@ class BoardModelTwoBranchSuspension:
     internal_loop_channel_points_by_branch_id: Mapping[str, tuple] | None = None
 
 
+@dataclass(frozen=True)
+class BoardModelCADCordStrand:
+    id: str
+    kind: str
+    rest_length: float
+    radius: float
+    material: str
+    provenance: str
+
+
+@dataclass(frozen=True)
+class BoardModelCADRoutedCord:
+    body_node_id: str
+    strands: tuple[BoardModelCADCordStrand, ...]
+    anchor: BoardModelInvisibleAnchor
+    canonical_poses: Mapping[str, BoardModelCanonicalPose]
+
+
 BoardModelSuspension = (
     BoardModelSingleCordSuspension
     | BoardModelPairedLeadCord
     | BoardModelTwoBranchSuspension
+    | BoardModelCADRoutedCord
 )
 
 
@@ -811,6 +837,29 @@ def _load_model_poses(
 def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
     payload = _mapping(value, source)
     suspension_type = _string(payload.get("type"), f"{source}.type")
+    if suspension_type == "cadRoutedCord":
+        _closed(payload, {"type", "bodyNodeID", "strands", "anchor", "canonicalPoses"}, source)
+        raw_strands = payload["strands"]
+        if not isinstance(raw_strands, list) or not 1 <= len(raw_strands) <= 8:
+            raise ValueError("cadRoutedCord strands must contain one to eight visible strands")
+        strands = []
+        for item in raw_strands:
+            item = _mapping(item, f"{source}.strands")
+            _closed(item, {"id", "kind", "restLength", "radius", "material", "provenance"}, f"{source}.strands")
+            if item["kind"] not in {"lead", "loop", "segment"}:
+                raise ValueError("cadRoutedCord strand kind must be lead, loop, or segment")
+            strands.append(BoardModelCADCordStrand(_identifier(item["id"], source), item["kind"],
+                _positive_number(item["restLength"], source), _positive_number(item["radius"], source),
+                _string(item["material"], source), _string(item["provenance"], source)))
+        identifiers = {strand.id for strand in strands}
+        if len(identifiers) != len(strands) or len({strand.radius for strand in strands}) != 1:
+            raise ValueError("cadRoutedCord strand IDs must be unique and radii must agree")
+        poses = _load_model_poses(payload["canonicalPoses"], f"{source}.canonicalPoses")
+        for pose in poses.values():
+            if pose.attachment_points is not None or pose.cord_contact_points is not None or pose.wrapped_routes is None or set(pose.wrapped_routes) != identifiers:
+                raise ValueError("cadRoutedCord requires an exact native-generated wrappedRoutes cache for every strand")
+        return BoardModelCADRoutedCord(_string(payload["bodyNodeID"], source), tuple(strands),
+            _load_model_anchor(payload["anchor"], f"{source}.anchor"), poses)
     if suspension_type in ("twoBranchCord", "threadedLoopCord"):
         threaded_loop = suspension_type == "threadedLoopCord"
         _closed(payload, {"type", "passages", "branches", "anchor", "canonicalPoses"}, source,
@@ -1406,11 +1455,23 @@ class BoardPosition:
     presentation_id: str
     contact_ids: tuple[str, ...] = ()
     contact_ids_authored: bool = False
+    effective_depths: Mapping[str, HoldDepth] = field(default_factory=lambda: MappingProxyType({}))
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "BoardPosition":
         payload = _mapping(value, source)
-        _closed(payload, {"id", "presentationID"}, source, optional={"contactIDs"})
+        _closed(payload, {"id", "presentationID"}, source, optional={"contactIDs", "effectiveDepths"})
+        depths = {}
+        if "effectiveDepths" in payload:
+            raw_depths = _mapping(payload["effectiveDepths"], f"{source}.effectiveDepths")
+            if not raw_depths:
+                raise ValueError(f"{source}.effectiveDepths must not be empty")
+            for identifier, raw_depth in raw_depths.items():
+                _identifier(identifier, f"{source}.effectiveDepths")
+                depth = HoldDepth.from_json(raw_depth, f"{source}.effectiveDepths.{identifier}")
+                if depth.range is None or depth.range.minimum <= 0 or depth.range.minimum != depth.range.maximum:
+                    raise ValueError(f"{source}.effectiveDepths must contain exact positive depths")
+                depths[identifier] = depth
         contact_ids: tuple[str, ...] = ()
         if "contactIDs" in payload:
             raw_contact_ids = payload["contactIDs"]
@@ -1427,6 +1488,7 @@ class BoardPosition:
             _identifier(payload["presentationID"], f"{source}.presentationID"),
             contact_ids,
             "contactIDs" in payload,
+            MappingProxyType(depths),
         )
 
 
@@ -1761,8 +1823,6 @@ def _validate_presentation_compatibility(
         isinstance(presentation.media, PresentationMediaModel)
         for presentation in presentations
     )
-    if sum(isinstance(presentation.media, PresentationMediaModel) for presentation in presentations) > 1:
-        raise ValueError("packages may contain only one model presentation")
     has_raster = any(
         isinstance(presentation.media, PresentationMediaRaster)
         for presentation in presentations
@@ -2002,6 +2062,21 @@ def _load_board(value: Mapping[str, Any]) -> BoardRevision:
         else position
         for position in positions
     )
+    configured_ids = {identifier for position in positions for identifier in position.effective_depths}
+    for position in positions:
+        available = set(position.contact_ids) if position.contact_ids_authored or position.presentation_id in model_presentation_ids else {
+            identifier for presentation in presentations if presentation.id == position.presentation_id
+            for identifier in presentation.media.contact_geometry
+        }
+        if not set(position.effective_depths) <= available:
+            raise ValueError("positions.effectiveDepths must reference contacts available in the position")
+        if (configured_ids & available) - set(position.effective_depths):
+            raise ValueError("positions.effectiveDepths must explicitly configure each affected contact in every position")
+        for identifier, depth in position.effective_depths.items():
+            base = contacts_by_id.get(identifier)
+            span = base.depth.range if base and base.depth else None
+            if span is None or span.minimum <= 0 or span.minimum != span.maximum or depth.range.maximum > span.maximum:
+                raise ValueError("positions.effectiveDepths must not exceed an exact positive base contact depth")
     raw_presentations = value["presentations"]
     raw_presentations_by_id = {
         presentation.id: raw_presentations[index]
@@ -2156,6 +2231,28 @@ def _validate_model_suspension(
     )
     if not all(math.isfinite(value) for value in anchor):
         raise ValueError("suspension anchor must be finite")
+    if isinstance(suspension, BoardModelCADRoutedCord):
+        if nodes.get(suspension.body_node_id) not in {"body", "attachment"}:
+            raise ValueError("cadRoutedCord bodyNodeID must reference an unpickable body or attachment")
+        for pose in suspension.canonical_poses.values():
+            qx, qy, qz, qw = pose.rotation
+            paths = {}
+            for strand in suspension.strands:
+                points = []
+                for point in pose.wrapped_routes[strand.id]:
+                    px, py, pz = point
+                    tx, ty, tz = 2*(qy*pz-qz*py), 2*(qz*px-qx*pz), 2*(qx*py-qy*px)
+                    points.append((px+qw*tx+qy*tz-qz*ty+pose.translation[0],
+                                   py+qw*ty+qz*tx-qx*tz+pose.translation[1],
+                                   pz+qw*tz+qx*ty-qy*tx+pose.translation[2]))
+                if strand.kind in {"lead", "loop"}: points.insert(0, anchor)
+                if strand.kind == "loop": points.append(anchor)
+                length = sum(math.dist(a,b) for a,b in zip(points,points[1:]))
+                if length > strand.rest_length + 2e-5:
+                    raise ValueError("cadRoutedCord restLength is shorter than its native route")
+                paths[strand.id] = points
+            validate_cord_paths(paths, {strand.id: strand.radius for strand in suspension.strands})
+        return
     if isinstance(suspension, BoardModelTwoBranchSuspension):
         passages = tuple(
             passage
@@ -2411,7 +2508,7 @@ def _load_reusable_model_descriptor(
         # in the repository and cannot be hashed here. The descriptor's
         # modelSHA256 remains the contract: prepare_assets.py verifies the
         # compiled bytes against it, and BoardPackageStore re-checks it on device.
-        if not _is_compiled_model_asset(asset_path.parent.parent, "assets/primary.usdz"):
+        if not _is_compiled_model_asset(asset_path.parent.parent, f"assets/{asset_path.name}"):
             raise ValueError("model asset must be readable for SHA-256 validation") from error
         actual_hash = declared_hash
     if declared_hash != actual_hash:
@@ -2556,7 +2653,7 @@ def _load_model_descriptor(
         # in the repository and cannot be hashed here. The descriptor's
         # modelSHA256 remains the contract: prepare_assets.py verifies the
         # compiled bytes against it, and BoardPackageStore re-checks it on device.
-        if not _is_compiled_model_asset(asset_path.parent.parent, "assets/primary.usdz"):
+        if not _is_compiled_model_asset(asset_path.parent.parent, f"assets/{asset_path.name}"):
             raise ValueError("model asset must be readable for SHA-256 validation") from error
         actual_hash = declared_hash
     if declared_hash != actual_hash:
@@ -2579,6 +2676,7 @@ def _load_model_descriptor(
         raise ValueError("model descriptor nodes must be a non-empty array")
     node_ids: set[str] = set()
     node_ids_by_contact: dict[str, list[str]] = {}
+    shared_contact_ids: set[str] = set()
     body_count = 0
     attachment_count = 0
     ordered_node_ids: list[str] = []
@@ -2587,7 +2685,7 @@ def _load_model_descriptor(
         node = _mapping(raw_node, source)
         role = node.get("role")
         expected = {"nodeID", "role", "contactID"} if role == "contact" else {"nodeID", "role"}
-        _closed(node, expected, source)
+        _closed(node, expected, source, optional={"additionalContactIDs"} if role == "contact" else set())
         node_id = _string(node["nodeID"], f"{source}.nodeID")
         if node_id in node_ids:
             raise ValueError(f"model descriptor has duplicate nodeID: {node_id}")
@@ -2598,10 +2696,21 @@ def _load_model_descriptor(
         elif role == "contact":
             contact_id = _identifier(node["contactID"], f"{source}.contactID")
             node_ids_by_contact.setdefault(contact_id, []).append(node_id)
+            if "additionalContactIDs" in node:
+                extra = node["additionalContactIDs"]
+                if not isinstance(extra, list) or not extra:
+                    raise ValueError(f"{source}.additionalContactIDs must be a non-empty array")
+                extra = [_identifier(item, f"{source}.additionalContactIDs") for item in extra]
+                if extra != sorted(set(extra)) or contact_id in extra:
+                    raise ValueError(f"{source}.additionalContactIDs must be sorted, unique and exclude primary")
+                shared_contact_ids.update(extra)
+                for additional_id in extra:
+                    node_ids_by_contact.setdefault(additional_id, []).append(node_id)
         elif role == "attachment":
             attachment_count += 1
             max_attachments = (
-                4 if isinstance(suspension, BoardModelTwoBranchSuspension)
+                8 if isinstance(suspension, BoardModelCADRoutedCord)
+                else 4 if isinstance(suspension, BoardModelTwoBranchSuspension)
                 else 2 if isinstance(suspension, BoardModelPairedLeadCord)
                 else 1
             )
@@ -2627,6 +2736,8 @@ def _load_model_descriptor(
     for contact_id, raw_contact in raw_contacts.items():
         source = f"model descriptor contacts[{contact_id}]"
         contact = _mapping(raw_contact, source)
+        if contact_id in shared_contact_ids and "outline" in contact:
+            raise ValueError(f"{source}: shared contact cannot replace member surfaces with an outline")
         _closed(contact, {"nodeIDs", "facePlaneAABB", "center"}, source, optional={"outline"})
         contact_node_ids = contact["nodeIDs"]
         if (
@@ -2691,9 +2802,13 @@ def _is_compiled_model_asset(root: Path, asset: str) -> bool:
     CAD authoring source. Every other missing asset is still an error, so this
     cannot be used to drop an arbitrary asset.
     """
-    if asset != "assets/primary.usdz":
+    source = root / f"{root.name}{_PACKAGE_SOURCE_SUFFIX}"
+    if not source.is_file():
         return False
-    return (root / f"{root.name}{_PACKAGE_SOURCE_SUFFIX}").is_file()
+    board = cad_source.load_board(source)
+    return any(presentation.get("media", {}).get("type") == "model"
+               and presentation["media"].get("assetPath") == asset
+               for presentation in board.get("presentations", []))
 
 
 def _validate_finished_shape(
@@ -2784,6 +2899,9 @@ def _validate_finished_shape(
     for presentation in board.presentations:
         if not isinstance(presentation.media, PresentationMediaModel):
             continue
+        local_position_ids = {position.id for position in board.positions if position.presentation_id == presentation.id}
+        if not local_position_ids:
+            raise ValueError("every model presentation must own at least one position")
         if presentation.media.physics_descriptor_path:
             model_document = _load_json(root / presentation.media.descriptor_path, "model descriptor")
             physics = load_rope_physics(root / presentation.media.physics_descriptor_path, model_document["modelSHA256"])

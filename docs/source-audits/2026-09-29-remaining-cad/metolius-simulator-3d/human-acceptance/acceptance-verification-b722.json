@@ -1,0 +1,126 @@
+{
+  "status": "fail",
+  "blockingFindings": [
+    "rawcount root verification"
+  ],
+  "acceptedAnswer": "lgtm",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+  "checks": {
+    "otherPackageFilesUnchanged": 203,
+    "otherQueueRowsUnchanged": 20,
+    "otherLockEntriesUnchanged": true,
+    "deliveryByteManifestUnchanged": true,
+    "technicalPacketFilesVerified": 1741,
+    "rawCopiesVerified": 1759,
+    "technicalPacketPreAcceptanceStatusPreserved": true,
+    "currentHumanWrapperAccepted": true
+  },
+  "changedJSONPaths": {
+    "queue": [
+      [
+        "boards",
+        7,
+        "humanReview"
+      ],
+      [
+        "boards",
+        7,
+        "acceptedDate"
+      ],
+      [
+        "boards",
+        7,
+        "reviewAnswer"
+      ],
+      [
+        "boards",
+        7,
+        "reviewPage"
+      ],
+      [
+        "boards",
+        7,
+        "acceptedScope"
+      ],
+      [
+        "reviewState"
+      ]
+    ],
+    "lock": [
+      [
+        "individualReviewRevisions",
+        11,
+        "geometryAcceptance"
+      ],
+      [
+        "individualReviewRevisions",
+        11,
+        "acceptedDate"
+      ],
+      [
+        "individualReviewRevisions",
+        11,
+        "answer"
+      ],
+      [
+        "individualReviewRevisions",
+        11,
+        "acceptedScope"
+      ],
+      [
+        "migratedPackages",
+        "metolius-simulator-3d",
+        "geometryAcceptance"
+      ],
+      [
+        "migratedPackages",
+        "metolius-simulator-3d",
+        "individualReview"
+      ]
+    ],
+    "batch": [
+      [
+        "reviewRevisions",
+        8,
+        "geometryAcceptance"
+      ],
+      [
+        "reviewRevisions",
+        8,
+        "acceptedDate"
+      ],
+      [
+        "reviewRevisions",
+        8,
+        "acceptedScope"
+      ],
+      [
+        "reviewRevisions",
+        8,
+        "answer"
+      ]
+    ]
+  },
+  "otherPackageChanges": [],
+  "technicalPacketHashFailures": [],
+  "limitations": "Hash/record inspection only. No tests, native/compiler/export jobs or resources started. Preacceptance technical packet remains immutable; current human wrapper and accepted-review.md record acceptance.",
+  "elapsedSeconds": 1.1479664159705862,
+  "fileSHA256": {
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/human-review.json": "6583e333316c463d38d668e165b82fa63b3a1859c729f744703af87f4cdccb79",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/accepted-review.md": "afefb88521a9b1a9c3243ed2ec48def841020b0148c65be9fb1b7c416e7b8946",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/source-audit.md": "b17eceb4034798c6d6a1453b79d694a8dd32de23f0885e84a1af2f592981d154",
+    "docs/source-audits/2026-09-29-remaining-cad/review-queue.json": "e17ef4f51963ccad01a3fa714823de0c5f7283f8bed60090f210a7617a6050ce",
+    "docs/model-delivery-lock.json": "3d78ba9da8df11cd3a5bc3bd8539099c8d2f7952e0e271e4bbf1c1ee2b4c85a1",
+    "docs/source-audits/2026-09-29-remaining-cad/batch-validation.json": "8619093e12ee8b30324f875ece55487d1c35c826411c62b0ef7975e1da5730d9",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/opus-and-plastic-review/retained-files.json": "f777430a25fc228b9e51203ad3cc029a893dd2c7501fa78127e96c12e0dcb308",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/opus-and-plastic-review/provenance.json": "efd85679ef69fd147dfdfc41b3786bffd88fde64b67e835176a2abec40cea9ed",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/final-root-verification.json": "d50722bae5a3f0ea8c8d0d782e72bfadac95aa92de9605193bb3633c05692b04",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/before-human-acceptance/human-review.json": "cd9b3f9aa430c78a9c3a20ce826c3e489c491921ed0160546d812932dabebe64",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/before-human-acceptance/review-queue.json": "10e6f9ee1e8535fc9350bd1f8cc4743b1b164c08813e303f35dd4282141ca778",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/before-human-acceptance/model-delivery-lock.json": "4697b01edc9028ea0d45759ce79fd5b77e8f3a44b671c8ed4a1e5d7c18ec9f9b",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/before-human-acceptance/batch-validation.json": "b4f944c35012a58ec5650685c2bfeaeeafd021bd35a10cde7359bbd3aa0146a2",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/before-human-acceptance/source-audit.md": "bf3d4c80d04bbffc51f770e7e01cfb0647239831f297b4b052f57c878e132278"
+  }
+}

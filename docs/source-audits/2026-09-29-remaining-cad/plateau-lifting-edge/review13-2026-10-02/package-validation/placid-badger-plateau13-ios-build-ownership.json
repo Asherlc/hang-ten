@@ -1,0 +1,54 @@
+{
+  "owner": "placid-badger",
+  "jobName": "placid-badger-plateau13-ios-build",
+  "status": "cleaned",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-build-TMP",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-DD"
+  ],
+  "processGroup": 35869,
+  "registeredUTC": "2026-10-02T19:12:47.288323+00:00",
+  "simulatorsCreated": 0,
+  "command": [
+    "rtk",
+    "proxy",
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "generic/platform=iOS Simulator",
+    "-derivedDataPath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-DD",
+    "build-for-testing"
+  ],
+  "timeoutSeconds": 600,
+  "logPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-build.log",
+  "startedUTC": "2026-10-02T19:12:47.291174+00:00",
+  "exitCode": 0,
+  "elapsedSeconds": 50.50919920799788,
+  "logSHA256": "bbef5cc0b8aba9de0736319772af641953ae64cae759fd9decdf81adab4209ec",
+  "cleanup": {
+    "owner": "placid-badger",
+    "jobName": "placid-badger-plateau13-ios-build",
+    "resources": [
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-build-TMP",
+        "absent": true
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-DD",
+        "absent": true
+      }
+    ],
+    "errors": [],
+    "remainingProcesses": [],
+    "processGroupAbsent": true,
+    "allResourcesAbsent": true,
+    "passed": true,
+    "finishedUTC": "2026-10-02T19:13:39.424452+00:00"
+  }
+}

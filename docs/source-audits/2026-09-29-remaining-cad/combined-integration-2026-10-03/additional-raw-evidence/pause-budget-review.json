@@ -1,0 +1,82 @@
+{
+  "workspaceOwner": "placid-badger-cad-second-half",
+  "scope": "Independent read-only review of proposed native integration wall-budget correction; no code edits",
+  "evidence": [
+    {
+      "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/pause-timing-controller/tests.stdout",
+      "sha256": "ed58ffc9213cd2a7b16ba8bc7a40b478176c6e593e3ed75468bf1df5204ad9bc"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/pause-timing-optimized/tests.stdout",
+      "sha256": "aa9328f8d354aa632006f8a7a083432c9dc505ae4b8e070d0212765845b9d487"
+    }
+  ],
+  "optimizedUnchanged30SecondResults": {
+    "tests": 2,
+    "failures": 0,
+    "totalTestSeconds": 9.561,
+    "scene": {
+      "totalSeconds": 5.432,
+      "workerSeconds": 3.1857563333469443,
+      "solverSeconds": 3.1856355416530278,
+      "acceptedSimulationTime": 0.5124999999999994,
+      "acceptedStepCount": 123,
+      "workerFramePresent": true,
+      "settled": true,
+      "geometryAccepted": true,
+      "publicationCountAssertion": 1,
+      "cameraAndPauseAssertions": "passed unchanged"
+    },
+    "controller": {
+      "totalSeconds": 4.129,
+      "workerSeconds": 3.2440639166452456,
+      "solverSeconds": 3.243966125010047,
+      "acceptedSimulationTime": 0.5124999999999994,
+      "acceptedStepCount": 123,
+      "workerFramePresent": true,
+      "settled": true,
+      "geometryAccepted": true,
+      "publicationCountAssertion": 1
+    }
+  },
+  "compilerComparison": "Same Debug conditions/testassertions/instrumentation and30second waits; SWIFT_OPTIMIZATION_LEVEL=-O replaces-Onone. This establishes accepted completion without a shipping algorithm/lifecycle change.",
+  "sameFirst8PhysicalRecords": {
+    "exactTextMatch": true,
+    "fieldsCompared": [
+      "stepIndex",
+      "simulationTime",
+      "speed",
+      "displacement",
+      "strain",
+      "clearanceMargin",
+      "settled"
+    ],
+    "count": 8,
+    "qualification": "Does not assert complete unoptimized final trajectory matches optimized until freshdefaultDebug complete solve is retained."
+  },
+  "proposalReview": {
+    "change": "Remove temporary production/test diagnostic prints; restore controller/solver bytes to prediagnosticSHA; change only the two existing native integration waits30\u2192600wallseconds and add evidence-backed comments. Retain nativeClavellium fixture and all assertions.",
+    "acceptedScope": "Proportionate wall-budget correction to expensive unoptimized native numerical integration, pending successful default-Onone validation. No controller/physics repair claimed.",
+    "600SecondRationale": "Observed late initial stepcost~1.6seconds and required123steps suggest order~200seconds, with600providing~3\u00d7headroom. This is a projection, not measured native completion runtime. Five simulated seconds/1200fixedsteps remain finite independent numerical bounds.",
+    "mustRemainUnchanged": [
+      "Full native Clavellium physics input/profile/target",
+      "geometry acceptance thresholds and topology/material constraints",
+      "settled state condition",
+      "exactlyone frame-publication assertion",
+      "paused-time boardheight equality",
+      "post-settle camera-framing bounds assertions",
+      "worker maxDuration5simulatedseconds and240Hz fixedstep bound"
+    ],
+    "commentGuidance": "State600is integration wall-clock allowance for-Onone native geometry cost. Immediate settle retains1200step bound; physical geometry/settled requirements remain unchanged. Do not call600a product latency requirement or claim220seconds was measured."
+  },
+  "requiredBeforeFinalClaim": [
+    "Fresh signed default-Onone build with all production diagnostics restored byteexact",
+    "Both real native tests complete accepted and pass with600wall waits; preserve actualduration/resultbundle/rawstdout/exit",
+    "Verify test diff alters only waitbudgets/comments and diagnostics removal relative integrated prediagnostic source",
+    "Recheck models SHA against prediagnostic baseline and selected canonical81file hashes",
+    "Report physical acceptance and publication/camera/pause checks; no production behavior/performance repair claim"
+  ],
+  "testArchitectureDecision": "No synthetic fixture substitution or new production dependency seam is needed. Keep full native integration; a later lightweight lifecycle unit test is optional separate scope.",
+  "fullSuiteRunnerBudget": "A3000second outer runner bound is reasonable only if selected full-suite cumulative native numerical work/progress justifies it. Keep each native acceptance test600bound, exactresources and immutable results. An outer runner allowance is not a blanket alltests-pass claim.",
+  "reviewStatus": "PROPOSED_SCOPE_SUPPORTED_PENDING_DEFAULT_DEBUG_COMPLETION"
+}

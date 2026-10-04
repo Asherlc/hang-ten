@@ -1,0 +1,14 @@
+{
+  "owner": "placid-badger",
+  "attempts": [
+    {
+      "command": "xcresulttool export attachments for green-viewport-ui-tests.xcresult",
+      "exitCode": 64,
+      "cause": "Concurrent summary/export operations tried to initialize the same xcresult database.sqlite3.",
+      "correction": "Reran attachment export sequentially after summary completion.",
+      "correctedExitCode": 0,
+      "allFourWholeAttachmentsExportedAndViewed": true,
+      "testOutcomeUnchanged": true
+    }
+  ]
+}

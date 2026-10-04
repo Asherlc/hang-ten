@@ -1,0 +1,714 @@
+
+HangTen/Views/RootView.swift:1617 sourceSHA256=5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926
+1617: enum WorkoutSessionPolicy {
+1618:     static let initialCountdownDuration: TimeInterval = 3
+1619:     static let skipCountdownDuration: TimeInterval = 3
+1620: 
+1621:     static func countdownDuration(for kind: WorkoutCountdownKind) -> TimeInterval {
+1622:         kind == .initial ? initialCountdownDuration : skipCountdownDuration
+1623:     }
+1624: 
+1625:     static func shouldAutoStart(
+1626:         didAutoStart: Bool,
+1627:         isRunning: Bool,
+1628:         routineStartedAt: Date?
+1629:     ) -> Bool {
+1630:         !didAutoStart
+1631:             && !isRunning
+1632:             && isFirstStart(routineStartedAt: routineStartedAt)
+1633:     }
+1634: 
+1635:     static func isFirstStart(routineStartedAt: Date?) -> Bool {
+1636:         routineStartedAt == nil
+1637:     }
+
+HangTen/Views/RootView.swift:1695 sourceSHA256=5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926
+1695:     static func startDate(for kind: WorkoutCountdownKind, now: Date) -> Date {
+1696:         now.addingTimeInterval(countdownDuration(for: kind))
+1697:     }
+1698: 
+1699:     static func startUptime(for kind: WorkoutCountdownKind, at uptime: TimeInterval) -> TimeInterval {
+1700:         uptime + countdownDuration(for: kind)
+1701:     }
+1702: 
+1703:     static func countdownRemaining(startUptime: TimeInterval?, nowUptime: TimeInterval) -> Int {
+1704:         guard let startUptime, startUptime > nowUptime else { return 0 }
+1705:         return max(1, Int(ceil(startUptime - nowUptime)))
+
+HangTen/Views/RootView.swift:1759 sourceSHA256=5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926
+1759: 
+1760:     func currentElapsed(planDuration: TimeInterval, at uptime: TimeInterval) -> TimeInterval {
+1761:         let activeElapsed = activeStartUptime.map { max(0, uptime - $0) } ?? 0
+1762:         return min(planDuration, pausedElapsed + max(0, activeElapsed))
+1763:     }
+1764: 
+1765:     func countdownRemaining(at uptime: TimeInterval) -> Int {
+1766:         pendingCountdownRemaining(at: uptime)
+1767:     }
+1768: 
+1769:     private func pendingCountdownRemaining(at uptime: TimeInterval) -> Int {
+1770:         guard countdownKind != nil else { return 0 }
+1771:         return WorkoutSessionPolicy.countdownRemaining(
+1772:             startUptime: activeStartUptime,
+1773:             nowUptime: uptime
+1774:         )
+1775:     }
+1776: 
+1777:     mutating func transitionExpiredCountdown(at uptime: TimeInterval) {
+1778:         guard countdownKind != nil, pendingCountdownRemaining(at: uptime) == 0 else { return }
+1779:         countdownKind = nil
+1780:     }
+1781: 
+1782:     func canNavigate(planDuration: TimeInterval, at uptime: TimeInterval) -> Bool {
+1783:         routineStartedAt != nil
+1784:             && pendingCountdownRemaining(at: uptime) == 0
+1785:             && currentElapsed(planDuration: planDuration, at: uptime) < planDuration
+1786:     }
+1787: 
+1788:     mutating func toggleRunning(uptime: TimeInterval, now: Date? = nil) {
+1789:         if let activeStartUptime {
+1790:             if activeStartUptime > uptime {
+1791:                 cancelCountdown(at: uptime)
+1792:                 return
+1793:             }
+1794:             pausedElapsed += max(0, uptime - activeStartUptime)
+1795:             self.activeStartUptime = nil
+1796:             countdownKind = nil
+1797:         } else {
+1798:             let isFirstStart = WorkoutSessionPolicy.isFirstStart(routineStartedAt: routineStartedAt)
+1799:             if isFirstStart {
+1800:                 guard let now else { return }
+1801:                 routineStartedAt = WorkoutSessionPolicy.startDate(for: .initial, now: now)
+1802:                 activeStartUptime = WorkoutSessionPolicy.startUptime(for: .initial, at: uptime)
+1803:                 countdownKind = .initial
+1804:             } else {
+1805:                 activeStartUptime = uptime
+1806:                 countdownKind = nil
+1807:             }
+1808:         }
+1809:     }
+1810: 
+1811:     mutating func cancelCountdown(at uptime: TimeInterval) {
+1812:         guard countdownKind != nil, countdownRemaining(at: uptime) > 0 else { return }
+1813: 
+1814:         switch countdownKind {
+1815:         case .skip:
+1816:             activeStartUptime = nil
+1817:             countdownKind = nil
+1818:         case .initial, nil:
+1819:             activeStartUptime = nil
+1820:             routineStartedAt = nil
+1821:             countdownKind = nil
+
+HangTen/Views/RootView.swift:1865 sourceSHA256=5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926
+1865:     mutating func startSkipCountdown(to targetElapsed: TimeInterval, at uptime: TimeInterval) {
+1866:         pausedElapsed = targetElapsed
+1867:         activeStartUptime = WorkoutSessionPolicy.startUptime(for: .skip, at: uptime)
+1868:         countdownKind = .skip
+1869:     }
+
+HangTen/Views/RootView.swift:1992 sourceSHA256=5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926
+1992:     var body: some View {
+1993: 		GeometryReader { geometry in
+1994: 			TimelineView(.periodic(from: .now, by: 0.25)) { context in
+1995: 				let monotonicTime = WorkoutClock.monotonicTime
+1996: 				let elapsed = currentElapsed(at: monotonicTime)
+1997: 				let step = step(at: elapsed)
+1998: 				// Session steps are already preference-materialized / alternate-expanded.
+1999: 				let presentedStep = step
+2000: 				let stepElapsed = elapsedInStep(at: elapsed)
+2001: 				let countdown = countdownRemaining(at: monotonicTime)
+2002: 				let canNavigate = canNavigate(at: monotonicTime)
+2003: 				let isComplete = elapsed >= sessionDuration
+2004: 				let isTimedResting = isRestInterval(step: step, stepElapsed: stepElapsed)
+2005: 				let boardCue = timeline.boardCue(
+2006: 					currentStep: step,
+2007: 					stepElapsed: stepElapsed,
+2008: 					countdown: countdown,
+2009: 					isComplete: isComplete,
+2010: 					isSkipCountdown: sessionState.countdownKind == .skip
+2011: 				)
+2012: 				let isResting = boardCue.isResting
+2013: 				let highlightedStep = boardCue.step
+2014: 				let resolvedHighlightedStep = highlightedStep
+2015: 				let previewHoldIDs = resolvedHighlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
+2016: 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
+2017: 				let highlightMode = boardCue.mode
+2018: 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
+
+HangTen/Views/RootView.swift:2038 sourceSHA256=5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926
+2038: 				Group {
+2039: 					if isLandscape {
+2040: 						landscapeSession(
+2041: 							step: presentedStep,
+2042: 							stepElapsed: stepElapsed,
+2043: 							elapsed: elapsed,
+2044: 							monotonicTime: monotonicTime,
+2045: 							countdown: countdown,
+2046: 							canNavigate: canNavigate,
+2047: 							isResting: isResting,
+2048: 							isComplete: isComplete,
+2049: 							highlightedHoldIDs: highlightedHoldIDs,
+2050: 							highlightMode: highlightMode,
+2051: 							showsHoldPreview: showsHoldPreview,
+2052: 							holdCue: holdCue,
+2053: 							cueStep: resolvedHighlightedStep,
+2054: 							isSkipCountdown: sessionState.countdownKind == .skip
+2055: 						)
+2056: 					} else {
+2057: 						portraitSession(
+2058: 							step: presentedStep,
+2059: 							stepElapsed: stepElapsed,
+2060: 							elapsed: elapsed,
+2061: 							monotonicTime: monotonicTime,
+2062: 							countdown: countdown,
+2063: 							canNavigate: canNavigate,
+2064: 							isResting: isResting,
+2065: 							isComplete: isComplete,
+2066: 							highlightedHoldIDs: highlightedHoldIDs,
+2067: 							highlightMode: highlightMode,
+2068: 							showsHoldPreview: showsHoldPreview,
+2069: 							holdCue: holdCue,
+2070: 							cueStep: resolvedHighlightedStep,
+2071: 							isSkipCountdown: sessionState.countdownKind == .skip
+2072: 						)
+2073: 					}
+2074: 				}
+2075:                 #if DEBUG
+2076:                 .environment(\.workoutDiagnosticIsPrestart, sessionState.routineStartedAt == nil)
+2077:                 #endif
+
+HangTen/Views/RootView.swift:2106 sourceSHA256=5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926
+2106: 				.onChange(of: countdown, initial: true) { _, countdown in
+2107:                     #if DEBUG
+2108:                     if BoardHighlightDiagnostic.recordsHandLifetimes {
+2109:                         BoardHighlightDiagnostic.shared.harnessEvent(
+2110:                             "workout-prestart-hand-state",
+2111:                             state: "flag=\(WorkoutPrestartHandDiagnostic.isEnabled);routineStartedIsNil=\(sessionState.routineStartedAt == nil);suppressed=\(WorkoutPrestartHandDiagnostic.isEnabled && sessionState.routineStartedAt == nil);countdown=\(countdown)",
+2112:                             viewport: .zero // State evidence, not a layout measurement.
+2113:                         )
+2114:                     }
+2115:                     #endif
+2116: 					guard countdown == 0 else { return }
+2117: 					sessionState.transitionExpiredCountdown(at: monotonicTime)
+2118: 				}
+
+HangTen/Views/RootView.swift:2217 sourceSHA256=5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926
+2217: 		.onAppear {
+2218: 			UIApplication.shared.isIdleTimerDisabled = true
+2219: 			configureRecorder()
+2220: 			if planNeedsHandChoice {
+2221: 				bothHandsResolvable = WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board)
+2222: 				if handPreference == nil {
+2223: 					applyHandPreference(
+2224: 						WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board)
+2225: 					)
+2226: 				}
+2227: 			}
+2228: 			#if DEBUG
+2229:             if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS"] == "1" {
+2230:                 BoardHighlightDiagnostic.shared.harnessEvent(
+2231:                     "workout-probe-appear-before-autostart",
+2232:                     state: "plan=\(plan.id);board=\(board.id);pausedElapsed=\(sessionState.pausedElapsed);activeStartIsNil=\(sessionState.activeStartUptime == nil);routineStartedIsNil=\(sessionState.routineStartedAt == nil);prestartHandFlag=\(WorkoutPrestartHandDiagnostic.isEnabled);prestartHandsSuppressed=\(WorkoutPrestartHandDiagnostic.isEnabled && sessionState.routineStartedAt == nil)",
+2233:                     viewport: .zero // Not a layout measurement; actual leaf comes from scene snapshots.
+2234:                 )
+2235:             }
+2236: 			if !didApplyReviewStep {
+2237: 				didApplyReviewStep = true
+2238: 				if let rawStep = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STEP"],
+2239: 				   let requestedStep = Int(rawStep),
+2240: 				   requestedStep > 1 {
+2241: 						sessionState.pausedElapsed = activeSteps
+2242: 							.prefix(min(requestedStep - 1, activeSteps.count))
+2243: 							.reduce(0) { $0 + $1.duration }
+2244: 				}
+2245: 			}
+2246: 
+2247: 				if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_AUTOSTART"] == "1",
+2248: 				   sessionState.activeStartUptime == nil {
+2249: 					didCompleteWorkoutPreparation = true
+2250: 					toggleRunning()
+2251: 				}
+2252: 			#endif
+2253: 			if !planNeedsHandChoice,
+2254: 			   WorkoutSessionPolicy.shouldAutoStart(
+2255: 				didAutoStart: didAutoStart,
+2256: 				isRunning: sessionState.activeStartUptime != nil,
+2257: 				routineStartedAt: sessionState.routineStartedAt
+2258: 			) {
+2259: 				didAutoStart = true
+2260: 				toggleRunning()
+2261: 			}
+2262: 			initializeStopwatches()
+2263: 		}
+2264: 		.onChange(of: scenePhase) { _, phase in
+2265: 			guard phase != .active else { return }
+2266: 			pauseForInterruption()
+2267: 		}
+2268: 		.onChange(of: audioCoach.countdownPreparationState) { _, state in
+2269: 			guard let pendingCountdownStart else { return }
+2270: 			switch WorkoutSessionPolicy.consumePendingCountdown(
+2271: 				&self.pendingCountdownStart,
+2272: 				afterPreparationState: state
+2273: 			) {
+2274: 			case .none:
+2275: 				return
+2276: 			case .beginVisibly:
+2277: 				beginVisibleCountdown(pendingCountdownStart, at: WorkoutClock.monotonicTime)
+2278: 			case .requestAudioCountdown:
+2279: 				requestCountdownStart(pendingCountdownStart)
+2280: 			}
+2281: 		}
+2282: 		.onReceive(motherboardBluetoothService.$latestMeasurement.compactMap { $0 }) { measurement in
+2283: 			let monotonicTime = WorkoutClock.monotonicTime
+2284: 			guard sessionState.activeStartUptime != nil, isScaleTrackingReady else { return }
+
+HangTen/Views/RootView.swift:2330 sourceSHA256=5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926
+2330: 					isComplete: isComplete
+2331: 				)
+2332: 				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
+2333: 				if showsHoldPreview {
+2334: 					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+2335: 				}
+2336: 				BoardMapView(
+2337: 					board: board,
+2338: 					highlightedHoldIDs: highlightedHoldIDs,
+2339: 					highlightMode: highlightMode,
+2340: 					selectedPresentationID: WorkoutHighlightResolver.presentationID(for: cueStep, on: board),
+2341: 					activeHoldID: holdCue?.hold?.id
+2342: 				)
+2343: 					.padding(.horizontal, 2)
+2344: 				if let holdCue, WorkoutHoldCueVisibilityPolicy.showsCue(
+2345: 					holdCue: holdCue,
+2346: 					countdown: countdown,
+2347: 					isComplete: isComplete,
+2348: 					isSkipCountdown: isSkipCountdown
+2349: 				) {
+2350: 					if let hold = holdCue.hold {
+2351: 						GripDiagramView(
+2352: 							hold: hold,
+2353: 							gripType: holdCue.gripType,
+2354: 							fingerConfiguration: holdCue.fingerConfiguration,
+2355: 							resolvedHandSide: resolvedHandSide(for: step)
+2356: 						)
+2357: 					} else {
+2358: 						portraitHandCueCards(holdCue: holdCue, cueStep: cueStep)
+2359: 					}
+2360: 				}
+2361: 				if let cueCardRows = WorkoutPresentationContent.cueCardRows(
+2362: 					step: step,
+2363: 					countdown: countdown,
+2364: 					isComplete: isComplete
+2365: 				) {
+
+HangTen/Views/RootView.swift:2418 sourceSHA256=5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926
+2418: 		isSkipCountdown: Bool
+2419: 	) -> some View {
+2420: 		let showsPairedHandCue: Bool = {
+2421: 			guard let holdCue else { return false }
+2422: 			return WorkoutLandscapeHandCuePolicy.showsHandCue(
+2423: 				for: .left, holdCue: holdCue, cueStep: cueStep, countdown: countdown,
+2424: 				isComplete: isComplete, isSkipCountdown: isSkipCountdown
+2425: 			) && WorkoutLandscapeHandCuePolicy.showsHandCue(
+2426: 				for: .right, holdCue: holdCue, cueStep: cueStep, countdown: countdown,
+2427: 				isComplete: isComplete, isSkipCountdown: isSkipCountdown
+2428: 			)
+2429: 		}()
+2430: 		return VStack(spacing: 9) {
+2431: 			landscapeHeader(
+2432: 				step: step,
+2433: 				stepElapsed: stepElapsed,
+2434: 				countdown: countdown,
+2435: 				canNavigate: canNavigate,
+2436: 				isResting: isResting,
+2437: 				isComplete: isComplete
+2438: 			)
+2439: 
+2440: 			ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
+2441: 				.tint(Color.hangGreenDark)
+2442: 
+2443: 			VStack(spacing: 2) {
+2444: 				if showsPairedHandCue, let holdCue {
+2445: 					Group {
+2446: 						#if DEBUG
+2447: 						if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_WORKOUT_HAND_HOST"] == "1" {
+2448: 							Color.clear
+2449: 						} else if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAIN_SECOND_HOST"] == "1" {
+2450: 							WorkoutPlainSecondHostProbe(posture: holdCue.gripType,
+2451: 								fingerConfiguration: holdCue.fingerConfiguration)
+2452: 						} else {
+2453: 							GripHandPairModelView(posture: holdCue.gripType,
+2454: 								fingerConfiguration: holdCue.fingerConfiguration)
+2455: 						}
+2456: 						#else
+2457: 						GripHandPairModelView(posture: holdCue.gripType,
+2458: 							fingerConfiguration: holdCue.fingerConfiguration)
+2459: 						#endif
+2460: 					}
+2461: 						.frame(height: 68)
+2462: 						.accessibilityHidden(true)
+2463: 				}
+2464: 				HStack(spacing: 12) {
+2465: 				landscapeHandCueSlot(
+2466: 					holdCue: holdCue,
+2467: 					cueStep: cueStep,
+2468: 					countdown: countdown,
+2469: 					isComplete: isComplete,
+2470: 					isSkipCountdown: isSkipCountdown,
+2471: 					side: .left,
+2472: 					usesSharedPairPreview: showsPairedHandCue
+2473: 				)
+2474: 
+2475: 				VStack(alignment: .leading, spacing: 4) {
+2476: 					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+2477: 						.frame(maxWidth: .infinity, minHeight: LandscapeLayout.previewLabelHeight, alignment: .center)
+2478: 						.opacity(showsHoldPreview ? 1 : 0)
+
+HangTen/Views/RootView.swift:3131 sourceSHA256=5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926
+3131:     private func toggleRunning() {
+3132: 		if sessionState.activeStartUptime == nil,
+3133: 		   WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
+3134: 		   planNeedsHandChoice,
+3135: 		   handPreference == nil {
+3136: 			applyHandPreference(
+3137: 				WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board)
+3138: 			)
+3139: 		}
+3140: 		let monotonicTime = WorkoutClock.monotonicTime
+3141: 		if pendingCountdownStart != nil || countdownArmTask != nil {
+3142: 			countdownArmTask?.cancel()
+3143: 			countdownArmTask = nil
+3144: 			pendingCountdownStart = nil
+3145: 			audioCoach.stop()
+3146: 			return
+3147: 		}
+3148: 		if sessionState.activeStartUptime != nil {
+3149: 			if countdownRemaining(at: monotonicTime) > 0 {
+3150: 				cancelCountdown()
+3151: 				return
+3152: 			}
+3153: 			recorder.pause(at: currentElapsed(at: monotonicTime))
+3154: 			pauseStopwatches(at: monotonicTime)
+3155: 			sessionState.toggleRunning(uptime: monotonicTime)
+3156: 			audioCoach.stop()
+3157: 		} else if needsWorkoutPreparation {
+3158: 			showsWorkoutPreparation = true
+3159: 		} else {
+3160: 			let isFirstStart = WorkoutSessionPolicy.isFirstStart(
+3161: 				routineStartedAt: sessionState.routineStartedAt
+3162: 			)
+3163: 			if isFirstStart {
+3164: 				motherboardMeasurementCollector.reset()
+3165: 				requestCountdownStart(.initial)
+3166: 				return
+3167: 			}
+3168: 			sessionState.toggleRunning(
+3169: 				uptime: monotonicTime,
+3170: 				now: nil
+3171: 			)
+3172: 		}
+3173:     }
+3174: 
+3175: 	private func requestCountdownStart(_ countdown: PendingCountdownStart) {
+3176: 		if audioCuesEnabled,
+3177: 		   WorkoutSessionPolicy.shouldPrepareCountdownAudio(
+3178: 			preparationState: audioCoach.countdownPreparationState
+3179: 		   ) {
+3180: 			audioCoach.prepareCountdownAudio()
+3181: 		}
+3182: 		if audioCuesEnabled,
+3183: 		   WorkoutSessionPolicy.shouldDeferCountdownStart(
+3184: 			isFirstStart: countdown == .initial,
+3185: 			preparationState: audioCoach.countdownPreparationState
+3186: 		   ) {
+3187: 			pendingCountdownStart = countdown
+3188: 			return
+3189: 		}
+3190: 
+3191: 		let now = WorkoutClock.monotonicTime
+3192: 		guard audioCuesEnabled, audioCoach.countdownPreparationState == .ready else {
+3193: 			beginVisibleCountdown(countdown, at: now)
+3194: 			return
+3195: 		}
+3196: 
+3197: 		let armUptime = now + WorkoutSessionPolicy.countdownAudioArmLead(
+3198: 			environment: ProcessInfo.processInfo.environment
+3199: 		)
+3200: 		let targetElapsed: TimeInterval
+3201: 		switch countdown {
+3202: 		case .initial:
+3203: 			targetElapsed = 0
+3204: 		case .skip(let elapsed):
+3205: 			targetElapsed = elapsed
+3206: 		}
+3207: 		let schedule = CountdownAudioSchedule(remainingFrom: "3")
+3208: 			.appendingShortIntervals(
+3209: 				WorkoutCountdownIntervalPolicy.shortDurations(
+3210: 					in: activeSteps,
+3211: 					startingAt: targetElapsed
+3212: 				),
+3213: 				startingAt: 3
+3214: 			)
+3215: 		_ = audioCoach.startCountdown(schedule, startUptime: armUptime)
+3216: 		countdownArmTask?.cancel()
+3217: 		countdownArmTask = Task { @MainActor in
+3218: 			do {
+3219: 				try await Task.sleep(for: .seconds(max(0, armUptime - WorkoutClock.monotonicTime)))
+3220: 			} catch {
+3221: 				return
+3222: 			}
+3223: 			guard !Task.isCancelled else { return }
+3224: 			countdownArmTask = nil
+3225: 			beginVisibleCountdown(countdown, at: armUptime)
+3226: 		}
+3227: 	}
+3228: 
+3229: 	private func beginVisibleCountdown(
+3230: 		_ countdown: PendingCountdownStart,
+3231: 		at armUptime: TimeInterval
+3232: 	) {
+3233: 		switch countdown {
+3234: 		case .initial:
+3235: 			sessionState.toggleRunning(uptime: armUptime, now: Date())
+3236: 		case .skip(let targetElapsed):
+3237: 			sessionState.startSkipCountdown(to: targetElapsed, at: armUptime)
+3238: 		}
+3239: 	}
+3240: 
+
+HangTen/Views/GripHandModelView.swift:35 sourceSHA256=78398b0253e6bca1184a9c24c5c938a3dd1cc0afce807b0226b0f4605e6824a1
+35: /// Displays the evaluated surfaces authored in Art/GripHand/GripHand.blend.
+36: /// Pose changes preserve Blender deformation and smoothing exactly.
+37: @MainActor
+38: private final class GripHandSceneStorage {
+39:     private let makeScene: @MainActor () -> GripHandRealityScene
+40:     lazy var scene = makeScene()
+41: 
+42:     init(makeScene: @escaping @MainActor () -> GripHandRealityScene = { GripHandRealityScene() }) {
+43:         self.makeScene = makeScene
+44:     }
+45: }
+46: 
+47: /// Makes the scroll-or-orbit choice once, at the first active drag update.
+48: /// The claiming event seeds the origin so earlier travel cannot jump the camera.
+49: struct GripHandDragState {
+
+HangTen/Views/GripHandModelView.swift:78 sourceSHA256=78398b0253e6bca1184a9c24c5c938a3dd1cc0afce807b0226b0f4605e6824a1
+78: #if DEBUG
+79: // Diagnostic launch constant. This affects only descendants of WorkoutView.
+80: @MainActor
+81: enum WorkoutPrestartHandDiagnostic {
+82:     static let isEnabled = BoardHighlightDiagnostic.isEnabled
+83:         && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_PRESTART_HAND_HOSTS"] == "1"
+84: }
+85: 
+86: private struct WorkoutDiagnosticPrestartHandKey: EnvironmentKey {
+87:     static let defaultValue = false
+88: }
+89: 
+90: extension EnvironmentValues {
+91:     var workoutDiagnosticIsPrestart: Bool {
+92:         get { self[WorkoutDiagnosticPrestartHandKey.self] }
+93:         set { self[WorkoutDiagnosticPrestartHandKey.self] = newValue }
+94:     }
+95: }
+96: #endif
+
+HangTen/Views/GripHandModelView.swift:107 sourceSHA256=78398b0253e6bca1184a9c24c5c938a3dd1cc0afce807b0226b0f4605e6824a1
+107:     @State private var lastMagnification: CGFloat = 1
+108:     @State private var cameraRevision = 0
+109:     #if DEBUG
+110:     @State private var diagnosticHandViewToken = UUID()
+111:     @Environment(\.workoutDiagnosticIsPrestart) private var diagnosticIsPrestart
+112:     #endif
+113: 
+114:     private var scene: GripHandRealityScene { sceneStorage.scene }
+115: 
+116:     init(posture: GripType?, fingerConfiguration: FingerConfiguration?, side: GripCueSide,
+117:          resetToken: Int = 0) {
+118:         self.posture = posture
+119:         self.fingerConfiguration = fingerConfiguration
+120:         self.side = side
+121:         self.resetToken = resetToken
+122:         _sceneStorage = State(initialValue: GripHandSceneStorage())
+123:         _isUnavailable = State(initialValue: false)
+124:     }
+125: 
+126:     init(posture: GripType?, fingerConfiguration: FingerConfiguration?, side: GripCueSide,
+127:          resetToken: Int, scene: GripHandRealityScene) {
+128:         self.posture = posture
+129:         self.fingerConfiguration = fingerConfiguration
+130:         self.side = side
+131:         self.resetToken = resetToken
+132:         _sceneStorage = State(initialValue: GripHandSceneStorage(makeScene: { scene }))
+133:         _isUnavailable = State(initialValue: scene.isUnavailable)
+134:     }
+135: 
+136:     var body: some View {
+137:         #if DEBUG
+138:         if BoardHighlightDiagnostic.suppressesAllHandHosts
+139:             || (WorkoutPrestartHandDiagnostic.isEnabled && diagnosticIsPrestart) {
+140:             Color.clear
+141:                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+142:                 .allowsHitTesting(false)
+143:                 .accessibilityHidden(true)
+144:         } else {
+145:             handContent
+146:         }
+147:         #else
+148:         handContent
+149:         #endif
+150:     }
+151: 
+152:     private var handContent: some View {
+153:         let _ = cameraRevision
+154:         return GeometryReader { proxy in
+155:             let size = proxy.size
+156:             RealityView { content in
+157:                 #if DEBUG
+158:                 if BoardHighlightDiagnostic.isEnabled {
+159:                     BoardHighlightDiagnostic.shared.handLifecycle(kind: "single",
+160:                         event: "make-entry", root: scene.root, camera: scene.camera,
+161:                         lifetime: scene.diagnosticHandLifetimeToken, view: diagnosticHandViewToken)
+162:                 }
+163:                 #endif
+164:                 content.camera = .virtual
+165:                 content.add(scene.root)
+166:                 syncScene(in: size)
+167:                 updateUnavailableState()
+168:             } update: { _ in
+169:                 syncScene(in: size)
+170:                 updateUnavailableState()
+171:             }
+172:             .simultaneousGesture(orbitGesture(size: size))
+173:             .simultaneousGesture(magnifyGesture)
+
+HangTen/Views/GripHandModelView.swift:942 sourceSHA256=78398b0253e6bca1184a9c24c5c938a3dd1cc0afce807b0226b0f4605e6824a1
+942: }
+943: 
+944: @MainActor
+945: private final class GripHandPairSceneStorage {
+946:     private let makeScene: @MainActor () -> GripHandRealityPairScene
+947:     lazy var scene = makeScene()
+948: 
+949:     init(makeScene: @escaping @MainActor () -> GripHandRealityPairScene = { GripHandRealityPairScene() }) {
+950:         self.makeScene = makeScene
+951:     }
+952: }
+953: 
+954: /// Shared RealityView host for layouts that display both mirrored hands.
+955: @MainActor
+
+HangTen/Views/GripHandModelView.swift:962 sourceSHA256=78398b0253e6bca1184a9c24c5c938a3dd1cc0afce807b0226b0f4605e6824a1
+962:     @State private var dragState = GripHandDragState()
+963:     @State private var lastMagnification: CGFloat = 1
+964:     @State private var cameraRevision = 0
+965:     #if DEBUG
+966:     @State private var diagnosticHandViewToken = UUID()
+967:     @Environment(\.workoutDiagnosticIsPrestart) private var diagnosticIsPrestart
+968:     #endif
+969: 
+970:     private var scene: GripHandRealityPairScene { sceneStorage.scene }
+971: 
+972:     init(posture: GripType?, fingerConfiguration: FingerConfiguration?, resetToken: Int = 0) {
+973:         self.posture = posture
+974:         self.fingerConfiguration = fingerConfiguration
+975:         self.resetToken = resetToken
+976:         _sceneStorage = State(initialValue: GripHandPairSceneStorage())
+977:         _isUnavailable = State(initialValue: false)
+978:     }
+979: 
+980:     init(posture: GripType?, fingerConfiguration: FingerConfiguration?, resetToken: Int = 0,
+981:          scene: GripHandRealityPairScene) {
+982:         self.posture = posture
+983:         self.fingerConfiguration = fingerConfiguration
+984:         self.resetToken = resetToken
+985:         _sceneStorage = State(initialValue: GripHandPairSceneStorage(makeScene: { scene }))
+986:         _isUnavailable = State(initialValue: !scene.isAvailable)
+987:     }
+988: 
+989:     var body: some View {
+990:         #if DEBUG
+991:         if BoardHighlightDiagnostic.suppressesAllHandHosts
+992:             || (WorkoutPrestartHandDiagnostic.isEnabled && diagnosticIsPrestart) {
+993:             Color.clear
+994:                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+995:                 .allowsHitTesting(false)
+996:                 .accessibilityHidden(true)
+997:         } else {
+998:             handContent
+999:         }
+1000:         #else
+1001:         handContent
+1002:         #endif
+1003:     }
+1004: 
+1005:     private var handContent: some View {
+1006:         let _ = cameraRevision
+1007:         return GeometryReader { proxy in
+1008:             let size = proxy.size
+1009:             RealityView { content in
+1010:                 #if DEBUG
+1011:                 if BoardHighlightDiagnostic.isEnabled {
+1012:                     BoardHighlightDiagnostic.shared.handLifecycle(kind: "pair",
+1013:                         event: "make-entry", root: scene.root, camera: scene.camera,
+1014:                         lifetime: scene.diagnosticHandLifetimeToken, view: diagnosticHandViewToken)
+1015:                 }
+1016:                 #endif
+1017:                 content.camera = .virtual
+1018:                 content.add(scene.root)
+1019:                 syncScene(in: size)
+1020:                 updateUnavailableState()
+1021:             } update: { _ in
+1022:                 syncScene(in: size)
+1023:                 updateUnavailableState()
+1024:             }
+
+HangTen/Models/WorkoutTimeline.swift:229 sourceSHA256=f6133f787e0639cf6071eb1236f9b39fa8d85eca0cc02bc295f8cd164a882248
+229: struct WorkoutClock {
+230:     static var monotonicTime: TimeInterval {
+231:         ProcessInfo.processInfo.systemUptime
+232:     }
+233: 
+
+HangTen/Models/WorkoutTimeline.swift:316 sourceSHA256=f6133f787e0639cf6071eb1236f9b39fa8d85eca0cc02bc295f8cd164a882248
+316: enum WorkoutHoldCueVisibilityPolicy {
+317:     static func showsCue(
+318:         holdCue: WorkoutHoldCue?,
+319:         countdown: Int,
+320:         isComplete: Bool,
+321:         isSkipCountdown: Bool = false
+322:     ) -> Bool {
+323:         holdCue != nil
+324:             && !isComplete
+325:             && (countdown == 0 || (countdown > 0 && isSkipCountdown))
+326:     }
+327: 
+328:     static func showsCue(
+329:         for cueSide: WorkoutSide,
+330:         step: WorkoutStep?
+331:     ) -> Bool {
+332:         guard let step, step.handUse == .single else { return true }
+333:         return step.side == cueSide
+334:     }
+335: }
+336: 
+337: /// Landscape lays the two hand cues out as fixed left/right slots beside the
+338: /// board, so each slot has to follow the step the cue actually describes. That
+339: /// is the upcoming work step while the athlete rests, not the resting step.
+340: enum WorkoutLandscapeHandCuePolicy {
+341:     static func showsHandCue(
+342:         for cueSide: WorkoutSide,
+343:         holdCue: WorkoutHoldCue?,
+344:         cueStep: WorkoutStep?,
+345:         countdown: Int,
+346:         isComplete: Bool,
+347:         isSkipCountdown: Bool
+348:     ) -> Bool {
+349:         WorkoutHoldCueVisibilityPolicy.showsCue(
+350:             holdCue: holdCue,
+351:             countdown: countdown,
+352:             isComplete: isComplete,
+353:             isSkipCountdown: isSkipCountdown
+354:         ) && WorkoutHoldCueVisibilityPolicy.showsCue(for: cueSide, step: cueStep)
+355:     }

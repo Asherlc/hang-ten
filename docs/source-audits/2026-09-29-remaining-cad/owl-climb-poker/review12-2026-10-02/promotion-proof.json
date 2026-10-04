@@ -1,0 +1,30 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "baselineCommit": "ad74a51e1c43991145721ab04ff8c0d3c6c51cca",
+  "package": "owl-climb-poker",
+  "prior": {
+    "owl-climb-poker.FCStd": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+    "assets/primary.usdz": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+    "assets/primary.model.json": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac"
+  },
+  "current": {
+    "owl-climb-poker.FCStd": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+    "assets/primary.usdz": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+    "assets/primary.model.json": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
+  },
+  "canonicalSHA256": {
+    "Hangboards/owl-climb-poker/owl-climb-poker.FCStd": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+    "Hangboards/owl-climb-poker/assets/primary.usdz": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+    "Hangboards/owl-climb-poker/assets/primary.model.json": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
+  },
+  "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1",
+  "onlyThreeCanonicalFilesChanged": true,
+  "otherPackageFilesVerifiedUnchanged": 203,
+  "sharedRendererFilesUnchanged": true,
+  "parallelWorkspaceInspectedOrMerged": false,
+  "independentPhysicalShapeGatePassed": true,
+  "cleanExportsByteIdentical": true,
+  "humanAcceptance": "pending",
+  "runtimeAppearanceVerified": false
+}

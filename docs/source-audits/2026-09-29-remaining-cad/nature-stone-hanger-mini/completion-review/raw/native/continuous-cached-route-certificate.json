@@ -1,0 +1,192 @@
+{
+  "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+  "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+  "sidecarSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
+  "collisionSHA256": "6d9883b5b021cb4c935e40e3bd6f11f9edd082feda38210229b0184700cf8b40",
+  "checkerSHA256": "307a4db1b44c80396f2e42638f0fbc0ff6ea588d9b96829bebce9c014da45e5a",
+  "method": "Independent reload of exact rounded runtime routes; signed-distance Lipschitz continuous interval certification against final native solid tessellation, full 1 mm tube radius and unchanged 0.01 mm numerical tolerance; all-strand tube intersections checked per pose.",
+  "poses": {
+    "front-upright": {
+      "strands": {
+        "left-lead": {
+          "kind": "lead",
+          "pointCount": 6,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.10999974335102744,
+          "restLengthMeters": 0.11,
+          "lengthRatio": 0.9999976668275222,
+          "minimumCertifiedSampleClearanceMeters": 0.0010020937734554311,
+          "continuousSolidClearancePass": true
+        },
+        "left-cross-return": {
+          "kind": "segment",
+          "pointCount": 3,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.0125,
+          "restLengthMeters": 0.04,
+          "lengthRatio": 0.3125,
+          "minimumCertifiedSampleClearanceMeters": 0.0013084968362487648,
+          "continuousSolidClearancePass": true
+        },
+        "right-lead": {
+          "kind": "lead",
+          "pointCount": 6,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.1100000009972524,
+          "restLengthMeters": 0.11,
+          "lengthRatio": 1.000000009065931,
+          "minimumCertifiedSampleClearanceMeters": 0.001001886038918425,
+          "continuousSolidClearancePass": true
+        },
+        "right-cross-return": {
+          "kind": "segment",
+          "pointCount": 3,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.0125,
+          "restLengthMeters": 0.04,
+          "lengthRatio": 0.3125,
+          "minimumCertifiedSampleClearanceMeters": 0.0013084968362487618,
+          "continuousSolidClearancePass": true
+        }
+      },
+      "allStrandTubeIntersectionPass": true
+    },
+    "wood-inverted": {
+      "strands": {
+        "left-lead": {
+          "kind": "lead",
+          "pointCount": 6,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.10999996894636632,
+          "restLengthMeters": 0.11,
+          "lengthRatio": 0.9999997176942393,
+          "minimumCertifiedSampleClearanceMeters": 0.0010019932693007632,
+          "continuousSolidClearancePass": true
+        },
+        "left-cross-return": {
+          "kind": "segment",
+          "pointCount": 3,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.0125,
+          "restLengthMeters": 0.04,
+          "lengthRatio": 0.3125,
+          "minimumCertifiedSampleClearanceMeters": 0.0013084968362487648,
+          "continuousSolidClearancePass": true
+        },
+        "right-lead": {
+          "kind": "lead",
+          "pointCount": 6,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.11000000030707544,
+          "restLengthMeters": 0.11,
+          "lengthRatio": 1.000000002791595,
+          "minimumCertifiedSampleClearanceMeters": 0.0010019896000734386,
+          "continuousSolidClearancePass": true
+        },
+        "right-cross-return": {
+          "kind": "segment",
+          "pointCount": 3,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.0125,
+          "restLengthMeters": 0.04,
+          "lengthRatio": 0.3125,
+          "minimumCertifiedSampleClearanceMeters": 0.0013084968362487618,
+          "continuousSolidClearancePass": true
+        }
+      },
+      "allStrandTubeIntersectionPass": true
+    },
+    "pinch-side": {
+      "strands": {
+        "left-lead": {
+          "kind": "lead",
+          "pointCount": 6,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.10999974335102744,
+          "restLengthMeters": 0.11,
+          "lengthRatio": 0.9999976668275222,
+          "minimumCertifiedSampleClearanceMeters": 0.0010020937734554311,
+          "continuousSolidClearancePass": true
+        },
+        "left-cross-return": {
+          "kind": "segment",
+          "pointCount": 3,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.0125,
+          "restLengthMeters": 0.04,
+          "lengthRatio": 0.3125,
+          "minimumCertifiedSampleClearanceMeters": 0.0013084968362487648,
+          "continuousSolidClearancePass": true
+        },
+        "right-lead": {
+          "kind": "lead",
+          "pointCount": 6,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.1100000009972524,
+          "restLengthMeters": 0.11,
+          "lengthRatio": 1.000000009065931,
+          "minimumCertifiedSampleClearanceMeters": 0.001001886038918425,
+          "continuousSolidClearancePass": true
+        },
+        "right-cross-return": {
+          "kind": "segment",
+          "pointCount": 3,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.0125,
+          "restLengthMeters": 0.04,
+          "lengthRatio": 0.3125,
+          "minimumCertifiedSampleClearanceMeters": 0.0013084968362487618,
+          "continuousSolidClearancePass": true
+        }
+      },
+      "allStrandTubeIntersectionPass": true
+    },
+    "jug-open-up": {
+      "strands": {
+        "left-lead": {
+          "kind": "lead",
+          "pointCount": 126,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.11000000029686188,
+          "restLengthMeters": 0.11,
+          "lengthRatio": 1.0000000026987443,
+          "minimumCertifiedSampleClearanceMeters": 0.0010803647036976894,
+          "continuousSolidClearancePass": true
+        },
+        "left-cross-return": {
+          "kind": "segment",
+          "pointCount": 3,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.0125,
+          "restLengthMeters": 0.04,
+          "lengthRatio": 0.3125,
+          "minimumCertifiedSampleClearanceMeters": 0.0013084968362487648,
+          "continuousSolidClearancePass": true
+        },
+        "right-lead": {
+          "kind": "lead",
+          "pointCount": 126,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.10999996882610166,
+          "restLengthMeters": 0.11,
+          "lengthRatio": 0.9999997166009242,
+          "minimumCertifiedSampleClearanceMeters": 0.0010803647036976846,
+          "continuousSolidClearancePass": true
+        },
+        "right-cross-return": {
+          "kind": "segment",
+          "pointCount": 3,
+          "radiusMeters": 0.001,
+          "lengthMeters": 0.0125,
+          "restLengthMeters": 0.04,
+          "lengthRatio": 0.3125,
+          "minimumCertifiedSampleClearanceMeters": 0.0013084968362487618,
+          "continuousSolidClearancePass": true
+        }
+      },
+      "allStrandTubeIntersectionPass": true
+    }
+  },
+  "pass": true,
+  "strandRouteCount": 16
+}

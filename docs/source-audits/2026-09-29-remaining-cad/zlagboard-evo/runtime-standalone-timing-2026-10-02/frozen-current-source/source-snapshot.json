@@ -1,0 +1,33 @@
+{
+  "createdUTC": "2026-10-02T22:48:34.905254+00:00",
+  "head": "a0ce2031b996ebfa82b7db7a78a970759dfdfed6",
+  "files": [
+    {
+      "source": "HangTen/Models/BoardModelRealityTypes.swift",
+      "authoritativeFrozenSource": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "retained": "HangTen/Models/BoardModelRealityTypes.swift",
+      "bytes": 85882,
+      "sha256": "008de5d3854b809fb452b9455d3d1d018da8649d48ece7d1d8a7b14120372eb5",
+      "currentMatchesAppliedFrozen": true
+    },
+    {
+      "source": "HangTen/Views/BoardModelView.swift",
+      "authoritativeFrozenSource": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-applied/source/HangTen/Views/BoardModelView.swift",
+      "retained": "HangTen/Views/BoardModelView.swift",
+      "bytes": 22063,
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c",
+      "currentMatchesAppliedFrozen": true
+    },
+    {
+      "source": "HangTen/Views/RootView.swift",
+      "authoritativeFrozenSource": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-applied/source/HangTen/Views/RootView.swift",
+      "retained": "HangTen/Views/RootView.swift",
+      "bytes": 149223,
+      "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221",
+      "currentMatchesAppliedFrozen": true
+    }
+  ],
+  "patchSHA256": "0568c9963a31cd678ed06ca148d2d47d6dddb2ec1dfa5f186ad300edfbd0e745",
+  "authority": "Applied frozen source; all three current hashes matched at audit time.",
+  "runtimeStatus": "Short arm running at request; no runtime report copied or result claimed."
+}

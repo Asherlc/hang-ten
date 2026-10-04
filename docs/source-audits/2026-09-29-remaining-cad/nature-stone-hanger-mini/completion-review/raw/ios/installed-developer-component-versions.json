@@ -1,0 +1,24 @@
+{
+  "/Applications/Xcode.app/Contents/version.plist": {
+    "BuildVersion": "2",
+    "CFBundleShortVersionString": "27.0",
+    "CFBundleVersion": "25183.107.5",
+    "ProductBuildVersion": "27A266a",
+    "ProjectName": "IDEApplication",
+    "SourceVersion": "25183107005000000"
+  },
+  "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Resources/version.plist": {
+    "BuildVersion": "5",
+    "CFBundleShortVersionString": "1171.7",
+    "CFBundleVersion": "1171.7",
+    "ProjectName": "CoreSimulator",
+    "SourceVersion": "1171007000000000"
+  },
+  "/Users/asherlc/Library/Developer/Packages/17C529/version.plist": {
+    "assetBuildUpdate": "17C7003i",
+    "description": "This component adds support for iPhone 17e, iPad Air 11-inch (M4), and iPad Air 13-inch (M4) in Xcode and Simulator.",
+    "identifier": "com.apple.Xcode.deviceSupport_26_3",
+    "name": "Device Support for iPhone 17e, iPad Air 11-inch (M4), and iPad Air 13-inch (M4)",
+    "targetXcodeBuild": "17C529"
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "timestampUTC": "2026-10-02T00:09:28.091186+00:00",
+  "baseline": "4119bef50529645aa3e28bf3e48ea689fe6fe166",
+  "trackedChangedFiles": [
+    "HangTenTests/BoardModelTests.swift",
+    "Hangboards/yy-penta-evo/assets/primary.model.json",
+    "Hangboards/yy-penta-evo/assets/primary.usdz",
+    "Hangboards/yy-penta-evo/suspension.json",
+    "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
+    "Tools/HangboardCAD/native_cord_routes.py",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py",
+    "docs/HANGBOARD_CORD_AUTHORING.md",
+    "docs/model-delivery-lock.json",
+    "docs/source-audits/2026-09-29-remaining-cad/review-queue.json",
+    "docs/source-audits/2026-09-29-remaining-cad/second-half-ownership.md",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/README.md"
+  ],
+  "untrackedFileCount": 149,
+  "outOfScopeChangedFiles": [],
+  "queue": {
+    "rowCountUnchanged": true,
+    "changedRows": [
+      {
+        "index": 17,
+        "number": 18,
+        "package": "yy-penta-evo",
+        "boardID": "yy.penta-evo"
+      }
+    ],
+    "other20RowsExact": true,
+    "nonRowMetadataUnchanged": true,
+    "humanReview": "pending"
+  },
+  "lock": {
+    "changedPackageRecords": [
+      "yy-penta-evo"
+    ],
+    "other56RecordsExact": true,
+    "changedTopLevelKeys": [
+      "sha256ManifestHistory",
+      "sha256Manifest"
+    ],
+    "historyPreservesPrefix": true,
+    "hashFieldsMatch": {
+      "sourceSHA256": true,
+      "assetSHA256": true,
+      "descriptorSHA256": true,
+      "suspensionSHA256": true
+    }
+  },
+  "outsidePackageByteCheck": {
+    "fileCount": 202,
+    "lfsRealObjectsCompared": 115,
+    "mismatches": [],
+    "accepted16And17Included": true
+  },
+  "finalAssets": {
+    "Hangboards/yy-penta-evo/yy-penta-evo.FCStd": {
+      "sha256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "indexMatches": true
+    },
+    "Hangboards/yy-penta-evo/assets/primary.usdz": {
+      "sha256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+      "indexMatches": true
+    },
+    "Hangboards/yy-penta-evo/assets/primary.model.json": {
+      "sha256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+      "indexMatches": true
+    },
+    "Hangboards/yy-penta-evo/suspension.json": {
+      "sha256": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97",
+      "indexMatches": true
+    }
+  },
+  "nativeSource": {
+    "isRealZIP": true,
+    "badArchiveMember": null,
+    "byteSize": 1224598
+  },
+  "verificationIndexLinks": {
+    "nativeCorrection": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/shape-audit/correction-report.json",
+      "exists": true,
+      "sha256": "6219c60632e03274263d33887e19ff4456d4a43b1c10c24d3a59d7405780991b"
+    },
+    "nativeEditability": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/shape-audit/editability.json",
+      "exists": true,
+      "sha256": "cb31d49f37d3ff8288707d074e1a136992ff7c64f170509ea4f25049b49102a3"
+    },
+    "nativeBearings": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/shape-audit/bearing-check.json",
+      "exists": true,
+      "sha256": "a87697d2fbc906947dcb8c4e4a97e729bebc89c67f3a4ae2de34564f7d001904"
+    },
+    "cordVisualReview": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/shape-audit/cord-review/visual-review.json",
+      "exists": true,
+      "sha256": "e4a2a82363019803ec6f6960c300a38d37cc97bec258fbe681a279b4a8d82644"
+    },
+    "actualUSDAndStaging": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/package-checks-final/published-package-verification-retry2.json",
+      "exists": true,
+      "sha256": "fef05eaddeafaaa128cf9fac27ab1c0381db0778e3c15f0a505e4f33ec863c8e"
+    },
+    "metadataBytePreservation": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/final-source/lexeme-fix-provenance.json",
+      "exists": true,
+      "sha256": "1b8f699b115f0a06e233eced809610333c53d3ea32000865186a57afa37cbaef"
+    },
+    "cordLeft": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/export/final-cord-check-left.json",
+      "exists": true,
+      "sha256": "ac41cb443f303603d64825e60bd6a2ed195b4c8f763d47245ce9eea7d162095e"
+    },
+    "cordRight": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/export/final-cord-check-right.json",
+      "exists": true,
+      "sha256": "ac41cb443f303603d64825e60bd6a2ed195b4c8f763d47245ce9eea7d162095e"
+    },
+    "sharedCodeTests": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/solver-draft/production-tests.log",
+      "exists": true,
+      "sha256": "58ee8ae6a0380b3c233485037ce2db561bcddbd67febe24fa61088af8a6bcace"
+    },
+    "sharedCodeReview": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/solver-extension-checks/production-code-review.json",
+      "exists": true,
+      "sha256": "13f6b1991757da1c209ab3b985f1b687c5e09bd3eac681639c646ab80f27c180"
+    },
+    "runtime": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/ios/final-runtime-validation.json",
+      "exists": false,
+      "sha256": null
+    },
+    "delivery": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/individual-review-2026-10-01/delivery-validation.json",
+      "exists": true,
+      "sha256": "9df1ef17647fbb60520e2b50201980633937652d1f9c25a1d9dabf214261792f"
+    }
+  },
+  "pendingLinks": [
+    "runtime"
+  ],
+  "scopePass": true
+}

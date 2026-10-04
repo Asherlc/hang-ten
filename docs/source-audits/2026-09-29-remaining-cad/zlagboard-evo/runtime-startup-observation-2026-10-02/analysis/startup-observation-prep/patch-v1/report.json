@@ -1,0 +1,101 @@
+{
+  "status": "UNAPPLIED_SCRATCH_DEBUG_PATCH_NOT_BUILT_OR_RUN",
+  "patchSHA256": "76901946edd8edee1c6937a707aac4d417f6ebbfe4d60dfefe68e8b04607f541",
+  "inputDiagnosticBinaryLabelFromRoot": "f98 (source hash inventory authoritative; no binary/device access)",
+  "files": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "inputSHA256": "5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926",
+      "proposedSHA256": "049d40bd016e962d12d296f5ffd4c5756d822eae07dbcf24aa63d3706bff624c"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "inputSHA256": "d74f4fbb2bd260cdd777e3fd15c0d0fc92f9b7b2a9f9b5cd9daa9bdf54748426",
+      "proposedSHA256": "b4ae8af4abc9564dfd2ea445236fa3eacfe31f2c38e14131ada61b8bb3bbad44"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "inputSHA256": "72ffe2a766a128688510fa02c2c1a1cbcc56c0aa28b6202f74f59a567ed42f67",
+      "proposedSHA256": "e9f44406138e6e59ca744e529812a8c70ca402341bd390167ea7a7d6258007fc"
+    }
+  ],
+  "checks": {
+    "HangTen/Views/RootView.swift": {
+      "existingLinesPreservedInOrder": true,
+      "trackedInputStillExact": true,
+      "actorAnnotationCountExact": true,
+      "awaitCountExact": true,
+      "taskCreationCountExact": true,
+      "sleepExpressionsCountExact": true,
+      "onChangeCountExact": true
+    },
+    "HangTen/Views/BoardModelView.swift": {
+      "existingLinesPreservedInOrder": true,
+      "trackedInputStillExact": true,
+      "actorAnnotationCountExact": true,
+      "awaitCountExact": true,
+      "taskCreationCountExact": true,
+      "sleepExpressionsCountExact": true,
+      "onChangeCountExact": true
+    },
+    "HangTen/Models/BoardModelRealityTypes.swift": {
+      "existingLinesPreservedInOrder": true,
+      "trackedInputStillExact": true,
+      "actorAnnotationCountExact": true,
+      "awaitCountExact": true,
+      "taskCreationCountExact": true,
+      "sleepExpressionsCountExact": true,
+      "onChangeCountExact": true
+    }
+  },
+  "additionalChecks": {
+    "onlyThreeReservedFiles": true,
+    "allChangesInsertionsOnly": true,
+    "scalarRecorderNoApplicationCensus": true,
+    "noSceneOrModelAccessAdded": true,
+    "noNewObservableState": true,
+    "noNewTaskAwaitSleepOnChangeOrTimer": true,
+    "recorderGuardRequiresStartupAndDiagnostic": true,
+    "readOnlyGitApplyCheckExit0": true
+  },
+  "normalMarkers": [
+    "startup-request-entry",
+    "startup-audio-preparation-change if existing callback fires",
+    "startup-audio-arm-before",
+    "startup-audio-arm-after",
+    "startup-arm-task-enter",
+    "startup-arm-task-resumed",
+    "startup-visible-countdown-before",
+    "startup-visible-countdown-after",
+    "startup-board-load-call",
+    "startup-board-load-return",
+    "startup-board-ready-published"
+  ],
+  "branchMarkers": [
+    "startup-request-deferred",
+    "startup-arm-task-cancelled",
+    "startup-board-load-error"
+  ],
+  "flag": "HANGTEN_REVIEW_STARTUP_OBSERVATION=1 plus existing diagnostic",
+  "fieldSemantics": {
+    "timestamps": "Existing emit supplies sequence, epoch, monotonic uptime. Planned armUptime and actual activeStartUptime fields distinguish scheduled state from actual execution time.",
+    "nilNumeric": "Optional armUptime/activeStartUptime encoded as NSNull. No fabricated zero timestamp.",
+    "loadAttempt": "UUID local to existing Surface task created only while startup flag is enabled; no stored SwiftUI state, no model reference. Board/presentation IDs logged only before loader call; returned model is not inspected.",
+    "cancellation": "Existing cancellation guards remain unchanged. Return/error markers precede the original guard and include Task.isCancelled. Task sleep catch logs then returns exactly as before.",
+    "noExtraPrepareMarker": "No prepare-return marker was added; request/deferred/preparation-change and arm boundaries remain the selected minimal sites. A synchronous prepare call delay lies in request\u2192next marker, not separately attributed."
+  },
+  "guarantees": [
+    "All original source lines remain in original order; existing callback/mutation/Task scheduling expressions and actor annotations are untouched.",
+    "No new body log, observer, timer, Task, await, subscription, scene/entity inspection, lazy hand read or forced redraw.",
+    "Recorder helper sits inside existing DEBUG class and forwards scalar fields through existing emit, without harnessEvent UIKit census. Root helper is DEBUG-only; Surface local and sites DEBUG-only.",
+    "No changes to training content, audio schedule, count durations, camera, selection, loading policy or review/canonical packages."
+  ],
+  "limits": [
+    "Read-only git apply --check and textual invariants only; no Swift parse/typecheck/build/device or actual source application.",
+    "Inserted scalar dictionary/string allocation and synchronous emit/file I/O consume time on the calling actor. Before/after spans include this overhead; marker time is not a perfect API entry timestamp.",
+    "Same-binary control and existing observation flags must be recorded by any eventual owner; a changed startup under instrumentation is not a root cause or fix.",
+    "Existing make marker occurs after applySync. Existing make-counter timestamp, if enabled, gives entry; no new host marker added.",
+    "A Surface task cancelled before its existing first guard emits no startup-load marker. Missing markers must be reported as incomplete, not zero work.",
+    "Thirty-second observation design remains conditional; this patch itself does not authorize any launch or new trial."
+  ]
+}

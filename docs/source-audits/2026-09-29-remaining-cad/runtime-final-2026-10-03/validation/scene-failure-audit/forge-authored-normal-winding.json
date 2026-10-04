@@ -1,0 +1,252 @@
+{
+  "assetPath": "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
+  "assetSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+  "scope": "USD authored geometry read-only; not native RealityKit importer execution",
+  "thresholdsMatchExistingSwiftTest": {
+    "faceLengthGT": 1e-12,
+    "normalLengthGT": 1e-06,
+    "inwardDotLT": -0.01
+  },
+  "nodes": [
+    {
+      "nodeID": "body_board_001",
+      "trianglesTotal": 8784,
+      "trianglesChecked": 8784,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9624888599988781,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex",
+      "left": {
+        "trianglesChecked": 4392,
+        "inwardTriangles": 0,
+        "boundsMin": [
+          -0.40005001425743103,
+          -0.06667499989271165,
+          -1.5014344671111492e-17
+        ],
+        "boundsMax": [
+          -0.07620000094175339,
+          0.06667499989271164,
+          0.08900000154972076
+        ]
+      },
+      "right": {
+        "trianglesChecked": 4392,
+        "inwardTriangles": 0,
+        "boundsMin": [
+          0.07620000094175339,
+          -0.06667499989271165,
+          -1.5014344671111492e-17
+        ],
+        "boundsMax": [
+          0.40005001425743103,
+          0.06667499989271164,
+          0.08900000154972076
+        ]
+      }
+    },
+    {
+      "nodeID": "contact_variable_edge_rail_right",
+      "trianglesTotal": 1194,
+      "trianglesChecked": 1194,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9994340942598289,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_closed_crimp_right",
+      "trianglesTotal": 1363,
+      "trianglesChecked": 1363,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9997415209638127,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_mr_deep_right",
+      "trianglesTotal": 1162,
+      "trianglesChecked": 1162,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9994343692152392,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_mr_shallow_right",
+      "trianglesTotal": 1158,
+      "trianglesChecked": 1158,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.999434208915103,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_im_shallow_right",
+      "trianglesTotal": 337,
+      "trianglesChecked": 337,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9993554587525644,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_im_deep_right",
+      "trianglesTotal": 590,
+      "trianglesChecked": 590,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9993536883253561,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_sloper_30_right",
+      "trianglesTotal": 98,
+      "trianglesChecked": 98,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9989879066107565,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_sloper_40_right",
+      "trianglesTotal": 27,
+      "trianglesChecked": 27,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9875334140585,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_large_flat_edge_right",
+      "trianglesTotal": 2,
+      "trianglesChecked": 2,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 1.0,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_slopey_crimper_right",
+      "trianglesTotal": 51,
+      "trianglesChecked": 51,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9975789274214629,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_variable_edge_rail_left",
+      "trianglesTotal": 1194,
+      "trianglesChecked": 1194,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9994340942598288,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_closed_crimp_left",
+      "trianglesTotal": 1363,
+      "trianglesChecked": 1363,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9997415209638127,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_mr_deep_left",
+      "trianglesTotal": 1162,
+      "trianglesChecked": 1162,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9994343692152392,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_mr_shallow_left",
+      "trianglesTotal": 1158,
+      "trianglesChecked": 1158,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.999434208915103,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_im_shallow_left",
+      "trianglesTotal": 337,
+      "trianglesChecked": 337,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9993554587525644,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_im_deep_left",
+      "trianglesTotal": 590,
+      "trianglesChecked": 590,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9993536883253561,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_sloper_30_left",
+      "trianglesTotal": 98,
+      "trianglesChecked": 98,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9989879066107565,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_sloper_40_left",
+      "trianglesTotal": 27,
+      "trianglesChecked": 27,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9875334140585,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_large_flat_edge_left",
+      "trianglesTotal": 2,
+      "trianglesChecked": 2,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 1.0,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    },
+    {
+      "nodeID": "contact_slopey_crimper_left",
+      "trianglesTotal": 51,
+      "trianglesChecked": 51,
+      "inwardTriangles": 0,
+      "minimumNormalDot": 0.9975789274214629,
+      "transformDeterminant": 1.0,
+      "usdOrientation": "rightHanded",
+      "normalInterpolation": "vertex"
+    }
+  ],
+  "totalTrianglesChecked": 20748,
+  "totalInwardTriangles": 0
+}

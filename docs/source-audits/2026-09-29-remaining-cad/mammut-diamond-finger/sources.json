@@ -1,0 +1,35 @@
+{
+  "approvalStatus": "approved",
+  "revisionNotes": "Exact 2060-00020 walnut revision. Product photo supports deliberately sculpted upper channels, three lower lobes, symmetric cavity arrangement, and removal of phone/mount hardware. Manufacturer manual page 1 is a materially distinct drawn topology view; page 2 shows side/mount context. The second gallery photograph differs only by a phone accessory and is not counted as a second geometric view. Preserve the existing 16 contact IDs; the subtitle says 21 surfaces but no contact-inventory change is in scope. Only 33.5 in width is published in current package; other display dimensions stay explicitly estimated.",
+  "sources": [
+    {
+      "slug": "mammut-diamond-finger",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/sources/product-01.jpg",
+      "url": "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg",
+      "publisher": "Mammut",
+      "sha256": "d08c0f36233171789ff450f4429646079f67ca2506da2f794ecf61089982014f",
+      "bytes": 512035,
+      "support": "Manufacturer gallery",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer"
+    },
+    {
+      "slug": "mammut-diamond-finger",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/sources/manual.pdf",
+      "url": "https://static.mammut.com/file/2060-00020_man_en_070420_DiamondFingerHangboard_Manual.pdf",
+      "publisher": "Mammut",
+      "sha256": "0ada1438277dae39cf96e45dc72f9d0aabe383502718368f143212bf8e51b024",
+      "bytes": 355740,
+      "support": "Revision identity and mounting form",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer"
+    }
+  ],
+  "approval": {
+    "reviewer": "asherlc",
+    "date": "2026-09-29",
+    "method": "direct conversation",
+    "quote": "those are fine, feel free to use more searches for individual boards as needed",
+    "consolidatedReview": ".context/placid-badger/source-review.json"
+  }
+}

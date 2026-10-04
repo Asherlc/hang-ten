@@ -1,0 +1,180 @@
+[1/10] validating owl-climb-poker.FCStd
+[2/10] reopening and recomputing the source document
+[3/10] extracting bound components and semantic regions
+[4/10] tessellating with pinned quality
+[5/10] partitioning the surface and preserving normals and materials
+      poker_body_001: 4480 triangles, role=body
+      face_a_left_outer_slot_001: 2748 triangles, role=contact
+      face_a_right_outer_slot_001: 2748 triangles, role=contact
+      face_a_left_single_pocket_001: 2642 triangles, role=contact
+      face_a_left_dual_pocket_001: 2628 triangles, role=contact
+      face_a_right_single_pocket_001: 2644 triangles, role=contact
+      face_a_right_dual_pocket_001: 2628 triangles, role=contact
+      face_a_center_pull_up_slot_001: 2628 triangles, role=contact
+      face_b_left_outer_slot_001: 2628 triangles, role=contact
+      face_b_right_outer_slot_001: 2628 triangles, role=contact
+      face_b_left_single_pocket_001: 2770 triangles, role=contact
+      face_b_left_dual_pocket_001: 2748 triangles, role=contact
+      face_b_right_single_pocket_001: 2770 triangles, role=contact
+      face_b_right_dual_pocket_001: 2748 triangles, role=contact
+      face_b_center_pull_up_slot_001: 2628 triangles, role=contact
+      face_c_left_outer_slot_001: 2388 triangles, role=contact
+      face_c_right_outer_slot_001: 2388 triangles, role=contact
+      face_c_left_single_pocket_001: 2644 triangles, role=contact
+      face_c_left_dual_pocket_001: 2628 triangles, role=contact
+      face_c_right_single_pocket_001: 2644 triangles, role=contact
+      face_c_right_dual_pocket_001: 2628 triangles, role=contact
+      face_c_center_pull_up_slot_001: 2628 triangles, role=contact
+      face_d_left_outer_slot_001: 2388 triangles, role=contact
+      face_d_right_outer_slot_001: 2388 triangles, role=contact
+      face_d_left_single_pocket_001: 2644 triangles, role=contact
+      face_d_left_dual_pocket_001: 2628 triangles, role=contact
+      face_d_right_single_pocket_001: 2644 triangles, role=contact
+      face_d_right_dual_pocket_001: 2628 triangles, role=contact
+      face_d_center_pull_up_slot_001: 2628 triangles, role=contact
+      face_b_left_deep_sloper_001: 890 triangles, role=contact
+      face_c_left_shallow_half_round_001: 4058 triangles, role=contact
+      face_d_left_deep_rounded_recess_001: 1854 triangles, role=contact
+      face_b_right_deep_sloper_001: 892 triangles, role=contact
+      face_c_right_shallow_half_round_001: 4088 triangles, role=contact
+      face_d_right_deep_rounded_recess_001: 1868 triangles, role=contact
+[6/10] writing the USDZ directly
+[7/10] reopening the exported asset
+[8/10] deriving the descriptor from the exported bytes
+[9/10] validating the staged package
+[10/10] publishing the asset and descriptor set
+{
+  "asset": ".context/placid-badger/poker-review12/native-correction-2026-10-02/compile-2/assets/primary.usdz",
+  "assetBytes": 2044005,
+  "assetSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+  "board": ".context/placid-badger/poker-review12/native-correction-2026-10-02/owl-climb-poker.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "face-a-center-pull-up-slot",
+    "face-a-left-dual-pocket",
+    "face-a-left-outer-slot",
+    "face-a-left-single-pocket",
+    "face-a-right-dual-pocket",
+    "face-a-right-outer-slot",
+    "face-a-right-single-pocket",
+    "face-b-center-pull-up-slot",
+    "face-b-left-deep-sloper",
+    "face-b-left-dual-pocket",
+    "face-b-left-outer-slot",
+    "face-b-left-single-pocket",
+    "face-b-right-deep-sloper",
+    "face-b-right-dual-pocket",
+    "face-b-right-outer-slot",
+    "face-b-right-single-pocket",
+    "face-c-center-pull-up-slot",
+    "face-c-left-dual-pocket",
+    "face-c-left-outer-slot",
+    "face-c-left-shallow-half-round",
+    "face-c-left-single-pocket",
+    "face-c-right-dual-pocket",
+    "face-c-right-outer-slot",
+    "face-c-right-shallow-half-round",
+    "face-c-right-single-pocket",
+    "face-d-center-pull-up-slot",
+    "face-d-left-deep-rounded-recess",
+    "face-d-left-dual-pocket",
+    "face-d-left-outer-slot",
+    "face-d-left-single-pocket",
+    "face-d-right-deep-rounded-recess",
+    "face-d-right-dual-pocket",
+    "face-d-right-outer-slot",
+    "face-d-right-single-pocket"
+  ],
+  "descriptor": ".context/placid-badger/poker-review12/native-correction-2026-10-02/compile-2/assets/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "face-a-center-pull-up-slot": 17.0,
+    "face-a-left-dual-pocket": 17.0,
+    "face-a-left-outer-slot": 22.0,
+    "face-a-left-single-pocket": 17.0,
+    "face-a-right-dual-pocket": 17.0,
+    "face-a-right-outer-slot": 22.0,
+    "face-a-right-single-pocket": 17.0,
+    "face-b-center-pull-up-slot": 25.0,
+    "face-b-left-deep-sloper": 86.0,
+    "face-b-left-dual-pocket": 24.0,
+    "face-b-left-outer-slot": 27.0,
+    "face-b-left-single-pocket": 23.993,
+    "face-b-right-deep-sloper": 86.0,
+    "face-b-right-dual-pocket": 24.0,
+    "face-b-right-outer-slot": 27.0,
+    "face-b-right-single-pocket": 23.993,
+    "face-c-center-pull-up-slot": 16.0,
+    "face-c-left-dual-pocket": 16.0,
+    "face-c-left-outer-slot": 14.0,
+    "face-c-left-shallow-half-round": 11.001,
+    "face-c-left-single-pocket": 16.0,
+    "face-c-right-dual-pocket": 16.0,
+    "face-c-right-outer-slot": 14.0,
+    "face-c-right-shallow-half-round": 11.001,
+    "face-c-right-single-pocket": 16.0,
+    "face-d-center-pull-up-slot": 25.0,
+    "face-d-left-deep-rounded-recess": 62.63,
+    "face-d-left-dual-pocket": 24.0,
+    "face-d-left-outer-slot": 27.0,
+    "face-d-left-single-pocket": 23.993,
+    "face-d-right-deep-rounded-recess": 62.63,
+    "face-d-right-dual-pocket": 24.0,
+    "face-d-right-outer-slot": 27.0,
+    "face-d-right-single-pocket": 23.993
+  },
+  "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+  "nodes": [
+    "face_a_center_pull_up_slot_001",
+    "face_a_left_dual_pocket_001",
+    "face_a_left_outer_slot_001",
+    "face_a_left_single_pocket_001",
+    "face_a_right_dual_pocket_001",
+    "face_a_right_outer_slot_001",
+    "face_a_right_single_pocket_001",
+    "face_b_center_pull_up_slot_001",
+    "face_b_left_deep_sloper_001",
+    "face_b_left_dual_pocket_001",
+    "face_b_left_outer_slot_001",
+    "face_b_left_single_pocket_001",
+    "face_b_right_deep_sloper_001",
+    "face_b_right_dual_pocket_001",
+    "face_b_right_outer_slot_001",
+    "face_b_right_single_pocket_001",
+    "face_c_center_pull_up_slot_001",
+    "face_c_left_dual_pocket_001",
+    "face_c_left_outer_slot_001",
+    "face_c_left_shallow_half_round_001",
+    "face_c_left_single_pocket_001",
+    "face_c_right_dual_pocket_001",
+    "face_c_right_outer_slot_001",
+    "face_c_right_shallow_half_round_001",
+    "face_c_right_single_pocket_001",
+    "face_d_center_pull_up_slot_001",
+    "face_d_left_deep_rounded_recess_001",
+    "face_d_left_dual_pocket_001",
+    "face_d_left_outer_slot_001",
+    "face_d_left_single_pocket_001",
+    "face_d_right_deep_rounded_recess_001",
+    "face_d_right_dual_pocket_001",
+    "face_d_right_outer_slot_001",
+    "face_d_right_single_pocket_001",
+    "poker_body_001"
+  ],
+  "package": "owl-climb-poker",
+  "presentationID": "primary",
+  "published": true,
+  "schemaVersion": 1,
+  "source": ".context/placid-badger/poker-review12/native-correction-2026-10-02/owl-climb-poker.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 91612
+}
+FreeCAD 1.1.3, Libs: 1.1.3R20260725 (Git shallow)
+(C) 2001-2026 FreeCAD contributors
+FreeCAD is free and open-source software licensed under the terms of LGPL2+ license.
+
+Importing project files......
+						(0 %)							(1 %)							(2 %)							(3 %)							(4 %)							(5 %)							(6 %)							(7 %)							(8 %)							(9 %)							(10 %)							(11 %)							(12 %)							(13 %)							(14 %)							(15 %)							(16 %)							(17 %)							(18 %)							(19 %)							(20 %)							(21 %)							(22 %)							(23 %)							(24 %)							(25 %)							(26 %)							(27 %)							(28 %)							(29 %)							(30 %)							(31 %)							(32 %)							(33 %)							(34 %)							(35 %)							(36 %)							(37 %)							(38 %)							(39 %)							(40 %)							(41 %)							(42 %)							(43 %)							(44 %)							(45 %)							(46 %)							(47 %)							(48 %)							(49 %)							(50 %)							(51 %)							(52 %)							(53 %)							(54 %)							(55 %)							(56 %)							(57 %)							(58 %)							(59 %)							(60 %)							(61 %)							(62 %)							(63 %)							(64 %)							(65 %)							(66 %)							(67 %)							(68 %)							(69 %)							(70 %)							(71 %)							(72 %)							(73 %)							(74 %)							(75 %)							(76 %)							(77 %)							(78 %)							(79 %)							(80 %)							(81 %)							(82 %)							(83 %)							(84 %)							(85 %)							(86 %)							(87 %)							(88 %)							(89 %)							(90 %)							(91 %)							(92 %)							(93 %)							(94 %)							(95 %)							(96 %)							(97 %)							(98 %)							(99 %)							(100 %)									Postprocessing......
+						(100 %)									Recompute......
+						(0 %)							(1 %)							(2 %)							(3 %)							(4 %)							(5 %)							(6 %)							(7 %)							(8 %)							(9 %)							(10 %)							(11 %)							(12 %)							(13 %)							(14 %)							(15 %)							(16 %)							(17 %)							(18 %)							(19 %)							(20 %)							(21 %)							(22 %)							(23 %)							(24 %)							(25 %)							(26 %)							(27 %)							(28 %)							(29 %)							(30 %)							(31 %)							(32 %)							(33 %)							(34 %)							(35 %)							(36 %)							(37 %)							(38 %)							(39 %)							(40 %)							(41 %)							(42 %)							(43 %)							(44 %)							(45 %)							(46 %)							(47 %)							(48 %)							(49 %)							(50 %)							(51 %)							(52 %)							(53 %)							(54 %)							(55 %)							(56 %)							(57 %)							(58 %)							(59 %)							(60 %)							(61 %)							(62 %)							(63 %)							(64 %)							(65 %)							(66 %)							(67 %)							(68 %)							(69 %)							(70 %)							(71 %)							(72 %)							(73 %)							(74 %)							(75 %)							(76 %)							(77 %)							(78 %)							(79 %)							(80 %)							(81 %)							(82 %)							(83 %)							(84 %)							(85 %)							(86 %)							(87 %)							(88 %)							(89 %)							(90 %)							(91 %)							(92 %)							(93 %)							(94 %)							(95 %)							(96 %)							(97 %)							(98 %)							(99 %)							(100 %)									

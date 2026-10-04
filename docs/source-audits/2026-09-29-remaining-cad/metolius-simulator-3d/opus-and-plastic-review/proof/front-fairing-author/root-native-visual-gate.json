@@ -1,0 +1,28 @@
+{
+  "owner": "placid-badger",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "status": "pass",
+  "scope": "Root native visual gate only; export, final app, final Opus and human acceptance remain separate.",
+  "wholeImagesReviewed": {
+    "review/comparison-front.png": "e62be15b6622f7b5b24b85247b2d4ad9a5b91d501ac956f6b0b3220f44c9726f",
+    "review/comparison-side.png": "ba4f5bd879d55cf823c512a786ca30f2a48c825479ea46932587045a36cadae2",
+    "review/comparison-top.png": "26d457d9f4c7cfbad45d2b8a3b0470b08c4a9bb99a154297a7c7ca256345cff0",
+    "review/comparison-oblique.png": "87030c1652cb3b8db79de96aa002a963e79661c494ffb64568b177b90caf76ce",
+    "review/comparison-raking.png": "b89ddf25dd09f48820e296ddfb7f29535e435d1915940f11018f2b061f4c3ec7",
+    "native-profile-sections.png": "3f74de14a3bf79dffc2d2f3c02cc18c84cfb487f139c2176f9fc8b763898d304"
+  },
+  "nativeProofSHA256": "32320800a41820fa8446f2f8eead57ba5bf56bc49b41bde748cf77594b5bb468",
+  "observations": [
+    "Repeated lower horizontal curvature bands are removed, leaving a smooth tapered face.",
+    "The single retained upper transition below the roof is consistent with the rounded upper hold band shown by the primary references.",
+    "Current transverse jug crest, rear fall, rolled nose and forward-reaching slopers remain visible.",
+    "Local pocket mouths and their curved rows remain distinct; all 24 native cavities pass independent void checks."
+  ],
+  "limits": [
+    "Taper anchors, slopes, thickness, rear return and edge rolls remain display estimates.",
+    "Raw upper mass-integral difference is retained despite empty Boolean differences; byte-identical BRep is not claimed.",
+    "Small inherited upper seams/contact-boundary teeth are still final-app watch items."
+  ],
+  "opusAdvisory": "Prior waviness diagnosis supports this correction; fresh preview call was provider-rate-limited until11:40PDT, with exact error retained; final Opus review pending.",
+  "humanGeometryAcceptance": "pending review #8"
+}

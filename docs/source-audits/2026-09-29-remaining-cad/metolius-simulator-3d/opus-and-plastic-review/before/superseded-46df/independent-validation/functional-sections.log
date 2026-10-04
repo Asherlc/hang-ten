@@ -1,0 +1,12 @@
+<ElementMap> check_functional_sections.py(5): No hasherRef
+
+Sloper sections checked
+{
+  "status": "pass",
+  "blockingFindings": [],
+  "report": ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/functional-sections.json"
+}
+
+								
+								
+								

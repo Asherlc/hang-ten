@@ -1,0 +1,37 @@
+{
+  "approach": "User-revised whole-face shared semantic membership; no partitions or shape helpers",
+  "jugFaces": [
+    43,
+    69
+  ],
+  "pinchPrimaryFaces": [
+    23,
+    30,
+    31,
+    44
+  ],
+  "jugSecondaryContactIDs": [
+    "pinch-60"
+  ],
+  "bodyPriorMinusCurrentVolume": 0.0,
+  "bodyCurrentMinusPriorVolume": 0.0,
+  "bodyPriorMinusCurrentSurfaceArea": 0.0,
+  "bodyCurrentMinusPriorSurfaceArea": 0.0,
+  "bodyAreaDelta": 0.0,
+  "distinctExportNodeOverlapArea": 0.0,
+  "logicalJugPinchSharedArea": 2009.8672286269282,
+  "jugArea": 2009.8672286269282,
+  "pinchPrimaryArea": 2669.6016858807843,
+  "originalPinchArea": 4679.468914507713,
+  "logicalPinchArea": 4679.468914507713,
+  "oldPinchMinusNewLogicalPinchArea": 0.0,
+  "newLogicalPinchMinusOldPinchArea": 0.0,
+  "jugOffBodyArea": 0.0,
+  "pinchOffBodyArea": 0.0,
+  "oldRecessWallNewContactOverlapArea": 0.0,
+  "depthsMm": {
+    "wood": 15.000000000000096,
+    "stone": 15.000000000000002,
+    "pinch": 60.0
+  }
+}

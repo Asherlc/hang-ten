@@ -1,0 +1,24 @@
+{
+  "status": "prepared-awaiting-final-candidate",
+  "baseline": {
+    "nativeSource": "before-metolius-simulator-3d.FCStd",
+    "model": "before-primary.usdz",
+    "descriptor": "before-primary.model.json",
+    "manifest": "before-manifest-raw.txt",
+    "allPackageFiles": "all-hangboards-baseline.json"
+  },
+  "checks": [
+    "Exact raw manifest, 30 logical IDs and finger/capacity facts unchanged",
+    "Fresh source recompute: one valid solid; constrained native sketches; no error state",
+    "Native and exported published face envelope 711x222 mm; 94 mm thickness remains estimate",
+    "24 exact cavity depths and 55/55/65 mm sloper support spans",
+    "30 contact surfaces on final shell; no rear proxy; pairwise nonoverlap; both round shoulders share existing ID",
+    "Depth_edge_11_left 14\u219216\u219214 modifies intended contact and body, then restores all bounds/area without saving",
+    "Native silhouette join positional/tangent continuity and mirroring",
+    "Shrinking-epsilon native roof sections at diagnosed old seams and new authored boundaries: continuity and local normals",
+    "Actual USDZ finite triangles, authored unit vertex normals, no material/shader/bindings; exact descriptor/imported node memberships",
+    "Actual USDZ corrected roof sections compared with native and prior; do not infer geometry from pixels",
+    "Rehash full Hangboards tree: 203 unrelated files unchanged"
+  ],
+  "acceptance": "Technical review only; revised #8 user acceptance remains pending; no #9 advancement"
+}

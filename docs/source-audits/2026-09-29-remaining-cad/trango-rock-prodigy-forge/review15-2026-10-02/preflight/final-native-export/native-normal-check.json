@@ -1,0 +1,510 @@
+{
+  "kind": "actual Forge USDZ normals versus native BRep incident surfaces",
+  "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+  "meshDataSHA256": "22ab4af94efaca7f8b457fc0dc68f6c4363c76f84b7027f9d7450f411c83281b",
+  "passed": false,
+  "positionToleranceMM": 0.0002,
+  "normalVectorTolerance": 5e-06,
+  "orientationPolicy": "source shell sign follows exported triangle winding; native normal direction compared up to sign",
+  "nodes": {
+    "body_board_001": {
+      "verticesChecked": 7290,
+      "uniqueNativePositions": 5266,
+      "maximumNativeNormalVectorError": 1.4142135677327525,
+      "maximumNativeSurfaceDistanceMM": 1.4769448485473416e-05
+    },
+    "contact_closed_crimp_left": {
+      "verticesChecked": 1414,
+      "uniqueNativePositions": 819,
+      "maximumNativeNormalVectorError": 6.959500899251386e-06,
+      "maximumNativeSurfaceDistanceMM": 1.4176530636915446e-05
+    },
+    "contact_closed_crimp_right": {
+      "verticesChecked": 1414,
+      "uniqueNativePositions": 819,
+      "maximumNativeNormalVectorError": 6.959500899251386e-06,
+      "maximumNativeSurfaceDistanceMM": 1.4176530636915446e-05
+    },
+    "contact_im_deep_left": {
+      "verticesChecked": 561,
+      "uniqueNativePositions": 333,
+      "maximumNativeNormalVectorError": 1.648588099609675e-06,
+      "maximumNativeSurfaceDistanceMM": 1.4862260575012349e-05
+    },
+    "contact_im_deep_right": {
+      "verticesChecked": 561,
+      "uniqueNativePositions": 333,
+      "maximumNativeNormalVectorError": 1.648588099609675e-06,
+      "maximumNativeSurfaceDistanceMM": 1.4862260575012349e-05
+    },
+    "contact_im_shallow_left": {
+      "verticesChecked": 331,
+      "uniqueNativePositions": 208,
+      "maximumNativeNormalVectorError": 7.353849868974777e-07,
+      "maximumNativeSurfaceDistanceMM": 7.1659133055247875e-06
+    },
+    "contact_im_shallow_right": {
+      "verticesChecked": 331,
+      "uniqueNativePositions": 208,
+      "maximumNativeNormalVectorError": 7.353849868974777e-07,
+      "maximumNativeSurfaceDistanceMM": 7.1659133055247875e-06
+    },
+    "contact_large_flat_edge_left": {
+      "verticesChecked": 4,
+      "uniqueNativePositions": 4,
+      "maximumNativeNormalVectorError": 0,
+      "maximumNativeSurfaceDistanceMM": 1.6689300537109375e-06
+    },
+    "contact_large_flat_edge_right": {
+      "verticesChecked": 4,
+      "uniqueNativePositions": 4,
+      "maximumNativeNormalVectorError": 0,
+      "maximumNativeSurfaceDistanceMM": 1.6689300537109375e-06
+    },
+    "contact_mr_deep_left": {
+      "verticesChecked": 1092,
+      "uniqueNativePositions": 648,
+      "maximumNativeNormalVectorError": 7.797940267688019e-07,
+      "maximumNativeSurfaceDistanceMM": 6.902429826474081e-06
+    },
+    "contact_mr_deep_right": {
+      "verticesChecked": 1092,
+      "uniqueNativePositions": 648,
+      "maximumNativeNormalVectorError": 7.797940267688019e-07,
+      "maximumNativeSurfaceDistanceMM": 6.902429826474081e-06
+    },
+    "contact_mr_shallow_left": {
+      "verticesChecked": 1090,
+      "uniqueNativePositions": 646,
+      "maximumNativeNormalVectorError": 8.081601895820506e-07,
+      "maximumNativeSurfaceDistanceMM": 7.213871652999195e-06
+    },
+    "contact_mr_shallow_right": {
+      "verticesChecked": 1090,
+      "uniqueNativePositions": 646,
+      "maximumNativeNormalVectorError": 8.081601895820506e-07,
+      "maximumNativeSurfaceDistanceMM": 7.213871652999195e-06
+    },
+    "contact_sloper_30_left": {
+      "verticesChecked": 92,
+      "uniqueNativePositions": 65,
+      "maximumNativeNormalVectorError": 5.621940931754007e-07,
+      "maximumNativeSurfaceDistanceMM": 9.54625818821437e-06
+    },
+    "contact_sloper_30_right": {
+      "verticesChecked": 92,
+      "uniqueNativePositions": 65,
+      "maximumNativeNormalVectorError": 5.621940931754007e-07,
+      "maximumNativeSurfaceDistanceMM": 9.54625818821437e-06
+    },
+    "contact_sloper_40_left": {
+      "verticesChecked": 32,
+      "uniqueNativePositions": 20,
+      "maximumNativeNormalVectorError": 3.0331716429822725e-08,
+      "maximumNativeSurfaceDistanceMM": 3.5959900643257413e-06
+    },
+    "contact_sloper_40_right": {
+      "verticesChecked": 32,
+      "uniqueNativePositions": 20,
+      "maximumNativeNormalVectorError": 3.0331716429822725e-08,
+      "maximumNativeSurfaceDistanceMM": 3.5959900643257413e-06
+    },
+    "contact_slopey_crimper_left": {
+      "verticesChecked": 47,
+      "uniqueNativePositions": 45,
+      "maximumNativeNormalVectorError": 1.336865843019551e-07,
+      "maximumNativeSurfaceDistanceMM": 3.862475406997341e-06
+    },
+    "contact_slopey_crimper_right": {
+      "verticesChecked": 47,
+      "uniqueNativePositions": 45,
+      "maximumNativeNormalVectorError": 1.336865843019551e-07,
+      "maximumNativeSurfaceDistanceMM": 3.862475406997341e-06
+    },
+    "contact_variable_edge_rail_left": {
+      "verticesChecked": 1129,
+      "uniqueNativePositions": 665,
+      "maximumNativeNormalVectorError": 1.7488647367201496e-06,
+      "maximumNativeSurfaceDistanceMM": 1.441863648065659e-05
+    },
+    "contact_variable_edge_rail_right": {
+      "verticesChecked": 1129,
+      "uniqueNativePositions": 665,
+      "maximumNativeNormalVectorError": 1.7488647367201496e-06,
+      "maximumNativeSurfaceDistanceMM": 1.441863648065659e-05
+    }
+  },
+  "failures": [
+    {
+      "node": "body_board_001",
+      "vertex": 962,
+      "pointNativeMM": [
+        159.31716561317444,
+        -43.0000014603138,
+        46.77727445960045
+      ],
+      "actualNormal": [
+        -0.0021597028244286776,
+        0.0,
+        -0.9999976754188538
+      ],
+      "bestNativeNormalVectorError": 1.4142135677327525
+    },
+    {
+      "node": "body_board_001",
+      "vertex": 973,
+      "pointNativeMM": [
+        158.85184705257416,
+        -45.666664838790894,
+        46.77777737379074
+      ],
+      "reason": "no incident native surface within float32 position tolerance"
+    },
+    {
+      "node": "body_board_001",
+      "vertex": 974,
+      "pointNativeMM": [
+        158.85184705257416,
+        -44.333335012197495,
+        46.77777737379074
+      ],
+      "reason": "no incident native surface within float32 position tolerance"
+    },
+    {
+      "node": "body_board_001",
+      "vertex": 1402,
+      "pointNativeMM": [
+        174.7407466173172,
+        -14.333332888782024,
+        -47.88888990879059
+      ],
+      "reason": "no incident native surface within float32 position tolerance"
+    },
+    {
+      "node": "body_board_001",
+      "vertex": 1406,
+      "pointNativeMM": [
+        174.7407466173172,
+        -28.66666577756405,
+        -47.88888990879059
+      ],
+      "reason": "no incident native surface within float32 position tolerance"
+    },
+    {
+      "node": "body_board_001",
+      "vertex": 4607,
+      "pointNativeMM": [
+        -159.31716561317444,
+        -43.0000014603138,
+        46.77727445960045
+      ],
+      "actualNormal": [
+        0.0021597028244286776,
+        -0.0,
+        -0.9999976754188538
+      ],
+      "bestNativeNormalVectorError": 1.4142135677327525
+    },
+    {
+      "node": "body_board_001",
+      "vertex": 4618,
+      "pointNativeMM": [
+        -158.85184705257416,
+        -45.666664838790894,
+        46.77777737379074
+      ],
+      "reason": "no incident native surface within float32 position tolerance"
+    },
+    {
+      "node": "body_board_001",
+      "vertex": 4619,
+      "pointNativeMM": [
+        -158.85184705257416,
+        -44.333335012197495,
+        46.77777737379074
+      ],
+      "reason": "no incident native surface within float32 position tolerance"
+    },
+    {
+      "node": "body_board_001",
+      "vertex": 5046,
+      "pointNativeMM": [
+        -174.7407466173172,
+        -14.333332888782024,
+        -47.88888990879059
+      ],
+      "reason": "no incident native surface within float32 position tolerance"
+    },
+    {
+      "node": "body_board_001",
+      "vertex": 5051,
+      "pointNativeMM": [
+        -174.7407466173172,
+        -28.66666577756405,
+        -47.88888990879059
+      ],
+      "reason": "no incident native surface within float32 position tolerance"
+    },
+    {
+      "node": "contact_closed_crimp_left",
+      "vertex": 52,
+      "pointNativeMM": [
+        -293.4369146823883,
+        -41.00000113248825,
+        -25.396980345249176
+      ],
+      "actualNormal": [
+        0.4239729046821594,
+        -0.2544499635696411,
+        0.8691962957382202
+      ],
+      "bestNativeNormalVectorError": 5.8003535335315186e-06
+    },
+    {
+      "node": "contact_closed_crimp_left",
+      "vertex": 71,
+      "pointNativeMM": [
+        -292.5460636615753,
+        -41.00000113248825,
+        -25.622136890888214
+      ],
+      "actualNormal": [
+        0.04732103645801544,
+        -0.11371798068284988,
+        0.9923855066299438
+      ],
+      "bestNativeNormalVectorError": 6.239579159213304e-06
+    },
+    {
+      "node": "contact_closed_crimp_left",
+      "vertex": 73,
+      "pointNativeMM": [
+        -290.27867317199707,
+        -35.50000116229057,
+        -25.09930729866028
+      ],
+      "actualNormal": [
+        0.023545999079942703,
+        -0.10435129702091217,
+        0.9942617416381836
+      ],
+      "bestNativeNormalVectorError": 6.223705828450964e-06
+    },
+    {
+      "node": "contact_closed_crimp_left",
+      "vertex": 895,
+      "pointNativeMM": [
+        -293.4369146823883,
+        -41.00000113248825,
+        -25.396980345249176
+      ],
+      "actualNormal": [
+        0.38946327567100525,
+        -0.45912978053092957,
+        0.7984473705291748
+      ],
+      "bestNativeNormalVectorError": 5.8799714177972244e-06
+    },
+    {
+      "node": "contact_closed_crimp_left",
+      "vertex": 899,
+      "pointNativeMM": [
+        -294.84882950782776,
+        -43.0000014603138,
+        -25.848083198070526
+      ],
+      "actualNormal": [
+        0.32371920347213745,
+        -0.41607919335365295,
+        0.8497552275657654
+      ],
+      "bestNativeNormalVectorError": 5.841818145411942e-06
+    },
+    {
+      "node": "contact_closed_crimp_left",
+      "vertex": 907,
+      "pointNativeMM": [
+        -294.44700479507446,
+        -43.0000014603138,
+        -25.960255414247513
+      ],
+      "actualNormal": [
+        0.17140106856822968,
+        -0.3107661008834839,
+        0.9349043369293213
+      ],
+      "bestNativeNormalVectorError": 6.959500899251386e-06
+    },
+    {
+      "node": "contact_closed_crimp_left",
+      "vertex": 908,
+      "pointNativeMM": [
+        -292.86080598831177,
+        -41.00000113248825,
+        -25.58624930679798
+      ],
+      "actualNormal": [
+        0.17140106856822968,
+        -0.3107661008834839,
+        0.9349043369293213
+      ],
+      "bestNativeNormalVectorError": 5.1913739428951864e-06
+    },
+    {
+      "node": "contact_closed_crimp_left",
+      "vertex": 913,
+      "pointNativeMM": [
+        -292.5460636615753,
+        -41.00000113248825,
+        -25.622136890888214
+      ],
+      "actualNormal": [
+        0.04646996408700943,
+        -0.2193571925163269,
+        0.9745373129844666
+      ],
+      "bestNativeNormalVectorError": 6.702849159052192e-06
+    },
+    {
+      "node": "contact_closed_crimp_right",
+      "vertex": 52,
+      "pointNativeMM": [
+        293.4369146823883,
+        -41.00000113248825,
+        -25.396980345249176
+      ],
+      "actualNormal": [
+        -0.4239729046821594,
+        -0.2544499635696411,
+        0.8691962957382202
+      ],
+      "bestNativeNormalVectorError": 5.8003535335315186e-06
+    },
+    {
+      "node": "contact_closed_crimp_right",
+      "vertex": 71,
+      "pointNativeMM": [
+        292.5460636615753,
+        -41.00000113248825,
+        -25.622136890888214
+      ],
+      "actualNormal": [
+        -0.04732103645801544,
+        -0.11371798068284988,
+        0.9923855066299438
+      ],
+      "bestNativeNormalVectorError": 6.239579159213304e-06
+    },
+    {
+      "node": "contact_closed_crimp_right",
+      "vertex": 73,
+      "pointNativeMM": [
+        290.27867317199707,
+        -35.50000116229057,
+        -25.09930729866028
+      ],
+      "actualNormal": [
+        -0.023545999079942703,
+        -0.10435129702091217,
+        0.9942617416381836
+      ],
+      "bestNativeNormalVectorError": 6.223705828450964e-06
+    },
+    {
+      "node": "contact_closed_crimp_right",
+      "vertex": 895,
+      "pointNativeMM": [
+        293.4369146823883,
+        -41.00000113248825,
+        -25.396980345249176
+      ],
+      "actualNormal": [
+        -0.38946327567100525,
+        -0.45912978053092957,
+        0.7984473705291748
+      ],
+      "bestNativeNormalVectorError": 5.8799714177972244e-06
+    },
+    {
+      "node": "contact_closed_crimp_right",
+      "vertex": 899,
+      "pointNativeMM": [
+        294.84882950782776,
+        -43.0000014603138,
+        -25.848083198070526
+      ],
+      "actualNormal": [
+        -0.32371920347213745,
+        -0.41607919335365295,
+        0.8497552275657654
+      ],
+      "bestNativeNormalVectorError": 5.841818145411942e-06
+    },
+    {
+      "node": "contact_closed_crimp_right",
+      "vertex": 907,
+      "pointNativeMM": [
+        294.44700479507446,
+        -43.0000014603138,
+        -25.960255414247513
+      ],
+      "actualNormal": [
+        -0.17140106856822968,
+        -0.3107661008834839,
+        0.9349043369293213
+      ],
+      "bestNativeNormalVectorError": 6.959500899251386e-06
+    },
+    {
+      "node": "contact_closed_crimp_right",
+      "vertex": 908,
+      "pointNativeMM": [
+        292.86080598831177,
+        -41.00000113248825,
+        -25.58624930679798
+      ],
+      "actualNormal": [
+        -0.17140106856822968,
+        -0.3107661008834839,
+        0.9349043369293213
+      ],
+      "bestNativeNormalVectorError": 5.1913739428951864e-06
+    },
+    {
+      "node": "contact_closed_crimp_right",
+      "vertex": 913,
+      "pointNativeMM": [
+        292.5460636615753,
+        -41.00000113248825,
+        -25.622136890888214
+      ],
+      "actualNormal": [
+        -0.04646996408700943,
+        -0.2193571925163269,
+        0.9745373129844666
+      ],
+      "bestNativeNormalVectorError": 6.702849159052192e-06
+    },
+    {
+      "node": "contact_slopey_crimper_left",
+      "vertex": 13,
+      "pointNativeMM": [
+        -160.30625998973846,
+        -43.0000014603138,
+        54.65816333889961
+      ],
+      "reason": "no incident native surface within float32 position tolerance"
+    },
+    {
+      "node": "contact_slopey_crimper_right",
+      "vertex": 13,
+      "pointNativeMM": [
+        160.30625998973846,
+        -43.0000014603138,
+        54.65816333889961
+      ],
+      "reason": "no incident native surface within float32 position tolerance"
+    }
+  ],
+  "failure": "Traceback (most recent call last):\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/check-forge-normals.py\", line 56, in main\n    assert not failures\n           ^^^^^^^^^^^^\nAssertionError\n"
+}

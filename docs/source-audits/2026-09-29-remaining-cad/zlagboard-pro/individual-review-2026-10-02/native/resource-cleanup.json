@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger-cad-second-half",
+  "nativeRunnerTempRoot": ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate",
+  "remainingRunnerTemporaryDirectories": [],
+  "nativeAuthorSessionExitCode": 0,
+  "nativeVerifySessionExitCode": 0,
+  "beforeRenderSessionExitCode": 0,
+  "afterRenderSessionExitCode": 0,
+  "externalResourcesCreated": [],
+  "policy": "Only workspace-owned scratch files retained; no canonical changes, USDZ compiles, servers or Simulators."
+}

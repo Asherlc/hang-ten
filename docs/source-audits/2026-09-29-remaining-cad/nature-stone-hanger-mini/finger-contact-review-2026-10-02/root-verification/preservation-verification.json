@@ -1,0 +1,23 @@
+{
+  "owner": "placid-badger",
+  "baselineCommit": "d3811417c4c2d7efd87e7b856399fd860124fbbc",
+  "checks": {
+    "otherPackages": {
+      "fileCount": 202,
+      "allSHA256Unchanged": true
+    },
+    "reservedSharedPaths": {
+      "fileCount": 7,
+      "allSHA256Unchanged": true
+    },
+    "priorReviewPackets": {
+      "fileCount": 591,
+      "allSHA256Unchanged": true
+    },
+    "originalCompletionPacket": {
+      "fileCount": 222,
+      "allSHA256Unchanged": true
+    }
+  },
+  "cordSidecarOnlyModelBindingChanged": true
+}

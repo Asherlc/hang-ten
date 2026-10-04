@@ -1,0 +1,7 @@
+{
+  "owner": "placid-badger",
+  "externalResources": [],
+  "policy": "No simulator, server, daemon, or shared resource created; transient commands terminate and are waited.",
+  "cleanupVerified": true,
+  "cleanupNote": "No external resources created; synchronous tool processes terminated."
+}

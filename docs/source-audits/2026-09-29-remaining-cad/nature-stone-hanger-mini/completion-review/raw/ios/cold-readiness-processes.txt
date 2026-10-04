@@ -1,0 +1,1 @@
+70164     1 70164       07:56 launchd_sim /Users/asherlc/Library/Developer/CoreSimulator/Devices/E9D3D8B4-1440-4417-862B-3023AF3841FA/data/var/run/launchd_bootstrap.plist

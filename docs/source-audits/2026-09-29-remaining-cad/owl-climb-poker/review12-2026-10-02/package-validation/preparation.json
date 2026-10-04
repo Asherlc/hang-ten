@@ -1,0 +1,80 @@
+{
+  "owner": "placid-badger",
+  "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+  "status": "prepared; awaiting root frozen final canonical hashes",
+  "validationExecuted": false,
+  "buildAttempted": false,
+  "simulatorsCreated": 0,
+  "simulatorsBooted": 0,
+  "appsInstalled": 0,
+  "appsLaunched": 0,
+  "appFramesCaptured": 0,
+  "iosUnitTestCasesExecuted": 0,
+  "runtimeEnvironment": "Previously blocked; no guest operations will be attempted",
+  "currentAppearanceVerified": false,
+  "sourceSyntaxCheck": "AST parsed only; no script import or execution",
+  "baselineSHA256": "337c3f6fb5d23b2fc4b155c810d71c36712c8d0257eb63504de1b56b1871656a",
+  "scripts": [
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/validation_support.py",
+      "sha256": "c28ceb4de33f67131a851b7a8e4f12ae2840198d3dda5af1d0cab1d13077fed4"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/run_validation.py",
+      "sha256": "f5edf5df64c12cf2c88dfce8e488cac0bf54dcbd8d29acfded6989e9f8c756f4"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/ios-build/build.py",
+      "sha256": "58ede08d10e71ca0bd69b58b39a624e9b6ef716c9a6513bbca896848199a1f9b"
+    }
+  ],
+  "frozenInputRequirements": {
+    "owner": "placid-badger",
+    "package": "owl-climb-poker",
+    "requiredSHA256Files": [
+      "owl-climb-poker.FCStd",
+      "assets/primary.usdz",
+      "assets/primary.model.json"
+    ],
+    "optionalGeneratedManifestSHA256": true
+  },
+  "plannedSteps": [
+    {
+      "name": "model-tools-pytest",
+      "scope": [
+        "contact_model_descriptor",
+        "contact_model_package",
+        "import_contact_model_source",
+        "verify_yy_baguette_evo"
+      ],
+      "timeoutSeconds": 300
+    },
+    {
+      "name": "manifest-package-pytest",
+      "scope": [
+        "board_manifest",
+        "cad_sidecars",
+        "board_catalog",
+        "pose_camera_facing"
+      ],
+      "timeoutSeconds": 300
+    },
+    {
+      "name": "canonical-cli",
+      "command": "python -m hangboard_packages.cli validate --root Hangboards --final-inventory",
+      "timeoutSeconds": 180
+    },
+    {
+      "name": "android-staging",
+      "scope": "Actual scripts/stage-board-packages.py --target android; Poker generated manifest/descriptor/inline USDZ byte parity, authoring exclusion",
+      "timeoutSeconds": 180
+    },
+    {
+      "name": "ios-build",
+      "scope": "Exactly one generic/platform=iOS Simulator build-for-testing; generated manifest/descriptor/exact ODR USDZ provenance only",
+      "timeoutSeconds": 600
+    }
+  ],
+  "manifestContract": "All 34 contacts, four ordered positions, all contact facts and rotations equal captured baseline; sole metadata change surfaceFinish: wood; no suspension.",
+  "resourceContract": "Immediate ownership registration, Python EXIT/INT/TERM handling, bounded process groups, owner-prefixed TMP/staging/Derived Data, exact deletion and process-group absence verification; leave preexisting/shared/unknown resources alone."
+}

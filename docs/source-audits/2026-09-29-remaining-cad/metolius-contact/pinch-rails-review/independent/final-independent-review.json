@@ -1,0 +1,73 @@
+{
+  "reviewedAtUTC": "2026-10-01T05:13:27.572515+00:00",
+  "status": "pass",
+  "blockingFindings": [],
+  "sourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+  "modelSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+  "descriptorSHA256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+  "rawManifestSHA256": "7f05fa8db30998f46c1268108b9778c30e869d099f025aa256827fc1b7cc0545",
+  "checks": {
+    "rawManifestAndAll33LogicalContactsUnchanged": true,
+    "nonPinchNativeContactCountPreserved": 31,
+    "publishedNativeDepthChecksPassed": 29,
+    "nativeEnvelopeXYZMM": [
+      826.0000002,
+      67.00000020000006,
+      279.0000002
+    ],
+    "nativeSourceReopenedRecomputedWithoutErrors": true,
+    "nativeSolidValidAndSingle": true,
+    "allSketchesFullyConstrained": true,
+    "contactSurfacePairwiseOverlapFindings": [],
+    "nativeCavityEditAndRestore": {
+      "parameter": "Depth_edge_16_center",
+      "before": 15.0,
+      "after": 17.0,
+      "changedContacts": [
+        "edge-16-center"
+      ]
+    },
+    "sourceBytesUnchangedAfterReadOnlyCheck": true,
+    "mirroredStationCountPerSide": 5,
+    "nativeProjectionRangeMM": [
+      23.53857421875,
+      38.4524201104627
+    ],
+    "meshWitnessCount": 10,
+    "maximumMeshEndpointDifferenceMM": 0.07614705290956181,
+    "maximumMeshProjectionDifferenceMM": 0.056264539256773105,
+    "meshCount": 34,
+    "triangleCount": 36299,
+    "materialsShadersOrBindings": [],
+    "onlyPackageChanges": [
+      "Hangboards/metolius-contact/assets/primary.model.json",
+      "Hangboards/metolius-contact/assets/primary.usdz",
+      "Hangboards/metolius-contact/metolius-contact.FCStd"
+    ],
+    "unrelatedPackageFilesUnchanged": 203,
+    "integratedPackageMatchesVerifiedCandidate": true
+  },
+  "practicalLimits": [
+    "Rail profiles, widths and forward projection are deliberately authored display estimates; they are not published manufacturer measurements. Native shape/source interpretation remains the author and human reviewer\u2019s decision.",
+    "Five mirrored native/triangle sections establish local opposed exposed faces and actual projection. They are not an anthropometric hand-clearance or physical-use certification.",
+    "Contact-to-final-shell verification samples each face and vertices and checks pairwise surface common area; standard author/compiler topology checks provide complementary coverage.",
+    "This review verifies source/export consistency and preservation. Revised app interaction, visual review and user acceptance remain parent-owned and pending at this capture time."
+  ],
+  "fileSHA256": {
+    ".context/placid-badger/metolius-contact-pinch-rails/independent-validation/baseline.json": "a3c876ac3df2c511be429c24a33bbf2b4fec2ee05f629114bb52cbe669a675d4",
+    ".context/placid-badger/metolius-contact-pinch-rails/independent-validation/all-hangboards-baseline.json": "1d180a4a2394c7cb8d93eb27e7353b8604d10bf3c5b683828c0dadcb7e762a9e",
+    ".context/placid-badger/metolius-contact-pinch-rails/independent-validation/check_native_candidate.py": "4c7c2ea59ac2b5c351d98fbc7a16791699c004a33776afedc303d785a5aef141",
+    ".context/placid-badger/metolius-contact-pinch-rails/independent-validation/native-check.json": "8774b936fa5a2b59cec0c0d1a6f9e97d236b34d582e4fd7b8265b10a161f3e02",
+    ".context/placid-badger/metolius-contact-pinch-rails/independent-validation/native-check.log": "694f16ba92bf18fa806e35260816b22423cfb8cf3e59ebd0b65b004d7af7de25",
+    ".context/placid-badger/metolius-contact-pinch-rails/independent-validation/check_candidate.py": "a8419a68003e9ad92666d327ec50f67e57cc547f666661a1e13f4b83aaac0036",
+    ".context/placid-badger/metolius-contact-pinch-rails/independent-validation/export-check.json": "dc87e24eca610b231da1b895d27d7d8d117ea11dcf8442b5d24a1a12f2c431f0",
+    ".context/placid-badger/metolius-contact-pinch-rails/independent-validation/check_export_sections.py": "5551ed0ed7dca69aeca838b9b8f2cb896922601cbcd3c32d8f74fe64325a458f",
+    ".context/placid-badger/metolius-contact-pinch-rails/independent-validation/export-section-check.json": "9ec407e9bb172f441d15fb6fe77c799bdc8d54f465a1b5ebd1cf12cf49c88b32",
+    ".context/placid-badger/metolius-contact-pinch-rails/independent-validation/final-package-scope.json": "a517ed24fca61e721ac601522e1bc7c114b52d810e9d6f5910071e9838b8fd14",
+    "Hangboards/metolius-contact/metolius-contact.FCStd": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+    "Hangboards/metolius-contact/assets/primary.usdz": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+    "Hangboards/metolius-contact/assets/primary.model.json": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+    ".context/placid-badger/metolius-contact-pinch-rails/native-author/authored-design.json": "faf65e071b59417902a7005a35c1ce64c9fa092a0906854535f5b039f1075dd1",
+    ".context/placid-badger/metolius-contact-pinch-rails/native-author/rail-access-check.json": "7ab24e61a018f229424ca15bdd526ea54d9df5fd18cd8df438f4ca661d4761cd"
+  }
+}

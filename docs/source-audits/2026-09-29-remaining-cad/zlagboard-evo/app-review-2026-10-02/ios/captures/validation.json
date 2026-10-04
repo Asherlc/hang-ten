@@ -1,0 +1,35 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "simulator": "1684856E-FC2D-4407-8063-9B343B99CAD6",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS26.5",
+  "boardID": "zlagboard.evo",
+  "sourceSHA256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+  "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+  "descriptorSHA256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+  "builtBinarySHA256": "4804ef80e20677bbfe4a94030b37d576b54fc7db8a953589153bc47286396319",
+  "surfaceFinish": "wood",
+  "checks": [],
+  "commands": [
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "1684856E-FC2D-4407-8063-9B343B99CAD6",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "1684856E-FC2D-4407-8063-9B343B99CAD6"
+    ]
+  ],
+  "humanGeometryAcceptance": "pending user review #20",
+  "limits": "Full-frame fresh app screenshots and AX identity/orbit probes; no factory geometry or ergonomic certification."
+}

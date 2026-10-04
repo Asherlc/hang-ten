@@ -1,0 +1,44 @@
+{
+  "owner": "placid-badger",
+  "ciRun": 37151709739,
+  "ciJob": 111286912547,
+  "ciLogSHA256": "2ead84407f3b9f7fb3e071b9e7d5e954dad9265dd9c44f068c6fd22b58ab51a7",
+  "failure": "test_native_forge_full_pair_maps_every_physical_contact_and_mirrored_frame",
+  "cause": "Stale test assumes one native paired rendering asset has only primary physical equipment identity; merged-main manifest correctly retains left-half and right-half.",
+  "affectedPaths": [
+    "Tools/HangboardPackages/tests/test_trango_mirrored_halves.py"
+  ],
+  "originalSHA256": "3c3025b9d25f9abbbc83595e631aaf5f4f00dd13518111fb5935af85e0a580f1",
+  "patchSHA256": "04d3768d240c95e59a4367e51c1a52bb3c2f7bb500bb5919927a7087fa9d3c2e",
+  "candidateSHA256": "7942184326169a312ebbf3a1195fb3170df4dbadc7d13b33a74bd544b35a772b",
+  "baselineReproduced": {
+    "failed": 1,
+    "log": "baseline-test.log"
+  },
+  "candidateModule": {
+    "passed": 4,
+    "failed": 0,
+    "log": "candidate-test.log"
+  },
+  "retainedContracts": [
+    "native full pair",
+    "no runtime instances",
+    "20 unique physical contacts",
+    "each left/right equipment identity exact",
+    "all other paired hold facts equal",
+    "21 exact native nodes",
+    "model SHA binding",
+    "mirrored body and contact frames",
+    "native source mirror construction"
+  ],
+  "trackedFilesEdited": false,
+  "stage": "Ready for parent-authorized application after merge; full suite pending integration",
+  "cleanup": {
+    "removedExactOwnedPaths": [
+      ".context/placid-badger/ci-fix-2026-10-03/python/baseline/Hangboards",
+      ".context/placid-badger/ci-fix-2026-10-03/python/candidate/Hangboards"
+    ],
+    "allAbsent": true,
+    "testProcessGroupsAbsent": true
+  }
+}

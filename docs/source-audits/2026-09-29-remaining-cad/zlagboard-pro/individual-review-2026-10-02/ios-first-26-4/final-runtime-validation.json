@@ -1,0 +1,25 @@
+{
+  "boardID": "zlagboard.pro",
+  "runtime": "iOS26.4",
+  "status": "blocked before app build/install: system startup did not become interactive within bounded boot plus single reboot",
+  "appWorkflowPassed": false,
+  "humanAccepted": false,
+  "appInstalled": false,
+  "contactCaptures": 0,
+  "expectedContacts": 28,
+  "testsRun": 0,
+  "boot": "boot-recovery-commands.json",
+  "finalScreen": "final-timeout-screen.png",
+  "accessibilityFailure": "status4-accessibility-command.json",
+  "diagnostics": "startup-diagnostics/commands.json",
+  "diagnosticLimit": "SpringBoard reports running, but screen remains black spinner. Error logs are symptoms, not proven causal diagnosis. No private migration or service changes made.",
+  "cleanup": {
+    "uuid": "9B0B559E-0E57-4C3F-9685-E5892BC41E30",
+    "simulatorDeleted": true,
+    "derivedDataDeleted": true,
+    "resultBundleDeleted": true,
+    "testResultBundleDeleted": true
+  },
+  "compileOnlyFollowup": "../build-only-2026-10-02/build-results-summary.json",
+  "preparedHarness": "../prep/lifecycle.zsh"
+}

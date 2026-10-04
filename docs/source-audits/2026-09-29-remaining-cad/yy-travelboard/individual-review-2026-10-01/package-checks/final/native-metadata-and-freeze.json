@@ -1,0 +1,39 @@
+{
+  "sourceBeforeSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+  "sourceAfterSHA256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+  "finalReadyHashesExact": true,
+  "sixContactFactsExact": true,
+  "objectDataBytesExact": true,
+  "nativeObjectsBytesExact": true,
+  "allNonDocumentArchiveBytesExact": true,
+  "manifestOnlyWoodFinishChanged": true,
+  "modelAndDescriptorExact": true,
+  "sidecarSHA256": "7af15a7f897baa87a4da89fcf62c8123dbb7544d8c3cb0bced71474bf9d044e4",
+  "sidecarChangedPaths": [
+    "/suspension/canonicalPoses/front-25-15/translation/1",
+    "/suspension/canonicalPoses/front-25-15/wrappedRoutes/left-lower-visible-lead",
+    "/suspension/canonicalPoses/front-25-15/wrappedRoutes/left-upper-visible-lead",
+    "/suspension/canonicalPoses/front-25-15/wrappedRoutes/right-lower-visible-lead",
+    "/suspension/canonicalPoses/front-25-15/wrappedRoutes/right-upper-visible-lead",
+    "/suspension/canonicalPoses/reverse-10/translation/1",
+    "/suspension/canonicalPoses/reverse-10/wrappedRoutes/left-lower-visible-lead",
+    "/suspension/canonicalPoses/reverse-10/wrappedRoutes/left-upper-visible-lead",
+    "/suspension/canonicalPoses/reverse-10/wrappedRoutes/right-lower-visible-lead",
+    "/suspension/canonicalPoses/reverse-10/wrappedRoutes/right-upper-visible-lead",
+    "/suspension/strands/0/provenance",
+    "/suspension/strands/0/restLength",
+    "/suspension/strands/1/provenance",
+    "/suspension/strands/1/restLength",
+    "/suspension/strands/2/provenance",
+    "/suspension/strands/2/restLength",
+    "/suspension/strands/3/provenance",
+    "/suspension/strands/3/restLength"
+  ],
+  "sidecarModelHashBound": true,
+  "sidecarPoseIDs": [
+    "front-25-15",
+    "reverse-10"
+  ],
+  "realFCStdZIP": true,
+  "passed": true
+}

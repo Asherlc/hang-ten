@@ -1,0 +1,40 @@
+{
+  "references": [
+    {
+      "archivedRelativePath": "../metadata/README.md",
+      "sha256": "0e47644d5bb5c8be1687af370c45e6f6a4c5be5f418cedb652150251e50a437e",
+      "meaning": "Existing tracked metadata/body-preservation evidence; linked without source/model/archive binaries."
+    },
+    {
+      "archivedRelativePath": "../metadata/metadata-preservation.json",
+      "sha256": "b83f997ac89ba3e741a21ca758b8f1152cdc10f5090ab40283e88aaffbacb1d1",
+      "meaning": "Existing tracked metadata/body-preservation evidence; linked without source/model/archive binaries."
+    },
+    {
+      "archivedRelativePath": "../metadata/forge-equipment-identity/metadata-preservation.json",
+      "sha256": "4ddc995fc1eada68462d5c0714baf29e5473efa960c7a8d2c0de0ed99c721bcd",
+      "meaning": "Existing tracked metadata/body-preservation evidence; linked without source/model/archive binaries."
+    },
+    {
+      "archivedRelativePath": "../metadata/forge-equipment-identity/independent-preservation-recheck.json",
+      "sha256": "d1011b3f1ddfa7563672f99267a65fd36f140509842ff45e72e45528ba82d7c4",
+      "meaning": "Existing tracked metadata/body-preservation evidence; linked without source/model/archive binaries."
+    },
+    {
+      "archivedRelativePath": "../metadata/forge-equipment-identity/README.md",
+      "sha256": "5ac30d9fa152a1fdff9739666ff085f0809a3b866b05fa88141d5db9bbc08575",
+      "meaning": "Existing tracked metadata/body-preservation evidence; linked without source/model/archive binaries."
+    },
+    {
+      "archivedRelativePath": "../metadata/initial-audit/audit-report.json",
+      "sha256": "2be4278786cca5526fb7c80fb75e5552e17221090552af1f530d291dc48be64c",
+      "meaning": "Existing tracked metadata/body-preservation evidence; linked without source/model/archive binaries."
+    },
+    {
+      "archivedRelativePath": "../metadata/initial-audit/three-way-facts.json",
+      "sha256": "6224bae7443e9bc2c54fc9efa113074166b7a4c6580adf139a4aa3d3f7d5e06c",
+      "meaning": "Existing tracked metadata/body-preservation evidence; linked without source/model/archive binaries."
+    }
+  ],
+  "initialAuditDisposition": "Initial raw audit remains historical; its Forge-primary disposition is superseded by the explicit Forge metadata addendum."
+}

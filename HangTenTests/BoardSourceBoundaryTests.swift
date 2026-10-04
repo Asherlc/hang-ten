@@ -291,6 +291,14 @@ final class BoardSourceBoundaryTests: XCTestCase {
         let packagePaths = try discoveredPackagePaths(at: repositoryRoot)
         let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
         let migratedModelBoardIDs: Set<String> = [
+            "aelith.cyclops-011",
+            "frictitious.nug",
+            "frictitious.port-a-board",
+            "nature.stone-hanger-mini",
+            "nature.stone-hanger-mini-karma8a",
+            "plateau.lifting-edge",
+            "yy.baguette",
+            "yy.travelboard",
             "frictitious.doormount-pro-7",
             "frictitious.megalith",
             "trango.rock-prodigy-forge",
@@ -464,20 +472,28 @@ final class BoardSourceBoundaryTests: XCTestCase {
                     logicalHoldIDs,
                     "Original raster media must cover every logical hold exactly once."
                 )
-            case .model(let media):
+            case .model:
                 XCTAssertTrue(
                     migratedModelBoardIDs.contains(board.id),
                     "Only migrated boards may use model media."
                 )
-                var typedAssets = Set([media.assetPath, media.descriptorPath])
-                if let physicsPath = media.physicsDescriptorPath {
-                    typedAssets.insert(physicsPath)
-                    XCTAssertNotNil(try BoardCatalog.packageStore.presentationPhysicsInput(for: board))
+                var modelAssets = Set<String>()
+                for presentation in board.presentations {
+                    guard case .model(let model) = presentation.media else { continue }
+                    modelAssets.formUnion([model.assetPath, model.descriptorPath])
+                    if let physicsPath = model.physicsDescriptorPath {
+                        modelAssets.insert(physicsPath)
+                        XCTAssertNotNil(try BoardCatalog.packageStore.presentationPhysicsInput(
+                            for: board, presentationID: presentation.id))
+                    }
                 }
                 if packageEntries.contains("rope-physics.json") {
-                    XCTAssertNotNil(media.physicsDescriptorPath)
+                    XCTAssertTrue(board.presentations.contains { presentation in
+                        guard case .model(let model) = presentation.media else { return false }
+                        return model.physicsDescriptorPath != nil
+                    })
                 }
-                XCTAssertEqual(assetPaths, typedAssets)
+                XCTAssertEqual(assetPaths, modelAssets)
                 XCTAssertTrue(
                     presentations.allSatisfy { presentation in
                         guard let media = presentation["media"] as? [String: Any] else {
@@ -490,9 +506,11 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 XCTAssertTrue(holds.allSatisfy {
                     $0["geometry"] == nil && $0["presentationID"] == nil
                 })
-                XCTAssertEqual(Set(media.descriptor.contacts.keys), Set(holds.compactMap {
-                    $0["id"] as? String
-                }))
+                for presentation in board.presentations {
+                    guard case .model(let media) = presentation.media else { continue }
+                    XCTAssertEqual(Set(media.descriptor.contacts.keys),
+                                   Set(board.contacts(in: presentation).map(\.id)), presentation.id)
+                }
             }
         }
     }
@@ -553,14 +571,17 @@ final class BoardSourceBoundaryTests: XCTestCase {
             source.contains(physicalHoldVisualFrame),
             "Each PhysicalHoldVisual must receive the board's explicit bounds."
         )
+        let holdFrameRange = try XCTUnwrap(source.range(of: physicalHoldVisualFrame))
+        let modelStart = try XCTUnwrap(source.range(of: "                case .model:",
+                                                  range: holdFrameRange.upperBound..<source.endIndex))
+        let rasterSource = source[holdFrameRange.lowerBound..<modelStart.lowerBound]
         let outerZStackFrame =
+            "                            }\n" +
             "                        }\n" +
-            "                        .frame(width: boardBounds.width, height: boardBounds.height)\n" +
-            "                    }\n" +
-            "                case .model:"
+            "                        .frame(width: boardBounds.width, height: boardBounds.height)"
         XCTAssertTrue(
-            source.contains(outerZStackFrame),
-            "The outer board ZStack must receive the board's explicit bounds."
+            rasterSource.contains(outerZStackFrame),
+            "The raster board ZStack must receive explicit bounds before later modifiers."
         )
     }
 
@@ -616,6 +637,99 @@ final class BoardSourceBoundaryTests: XCTestCase {
             source: binding + "\nlet planTarget = \"metolius.wood-grips-compact-ii\"",
             packageOwnedLiterals: literals
         ).isEmpty)
+    }
+
+    func testBoundaryAuditAllowsOnlyScopedLegacyPlateauPersistenceIDs() {
+        let source = """
+        private static func normalize(_ definition: CustomRoutineDefinition) -> CustomRoutineDefinition {
+            definition.steps.map { step in
+                if case let .boardSpecific(boardID) = definition.targetMode,
+                   boardID == "plateau.lifting-edge" {
+                    return migratingLegacyPlateauTargets(in: step)
+                }
+                return step
+            }
+        }
+        private static func migratingLegacyPlateauRequirement(
+            _ requirement: ContactRequirement
+        ) -> ContactRequirement {
+            return ContactRequirement(
+                contactID: "edge-18",
+                kind: requirement.kind
+            )
+        }
+        """
+        let path = "HangTen/Models/CustomRoutineStore.swift"
+        let literals: Set<String> = ["plateau.lifting-edge", "edge-18"]
+
+        XCTAssertEqual(BoardSourceBoundaryAudit.findings(
+            relativePath: path, source: source, packageOwnedLiterals: literals
+        ), [])
+        XCTAssertEqual(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Models/OtherStore.swift", source: source,
+            packageOwnedLiterals: literals
+        ).sorted(), [
+            "HangTen/Models/OtherStore.swift: package-owned literal edge-18",
+            "HangTen/Models/OtherStore.swift: package-owned literal plateau.lifting-edge"
+        ])
+        XCTAssertEqual(BoardSourceBoundaryAudit.findings(
+            relativePath: path,
+            source: source + "\nlet outsideBoard = \"plateau.lifting-edge\"\nlet outsideContact = \"edge-18\"",
+            packageOwnedLiterals: literals
+        ).sorted(), [
+            "\(path): package-owned literal edge-18",
+            "\(path): package-owned literal plateau.lifting-edge"
+        ])
+        XCTAssertEqual(BoardSourceBoundaryAudit.findings(
+            relativePath: path,
+            source: source.replacingOccurrences(of: "func normalize(", with: "func unrelatedNormalize(")
+                .replacingOccurrences(of: "func migratingLegacyPlateauRequirement(", with: "func unrelatedRequirement("),
+            packageOwnedLiterals: literals
+        ).sorted(), [
+            "\(path): package-owned literal edge-18",
+            "\(path): package-owned literal plateau.lifting-edge"
+        ])
+        XCTAssertEqual(BoardSourceBoundaryAudit.findings(
+            relativePath: path,
+            source: source.replacingOccurrences(of: "plateau.lifting-edge", with: "fixture.board")
+                .replacingOccurrences(of: "edge-18", with: "fixture.contact"),
+            packageOwnedLiterals: ["fixture.board", "fixture.contact"]
+        ).sorted(), [
+            "\(path): package-owned literal fixture.board",
+            "\(path): package-owned literal fixture.contact"
+        ])
+    }
+
+    func testBoundaryAuditStillRejectsArtifactsInsideLegacyPlateauMigration() {
+        let path = "HangTen/Models/CustomRoutineStore.swift"
+        let source = """
+        private static func migratingLegacyPlateauRequirement(
+            _ requirement: ContactRequirement
+        ) -> ContactRequirement {
+            let asset = "assets/primary.png"
+            let geometry = PhysicalContact()
+            return ContactRequirement(contactID: "edge-18", kind: requirement.kind)
+        }
+        """
+
+        XCTAssertEqual(BoardSourceBoundaryAudit.findings(
+            relativePath: path, source: source,
+            packageOwnedLiterals: ["edge-18", "assets/primary.png"]
+        ).sorted(), [
+            "\(path): board geometry construct PhysicalContact(",
+            "\(path): package-owned literal assets/primary.png"
+        ])
+        XCTAssertEqual(BoardSourceBoundaryAudit.findings(
+            relativePath: path,
+            source: source.replacingOccurrences(
+                of: "let asset = \"assets/primary.png\"",
+                with: "let unrelatedTarget = \"edge-18\""
+            ),
+            packageOwnedLiterals: ["edge-18"]
+        ).sorted(), [
+            "\(path): board geometry construct PhysicalContact(",
+            "\(path): package-owned literal edge-18"
+        ])
     }
 
     func testBoundaryAuditRejectsAssetLiteralsInsideDisplayModelIdentity() {

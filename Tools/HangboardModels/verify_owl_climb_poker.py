@@ -8,6 +8,7 @@ not purported manufacturer measurements. No image processing is performed.
 
 from collections import defaultdict
 from pathlib import Path
+import hashlib
 import json
 import math
 import sys
@@ -16,8 +17,51 @@ import numpy as np
 from pxr import Gf, Usd, UsdGeom
 
 
+def descriptor_owners(asset):
+    """Use the runtime descriptor's identity contract for native CAD meshes."""
+    descriptor = Path(asset).with_suffix(".model.json")
+    if not descriptor.is_file():
+        return None  # Historical standalone Blender exports carry contact attributes.
+    document = json.loads(descriptor.read_text())
+    assert document.get("schemaVersion") == 1, "Poker requires its contact descriptor"
+    assert document.get("modelSHA256") == hashlib.sha256(Path(asset).read_bytes()).hexdigest(), "descriptor SHA-256 does not match model"
+    result = {}
+    for node in document["nodes"]:
+        node_id = node["nodeID"]
+        assert node_id and node_id not in result, ("duplicate or empty descriptor node", node_id)
+        assert node["role"] in {"body", "contact", "attachment"}, node
+        owner = node.get("contactID") if node["role"] == "contact" else "body"
+        assert isinstance(owner, str) and owner, ("missing contact identity", node_id)
+        result[node_id] = owner
+    assert result, "empty descriptor node inventory"
+    return result
+
+
+def mesh_owner(prim, node_owners):
+    """Resolve an exact descriptor node or its descendant, retaining old tags."""
+    current = prim
+    descriptor_owner = None
+    legacy_owner = None
+    while current and not current.IsPseudoRoot():
+        legacy_owner = legacy_owner or current.GetAttribute("userProperties:contact_id").Get()
+        if node_owners is not None and descriptor_owner is None:
+            path = current.GetPath().pathString.lstrip("/")
+            matches = [owner for node_id, owner in node_owners.items()
+                       if path == node_id or path.endswith("/" + node_id)]
+            assert len(matches) <= 1, ("ambiguous descriptor node identity", path)
+            if matches:
+                descriptor_owner = matches[0]
+        current = current.GetParent()
+    if node_owners is not None:
+        assert descriptor_owner is not None, ("mesh missing from descriptor", prim.GetPath())
+        assert not legacy_owner or legacy_owner == descriptor_owner, ("descriptor/contact attribute conflict", prim.GetPath())
+        return descriptor_owner
+    return legacy_owner or "body"
+
+
 def inspect_section(asset):
     stage = Usd.Stage.Open(str(asset))
+    node_owners = descriptor_owners(asset)
     triangles = []
     owners = []
     edges = defaultdict(list)
@@ -30,12 +74,7 @@ def inspect_section(asset):
         counts = list(mesh.GetFaceVertexCountsAttr().Get())
         assert set(counts) == {3}, (prim.GetPath(), set(counts))
         indices = np.array(mesh.GetFaceVertexIndicesAttr().Get()).reshape((-1, 3))
-        owner_prim = prim
-        contact = None
-        while owner_prim and not contact:
-            contact = owner_prim.GetAttribute("userProperties:contact_id").Get()
-            owner_prim = owner_prim.GetParent()
-        contact = contact or "body"
+        contact = mesh_owner(prim, node_owners)
         for triangle in points[indices]:
             number = len(triangles)
             triangles.append(triangle)

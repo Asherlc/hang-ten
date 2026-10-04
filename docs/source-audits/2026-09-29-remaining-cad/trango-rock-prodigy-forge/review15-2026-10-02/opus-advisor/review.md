@@ -1,0 +1,46 @@
+# Opus Forge #15 advisory
+
+Advisor: Claude Opus 5.5, agent `4c95fae2-5c9d-4734-b3f5-a47ad77aeaa7`. Analysis only. The final response text follows unchanged; transient attachment links are preserved in `final-activity.json`. The whole images are retained at `../views/comparison-front-side-top.png` and `../views/comparison-oblique.png`.
+
+**Recommendation: close #15 as accepted.** I found no source-backed geometry blocker. The current geometry shows the open outer-wing recess and the set-back lower lip as the maker evidence shows them. The "one editable right unit, native mirrored left" claim is accurate in the FCStd file, and the maker sources support mirroring.
+
+## Hashes checked
+- FCStd `4f970f46…5843dc4e`, USDZ `6af10911…8ba61` and descriptor `ec716c7e…989e6` all match the stated values. I recomputed them with `shasum`, and both LFS objects are present.
+- I viewed these whole, without cropping or measuring pixels: `sources/product-01.jpg`, `03.png`, `04.png`, `05.png` and `06.png`, `hold-chart-page-1.png` and `depth-guide-page-1.png`.
+- I also viewed the whole review images: `review15-2026-10-02/views/comparison-front-side-top.png`, `comparison-oblique.png`, `current-front.png` and `current-oblique.png`.
+- I read `review.md`, `human-review.json`, `independent-shape/final-shape-verdict.{md,json}`, `generated-board.json`, `source-audit.md` and `sources.json`.
+- I read the FCStd `Document.xml` read-only, in memory. Nothing was written.
+
+## Recess and lower lip
+**What the sources show:**
+- **03:** the outer-end profile has a rounded U-shaped notch between the upper block and a separate lower lip with a rounded nose.
+- **05:** a concave channel runs the full length of the wing under the logo face and opens out through the outer end, with the lip's rolled edge below it.
+- **04 and 01:** in front view, the upper block's lower edge overhangs a shadowed band, with the lip behind and below it.
+- **04 (right unit) and 05 (left unit):** both units have the feature, which also supports mirroring it.
+- **Hold chart and depth guide:** the wide, medium and narrow pinch regions match this block / gap / lip arrangement.
+
+**What the model does:** I read the `OuterWingRecessSection` sketch directly. Its coordinates are depth from the back plane (0 is the back, −89 is the wing front) by height:
+- The recess ceiling is at −11 and the floor at −36, so the opening is **25 mm**.
+- The back wall is at −43, so the recess goes **46 mm** in from the front.
+- The lip front is at −77.5, so it sits **11.5 mm** behind the upper block's front.
+- There are two 6 mm rolls at the back and two 2.5 mm rolls at the mouth.
+- The cut is extruded along X from **310 to 401 mm** (`LengthFwd` 91).
+
+These match every estimate stated in the review. The lip keeps the original bottom chamfer, and the 30° top plane in `WingSection2` (89 mm forward, 51.4 mm rise) is unchanged. The side and oblique renders show this topology. Compared with the prior chamfered solid wing, this is a real correction.
+
+## Mirroring
+- `LeftPocketedWing` is a `Part::Mirroring` of `RightWingWithIMRSeam`, across the plane at X = 0.
+- `BodySolid` is a `MultiFuse` of the right and left units, which gives the two separate solids.
+- The recess cut sits upstream of the mirror: RightBlank → RightBlankWithOuterRecess → RightBlankWithCrimper → RightPocketedWing → … → RightWingWithIMRSeam. So the left unit inherits it exactly.
+- Every Sketcher profile is a right-side or unsided object; there are no left sketches. All 10 left contacts are `Part::Mirroring` copies of the right ones.
+- **Source support:** 01 and the depth guide show the two units as mirror images. That covers the wing at the outer end, the MR pockets at the inner end, the IMR large hole at the outer end, and the rail and stepped crimp. The deep ends in the depth guide (L–R on the right board) and the hold chart's "IM Deep" on the outer side are consistent with a mirror.
+- The only thing that isn't mirror-symmetric is the molded TRANGO lettering, which is omitted anyway.
+
+## Estimates and cosmetic limits (none block closing)
+1. **Recess back shape:** 03 and 05 read as a more continuous scooped U. The model has a squarer slot, with about 13 mm of flat back wall between the 6 mm rolls. If anyone wants it closer, the smallest optional change is to raise the back-roll radius in `OuterWingRecessSection` toward 12.5 mm (a full round).
+2. **Outer end of the wing:** 01, 04 and the depth guide show a boxier outer end, with the lip's end stepping in from the block's end. The model's rounded outer outline came from the earlier version and wasn't part of this correction. Because of it, the lip end does sit inboard, but only approximately.
+3. **Hold chart lip position:** the chart's CAD render seems to place the lip further inboard than the photos do. I can't resolve that without measuring, and the photos govern.
+4. **Sketch constraints:** every sketch in this file, including the recess, is "fully constrained" by Block constraints (type 17), not named dimensions. The estimates are fixed coordinates, so changing one means unblocking the sketch. This is an editability note, not a fidelity problem.
+
+## Not verified (unchanged)
+Pinch widths aren't tied to any contact, and there are no pinch contacts among the 20 IDs, so these estimates can't affect contact facts. Current app frames, Swift tests, picking, highlighting, orbit and workout behaviour, and the actual plastic appearance remain unverified, as the packet already says. Closing #15 should be scoped as acceptance of the geometry, not of the app.

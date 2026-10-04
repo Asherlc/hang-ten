@@ -1,0 +1,34 @@
+{
+  "argv": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/solve_threaded_rope.py",
+    "--package",
+    "nature-stone-hanger-mini",
+    "--solid",
+    ".context/placid-badger/mini-review10-correction/native-author/cord-collider/native-collider.json",
+    "--apply",
+    "--report",
+    ".context/placid-badger/mini-review10-correction/root/native-route-final-apply.json"
+  ],
+  "script": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/solve_threaded_rope.py",
+  "arguments": [
+    "--package",
+    "nature-stone-hanger-mini",
+    "--solid",
+    ".context/placid-badger/mini-review10-correction/native-author/cord-collider/native-collider.json",
+    "--apply",
+    "--report",
+    ".context/placid-badger/mini-review10-correction/root/native-route-final-apply.json"
+  ],
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-cord-apply-config",
+    "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-cord-apply-cache",
+    "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-cord-apply-tmp",
+    "FREECAD_USER_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-cord-apply-config",
+    "QT_QPA_PLATFORM": "offscreen",
+    "HANGTEN_CAD_PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311"
+  }
+}

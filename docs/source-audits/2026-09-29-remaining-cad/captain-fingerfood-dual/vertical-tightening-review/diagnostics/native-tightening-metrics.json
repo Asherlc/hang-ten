@@ -1,0 +1,777 @@
+{
+  "diagnosticOnly": true,
+  "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+  "sidecarSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+  "solverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+  "elapsedSeconds": 121.32607325003482,
+  "before": {
+    "height": -0.154356864,
+    "wholeTubeGate": "passed",
+    "strands": {
+      "left-lead": {
+        "lengthMM": 399.999997570735,
+        "maximumLateralOffsetFromMouthMM": 11.217131991679192,
+        "frontEntryDotMM": 22.2,
+        "certifiedClearanceMM": 1.9929140224659108,
+        "turnsOverOneDegree": [
+          {
+            "index": 3,
+            "turnDegrees": 1.496634245110446,
+            "woodClearanceMM": 2.067646797887563,
+            "bodyPointMM": [
+              59.234371,
+              -10.211476000000001,
+              16.547732
+            ]
+          },
+          {
+            "index": 4,
+            "turnDegrees": 1.4961839361854685,
+            "woodClearanceMM": 2.066792592641394,
+            "bodyPointMM": [
+              59.130545,
+              -10.214227,
+              16.596837
+            ]
+          },
+          {
+            "index": 5,
+            "turnDegrees": 1.4964774227635589,
+            "woodClearanceMM": 2.06676096667515,
+            "bodyPointMM": [
+              58.99593,
+              -10.216437,
+              16.656507
+            ]
+          },
+          {
+            "index": 6,
+            "turnDegrees": 1.497509725336491,
+            "woodClearanceMM": 2.0665377767365274,
+            "bodyPointMM": [
+              58.889735,
+              -10.217132,
+              16.700495
+            ]
+          },
+          {
+            "index": 7,
+            "turnDegrees": 1.496563229780114,
+            "woodClearanceMM": 2.0665382945012523,
+            "bodyPointMM": [
+              58.752354,
+              -10.216703,
+              16.753488
+            ]
+          },
+          {
+            "index": 8,
+            "turnDegrees": 1.4965758182398514,
+            "woodClearanceMM": 2.0669767668682995,
+            "bodyPointMM": [
+              58.644146,
+              -10.215338,
+              16.792206
+            ]
+          },
+          {
+            "index": 10,
+            "turnDegrees": 1.4958802637296653,
+            "woodClearanceMM": 2.067036337244589,
+            "bodyPointMM": [
+              58.50433,
+              -10.212272,
+              16.838395
+            ]
+          },
+          {
+            "index": 11,
+            "turnDegrees": 1.4954298914286306,
+            "woodClearanceMM": 2.068074951648157,
+            "bodyPointMM": [
+              58.394475,
+              -10.208854,
+              16.87172
+            ]
+          },
+          {
+            "index": 12,
+            "turnDegrees": 1.4938576662026668,
+            "woodClearanceMM": 2.0682788022834937,
+            "bodyPointMM": [
+              58.252562,
+              -10.203157,
+              16.910992999999998
+            ]
+          },
+          {
+            "index": 13,
+            "turnDegrees": 1.4934455070683805,
+            "woodClearanceMM": 2.0698200997667873,
+            "bodyPointMM": [
+              58.141434,
+              -10.197706,
+              16.93883
+            ]
+          },
+          {
+            "index": 15,
+            "turnDegrees": 1.4904175735957443,
+            "woodClearanceMM": 2.070246580734252,
+            "bodyPointMM": [
+              57.997764000000004,
+              -10.189392,
+              16.971092
+            ]
+          },
+          {
+            "index": 16,
+            "turnDegrees": 1.4907311131605816,
+            "woodClearanceMM": 2.072193874419213,
+            "bodyPointMM": [
+              57.885739,
+              -10.181934,
+              16.993377
+            ]
+          },
+          {
+            "index": 17,
+            "turnDegrees": 1.487048503942895,
+            "woodClearanceMM": 2.0729133690153656,
+            "bodyPointMM": [
+              57.740659,
+              -10.171023,
+              17.018551
+            ]
+          },
+          {
+            "index": 18,
+            "turnDegrees": 1.486540905791361,
+            "woodClearanceMM": 2.075170879492345,
+            "bodyPointMM": [
+              57.628113,
+              -10.161598000000001,
+              17.035247
+            ]
+          },
+          {
+            "index": 19,
+            "turnDegrees": 1.4822903323137728,
+            "woodClearanceMM": 2.0762397508320323,
+            "bodyPointMM": [
+              57.481972999999996,
+              -10.148117,
+              17.053272
+            ]
+          },
+          {
+            "index": 20,
+            "turnDegrees": 1.4822445825583848,
+            "woodClearanceMM": 2.0787210309509025,
+            "bodyPointMM": [
+              57.369276,
+              -10.136771,
+              17.064374
+            ]
+          },
+          {
+            "index": 21,
+            "turnDegrees": 1.4764078028021659,
+            "woodClearanceMM": 2.080180246275989,
+            "bodyPointMM": [
+              57.222428,
+              -10.120752,
+              17.075205999999998
+            ]
+          },
+          {
+            "index": 22,
+            "turnDegrees": 1.476809437668204,
+            "woodClearanceMM": 2.0828064823485697,
+            "bodyPointMM": [
+              57.109944000000006,
+              -10.107542,
+              17.080735
+            ]
+          },
+          {
+            "index": 26,
+            "turnDegrees": 90.07874907927578,
+            "woodClearanceMM": 21.882073347302093,
+            "bodyPointMM": [
+              -26.0,
+              1.0,
+              17.2
+            ]
+          }
+        ],
+        "feasibleLocalCornerCuts": [
+          {
+            "index": 26,
+            "trimMM": 1.0,
+            "shorteningMM": 0.5867586407718934,
+            "certifiedClearanceMM": 20.822223635810797
+          }
+        ]
+      },
+      "right-lead": {
+        "lengthMM": 347.1398921620491,
+        "maximumLateralOffsetFromMouthMM": 1.0000000053609486,
+        "frontEntryDotMM": 22.2,
+        "certifiedClearanceMM": 1.9988142880295392,
+        "turnsOverOneDegree": [
+          {
+            "index": 2,
+            "turnDegrees": 1.4064475199318875,
+            "woodClearanceMM": 2.1999977856915884,
+            "bodyPointMM": [
+              59.2718,
+              0.886402,
+              16.677063999999998
+            ]
+          },
+          {
+            "index": 3,
+            "turnDegrees": 1.4061380844792637,
+            "woodClearanceMM": 2.199997799343943,
+            "bodyPointMM": [
+              59.174187,
+              0.886735,
+              16.723231000000002
+            ]
+          },
+          {
+            "index": 5,
+            "turnDegrees": 1.4067696527735767,
+            "woodClearanceMM": 2.1999980501922805,
+            "bodyPointMM": [
+              59.039572,
+              0.8871950000000001,
+              16.782902
+            ]
+          },
+          {
+            "index": 6,
+            "turnDegrees": 1.4059586077317656,
+            "woodClearanceMM": 2.1999981466086043,
+            "bodyPointMM": [
+              58.939811,
+              0.887536,
+              16.824223999999997
+            ]
+          },
+          {
+            "index": 7,
+            "turnDegrees": 1.4065487192815704,
+            "woodClearanceMM": 2.199998426977341,
+            "bodyPointMM": [
+              58.80243,
+              0.8880049999999999,
+              16.877218
+            ]
+          },
+          {
+            "index": 8,
+            "turnDegrees": 1.4057709049087521,
+            "woodClearanceMM": 2.1999984486087425,
+            "bodyPointMM": [
+              58.700762,
+              0.888352,
+              16.913595
+            ]
+          },
+          {
+            "index": 10,
+            "turnDegrees": 1.4058777883150297,
+            "woodClearanceMM": 2.1999984795282765,
+            "bodyPointMM": [
+              58.560946,
+              0.8888290000000001,
+              16.959784
+            ]
+          },
+          {
+            "index": 11,
+            "turnDegrees": 1.4062980380142083,
+            "woodClearanceMM": 2.1999989981167705,
+            "bodyPointMM": [
+              58.457615999999994,
+              0.8891819999999999,
+              16.991129
+            ]
+          },
+          {
+            "index": 12,
+            "turnDegrees": 1.4062858355186774,
+            "woodClearanceMM": 2.1999991012860574,
+            "bodyPointMM": [
+              58.315701999999995,
+              0.889667,
+              17.030402
+            ]
+          },
+          {
+            "index": 13,
+            "turnDegrees": 1.4062128620470928,
+            "woodClearanceMM": 2.199999386631458,
+            "bodyPointMM": [
+              58.210958,
+              0.890024,
+              17.056638999999997
+            ]
+          },
+          {
+            "index": 15,
+            "turnDegrees": 1.4059776652707576,
+            "woodClearanceMM": 2.199999213578413,
+            "bodyPointMM": [
+              58.067288000000005,
+              0.8905150000000001,
+              17.088901
+            ]
+          },
+          {
+            "index": 16,
+            "turnDegrees": 1.4062505539023684,
+            "woodClearanceMM": 2.1999996358625826,
+            "bodyPointMM": [
+              57.961383,
+              0.890876,
+              17.109967
+            ]
+          },
+          {
+            "index": 17,
+            "turnDegrees": 1.406286425834419,
+            "woodClearanceMM": 2.199999864411739,
+            "bodyPointMM": [
+              57.816303,
+              0.8913719999999999,
+              17.135141
+            ]
+          },
+          {
+            "index": 18,
+            "turnDegrees": 1.4066110561910472,
+            "woodClearanceMM": 2.200000134206744,
+            "bodyPointMM": [
+              57.709492000000004,
+              0.891736,
+              17.150985000000002
+            ]
+          },
+          {
+            "index": 20,
+            "turnDegrees": 1.4060091719353713,
+            "woodClearanceMM": 2.1999994892646284,
+            "bodyPointMM": [
+              57.563351999999995,
+              0.892235,
+              17.169009
+            ]
+          },
+          {
+            "index": 21,
+            "turnDegrees": 1.4062263681632128,
+            "woodClearanceMM": 2.199999708320192,
+            "bodyPointMM": [
+              57.455892,
+              0.892602,
+              17.179593
+            ]
+          },
+          {
+            "index": 23,
+            "turnDegrees": 1.4056415025295421,
+            "woodClearanceMM": 2.1999994759473487,
+            "bodyPointMM": [
+              57.309042999999996,
+              0.893103,
+              17.190424999999998
+            ]
+          },
+          {
+            "index": 24,
+            "turnDegrees": 1.4070696905419942,
+            "woodClearanceMM": 2.2000002123732387,
+            "bodyPointMM": [
+              57.201192999999996,
+              0.8934719999999999,
+              17.195724
+            ]
+          },
+          {
+            "index": 30,
+            "turnDegrees": 90.0,
+            "woodClearanceMM": 21.865271413895446,
+            "bodyPointMM": [
+              26.0,
+              1.0,
+              17.2
+            ]
+          }
+        ],
+        "feasibleLocalCornerCuts": [
+          {
+            "index": 30,
+            "trimMM": 1.0,
+            "shorteningMM": 0.5857864376269044,
+            "certifiedClearanceMM": 20.98714074099965
+          }
+        ]
+      }
+    }
+  },
+  "after": {
+    "height": -0.17420943,
+    "wholeTubeGate": "passed",
+    "strands": {
+      "left-lead": {
+        "lengthMM": 399.99999973447683,
+        "maximumLateralOffsetFromMouthMM": 4.289887990871082,
+        "frontEntryDotMM": 1.6312140000000002,
+        "certifiedClearanceMM": 1.9901019367640458,
+        "turnsOverOneDegree": [
+          {
+            "index": 1,
+            "turnDegrees": 2.920395329255432,
+            "woodClearanceMM": 2.0170238555180102,
+            "bodyPointMM": [
+              59.117434,
+              -3.289888,
+              16.548145
+            ]
+          },
+          {
+            "index": 2,
+            "turnDegrees": 6.862217024741154,
+            "woodClearanceMM": 2.025086061861386,
+            "bodyPointMM": [
+              58.82491,
+              -3.28225,
+              16.681072
+            ]
+          },
+          {
+            "index": 3,
+            "turnDegrees": 9.196121006871312,
+            "woodClearanceMM": 2.0404876045788862,
+            "bodyPointMM": [
+              58.041344,
+              -3.243171,
+              16.931243
+            ]
+          },
+          {
+            "index": 4,
+            "turnDegrees": 8.678950268646009,
+            "woodClearanceMM": 2.0370993392369567,
+            "bodyPointMM": [
+              57.505277,
+              -3.2097160000000002,
+              17.011673000000002
+            ]
+          },
+          {
+            "index": 5,
+            "turnDegrees": 3.011715515503984,
+            "woodClearanceMM": 2.0249974317386155,
+            "bodyPointMM": [
+              53.753122,
+              -3.076114,
+              17.009891999999997
+            ]
+          },
+          {
+            "index": 6,
+            "turnDegrees": 3.011841841173611,
+            "woodClearanceMM": 2.235465546435461,
+            "bodyPointMM": [
+              52.937132,
+              -3.044336,
+              16.966625999999998
+            ]
+          },
+          {
+            "index": 7,
+            "turnDegrees": 4.3146104909711305,
+            "woodClearanceMM": 2.77163958077583,
+            "bodyPointMM": [
+              51.716713,
+              -2.992713,
+              16.837408
+            ]
+          },
+          {
+            "index": 8,
+            "turnDegrees": 2.34437138159941,
+            "woodClearanceMM": 3.843350265181266,
+            "bodyPointMM": [
+              48.884309,
+              -2.85908,
+              16.319831999999998
+            ]
+          },
+          {
+            "index": 9,
+            "turnDegrees": 2.3443913570312995,
+            "woodClearanceMM": 4.783757389897265,
+            "bodyPointMM": [
+              47.013495,
+              -2.765752,
+              15.898257
+            ]
+          },
+          {
+            "index": 10,
+            "turnDegrees": 11.01559701389731,
+            "woodClearanceMM": 2.02350017749275,
+            "bodyPointMM": [
+              -23.747583,
+              0.959275,
+              -3.119166
+            ]
+          },
+          {
+            "index": 11,
+            "turnDegrees": 8.055515296241696,
+            "woodClearanceMM": 2.023504387808842,
+            "bodyPointMM": [
+              -24.024911,
+              0.970263,
+              -3.254635
+            ]
+          },
+          {
+            "index": 12,
+            "turnDegrees": 8.055679005647217,
+            "woodClearanceMM": 2.0207743755008294,
+            "bodyPointMM": [
+              -24.193752,
+              0.9749840000000001,
+              -3.368786
+            ]
+          }
+        ],
+        "feasibleLocalCornerCuts": [
+          {
+            "index": 2,
+            "trimMM": 0.03214003997337305,
+            "shorteningMM": 0.00011522328819795749,
+            "certifiedClearanceMM": 1.9911182158629621
+          },
+          {
+            "index": 3,
+            "trimMM": 0.0543098564179654,
+            "shorteningMM": 0.00034958248030917717,
+            "certifiedClearanceMM": 2.008863787408987
+          },
+          {
+            "index": 4,
+            "trimMM": 0.0543098564179654,
+            "shorteningMM": 0.00031138679098710153,
+            "certifiedClearanceMM": 2.005530431093605
+          },
+          {
+            "index": 7,
+            "trimMM": 0.12283259995677046,
+            "shorteningMM": 0.0001741166370648902,
+            "certifiedClearanceMM": 2.6446724698613338
+          },
+          {
+            "index": 10,
+            "trimMM": 0.0308842040028556,
+            "shorteningMM": 0.0002851758687243567,
+            "certifiedClearanceMM": 1.990035943475157
+          },
+          {
+            "index": 11,
+            "trimMM": 0.020386275266217658,
+            "shorteningMM": 0.00010070254018592717,
+            "certifiedClearanceMM": 2.001842958882266
+          },
+          {
+            "index": 12,
+            "trimMM": 0.020386275266217658,
+            "shorteningMM": 0.00010070663162728525,
+            "certifiedClearanceMM": 1.9991137520082234
+          }
+        ]
+      },
+      "right-lead": {
+        "lengthMM": 352.3283822959691,
+        "maximumLateralOffsetFromMouthMM": 1.0000000054961737,
+        "frontEntryDotMM": 3.607244,
+        "certifiedClearanceMM": 1.9904105817682505,
+        "turnsOverOneDegree": [
+          {
+            "index": 1,
+            "turnDegrees": 7.235656399050747,
+            "woodClearanceMM": 2.021098586318063,
+            "bodyPointMM": [
+              58.956822,
+              0.930941,
+              16.623861
+            ]
+          },
+          {
+            "index": 2,
+            "turnDegrees": 5.053000779455757,
+            "woodClearanceMM": 2.0162357546042635,
+            "bodyPointMM": [
+              58.447212,
+              0.932795,
+              16.802923
+            ]
+          },
+          {
+            "index": 3,
+            "turnDegrees": 6.259918874886764,
+            "woodClearanceMM": 2.027891306330541,
+            "bodyPointMM": [
+              57.857530999999994,
+              0.934957,
+              16.953307000000002
+            ]
+          },
+          {
+            "index": 4,
+            "turnDegrees": 8.006149709785623,
+            "woodClearanceMM": 2.030833799512639,
+            "bodyPointMM": [
+              57.458535,
+              0.936434,
+              17.009716
+            ]
+          },
+          {
+            "index": 5,
+            "turnDegrees": 6.649533455298624,
+            "woodClearanceMM": 2.014881528644304,
+            "bodyPointMM": [
+              53.897134,
+              0.951189,
+              17.012254000000002
+            ]
+          },
+          {
+            "index": 6,
+            "turnDegrees": 6.649285560348641,
+            "woodClearanceMM": 2.0146208441535602,
+            "bodyPointMM": [
+              53.644143,
+              0.952129,
+              16.982943
+            ]
+          },
+          {
+            "index": 7,
+            "turnDegrees": 7.952335371094812,
+            "woodClearanceMM": 2.0197463407331644,
+            "bodyPointMM": [
+              53.363372,
+              0.95305,
+              16.916789
+            ]
+          },
+          {
+            "index": 8,
+            "turnDegrees": 8.052238544893239,
+            "woodClearanceMM": 2.019298682103519,
+            "bodyPointMM": [
+              53.185815999999996,
+              0.95354,
+              16.847883
+            ]
+          },
+          {
+            "index": 9,
+            "turnDegrees": 3.10076722197922,
+            "woodClearanceMM": 2.0870892000739714,
+            "bodyPointMM": [
+              51.664480999999995,
+              0.956874,
+              15.995460999999999
+            ]
+          },
+          {
+            "index": 10,
+            "turnDegrees": 3.3166888903071334,
+            "woodClearanceMM": 2.083938962906407,
+            "bodyPointMM": [
+              50.683919,
+              0.958877,
+              15.374061
+            ]
+          },
+          {
+            "index": 11,
+            "turnDegrees": 3.573339348695997,
+            "woodClearanceMM": 2.420258705606457,
+            "bodyPointMM": [
+              48.122146,
+              0.96367,
+              13.534606
+            ]
+          },
+          {
+            "index": 12,
+            "turnDegrees": 1.4164781967050815,
+            "woodClearanceMM": 5.944801,
+            "bodyPointMM": [
+              32.714736,
+              0.989581,
+              0.944801
+            ]
+          },
+          {
+            "index": 13,
+            "turnDegrees": 1.4164826185475567,
+            "woodClearanceMM": 3.607244,
+            "bodyPointMM": [
+              29.994161,
+              0.993938,
+              -1.3927559999999999
+            ]
+          }
+        ],
+        "feasibleLocalCornerCuts": [
+          {
+            "index": 1,
+            "trimMM": 0.054015644887384334,
+            "shorteningMM": 0.00021529100209195437,
+            "certifiedClearanceMM": 1.9908086744112128
+          },
+          {
+            "index": 2,
+            "trimMM": 0.054015644887384334,
+            "shorteningMM": 0.00010501290367509008,
+            "certifiedClearanceMM": 2.000401635293327
+          },
+          {
+            "index": 3,
+            "trimMM": 0.04029664562044824,
+            "shorteningMM": 0.00012022451795497377,
+            "certifiedClearanceMM": 2.0051053121698064
+          },
+          {
+            "index": 4,
+            "trimMM": 0.04029664562044824,
+            "shorteningMM": 0.0001966230296473326,
+            "certifiedClearanceMM": 2.007832108493586
+          },
+          {
+            "index": 11,
+            "trimMM": 0.3153775288983509,
+            "shorteningMM": 0.00030664707102235397,
+            "certifiedClearanceMM": 2.0954459554925835
+          }
+        ]
+      }
+    }
+  },
+  "fixedHeightShorteningMM": {
+    "left-lead": 19.71104886703362,
+    "right-lead": 14.522581833956217
+  }
+}

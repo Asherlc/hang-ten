@@ -1,0 +1,287 @@
+{
+  "status": "pass-static-archive-metadata-only",
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "beforeSourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+  "fileSHA256": {
+    ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/package/nature-stone-hanger.FCStd": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-author/nature-stone-hanger.FCStd": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6"
+  },
+  "manifestUTF8SHA256": "c6d1fdc96db2d28174209fd247b95fc29f11431ba0d4f2446fe381f3ca49503a",
+  "manifestBytesIdentical": true,
+  "contacts": 8,
+  "contactIDs": [
+    "edge-front-15mm-flat",
+    "edge-front-15mm-incut",
+    "edge-front-20mm-granite",
+    "edge-front-20mm-wood-flat",
+    "edge-reverse-06mm-flat",
+    "edge-reverse-06mm-incut",
+    "edge-reverse-10mm-flat",
+    "edge-reverse-10mm-incut"
+  ],
+  "publishedDepthsMM": {
+    "edge-front-15mm-incut": 15,
+    "edge-front-15mm-flat": 15,
+    "edge-front-20mm-wood-flat": 20,
+    "edge-front-20mm-granite": 20,
+    "edge-reverse-10mm-incut": 10,
+    "edge-reverse-10mm-flat": 10,
+    "edge-reverse-06mm-flat": 6,
+    "edge-reverse-06mm-incut": 6
+  },
+  "allContactFactsUnchanged": true,
+  "allEightSingletonPositionsUnchanged": true,
+  "woodAndGraniteMetadataUnchanged": true,
+  "nativeBodyGeometryChanged": true,
+  "addedNativeObjects": {
+    "CordSeat_Left": "Part::Cut",
+    "RightVerticalCordGroove": "Part::Cylinder",
+    "CordSeat_Right": "Part::Cut",
+    "LeftVerticalCordGroove": "Part::Cylinder"
+  },
+  "verticalSeats": {
+    "left": {
+      "tool": "LeftVerticalCordGroove",
+      "cut": "CordSeat_Left",
+      "radiusMM": 1.75,
+      "toolHeightMM": 110.0,
+      "nativeBaseXYZMM": [
+        -52.5,
+        0,
+        -55
+      ],
+      "nativeAxis": [
+        0,
+        0,
+        1
+      ],
+      "numericProvenance": "Operator display estimate"
+    },
+    "right": {
+      "tool": "RightVerticalCordGroove",
+      "cut": "CordSeat_Right",
+      "radiusMM": 1.75,
+      "toolHeightMM": 110.0,
+      "nativeBaseXYZMM": [
+        52.5,
+        0,
+        -55
+      ],
+      "nativeAxis": [
+        0,
+        0,
+        1
+      ],
+      "numericProvenance": "Operator display estimate"
+    }
+  },
+  "transverseNotchesPreserved": 6,
+  "transverseToolParametersAndCutLinksUnchanged": true,
+  "transverseTools": {
+    "LeftAdjustment0": {
+      "Radius": {
+        "value": "1.7500000000000000"
+      },
+      "Height": {
+        "value": "40.0000000000000000"
+      },
+      "Placement": {
+        "Px": "-52.5000000000000000",
+        "Py": "-20.0000000000000000",
+        "Pz": "24.0000000000000000",
+        "Q0": "-0.7071067811865475",
+        "Q1": "0.0000000000000000",
+        "Q2": "0.0000000000000000",
+        "Q3": "0.7071067811865476",
+        "A": "1.5707963267948966",
+        "Ox": "-1.0000000000000000",
+        "Oy": "0.0000000000000000",
+        "Oz": "0.0000000000000000"
+      }
+    },
+    "LeftAdjustment1": {
+      "Radius": {
+        "value": "1.7500000000000000"
+      },
+      "Height": {
+        "value": "40.0000000000000000"
+      },
+      "Placement": {
+        "Px": "-52.5000000000000000",
+        "Py": "-20.0000000000000000",
+        "Pz": "-2.3999999999999999",
+        "Q0": "-0.7071067811865475",
+        "Q1": "0.0000000000000000",
+        "Q2": "0.0000000000000000",
+        "Q3": "0.7071067811865476",
+        "A": "1.5707963267948966",
+        "Ox": "-1.0000000000000000",
+        "Oy": "0.0000000000000000",
+        "Oz": "0.0000000000000000"
+      }
+    },
+    "LeftAdjustment2": {
+      "Radius": {
+        "value": "1.7500000000000000"
+      },
+      "Height": {
+        "value": "40.0000000000000000"
+      },
+      "Placement": {
+        "Px": "-52.5000000000000000",
+        "Py": "-20.0000000000000000",
+        "Pz": "-22.8000000000000007",
+        "Q0": "-0.7071067811865475",
+        "Q1": "0.0000000000000000",
+        "Q2": "0.0000000000000000",
+        "Q3": "0.7071067811865476",
+        "A": "1.5707963267948966",
+        "Ox": "-1.0000000000000000",
+        "Oy": "0.0000000000000000",
+        "Oz": "0.0000000000000000"
+      }
+    },
+    "RightAdjustment0": {
+      "Radius": {
+        "value": "1.7500000000000000"
+      },
+      "Height": {
+        "value": "40.0000000000000000"
+      },
+      "Placement": {
+        "Px": "52.5000000000000000",
+        "Py": "-20.0000000000000000",
+        "Pz": "24.0000000000000000",
+        "Q0": "-0.7071067811865475",
+        "Q1": "0.0000000000000000",
+        "Q2": "0.0000000000000000",
+        "Q3": "0.7071067811865476",
+        "A": "1.5707963267948966",
+        "Ox": "-1.0000000000000000",
+        "Oy": "0.0000000000000000",
+        "Oz": "0.0000000000000000"
+      }
+    },
+    "RightAdjustment1": {
+      "Radius": {
+        "value": "1.7500000000000000"
+      },
+      "Height": {
+        "value": "40.0000000000000000"
+      },
+      "Placement": {
+        "Px": "52.5000000000000000",
+        "Py": "-20.0000000000000000",
+        "Pz": "-2.3999999999999999",
+        "Q0": "-0.7071067811865475",
+        "Q1": "0.0000000000000000",
+        "Q2": "0.0000000000000000",
+        "Q3": "0.7071067811865476",
+        "A": "1.5707963267948966",
+        "Ox": "-1.0000000000000000",
+        "Oy": "0.0000000000000000",
+        "Oz": "0.0000000000000000"
+      }
+    },
+    "RightAdjustment2": {
+      "Radius": {
+        "value": "1.7500000000000000"
+      },
+      "Height": {
+        "value": "40.0000000000000000"
+      },
+      "Placement": {
+        "Px": "52.5000000000000000",
+        "Py": "-20.0000000000000000",
+        "Pz": "-22.8000000000000007",
+        "Q0": "-0.7071067811865475",
+        "Q1": "0.0000000000000000",
+        "Q2": "0.0000000000000000",
+        "Q3": "0.7071067811865476",
+        "A": "1.5707963267948966",
+        "Ox": "-1.0000000000000000",
+        "Oy": "0.0000000000000000",
+        "Oz": "0.0000000000000000"
+      }
+    }
+  },
+  "archiveShapeMembers": {
+    "before": 174,
+    "after": 178,
+    "new": [
+      "CordSeat_Left.Shape.brp",
+      "CordSeat_Right.Shape.brp",
+      "LeftVerticalCordGroove.Shape.brp",
+      "RightVerticalCordGroove.Shape.brp"
+    ],
+    "changedCommon": [
+      "Blank.Shape.brp",
+      "BodySkin.Shape.brp",
+      "Cavity0.Shape.brp",
+      "Cavity1.Shape.brp",
+      "Cavity2.Shape.brp",
+      "Cavity3.Shape.brp",
+      "FrontFifteenVoid.Shape.brp",
+      "FrontTwentyVoid.Shape.brp",
+      "Groove_LeftAdjustment0.Shape.brp",
+      "Groove_LeftAdjustment1.Shape.brp",
+      "Groove_LeftAdjustment2.Shape.brp",
+      "Groove_RightAdjustment0.Shape.brp",
+      "Groove_RightAdjustment1.Shape.brp",
+      "Groove_RightAdjustment2.Shape.brp",
+      "InsertUnion.Shape.brp",
+      "LeftAdjustment0.Shape.brp",
+      "LeftAdjustment1.Shape.brp",
+      "LeftAdjustment2.Shape.brp",
+      "LeftVisibleMouth.Shape.brp",
+      "OuterRoundover.Shape.brp",
+      "Port_LeftVisibleMouth.Shape.brp",
+      "Port_RightVisibleMouth.Shape.brp",
+      "Region_edge_front_15mm_flat.Shape.brp",
+      "Region_edge_front_15mm_incut.Shape.brp",
+      "Region_edge_front_20mm_granite.Shape.brp",
+      "Region_edge_front_20mm_wood_flat.Shape.brp",
+      "Region_edge_reverse_06mm_flat.Shape.brp",
+      "Region_edge_reverse_06mm_incut.Shape.brp",
+      "Region_edge_reverse_10mm_flat.Shape.brp",
+      "Region_edge_reverse_10mm_incut.Shape.brp",
+      "ReverseSixVoid.Shape.brp",
+      "ReverseTenVoid.Shape.brp",
+      "RightAdjustment0.Shape.brp",
+      "RightAdjustment1.Shape.brp",
+      "RightAdjustment2.Shape.brp",
+      "RightVisibleMouth.Shape.brp",
+      "StoneBearing.Shape.brp",
+      "StoneFront.Shape.brp",
+      "StoneRoundover.Shape.brp",
+      "StoneSkin.Shape.brp",
+      "StoneSurfaces.Shape.brp",
+      "edge_front_15mm_flatSurface.Shape.brp",
+      "edge_front_15mm_incutSurface.Shape.brp",
+      "edge_front_20mm_wood_flatSurface.Shape.brp",
+      "edge_reverse_06mm_flatSurface.Shape.brp",
+      "edge_reverse_06mm_incutSurface.Shape.brp",
+      "edge_reverse_10mm_flatSurface.Shape.brp",
+      "edge_reverse_10mm_incutSurface.Shape.brp"
+    ],
+    "contactRegionBytesEqual": {
+      "Region_edge_front_15mm_flat.Shape.brp": false,
+      "Region_edge_front_15mm_incut.Shape.brp": false,
+      "Region_edge_front_20mm_granite.Shape.brp": false,
+      "Region_edge_front_20mm_wood_flat.Shape.brp": false,
+      "Region_edge_reverse_06mm_flat.Shape.brp": false,
+      "Region_edge_reverse_06mm_incut.Shape.brp": false,
+      "Region_edge_reverse_10mm_flat.Shape.brp": false,
+      "Region_edge_reverse_10mm_incut.Shape.brp": false
+    }
+  },
+  "limits": [
+    "Static native ZIP/XML and complete manifest comparison only; no FreeCAD, solver, shape judgement or runtime resources were launched.",
+    "The two vertical tool definitions and retained transverse definitions are verified. Their actual native Boolean validity and contact surface equivalence require the separate fresh source-bound native reports.",
+    "Contact BRep archive bytes differ after recompute; no contact BRep byte preservation is claimed.",
+    "No cord, exported mesh, posed bearing, app appearance, test completion or human acceptance gate is supplied by this metadata audit."
+  ],
+  "blockingFindings": [],
+  "humanAcceptance": "pending",
+  "canonicalMutation": false
+}

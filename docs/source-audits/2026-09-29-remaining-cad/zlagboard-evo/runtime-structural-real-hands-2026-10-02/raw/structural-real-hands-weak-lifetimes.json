@@ -1,0 +1,1149 @@
+{
+  "observations": [
+    {
+      "sequence": 5,
+      "epoch": 1790994035.68006,
+      "event": "highlight-before",
+      "wrapperAlive": true,
+      "rootAlive": true,
+      "cameraAlive": true
+    },
+    {
+      "sequence": 6,
+      "epoch": 1790994035.681251,
+      "event": "highlight-after",
+      "wrapperAlive": true,
+      "rootAlive": true,
+      "cameraAlive": true
+    },
+    {
+      "sequence": 7,
+      "epoch": 1790994035.683177,
+      "event": "view-make",
+      "wrapperAlive": true,
+      "rootAlive": true,
+      "cameraAlive": true
+    },
+    {
+      "sequence": 9,
+      "epoch": 1790994035.885401,
+      "event": "detach-trial-before",
+      "wrapperAlive": true,
+      "rootAlive": true,
+      "cameraAlive": true
+    },
+    {
+      "sequence": 10,
+      "epoch": 1790994035.885843,
+      "event": "detach-trial-after",
+      "wrapperAlive": true,
+      "rootAlive": true,
+      "cameraAlive": true
+    },
+    {
+      "sequence": 11,
+      "epoch": 1790994035.886211,
+      "event": "view-disappear",
+      "wrapperAlive": true,
+      "rootAlive": true,
+      "cameraAlive": true
+    },
+    {
+      "sequence": 19,
+      "epoch": 1790994037.2748408,
+      "event": "highlight-before",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 20,
+      "epoch": 1790994037.276195,
+      "event": "highlight-after",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 21,
+      "epoch": 1790994037.277495,
+      "event": "view-make",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 22,
+      "epoch": 1790994038.3316832,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 23,
+      "epoch": 1790994039.404937,
+      "event": "highlight-before",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 24,
+      "epoch": 1790994039.417362,
+      "event": "highlight-after",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 25,
+      "epoch": 1790994039.418319,
+      "event": "view-update",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 31,
+      "epoch": 1790994039.49724,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 32,
+      "epoch": 1790994040.509625,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 33,
+      "epoch": 1790994042.46424,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 34,
+      "epoch": 1790994043.489075,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 35,
+      "epoch": 1790994044.495469,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 36,
+      "epoch": 1790994045.5319471,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 37,
+      "epoch": 1790994046.503272,
+      "event": "highlight-before",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 38,
+      "epoch": 1790994046.514787,
+      "event": "highlight-after",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 39,
+      "epoch": 1790994046.515784,
+      "event": "view-update",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 41,
+      "epoch": 1790994046.535362,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 42,
+      "epoch": 1790994048.5212579,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 43,
+      "epoch": 1790994049.527138,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 44,
+      "epoch": 1790994051.534072,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 45,
+      "epoch": 1790994052.539116,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 46,
+      "epoch": 1790994053.543072,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 47,
+      "epoch": 1790994054.557442,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 48,
+      "epoch": 1790994055.563298,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 49,
+      "epoch": 1790994056.5706348,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 50,
+      "epoch": 1790994057.579307,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 51,
+      "epoch": 1790994059.580814,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 52,
+      "epoch": 1790994061.588122,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 53,
+      "epoch": 1790994062.594472,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 54,
+      "epoch": 1790994064.601183,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 55,
+      "epoch": 1790994065.6142669,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 56,
+      "epoch": 1790994066.624141,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 57,
+      "epoch": 1790994067.631769,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 58,
+      "epoch": 1790994068.6465,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 59,
+      "epoch": 1790994070.650158,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 60,
+      "epoch": 1790994072.6484451,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 61,
+      "epoch": 1790994073.650838,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 62,
+      "epoch": 1790994074.659202,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 63,
+      "epoch": 1790994076.66677,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 64,
+      "epoch": 1790994077.6707911,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 65,
+      "epoch": 1790994078.676789,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 66,
+      "epoch": 1790994079.679106,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 67,
+      "epoch": 1790994080.682059,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 68,
+      "epoch": 1790994081.689091,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 69,
+      "epoch": 1790994082.693207,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 70,
+      "epoch": 1790994083.696228,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 71,
+      "epoch": 1790994084.700813,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 72,
+      "epoch": 1790994085.7070951,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 73,
+      "epoch": 1790994086.7089791,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 74,
+      "epoch": 1790994087.719891,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 75,
+      "epoch": 1790994089.7285628,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 76,
+      "epoch": 1790994091.736239,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 77,
+      "epoch": 1790994092.739542,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 78,
+      "epoch": 1790994093.742293,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 79,
+      "epoch": 1790994094.746605,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 80,
+      "epoch": 1790994096.756294,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 81,
+      "epoch": 1790994097.76161,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 82,
+      "epoch": 1790994099.7666721,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 83,
+      "epoch": 1790994100.774737,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 84,
+      "epoch": 1790994101.779398,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 85,
+      "epoch": 1790994103.790677,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 86,
+      "epoch": 1790994104.834688,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 87,
+      "epoch": 1790994105.901329,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 88,
+      "epoch": 1790994106.934269,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 89,
+      "epoch": 1790994108.618857,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 90,
+      "epoch": 1790994109.630412,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 91,
+      "epoch": 1790994110.636132,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 92,
+      "epoch": 1790994112.645872,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 93,
+      "epoch": 1790994113.6784592,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 94,
+      "epoch": 1790994114.747908,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 95,
+      "epoch": 1790994115.811064,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 96,
+      "epoch": 1790994116.8797479,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 97,
+      "epoch": 1790994117.8954911,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 98,
+      "epoch": 1790994118.946769,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 99,
+      "epoch": 1790994120.0042958,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 100,
+      "epoch": 1790994121.7627969,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 101,
+      "epoch": 1790994122.831174,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 102,
+      "epoch": 1790994123.899934,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 103,
+      "epoch": 1790994124.9680939,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 104,
+      "epoch": 1790994126.0299659,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 105,
+      "epoch": 1790994127.099894,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 106,
+      "epoch": 1790994128.149344,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 107,
+      "epoch": 1790994129.21834,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 108,
+      "epoch": 1790994130.286045,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 109,
+      "epoch": 1790994131.3129768,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 110,
+      "epoch": 1790994132.377746,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 111,
+      "epoch": 1790994133.445386,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 112,
+      "epoch": 1790994134.4816499,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 113,
+      "epoch": 1790994135.496162,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 114,
+      "epoch": 1790994136.4993448,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 115,
+      "epoch": 1790994137.564719,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 116,
+      "epoch": 1790994138.6189451,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 117,
+      "epoch": 1790994139.682955,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 118,
+      "epoch": 1790994140.75352,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 119,
+      "epoch": 1790994141.809752,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 120,
+      "epoch": 1790994142.873002,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 121,
+      "epoch": 1790994143.9308748,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 122,
+      "epoch": 1790994144.9978871,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 123,
+      "epoch": 1790994146.063538,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 124,
+      "epoch": 1790994147.131643,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 125,
+      "epoch": 1790994148.1952949,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 126,
+      "epoch": 1790994149.250716,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 127,
+      "epoch": 1790994150.280511,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 128,
+      "epoch": 1790994151.348271,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 129,
+      "epoch": 1790994152.3774471,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 130,
+      "epoch": 1790994153.4427938,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 131,
+      "epoch": 1790994154.499088,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 132,
+      "epoch": 1790994155.847805,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 133,
+      "epoch": 1790994156.863916,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 134,
+      "epoch": 1790994157.876035,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 135,
+      "epoch": 1790994159.8736482,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 136,
+      "epoch": 1790994160.87857,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 137,
+      "epoch": 1790994161.8818321,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 138,
+      "epoch": 1790994162.883862,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 139,
+      "epoch": 1790994163.890562,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 140,
+      "epoch": 1790994165.894228,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 141,
+      "epoch": 1790994166.900992,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 142,
+      "epoch": 1790994167.904725,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 143,
+      "epoch": 1790994168.908762,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 144,
+      "epoch": 1790994169.917472,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 145,
+      "epoch": 1790994170.9207559,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 146,
+      "epoch": 1790994171.924047,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 147,
+      "epoch": 1790994173.932574,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 148,
+      "epoch": 1790994174.935186,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 149,
+      "epoch": 1790994175.939137,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 150,
+      "epoch": 1790994176.946244,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 151,
+      "epoch": 1790994178.951263,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 152,
+      "epoch": 1790994179.9589748,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 153,
+      "epoch": 1790994180.963269,
+      "event": "sample",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 154,
+      "epoch": 1790994180.9639158,
+      "event": "sample-end",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 155,
+      "epoch": 1790994226.3942308,
+      "event": "highlight-before",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 156,
+      "epoch": 1790994226.404757,
+      "event": "highlight-after",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 157,
+      "epoch": 1790994226.405976,
+      "event": "view-update",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 159,
+      "epoch": 1790994233.386389,
+      "event": "highlight-before",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 160,
+      "epoch": 1790994233.393721,
+      "event": "highlight-after",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    },
+    {
+      "sequence": 161,
+      "epoch": 1790994233.394559,
+      "event": "view-update",
+      "wrapperAlive": false,
+      "rootAlive": false,
+      "cameraAlive": false
+    }
+  ],
+  "firstObservedAllDead": {
+    "sequence": 19,
+    "epoch": 1790994037.2748408,
+    "event": "highlight-before",
+    "wrapperAlive": false,
+    "rootAlive": false,
+    "cameraAlive": false
+  },
+  "scope": "Point observations only, not exact deallocation or backing renderer lifetime."
+}

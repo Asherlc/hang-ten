@@ -1,0 +1,51 @@
+{
+  "slug": "metolius-contact",
+  "sourceSHA256": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
+  "validSolidCount": 1,
+  "fullyConstrainedSketchCount": 135,
+  "contactCount": 33,
+  "publishedDepthsMm": {
+    "pocket-4-left": 29.999999999999996,
+    "pocket-5-left": 40.0,
+    "pocket-6-left": 20.0,
+    "pocket-7-left": 30.000000000000004,
+    "pocket-8-left": 31.999999999999993,
+    "pocket-9-left": 20.000000000000004,
+    "pocket-10-left": 25.000000000000004,
+    "pocket-11-left": 25.0,
+    "pocket-12-left": 12.0,
+    "pocket-13-left": 16.999999999999996,
+    "pocket-14-left": 17.0,
+    "edge-16-center": 15.000000100000001,
+    "edge-17-center": 34.99999999999999,
+    "edge-18-center": 28.000000000000004,
+    "edge-19-center": 23.000000000000004,
+    "pocket-14-right": 17.0,
+    "pocket-13-right": 17.0,
+    "pocket-12-right": 12.0,
+    "pocket-11-right": 25.0,
+    "pocket-10-right": 25.000000000000004,
+    "pocket-9-right": 20.0,
+    "pocket-8-right": 32.0,
+    "pocket-7-right": 30.000000000000004,
+    "pocket-6-right": 20.000000000000004,
+    "pocket-5-right": 40.0,
+    "pocket-4-right": 29.999999999999996
+  },
+  "nativeEdit": {
+    "parameter": "Depth_edge_16_center",
+    "before": 15.0,
+    "after": 17.0,
+    "changedContacts": [
+      "edge-16-center"
+    ],
+    "bodyVolumeChanged": true,
+    "restored": true
+  },
+  "allContactsOnBody": true,
+  "noRearContactFaces": true,
+  "noContactSurfaceOverlap": true,
+  "potentialOverlapPairsChecked": 26,
+  "allObjectsRecomputed": true,
+  "savedSourceUnchanged": true
+}

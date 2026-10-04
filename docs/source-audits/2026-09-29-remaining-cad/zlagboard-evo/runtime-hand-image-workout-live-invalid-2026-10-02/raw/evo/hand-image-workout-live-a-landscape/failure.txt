@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-runtime-prep/capture.py", line 179, in <module>
+    write('missing-initial-sequence.json',dict(reason='No eligible firstHang within30s of recorded appearance',appearance=appearance,observedEpoch=observed));raise AssertionError('Missing initial sequence; stop without retry')
+                                                                                                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Missing initial sequence; stop without retry

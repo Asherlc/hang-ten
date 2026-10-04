@@ -1,0 +1,18 @@
+{
+  "status": "pass-with-retained-grazing-probe-disposition",
+  "blockingFindings": [],
+  "modelSHA256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+  "sourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+  "originalStrictFindings": [
+    "finite exported roof step 63/-65: -0.016663983510448413"
+  ],
+  "disposition": "The 0.01/0.001mm coarse linear extrapolation crosses changing triangle slopes at the grazing65mm support lip. Actual mesh probes at epsilon0.0001/0.00001/0.000001mm shrink height difference0.000823628/0.000082363/0.000008236mm. InteriorY\u221264.9 is also continuous. No finite roof step is supported.",
+  "maximumSampledNativeDeviationMM": 0.18996232930578572,
+  "unchangedTessellationDeflectionMM": 0.28,
+  "limits": "Sampled exported geometry continuity, not global G1/G2 or factory surface certification.",
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/export-continuity.json": "29eb3335162e34fcd4dd20a68db6e2f1e2f028ca3d9c27dab689d5eb697ca721",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/export-continuity-interior.json": "8f9e138d8554ccc309c62820e3822e16f9af0f4ab66ab703d0d065edd1228388",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/check_export_continuity.py": "7d86c12e623ee56b1eb211ea871f0489beb8c268ce4371b5ded53868edfce62e"
+  }
+}

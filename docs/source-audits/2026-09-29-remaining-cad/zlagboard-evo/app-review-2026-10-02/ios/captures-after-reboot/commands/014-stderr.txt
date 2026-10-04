@@ -1,0 +1,3 @@
+Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: CCA15FC7-517F-4CAF-8F9C-2511F40FB5CC (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/captures-after-reboot/top-jug-right.png

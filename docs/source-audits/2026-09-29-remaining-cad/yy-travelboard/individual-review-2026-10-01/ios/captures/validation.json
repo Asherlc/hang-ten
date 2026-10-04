@@ -1,0 +1,36 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "simulator": "218DD2D3-AD28-4F6A-AF3F-C893CB3FDF88",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS26.5",
+  "boardID": "yy.travelboard",
+  "sourceSHA256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+  "modelSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+  "descriptorSHA256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+  "suspensionSHA256": "7af15a7f897baa87a4da89fcf62c8123dbb7544d8c3cb0bced71474bf9d044e4",
+  "builtBinarySHA256": "0c00d04b0deba1a425e0e306f1e833742ac5db15dba314870b9eb7596f6770bd",
+  "surfaceFinish": "wood",
+  "checks": [],
+  "commands": [
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "218DD2D3-AD28-4F6A-AF3F-C893CB3FDF88",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "218DD2D3-AD28-4F6A-AF3F-C893CB3FDF88"
+    ]
+  ],
+  "humanGeometryAcceptance": "pending user review #19",
+  "limits": "Full-frame fresh app screenshots and AX identity/orbit probes; no factory geometry or ergonomic certification."
+}

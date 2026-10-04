@@ -1,0 +1,64 @@
+{
+  "source": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/build-placid-badger-cad-second-half-terminal-green.xcresult",
+  "archive": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-terminal-green/build-placid-badger-cad-second-half-terminal-green.xcresult.zip",
+  "sha256": "b43fc56c617894fab99b101ad1448a7053d2e3c62d63eec5bad29ff9b4835e3b",
+  "members": [
+    {
+      "path": "Data/",
+      "kind": "directory",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "externalAttributes": 1106051088
+    },
+    {
+      "path": "Data/data.0~1hROXreFRn17anYWJdTc58utR-arGKC0qGAb-cnDjun4m0xoGM4JPjibJnl4Co1TNpJCcltRao3zKM0ANJBFgg==",
+      "kind": "file",
+      "bytes": 314,
+      "sha256": "22ed1e5b15569db8d942c653ed1c47553c8d87fab68ca93120b93753cebf563d",
+      "externalAttributes": 2175008768
+    },
+    {
+      "path": "Data/data.0~eTizYnGiOgedy2Ltmtlu7vkXgfJteryISkCEwGa7fC5vMjK1uXCbSMBcJKHGazsCCXhbHIpDi5ixSjEghjzacA==",
+      "kind": "file",
+      "bytes": 35524,
+      "sha256": "3af84665425ba75f2597e22d36667fe2653fc8cf232b86a7207f30298b544d89",
+      "externalAttributes": 2175008768
+    },
+    {
+      "path": "Data/data.0~vgGU-MKPgVRcvZEDRV0fQp4rOZ3Glgiaf2zuAKWED9J5TkNgZ66EW7vvKipthnRDms76NrOVwUdRNEpqoURDSQ==",
+      "kind": "file",
+      "bytes": 2612,
+      "sha256": "32dc9c834382568c922eff9eacce89b19b7e3c93a903d0cfc23f340beb656ab3",
+      "externalAttributes": 2175008768
+    },
+    {
+      "path": "Data/refs.0~1hROXreFRn17anYWJdTc58utR-arGKC0qGAb-cnDjun4m0xoGM4JPjibJnl4Co1TNpJCcltRao3zKM0ANJBFgg==",
+      "kind": "file",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "externalAttributes": 2175008768
+    },
+    {
+      "path": "Data/refs.0~eTizYnGiOgedy2Ltmtlu7vkXgfJteryISkCEwGa7fC5vMjK1uXCbSMBcJKHGazsCCXhbHIpDi5ixSjEghjzacA==",
+      "kind": "file",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "externalAttributes": 2175008768
+    },
+    {
+      "path": "Data/refs.0~vgGU-MKPgVRcvZEDRV0fQp4rOZ3Glgiaf2zuAKWED9J5TkNgZ66EW7vvKipthnRDms76NrOVwUdRNEpqoURDSQ==",
+      "kind": "file",
+      "bytes": 133,
+      "sha256": "44b4c6378e896c7227d73d57ba77e9f0399934d0f5da78bd89a9aa07f681197d",
+      "externalAttributes": 2175008768
+    },
+    {
+      "path": "Info.plist",
+      "kind": "file",
+      "bytes": 776,
+      "sha256": "92a33c9f32bcbc3472870b67dae0db51644553b39ad382d2cc9dcc726a8df8f4",
+      "externalAttributes": 2175008768
+    }
+  ],
+  "verified": true
+}

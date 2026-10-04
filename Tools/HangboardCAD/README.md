@@ -290,6 +290,18 @@ For a contact that declares `HangTenGripDepthMm`, optional string property
 Omitting it retains the original Y-axis behavior. The compiler validates the
 declared depth against that axis's exported contact bounds.
 
+A schema-v1 contact mesh may also declare `AdditionalContactIDs` as a nonempty,
+sorted, unique `App::PropertyStringList` of other logical contacts that use that
+same physical surface. The primary `ContactID` remains the picking identity;
+the descriptor includes the mesh in every declared contact's `nodeIDs`, and the
+app highlights it when any membership is selected. The surface is exported once.
+Secondary IDs must belong to the board and must not repeat the primary ID.
+Shared contacts derive their bounds from all member meshes and cannot supply an
+outline. Their published depth is measured across those members using the
+primary contact object's axis or witness pair; unrelated contacts retain their
+individual depth checks. For example, The NUG's upper jug surface also belongs
+to its 60 mm pinch, measured between the upper and lower surfaces along native Z.
+
 Coordinate conversion is applied exactly once: native millimetres
 (+X right, +Z up, front -Y) to runtime metres (+X right, +Y up, front +Z) as
 `(x, y, z) -> (x/1000, z/1000, -y/1000)`.
@@ -441,6 +453,26 @@ existing sources keep reproducing their committed bytes. `metolius-light-rail-2`
 `the-hangboard`, `metolius-climbers-edge`, `frictitious-megalith` and
 `metolius-foundry` set it.
 
+`HangTenUVNodeSurfaceNormals` is a separate optional `App::PropertyBool`,
+defaulting to false and requiring `HangTenSurfaceNormals` to be true. It speeds
+up analytic normal evaluation by using cached native face UV nodes only when
+an exported triangle exactly matches a tessellated facet of one unique face
+and every vertex has one UV evaluation within 0.00002 mm. UV-node order is
+not assumed to match tessellation vertex order. Missing APIs, ambiguous owners,
+unmatched/ambiguous UV vertices, or vertices at internal non-smooth B-spline
+knots retain the original surface-inverse
+evaluator. Winding still determines normal sign; positions, triangle order,
+node identity, material policy and pinned tessellation settings are unchanged.
+For an unambiguous native facet, its exact owning face takes precedence over
+centroid-distance ownership. Near adjacent surfaces, the legacy heuristic can
+select a different face even though the facet belongs uniquely to the first;
+opt-in normals can therefore differ from legacy normals in that case. Validate
+such differences against the actual owner's analytic normal and exact facet
+identity, rather than treating legacy agreement as the sole correctness test.
+The internal non-smooth-knot fallback remains necessary when derivative side
+is ambiguous on the same face. Sources without this flag use the original code
+path and retain their bytes.
+
 ## Published depth deeper than the board
 
 The published-depth gate compares a region's extent on its selected native
@@ -531,6 +563,29 @@ Not verified in the app: suspension and cord clearance, accessibility, and
 performance. Those remain open.
 
 ## Tests
+
+Native packages can declare several model presentations when a real accessory
+changes the solid. Tag each bound feature with `HangTenPresentationID`, keep
+each presentation's asset/descriptor names unique in the embedded manifest,
+and compile it with `--presentation <id>`. Untagged legacy features belong to
+the document's default presentation. `prepare_assets.py` covers every declared asset pair. The former global delivery
+lock and reproduction checker were retired on Main; prior exact checks remain
+historical evidence. Plateau uses this for
+its 18/15/10 mm spacer configurations while retaining one physical contact ID;
+position `effectiveDepths` records each actual configured depth.
+
+For a stepped lip where an axis-aligned region extent is not grip depth, a
+contact feature may carry both native-millimetre vector properties
+`HangTenGripDepthStart` and `HangTenGripDepthEnd`. Both must lie on its native
+contact shape within 0.25 mm; their distance is the depth witness. Audit the
+specific lip and floor used, and bind the witnesses to native dimensions when
+they can change. An incomplete pair fails compilation.
+
+`HangTenUseBodyTriangles = true` is available only on a native
+`PartDesign::SubShapeBinder` contact. It exports that contact's already-validated
+assigned body triangles to share an exact seam, rather than independently
+tessellating the same curved face. It does not bypass native source, depth,
+face-membership, contact-partition or material validation.
 
     python -m pytest Tools/HangboardCAD/tests -q   # in a venv with Tools/HangboardPackages[dev], numpy, usd-core==26.8
 

@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/vertical-groove-correction/run_final_routes.py", line 7, in <module>
+    import trimesh
+ModuleNotFoundError: No module named 'trimesh'

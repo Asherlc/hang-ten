@@ -1,0 +1,6 @@
+{
+  "owner": "placid-badger",
+  "productionAndTestScopePassed": true,
+  "rawEvidenceWhitespacePreserved": true,
+  "note": "The full retained raw Xcode/log evidence includes native trailing spaces. Those immutable evidence bytes are preserved; the production/test/tooling diff check passes."
+}

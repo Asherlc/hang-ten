@@ -1,0 +1,769 @@
+{
+  "frozenAtEpoch": 1790998569.205697,
+  "fileCount": 152,
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-validate.py",
+      "sha256": "9c9e21bdfe17dfbe2e2ad8a7f03a575751ac1d6c6397ce3d8630b6dc21b7417f",
+      "bytes": 1069
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/check-parity.py",
+      "sha256": "68cc711f10960d99a7c19f124f3856b16bbcdd650171038db91c7d4fd4b2f062",
+      "bytes": 1192
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/design.md",
+      "sha256": "a4ef6a96bccd13889add5d7fedbb3e93ab04554011883644d6e27e6aa9f1a322",
+      "bytes": 1128
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/prestart-hand-suppression.patch",
+      "sha256": "904dc50c002eb69c03aafcfac197b81036f92f10dde18d32d9bc2bb2e7c72829",
+      "bytes": 4602
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/report.json",
+      "sha256": "e2e3bf0f89d01ba14082f3656e593b7372cffc9cf49cc1d03287e262addd7cb7",
+      "bytes": 7080
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/root-application.json",
+      "sha256": "461f990f6f5cb00c14073ab0b52aded4b39c0488ea30a8bf200eeb029a3a0d5d",
+      "bytes": 936
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/action/capture-vs-counter.patch",
+      "sha256": "7e8fc6482008849a76fdf99972711325de29a62454e9a23f43eab080e015f90b",
+      "bytes": 6684
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/action/capture.py",
+      "sha256": "38af1958b95229f33e5c77715b076153585b990b44a048ca5e011f3899466353",
+      "bytes": 13177
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/action/check-constructors.py",
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+      "bytes": 2828
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/action/check-cpu-semantics.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "bytes": 3958
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/action/check-frames.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "bytes": 3729
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/action/check-navigation.py",
+      "sha256": "0ee28cbbd99bb81457ee776337925f802cee1a404cb6522a1c434aaf39101c22",
+      "bytes": 4394
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/action/check-ownership.py",
+      "sha256": "0a0e562903606f406d229483ed8b4475b8e4186525fe542ec6e3239a32658d1d",
+      "bytes": 10049
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/action/check-prestart-hands.py",
+      "sha256": "8f780e261d5fe843676805afb4c42968fdf2f211842fb8a55dba1c9447742f40",
+      "bytes": 8320
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/action/check-real-hands.py",
+      "sha256": "c2d6a88a244290229a24d262d3b710d03bf0d649125d5749bbca0126b389c1f1",
+      "bytes": 5026
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/action/check-sync-counters.py",
+      "sha256": "feab2da3f76303f00d4e4f96a998eca8a4d7bcd10ec292065fae31a23e477ba8",
+      "bytes": 5344
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/action/check-weak-hand-census.py",
+      "sha256": "08692559d22fa395a9451a901793d04381ab9c0b10a88af560696973cdee501a",
+      "bytes": 6589
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/action/compare.py",
+      "sha256": "b5858d64deba556c9a1a86b20c0cdc2ad02d9c98717739ed9dc051154fad2556",
+      "bytes": 2947
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/control/capture-vs-counter.patch",
+      "sha256": "749ac2a5aaf4c3af26664f04923b6e7405fb886cf30db15dc773ba2813cdd6d5",
+      "bytes": 5893
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/control/capture.py",
+      "sha256": "bb309ac22e36e15c142078c78245a7f47a8e2667f84df45ae4593e9208321f50",
+      "bytes": 12635
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/control/check-constructors.py",
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+      "bytes": 2828
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/control/check-cpu-semantics.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "bytes": 3958
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/control/check-frames.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "bytes": 3729
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/control/check-navigation.py",
+      "sha256": "f9b58b2543c458f054aa631132a4599e95994dc828dfaeb41238ecd86aa57e1c",
+      "bytes": 4396
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/control/check-ownership.py",
+      "sha256": "807d63dc37cf4c99edd1e4e4277fe35d597bc77a4c6e18332bc83e791a88a2a4",
+      "bytes": 10006
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/control/check-prestart-hands.py",
+      "sha256": "327ccf1d2252fe5260393705c72f50d596a7c1d3a7c091d927dc1e72553f1f4a",
+      "bytes": 8322
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/control/check-real-hands.py",
+      "sha256": "11c09feed0bc8bb805e873bb739ab4c51de86eef0226cf32e4d1371b2629454a",
+      "bytes": 5027
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/control/check-sync-counters.py",
+      "sha256": "ab7d331b27814b9bd743ee8adb115d130a5bff8f0aa4ad981f8bc8345f67158d",
+      "bytes": 5345
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/control/check-weak-hand-census.py",
+      "sha256": "f19b318e67d09fcf34028c820976e955bec635326d3b9bc65cd03896f849ba55",
+      "bytes": 6590
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/control/compare.py",
+      "sha256": "813f0fb323e4e114e6dcac239a436012bb9c94a4e4c85a15a4f4874330db7608",
+      "bytes": 2949
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/draft-before-expiry-audit/action-check-prestart-hands.py",
+      "sha256": "15cc584585afd9a0d2c9f1da1ef0123e333be16274341eccf0b517a263784f8e",
+      "bytes": 6755
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/draft-before-expiry-audit/control-check-prestart-hands.py",
+      "sha256": "68e54833cecd01679f1579cfea260b833a6071beb3314f575d1fc971bb894b4a",
+      "bytes": 6757
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/draft-before-expiry-audit/report.json",
+      "sha256": "75b5bc1a7faf1c149dc0e3787eb358f560a3a2c5ac1938901c283d072ae43593",
+      "bytes": 3791
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/report.json",
+      "sha256": "8c7ee52d76d2cd7cef2d07ad7de5674c42817423f9a8bf4c9f1c4a8fb71c1578",
+      "bytes": 4327
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "72ffe2a766a128688510fa02c2c1a1cbcc56c0aa28b6202f74f59a567ed42f67",
+      "bytes": 112594
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/source/HangTen/Views/BoardModelView.swift",
+      "sha256": "d74f4fbb2bd260cdd777e3fd15c0d0fc92f9b7b2a9f9b5cd9daa9bdf54748426",
+      "bytes": 24014
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/source/HangTen/Views/GripHandModelView.swift",
+      "sha256": "78398b0253e6bca1184a9c24c5c938a3dd1cc0afce807b0226b0f4605e6824a1",
+      "bytes": 50471
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/source/HangTen/Views/RootView.swift",
+      "sha256": "5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926",
+      "bytes": 150194
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/source/HangTen/Views/TrainView.swift",
+      "sha256": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba",
+      "bytes": 27742
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/source-freeze.json",
+      "sha256": "911bb33a9666e789768a61d5ef0151b9cab4419f1a08d26bb334ea5263d4368c",
+      "bytes": 815
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/static-check.json",
+      "sha256": "f95129348a28d2314bbaf6e03084b6e6572840bdbb32a341bd201c0ca1a11eae",
+      "bytes": 769
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-build-command.json",
+      "sha256": "cf3dc45cdb98142ceae1b8a49f163cacc3c6748aafd162b3372bf686ff58e2dc",
+      "bytes": 533
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-build-command.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-build-command.stdout",
+      "sha256": "1e6ae060266c0be41a882f078ecb72503526fd6be9d13cd2dda15682432a3733",
+      "bytes": 311455
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-code-parity/mach-o-parity.json",
+      "sha256": "d3d7638de6be2256687d53d7d962d023151ae972ac599215779205a3bf01a5d2",
+      "bytes": 2030
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-app-termination-verification.json",
+      "sha256": "5a7783cb9a100266c6829112ab719b191d0c1c6d3b65105566482a49e4739583",
+      "bytes": 182
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-failure-detail.json",
+      "sha256": "135e4b933064a623cc24caba9a496770db3219127781be4ccc4b7396556c7b23",
+      "bytes": 81861
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-final-parity.json",
+      "sha256": "d41c248d904a4c5f0810eec69a5584fb132ee6ff2b46e489ad7052463b543942",
+      "bytes": 12855
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-findings.json",
+      "sha256": "bc20a2b844da85378c0a07ea4892ef99bfbe452857832b4a6a6f883c9610e84d",
+      "bytes": 97113
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/000-stdout.txt",
+      "sha256": "0ad7dfad7e51988d35748c327dd84223e1513590bf6085156ae7064e9d77e8a0",
+      "bytes": 176
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/001-stdout.txt",
+      "sha256": "988727e57a22c18cf041def9f3601cd0167646033b49dc2aa13ad91bade45180",
+      "bytes": 162
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/002-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/002-stdout.txt",
+      "sha256": "c8335b6be21eda7c5cc656c788e2f1e4502c1e34c4251b713e611f1ad4bef1bc",
+      "bytes": 28
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/003-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/003-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/004-stderr.txt",
+      "sha256": "ece53f906776a82b449fddff362a134d803300247e0fc81e4007c85d5d697d18",
+      "bytes": 369
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/004-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/005-stderr.txt",
+      "sha256": "e46473f6923ee1b57d692a4cf818c793f8689b829f9b2b8658e171119908c1d1",
+      "bytes": 379
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/005-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/006-stderr.txt",
+      "sha256": "7591d2c206bad8922820a1354f5503f52885c48f815052c97526418c95aa73bd",
+      "bytes": 376
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/006-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/007-stderr.txt",
+      "sha256": "0e922c610dc9f120eb123298cebc6fb37101002c05ccb19ea170c391890d288a",
+      "bytes": 376
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/007-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/008-stderr.txt",
+      "sha256": "304c232692e36cdb712e672555d411bbaa50849ed62e18236c65852870ac8788",
+      "bytes": 376
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/008-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/009-stderr.txt",
+      "sha256": "09bcb121ef829c68e62eecba41a8c833e31ca94018cd85c6c716a5966ec8eac6",
+      "bytes": 380
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/009-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/010-stderr.txt",
+      "sha256": "2d7d79bdeecd95316d8e26cf479f1c66549176c726c5ecba52f217ee112716fd",
+      "bytes": 377
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/010-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/011-stderr.txt",
+      "sha256": "5cc7a9350b6a1700f1d8ff806ea614d7af235da351425f5432a34cf8c650d9ee",
+      "bytes": 377
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/011-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/012-stderr.txt",
+      "sha256": "00b94fca4a4257d01b465018b3dd8d00a761436bd091d52ed5a2d628663762bc",
+      "bytes": 377
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/012-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/013-stderr.txt",
+      "sha256": "64635bc2f414d4368799dc095b51a1a556f1659f339c8bfe3a25dd44031bd276",
+      "bytes": 379
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/013-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/014-stderr.txt",
+      "sha256": "61729eb4582d61bbc4b874191eecd681913cd308b884883999ac642df21fb1cc",
+      "bytes": 376
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/014-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/015-stderr.txt",
+      "sha256": "b07bc6ad227423b641c81017c585d4f45171d05611438a81c5723ffa1d77d526",
+      "bytes": 376
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/015-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/016-stderr.txt",
+      "sha256": "001b787b27bc508dc6f30c8fc2dc233214c6cc337c0cb2c419d100e7e831ee25",
+      "bytes": 376
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/016-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/capture-process-status.json",
+      "sha256": "68879e0e95c86ed551b4347d3ceec077da01b2c0154a00596a4e74f569070b71",
+      "bytes": 117
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/captures.json",
+      "sha256": "53637a860afb2d4b70b9c6e7a766d5e2e44d1d41227d78d55b910bb5b64e3d94",
+      "bytes": 7898
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-constructors.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-constructors.py.stdout",
+      "sha256": "ead9b3d7bb8fc863e0258fef33269be5cd16591ed1e0e899394036056c0df326",
+      "bytes": 423
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-cpu-semantics.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-cpu-semantics.py.stdout",
+      "sha256": "460ad5239445a544a5079fd41bc80069d18a4ada039c299e1c1864c5fdc95358",
+      "bytes": 448
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-frames.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-frames.py.stdout",
+      "sha256": "fabe73a6fed6ef9abc92d906c92f0173dce97576357f6e4e324eba4f70cccfd2",
+      "bytes": 594
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-navigation.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-navigation.py.stdout",
+      "sha256": "024b507109b6d9f74081ddb4294db78b2ba8c70b31cd881572b1154800a9a82a",
+      "bytes": 627
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-ownership.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-ownership.py.stdout",
+      "sha256": "71c06012c25073345b627590c6cf52bc7b5445dfdbbd17f029d9270d32ce0a90",
+      "bytes": 998
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-prestart-hands.py.stderr",
+      "sha256": "ac9339c9b082f5828f62210f8dc2de7f3f7829d4732a2c456341e5b95174ea86",
+      "bytes": 766
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-prestart-hands.py.stdout",
+      "sha256": "c0c48b3c93dc06fb1ff8fda07b71196209bcb46d7caad70342f7bd9cb6feaa63",
+      "bytes": 490
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-real-hands.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-real-hands.py.stdout",
+      "sha256": "8665c7f2710359e57ee71b52635111571497737cce9194032229c338848f6376",
+      "bytes": 847
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-sync-counters.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-sync-counters.py.stdout",
+      "sha256": "172b51574c9f697755c9dc34427e2cf51c85b2366d730e1a87833581ed6e5184",
+      "bytes": 278
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-weak-hand-census.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/check-weak-hand-census.py.stdout",
+      "sha256": "5c38e2d4c5eef59160d0ce86c977fc3e479d186c936f1b360d6dca6f76883400",
+      "bytes": 358
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/commands.json",
+      "sha256": "ed1ebe8dd4aae68f7ec7974cb3a7688dbc78be439d1a4bc1859ca3f197d9fec8",
+      "bytes": 6455
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/events-17D26FA5-2554-4CBF-BE42-1CA20923E495.jsonl",
+      "sha256": "072b1cd9719e5b0cc92f112144f54d8e801aa5ee0e700d3087d6c6d42fb8b538",
+      "bytes": 1713716
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/first-eight-visual-review.json",
+      "sha256": "1a7452e150b9019336653e1ac593e64ffd7e9270db7a3525f0c9bff1b0843076",
+      "bytes": 4999
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/following-preview-tail.json",
+      "sha256": "58a6f07c120b2d75f64c4ff4708a6f7eaecfe1b25e3085ffe7e52692e7015bd7",
+      "bytes": 18961
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/installed-binary-gate.json",
+      "sha256": "65f528935b3bbffcf17b112cac01e5124c53841aed68efd77e4e4092555d4e5a",
+      "bytes": 374
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/launch-initial-capture.json",
+      "sha256": "467223884e1fa97481bef5a2a15bdc2ffc2c117211e53193697e3f7b8a8ff49c",
+      "bytes": 152
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/launch-initial.png",
+      "sha256": "f83ac2a57f55e6807fae659af9f086dc41ec8e10959e48d4dbd34be634af3b2f",
+      "bytes": 724460
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/launch-review-environment.json",
+      "sha256": "c6338495985e660b8df023d8362f2bdf673c2028f1bf5a50dabe1fc4f002136e",
+      "bytes": 567
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/normal-host-frame-validation.json",
+      "sha256": "215d5b811598fdbbf584a7d47c335e60942a2630d39c45a0545d126c57c962c2",
+      "bytes": 383897
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-0-active-plus-0.25.png",
+      "sha256": "d953869139b791c9dafb4f0b0b22effad3dad3c4c040ce0693514c93ce8f8674",
+      "bytes": 332536
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-0-active-plus-1.png",
+      "sha256": "2ea289e4ed559e4f6ef52857df59eeb36e44e79219ac8a7eba9094c265a7b76f",
+      "bytes": 336187
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-0-active-plus-3.png",
+      "sha256": "3cf6319961f2d3a47ff3c85b408ea6b350113ead48fbbf7190a6092b4bfbf584",
+      "bytes": 334652
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-0-active-plus-5.png",
+      "sha256": "4ca1142e638464f3ad051ff6f3a51f651d72f5ba4db8a1eef21c968d0097319b",
+      "bytes": 335111
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-1-preview-plus-0.25.png",
+      "sha256": "14e7a4f09ecc7870155e58747f5784d8d99fac8e84d40fcd911c255532b6a523",
+      "bytes": 300960
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-1-preview-plus-1.png",
+      "sha256": "2bd6044efa35979b49ce1013cd2bdc2c33ee858d8202336e67b95b469ee16e26",
+      "bytes": 305282
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-1-preview-plus-3.png",
+      "sha256": "f6e35cd1991fb0f167ccb0f2b1b3d6688d4ccb33b823995d715921862ddbc9e2",
+      "bytes": 303574
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-1-preview-plus-5.png",
+      "sha256": "1b8c132a0747c3d2957526c45e978c1ccb96da2aed37dea1d4d351171b9eaca5",
+      "bytes": 302203
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "16bbfe5b3839e6ea2b21df7867df19b39bdde8c3c244e0821a41e55f9dc0fa58",
+      "bytes": 335590
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-2-active-plus-1.png",
+      "sha256": "a67b88ab1e47eb78979e980552d42d130b78edde5681082ebb67605b8939b813",
+      "bytes": 337450
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-2-active-plus-3.png",
+      "sha256": "78cc44814e9a19de371155545e687dab82f19b59ecd8b13e9d9979ca00fca0fb",
+      "bytes": 335859
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-2-active-plus-5.png",
+      "sha256": "67ae3730d936cd8e150128749f9bcc743988bba99f75f7ad8b32f948bf18823b",
+      "bytes": 336352
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/prestart-hand-validation.json",
+      "sha256": "fc31808b65168a41a8270ce316b05da8da0cc9552d5259d174f92e1ad442278f",
+      "bytes": 64402
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/protocol.json",
+      "sha256": "8416f2d8aa58ff1551487e7799d4624c80346a519c241116287dcf00d2517fbd",
+      "bytes": 1319
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/real-hand-lifetime-camera-validation.json",
+      "sha256": "9e3058b5d5968c5a96ec67c77328ed48f4bea0930e3ec37b8eeacc9171bbf520",
+      "bytes": 19273
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/runtime-release.json",
+      "sha256": "66cda7df85301c0951133dc9724498e18ea5d692ba93fb3b1c089cb7034dfd1e",
+      "bytes": 1449
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/structural-correspondence.json",
+      "sha256": "12a27d0e8f89225a7e9ca9bab892404b868ec7af76040989c9916c215feafecb",
+      "bytes": 508253
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/structural-dependency-navigation.json",
+      "sha256": "0708fc48226b5faf799cce886a3007ae8f99221c8a09ddfe1c49372c2cd0c132",
+      "bytes": 60807
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/structural-dependency-ownership.json",
+      "sha256": "2151ae2dce93d892f3711b82e6c2cf18231f75cf97e223b3e65cb59a0d52fd6e",
+      "bytes": 236545
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/sync-delivery-counter-validation.json",
+      "sha256": "d513c924bd1390a5c27e884b951b7e8225cac5a6b3d08a672be4c1297a555b75",
+      "bytes": 842648
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/trace-copy.json",
+      "sha256": "1343a4009c7b28b32195c88d0440723778e337b09c9aa05bca6748a69e431303",
+      "bytes": 717
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/train-constructor-validation.json",
+      "sha256": "5861879ebb136d45a2d368ccb68d0266517f0c7bcb33e5c8f9f9cb4275515668",
+      "bytes": 327714
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/train-startup-readiness.json",
+      "sha256": "88dab9c5cbee834a5830e2b060b2e8a33c2bb2975fda5fe056d700cc519f5b3c",
+      "bytes": 22508
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/transition-observations.json",
+      "sha256": "f8c7f5d045be6376b49bb2ae0bc3ced6315614ad9be7b30f721c03a49feece68",
+      "bytes": 57283
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/validator-command-results.json",
+      "sha256": "b537b275fbd5acb0aeac73de834bb930630211481e770fbf7ad8a3e8040f43e3",
+      "bytes": 610
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/visual-review.json",
+      "sha256": "7ff097174c42695c597f19866444f06a9f4ceebd493799e3d731a33b8ea6617b",
+      "bytes": 7535
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/weak-hand-census-validation.json",
+      "sha256": "a0c0a9427c83a6143aa77f5878a2f220b7772836e2d97f10c16be20ae6a0800e",
+      "bytes": 423978
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/workout-openurl-timing.json",
+      "sha256": "0e0b1901afb5a4e0c7e5523e340c4c656750e669f407c7bcf6e75ecc46d19c37",
+      "bytes": 152
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-prelaunch-parity.json",
+      "sha256": "d41c248d904a4c5f0810eec69a5584fb132ee6ff2b46e489ad7052463b543942",
+      "bytes": 12855
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-prior-freeze-verification.json",
+      "sha256": "ec314de90df0f9ff6c1f0650603436606342eb23fcbf9f0bc6771caa7c774119",
+      "bytes": 796
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-root-visual-corroboration.json",
+      "sha256": "5111d0804c5600331adef8ca37e75ae3b19fdfccb7868b479c60c1fa0778d6ff",
+      "bytes": 1399
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-runtime-release.json",
+      "sha256": "66cda7df85301c0951133dc9724498e18ea5d692ba93fb3b1c089cb7034dfd1e",
+      "bytes": 1449
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-summarize.py",
+      "sha256": "ddd3b58c5a04a8688baaddd10b4c798387a47be338761a2bf440300d042dbf85",
+      "bytes": 2708
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-termination.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-termination.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-validate.py",
+      "sha256": "242bb74bf0b968a31c677831f4f66cb8eb90415a6cbcd6d10cae186534c15151",
+      "bytes": 1071
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-install-command.json",
+      "sha256": "9f90448dbec499ed3940265611d697c119652213fdb02d54c0f58765eeb35be3",
+      "bytes": 448
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-install-command.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-install-command.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-package-parity.json",
+      "sha256": "1b0b8dee31992f15121b3873ca9283cc787138cf5997c391cc6537a177fceafc",
+      "bytes": 7405
+    }
+  ],
+  "scope": "Shared newsource/build/install/prospective helpers plus completed flagOFFcontrol with preserved gate failure; no action run and no app bundle copy.",
+  "appTerminated": true,
+  "handbackToRoot": true
+}

@@ -1,0 +1,35 @@
+{
+  "uuid": "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+  "simulatorDeleted": true,
+  "preservedProductsDeleted": true,
+  "derivedDataCreated": false,
+  "resultBundleCreated": false,
+  "commands": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "shutdown",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "exitStatus": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "delete",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "exitStatus": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

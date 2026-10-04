@@ -1,0 +1,22 @@
+{
+  "candidate": ".context/placid-badger-cad-second-half/yy-baguette-evo/rounded-ends/rounded-partitioned.FCStd",
+  "sha256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+  "nativeAuditPassed": true,
+  "sameTessellatedBounds": true,
+  "bodiesContainedInOriginalBarrel": true,
+  "editability": {
+    "feature": "leftSixCutRoundedEnds",
+    "originalRadiusMm": 8.5,
+    "trialRadiusMm": 8.0,
+    "originalVolumeMm3": 52959.2027688745,
+    "changedVolumeMm3": 53242.47719318986,
+    "restoredVolumeMm3": 52959.20276887449,
+    "originalBodyVolumeMm3": 754063.949207064,
+    "changedBodyVolumeMm3": 754015.7321625828,
+    "restoredBodyVolumeMm3": 754063.9492086308,
+    "sourceSha256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+    "sourceUnchanged": true
+  },
+  "preview": ".context/placid-badger-cad-second-half/yy-baguette-evo/rounded-ends/before-after-front-side-top.png",
+  "provenance": "Editable end rounding corrects qualitative source-supported rounded slot topology. 9mm front/back and8.5mm top radii are operator-selected display estimates, not maker dimensions. All18 factual depth witnesses retained. No pixels measured."
+}

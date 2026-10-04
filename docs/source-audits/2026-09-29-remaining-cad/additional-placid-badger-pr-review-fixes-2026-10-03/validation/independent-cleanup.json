@@ -1,0 +1,55 @@
+{
+  "owner": "placid-badger",
+  "exactSimulatorUUID": "7774F2CB-D5DF-45EA-A5ED-FFACBEAED21B",
+  "exactSimulatorAbsent": true,
+  "derivedDataAbsent": true,
+  "ownedTmpAbsent": true,
+  "commandProcessGroups": [
+    {
+      "label": "archive-and-verify-review-results",
+      "processGroup": 789,
+      "independentlyAbsent": true
+    },
+    {
+      "label": "bootstatus",
+      "processGroup": 56860,
+      "independentlyAbsent": true
+    },
+    {
+      "label": "green-affected-unit-tests",
+      "processGroup": 90428,
+      "independentlyAbsent": true
+    },
+    {
+      "label": "green-pose-camera-tests",
+      "processGroup": 90955,
+      "independentlyAbsent": true
+    },
+    {
+      "label": "green-review-build",
+      "processGroup": 78519,
+      "independentlyAbsent": true
+    },
+    {
+      "label": "green-viewport-ui-tests",
+      "processGroup": 91737,
+      "independentlyAbsent": true
+    },
+    {
+      "label": "red-review-build",
+      "processGroup": 61549,
+      "independentlyAbsent": true
+    },
+    {
+      "label": "red-selection-regressions",
+      "processGroup": 66844,
+      "independentlyAbsent": true
+    },
+    {
+      "label": "show-owned-simulator",
+      "processGroup": 60442,
+      "independentlyAbsent": true
+    }
+  ],
+  "sharedAndUnknownResourcesUntouched": true
+}

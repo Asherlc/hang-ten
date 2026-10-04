@@ -1,0 +1,17 @@
+{
+  "status": "SCRATCH_ONLY_NOT_APPLIED_NOT_BUILT",
+  "files": [
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "beforeSHA256": "b47b76a780061f291a2e32b888e00adfba6b1dcc6a157d5f73df36a5d1797f15",
+      "proposedSHA256": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "beforeSHA256": "6f9fcd3da0677d79c411cf4cf053ae06a88b60f58f2b37522924f91570c3be25",
+      "proposedSHA256": "eb00001d1215aa25f02f62e80340bc905203f0deecd730fbff02fd276fc638e6"
+    }
+  ],
+  "patchSHA256": "103c25dd368f4a819f6cd84f289d577e68154d5741d8e44090e81243a3b2c9e4",
+  "applyCheckExit": 0
+}

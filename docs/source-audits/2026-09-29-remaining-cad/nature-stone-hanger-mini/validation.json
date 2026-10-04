@@ -1,0 +1,31 @@
+{
+  "package": "nature-stone-hanger-mini",
+  "currentSourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+  "nativeReopenEditSourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+  "modelSHA256ByPresentation": {
+    "primary": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30"
+  },
+  "fullPackageSchemaPassed": true,
+  "nativeCordCacheCheckPassed": true,
+  "minimumNativeCordClearanceMM": 1.1990608185153786,
+  "metadataOnlyCompileRebindings": [
+    {
+      "presentationID": "primary",
+      "compiledSourceSHA256": "ea1545e20974b509f815aa61c316c8ca00237e4a2fda116a30a7f6d39f1dc805",
+      "currentSourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+      "compiledAssetSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+      "changesSinceCompile": [
+        "media.display orthographic camera metadata"
+      ],
+      "geometryUnchangedEvidence": "Supported set_board_manifest.py changes only the HangTenBoardManifest XML value and asserts all other archive members remain byte-identical. Native body/region features, export flags, placements, tessellation and contact/depth contracts were unchanged. Current source separately passes native reopen/edit validation and full package validation. Raw compile report is retained with its actual executed source hash.",
+      "additionalArchiveProof": null
+    }
+  ],
+  "humanCADReview": "pending requested one-at-a-time review after whole batch",
+  "externalResourcesCreated": false,
+  "continuousRoundedRuntimeCordClearancePassed": true,
+  "minimumCertifiedRuntimeCordClearanceMM": 0.9927167037276042,
+  "continuousClearanceReport": "cord-continuous-clearance.json",
+  "sidecarSHA256": "3ededde32246c2b90cbf89dbb28ec26f362f387ae60f5f3f22dff2c76f115325",
+  "cameraOnlyRebindingProof": "camera-correction-proof.json"
+}

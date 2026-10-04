@@ -1,0 +1,75 @@
+{
+  "nativeSource": "Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd",
+  "nativeFrame": "mm; x right, y depth (front negative), z up",
+  "runtimeFrame": "metres; x=native x/1000, y=native z/1000, z=-native y/1000",
+  "solidFeature": "FinalSolid",
+  "attachmentNodeID": "nature_body",
+  "evidencedGraph": "Exterior side wraps follow visible cross grooves. No closed internal passages supported.",
+  "nativeFeatures": {
+    "openSideGrooves": [
+      {
+        "sideX": -52.5,
+        "verticalTrackY": [
+          -7.5,
+          7.5
+        ],
+        "verticalTrackZ": [
+          -30,
+          30
+        ],
+        "crossTrackZ": 0,
+        "crossTrackY": [
+          -15.0,
+          15.0
+        ],
+        "cutterRadiusMM": 1.7
+      },
+      {
+        "sideX": 52.5,
+        "verticalTrackY": [
+          -7.5,
+          7.5
+        ],
+        "verticalTrackZ": [
+          -30,
+          30
+        ],
+        "crossTrackZ": 0,
+        "crossTrackY": [
+          -15.0,
+          15.0
+        ],
+        "cutterRadiusMM": 1.7
+      }
+    ]
+  },
+  "positions": [
+    {
+      "id": "granite-front",
+      "presentationID": "primary",
+      "contactIDs": [
+        "granite-edge-15"
+      ]
+    },
+    {
+      "id": "wood-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "wood-edge-15"
+      ]
+    },
+    {
+      "id": "pinch-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-60"
+      ]
+    }
+  ],
+  "notes": "Granite-front upright at lower granite shelf; wood-inverted flips in face plane. Groove radius is display estimate; source governs external route. Pinch orientation source-specific, do not infer hidden return.",
+  "sourceRegister": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/sources.json",
+  "sourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
+  "modelSHA256ByPresentation": {
+    "primary": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46"
+  }
+}

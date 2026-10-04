@@ -1,0 +1,43 @@
+[
+  {
+    "args": [
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "--udid",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "--label",
+      "Open",
+      "--element-type",
+      "Button",
+      "--tap-style",
+      "physical"
+    ],
+    "startUTC": 1791048617.546688,
+    "endUTC": 1791048619.082436,
+    "exitStatus": 0
+  },
+  {
+    "args": [
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "E0AC7F37-369F-414E-B407-353435A0BE03"
+    ],
+    "startUTC": 1791048622.083452,
+    "endUTC": 1791048622.900005,
+    "exitStatus": 0
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/portrait-route-setup/after-physical-open.png"
+    ],
+    "startUTC": 1791048622.900199,
+    "endUTC": 1791048623.356904,
+    "exitStatus": 0
+  }
+]

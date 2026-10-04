@@ -1,0 +1,305 @@
+{
+  "schemaVersion": 3,
+  "id": "zlagboard.evo",
+  "manufacturer": "Zlagboard",
+  "name": "Zlagboard.Evo",
+  "subtitle": "Compact lime-wood hangboard with crimps, pockets, slopers, and jugs.",
+  "productURL": "https://www.zlagboard.com/hangboards",
+  "aspectRatio": 5.833333333333333,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "aspectRatio": 5.833333333333333,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              -0.35,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          },
+          "surfaceFinish": "wood"
+        }
+      }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "top-jug-left",
+      "equipmentObjectID": "primary",
+      "name": "Left top jug",
+      "kind": "jug",
+      "gripTypes": []
+    },
+    {
+      "id": "top-sloper-32-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 32-degree top sloper",
+      "kind": "sloper",
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "top-sloper-20-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 20-degree top sloper",
+      "kind": "sloper",
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "top-sloper-jug-center",
+      "equipmentObjectID": "primary",
+      "name": "Center top sloper jug",
+      "kind": "sloper",
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "top-sloper-20-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 20-degree top sloper",
+      "kind": "sloper",
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "top-sloper-32-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 32-degree top sloper",
+      "kind": "sloper",
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "top-jug-right",
+      "equipmentObjectID": "primary",
+      "name": "Right top jug",
+      "kind": "jug",
+      "gripTypes": []
+    },
+    {
+      "id": "edge-30-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 30 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "sloper-edge-30-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 30 mm sloper edge",
+      "kind": "sloper",
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "sloper-edge-25-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 25 mm sloper edge",
+      "kind": "sloper",
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "edge-35-center",
+      "equipmentObjectID": "primary",
+      "name": "Center 35 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 35,
+          "maximum": 35
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "sloper-edge-25-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 25 mm sloper edge",
+      "kind": "sloper",
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "sloper-edge-30-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 30 mm sloper edge",
+      "kind": "sloper",
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "edge-30-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 30 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 20 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "sloper-edge-25-lower-left",
+      "equipmentObjectID": "primary",
+      "name": "Lower left 25 mm sloper edge",
+      "kind": "sloper",
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "edge-30-inner-left",
+      "equipmentObjectID": "primary",
+      "name": "Inner left 30 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "sloper-edge-30-center",
+      "equipmentObjectID": "primary",
+      "name": "Center 30 mm sloper edge",
+      "kind": "sloper",
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "edge-30-inner-right",
+      "equipmentObjectID": "primary",
+      "name": "Inner right 30 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "sloper-edge-25-lower-right",
+      "equipmentObjectID": "primary",
+      "name": "Lower right 25 mm sloper edge",
+      "kind": "sloper",
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "edge-20-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 20 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    }
+  ]
+}

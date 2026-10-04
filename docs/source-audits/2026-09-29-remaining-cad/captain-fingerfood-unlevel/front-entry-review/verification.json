@@ -1,0 +1,297 @@
+{
+  "passed": true,
+  "date": "2026-09-30",
+  "package": "captain-fingerfood-unlevel",
+  "feedback": "Manufacturer reference audit: visible leads must approach the front floor holes; the prior routes entered from the rear in three poses.",
+  "suspensionBeforeSHA256": "d689a72a606c7e429ff3050da9f4daa3d57ba02c55f9a100c56d71f019ddde18",
+  "suspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+  "sourceSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+  "modelSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+  "descriptorSHA256": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89",
+  "solverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+  "testsSHA256": "362679227649f45dbfab39a7eda39a7c648de4e928d3904e93750e51f2ab60e7",
+  "generatedManifestSHA256": "34678d8121b0795267fe0468fd8ef6337c469fdb46d2e216b080a71f4ef3db07",
+  "nativeExactRegeneration": "all four poses; apply/check byte-identical reports; native seed regenerated from CAD, never an authored cache",
+  "certification": "Every exact rounded complete route retains source-backed front-mouth entry, original continuous solid and whole-path tube gates, reconstructed fixed support and settled length bounds.",
+  "poseResults": {
+    "edge20-front": {
+      "height": -0.193097215,
+      "minimumClearance": {
+        "left-lead": 0.001990158911644487,
+        "right-lead": 0.0019901867299556
+      },
+      "lengthRatios": {
+        "left-lead": 0.9999966309395449,
+        "right-lead": 1.0000000005135832
+      },
+      "coupledTightening": {
+        "converged": true,
+        "iterations": 2,
+        "passes": [
+          {
+            "converged": true,
+            "sweeps": 8,
+            "acceptedMoves": 95,
+            "candidateChecks": 2353,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.39999999831551686,
+              "right-lead": 0.3999999983155242
+            },
+            "lengthAfter": {
+              "left-lead": 0.38589316549584035,
+              "right-lead": 0.38589451332545566
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          },
+          {
+            "converged": true,
+            "sweeps": 1,
+            "acceptedMoves": 0,
+            "candidateChecks": 388,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.399998652375818,
+              "right-lead": 0.4000000002054333
+            },
+            "lengthAfter": {
+              "left-lead": 0.399998652375818,
+              "right-lead": 0.4000000002054333
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          }
+        ],
+        "initialHeight": -0.178901628,
+        "entryConstraint": "actual mouth, positive native-axis half-space, complete tube clearance",
+        "policy": "Generated native seed followed by bounded coupled local shortening and height settling; no equilibrium claim."
+      }
+    },
+    "edge25-inverted": {
+      "height": -0.193113789,
+      "minimumClearance": {
+        "left-lead": 0.0019900452342554546,
+        "right-lead": 0.001990012676328855
+      },
+      "lengthRatios": {
+        "left-lead": 0.9999999999426721,
+        "right-lead": 0.9999890906607439
+      },
+      "coupledTightening": {
+        "converged": true,
+        "iterations": 2,
+        "passes": [
+          {
+            "converged": true,
+            "sweeps": 15,
+            "acceptedMoves": 144,
+            "candidateChecks": 7141,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.39999999598506614,
+              "right-lead": 0.4000000005031139
+            },
+            "lengthAfter": {
+              "left-lead": 0.3858805020619728,
+              "right-lead": 0.38587613834971596
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          },
+          {
+            "converged": true,
+            "sweeps": 1,
+            "acceptedMoves": 0,
+            "candidateChecks": 426,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.39999999997706887,
+              "right-lead": 0.39999563626429757
+            },
+            "lengthAfter": {
+              "left-lead": 0.39999999997706887,
+              "right-lead": 0.39999563626429757
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          }
+        ],
+        "initialHeight": -0.178901628,
+        "entryConstraint": "actual mouth, positive native-axis half-space, complete tube clearance",
+        "policy": "Generated native seed followed by bounded coupled local shortening and height settling; no equilibrium claim."
+      }
+    },
+    "jug-reverse": {
+      "height": -0.208857751,
+      "minimumClearance": {
+        "left-lead": 0.0019904874160295927,
+        "right-lead": 0.0019906599409822284
+      },
+      "lengthRatios": {
+        "left-lead": 0.9999973283764109,
+        "right-lead": 0.9999999993930465
+      },
+      "coupledTightening": {
+        "converged": true,
+        "iterations": 2,
+        "passes": [
+          {
+            "converged": true,
+            "sweeps": 9,
+            "acceptedMoves": 41,
+            "candidateChecks": 660,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.3999999992240265,
+              "right-lead": 0.39999999713542145
+            },
+            "lengthAfter": {
+              "left-lead": 0.3878240761530997,
+              "right-lead": 0.3878251447716692
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          },
+          {
+            "converged": true,
+            "sweeps": 1,
+            "acceptedMoves": 0,
+            "candidateChecks": 114,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.39999893135056436,
+              "right-lead": 0.3999999997572186
+            },
+            "lengthAfter": {
+              "left-lead": 0.39999893135056436,
+              "right-lead": 0.3999999997572186
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          }
+        ],
+        "initialHeight": -0.196646789,
+        "entryConstraint": "actual mouth, positive native-axis half-space, complete tube clearance",
+        "policy": "Generated native seed followed by bounded coupled local shortening and height settling; no equilibrium claim."
+      }
+    },
+    "pocket-right-end": {
+      "height": -0.167817989,
+      "minimumClearance": {
+        "left-lead": 0.001990171302207156,
+        "right-lead": 0.0019900803699990184
+      },
+      "lengthRatios": {
+        "left-lead": 0.8696362259794572,
+        "right-lead": 1.0000000006589467
+      },
+      "coupledTightening": {
+        "converged": true,
+        "iterations": 2,
+        "passes": [
+          {
+            "converged": true,
+            "sweeps": 17,
+            "acceptedMoves": 156,
+            "candidateChecks": 6394,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.34079157555656764,
+              "right-lead": 0.39999999802475633
+            },
+            "lengthAfter": {
+              "left-lead": 0.32563648937233075,
+              "right-lead": 0.37778435028214674
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          },
+          {
+            "converged": true,
+            "sweeps": 1,
+            "acceptedMoves": 0,
+            "candidateChecks": 392,
+            "minimumAcceptedGain": 1e-06,
+            "proposalSolidMargin": 2e-05,
+            "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+            "vertexBudget": 256,
+            "candidateCheckBudget": 20000,
+            "lengthBefore": {
+              "left-lead": 0.3478544903917829,
+              "right-lead": 0.4000000002635787
+            },
+            "lengthAfter": {
+              "left-lead": 0.3478544903917829,
+              "right-lead": 0.4000000002635787
+            },
+            "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+          }
+        ],
+        "initialHeight": -0.145403567,
+        "entryConstraint": "actual mouth, positive native-axis half-space, complete tube clearance",
+        "policy": "Generated native seed followed by bounded coupled local shortening and height settling; no equilibrium claim."
+      }
+    }
+  },
+  "packageChanges": {
+    "changedPackageFiles": [
+      "Hangboards/captain-fingerfood-unlevel/suspension.json"
+    ],
+    "changedLockedFiles": [
+      "Hangboards/captain-fingerfood-unlevel/suspension.json"
+    ],
+    "sha256Manifest": "57c0654a52e3c8b4cb4c3dd6e610dced580daf8ccfb71dbd2f1d4028c4ad66be",
+    "beforeSuspensionSHA256": "d689a72a606c7e429ff3050da9f4daa3d57ba02c55f9a100c56d71f019ddde18",
+    "afterSuspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+    "preservedPackageFiles": 205,
+    "permittedChanges": "Source-backed front mouth axes, existing tightening selector, native-generated routes and translation Y only"
+  },
+  "python": {
+    "command": [
+      "rtk",
+      "proxy",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+      "-m",
+      "pytest",
+      "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+      "Tools/HangboardPackages/tests/test_model_delivery_lock.py",
+      "-q"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.9824729170068167,
+    "fileSHA256": {
+      "Tools/HangboardCAD/native_cord_routes.py": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+      "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "31a4896a3e423f23199907fabd8d63481d1890beca90307394e28c1cfac20661",
+      "Hangboards/captain-fingerfood-unlevel/suspension.json": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e"
+    },
+    "sourceUnchangedDuringRun": true,
+    "summary": "31 passed in 0.23s",
+    "scope": "Sidecar authoring/private-runtime boundary and complete delivery-lock behavior; exact native route reproduction separately validates actual UNLEVEL geometry."
+  },
+  "scopeLimit": "Deterministic bounded local shortening; no global optimum, whole-rope equilibrium or unseen connection claim.",
+  "humanReview": "Pending UNLEVEL one-by-one review",
+  "independentReview": "final-independent-review.json",
+  "independentFreshReproduction": "fresh-reproducibility-result.json"
+}

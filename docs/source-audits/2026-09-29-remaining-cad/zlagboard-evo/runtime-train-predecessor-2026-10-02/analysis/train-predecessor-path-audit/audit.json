@@ -1,0 +1,177 @@
+{
+  "createdUTC": "2026-10-03T00:38:15.633947+00:00",
+  "status": "READ_ONLY_PREPARATION_NO_PROBE_EXECUTION",
+  "sourceExcerpts": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "ranges": [
+        [
+          141,
+          156
+        ],
+        [
+          255,
+          311
+        ],
+        [
+          339,
+          355
+        ],
+        [
+          446,
+          460
+        ],
+        [
+          1169,
+          1188
+        ],
+        [
+          2319,
+          2331
+        ],
+        [
+          2463,
+          2478
+        ]
+      ],
+      "excerpt": "RootView.swift.excerpts.txt",
+      "sha256": "80687ff988006f1989c8e02f871c867938f6a60d49c3602f5b4f07a4c98db213"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "ranges": [
+        [
+          3,
+          27
+        ],
+        [
+          30,
+          177
+        ],
+        [
+          180,
+          224
+        ],
+        [
+          282,
+          313
+        ],
+        [
+          558,
+          575
+        ]
+      ],
+      "excerpt": "TrainView.swift.excerpts.txt",
+      "sha256": "bddb711e04b04ac4e50f96032b54ca0864f7274f702b523c630748b088c219de"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "ranges": [
+        [
+          43,
+          88
+        ],
+        [
+          109,
+          134
+        ]
+      ],
+      "excerpt": "BoardModelView.swift.excerpts.txt",
+      "sha256": "e16791922f81d69eff5771e53c59572a84a14389c4dbeadbfbfa980b6be2966d"
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "ranges": [
+        [
+          395,
+          415
+        ],
+        [
+          650,
+          665
+        ]
+      ],
+      "excerpt": "BoardMapView.swift.excerpts.txt",
+      "sha256": "10f59489c4b53080e24940b187a61eb5440fb20f2ee4dd1cff5e82a6dea1f024"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "ranges": [
+        [
+          223,
+          240
+        ],
+        [
+          1340,
+          1394
+        ]
+      ],
+      "excerpt": "BoardModelRealityTypes.swift.excerpts.txt",
+      "sha256": "208a73128c1896f8e429015b0fbdc9f7c035c3a65733a6de1217b198ccddb37a"
+    },
+    {
+      "path": "HangTen/Views/WorkoutSummaryView.swift",
+      "ranges": [
+        [
+          142,
+          219
+        ]
+      ],
+      "excerpt": "WorkoutSummaryView.swift.excerpts.txt",
+      "sha256": "32b2a2c76f77c2bbd1363664631696bae5e9b193a893b0df9699ae7d6dc3dec3"
+    }
+  ],
+  "paths": [
+    {
+      "entry": "TrainView.selectedBoardCard, TrainView.swift:139-142",
+      "initial": "Always in initial Train body. Main expected predecessor; BoardMapView .model -> BoardModelSurface task -> fresh mutable scene loader -> RealityView host."
+    },
+    {
+      "entry": "TrainView board-picker/detail NavigationLinks and navigationDestination",
+      "initial": "Not explicitly activated in retained launch environment/protocol; picker cards at570 are display-only but still real BoardModelSurface hosts when realized. Detail at306 reaches same host. Do not infer a constructed destination value means its async task/RealityView made; verify lifecycle."
+    },
+    {
+      "entry": "PlanDetailView first-hold map, RootView.swift:1176",
+      "initial": "Reachable via Train reviewDestination .plan or Plans navigation. Normal retained env has PLAN_ID but not HANGTEN_REVIEW_PLAN; PLAN_ID alone does not activate this destination."
+    },
+    {
+      "entry": "Normal TabView Plans root",
+      "initial": "Initial root contains text/cards/links, no direct BoardMapView. Links can lead to board picker, plan detail or custom routine editor; tab retention/lazy behavior alone is not a guarantee no descendants run."
+    },
+    {
+      "entry": "History root/summary",
+      "initial": "No BoardMapView/BoardModelSurface call in History/WorkoutSummary source scanned; no expected direct host. Still do not assume all TabView children are absent."
+    },
+    {
+      "entry": "FreeWorkoutGuidedHangView, FreeWorkoutLogSessionView, CustomRoutineEditorView",
+      "initial": "Board hosts behind user-activated free-workout/editor sheets; not in this no-input workout deep-link sequence."
+    },
+    {
+      "entry": "WorkoutView portrait and landscape BoardMapView",
+      "initial": "Expected destination hosts; portrait startup/landscape transition can create distinct Surface identities and loads. Empty contact IDs before active overlap Train metadata, so cannot identify source by empty IDs alone."
+    },
+    {
+      "entry": "DEBUG StandaloneBoardHighlightProbe/diagnosticRootWorkout",
+      "initial": "Separate explicit root gates; must be absent in normal Train-only experiment launch env."
+    }
+  ],
+  "existingTraceLimits": [
+    "Observed make counts O1=3, P1=2, normal strictOFF=2; prior reports characterize 2/1/1 predecessor scene tokens. No callsite origin field proves every predecessor is Train.",
+    "All initial resolvedSurfaceInputs have Evo/primary/emptyIDs/isDisplayOnly=false, also possible for preactive workout; lifecycle sequence not enough for lexical callsite attribution.",
+    "BoardModelSurface.onDisappear resets result to loading; reentry/recreation can load fresh scene even though resource cache is shared. BoardModelRealityLoader constructs a new mutable scene for every successful load. Repeated tokens do not require picker/tab hosts.",
+    "No global scene constructor/lazy-load record exists before host make; unshown/canceled scene loads can escape existing host-only traces.",
+    "Sparse UIKit census cannot prove lifetime absence or absence between observations; count actual ARView instances matching root scene, not private wrapper class totals."
+  ],
+  "verificationWithoutPerBodyLogs": [
+    "Strict gate must branch before Train selectedBoardCard BoardMapView construction only, leaving the rest of Train/nav/cues/layout intact; .hidden/opacity/accessibilityHidden do not suppress host creation. Do not suppress all BoardMapView instances or workout destination.",
+    "Fresh process with exact normal env: no direct-root/standalone/reviewPlan/picker/detail/free-workout flags, same selected board and routine, no other navigation/input. Preserve launch env and deep-link command history.",
+    "Add a static DEBUG origin tag at the Train board callsite and carry it into existing Surface load/make/lifecycle records (or init/load boundary once). All other callers default unspecified; no log in body. Tag workout callsites too if distinguishing portrait/landscape recreation matters. This is prospective coordination, not code authored.",
+    "Require zero Train-tagged load/scene/make events from startup through tail under gate. Enumerate EVERY global board scene token and view-make token; map each to expected workout origin, include completed/canceled loads and any initial portrait replacement rather than silently dropping extras. An unexplained token fails the isolation gate.",
+    "At scene constructor/loader and actual RealityView make entries, emit bounded one-time events with static origin+scene/view IDs; recorder opens before first possible allocation. Existing Surface onChange input event can carry metadata without per-body logging, but alone cannot detect constructor-before-cancel.",
+    "Keep existing actual host/root/camera attachment census, callbacks and selected-contact timing. If no new origin/lifetime counters authorized, limit conclusion to no additional observed make tokens, not guaranteed history-free."
+  ],
+  "noEdits": [
+    "No source/test/device/build/index/commit modifications. Scratch only.",
+    "Some initial exact filenames for loader/History were absent; located real definitions with rg. No environment or unrelated device inventory read."
+  ]
+}

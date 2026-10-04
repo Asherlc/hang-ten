@@ -1,0 +1,113 @@
+{
+  "workspaceOwner": "placid-badger",
+  "externalResources": [],
+  "nativeJobs": "run_freecad.py ephemeral child processes, workspace TMPDIR; no servers/simulators",
+  "immutableSourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+  "completedCompilerRuns": [
+    {
+      "mode": "check",
+      "toolSession": 45302,
+      "childPID": 67048,
+      "output": "candidate/assets",
+      "tmp": "tmp"
+    },
+    {
+      "mode": "export",
+      "toolSession": 29792,
+      "output": "export-run/assets",
+      "tmp": "export-run/tmp"
+    }
+  ],
+  "completedCompilerDisposition": "Stopped under parent coordination; process timing and empty staging cleanup retained",
+  "activeCompilerRuns": [],
+  "lastNativeJobCheckUTC": "2026-10-01T14:32:27.468063+00:00",
+  "remainingOwnedNativeProcesses": [],
+  "completedFinalCompilerRuns": [
+    {
+      "workspaceOwner": "placid-badger",
+      "name": "compile-check",
+      "startedUTC": "2026-10-01T14:52:33.945966+00:00",
+      "timeoutSeconds": 900,
+      "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+      "args": [
+        "--package",
+        "metolius-simulator-3d",
+        "--source",
+        ".context/placid-badger/metolius-simulator-3d-jagged/native-author/candidate/metolius-simulator-3d.FCStd",
+        "--assets",
+        ".context/placid-badger/metolius-simulator-3d-jagged/native-author/candidate/assets",
+        "--check"
+      ],
+      "ownedProcessGroup": 47030,
+      "compilerSHA256After": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+      "compilerBytesUnchanged": true,
+      "elapsedSeconds": 383.2438087919727,
+      "exitCode": 0,
+      "ownedProcessGroupExited": true
+    },
+    {
+      "workspaceOwner": "placid-badger",
+      "name": "compile",
+      "startedUTC": "2026-10-01T14:52:33.946043+00:00",
+      "timeoutSeconds": 900,
+      "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+      "args": [
+        "--package",
+        "metolius-simulator-3d",
+        "--source",
+        ".context/placid-badger/metolius-simulator-3d-jagged/native-author/candidate/metolius-simulator-3d.FCStd",
+        "--assets",
+        ".context/placid-badger/metolius-simulator-3d-jagged/native-author/export-run/assets"
+      ],
+      "ownedProcessGroup": 47032,
+      "compilerSHA256After": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+      "compilerBytesUnchanged": true,
+      "elapsedSeconds": 382.17040037497645,
+      "exitCode": 0,
+      "ownedProcessGroupExited": true
+    },
+    {
+      "workspaceOwner": "placid-badger",
+      "name": "baseline-rebuild",
+      "startedUTC": "2026-10-01T14:52:33.945966+00:00",
+      "timeoutSeconds": 900,
+      "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+      "args": [
+        "--package",
+        "metolius-simulator-3d",
+        "--source",
+        ".context/placid-badger/metolius-simulator-3d-jagged/native-author/before/metolius-simulator-3d.FCStd",
+        "--assets",
+        ".context/placid-badger/metolius-simulator-3d-jagged/native-author/baseline-rebuild/assets"
+      ],
+      "ownedProcessGroup": 47031,
+      "compilerSHA256After": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+      "compilerBytesUnchanged": true,
+      "elapsedSeconds": 132.8159752089996,
+      "exitCode": 0,
+      "ownedProcessGroupExited": true
+    },
+    {
+      "workspaceOwner": "placid-badger",
+      "name": "reproduce",
+      "startedUTC": "2026-10-01T14:53:17.133886+00:00",
+      "timeoutSeconds": 900,
+      "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+      "args": [
+        "--package",
+        "metolius-simulator-3d",
+        "--source",
+        ".context/placid-badger/metolius-simulator-3d-jagged/native-author/candidate/metolius-simulator-3d.FCStd",
+        "--assets",
+        ".context/placid-badger/metolius-simulator-3d-jagged/native-author/reproduce/assets"
+      ],
+      "ownedProcessGroup": 47290,
+      "compilerSHA256After": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+      "compilerBytesUnchanged": true,
+      "elapsedSeconds": 379.3675922920229,
+      "exitCode": 0,
+      "ownedProcessGroupExited": true
+    }
+  ],
+  "cleanupReport": "cleanup.json"
+}

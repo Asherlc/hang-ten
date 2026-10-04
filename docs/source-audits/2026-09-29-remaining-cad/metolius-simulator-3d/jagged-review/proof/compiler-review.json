@@ -1,0 +1,100 @@
+{
+  "reviewedAtUTC": "2026-10-01T15:03:20.675247+00:00",
+  "status": "no blocking code findings in final hash; package/runtime integration pending",
+  "initialCompilerSHA256": "0f3c473cd36aaff03cfc701043e7d5272abd66eda27a7d3b8f8658916c85e815",
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "sourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+  "blockingFindings": [],
+  "resolvedFindings": [
+    {
+      "id": "invalid-uv-witness",
+      "initialProblem": "Discarding finite UV positions with invalid normals could make a coincident position falsely unique.",
+      "resolution": "Finite unsafe/invalid normals remain None-valued spatial witnesses; exactly one non-None match is required. Nonfinite positions discard the face cache.",
+      "regression": "Real periodic-cylinder invalid-duplicate red/green proof retained."
+    },
+    {
+      "id": "test-child-lifecycle",
+      "initialProblem": "Conditional kill only while wrapper alive could orphan FreeCAD child before temporary directory deletion.",
+      "resolution": "Always terminate the exact owned process group, tolerate absent group, then wait before deleting owned scratch."
+    },
+    {
+      "id": "c0-derivative-boundary",
+      "origin": "Author/independent boundary comparison, reviewed here",
+      "initialProblem": "At non-smooth B-spline knots, one ULP of inverse parameter could select a different derivative.",
+      "resolution": "Internal U/V knots with multiplicity>=degree create unusable witnesses, forcing legacy evaluation; folded degree-eight native regression retained."
+    }
+  ],
+  "codeChecks": {
+    "faceOwnership": "Exact unordered native facet signature; all tessellatable face ownership recorded before UV APIs; an uninspectable face disables the cache.",
+    "uvCorrespondence": "Spatial matching in 27 neighboring cells within0.00002mm; no UV or tessellation order assumption; exactly one usable witness per corner.",
+    "normalOrientationAndReuse": "Per-(original point index,face) remap and existing winding sign remain; normalization and negative vector creation preserve existing convention.",
+    "fallback": "Missing/unmatched/ambiguous/unsafe data use unchanged inverse evaluator.",
+    "metadata": "Explicit App::PropertyBool only; true UV opt-in requires present true App::PropertyBool analytic-normal flag.",
+    "defaultPath": "Absent/false UV flag neither constructs cache nor reads UV APIs; legacy build dispatch unchanged by inspection.",
+    "materialAndGeometry": "No writer, material, tessellation, contact/node identity or geometry-authoring behavior changed."
+  },
+  "verifiedRetainedEvidence": {
+    "nativeCases": 9,
+    "hostNativeTestWrapper": "1 passed",
+    "adjacentTests": "84 passed",
+    "testsWereNotRerunByReviewer": true,
+    "normalComparison": {
+      "trianglesCompared": 71,
+      "cornersCompared": 213,
+      "allPositionsExact": true,
+      "maxNormalAngleDegrees": 8.537736462515939e-07
+    },
+    "defaultFalse": {
+      "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+      "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+      "files": {
+        "primary.usdz": {
+          "sha256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+          "bytes": 994933,
+          "exactBaselineBytes": true
+        },
+        "primary.model.json": {
+          "sha256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e",
+          "bytes": 13956,
+          "exactBaselineBytes": true
+        }
+      },
+      "actualOutputHashesVerified": true
+    },
+    "sourceArchive": {
+      "geometrySourceSHA256": "40e42ed072a72946d11756cd6f92047fd0d5acd79eb33946cb2188441babbbde",
+      "headerSourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+      "onlyChangedMember": "Document.xml",
+      "unchangedBRepMembers": 387,
+      "allOtherMembersExact": true,
+      "geometryRejected": false
+    }
+  },
+  "integrationGatesPending": [
+    "Final deterministic check/export and independent current mesh/descriptor proof",
+    "Final Python/iOS integration and fresh actual-app review",
+    "Human acceptance of review8"
+  ],
+  "limits": "Read-only tooling and metadata review; no authoritative shape or appearance judgment, native compiler/test invocation, server, simulator or other external resource from this reviewer. Reported test runs were inspected and hash-bound.",
+  "fileSHA256": {
+    "Tools/HangboardCAD/compile_board.py": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+    "Tools/HangboardCAD/README.md": "7f8532019f23e2aceee349f5ef798ad007a6bfc19782c11fc5ec6385a80d85d7",
+    "Tools/HangboardCAD/tests/test_uv_node_normals.py": "829e79fc508ac55c28ab17c859ffaca4fa92c29438533f699f96cc308fd05f2f",
+    "Tools/HangboardCAD/tests/uv_node_normal_checks.py": "f43f4019875fc92af8782f4b05bbfd16e65f81aa51a79bf9ae47591989d31756",
+    "Tools/HangboardCAD/run_freecad.py": "b5c030eec4b3f22e1e2ecc93c21e18880b1bdcdb66e1eaaa24cdb1f167816350",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/implementation-review.json": "72a24c138c7f95cac9a749087dea11a7f6db0bbda1d1d32018ff34d1798a1b07",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/green-final.log": "a16353b8dc4c6f9e52d17bebe630d48503c3c8c6f5ac659eb0bfd2d527739fb4",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/adjacent-final-tests.log": "0deebfb3f13af88d567213c629663840abed9d4ec9c5325cd744f65a7bb4c6b3",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/invalid-uv-red.log": "92484d18dad6528d30bbcdb1003692025a8dab6be9817c606dfd7c681a2dd02b",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/invalid-uv-green.log": "49ae1d28768606678fb46a3a1115bec23f60c30f324650f113d9783ee5d44d57",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/knot-red.log": "c38d5937d7fc20a97c258fea4fe6f371d3e97f150168c5d78a161d7f5276462a",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization/knot-green.log": "8964ec0c2d96a99a0012763cb299d0385e0125f9a98c492b18fdae2e013f728a",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/final-normal-comparison.json": "c1a6555528f7763e95be728bf0525a5d199089656663b46a0def188892974e42",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/baseline-default-false-reproducibility.json": "866d5a42b8954dc6a1591b3be5c7802e27da46d38cd437fcf70eef0f4b7caf43",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/independent-flag-source-preservation.json": "e9266cdcba7ff9cd2411a22ecea437546bb426e1ba6fbce34fb69e78a290fed9",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/baseline-rebuild/assets/primary.usdz": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/baseline-rebuild/assets/primary.model.json": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e"
+  },
+  "trackedMutation": false,
+  "externalResources": []
+}

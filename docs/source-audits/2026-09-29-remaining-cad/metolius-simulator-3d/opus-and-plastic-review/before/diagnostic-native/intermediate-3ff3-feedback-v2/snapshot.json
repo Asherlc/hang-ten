@@ -1,0 +1,31 @@
+{
+  "owner": "placid-badger",
+  "recordedAtUTC": "2026-10-01T18:17:15.273998+00:00",
+  "status": "intermediate diagnostic metadata correction;3ff3 waviness correction still required;human review pending",
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "humanAcceptance": "pending review #8",
+  "reason": "Immutable v2 root feedback corrects actual swipes to after3/finish1/grasp6. Source, image, verdict and visual feedback unchanged; v1 raw retained by exact copy. Technical source/export passes remain historical; no app/human acceptance or human rejection.",
+  "preferredFeedbackMetadata": "root-proof/3ff3-app-visual-feedback-v2.json",
+  "preferredFeedbackSHA256": "228372fa6e6e0057564d28721be10d7e7de1589b0e894ad05cdd32fea73d29b8",
+  "priorFeedbackSHA256": "a78414b88f0d0bdc6fc480dc20773a50007435b828c217043c373ccc7dfd2c1f",
+  "rawCopies": [
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/intermediate-3ff3-completed-app-wavy-block/candidate/metolius-simulator-3d.FCStd",
+      "retained": "candidate/metolius-simulator-3d.FCStd",
+      "sha256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+      "bytes": 8294771
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/3ff3-app-visual-feedback.json",
+      "retained": "root-proof/3ff3-app-visual-feedback.json",
+      "sha256": "a78414b88f0d0bdc6fc480dc20773a50007435b828c217043c373ccc7dfd2c1f",
+      "bytes": 5809
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/3ff3-app-visual-feedback-v2.json",
+      "retained": "root-proof/3ff3-app-visual-feedback-v2.json",
+      "sha256": "228372fa6e6e0057564d28721be10d7e7de1589b0e894ad05cdd32fea73d29b8",
+      "bytes": 6205
+    }
+  ]
+}

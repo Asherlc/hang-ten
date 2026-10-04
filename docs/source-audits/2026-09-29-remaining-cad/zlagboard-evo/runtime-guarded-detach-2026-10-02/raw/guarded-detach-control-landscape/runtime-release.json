@@ -1,0 +1,8 @@
+{
+  "runtimeAuthorized": true,
+  "arm": "control",
+  "helperSHA256": "480220b28acb8f3ac4bf4e036fe2821989a2dcbb3053d7484305b56be6da322f",
+  "constructorMarkerAuditReady": true,
+  "previousArmGatePassed": true,
+  "binarySHA256": "66a1bd90a99a9226dc96b6ec12b8b3325d3a054baf5930009ccdc6808b2c5723"
+}

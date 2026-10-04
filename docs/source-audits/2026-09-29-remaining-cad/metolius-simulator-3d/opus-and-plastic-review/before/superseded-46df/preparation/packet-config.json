@@ -1,0 +1,664 @@
+{
+  "owner": "placid-badger",
+  "reviewNumber": 8,
+  "packetDirectory": "opus-and-plastic-review",
+  "candidateHashes": {
+    "sourceSHA256": "46df0c88878d3f833c27c7cce12c637fba09572d9223290c850c0e866b4d1264",
+    "modelSHA256": null,
+    "descriptorSHA256": null
+  },
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "revisionBaseCommit": "b097aa5ba34d55e69b9cdac73122b06774947a16",
+  "packageBaseline": ".context/placid-badger/metolius-simulator-3d-plastic-review/all-hangboards-baseline.json",
+  "neutralPacketSnapshot": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/neutral-packet-snapshot.json",
+  "neutralRecordSnapshot": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/before-records-snapshot.json",
+  "plasticTagSource": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/plastic-tag-intermediate/metolius-simulator-3d.FCStd",
+  "summary": null,
+  "question": "Does this look right now?",
+  "reviewScope": "Shown complete original and prior neutral native front/side/top comparisons and fresh actual-app plastic views of the Opus-corrected candidate; estimated transitions, rounding and thickness, existing app display palette and representative selected contacts with orbit coverage. Adapted center-jug rear return and finger room, forward-anchored sloper support bands and their actual contact surfaces are included.",
+  "approvalLimit": "Any later human acceptance applies to this displayed candidate, its app palette and representative selection coverage. It does not certify manufacturer-exact estimated geometry or color, global roof G1/C1 continuity, or a visual sweep of all 30 contacts.",
+  "limits": "Whole raw images; no crop, registration, tracing, pixel-derived geometry, or automatic shape inference. Neutral app frames are historical. Final native/export measurements are finite technical probes; source fidelity and actual-app appearance require the retained Opus and human reviews. Mint is the app palette, not a manufacturer color or texture claim. The center-jug rear return and finger-room profile are operator-selected display adaptations responding to user feedback. The retained manufacturer front photographs, comparison sheet and mounting instructions do not establish a definitive rear profile or any incut dimension. The 55/65 mm sloper support depths remain sourced; locating those support bands from the front backward is an explicitly labeled interpretation and display adaptation. No material chemistry, manufacturer mint color, global roof G1/C1 continuity or exact estimated thickness is claimed.",
+  "beforeApp": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/jagged-review/app/after/validation.json",
+  "beforeAppPhase": "after",
+  "beforeInstalled": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/jagged-review/proof/ios/installed-app-provenance.json",
+  "afterApp": ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/after-captures/validation.json",
+  "afterAppPhase": "after",
+  "appPairs": [
+    "jug-left-orbit"
+  ],
+  "measurements": {
+    "nativeReport": ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/native-check.json",
+    "envelopePointer": "/envelopeXYZMM",
+    "depthsPointer": "/publishedDepthChecks",
+    "measuredThicknessMM": 94.00150336931881,
+    "continuityReport": null,
+    "normalAnglePointer": null,
+    "maximumResidualRoofNormalAngleDegrees": null
+  },
+  "opus": {
+    "advisorAgentID": "918cc0e7-961d-4672-9f95-b4f2918098b7",
+    "firstMarkdown": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-first-review.md",
+    "firstMarkdownSHA256": "e8f76f3f115d62060a8bca10d03cf1fdf4984ee5a0ebc7a656db94c9c19c46e5",
+    "firstActivity": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-first-activity.json",
+    "rawRecords": [
+      {
+        "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-first-review.md",
+        "sha256": "e8f76f3f115d62060a8bca10d03cf1fdf4984ee5a0ebc7a656db94c9c19c46e5"
+      },
+      {
+        "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-first-activity.json",
+        "sha256": "0a14739d9fe7dd33a28080379ce152657f287593775def6846cb977bb8a57e4d"
+      },
+      {
+        "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-metadata-followup-review.md",
+        "sha256": "73f640dfdf74f6e114ea5a2549a4da07e692ccb6e0c3a5243e25b511692287b6"
+      },
+      {
+        "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-metadata-followup-activity.json",
+        "sha256": "7ac8691f793685dc6a282073015d86d8471cf78de13471a5e793026bd9fd21da"
+      },
+      {
+        "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-native-review.md",
+        "sha256": "437eac424305acc4cf7a7b06e0c813152bbe0e40e0e94828ae51672918b8fc51"
+      },
+      {
+        "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-native-activity.json",
+        "sha256": "37bdc1a721ec9260da09a05cfcf623c7299ab78da73491ecffcac494989c87f6"
+      },
+      {
+        "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-functional-feedback-review.md",
+        "sha256": "951efd1acb7aa94b02d40040f9fb6be34b7f199acaf236bc92736caf44f2ad46"
+      },
+      {
+        "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-functional-feedback-activity.json",
+        "sha256": "a5bb38f42d5e82c37afcb01f79992cc50ba31042b36f3c74fcaead83a06ef37d"
+      }
+    ],
+    "finalMarkdown": null,
+    "finalActivity": null,
+    "cleanupReport": null,
+    "cleanupEquals": null
+  },
+  "cleanupDevices": ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/devices-fresh-deletion-verification.json",
+  "cleanupLogProvenance": null,
+  "reports": [
+    {
+      "role": "author",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/source-freeze.json",
+      "equals": {
+        "/sourceSHA256": "@sourceSHA256",
+        "/sourceBeforeSHA256": "21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d",
+        "/rawPlasticManifestExact": true,
+        "/normalFlagsPreserved": true
+      }
+    },
+    {
+      "role": "independent-native",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/native-check.json",
+      "equals": {
+        "/status": "pass",
+        "/sourceSHA256": "@sourceSHA256",
+        "/blockingFindings": [],
+        "/sourceBytesUnchanged": true
+      }
+    },
+    {
+      "role": "independent-export",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/export-check.json",
+      "equals": {
+        "/status": "pass",
+        "/blockingFindings": [],
+        "/modelSHA256": "@modelSHA256",
+        "/descriptorSHA256": "@descriptorSHA256",
+        "/contactCount": 30,
+        "/forbiddenMaterialPrimsOrBindings": [],
+        "/unrelatedPackageChanges": []
+      }
+    },
+    {
+      "role": "compiler",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/reproducibility.json",
+      "equals": {
+        "/status": "pass",
+        "/sourceSHA256": "@sourceSHA256",
+        "/modelSHA256": "@modelSHA256",
+        "/descriptorSHA256": "@descriptorSHA256",
+        "/modelByteReproducibility": true,
+        "/descriptorByteReproducibility": true
+      }
+    },
+    {
+      "role": "geometry-disposition",
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/geometry-disposition.json",
+      "equals": {
+        "/status": null,
+        "/sourceSHA256": "@sourceSHA256",
+        "/blockingFindings": []
+      },
+      "validateLinkedHashes": true
+    },
+    {
+      "role": "ios-tests",
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/ios-summary.json",
+      "equals": {
+        "/result": "Passed",
+        "/failedTests": 0
+      }
+    },
+    {
+      "role": "python-tests",
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/python-test-report.json",
+      "equals": {
+        "/exitCode": 0
+      }
+    },
+    {
+      "role": "package",
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/integrated-package.json",
+      "equals": {
+        "/sourceSHA256": "@sourceSHA256",
+        "/modelSHA256": "@modelSHA256",
+        "/descriptorSHA256": "@descriptorSHA256",
+        "/contactsUnchanged": 30,
+        "/allOtherPackageFilesUnchanged": 203
+      }
+    },
+    {
+      "role": "staging",
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/delivery-parity.json",
+      "equals": {
+        "/status": "passed",
+        "/packageValidation/boards": 64,
+        "/packageValidation/drafts": 0
+      }
+    },
+    {
+      "role": "build",
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/ios-build-command.json",
+      "equals": {
+        "/exitCode": 0
+      }
+    },
+    {
+      "role": "installed",
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/installed-app-provenance.json",
+      "equals": {
+        "/nativeSourceSHA256": "@sourceSHA256",
+        "/binaryBytesMatch": true
+      }
+    },
+    {
+      "role": "app-visual",
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/app-visual-review.json",
+      "equals": {
+        "/sourceSHA256": "@sourceSHA256",
+        "/modelSHA256": "@modelSHA256",
+        "/descriptorSHA256": "@descriptorSHA256",
+        "/surfaceFinish": "plastic",
+        "/status": null
+      },
+      "validateLinkedHashes": true
+    },
+    {
+      "role": "cleanup",
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/verified-cleanup.json",
+      "equals": {
+        "/cleanupStatus": 0,
+        "/derivedDataRemoved": true,
+        "/xcresultRemoved": true,
+        "/exactSimulatorAbsent": true,
+        "/owner": "placid-badger"
+      }
+    },
+    {
+      "role": "opus-final",
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-final-disposition.json",
+      "equals": {
+        "/status": null,
+        "/sourceSHA256": "@sourceSHA256",
+        "/blockingFindings": []
+      },
+      "validateLinkedHashes": true
+    },
+    {
+      "role": "independent-native",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/functional-sections.json",
+      "equals": {
+        "/status": "pass",
+        "/sourceSHA256": "@sourceSHA256",
+        "/blockingFindings": [],
+        "/sourceBytesUnchanged": true
+      }
+    }
+  ],
+  "rawGroups": [
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/ios",
+      "destination": "proof/ios",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".md",
+        ".txt",
+        ".py",
+        ".zsh"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/retained-native-volume-failure-21ca",
+      "destination": "proof/retained-native-volume-failure-21ca",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/color-only-captures",
+      "destination": "proof/intermediate-plastic-ios/captures",
+      "suffixes": [
+        ".json",
+        ".png",
+        ".log"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/color-only-failed-tap",
+      "destination": "proof/intermediate-plastic-ios/failed-tap",
+      "suffixes": [
+        ".json",
+        ".png",
+        ".log"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/color-only-failed-selection",
+      "destination": "proof/intermediate-plastic-ios/failed-selection",
+      "suffixes": [
+        ".json",
+        ".png",
+        ".log"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/color-only-manual-physical-diagnosis",
+      "destination": "proof/intermediate-plastic-ios/manual-physical-diagnosis",
+      "suffixes": [
+        ".json",
+        ".png",
+        ".log"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources",
+      "destination": "sources/additional-primary",
+      "suffixes": [
+        ".jpg",
+        ".png",
+        ".pdf",
+        ".json",
+        ".log",
+        ".swift",
+        ".md"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction",
+      "destination": "proof/functional-author",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".md",
+        ".txt",
+        ".py",
+        ".zsh",
+        ".FCStd",
+        ".brep"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation",
+      "destination": "proof/functional-independent",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".md",
+        ".txt",
+        ".py"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/review",
+      "destination": "proof/functional-native-probe-review",
+      "suffixes": [
+        ".png",
+        ".json",
+        ".md"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/grasp-review",
+      "destination": "proof/functional-grasp-review",
+      "suffixes": [
+        ".png",
+        ".json",
+        ".md",
+        ".py",
+        ".log"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/probe-v1",
+      "destination": "proof/functional-probes/v1",
+      "suffixes": [
+        ".FCStd",
+        ".brep",
+        ".json",
+        ".py",
+        ".log",
+        ".md"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/probe-v2",
+      "destination": "proof/functional-probes/v2",
+      "suffixes": [
+        ".FCStd",
+        ".brep",
+        ".json",
+        ".py",
+        ".log",
+        ".md"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/probe-v3",
+      "destination": "proof/functional-probes/v3",
+      "suffixes": [
+        ".FCStd",
+        ".brep",
+        ".json",
+        ".py",
+        ".log",
+        ".md"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/probe-v4",
+      "destination": "proof/functional-probes/v4",
+      "suffixes": [
+        ".FCStd",
+        ".brep",
+        ".json",
+        ".py",
+        ".log",
+        ".md"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/contact-probe-v2",
+      "destination": "proof/functional-contact-probe-v2",
+      "suffixes": [
+        ".FCStd",
+        ".brep",
+        ".json",
+        ".py",
+        ".log",
+        ".md"
+      ]
+    }
+  ],
+  "rawFiles": [
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/metadata-preservation.json",
+      "destination": "proof/plastic-tag/metadata-preservation.json",
+      "sha256": "eac9256c3361c66ad40438ab35cffc2cb5a4ced4d7f3f06a97f836d5e5718b40"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/ownership.json",
+      "destination": "proof/opus/ownership.json",
+      "sha256": "1f1a4471bc687cb4ba771383848f1289c67b1443ae43236d4394b5d7b3886f13"
+    },
+    {
+      "source": "Tools/HangboardCAD/compile_board.py",
+      "destination": "proof/compiler/compile_board.py",
+      "sha256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/Training-Board-instructions.pdf",
+      "destination": "sources/additional-primary/Training-Board-instructions.pdf",
+      "sha256": "32d8edecde62767b25ea266704a11a0a065cc610e39817963fa91a55d0775911"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/gallery-and-video-web-lookup.json",
+      "destination": "sources/additional-primary/gallery-and-video-web-lookup.json",
+      "sha256": "191aa0e398e6926c429bc7394bed733e2aa9ad5e2543a9175c2fc6bac763c7fe"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/mounting-instructions-page-1.png",
+      "destination": "sources/additional-primary/mounting-instructions-page-1.png",
+      "sha256": "8487d02638a213cc85097c6987f7b1b8696f9122f40f5ffb15043eb4a9030ab7"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/mounting-instructions-page-2.png",
+      "destination": "sources/additional-primary/mounting-instructions-page-2.png",
+      "sha256": "33c262b90c5d33122f4daacd5ed05d9f18dc2dfd81d4ceb4ff9ecd9c5dc4bf04"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/pdf-render-command.json",
+      "destination": "sources/additional-primary/pdf-render-command.json",
+      "sha256": "21c0c9672a79c594bf098d2d362f8ae1370e9ec0bf3b082a27bdf0c4009ddec5"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/pdf-render.log",
+      "destination": "sources/additional-primary/pdf-render.log",
+      "sha256": "46f2ad2424bafc5d70983293fec71c3ec7791046b46b535b52b25f9e8b09789b"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/product-blue-white.jpg",
+      "destination": "sources/additional-primary/product-blue-white.jpg",
+      "sha256": "1c856a0cb9b4c47f40f421c96abc2c6cf50222aa8a17df46d74bbc24b3cf6fc8"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/product-page-web-lookup.json",
+      "destination": "sources/additional-primary/product-page-web-lookup.json",
+      "sha256": "199751d12ec15884f691ddf48bf78aa413516f103b067551417483286f1daee0"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/render_complete_pdf.swift",
+      "destination": "sources/additional-primary/render_complete_pdf.swift",
+      "sha256": "73f790e8f858d50dbede7e3328881f336e253a9c783521f29fda7bd8be0f681a"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/source-review.json",
+      "destination": "sources/additional-primary/source-review.json",
+      "sha256": "66f9e0317f4e5a48b605c286f7334306a87ef5fad9f84f445f6e14c63d775a60"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/sources.json",
+      "destination": "sources/additional-primary/sources.json",
+      "sha256": "c74cdce478c41707c3d6c653acc5bf9cd88549b562f5511bdac11a7ffaf65bc0"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/training-board-comparison.jpg",
+      "destination": "sources/additional-primary/training-board-comparison.jpg",
+      "sha256": "7ca8b427b6efe55a9b60cb3cc00c93f4775dcd640ded495cd58fea400366ef4a"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/authored-design.json",
+      "destination": "proof/functional-author/authored-design.json",
+      "sha256": "7b3cb264107c250935baa28c2f754638a5de20c556e90e864be3ef41836daecb"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/source-freeze.json",
+      "destination": "proof/functional-author/source-freeze.json",
+      "sha256": "2050957593e48c60a5813feabbf12133de57a965ce78e0b1cca6744a1eba419c"
+    }
+  ],
+  "cadPairs": {
+    "original": {
+      "front": {
+        "before": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/original-9449-front.png",
+        "after": null
+      },
+      "side": {
+        "before": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/original-9449-side.png",
+        "after": null
+      },
+      "top": {
+        "before": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/original-9449-top.png",
+        "after": null
+      }
+    },
+    "neutral": {
+      "front": {
+        "before": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/rejected-8fa-front.png",
+        "after": null
+      },
+      "side": {
+        "before": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/rejected-8fa-side.png",
+        "after": null
+      },
+      "top": {
+        "before": ".context/placid-badger/metolius-simulator-3d-opus-corrections/final-native-review/rejected-8fa-top.png",
+        "after": null
+      }
+    }
+  },
+  "cadPreviewReport": null,
+  "cadPreviewDirectory": null,
+  "superseded21caSnapshot": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/superseded-21ca-native-gate/snapshot.json",
+  "superseded21caAdditionalSnapshots": [
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/superseded-21ca-unwaived-validation/snapshot.json",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/superseded-21ca-completed-exports/snapshot.json"
+  ],
+  "additionalSources": {
+    "directory": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources",
+    "review": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/source-review.json",
+    "reviewSHA256": "66f9e0317f4e5a48b605c286f7334306a87ef5fad9f84f445f6e14c63d775a60",
+    "manifest": ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/sources.json",
+    "manifestSHA256": "c74cdce478c41707c3d6c653acc5bf9cd88549b562f5511bdac11a7ffaf65bc0",
+    "files": {
+      "Training-Board-instructions.pdf": {
+        "sha256": "32d8edecde62767b25ea266704a11a0a065cc610e39817963fa91a55d0775911",
+        "bytes": 440009
+      },
+      "gallery-and-video-web-lookup.json": {
+        "sha256": "191aa0e398e6926c429bc7394bed733e2aa9ad5e2543a9175c2fc6bac763c7fe",
+        "bytes": 778
+      },
+      "mounting-instructions-page-1.png": {
+        "sha256": "8487d02638a213cc85097c6987f7b1b8696f9122f40f5ffb15043eb4a9030ab7",
+        "bytes": 503686
+      },
+      "mounting-instructions-page-2.png": {
+        "sha256": "33c262b90c5d33122f4daacd5ed05d9f18dc2dfd81d4ceb4ff9ecd9c5dc4bf04",
+        "bytes": 509926
+      },
+      "pdf-render-command.json": {
+        "sha256": "21c0c9672a79c594bf098d2d362f8ae1370e9ec0bf3b082a27bdf0c4009ddec5",
+        "bytes": 467
+      },
+      "pdf-render.log": {
+        "sha256": "46f2ad2424bafc5d70983293fec71c3ec7791046b46b535b52b25f9e8b09789b",
+        "bytes": 18
+      },
+      "product-blue-white.jpg": {
+        "sha256": "1c856a0cb9b4c47f40f421c96abc2c6cf50222aa8a17df46d74bbc24b3cf6fc8",
+        "bytes": 310084
+      },
+      "product-page-web-lookup.json": {
+        "sha256": "199751d12ec15884f691ddf48bf78aa413516f103b067551417483286f1daee0",
+        "bytes": 11040
+      },
+      "render_complete_pdf.swift": {
+        "sha256": "73f790e8f858d50dbede7e3328881f336e253a9c783521f29fda7bd8be0f681a",
+        "bytes": 976
+      },
+      "source-review.json": {
+        "sha256": "66f9e0317f4e5a48b605c286f7334306a87ef5fad9f84f445f6e14c63d775a60",
+        "bytes": 2976
+      },
+      "sources.json": {
+        "sha256": "c74cdce478c41707c3d6c653acc5bf9cd88549b562f5511bdac11a7ffaf65bc0",
+        "bytes": 1432
+      },
+      "training-board-comparison.jpg": {
+        "sha256": "7ca8b427b6efe55a9b60cb3cc00c93f4775dcd640ded495cd58fea400366ef4a",
+        "bytes": 238582
+      }
+    }
+  },
+  "adaptationLimits": "The center-jug rear return and finger-room profile are operator-selected display adaptations responding to user feedback. The retained manufacturer front photographs, comparison sheet and mounting instructions do not establish a definitive rear profile or any incut dimension. The 55/65 mm sloper support depths remain sourced; locating those support bands from the front backward is an explicitly labeled interpretation and display adaptation. No material chemistry, manufacturer mint color, global roof G1/C1 continuity or exact estimated thickness is claimed.",
+  "functionalSourceCheckpoint": {
+    "directory": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/functional-46df-source-checkpoint",
+    "sourceSHA256": "46df0c88878d3f833c27c7cce12c637fba09572d9223290c850c0e866b4d1264",
+    "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/functional-46df-source-checkpoint/metolius-simulator-3d.FCStd",
+    "purpose": "Read-only native source checkpoint; final visual/export/app gates remain pending."
+  },
+  "pendingFunctionalRawGroups": [
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/final-native-review",
+      "destination": "proof/functional-final-native-review",
+      "suffixes": [
+        ".png",
+        ".json",
+        ".md"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/export-review",
+      "destination": "proof/functional-final-export-review",
+      "suffixes": [
+        ".png",
+        ".json",
+        ".md"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/check-assets",
+      "destination": "proof/functional-check-export",
+      "suffixes": [
+        ".json",
+        ".usdz",
+        ".log",
+        ".txt"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/reproduce-assets",
+      "destination": "proof/functional-reproduced-export",
+      "suffixes": [
+        ".json",
+        ".usdz",
+        ".log",
+        ".txt"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-correction/contact-probe-v2/assets",
+      "destination": "proof/functional-contact-probe-v2/assets",
+      "suffixes": [
+        ".json",
+        ".usdz"
+      ]
+    }
+  ],
+  "extraAppPhases": [
+    {
+      "name": "finish",
+      "source": null,
+      "phase": "finish",
+      "expectedCaptures": 4,
+      "purpose": "Fresh mint coverage, selected highlight contrast and deselection restoring mint."
+    },
+    {
+      "name": "grasp",
+      "source": null,
+      "phase": "grasp",
+      "expectedCaptures": 2,
+      "requiredContactID": "jug-14-center",
+      "purpose": "Fresh critical center-jug selection and rear/return orbit."
+    }
+  ]
+}

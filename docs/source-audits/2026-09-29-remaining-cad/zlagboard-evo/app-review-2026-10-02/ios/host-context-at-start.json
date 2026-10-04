@@ -1,0 +1,29 @@
+{
+  "observedUTC": "2026-10-02T05:10:09.272414+00:00",
+  "timing": "Captured immediately after lifecycle launch; before build or app validation.",
+  "records": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "sysctl",
+        "kern.boottime"
+      ],
+      "exitStatus": 0,
+      "stdout": "kern.boottime: { sec = 1790916932, usec = 425231 } Thu Oct  1 21:55:32 2026\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "df",
+        "-h",
+        "/System/Volumes/Data"
+      ],
+      "exitStatus": 0,
+      "stdout": "Filesystem      Size    Used   Avail Capacity iused ifree %iused  Mounted on\n/dev/disk3s1   926Gi   835Gi    66Gi    93%     25M  695M    3%   /System/Volumes/Data\n",
+      "stderr": ""
+    }
+  ]
+}

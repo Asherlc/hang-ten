@@ -1,0 +1,4 @@
+ M Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.model.json
+ M Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.usdz
+ M Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd
+ M Hangboards/nature-stone-hanger-mini-karma8a/suspension.json

@@ -1,0 +1,7 @@
+This is the independent corrected-shape route audit lane. The original vector/finite-triangle arithmetic is reused as code, while every witness, source, mesh, asset and loaded-helper identity is checked afresh; no prior shape pass carries forward.
+
+Run `rtk proxy python3 -B audit_vertical_candidate.py --help` for the deferred interface. Required inputs are the immutable final certificate/report SHA, candidate sidecar/SHA and final code-freeze/SHA. Source, collider and export defaults pin ee1890 / 9f1c7a / c4aa09 / 82c3. The canonical pre-application sidecar defaults to retained 7c248 history; it remains separate from the new candidate. Output filenames are immutable and remain in this folder.
+
+The audit verifies all eight poses and sixteen rounded paths, positive local segment/fraction forces, finite material incidence, independent closest-feature ties, actual nonnegative outward-facet cone assembly and its amplified error bound, finite vertical-seat traversal and continuous eroded-bore entry intervals. It checks retained whole-solid clearance thresholds without running a new solver/collision job. Every physical policy remains unchanged. Final regeneration, actual app and human review are separate gates.
+
+No final certificate is present yet. finalReady stays false. implementation-review-13975c3e retains the exact reviewed code and diagnostic failure/correction; final loaded helper/code freeze will be checked separately.

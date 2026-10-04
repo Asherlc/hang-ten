@@ -1,0 +1,31 @@
+{
+  "C0Faces": [
+    {
+      "face": 42,
+      "bounds": "BoundBox (-278, -94, 142.295, -238, 3.997e-14, 174.809)",
+      "error": "BOP check found the following errors:\nError in Face: BOPAlgo GeomAbs_C0\n"
+    },
+    {
+      "face": 54,
+      "bounds": "BoundBox (238, -94, 142.295, 278, 3.997e-14, 174.809)",
+      "error": "BOP check found the following errors:\nError in Face: BOPAlgo GeomAbs_C0\n"
+    },
+    {
+      "face": 62,
+      "bounds": "BoundBox (-278, -94, 135, -238, -72.128, 171.397)",
+      "error": "BOP check found the following errors:\nError in Edge: BOPAlgo_InvalidCurveOnSurface\nError in Face: BOPAlgo_InvalidCurveOnSurface\n"
+    },
+    {
+      "face": 74,
+      "bounds": "BoundBox (238, -94, 135, 278, -72.128, 171.397)",
+      "error": "BOP check found the following errors:\nError in Edge: BOPAlgo_InvalidCurveOnSurface\nError in Face: BOPAlgo_InvalidCurveOnSurface\n"
+    }
+  ],
+  "lowerBOP": "pass",
+  "lowerValid": true,
+  "lowerSolids": 1,
+  "remainingPocket13": {
+    "left": 0.0,
+    "right": 0.0
+  }
+}

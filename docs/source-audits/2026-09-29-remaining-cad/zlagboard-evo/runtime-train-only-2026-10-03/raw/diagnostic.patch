@@ -1,0 +1,35 @@
+diff --git a/HangTen/Views/TrainView.swift b/HangTen/Views/TrainView.swift
+index ed3034572..25a683a0b 100644
+--- a/HangTen/Views/TrainView.swift
++++ b/HangTen/Views/TrainView.swift
+@@ -138,8 +138,30 @@ struct TrainView: View {
+ 
+     private var selectedBoardCard: some View {
+         VStack(alignment: .leading, spacing: 16) {
++            #if DEBUG
++            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_UNMOUNT_TRAIN_FOR_WORKOUT"] == "1",
++               showsDeepLinkedWorkout,
++               store.selectedBoard.id == "zlagboard.evo",
++               store.selectedBoard.presentations.count == 1 {
++                // Temporary comparison: remove only the covered Train board host.
++                VStack(spacing: 8) {
++                    Color.clear
++                        .aspectRatio(store.selectedBoard.defaultPresentation.aspectRatio(
++                            for: BoardMapPresentationSelection.resolvePositionID(
++                                board: store.selectedBoard,
++                                presentationID: store.selectedBoard.defaultPresentation.id,
++                                activeHoldID: nil)), contentMode: .fit)
++                }
++                .allowsHitTesting(false)
++                .accessibilityHidden(true)
++            } else {
++                BoardMapView(board: store.selectedBoard)
++                    .cardPreviewStyle()
++            }
++            #else
+             BoardMapView(board: store.selectedBoard)
+                 .cardPreviewStyle()
++            #endif
+ 
+             VStack(alignment: .leading, spacing: 5) {
+                 SectionLabel(title: "Your board")

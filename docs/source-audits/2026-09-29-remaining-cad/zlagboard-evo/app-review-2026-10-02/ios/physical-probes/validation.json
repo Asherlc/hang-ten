@@ -1,0 +1,11 @@
+{
+  "checks": {
+    "orbitChangesProjectedFrames": true,
+    "physicalContactTapResetsCanonicalFrames": true,
+    "physicalResetRetainsSelection": true,
+    "physicalLeftJugPick": true,
+    "physicalRightEdge20Pick": true,
+    "physicalCenterEdge35Pick": true
+  },
+  "limits": "Actual UI points selected from visible app scenes, not manufacturer measurement. No public separate clear/reset control; scene-contact tap restores canonical view. Cord checks not applicable to fixed board without suspension metadata."
+}

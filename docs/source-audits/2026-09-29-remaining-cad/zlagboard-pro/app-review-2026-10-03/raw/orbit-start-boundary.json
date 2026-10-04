@@ -1,0 +1,10 @@
+{
+  "previousRun": "captures-v2",
+  "previousStatus": "FAIL_ORBIT_NOT_DELIVERED",
+  "rawStatusPreserved": true,
+  "firstPhysicalDownUpTapConfirmed": true,
+  "previousGesture": "Board map interior(167.6,259.6)\u2192(211.02,248.8)",
+  "observations": "Projected frames and diagnostic orbit values unchanged. Cause not established.",
+  "nextSeparateProtocol": "Begin same bounded drag on actual successfully tapped contact projected center, instead of unproven board-map interior. Six obliques and28physicalselections remain planned.",
+  "appSourceChanged": false
+}

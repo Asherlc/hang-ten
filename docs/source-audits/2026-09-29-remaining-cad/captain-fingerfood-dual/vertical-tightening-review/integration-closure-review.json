@@ -1,0 +1,62 @@
+{
+  "reviewedAt": "2026-09-30T19:31:15.767070+00:00",
+  "reviewer": "cad_wall_boards",
+  "status": "passed",
+  "blockingFindings": [],
+  "scope": "Read-only documentation/provenance closure. No tests, native solves, code/package edits or resources created.",
+  "identities": {
+    "currentSidecarSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+    "historicalFrontEntrySidecarSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+    "solverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+    "generatedManifestSHA256": "13c588a09f81a5ba2c7529e211fc6fdf610a948e5cdcf01b70a1ee19bd958ef4",
+    "consistency": "Current verification/runtime/render/app/queue/delivery records agree. Before snapshot is separately retained. Unchanged native solid is distinguished from changed transient cord geometry."
+  },
+  "checks": {
+    "retainedFileAndImageHashesVerified": 72,
+    "markdownReviewLinksExist": true,
+    "currentQueueAndLockAppLinks": "vertical-tightening-review/app-review",
+    "deliveryLock": {
+      "passed": true,
+      "models": 58,
+      "files": 135,
+      "sha256Manifest": "a3349681809872a6b65205b4da7cb38beaa3b1ed7b246518d4d225bc87702c11"
+    },
+    "freshNativeApplyCheck": "All-four reports byte-identical and bound to current source/solver/sidecar.",
+    "python": "594 passed, 9 skipped, 1 deselected; exit0; corrected MESHOPT_LIBRARY environment retained.",
+    "iOS": "1258 passed, 3 skipped, 0 failed; exit0.",
+    "cleanup": {
+      "/Users/asherlc/Library/Developer/CoreSimulator/Devices/990DFC2B-D415-4490-B070-95D4EAD9B5C8": true,
+      ".context/DerivedData": true,
+      ".context/placid-badger/dual-vertical-review/placid-badger-dual-vertical-tests.xcresult": true
+    }
+  },
+  "approvalAndClaims": {
+    "frontEntryApproval": "The user reply y applies only to the preceding general front-hole entry correction.",
+    "verticalAcceptance": "Revised90degree lower-lead shape remains pending in human-review, queue, lock and app records.",
+    "physicalClaims": "Bounded local geometric shortening only. No global optimum, unavoidable remaining offset, complete hidden threading, equal-taut-rope equilibrium or physical UI orbit claim.",
+    "orbit": "Explicitly unverified; only canonical current-source app views claimed.",
+    "visualEvidence": "All24technical front/side/top full/detail comparison hashes and all8app screenshot/accessibility artifact hashes checked."
+  },
+  "historicalPendingResolution": {
+    "snapshot": "final-independent-review.json preserves its earlier dated pending list and hash.",
+    "PythonAndiOS": "Completed successfully in the later runtime-validation.json; this closure resolves those pending entries.",
+    "optionalBaguette": "Terminated as directed after partial generation; no final all-five package cache comparison was completed or claimed. Partial/termination record and logs retained, owned processes verified exited, package hashes unchanged."
+  },
+  "remainingHumanWork": "Present the revised DUAL90degree view for user acceptance; remain on board2 until that review concludes.",
+  "reviewedFileSHA256": {
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/review.md": "8965f43f5897a9677ebf9103f7d1ca85a5853fc6089a2f7b10e436ac909c7998",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/verification.json": "437d76967d88e53893479785381f32b4e14e795eb766515be9ff1873359caaf4",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/runtime-validation.json": "e0b98a3c0539c7f9897443cb683a9d476a78854ed8f1e3ab76fb4026a55048fc",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/final-independent-review.json": "83e7ad0923e17bdeb956d76ccb3e7f9b94774c0dc0f2e722fed8fb73a2625533",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/fresh-reproducibility-result.json": "78a86127576203cced503cf46464516426b57389a9fea423afe0979812e4cce0",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/render-provenance.json": "63bc58b3be45f4383cdd84d41a5eeed863cd966c6c90441d1b7d3018fe47b831",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/app-review/validation.json": "ef21518e23ccf898dac2d732db5af22ed5edb096a1758351e89696aa1b0210eb",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/resource-cleanup.json": "649097c0f4a01cee329bb4414ea248642d714987551c3b706c499e30be5f621f",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/final-hash-closure.json": "6f1503f47762983b506a022750008252359024831243b1ccc1b9de311388e3d5",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/human-review.json": "0b293e40b83037b0e9c38bd924e8aa2936c2f0002f2a40af668de8226c649c0a",
+    "docs/source-audits/2026-09-29-remaining-cad/review-queue.json": "ccbd476ce4b83ce3ba5dd20d5f73ced19cd0447cb4ade53a45568c3e9fd61531",
+    "docs/model-delivery-lock.json": "5def36ba09f41f46f45857fcc993a2010b73b246ad06f56fb8a4bc2ffcd719ea",
+    ".context/placid-badger/dual-vertical-review/baguette-unchanged-check-partial-terminated.json": "3028d6ee105273f18ffa011d898f14e21898d3a1bc697d41f1f6db23ec64096f",
+    ".context/placid-badger/dual-vertical-review/closure-verification-data.json": "5ebe8c9b58578e4303de4dfba54e392769c17807e24a398409b35777806bdbbf"
+  }
+}

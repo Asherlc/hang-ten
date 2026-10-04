@@ -1,0 +1,36 @@
+{
+  "sourceModelDescriptorExact": true,
+  "anchorAndRadiiExact": true,
+  "poses": {
+    "three-edge-upright": {
+      "routesExact": true,
+      "heightExact": true,
+      "rotationExact": true,
+      "cameraExact": true
+    },
+    "three-edge-inverted": {
+      "routesExact": true,
+      "heightExact": true,
+      "rotationExact": true,
+      "cameraExact": true
+    },
+    "two-edge-upright": {
+      "routesExact": true,
+      "heightExact": true,
+      "rotationExact": true,
+      "cameraExact": true
+    },
+    "two-edge-inverted": {
+      "routesExact": true,
+      "heightExact": true,
+      "rotationExact": true,
+      "cameraExact": true
+    }
+  },
+  "defaultSourcePackage": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-20261002T234319/placid-badger-provisional-package/Hangboards/tension-flash-board",
+  "finalSourcePackage": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-final-package/Hangboards/tension-flash-board",
+  "defaultSidecarSHA256": "434f47da5049a7ecd4f4bc471c1640d694838968eb919f53880c9b49e7359866",
+  "finalSidecarSHA256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
+  "scope": "exact actual visible mesh, cache/pose/support geometry equivalence; provenance/allowance/search metadata differ; independent image review still owned by root/reviewer",
+  "pixelMeasurementsOrInference": false
+}

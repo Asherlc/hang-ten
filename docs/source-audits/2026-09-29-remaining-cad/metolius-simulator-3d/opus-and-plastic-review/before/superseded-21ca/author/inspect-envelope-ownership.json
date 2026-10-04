@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "inspect-envelope",
+  "script": ".context/placid-badger/metolius-simulator-3d-opus-corrections/inspect_envelope.py",
+  "timeoutSeconds": 120,
+  "startedUTC": "2026-10-01T15:52:58.864291+00:00",
+  "ownedProcessGroup": 37347,
+  "elapsedSeconds": 2.842515083961189,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

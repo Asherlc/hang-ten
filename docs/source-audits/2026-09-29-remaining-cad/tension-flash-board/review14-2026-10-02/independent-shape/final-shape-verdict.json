@@ -1,0 +1,502 @@
+{
+  "owner": "placid-badger",
+  "board": "tension-flash-board",
+  "status": "pass",
+  "blockers": [],
+  "scope": "Independent technical physical shape/contact/compact-cord gate for exact final four-file package; runtime and human acceptance excluded.",
+  "candidatePackage": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-final-package/Hangboards/tension-flash-board",
+  "files": {
+    "assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+    "tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53"
+  },
+  "viewedRenderFiles": [
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/three-edge-upright-full-cord-front.png",
+      "sha256": "d2629308a93440926e9b6eaf0ad397d4282dea85ef7b8a3d93f6e0f1f8b6361e",
+      "pose": "three-edge-upright",
+      "view": "front",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/three-edge-upright-full-cord-oblique.png",
+      "sha256": "264067f9574080eb295cb06b71e6220bf96fc1b78aa82428f5eeca33fd003129",
+      "pose": "three-edge-upright",
+      "view": "oblique",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/three-edge-upright-full-cord-side.png",
+      "sha256": "ce1a7ecf5303593900f8fc697fca1bcb686a22e339ad4c72e1a3853ab7b3a4d5",
+      "pose": "three-edge-upright",
+      "view": "side",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/three-edge-upright-full-cord-top.png",
+      "sha256": "3af46bdd750e38f1c8af03d91ab771402af32520b51064196294094b3b7c58d6",
+      "pose": "three-edge-upright",
+      "view": "top",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/three-edge-upright-three-edge-left-reverse-oblique.png",
+      "sha256": "a8600f48539ae7563edd419fd9756c700339328a36fc0947a766becc64dd7d41",
+      "pose": "three-edge-upright",
+      "view": "reverse-oblique",
+      "activeContactID": "three-edge-left"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/three-edge-upright-three-edge-center-reverse-oblique.png",
+      "sha256": "5882b005066397dc15f7013cc0d046f0d0cb519dec4355101a3396457dbafcc6",
+      "pose": "three-edge-upright",
+      "view": "reverse-oblique",
+      "activeContactID": "three-edge-center"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/three-edge-upright-three-edge-right-reverse-oblique.png",
+      "sha256": "d6cde4a629cd03bea7f11396e4acbfdb21c1f71d69e2f175b1336ef8bb1d64ae",
+      "pose": "three-edge-upright",
+      "view": "reverse-oblique",
+      "activeContactID": "three-edge-right"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/three-edge-inverted-full-cord-front.png",
+      "sha256": "858af5afef36c188feba1b37f905d0cd27969a5a74127a519a75fe20a0025b74",
+      "pose": "three-edge-inverted",
+      "view": "front",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/three-edge-inverted-full-cord-oblique.png",
+      "sha256": "b71be9635aec746ce78676a557b574075d035cb3710448b45330ade4139b5144",
+      "pose": "three-edge-inverted",
+      "view": "oblique",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/three-edge-inverted-full-cord-side.png",
+      "sha256": "ee0aa3c769129222e9c57c3a6323547b439b6160d50993037c58390bdbd8895a",
+      "pose": "three-edge-inverted",
+      "view": "side",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/three-edge-inverted-full-cord-top.png",
+      "sha256": "6664e530acdfdde58b6232f0a2efd38c588559b4e162e190f988774589d04ec2",
+      "pose": "three-edge-inverted",
+      "view": "top",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/three-edge-inverted-three-edge-left-oblique.png",
+      "sha256": "56ef41e89bae5c6f720014a1ee55bf7a8a284cde062bc798497b1de878277d9a",
+      "pose": "three-edge-inverted",
+      "view": "oblique",
+      "activeContactID": "three-edge-left"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/three-edge-inverted-three-edge-center-oblique.png",
+      "sha256": "783735f897a1d4e53f71d4d44805b2d135dc15eafd709d94adebeb975de1f476",
+      "pose": "three-edge-inverted",
+      "view": "oblique",
+      "activeContactID": "three-edge-center"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/three-edge-inverted-three-edge-right-oblique.png",
+      "sha256": "e45d1a8cfe29458a2aa64b587f9182fa6cbd4e721ea79307fcc03e496bb218ec",
+      "pose": "three-edge-inverted",
+      "view": "oblique",
+      "activeContactID": "three-edge-right"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-upright-full-cord-front.png",
+      "sha256": "fabf0999057e7db924aac70e9f7ec43814c993b2d28b55b440597bbfe45ed716",
+      "pose": "two-edge-upright",
+      "view": "front",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-upright-full-cord-oblique.png",
+      "sha256": "d234028cdb6cdd3d43257eafb210dd4121d635ed956730b03f1f373ad2495769",
+      "pose": "two-edge-upright",
+      "view": "oblique",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-upright-full-cord-side.png",
+      "sha256": "874645fc015e1cdf3ad21e4999997d8d7b666e59e098e47cf087e682eefb87f2",
+      "pose": "two-edge-upright",
+      "view": "side",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-upright-full-cord-top.png",
+      "sha256": "24f42b621dca368e6e076a3ea2a85a53c99d1b1c174d4aa8abc230d064336172",
+      "pose": "two-edge-upright",
+      "view": "top",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-upright-two-edge-left-reverse-oblique.png",
+      "sha256": "9121da7b1008b7e8f07dcca2853be316b398d7ff08606816082cdc0af66be174",
+      "pose": "two-edge-upright",
+      "view": "reverse-oblique",
+      "activeContactID": "two-edge-left"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-upright-two-edge-right-reverse-oblique.png",
+      "sha256": "86105d918f9492fe1ca09b0a6d61d2d2a527ea2de0c280ebfef5fd1f3b4f467a",
+      "pose": "two-edge-upright",
+      "view": "reverse-oblique",
+      "activeContactID": "two-edge-right"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-upright-small-crimp-left-reverse-oblique.png",
+      "sha256": "b458fc26b9eef8758f4ae0bc25c77c3504b597af4b67e10e81773b6e01a631b8",
+      "pose": "two-edge-upright",
+      "view": "reverse-oblique",
+      "activeContactID": "small-crimp-left"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-upright-small-crimp-right-reverse-oblique.png",
+      "sha256": "107ab7bf13f62addba10b21d5320c684d196324807d7fe042efb5c6053bbafed",
+      "pose": "two-edge-upright",
+      "view": "reverse-oblique",
+      "activeContactID": "small-crimp-right"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-inverted-full-cord-front.png",
+      "sha256": "de75c816bcee317922e3065777165b97384211b068b42328187bf7b9aa6c09c7",
+      "pose": "two-edge-inverted",
+      "view": "front",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-inverted-full-cord-oblique.png",
+      "sha256": "02c50657aba88bd9c18281ade50cc6295299bed8f3284b6958bd108af02bf2a4",
+      "pose": "two-edge-inverted",
+      "view": "oblique",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-inverted-full-cord-side.png",
+      "sha256": "3b26acf256220d89c2bca0cb95db2cc5e872e8e87aead8c86f8e65d40d95b56a",
+      "pose": "two-edge-inverted",
+      "view": "side",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-inverted-full-cord-top.png",
+      "sha256": "0ee6378c9b3194ff2a3241c850861f4e120b337494cbcc0d548e63b495c9b8d8",
+      "pose": "two-edge-inverted",
+      "view": "top",
+      "activeContactID": null
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-inverted-two-edge-left-oblique.png",
+      "sha256": "cfb223b5207a775fc35aa2cfb11786c82c13ec307a6e223c538430204ff25158",
+      "pose": "two-edge-inverted",
+      "view": "oblique",
+      "activeContactID": "two-edge-left"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-inverted-two-edge-right-oblique.png",
+      "sha256": "b3ded283e26aa6aed19344bdae7e40dadf7b6845c337952e08a36b715c548448",
+      "pose": "two-edge-inverted",
+      "view": "oblique",
+      "activeContactID": "two-edge-right"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-inverted-small-crimp-left-oblique.png",
+      "sha256": "ac95d4b972777fcf2c4821922cfb6e8f670984d2f4ed4fc18b6d48bbdca426b9",
+      "pose": "two-edge-inverted",
+      "view": "oblique",
+      "activeContactID": "small-crimp-left"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/two-edge-inverted-small-crimp-right-oblique.png",
+      "sha256": "3f2fcb8a15c37b2c97dc030a8c8ddfc38312e1efe89ebee7ae05dfa98a04f969",
+      "pose": "two-edge-inverted",
+      "view": "oblique",
+      "activeContactID": "small-crimp-right"
+    }
+  ],
+  "sourceImages": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard1.png",
+      "sha256": "aa00ab77e04c685acc4dee0e0704d25fd3165810387649a4e924bf3f7bfff148",
+      "url": "https://tensionclimbing.com/cdn/shop/files/FlashBoard1.png?v=1726542491"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard2.png",
+      "sha256": "ae84f7d58def1c2f4e3b14c2e98ddf8e332b7f48e6c774312744b792d4ab97b4",
+      "url": "https://tensionclimbing.com/cdn/shop/files/FlashBoard2.png?v=1726542491"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard3.png",
+      "sha256": "5753461d938adb19655556e8070f7361a0f9a1697752a861bacde4d240f0f63d",
+      "url": "https://tensionclimbing.com/cdn/shop/files/FlashBoard3.png?v=1726542491"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard4.png",
+      "sha256": "7c078225890ae6d6975bff865e706e8858e7a56c3edc8df572637241ca6df200",
+      "url": "https://tensionclimbing.com/cdn/shop/files/FlashBoard4.png?v=1726542491"
+    }
+  ],
+  "priorShapeRenderFiles": [
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/prior-front.png",
+      "sha256": "29d0120edb4d2dfa860daef2c2014cc6024836ecf7494acbad8883c2158a6c16"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/prior-side.png",
+      "sha256": "8dc630fa6a7658e5a76618e689d1f9d6196f38fd9abc015d0cebf29872195b06"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/prior-top.png",
+      "sha256": "01471e0fe8b185b2edb87cc65548ce55051e35f6fe34875d58ccc71de1a802d4"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/prior-reverse.png",
+      "sha256": "ca4430673192f3873c2350e221b293a3a450fc00840c112d1b7b1133fa846c43"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/prior-oblique.png",
+      "sha256": "c3cbdfb2b36201d506d904bab80133a02c886e74e2ba3d1082dd02ad11a7de41"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/prior-reverse-oblique.png",
+      "sha256": "13f8f0525e4152a0fad490eaa561cf472a6d84caff53cc935d6842462ce8a29e"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/prior-under-oblique.png",
+      "sha256": "2d5d50fe375effd4469e94cd2daa3a98bbf0310109b7dd897747a4df157362a1"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/candidate-front.png",
+      "sha256": "099613ba200ca718009fa7ca1b5b2afb0c3e484b46f65add7ea70efb9f78c099"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/candidate-side.png",
+      "sha256": "05e320bec7f976b8d95de277d4da5582e676d6015a7fe853c23beebe53b5da81"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/candidate-top.png",
+      "sha256": "3db9f07aa84ddd2c78fbc83f0b61c75178f107459c54ed1ccd6fcd726527ca6d"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/candidate-reverse.png",
+      "sha256": "5c8f0d9866c69947842f5830ac4355b7003713724b4f122243f37071efb0312e"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/candidate-oblique.png",
+      "sha256": "ec3bf66267bcec7e0304f5525b031705f1f3adf3e01e6a4b1e992473ece90dad"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/candidate-reverse-oblique.png",
+      "sha256": "93431d2a950375dc7ebd8f2d4e82e04370ecf155f03f59afbc88b170f4e5380c"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/candidate-under-oblique.png",
+      "sha256": "cccabaab887406a267c85f36e8341f62d98296a3eaa8041b876e1e11bc97d07d"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/contact-three-edge-left.png",
+      "sha256": "f017d2b5d0e5d1a486dee26e482383dae87fc38b9707b514b38346519752fb83"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/contact-three-edge-center.png",
+      "sha256": "2e7863f5cb0bfed25fcbf1980ce8850a1931912206f872d729af1c2a2d611775"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/contact-three-edge-right.png",
+      "sha256": "01f97a447ba1023ddf401bc693f9123e3e5ef04856b077e377dd6a7408103f32"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/contact-two-edge-left.png",
+      "sha256": "8014f63de06ff56415ca202aa67dd8d5e413c4c8d4be583f39a9b5d8c57ebc41"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/contact-two-edge-right.png",
+      "sha256": "e44f0af8c8cd29c91b3f359f72ae45043b11e167f93d807754b7d35b02f07e7d"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/contact-small-crimp-left.png",
+      "sha256": "078056c17a0f3d913df0632946ea91b1ca6cdfaf02aae0f6c9fb67a97973bcec"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/contact-small-crimp-right.png",
+      "sha256": "018a622aed4cef8325ec69e047718249c9e1477ab83322a18c7b983528a2825c"
+    }
+  ],
+  "physicalPoseDisposition": {
+    "status": "pass",
+    "poses": [
+      "three-edge-upright",
+      "three-edge-inverted",
+      "two-edge-upright",
+      "two-edge-inverted"
+    ],
+    "wholeCordViews": 16,
+    "judgment": "All four canonical poses preserve cylindrical body and refined shelves, with paired free legs rising to the invisible support and source-supported end returns. No source-supported route reversal, crossing through a grip cavity, unsupported sharp shoulder or new hidden connection is present in the reviewed final route. Compact support/length settings are display estimates.",
+    "renderLimit": "Whole comparison sheets use actual mesh plus metadata-derived tubes and offline contact tint. The oblique diagnostic renderer has far-surface/occlusion line artifacts; these are not app appearance or picking evidence."
+  },
+  "frontEntryDisposition": {
+    "status": "pass",
+    "leadPoseCases": 16,
+    "evidence": {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/direct-native-front-entry-diagnostics.json",
+      "sha256": "c0aecddb9a799b298f2dbfef5d334957a639a82a005b2f73b1da5ea6339d5198"
+    },
+    "minimumPositiveFrontDeltaMM": 1.1024214404000006,
+    "boreInteriorIntervals": 0,
+    "judgment": "Every full visible front lead terminates at its unchanged native front mouth from the positive native front half-space. No visible centerline enters a bore interior before that termination. Four independent bores remain; no hidden U passage is inferred."
+  },
+  "elbowDisposition": {
+    "status": "pass",
+    "evidence": {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/direct-applied-native-elbow-diagnostics.json",
+      "sha256": "1370952e5d0d3e6715e17c330fc12b55754917f5464a43657ba901e773cb3952"
+    },
+    "metrics": {
+      "frontLeadCases": 16,
+      "minimumFrontApproachDeltaMM": 1.1024214404000006,
+      "frontLeadMaximumReportedTurnDegrees": 11.829299306023257,
+      "frontLeadReportedGapRangeMM": [
+        0.1658578689189517,
+        0.17900815721909888
+      ],
+      "rearReturnMaximumReportedTurnDegrees": 11.250146706231341,
+      "rearReturnMaximumReportedGapMM": 0.13087551014200277,
+      "applyMinimumContinuousConservativeCenterlineDistanceMM": 1.9900335569217176,
+      "cordRadiusMM": 2,
+      "numericalClearanceToleranceMM": 0.01
+    },
+    "judgment": "Final reported lead bends sit within the declared .2 mm section margin of actual native wood, replacing the rejected long route air elbows. Rear returns bend near their native end-pair bearing regions with maximum reported tube-to-wood gap .130876 mm.",
+    "reportingThreshold": "The source diagnostic reports turns over 5 degrees; 5 degrees is a reporting threshold, not an acceptance tolerance. Native apply/check certifies the complete rounded routes. This gate does not claim frictionless equilibrium or dynamic rope simulation."
+  },
+  "contactCoverage": {
+    "status": "pass",
+    "wholeContactViews": 14,
+    "legalPoseContactIDsViewed": {
+      "three-edge-upright": [
+        "three-edge-left",
+        "three-edge-center",
+        "three-edge-right"
+      ],
+      "three-edge-inverted": [
+        "three-edge-left",
+        "three-edge-center",
+        "three-edge-right"
+      ],
+      "two-edge-upright": [
+        "two-edge-left",
+        "two-edge-right",
+        "small-crimp-left",
+        "small-crimp-right"
+      ],
+      "two-edge-inverted": [
+        "two-edge-left",
+        "two-edge-right",
+        "small-crimp-left",
+        "small-crimp-right"
+      ]
+    },
+    "judgment": "All seven IDs viewed in both legal flip orientations. Highlights remain on their own actual finger-facing cavity floors/walls/mouth rounds; small crimps stay distinct above the reverse shelves. Both ledge directions exist in source-bound native contact proof. Cord is represented independently; runtime selection/non-pickability remains unverified."
+  },
+  "shapeAndMaterialBoundary": {
+    "status": "pass",
+    "priorNativeGate": {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/native-export-verdict.json",
+      "sha256": "eb6de0ce3af15f09ac22762adf7466dc854fc06232f6c09095e288d018cb3e78"
+    },
+    "priorActualExportGate": {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/immutable-export-boundary.json",
+      "sha256": "02589d2374260b0d06aa6fa15cc47f66db3fc681417e348afa2e0a9bb7250ebb"
+    },
+    "judgment": "Reviewed refined native geometry unchanged by supported wood metadata setter. Actual exported USDZ previously independently reopened: 49,954 unique triangles, 8 unbound nodes, 7 contact IDs, no materials/shaders; descriptor exact. Wood is presentation metadata only. Seven factual contacts, four positions, twelve transitions and four bores preserved."
+  },
+  "strictCheck": {
+    "status": "pass",
+    "wasPendingAtReviewStart": true,
+    "completedBeforeVerdict": true,
+    "allFourPoses": true,
+    "byteIdenticalApplyAndCheck": true,
+    "apply": {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/direct-native-apply.json",
+      "sha256": "01c9957213a77bcc552cc29d56f327f64ca46a1525ac5d7abc79ef2e02884250"
+    },
+    "check": {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/direct-native-check.json",
+      "sha256": "01c9957213a77bcc552cc29d56f327f64ca46a1525ac5d7abc79ef2e02884250"
+    },
+    "scope": "Root/preflight ran independent read-only native regeneration. This reviewer verified completed report hash and exact byte equality, exact final file identities, and apply routes equal immutable sidecar caches; no duplicate solve launched."
+  },
+  "factsAndEstimates": {
+    "manufacturerFacts": "8/10/15/20 mm and Small Crimps are explicitly listed in retained product HTML without per-contact/orientation mapping. No new depth mapping assigned.",
+    "bodyAndRelief": {
+      "manufacturerDepths": "8/10/15/20 mm and Small Crimps are explicitly listed in retained product HTML without per-contact/orientation mapping. No new depth mapping assigned.",
+      "newDisplayEstimates": {
+        "frontReliefDepthMM": 8,
+        "reverseReliefDepthMM": 10,
+        "frontXRangeMM": [
+          48,
+          452
+        ],
+        "reverseXRangesMM": [
+          [
+            49,
+            215
+          ],
+          [
+            285,
+            451
+          ]
+        ],
+        "reverseReliefTopZMM": 56,
+        "endWallBlendRadiusMM": 3,
+        "mainPocketLipRadiusMM": 1.5
+      },
+      "otherGeometry": "Preserved500\u00d776\u00d776mm native cylinder and existing pocket geometry are model dimensions, not newly established manufacturer measurements.",
+      "contactRegionExtent": "14mm native main-contact region extent is a geometric result, not a manufacturer grip-depth claim."
+    },
+    "suspension": "0.20 m support offset, 0.42 m per-lead allowance, 2 mm cord radius, 0.03 m rear-return allowances, 0.2 mm section margin, poses and native terminal display geometry are estimates. Lead allowances are not a claim that every displayed lead uses exactly 0.42 m. Native solve settles height and derives the paths; no hand-authored bends or new manufacturer length claim."
+  },
+  "proofFiles": [
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/immutable-four-file-handoff.json",
+      "sha256": "9598dd99d3cd94ffb60fa4cd61c6f14547b60db4bcc7a858dadcb4f4fc8de816"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-applied-cord-views/provenance.json",
+      "sha256": "6e8638a0e1c80ff36a764cdf56026c65d6f833a5668414d22c92057fa661e7b0"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/direct-native-front-entry-diagnostics.json",
+      "sha256": "c0aecddb9a799b298f2dbfef5d334957a639a82a005b2f73b1da5ea6339d5198"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/direct-applied-native-elbow-diagnostics.json",
+      "sha256": "1370952e5d0d3e6715e17c330fc12b55754917f5464a43657ba901e773cb3952"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/manifest-and-contact-preservation.json",
+      "sha256": "8f898762b58ee35f85a04657fc7d2a8bf3a42377edc935b51531ba056a542587"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/cleanup-receipt.json",
+      "sha256": "380dfdbe2782e507aa1c4f129080800823fdfb1239f28a9cf1c0414e17cc42eb"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/final-binding-and-view-proof.json",
+      "sha256": "3f7c66b6f7278407d7dc8f1ff4bc77c0e86a522ddc0dedd4e98c84981c2632f8"
+    }
+  ],
+  "appFrames": 0,
+  "runtimeAcceptance": "pending",
+  "humanAcceptance": "pending",
+  "externalResources": [],
+  "cleanup": "This independent lane created no external resources or servers and wrote only its owned output. Root worker completion/cleanup receipt retained separately. Six shared reserved source/test paths untouched by this reviewer."
+}

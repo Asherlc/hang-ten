@@ -1,0 +1,59 @@
+{
+  "status": "pass",
+  "scope": "Fresh independent native-only validation; export, Opus/app review and human acceptance remain separate gates.",
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "blockingFindings": [],
+  "envelopeXYZMM": [
+    711.0000002,
+    94.00075012973058,
+    222.00000010067734
+  ],
+  "displayThicknessIsEstimate": true,
+  "contactCount": 30,
+  "publishedDepthCount": 27,
+  "nativeEdit": {
+    "parameter": "Depth_edge_11_left",
+    "before": 14.0,
+    "after": 16.0,
+    "changedContacts": [
+      "edge-11-left"
+    ],
+    "beforeVolumeMM3": 5737215.109695997,
+    "editedVolumeMM3": 5734580.569868971,
+    "restoredVolumeMM3": 5737215.109696069,
+    "restoreVolumeDeltaMM3": 7.171183824539185e-08
+  },
+  "strictGates": [
+    "Exact current raw plastic manifest",
+    "Single valid native solid and clean document states",
+    "30 final-shell contact regions and pairwise nonoverlap",
+    "27 source-backed depths and711x222mm face envelope",
+    "Depth_edge_11_left14\u219216\u219214 changes only intended contact and restores allregions plus original<.001mm\u00b3 solidvolume gate",
+    "Mirrored root carrier strictBOP and explicitX47membership",
+    "Off-station cap/nose positionaljoin continuity and flatroll continuity",
+    "No sampled horizontal nose roof shelf; upperroll contact coverage",
+    "Forward-anchored55/65mm sloperband and actualbodyfront agreement",
+    "Centerjug forwardcrest/rearreturn, curvedcontactcoverage, #15p50 andmirrorwitnesses"
+  ],
+  "maxNoseHeightDifferenceMMAtPlusMinus0001": 0.0002318163791699135,
+  "limits": [
+    "Residual sampled nose normal-angle change reaches2.05574349degrees atX0; positionalcontinuity does not establish globalG1. Author/root notified for native/Opus visualjudgment.",
+    "Finite sections/contact witnesses do not establish manufacturing accuracy or ergonomic certification.",
+    "Only root carriers received explicit strictBOP in this targeted suite; the complete solid and allcontacts received the original ordinary validity checks.",
+    "203 outsidepackage filepreservation and actual unbound exportedmesh checks will be bound to finalexport when available.",
+    "Human review#8 remains pending."
+  ],
+  "ownedResourcesCleaned": true,
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/metolius-simulator-3d.FCStd": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-check-3ff3.json": "094f051ddf77a64f4960c40fd86c99bdc719fcbd69753a08d3c84ad6acd59394",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/local-contact-joins-3ff3.json": "a46cc5e397af5714eb08b5a2df24812df28deb36257ecc7b8b4221b454c9f817",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/functional-sections-3ff3.json": "3071cf33a5fec611b69f3533d34116c45dfb1144539cab746d660965a11c5bcc",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-check-3ff3-ownership.json": "b5abd41e71ed1100dde84bd89e2650d2437f3f1d627a94c86a527f44f5df9df1",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/local-contact-joins-3ff3-ownership.json": "704ea5dffb9f084554f1922710b572c662682151b0428766d8c948197c8e6b51",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/functional-sections-3ff3-ownership.json": "9e29c7c1fda29961c1f4afb9dff662d297dfa2f7d7ce8d8a8ae70ebe375e448b",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/check_native_candidate.py": "ef8634bbd8b9fe9ea1b0a78e391051cd9682ce74928276546cc2275ed6f3e086",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/check_local_contact_and_joins.py": "daceb649a41fb27ed1193594694074a0ad1e6c835ab98e0c94aa7a7a79d91aec",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/check_functional_sections.py": "2f5230cd633496b0018b4f3b3826afd33fb908c34d29376415dc334448698196"
+  }
+}

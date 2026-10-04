@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger",
+  "ownerDerivedFrom": "${PASEO_WORKTREE_PATH:-$PWD} final component",
+  "task": "Mini10 bounded nativeRoutes groove-seating and loading-direction feasibility experiment",
+  "recordedAt": "2026-10-03T03:42:45.249909+00:00",
+  "outputScope": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment",
+  "canonicalOrSharedMutation": false,
+  "reservedPathsReadOrEdited": false,
+  "externalResources": [],
+  "temporaryResources": [],
+  "processGroups": [],
+  "resourcePolicy": "Record exact resources before launch; own cleanup traps and verify all owned groups/temp/cache/config absent; retain inputs/reports/logs."
+}

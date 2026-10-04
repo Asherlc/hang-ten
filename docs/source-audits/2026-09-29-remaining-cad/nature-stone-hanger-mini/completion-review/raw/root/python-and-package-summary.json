@@ -1,0 +1,11 @@
+{
+  "status": "pass",
+  "passed": 260,
+  "skipped": 0,
+  "failed": 0,
+  "owner": "placid-badger",
+  "catalogBoards": 64,
+  "catalogDrafts": 0,
+  "failedInitialInterpreterRunsRetained": true,
+  "receipt": "placid-badger-mini-python-tests-venv-command.json"
+}

@@ -1,0 +1,45 @@
+{
+  "disposition": "Opt-in UV prototype rejected at C0 normal boundaries; original evaluator required there. Candidate source geometry and opt-in flag remain valid.",
+  "files": [
+    {
+      "path": "compile-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "compile-check-ownership.json",
+      "sha256": "f8d14f16125380f27dad232edd564fd1fe58718225c933279394efb97b13f6e4"
+    },
+    {
+      "path": "compile-ownership.json",
+      "sha256": "ab3bae36012a3e711d647865124f4c91ac5607eff0ab10f2ac7e752e5bd92ec5"
+    },
+    {
+      "path": "final-normal-comparison.json",
+      "sha256": "edfe2145120ee18a900b51f140314e9f0ad9de9b7e8d2aa76ec5e70771c8b336"
+    },
+    {
+      "path": "final-normal-comparison.log",
+      "sha256": "81708abf6c980997698926194bec63ae9c98a48f9643562096e006c3b4030c20"
+    },
+    {
+      "path": "uv-boundary-diagnosis.json",
+      "sha256": "33c6a7bdea0ac7e655af3f98b559bbc2d2bec6e53942d938b381cb54e441b590"
+    },
+    {
+      "path": "uv-boundary-diagnosis.log",
+      "sha256": "f92ad13731ce396b00fc5890528ec1374f3f24777f4a57eae8becdde89393d7d"
+    },
+    {
+      "path": "uv-boundary-attempt-stop.json",
+      "sha256": "59d0b717b94fefb994f86472079fe720a92b26e82f055deebddfa917ef260ab8"
+    },
+    {
+      "path": "compare_final_uv_normals.py",
+      "sha256": "afc88438a9776be7ce004f04adf1c00a5bef0f046e10b5d87c502a0c03220c33"
+    }
+  ]
+}

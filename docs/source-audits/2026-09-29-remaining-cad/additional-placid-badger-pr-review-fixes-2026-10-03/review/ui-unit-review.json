@@ -1,0 +1,48 @@
+{
+  "owner": "placid-badger",
+  "agent": "/root/flash_board_shape_review",
+  "findings": {
+    "1": {
+      "valid": true,
+      "change": "At both paused Hang and natural Rest, both UI tests now assert board.frame intersected with app.frame is wider and taller than 30 points. Existing height, layout, timers and identifiers retained."
+    },
+    "5": {
+      "valid": true,
+      "change": "Replace fixed 0.6-second scheduling assumption in WorkoutDrawablePresentationTests.checkPresentation(ambiguous:) with XCTNSPredicateExpectation observing either drawable property transition. Unique case must transition; ambiguous case is inverted and must remain unchanged for bounded 2 seconds. Original final unique/other assertions retained."
+    },
+    "6": {
+      "valid": true,
+      "change": "Assert source and solved route sample counts equal before zip."
+    },
+    "7": {
+      "valid": false,
+      "reason": "WorkoutView landscape BoardMapView caller at729 omits onHoldTap. Init default at BoardMapView649 is nil; optional.map at754 preserves nil; BoardModelSurface79\u201380 therefore attaches boardModel.3d. This normal workout is nonselectable but isDisplayOnly flag is false, so do not confuse lack of callback with that separate flag."
+    },
+    "8": {
+      "valid": false,
+      "reason": "Portrait WorkoutView506 similarly omits onHoldTap, so same nil callback path publishes boardModel.3d."
+    }
+  },
+  "previousRuntimeEvidence": {
+    "archive": "../final-natural-workflows.xcresult.zip",
+    "sha256": "2dfd1d8273bce790dd8018aa23d80f1384fdad59791c031eb32639704435e4a8",
+    "directXCResultQuery": "previous-green-tests.json",
+    "testsPassed": 2,
+    "newAssertionsWerePresentInPreviousRun": false
+  },
+  "validation": {
+    "gitDiffCheck": "passed",
+    "newSimulatorRun": "pending root",
+    "onlyTestingFilters": [
+      "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests/testLandscapePlateauWorkoutKeepsBoardVisibleBelowConfigurationSelector",
+      "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests/testMiniPortraitWorkoutShowsBoardDuringHangAndNaturalRest",
+      "HangTenTests/WorkoutDrawablePresentationTests/testPresentationOnlyChangesTheUniqueMatchingDrawable",
+      "HangTenTests/WorkoutDrawablePresentationTests/testAmbiguousMatchingDrawablesRemainUntouched",
+      "HangTenTests/SuspendedBoardPresentationTests/testNativeCADInstanceComposesCanonicalPoseAfterRotatedReflectedBase"
+    ]
+  },
+  "exactSharedFileEditScope": "HangTenTests/WorkoutTimelineTests.swift: WorkoutDrawablePresentationTests.checkPresentation(ambiguous:) only. No edits to other agent-owned methods.",
+  "productionEdits": false,
+  "simulatorOrBuildOperations": false,
+  "externalResourcesCreated": []
+}

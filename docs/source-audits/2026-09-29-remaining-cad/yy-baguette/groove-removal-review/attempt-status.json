@@ -1,0 +1,23 @@
+{
+  "priorRouteCheck": {
+    "exitCode": 1,
+    "result": "Rejected old bearing stations inside restored smooth solid clearance envelope."
+  },
+  "solveAttempt1": {
+    "exitCode": 1,
+    "result": "Exact offset-boundary station classified inside; no routes applied."
+  },
+  "solveAttempt2": {
+    "exitCode": 0,
+    "result": "One-micrometre numeric station offset solved all poses. Intermediate report uses prior descriptor identity pending final compile; not final delivery proof."
+  },
+  "nativePreviewAttempt1": {
+    "exitCode": 1,
+    "result": "Scratch inspect.py shadowed Python inspect module; renamed scratch helper and successful rerun retained."
+  },
+  "compilerCheck": {
+    "exitCode": 0,
+    "result": "Native source valid, unbound staged export reimported and all five published grip depths checked."
+  },
+  "humanAcceptance": "pending"
+}

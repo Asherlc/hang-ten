@@ -1,0 +1,628 @@
+{
+  "owner": "placid-badger",
+  "completedUTC": "2026-10-03T18:17:32.493561+00:00",
+  "scope": "Review queue boards 1 through 15 only; read-only canonical audit; scratch writes only",
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "mainCommit": "d53c019c43319a70b32e6dc654814de29e87ab89",
+  "initialTaskHEAD": "f9554600c",
+  "snapshotSemantics": "All snapshots/*/current-*.json, root *-current.json, three-way-facts.json, protected-file-baseline.json and review-identity-comparison.json are initial PRE-CORRECTION observations. They are intentionally frozen.",
+  "initialMissedDirectUpstreamFacts": [
+    {
+      "number": 8,
+      "package": "metolius-simulator-3d",
+      "boardID": "metolius.simulator-3d",
+      "field": "contacts[round-sloper-3-center].handCapacity",
+      "baseline": {
+        "$absent": true
+      },
+      "main": 2,
+      "current": {
+        "$absent": true
+      },
+      "category": "upstream-missed-unchanged-local"
+    }
+  ],
+  "alreadyIntegratedDirectUpstreamFacts": [
+    {
+      "number": 7,
+      "package": "metolius-contact",
+      "boardID": "metolius.contact",
+      "field": "contacts[edge-17-center].handCapacity",
+      "baseline": {
+        "$absent": true
+      },
+      "main": 2,
+      "current": 2,
+      "category": "upstream-integrated"
+    },
+    {
+      "number": 7,
+      "package": "metolius-contact",
+      "boardID": "metolius.contact",
+      "field": "contacts[edge-18-center].handCapacity",
+      "baseline": {
+        "$absent": true
+      },
+      "main": 2,
+      "current": 2,
+      "category": "upstream-integrated"
+    },
+    {
+      "number": 7,
+      "package": "metolius-contact",
+      "boardID": "metolius.contact",
+      "field": "contacts[flat-sloper-center].handCapacity",
+      "baseline": {
+        "$absent": true
+      },
+      "main": 2,
+      "current": 2,
+      "category": "upstream-integrated"
+    }
+  ],
+  "separateStructuralChanges": [
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[closed-crimp-left].equipmentObjectID",
+      "baseline": "primary",
+      "main": "left-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[closed-crimp-right].equipmentObjectID",
+      "baseline": "primary",
+      "main": "right-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[im-deep-left].equipmentObjectID",
+      "baseline": "primary",
+      "main": "left-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[im-deep-right].equipmentObjectID",
+      "baseline": "primary",
+      "main": "right-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[im-shallow-left].equipmentObjectID",
+      "baseline": "primary",
+      "main": "left-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[im-shallow-right].equipmentObjectID",
+      "baseline": "primary",
+      "main": "right-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[large-flat-edge-left].equipmentObjectID",
+      "baseline": "primary",
+      "main": "left-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[large-flat-edge-right].equipmentObjectID",
+      "baseline": "primary",
+      "main": "right-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[mr-deep-left].equipmentObjectID",
+      "baseline": "primary",
+      "main": "left-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[mr-deep-right].equipmentObjectID",
+      "baseline": "primary",
+      "main": "right-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[mr-shallow-left].equipmentObjectID",
+      "baseline": "primary",
+      "main": "left-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[mr-shallow-right].equipmentObjectID",
+      "baseline": "primary",
+      "main": "right-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[sloper-30-left].equipmentObjectID",
+      "baseline": "primary",
+      "main": "left-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[sloper-30-right].equipmentObjectID",
+      "baseline": "primary",
+      "main": "right-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[sloper-40-left].equipmentObjectID",
+      "baseline": "primary",
+      "main": "left-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[sloper-40-right].equipmentObjectID",
+      "baseline": "primary",
+      "main": "right-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[slopey-crimper-left].equipmentObjectID",
+      "baseline": "primary",
+      "main": "left-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[slopey-crimper-right].equipmentObjectID",
+      "baseline": "primary",
+      "main": "right-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[variable-edge-rail-left].equipmentObjectID",
+      "baseline": "primary",
+      "main": "left-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "field": "contacts[variable-edge-rail-right].equipmentObjectID",
+      "baseline": "primary",
+      "main": "right-half",
+      "current": "primary",
+      "category": "upstream-missed-unchanged-local"
+    }
+  ],
+  "structuralDisposition": "Parent confirmed accepted combined Forge native asset keeps primary equipmentObjectID for all 20 contacts; no direct factual correction requested.",
+  "localOnlyOverrides": [
+    {
+      "number": 5,
+      "package": "frictitious-port-a-board",
+      "boardID": "frictitious.port-a-board",
+      "field": "contacts[pocket-30-two-finger-mono].depth",
+      "baseline": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "main": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 5,
+      "package": "frictitious-port-a-board",
+      "boardID": "frictitious.port-a-board",
+      "field": "contacts[pocket-30-two-finger-mono].equipmentObjectID",
+      "baseline": "primary",
+      "main": "primary",
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 5,
+      "package": "frictitious-port-a-board",
+      "boardID": "frictitious.port-a-board",
+      "field": "contacts[pocket-30-two-finger-mono].fingerCapacity",
+      "baseline": 2,
+      "main": 2,
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 5,
+      "package": "frictitious-port-a-board",
+      "boardID": "frictitious.port-a-board",
+      "field": "contacts[pocket-30-two-finger-mono].gripTypes",
+      "baseline": [],
+      "main": [],
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 5,
+      "package": "frictitious-port-a-board",
+      "boardID": "frictitious.port-a-board",
+      "field": "contacts[pocket-30-two-finger-mono].kind",
+      "baseline": "pocket",
+      "main": "pocket",
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 5,
+      "package": "frictitious-port-a-board",
+      "boardID": "frictitious.port-a-board",
+      "field": "contacts[pocket-30-two-finger-mono].name",
+      "baseline": "30 mm two-finger / mono pocket contact",
+      "main": "30 mm two-finger / mono pocket contact",
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 12,
+      "package": "owl-climb-poker",
+      "boardID": "owl-climb.poker",
+      "field": "contacts[face-c-left-shallow-half-round].depth",
+      "baseline": {
+        "range": {
+          "minimum": 100,
+          "maximum": 100
+        }
+      },
+      "main": {
+        "range": {
+          "minimum": 100,
+          "maximum": 100
+        }
+      },
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 12,
+      "package": "owl-climb-poker",
+      "boardID": "owl-climb.poker",
+      "field": "contacts[face-c-right-shallow-half-round].depth",
+      "baseline": {
+        "range": {
+          "minimum": 100,
+          "maximum": 100
+        }
+      },
+      "main": {
+        "range": {
+          "minimum": 100,
+          "maximum": 100
+        }
+      },
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "field": "contacts[blocker-edge-10].depth",
+      "baseline": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "main": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "field": "contacts[blocker-edge-10].equipmentObjectID",
+      "baseline": "primary",
+      "main": "primary",
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "field": "contacts[blocker-edge-10].gripTypes",
+      "baseline": [],
+      "main": [],
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "field": "contacts[blocker-edge-10].handCapacity",
+      "baseline": 1,
+      "main": 1,
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "field": "contacts[blocker-edge-10].kind",
+      "baseline": "edge",
+      "main": "edge",
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "field": "contacts[blocker-edge-10].name",
+      "baseline": "10 mm blocker edge",
+      "main": "10 mm blocker edge",
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "field": "contacts[blocker-edge-15].depth",
+      "baseline": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "main": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "field": "contacts[blocker-edge-15].equipmentObjectID",
+      "baseline": "primary",
+      "main": "primary",
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "field": "contacts[blocker-edge-15].gripTypes",
+      "baseline": [],
+      "main": [],
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "field": "contacts[blocker-edge-15].handCapacity",
+      "baseline": 1,
+      "main": 1,
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "field": "contacts[blocker-edge-15].kind",
+      "baseline": "edge",
+      "main": "edge",
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "field": "contacts[blocker-edge-15].name",
+      "baseline": "15 mm blocker edge",
+      "main": "15 mm blocker edge",
+      "current": {
+        "$absent": true
+      },
+      "category": "local-only-override"
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "field": "contacts[edge-18].name",
+      "baseline": "18 mm wood edge",
+      "main": "18 mm wood edge",
+      "current": "Wood edge",
+      "category": "local-only-override"
+    }
+  ],
+  "noBoardHandCapacityChanges": true,
+  "noUpstreamContactIDInventoryOrOrderChanges": true,
+  "all15InitialEmbeddedGeneratedBuiltFactsEqual": true,
+  "allReviewedModelsAndDescriptorsMatchReviewQueue": true,
+  "initialSourceHashDifferencesFromReviewQueue": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7
+  ],
+  "sourceHashInterpretation": "Native metadata can change source SHA without changing accepted geometry. This audit compares exported model/descriptor hashes; it does not independently claim BRep equality for prior finish-only updates.",
+  "rootCorrection": {
+    "proofPath": ".context/placid-badger/runtime-final-2026-10-03/main-metadata-correction/metadata-preservation.json",
+    "proofSHA256": "b83f997ac89ba3e741a21ca758b8f1152cdc10f5090ab40283e88aaffbacb1d1",
+    "details": {
+      "owner": "placid-badger",
+      "status": "pass",
+      "mainCommit": "d53c019c43319a70b32e6dc654814de29e87ab89",
+      "upstreamPR": 516,
+      "upstreamMergeCommit": "781e64636eafb382f6ad49cbdf276be354117310",
+      "field": "contacts[round-sloper-3-center].handCapacity",
+      "before": null,
+      "after": 2,
+      "nativeSourceBeforeSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+      "nativeSourceAfterSHA256": "ac957ebf25e5134ab2875e9b06d9c23831f35b0b8bcbc64730d6a626b7f8588e",
+      "onlyManifestFieldChanged": true,
+      "changedArchiveMembers": [
+        "Document.xml"
+      ],
+      "brepEntriesByteIdentical": 509,
+      "allOtherArchiveEntriesByteIdentical": true,
+      "modelsAndDescriptorsUnchanged": {
+        "Hangboards/metolius-simulator-3d/assets/primary.usdz": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+        "Hangboards/metolius-simulator-3d/assets/primary.model.json": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb"
+      },
+      "planContentChanged": false,
+      "geometryChanged": false,
+      "regression": "PlanStorageTests.testBundledPlanLibraryValidatesAgainstPackagedBoards",
+      "sourceURL": "https://www.metoliusclimbing.com/collections/training-boards/products/simulator-training-board",
+      "sourceMeaning": "Restored merged-main capacity metadata on the existing shared round sloper; no new source fact or geometry authored."
+    },
+    "independentPureReaderCheck": "Corrected embedded manifest equals initial embedded snapshot with only round-sloper-3-center.handCapacity=2 added."
+  },
+  "protectedCanonicalObservedChanges": {
+    "Hangboards/metolius-simulator-3d/metolius-simulator-3d.FCStd": {
+      "initial": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+      "current": "ac957ebf25e5134ab2875e9b06d9c23831f35b0b8bcbc64730d6a626b7f8588e"
+    }
+  },
+  "allOtherProtectedFilesUnchanged": true,
+  "additionalDirectFactCorrectionsNeeded": [],
+  "resourceLifecycle": {
+    "externalResources": [],
+    "persistentProcesses": [],
+    "cleanupRequired": false,
+    "canonicalWritesByAuditAgent": false,
+    "freeCADOrBuildOrSimulatorStarted": false
+  }
+}

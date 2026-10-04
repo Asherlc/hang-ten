@@ -290,7 +290,7 @@ final class BoardModelRealityScene {
 
         // Appearance is runtime-only; the bundled USDZ stays unbound. Capture
         // each finish before highlighting so deselection restores the authored finish.
-        applyBoardMaterials(to: root, inheritedFinish: display.surfaceFinish)
+        applyBoardMaterials()
 
         // Build contact entity mapping from descriptor
         // Highlight baselines were captured by applyBoardMaterials().
@@ -374,10 +374,18 @@ final class BoardModelRealityScene {
         return Transform(matrix: matrix * Self.reflectionMatrix(center: Self.boundsCenter(descriptor.modelBounds)))
     }
 
-    private func applyBoardMaterials(to entity: Entity, inheritedFinish: BoardSurfaceFinish) {
+    func applyBoardMaterials() {
+        for instance in instanceEntities {
+            applyBoardMaterials(to: instance, relativeTo: instance, inheritedFinish: display.surfaceFinish)
+        }
+    }
+
+    private func applyBoardMaterials(to entity: Entity, relativeTo instanceRoot: Entity,
+                                     inheritedFinish: BoardSurfaceFinish) {
         // CAD descriptor names identify the authored surfaces. Carry the finish
         // through any unnamed mesh children inserted by the USDZ importer.
-        let finish = finishByNodeID[entity.name] ?? inheritedFinish
+        let nodeID = findNodeID(for: entity, relativeTo: instanceRoot, bindings: finishByNodeID)
+        let finish = nodeID.flatMap { finishByNodeID[$0] } ?? inheritedFinish
         if let modelEntity = entity as? ModelEntity, modelEntity.model != nil {
             let material: any RealityKit.Material
             switch finish {
@@ -390,7 +398,7 @@ final class BoardModelRealityScene {
             baselineMaterials[modelEntity] = material
         }
         for child in entity.children {
-            applyBoardMaterials(to: child, inheritedFinish: finish)
+            applyBoardMaterials(to: child, relativeTo: instanceRoot, inheritedFinish: finish)
         }
     }
 
@@ -686,11 +694,12 @@ final class BoardModelRealityScene {
                         let base = Self.instanceMatrix(instance: instance, positionID: nil,
                                                        center: Self.boundsCenter(descriptor.modelBounds))
                         let instanceTransform: simd_float4x4
-                        if case .twoBranchCord = suspension {
-                            // This adapter composes base * pose itself and places
-                            // connected-channel anchors using the base alone.
+                        switch suspension {
+                        case .cadRoutedCord, .twoBranchCord:
+                            // These adapters compose the cached pose with the base
+                            // themselves and retain their authored support points.
                             instanceTransform = base
-                        } else {
+                        case .singleCord, .pairedLeadCord:
                             instanceTransform = try SuspendedBoardPresentation.boardTransform(for: pose) * base
                         }
                         let solved = try SuspendedBoardPresentation.solveInstance(
@@ -704,8 +713,10 @@ final class BoardModelRealityScene {
                         selectedFramings.append(solved.cameraFraming)
                         let cord = Self.makeCordEntity(for: solved)
                         cordGroup.addChild(cord)
-                        cordPoses.append(try makeGeometricCordPose(solved: solved, suspension: suspension,
-                            instance: index, boardTransform: renderTransform(transform, instance: instance).matrix))
+                        if let cordPose = try makeGeometricCordPose(solved: solved, suspension: suspension,
+                            instance: index, boardTransform: renderTransform(transform, instance: instance).matrix) {
+                            cordPoses.append(cordPose)
+                        }
                     } catch { return false }
                 } else {
                     guard instance.positionTransforms == nil || instance.positionTransforms?[positionID] != nil else {
@@ -812,7 +823,7 @@ final class BoardModelRealityScene {
                 let cordPose = try makeGeometricCordPose(solved: solved, suspension: suspension,
                     instance: 0, boardTransform: solved.boardTransform)
                 cancelGeometricTilt()
-                geometricCordPoses = [cordPose]
+                geometricCordPoses = cordPose.map { [$0] } ?? []
                 displayedCordAngles = .zero
                 targetCordAngles = nil
                 instanceEntities.first?.transform = Transform(matrix: solved.boardTransform)
@@ -1106,13 +1117,14 @@ final class BoardModelRealityScene {
             updateCameraTransform(animated: true)
         }
         lastHighlightMode = mode
-        // Apply highlight materials to contact entities
-        for (contactID, entities) in contactEntities {
-            let isHighlighted = contactIDs.contains(contactID)
-            let highlightColor: Color = isHighlighted ? (mode == .active ? Color.holdActive : Color.restBlue) : .clear
-            for entity in entities {
-                applyHighlight(to: entity, color: highlightColor, mode: mode)
-            }
+        // A shared mesh is selected when any of its logical contacts is selected.
+        // Update each entity once so an unselected membership cannot clear it.
+        let highlightedEntities = Set(contactIDs.flatMap { contactEntities[$0] ?? [] })
+        let allEntities = Set(contactEntities.values.flatMap { $0 })
+        for entity in allEntities {
+            let highlightColor: Color = highlightedEntities.contains(entity)
+                ? (mode == .active ? Color.holdActive : Color.restBlue) : .clear
+            applyHighlight(to: entity, color: highlightColor, mode: mode)
         }
     }
 
@@ -1376,7 +1388,7 @@ final class BoardModelRealityScene {
                 traverseEntities(instanceEntity) { entity in
                     if let modelEntity = entity as? ModelEntity,
                        let nodeID = findNodeID(for: entity, relativeTo: instanceEntity,
-                                               nodeIDToSlotID: nodeIDToSlotID),
+                                               bindings: nodeIDToSlotID),
                        let slotID = nodeIDToSlotID[nodeID],
                        let contactID = slotIDToContactID[slotID] {
                         matchedNodeIDs.insert(nodeID)
@@ -1389,10 +1401,17 @@ final class BoardModelRealityScene {
                 try requireDescriptorNodes(nodeIDToSlotID, matched: matchedNodeIDs,
                                            slotIDToContactID: slotIDToContactID)
             } else {
-                // Single instance (schema v1): descriptor.contacts is keyed by physical contact ID == slotID
-                for (physicalContactID, contactDescriptor) in contactDescriptorByPhysicalID {
-                    for nodeID in contactDescriptor.nodeIDs {
-                        nodeIDToSlotID[nodeID] = physicalContactID
+                // V1 picking uses the node's primary identity. Memberships come
+                // from the full contact inventory and may share the same mesh.
+                for node in descriptor.nodes where node.role == .contact {
+                    if let primaryID = node.contactID {
+                        nodeIDToSlotID[node.nodeID] = primaryID
+                    }
+                }
+                var contactIDsByNodeID: [String: [String]] = [:]
+                for contactID in contactDescriptorByPhysicalID.keys.sorted() {
+                    for nodeID in contactDescriptorByPhysicalID[contactID]?.nodeIDs ?? [] {
+                        contactIDsByNodeID[nodeID, default: []].append(contactID)
                     }
                 }
 
@@ -1405,11 +1424,13 @@ final class BoardModelRealityScene {
                 traverseEntities(instanceEntity) { entity in
                     if let modelEntity = entity as? ModelEntity,
                        let nodeID = findNodeID(for: entity, relativeTo: instanceEntity,
-                                               nodeIDToSlotID: nodeIDToSlotID),
+                                               bindings: nodeIDToSlotID),
                        let slotID = nodeIDToSlotID[nodeID],
                        let contactID = slotIDToContactID[slotID] {
                         matchedNodeIDs.insert(nodeID)
-                        contactEntities[contactID, default: []].append(modelEntity)
+                        for member in contactIDsByNodeID[nodeID] ?? [] {
+                            contactEntities[member, default: []].append(modelEntity)
+                        }
                         contactIDByEntity[modelEntity] = contactID
                         modelEntity.generateCollisionShapes(recursive: false)
                         modelEntity.components.set(InputTargetComponent())
@@ -1421,9 +1442,9 @@ final class BoardModelRealityScene {
         }
     }
 
-    private func findNodeID(for entity: Entity, relativeTo instanceRoot: Entity,
-                            nodeIDToSlotID: [String: String]) -> String? {
-        if nodeIDToSlotID[entity.name] != nil { return entity.name }
+    private func findNodeID<Value>(for entity: Entity, relativeTo instanceRoot: Entity,
+                                   bindings: [String: Value]) -> String? {
+        if bindings[entity.name] != nil { return entity.name }
         var components: [String] = []
         var current: Entity? = entity
         while let value = current, value !== instanceRoot {
@@ -1431,7 +1452,7 @@ final class BoardModelRealityScene {
             current = value.parent
         }
         let path = components.reversed().joined(separator: "/")
-        return nodeIDToSlotID[path] == nil ? nil : path
+        return bindings[path] == nil ? nil : path
     }
 
     private func requireDescriptorNodes(_ nodeIDToSlotID: [String: String],
@@ -1473,9 +1494,15 @@ final class BoardModelRealityScene {
 
     private func makeGeometricCordPose(solved: BoardModelSolvedSuspension,
                                       suspension: BoardModelSuspension,
-                                      instance: Int, boardTransform: simd_float4x4) throws -> GeometricCordPose {
+                                      instance: Int, boardTransform: simd_float4x4) throws -> GeometricCordPose? {
         let localPoints: [[Double]]
         switch suspension {
+        case .cadRoutedCord:
+            // Native clearance is certified for the solved body and its routes
+            // together. Distributed wrap bearings do not define a rigid hinge;
+            // moving the body alone would drive the fixed cord into the solid.
+            // Orbit the camera while retaining both source-solved transforms.
+            return nil
         case .singleCord(let profile): localPoints = [profile.attachment.pointInModel]
         case .pairedLeadCord(let profile): localPoints = profile.attachments.map(\.pointInModel)
         case .twoBranchCord(let profile):
@@ -1731,6 +1758,8 @@ final class BoardModelRealityScene {
                                 suspension: BoardModelSuspension,
                                 bounds: BoardModelBounds) throws -> BoardModelSolvedSuspension {
         switch suspension {
+        case .cadRoutedCord(let profile):
+            return .twoBranch(try SuspendedBoardPresentation.solve(pose: pose, suspension: profile, bounds: bounds))
         case .singleCord(let profile):
             return .single(try SuspendedBoardPresentation.solve(
                 pose: pose, suspension: .singleCord(profile), bounds: bounds))

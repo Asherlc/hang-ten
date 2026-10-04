@@ -1,0 +1,23 @@
+{
+  "reviewer": "/root",
+  "attribution": "Parent reports direct whole-image inspection in task authorization; packaging agent records this scope without claiming independent visual inspection.",
+  "scope": "Exactly two images; worker all-12 judgments remain separate.",
+  "images": [
+    {
+      "path": "raw/predecessor-attachment-normal-landscape/phase-1-preview-plus-1.png",
+      "sha256": "f89720fdecdc4cbb8b0698254ee99732f4c7b54ce09b4328bd3e9cceec94c8b6",
+      "observedBoardColor": "red",
+      "phase": "Rest",
+      "displayedClock": "02:59",
+      "correct": false
+    },
+    {
+      "path": "raw/predecessor-attachment-normal-landscape/phase-2-active-plus-1.png",
+      "sha256": "08a754dfa2bad8f0dee1a1c326135b861f5d2dd9fe1fb33aacd558db39ddc092",
+      "observedBoardColor": "blue",
+      "phase": "Hang",
+      "displayedClock": "00:06",
+      "correct": false
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "status": "frozen-input-inventory-not-independent-cleanup-verification",
+  "records": [
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/baseline-restored-build/ownership.json",
+      "sha256": "307d8e22f20e057a17f67e3dd4222c5a2d07b1cfd0e2f4a5b7a9790698ba2202",
+      "keys": [
+        "cleanup",
+        "exactResultBundle",
+        "owner"
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/candidate2/ownership.json",
+      "sha256": "b5c0b20d0f9beb15b8ea1b761ca61e9e37d5a910dfd664a608e5a74ab3d48804",
+      "keys": [
+        "cleanup",
+        "exactResultBundle",
+        "owner"
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/candidate3/ownership.json",
+      "sha256": "56c295c1b5a75cee8d7512a91aaaa07a1ab5022ae50d1850c3b71308bf631643",
+      "keys": [
+        "cleanup",
+        "exactResultBundle",
+        "owner"
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/candidate4/ownership.json",
+      "sha256": "3b1db2cf8ebf3a9c77d21338b58be706f3a0c7f9ca598b009c57830716fb9292",
+      "keys": [
+        "cleanup",
+        "exactResultBundle",
+        "owner"
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/green/ownership.json",
+      "sha256": "a2b14bc926e03e348ba533cb6d5c03006516d4d438a949320d14b5c01e004b19",
+      "keys": [
+        "cleanup",
+        "exactResultBundle",
+        "owner"
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/normal-monotonic/ownership.json",
+      "sha256": "2933ab85927d22f4cb4dc11eb37fd6a420cb8e72ca23ddb5a9f1468d58df7cf6",
+      "keys": [
+        "cleanup",
+        "exactResultBundle",
+        "owner"
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/red/ownership.json",
+      "sha256": "3c51aab2a202b29831dd53802f6eb06b9d92d723a2ce3e7145d2aa7aa27dfb10",
+      "keys": [
+        "cleanup",
+        "exactResultBundle",
+        "owner"
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/red-timeline/ownership.json",
+      "sha256": "6bfd424832ed008144ffcc8d0d7f27736542995e1473054b6e8b0fdec3972480",
+      "keys": [
+        "cleanup",
+        "exactResultBundle",
+        "owner"
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/trace-build/ownership.json",
+      "sha256": "a7f1404d6cf99ac0947376f283384901f11db3aee1848934e996e48a37ecaa68",
+      "keys": [
+        "cleanup",
+        "exactResultBundle",
+        "owner"
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/trace2-build/ownership.json",
+      "sha256": "9e870ea1fee9604ecd2ec8aae22687b19771f7e2ca34ddb3207808293d0e80b1",
+      "keys": [
+        "cleanup",
+        "exactResultBundle",
+        "owner"
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/trace3-build/ownership.json",
+      "sha256": "42530ee0490ea2cdd2f739bebb91be076e117a8fd8ea1ea7d7d9cd3b94b4d8b4",
+      "keys": [
+        "cleanup",
+        "exactResultBundle",
+        "owner"
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/ownership.json",
+      "sha256": "bbaea40367963fabe8d6fabe71493eb6e5ff196b08ee95c67afa5abb53281363",
+      "keys": [
+        "derivedData",
+        "lifetime",
+        "owner",
+        "resultBundle",
+        "simulator",
+        "testResultBundle"
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/test-retry-ownership.json",
+      "sha256": "8a9103c219d4b3fb66b648deda4f163fa77f0d8c9bc56479e762eb93c07c8279",
+      "keys": [
+        "cleanup",
+        "exactResultBundle",
+        "owner"
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/ownership.json",
+      "sha256": "2fed9141c94b80a870c733178a29d3797157b0c2eb97803d9f9da350cb3f24bb",
+      "keys": [
+        "owner",
+        "preservedProducts",
+        "runtime",
+        "simulator",
+        "traps"
+      ]
+    }
+  ],
+  "recordCount": 14,
+  "liveAuditExecuted": false
+}

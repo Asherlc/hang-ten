@@ -1,0 +1,178 @@
+[
+  {
+    "AXLabel": " ",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 402,
+      "width": 874,
+      "y": 0,
+      "x": 0
+    }
+  },
+  {
+    "AXLabel": null,
+    "AXUniqueId": "SBSwitcherWindow:Main",
+    "AXValue": null,
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874
+    }
+  },
+  {
+    "AXLabel": null,
+    "AXUniqueId": "AppSwitcherContentView",
+    "AXValue": null,
+    "frame": {
+      "width": 402,
+      "y": 0,
+      "height": 874,
+      "x": 0
+    }
+  },
+  {
+    "AXLabel": "Hang Ten",
+    "AXUniqueId": "card:com.hangten.training:sceneID:com.hangten.training-EDF23986-CD1E-48C5-B16F-6934FE0229D8",
+    "AXValue": null,
+    "frame": {
+      "width": 402,
+      "x": 0,
+      "height": 874,
+      "y": 0
+    }
+  },
+  {
+    "AXLabel": "Open in \u201cHang Ten\u201d?",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 320,
+      "width": 126.33333333333331,
+      "y": 277,
+      "x": 148.33333333333331
+    }
+  },
+  {
+    "AXLabel": "Open in \u201cHang Ten\u201d?",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 307,
+      "x": 232.3333333333333,
+      "height": 260,
+      "width": 20.333333333333343
+    }
+  },
+  {
+    "AXLabel": "Vertical scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "y": 564,
+      "x": 228.33333333333331,
+      "height": 30,
+      "width": 46.333333333333314
+    }
+  },
+  {
+    "AXLabel": "Horizontal scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "y": 277,
+      "x": 231.33333333333331,
+      "height": 320,
+      "width": 23.166666666666686
+    }
+  },
+  {
+    "AXLabel": "Vertical scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "y": 564,
+      "x": 228.33333333333331,
+      "height": 30,
+      "width": 46.333333333333314
+    }
+  },
+  {
+    "AXLabel": "Horizontal scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "y": 277,
+      "x": 231.33333333333331,
+      "height": 320,
+      "width": 23.166666666666686
+    }
+  },
+  {
+    "AXLabel": "Cancel",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 140,
+      "width": 48,
+      "y": 293,
+      "x": 164.33333333333331
+    }
+  },
+  {
+    "AXLabel": "Open",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 140,
+      "width": 48,
+      "y": 441,
+      "x": 164.33333333333331
+    }
+  },
+  {
+    "AXLabel": "Vertical scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "height": 30,
+      "width": 80,
+      "x": 148.33333333333331,
+      "y": 564
+    }
+  },
+  {
+    "AXLabel": "Horizontal scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "height": 320,
+      "width": 30,
+      "x": 151.33333333333331,
+      "y": 277
+    }
+  },
+  {
+    "AXLabel": "Vertical scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "height": 30,
+      "width": 80,
+      "y": 564,
+      "x": 148.33333333333331
+    }
+  },
+  {
+    "AXLabel": "Horizontal scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "height": 320,
+      "width": 30,
+      "x": 151.33333333333331,
+      "y": 277
+    }
+  }
+]

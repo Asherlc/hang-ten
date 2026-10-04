@@ -1,0 +1,42 @@
+[
+  {
+    "name": "placid-badger-compile-primary",
+    "processGroupAbsent": true,
+    "temporaryDirectoryAbsent": true
+  },
+  {
+    "name": "placid-badger-compile-repro",
+    "processGroupAbsent": true,
+    "temporaryDirectoryAbsent": true
+  },
+  {
+    "name": "placid-badger-compile-check",
+    "processGroupAbsent": true,
+    "temporaryDirectoryAbsent": true
+  },
+  {
+    "name": "placid-badger-export-previews",
+    "processGroupAbsent": true,
+    "temporaryDirectoryAbsent": true
+  },
+  {
+    "name": "placid-badger-retained-red",
+    "processGroupAbsent": true,
+    "temporaryDirectoryAbsent": true
+  },
+  {
+    "name": "placid-badger-retained-red-v2",
+    "processGroupAbsent": true,
+    "temporaryDirectoryAbsent": true
+  },
+  {
+    "name": "placid-badger-collider-merged",
+    "processGroupAbsent": true,
+    "temporaryDirectoryAbsent": true
+  },
+  {
+    "name": "placid-badger-native-check",
+    "processGroupAbsent": true,
+    "temporaryDirectoryAbsent": true
+  }
+]

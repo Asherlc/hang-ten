@@ -1,0 +1,17 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "io",
+    "87CE3964-139D-4FAE-B121-AB12237401DB",
+    "screenshot",
+    ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/ios-uninterrupted/startup-after-eight-minutes.png"
+  ],
+  "boundSeconds": 20.0,
+  "timedOut": false,
+  "interruptedBySignal": null,
+  "exitStatus": 0,
+  "elapsedSeconds": 0.9685387089994038
+}

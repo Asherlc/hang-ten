@@ -1,0 +1,33 @@
+{
+  "status": "native-export-cord-ready",
+  "frozenFiles": "frozen-files.json",
+  "sourceMapping": "source-mapping.json",
+  "baseline": "before/",
+  "nativeGeometry": "native-author-report.json",
+  "finalNative": "final-native-check.json",
+  "depthAxisMetadata": "depth-axis-metadata-proof.json",
+  "compiles": [
+    "compile-primary.json",
+    "compile-repro.json"
+  ],
+  "export": "export-check.json",
+  "cordApply": "cord-apply-report.json",
+  "cordFreshCheck": "cord-check-report.json",
+  "continuousRuntimeRouteCertificate": "continuous-cached-route-certificate.json",
+  "wholePriorCurrentPreviews": [
+    "export-previews/comparison-front.png",
+    "export-previews/comparison-side.png",
+    "export-previews/comparison-top.png",
+    "export-previews/comparison-oblique.png"
+  ],
+  "previewProvenance": "export-previews/provenance.json",
+  "validation": {
+    "command": "hangboard-packages validate --root .context/placid-badger/nature-stone-mini-review10/completion/solve-root/Hangboards",
+    "exitCode": 0,
+    "boards": [
+      "nature.stone-hanger-mini"
+    ],
+    "drafts": []
+  },
+  "remaining": "Fresh iOS visual review of finishes, all four grips, compact cords, and operator-selected jug pose; parent owns delivery records/commit."
+}

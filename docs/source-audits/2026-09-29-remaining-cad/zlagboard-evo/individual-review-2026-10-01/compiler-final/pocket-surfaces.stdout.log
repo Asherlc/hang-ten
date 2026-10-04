@@ -1,0 +1,165 @@
+{
+  "sourceSHA256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+  "method": "Independent Part.Shape import from saved BREP members; bidirectional native surface subtraction, not just equal areas or bounds.",
+  "pockets": [
+    {
+      "member": "Contact_edge_30_left.Shape.brp",
+      "oldAreaMM2": 9208.358586104025,
+      "newAreaMM2": 9208.358586104025,
+      "removedAreaMM2": 0.0,
+      "addedAreaMM2": 0.0,
+      "oldDepthMM": 30.000000000000004,
+      "newDepthMM": 30.000000000000004,
+      "surfaceGeometryEqual": true,
+      "depthEqual": true
+    },
+    {
+      "member": "Contact_sloper_edge_30_left.Shape.brp",
+      "oldAreaMM2": 6849.957059838389,
+      "newAreaMM2": 6849.957059838389,
+      "removedAreaMM2": 0.0,
+      "addedAreaMM2": 0.0,
+      "oldDepthMM": 30.000000000001066,
+      "newDepthMM": 30.000000000001066,
+      "surfaceGeometryEqual": true,
+      "depthEqual": true
+    },
+    {
+      "member": "Contact_sloper_edge_25_left.Shape.brp",
+      "oldAreaMM2": 4282.882138456849,
+      "newAreaMM2": 4282.882138456849,
+      "removedAreaMM2": 0.0,
+      "addedAreaMM2": 0.0,
+      "oldDepthMM": 25.000000000001542,
+      "newDepthMM": 25.000000000001542,
+      "surfaceGeometryEqual": true,
+      "depthEqual": true
+    },
+    {
+      "member": "Contact_edge_35_center.Shape.brp",
+      "oldAreaMM2": 10094.734506817857,
+      "newAreaMM2": 10094.734506817857,
+      "removedAreaMM2": 0.0,
+      "addedAreaMM2": 0.0,
+      "oldDepthMM": 35.0,
+      "newDepthMM": 35.0,
+      "surfaceGeometryEqual": true,
+      "depthEqual": true
+    },
+    {
+      "member": "Contact_sloper_edge_25_right.Shape.brp",
+      "oldAreaMM2": 4282.88213845685,
+      "newAreaMM2": 4282.88213845685,
+      "removedAreaMM2": 0.0,
+      "addedAreaMM2": 0.0,
+      "oldDepthMM": 25.000000000001542,
+      "newDepthMM": 25.000000000001542,
+      "surfaceGeometryEqual": true,
+      "depthEqual": true
+    },
+    {
+      "member": "Contact_sloper_edge_30_right.Shape.brp",
+      "oldAreaMM2": 6849.957059838391,
+      "newAreaMM2": 6849.957059838391,
+      "removedAreaMM2": 0.0,
+      "addedAreaMM2": 0.0,
+      "oldDepthMM": 30.000000000001066,
+      "newDepthMM": 30.000000000001066,
+      "surfaceGeometryEqual": true,
+      "depthEqual": true
+    },
+    {
+      "member": "Contact_edge_30_right.Shape.brp",
+      "oldAreaMM2": 9208.358586104025,
+      "newAreaMM2": 9208.358586104026,
+      "removedAreaMM2": 0.0,
+      "addedAreaMM2": 0.0,
+      "oldDepthMM": 30.000000000000004,
+      "newDepthMM": 30.000000000000004,
+      "surfaceGeometryEqual": true,
+      "depthEqual": true
+    },
+    {
+      "member": "Contact_edge_20_left.Shape.brp",
+      "oldAreaMM2": 6982.8719084578615,
+      "newAreaMM2": 6982.8719084578615,
+      "removedAreaMM2": 0.0,
+      "addedAreaMM2": 0.0,
+      "oldDepthMM": 20.000000000000004,
+      "newDepthMM": 20.000000000000004,
+      "surfaceGeometryEqual": true,
+      "depthEqual": true
+    },
+    {
+      "member": "Contact_sloper_edge_25_lower_left.Shape.brp",
+      "oldAreaMM2": 6003.323185856897,
+      "newAreaMM2": 6003.323185856897,
+      "removedAreaMM2": 0.0,
+      "addedAreaMM2": 0.0,
+      "oldDepthMM": 25.00000000000143,
+      "newDepthMM": 25.00000000000143,
+      "surfaceGeometryEqual": true,
+      "depthEqual": true
+    },
+    {
+      "member": "Contact_edge_30_inner_left.Shape.brp",
+      "oldAreaMM2": 4852.234950949861,
+      "newAreaMM2": 4852.234950949861,
+      "removedAreaMM2": 0.0,
+      "addedAreaMM2": 0.0,
+      "oldDepthMM": 30.000000000000004,
+      "newDepthMM": 30.000000000000004,
+      "surfaceGeometryEqual": true,
+      "depthEqual": true
+    },
+    {
+      "member": "Contact_sloper_edge_30_center.Shape.brp",
+      "oldAreaMM2": 9124.28605429095,
+      "newAreaMM2": 9124.28605429095,
+      "removedAreaMM2": 0.0,
+      "addedAreaMM2": 0.0,
+      "oldDepthMM": 30.00000000000309,
+      "newDepthMM": 30.00000000000309,
+      "surfaceGeometryEqual": true,
+      "depthEqual": true
+    },
+    {
+      "member": "Contact_edge_30_inner_right.Shape.brp",
+      "oldAreaMM2": 4852.234950949861,
+      "newAreaMM2": 4852.234950949861,
+      "removedAreaMM2": 0.0,
+      "addedAreaMM2": 0.0,
+      "oldDepthMM": 30.000000000000004,
+      "newDepthMM": 30.000000000000004,
+      "surfaceGeometryEqual": true,
+      "depthEqual": true
+    },
+    {
+      "member": "Contact_sloper_edge_25_lower_right.Shape.brp",
+      "oldAreaMM2": 6003.3231858569,
+      "newAreaMM2": 6003.3231858569,
+      "removedAreaMM2": 0.0,
+      "addedAreaMM2": 0.0,
+      "oldDepthMM": 25.00000000000143,
+      "newDepthMM": 25.00000000000143,
+      "surfaceGeometryEqual": true,
+      "depthEqual": true
+    },
+    {
+      "member": "Contact_edge_20_right.Shape.brp",
+      "oldAreaMM2": 6982.8719084578615,
+      "newAreaMM2": 6982.8719084578615,
+      "removedAreaMM2": 0.0,
+      "addedAreaMM2": 0.0,
+      "oldDepthMM": 20.000000000000004,
+      "newDepthMM": 20.000000000000004,
+      "surfaceGeometryEqual": true,
+      "depthEqual": true
+    }
+  ],
+  "passed": true
+}
+FreeCAD 1.1.3, Libs: 1.1.3R20260725 (Git shallow)
+(C) 2001-2026 FreeCAD contributors
+FreeCAD is free and open-source software licensed under the terms of LGPL2+ license.
+

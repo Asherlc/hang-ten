@@ -1,0 +1,34 @@
+[
+  [
+    "rtk",
+    "proxy",
+    "/opt/homebrew/bin/axe",
+    "tap",
+    "-x",
+    "200",
+    "-y",
+    "391",
+    "--tap-style",
+    "physical",
+    "--udid",
+    "218DD2D3-AD28-4F6A-AF3F-C893CB3FDF88"
+  ],
+  [
+    "rtk",
+    "proxy",
+    "/opt/homebrew/bin/axe",
+    "describe-ui",
+    "--udid",
+    "218DD2D3-AD28-4F6A-AF3F-C893CB3FDF88"
+  ],
+  [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "io",
+    "218DD2D3-AD28-4F6A-AF3F-C893CB3FDF88",
+    "screenshot",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-travelboard/ios-review/physical-probes/06-edge15-pick/view.png"
+  ]
+]

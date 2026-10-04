@@ -1,0 +1,135 @@
+{
+  "kind": "independent Forge native source gate",
+  "source": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/placid-badger-final-package/Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd",
+  "sourceSHA256": "3befc7e58894d76f7f7f70bdab82c33f3bf9901bf61512b4aa555b495bf862a4",
+  "baselineSourceSHA256": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+  "passed": false,
+  "areaToleranceMM2": 0.0001,
+  "depthToleranceMM": 0.01,
+  "publishedPlaneAngleToleranceDegrees": 0.01,
+  "sourceSaved": false,
+  "failedObjectStates": {},
+  "bodyNodeID": "body_board_001",
+  "bodyValid": true,
+  "solidCount": 2,
+  "bodyBoundsNativeMM": [
+    -400.05,
+    -89.0,
+    -66.67500000000001,
+    400.05,
+    4.263256414560601e-14,
+    66.675
+  ],
+  "bodyVolumeMM3": 3165072.1914374502,
+  "solidBoundsNativeMM": [
+    [
+      76.19999999999999,
+      -89.0,
+      -66.67500000000001,
+      400.05,
+      4.263256414560601e-14,
+      66.675
+    ],
+    [
+      -400.05,
+      -89.0,
+      -66.67500000000001,
+      -76.19999999999999,
+      4.263256414560601e-14,
+      66.675
+    ]
+  ],
+  "sketches": {
+    "WingSection0": {
+      "fullyConstrained": true
+    },
+    "WingSection1": {
+      "fullyConstrained": true
+    },
+    "WingSection2": {
+      "fullyConstrained": true
+    },
+    "RightFrontSilhouette": {
+      "fullyConstrained": true
+    },
+    "SlopeyCrimperProfile": {
+      "fullyConstrained": true
+    },
+    "Pocket_variable_edge_rail_right_S0": {
+      "fullyConstrained": true
+    },
+    "Pocket_variable_edge_rail_right_S1": {
+      "fullyConstrained": true
+    },
+    "Pocket_variable_edge_rail_right_S2": {
+      "fullyConstrained": true
+    },
+    "Pocket_variable_edge_rail_right_S3": {
+      "fullyConstrained": true
+    },
+    "Pocket_variable_edge_rail_right_S4": {
+      "fullyConstrained": true
+    },
+    "Drawn_closed_crimp_right_S0": {
+      "fullyConstrained": true
+    },
+    "Drawn_closed_crimp_right_S1": {
+      "fullyConstrained": true
+    },
+    "Drawn_closed_crimp_right_S2": {
+      "fullyConstrained": true
+    },
+    "Drawn_closed_crimp_right_S3": {
+      "fullyConstrained": true
+    },
+    "Pocket_mr_deep_right_S0": {
+      "fullyConstrained": true
+    },
+    "Pocket_mr_deep_right_S1": {
+      "fullyConstrained": true
+    },
+    "Pocket_mr_deep_right_S2": {
+      "fullyConstrained": true
+    },
+    "Pocket_mr_deep_right_S3": {
+      "fullyConstrained": true
+    },
+    "Pocket_mr_deep_right_S4": {
+      "fullyConstrained": true
+    },
+    "Pocket_mr_shallow_right_S0": {
+      "fullyConstrained": true
+    },
+    "Pocket_mr_shallow_right_S1": {
+      "fullyConstrained": true
+    },
+    "Pocket_mr_shallow_right_S2": {
+      "fullyConstrained": true
+    },
+    "Pocket_mr_shallow_right_S3": {
+      "fullyConstrained": true
+    },
+    "Pocket_mr_shallow_right_S4": {
+      "fullyConstrained": true
+    },
+    "Pocket_im_cavity_right_S0": {
+      "fullyConstrained": true
+    },
+    "Pocket_im_cavity_right_S1": {
+      "fullyConstrained": true
+    },
+    "Pocket_im_cavity_right_S2": {
+      "fullyConstrained": true
+    },
+    "Pocket_im_cavity_right_S3": {
+      "fullyConstrained": true
+    },
+    "Pocket_im_cavity_right_S4": {
+      "fullyConstrained": true
+    },
+    "OuterWingRecessSection": {
+      "fullyConstrained": true
+    }
+  },
+  "failure": "Traceback (most recent call last):\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/check-forge-native.py\", line 94, in main\n    assert outside < 1e-4 and not rear and inventory[contact_id]['sameSurfaceAsBaseline']\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+}

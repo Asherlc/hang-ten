@@ -1,0 +1,35 @@
+{
+  "runtimeAuthorized": false,
+  "exclusiveRuntimeOwnership": false,
+  "owner": "placid-badger-cad-second-half",
+  "simulatorUUID": "E0AC7F37-369F-414E-B407-353435A0BE03",
+  "controllerPID": 17341,
+  "ownershipPath": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/ownership.json",
+  "ownershipSHA256": "46345ff969e249c2a240dbb442761417e95d64ddafa3922cd0c6ed955ed9bb59",
+  "sourceCommit": "ROOT_MUST_BIND",
+  "sourceReferencePath": "ROOT_MUST_SUPPLY_CANDIDATE_SOURCE_REFERENCE",
+  "sourceReferenceSHA256": "ROOT_MUST_BIND",
+  "parityPath": "ROOT_MUST_SUPPLY_NEW_BINARY_PARITY",
+  "paritySHA256": "ROOT_MUST_BIND",
+  "parityCheckCount": 0,
+  "binarySHA256": "ROOT_MUST_BIND",
+  "helperSHA256": "e0a636c56eabc7aea3a695cb330bf9545bf404ab2f24de36c72505530701ec87",
+  "scheduleSHA256": "26b19c6c9273432d96bf9a34be0f5796e6d8af197b8ca017766ea8123d0f45b2",
+  "planLibrarySHA256": "2c2ecd7ae62de57928c9434029a812dfae4043fa17b071408b6ee22c5aa481d1",
+  "routineReferenceSHA256": "ed3655bf12b217326324bb5f461cdaee0db28f018e0e593a995c49f5b084e601",
+  "boardID": "zlagboard.evo",
+  "planID": "research.max-hangs",
+  "arm": "control",
+  "runID": "placid-badger-cad-second-half-post-main-zlagboard-evo-control",
+  "outputDirectory": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/candidate-evo-control",
+  "appArguments": [
+    "-workoutAudioCuesEnabled",
+    "NO"
+  ],
+  "launchReviewFlags": {
+    "HANGTEN_REVIEW_BOARD_ID": "zlagboard.evo",
+    "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+    "HANGTEN_REVIEW_LANDSCAPE": "1",
+    "HANGTEN_REVIEW_SKIP_NONINTERACTIVE_PRESENTATION": "1"
+  }
+}

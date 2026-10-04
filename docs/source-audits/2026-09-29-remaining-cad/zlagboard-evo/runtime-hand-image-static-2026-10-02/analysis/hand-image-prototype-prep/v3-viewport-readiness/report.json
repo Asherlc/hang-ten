@@ -1,0 +1,67 @@
+{
+  "scope": "unapplied viewport-readiness setup correction only",
+  "source": "HangTen/Views/GripHandModelView.swift",
+  "beforeSHA256": "d39ba6ca3ce4d4d1caf5da359b0bbf5ab18b49645f9110518676750c2c10ee28",
+  "proposedSHA256": "10368b26488a7daa145eaff42673b4c2bdbed18d87ef132b3b87c49ca98839c8",
+  "patchSHA256": "eaaac26175c4c72e79fa3994c35f60b34e0a20768cbf9ab669167980d8f66067",
+  "checks": [
+    {
+      "name": "apply-check",
+      "exitCode": 0,
+      "command": [
+        "rtk",
+        "proxy",
+        "git",
+        "apply",
+        "--check",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-prototype-prep/v3-viewport-readiness/viewport-readiness.patch"
+      ]
+    },
+    {
+      "name": "swift-parse",
+      "exitCode": 0,
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "swiftc",
+        "-frontend",
+        "-parse",
+        "-D",
+        "DEBUG",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-prototype-prep/v3-viewport-readiness/proposed/HangTen/Views/GripHandModelView.swift"
+      ]
+    }
+  ],
+  "applied": false,
+  "runtimeActions": false,
+  "failedTrial": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-a/events-49E3DB1D-57B7-4BF1-8C84-EE671B9859BA.jsonl",
+    "sha256": "1d451c86ff2d7b9f70ea7e7f111f8d2e169b25eda065c281bc98acb10a55960f",
+    "events": [
+      [
+        1,
+        "recorder-open"
+      ],
+      [
+        2,
+        "requested"
+      ],
+      [
+        3,
+        "failed"
+      ]
+    ],
+    "zeroHandConstructors": true,
+    "qualification": "invalidViewport occurs before scene construction/submission. Prior trace omitted actual dimensions/scale, so zero vs nonfinite/oversized/invalid-scale cannot be identified. This is not evidence of a RealityRenderer failure."
+  },
+  "schemaDelta": {
+    "requested": {
+      "requestedViewport": "two scalar-description Strings width,height; preserves nonfinite without JSON failure",
+      "requestedDisplayScale": "scalar-description String"
+    },
+    "waiting-for-viewport": "same session/revision after requested; zero width or height, finite nonnegative dimensions and positive finite scale within existing 4096-pixel bound; no scene ctor/submission"
+  },
+  "behavior": "Consumes zero request and waits solely for existing normal onChange/onAppear; no timer, layout mutation, forced render or retry loop. Nonfinite, nonpositive scale, negative or oversized input fails explicitly. Later ordinary input creates new revision through unchanged path.",
+  "helperAdaptation": "Allow waiting-for-viewport after its requested row, before any submitted row for that revision; require logged actual input has a zero dimension and no scene ctor/submission for that request. Still require current successful publication within unchanged external bound."
+}

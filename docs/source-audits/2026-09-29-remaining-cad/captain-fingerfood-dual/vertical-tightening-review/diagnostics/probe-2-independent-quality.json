@@ -1,0 +1,22 @@
+{
+  "source": ".context/placid-badger/dual-vertical-review/tightening-probe-2/diagnostic-pass-1-failed-paths.json",
+  "sourceSHA256": "ca72b2f57e9a3506642506e55ce50e07b52d6a980b387254216a22db08b76b86",
+  "published": false,
+  "probeOutcome": "Budget exhausted; not an accepted final cache.",
+  "originalWholeTubeReplay": "passed",
+  "largeFreeSpaceElbowsRemoved": true,
+  "maximumTurnAtNodesMoreThan0_2MMBeyondTubeContactBandDegrees": 4.024102223167144,
+  "remainingFreeNodeProbes": [
+    {
+      "strand": "left-lead",
+      "index": 14,
+      "woodDistanceMM": 2.692777922810956,
+      "turnDegrees": 4.024102223167144,
+      "probedGainMicrometres": 0.21356110993791133,
+      "passed": true,
+      "chordCertificateMM": 2.5143537293775897
+    }
+  ],
+  "lateralImprovementCounterexample": "independent-rim-subchain-probe.json: +Y1 mm,+Z0.1 mm rim group passes and reduces visible bow by1 mm.",
+  "conclusion": "Corner cuts fix the large artificial knees, but the route remains visibly constrained by grouped-bearing search limitations. Budget/tolerance changes alone do not establish physical or visual quality."
+}

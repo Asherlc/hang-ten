@@ -1,0 +1,510 @@
+{
+  "status": "fail",
+  "blockingFindings": [
+    "exported curved upper roll (30, -90)"
+  ],
+  "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+  "descriptorSHA256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+  "nativeSourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "nativeReportSHA256": "3071cf33a5fec611b69f3533d34116c45dfb1144539cab746d660965a11c5bcc",
+  "localNativeReportSHA256": "a46cc5e397af5714eb08b5a2df24812df28deb36257ecc7b8b4221b454c9f817",
+  "rootMembership": [
+    {
+      "xMM": -47.1,
+      "yMM": -35,
+      "expected": "round",
+      "nativeZErrorMM": 0.00938784324469566,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -47.1,
+      "yMM": -50,
+      "expected": "round",
+      "nativeZErrorMM": 0.03190728475982496,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -47.1,
+      "yMM": -80,
+      "expected": "round",
+      "nativeZErrorMM": 0.009064990358410796,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -46.9,
+      "yMM": -35,
+      "expected": "jug",
+      "nativeZErrorMM": 0.0011687427951301288,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -46.9,
+      "yMM": -50,
+      "expected": "jug",
+      "nativeZErrorMM": 0.015037141261188935,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -46.9,
+      "yMM": -80,
+      "expected": "jug",
+      "nativeZErrorMM": 0.0046728663937187775,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -46,
+      "yMM": -35,
+      "expected": "jug",
+      "nativeZErrorMM": 0.00877634609454958,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -46,
+      "yMM": -50,
+      "expected": "jug",
+      "nativeZErrorMM": 0.09736967799489094,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -46,
+      "yMM": -80,
+      "expected": "jug",
+      "nativeZErrorMM": 0.012904274825530138,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -45.6,
+      "yMM": -35,
+      "expected": "jug",
+      "nativeZErrorMM": 0.0005141021688359615,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -45.6,
+      "yMM": -50,
+      "expected": "jug",
+      "nativeZErrorMM": 0.02729782299729777,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -45.6,
+      "yMM": -80,
+      "expected": "jug",
+      "nativeZErrorMM": 0.0088565151850446,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 45.6,
+      "yMM": -35,
+      "expected": "jug",
+      "nativeZErrorMM": 0.0005141021688359615,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 45.6,
+      "yMM": -50,
+      "expected": "jug",
+      "nativeZErrorMM": 0.033342004956978144,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 45.6,
+      "yMM": -80,
+      "expected": "jug",
+      "nativeZErrorMM": 0.008856515185073022,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 46,
+      "yMM": -35,
+      "expected": "jug",
+      "nativeZErrorMM": 0.00877634609454958,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 46,
+      "yMM": -50,
+      "expected": "jug",
+      "nativeZErrorMM": 0.09816098386272643,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 46,
+      "yMM": -80,
+      "expected": "jug",
+      "nativeZErrorMM": 0.01290427482555856,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 46.9,
+      "yMM": -35,
+      "expected": "jug",
+      "nativeZErrorMM": 0.0011687427951869722,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 46.9,
+      "yMM": -50,
+      "expected": "jug",
+      "nativeZErrorMM": 0.015037141261188935,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 46.9,
+      "yMM": -80,
+      "expected": "jug",
+      "nativeZErrorMM": 0.0046728663937187775,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 47.1,
+      "yMM": -35,
+      "expected": "round",
+      "nativeZErrorMM": 0.012634187421355136,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 47.1,
+      "yMM": -50,
+      "expected": "round",
+      "nativeZErrorMM": 0.03190728475982496,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 47.1,
+      "yMM": -80,
+      "expected": "round",
+      "nativeZErrorMM": 0.009064990358382374,
+      "unexpectedOtherContactIntersection": null
+    }
+  ],
+  "jugForwardRoll": [
+    {
+      "xMM": 0,
+      "yMM": -90,
+      "nativeZErrorMM": 0.09979527309363334
+    },
+    {
+      "xMM": 0,
+      "yMM": -92,
+      "nativeZErrorMM": 0.00025743135691413954
+    },
+    {
+      "xMM": 0,
+      "yMM": -93,
+      "nativeZErrorMM": 0.02635505978523156
+    },
+    {
+      "xMM": 0,
+      "yMM": -93.5,
+      "nativeZErrorMM": 0.020602967346604828
+    },
+    {
+      "xMM": 0,
+      "yMM": -93.9,
+      "nativeZErrorMM": 0.0038859494567304864
+    },
+    {
+      "xMM": 30,
+      "yMM": -90,
+      "nativeZErrorMM": 0.38815420767326714
+    },
+    {
+      "xMM": 30,
+      "yMM": -92,
+      "nativeZErrorMM": 0.06574769945345338
+    },
+    {
+      "xMM": 30,
+      "yMM": -93,
+      "nativeZErrorMM": 0.12300868887945171
+    },
+    {
+      "xMM": 30,
+      "yMM": -93.5,
+      "nativeZErrorMM": 0.07287678132516362
+    },
+    {
+      "xMM": 30,
+      "yMM": -93.9,
+      "nativeZErrorMM": 0.06908684933861764
+    },
+    {
+      "xMM": 46,
+      "yMM": -90,
+      "nativeZErrorMM": 0.012751212167614767
+    },
+    {
+      "xMM": 46,
+      "yMM": -92,
+      "nativeZErrorMM": 0.01288146629084963
+    },
+    {
+      "xMM": 46,
+      "yMM": -93,
+      "nativeZErrorMM": 0.018066851749182433
+    },
+    {
+      "xMM": 46,
+      "yMM": -93.5,
+      "nativeZErrorMM": 0.009882436487885116
+    },
+    {
+      "xMM": 46,
+      "yMM": -93.9,
+      "nativeZErrorMM": 0.0059733296544379755
+    }
+  ],
+  "slopers": [
+    {
+      "id": "flat-sloper-2-left",
+      "xMM": -210,
+      "meshYBoundsMM": [
+        -93.99999678134922,
+        -39.00000080466274
+      ],
+      "samples": [
+        {
+          "yMM": -92.9,
+          "nativeToContactMeshZErrorMM": 0.0009335714584040034,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -83.0,
+          "nativeToContactMeshZErrorMM": 0.03627042805649694,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -72.0,
+          "nativeToContactMeshZErrorMM": 0.01532587542709507,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -61.0,
+          "nativeToContactMeshZErrorMM": 8.026918862924504e-08,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -50.0,
+          "nativeToContactMeshZErrorMM": 2.155626731337179e-06,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -40.1,
+          "nativeToContactMeshZErrorMM": 4.023448525458662e-06,
+          "bodyRoofToContactMeshZGapMM": 6.616003219050981e-06
+        }
+      ]
+    },
+    {
+      "id": "flat-sloper-2-right",
+      "xMM": 210,
+      "meshYBoundsMM": [
+        -93.99999678134922,
+        -39.00000080466274
+      ],
+      "samples": [
+        {
+          "yMM": -92.9,
+          "nativeToContactMeshZErrorMM": 0.0009335714584040034,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -83.0,
+          "nativeToContactMeshZErrorMM": 0.03627042805646852,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -72.0,
+          "nativeToContactMeshZErrorMM": 0.015325875427066649,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -61.0,
+          "nativeToContactMeshZErrorMM": 8.026918862924504e-08,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -50.0,
+          "nativeToContactMeshZErrorMM": 2.1556267597588885e-06,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -40.1,
+          "nativeToContactMeshZErrorMM": 4.0234485823020805e-06,
+          "bodyRoofToContactMeshZGapMM": 6.616003304316109e-06
+        }
+      ]
+    },
+    {
+      "id": "round-sloper-3-center",
+      "xMM": -95,
+      "meshYBoundsMM": [
+        -93.99999678134922,
+        -28.999999165535012
+      ],
+      "samples": [
+        {
+          "yMM": -92.7,
+          "nativeToContactMeshZErrorMM": 0.0016957884978978655,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -81.0,
+          "nativeToContactMeshZErrorMM": 0.005438799542787365,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -68.0,
+          "nativeToContactMeshZErrorMM": 0.004886652115743573,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -55.0,
+          "nativeToContactMeshZErrorMM": 0.012667283379357741,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -42.0,
+          "nativeToContactMeshZErrorMM": 0.010862590807334982,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -30.300000000000004,
+          "nativeToContactMeshZErrorMM": 0.008887293470735358,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        }
+      ]
+    },
+    {
+      "id": "round-sloper-3-center",
+      "xMM": 95,
+      "meshYBoundsMM": [
+        -93.99999678134922,
+        -28.999999165535012
+      ],
+      "samples": [
+        {
+          "yMM": -92.7,
+          "nativeToContactMeshZErrorMM": 0.0016957884978978655,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -81.0,
+          "nativeToContactMeshZErrorMM": 0.005438799542787365,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -68.0,
+          "nativeToContactMeshZErrorMM": 0.004886652115800416,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -55.0,
+          "nativeToContactMeshZErrorMM": 0.012667283379357741,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -42.0,
+          "nativeToContactMeshZErrorMM": 0.010862590807278139,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -30.300000000000004,
+          "nativeToContactMeshZErrorMM": 0.008887293470735358,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        }
+      ]
+    }
+  ],
+  "centerJug": [
+    {
+      "xMM": 0,
+      "crestYMM": -66,
+      "crestZMM": 221.96037190168317,
+      "rearRoofZMM": 187.99792462334264,
+      "frontRoofZMM": 183.76305291416222,
+      "contactSamples": [
+        {
+          "yMM": -35,
+          "nativeToContactMeshZErrorMM": 0.012923131711687574,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -50,
+          "nativeToContactMeshZErrorMM": 0.02331502369906957,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -66,
+          "nativeToContactMeshZErrorMM": 0.003753987367758782,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -80,
+          "nativeToContactMeshZErrorMM": 9.384908111087498e-06,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        }
+      ]
+    },
+    {
+      "xMM": 30,
+      "crestYMM": -66,
+      "crestZMM": 213.9470715224777,
+      "rearRoofZMM": 187.95617098007028,
+      "frontRoofZMM": 183.64680975052318,
+      "contactSamples": [
+        {
+          "yMM": -35,
+          "nativeToContactMeshZErrorMM": 0.02426805371470664,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -50,
+          "nativeToContactMeshZErrorMM": 0.052558219658919825,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -66,
+          "nativeToContactMeshZErrorMM": 0.07424405498321107,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -80,
+          "nativeToContactMeshZErrorMM": 0.006298127230252248,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        }
+      ]
+    },
+    {
+      "xMM": -30,
+      "crestYMM": -66,
+      "crestZMM": 213.9470715224777,
+      "rearRoofZMM": 187.95617078641314,
+      "frontRoofZMM": 183.6856129188221,
+      "contactSamples": [
+        {
+          "yMM": -35,
+          "nativeToContactMeshZErrorMM": 0.011820382049677391,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -50,
+          "nativeToContactMeshZErrorMM": 0.05255821965886298,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -66,
+          "nativeToContactMeshZErrorMM": 0.07424405498315423,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -80,
+          "nativeToContactMeshZErrorMM": 0.009275944997284569,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        }
+      ]
+    }
+  ],
+  "limits": "Finite actualtriangle native-frame probes; operator display-intent position/return thresholds are not maker or ergonomic facts. Whole-image Opus and user acceptance remain separate."
+}

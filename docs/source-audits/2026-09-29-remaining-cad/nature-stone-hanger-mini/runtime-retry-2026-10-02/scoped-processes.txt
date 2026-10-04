@@ -1,0 +1,7 @@
+82960 10248 82960 rtk proxy zsh -c trap "rtk proxy env PASEO_WORKTREE_PATH=$PWD $PWD/scripts/paseo-resource-cleanup.sh archive" EXIT; trap "exit 130" INT; trap "exit 143" TERM; rtk proxy python3 .context/placid-badger/nature-stone-mini-review10/runtime-retry-2026-10-02/session.py
+82963 82960 82960 /opt/homebrew/bin/zsh -c trap "rtk proxy env PASEO_WORKTREE_PATH=$PWD $PWD/scripts/paseo-resource-cleanup.sh archive" EXIT; trap "exit 130" INT; trap "exit 143" TERM; rtk proxy python3 .context/placid-badger/nature-stone-mini-review10/runtime-retry-2026-10-02/session.py
+82964 82963 82960 rtk proxy python3 .context/placid-badger/nature-stone-mini-review10/runtime-retry-2026-10-02/session.py
+82965 82964 82960 /opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python .context/placid-badger/nature-stone-mini-review10/runtime-retry-2026-10-02/session.py
+82995     1 82995 launchd_sim /Users/asherlc/Library/Developer/CoreSimulator/Devices/2397F02F-15E4-48C9-8E5C-37DE8CC995B2/data/var/run/launchd_bootstrap.plist
+92820 92818 92820 rtk proxy xcrun simctl bootstatus 2397F02F-15E4-48C9-8E5C-37DE8CC995B2 -b
+92821 92820 92820 /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl bootstatus 2397F02F-15E4-48C9-8E5C-37DE8CC995B2 -b

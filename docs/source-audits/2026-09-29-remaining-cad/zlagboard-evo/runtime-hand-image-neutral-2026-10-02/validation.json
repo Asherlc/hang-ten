@@ -1,0 +1,22 @@
+{
+  "staticPairReadabilityPassed": true,
+  "wholeLightDarkCompositionPassed": true,
+  "appearanceEquivalentToLive": false,
+  "orientationOnlyVisualFailurePreserved": true,
+  "workoutPassed": false,
+  "productionReady": false,
+  "humanAccepted": false,
+  "sourceInputsBeforePackaging": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "37f32c3c9e45b85da06978aca49cb0f1066f092d3b62a1ac114e1dd3a90cf361",
+    "HangTen/Views/BoardModelView.swift": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97",
+    "HangTen/Views/GripHandModelView.swift": "66f77336b6bc1533e467c6165d7c35d330b1a817afddf8229f3b2bb7090fb542",
+    "HangTen/Views/RootView.swift": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d",
+    "HangTen/Views/TrainView.swift": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba"
+  },
+  "baseHEAD": "f19fccc8c112c06eb5d57c17d731ce68aa28105c",
+  "priorPacketVerifiedFiles": 304,
+  "originalOrientationFreezeVerifiedFiles": 63,
+  "nativePackagesModified": false,
+  "appSourceModifiedByPackaging": false,
+  "runtimeActionsByPackaging": false
+}

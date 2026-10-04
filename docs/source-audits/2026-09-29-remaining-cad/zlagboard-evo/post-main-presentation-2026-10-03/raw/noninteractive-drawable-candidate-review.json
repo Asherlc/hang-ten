@@ -1,0 +1,47 @@
+{
+  "kind": "read-only candidate review",
+  "timestampUTC": "2026-10-03T17:45:56.890949+00:00",
+  "HEAD": "a314f39c03121465b493da6f45e49fa7c928b1cc",
+  "reviewedBoardModelViewSHA256": "4ba1f9f18ac980da4a168def3761e1bddff475702092d0d48d752b0c48c8cef4",
+  "candidate": "Mount the existing unchanged BoardSimulatorPresentation for callback-nil live BoardModelRealityViews as well as existing interactive views. DEBUG-only launch flag disables only this added callback-nil coverage; no flag is action.",
+  "verdict": "No source-level blocker to this narrowly scoped simulator comparison. Full baseline remains in progress; observed early Rest wrong-color is parent-reported, not a complete control verdict. No fix claim.",
+  "requiredScope": [
+    "Keep the existing targetEnvironment(simulator) boundary; hardware path must remain unchanged.",
+    "Control must retain helper for every onContactTap != nil view. Disable only newly added callback-nil mounting.",
+    "Do not change existing helper implementation, camera, material, hands, audio, native packages, navigation or frame-renderer flag in this comparison.",
+    "Describe action as added noninteractive BOARD coverage, including Train board cards and workout board, not a workout-only intervention. TrainView currently constructs BoardMapView(isDisplayOnly:true).",
+    "Same-binary action/control in fresh app processes, with control flag fixed before launch. The helper does not restore layer policy when removed, so toggling it in a retained view would not establish a valid control."
+  ],
+  "risks": [
+    {
+      "name": "viewport-based association",
+      "detail": "The existing helper identifies a layer by unique matching window-space bounds, not explicit ownership identity. It walks ancestors up to the window; retained/overlaid sibling renderers with the same bounds can make matches ambiguous or coincident. Existing exactly-one candidate/visited cap is essential and must remain. Log presence alone demonstrates a matched layer was changed, not formal board identity."
+    },
+    {
+      "name": "lifecycle and layout timing",
+      "detail": "Configuration is scheduled in50ms attempts capped120; viewport changes can reset attempts. Added Train/predecessor layouts and orientation changes increase the number of bounded searches. Verify the actual final workout viewport receives configuration rather than assuming mounting suffices. No need new per-frame sampler."
+    },
+    {
+      "name": "default policy and no restoration",
+      "detail": "Setting false is idempotent, but fresh control may already receive false from the framework. The comparison tests policy enforcement/coverage, not a guaranteed boolean difference; keep actual existing configuration messages when available. No new restore-on-disappear behavior in this candidate."
+    },
+    {
+      "name": "noninteractive hit testing",
+      "detail": "Retain allowsHitTesting(false) on helper. It must not intercept Train-card buttons, gestures or projected contact accessibility."
+    }
+  ],
+  "validationPriorities": [
+    "Finish full normal-route baseline and retain all failures, screenshots, binary/source/package parity.",
+    "Action must show actual complete first Hang, Rest and next Hang board colors with visible hands and legible wood/cavities; no CPU or timer-label-only substitute.",
+    "Retain Train startup, workout portrait/landscape framing and native model/cord visibility. Do not infer which newly covered surface produced any result.",
+    "If full action passes, matched control reversal and normal Pro validation are stronger than extra old host/projection changes. Stop on invalid setup, missing capture or lost control.",
+    "Preserve Main interactive board pick/orbit/reset behavior with one focused smoke after a candidate pass; the existing interactive branch is expected unchanged, not assumed tested."
+  ],
+  "historicalInterpretation": "This is new coverage of Main existing drawable workaround, not proof of a graphics-driver root cause or revival of ruled-out projection/host theories.",
+  "mutations": {
+    "source": false,
+    "runtime": false,
+    "resources": false,
+    "nativePackages": false
+  }
+}

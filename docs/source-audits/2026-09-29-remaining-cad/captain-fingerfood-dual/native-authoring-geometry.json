@@ -1,0 +1,13 @@
+{
+  "bodyFeature": "CutRightFloorBore",
+  "bodyVolume": 167082.73459286458,
+  "boreCentersXmm": [
+    -26,
+    26
+  ],
+  "boreNativeZmm": 1,
+  "cavityFloorYmm": 5,
+  "backYmm": 15,
+  "bodyNode": "DUAL_skin_body_001",
+  "topology": "Two floor-to-rear daylight holes only; exterior connection graph not inferred."
+}

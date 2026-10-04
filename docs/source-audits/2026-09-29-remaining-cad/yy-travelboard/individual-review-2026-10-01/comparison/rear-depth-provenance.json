@@ -1,0 +1,34 @@
+{
+  "modelSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+  "modelBytesUnchanged": true,
+  "renderer": "Orthographic per-triangle depth buffer from actual USDZ triangles; no pixel source analysis or geometry edits.",
+  "rotation": [
+    [
+      -0.882947592858927,
+      -0.4694715627858908,
+      0.0
+    ],
+    [
+      0.42195824553872424,
+      -0.7935880396557845,
+      -0.43837114678907746
+    ],
+    [
+      0.20580278736331134,
+      -0.38705874883622327,
+      0.898794046299167
+    ]
+  ],
+  "light": [
+    -0.8807710121010884,
+    -0.2752409412815901,
+    0.38533731779422614
+  ],
+  "triangleCount": 80692,
+  "images": {
+    "rear-oblique-depth-buffered.png": "7ba6be8cd1f46bd2973a822cfe50135cd5d969907c554f9604009e0d6d1cc08e",
+    "rear-depth-cue-final.png": "9c0f54bc8b0a494609cbd317dfcdda1b834baf42d79edac3c93c991550ae33e5"
+  },
+  "supersedesForReviewOnly": "rear-oblique-painter-limitation.json",
+  "originalsPreserved": true
+}

@@ -1,0 +1,2383 @@
+{
+  "commit": "0d08d4ebb6e2d055ce158572f5079c881a90fb58",
+  "files": [
+    {
+      "path": "HangTen.xcodeproj/project.pbxproj",
+      "sha256": "cb60a541be3ca9b24e621e46b0bc02ef9bab29e4cf2d1d6c88c2ce3834d6609c"
+    },
+    {
+      "path": "HangTen/Config/Analytics.local.xcconfig.example",
+      "sha256": "f71256c210d84ef78cb687dc73901fc5aeb8e311ef8872b2b411bbc033490283"
+    },
+    {
+      "path": "HangTen/Config/Analytics.xcconfig",
+      "sha256": "ca7a210e30b6f878c78f8f2b2cdfed7521b6ecd408cd2ab41cd730ef6d6795c1"
+    },
+    {
+      "path": "HangTen/HangTen.entitlements",
+      "sha256": "e82a7f6e130b0fe65a40214c15b4116c5245125329c63954d9ccdd9cc80f039e"
+    },
+    {
+      "path": "HangTen/HangTenApp.swift",
+      "sha256": "dd27b306a4c9f1f5abf5894433b54319ce21ffe7598046e7294ad39a67964792"
+    },
+    {
+      "path": "HangTen/Info.plist",
+      "sha256": "e942998a3134d316d20f33dbc6b409eb7e8d4973f9d379919b67619390d0f91a"
+    },
+    {
+      "path": "HangTen/Models/AmplitudeAnalyticsTelemetry.swift",
+      "sha256": "49e774878c37eb647def76315c53241d0d7617efef4beb7afa1c2346b697c79a"
+    },
+    {
+      "path": "HangTen/Models/AppStore.swift",
+      "sha256": "48ce4d87e27cef4ba06a8d4077523f550dee89abd64d167c8ea924601b0b6107"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "dfb079b42c054c29f9c9719721c96face6f573db8e7c66792cc755d22ca5bfc4"
+    },
+    {
+      "path": "HangTen/Models/BoardPackageStore.swift",
+      "sha256": "4f404ef95aa28cd7eeeb7586df9266ccfff313706772093e0b53c8ad910235b3"
+    },
+    {
+      "path": "HangTen/Models/BoardStorage.swift",
+      "sha256": "865f618cede9fdaf323704c2ade39464e498e87b8494a745a5cc1ded98e60f17"
+    },
+    {
+      "path": "HangTen/Models/ClimbroProtocol.swift",
+      "sha256": "6b7b675aed8624b94937b4975e4fea24242feb82746e54e7f05d52318b10bd35"
+    },
+    {
+      "path": "HangTen/Models/CountdownAudioScheduler.swift",
+      "sha256": "71ec106325e87c4112b6301289d1cec2c5b64ad24b5545040c6d63af671f6d3a"
+    },
+    {
+      "path": "HangTen/Models/CustomRoutineDraft.swift",
+      "sha256": "603f749ce91ef6ca729d92213273368b52dca2b915c433dc4cf08e0d6330d0d4"
+    },
+    {
+      "path": "HangTen/Models/CustomRoutineStore.swift",
+      "sha256": "c127ce28351aa62b3d8bc6ca5a3d36d6b6d7c567f6a99160403dde1ba253039c"
+    },
+    {
+      "path": "HangTen/Models/DeepLinkManager.swift",
+      "sha256": "e56a93e0908cce433dbdbe2f49f3e75bfdda600f94118806020d51117a2fe030"
+    },
+    {
+      "path": "HangTen/Models/EntralpiProtocol.swift",
+      "sha256": "8048a5adab5c0d9a2c3cacecd972985af5c707550242a0a29a9221cc949fef92"
+    },
+    {
+      "path": "HangTen/Models/ForceSensorModels.swift",
+      "sha256": "2b0e29914c715ec8172e33a0313e8e9dd61490b6252ceab57f274f196f993a4c"
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutDecimalText.swift",
+      "sha256": "d90262e3b7747c046394d913f740a95133983d557384e334705d20c528db42a0"
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutDraft.swift",
+      "sha256": "45118dbb2adeaec2310f3cfa7eef2ec2f416e3acd7ae57f146b29cea1a72ad88"
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutDraftMigration.swift",
+      "sha256": "214444a3e2917021d4317130f2ae650c61d36de89e523e37c9636de662c6b93c"
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutFinish.swift",
+      "sha256": "2f437e816bcac6b049c8ceaee7a7e499bc7db313feb990f7a64dd7d1b4d7c9f4"
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutGuidedHangCountdown.swift",
+      "sha256": "8c2929d07e09dae01674ab4fb5e04fb0472a4d85521b60490672db3221dd384e"
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutLog.swift",
+      "sha256": "41606c075d2c1e1ed18f9764ed82f44640fe3b1ebe3596387713352261bdb362"
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutLogStore.swift",
+      "sha256": "4d27a5a641c13e131a72eb569fa37c90d5f2adf0172dc4371afdafa3935e79ec"
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutRestTimer.swift",
+      "sha256": "0c81fc236988d84332bb9e1b14c24aefca242ff4b0426063511a029542384636"
+    },
+    {
+      "path": "HangTen/Models/HealthKitService.swift",
+      "sha256": "9e4291125b42c69148672cd009c267bf59d3a3fd34b1b9bdc4258084730c9a48"
+    },
+    {
+      "path": "HangTen/Models/LiveRopeController.swift",
+      "sha256": "464db176a840c98d99afaaf182811df804d9aaa70a2d92f1aca0f2bcdebfbfbe"
+    },
+    {
+      "path": "HangTen/Models/LiveRopeMesh.swift",
+      "sha256": "3718e8f990e45bce1c148af2cfb3222ecc9d2451a259989504b509e3bed83720"
+    },
+    {
+      "path": "HangTen/Models/LocalWorkoutHistoryStore.swift",
+      "sha256": "b5dec38e7436a7e9fafe43104ef95df630449a14e3d5e2b6592be900a71a99c0"
+    },
+    {
+      "path": "HangTen/Models/MotherboardBluetoothService.swift",
+      "sha256": "9d63f39d0bc0c2631ce296298eb6932d5d3aa844141a942bdceea6e079dbb402"
+    },
+    {
+      "path": "HangTen/Models/MotherboardModels.swift",
+      "sha256": "c7161f52cda298a64caddfa154e317449bccdfedc3e6b372ecc746990ba0f6ec"
+    },
+    {
+      "path": "HangTen/Models/MotherboardProtocol.swift",
+      "sha256": "badf81a9d16971423bf146af87c5118015762578d30cf53d59bf555ddf7e91be"
+    },
+    {
+      "path": "HangTen/Models/MotherboardWorkoutPreparation.swift",
+      "sha256": "fc9697a38dfd2c02c523f3937338b4281ac5a1108dc820a803d6471d268f77d3"
+    },
+    {
+      "path": "HangTen/Models/MotherboardWorkoutRecorder.swift",
+      "sha256": "a77ab9e790d448d6a3e6f861d077f8013ab138eb7bbc0eb2daf2bf706b06f7f5"
+    },
+    {
+      "path": "HangTen/Models/PitchSixProtocol.swift",
+      "sha256": "bfad7c68ff3487653183fb4930e313a70abe73d4c3dc270fe2c72ac88acc4797"
+    },
+    {
+      "path": "HangTen/Models/PlanFilters.swift",
+      "sha256": "7f8db3f3c62628f8c0caa3821437c3e67d20a3ed1e8dd6534b8e391b89e65814"
+    },
+    {
+      "path": "HangTen/Models/PlanStorage.swift",
+      "sha256": "a108e9c9a58556b9b6319e679992b78b5df9b6169f1ab64a8dc05680ddd454d1"
+    },
+    {
+      "path": "HangTen/Models/ProgressorProtocol.swift",
+      "sha256": "02519f58f202f519d950e046f6f2801606c17164c4be7c48605e3d1c58d8be96"
+    },
+    {
+      "path": "HangTen/Models/PurchaseManager.swift",
+      "sha256": "bf99d58c390f1d9c668fd2c098731f12a29a76ca7446bc1118325250cda870d4"
+    },
+    {
+      "path": "HangTen/Models/RopeBandedSystem.swift",
+      "sha256": "d72906a280256e3d760d4b99320b5f0531ca624ae615c4d435f9f2400c18d5aa"
+    },
+    {
+      "path": "HangTen/Models/RopeContactSystem.swift",
+      "sha256": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e"
+    },
+    {
+      "path": "HangTen/Models/RopeCordContacts.swift",
+      "sha256": "6c05954e1f2d953f0feeeaf05b4a0176aae8fa14ddfb21e67a4686c01bb601bd"
+    },
+    {
+      "path": "HangTen/Models/RopeDynamicsSolver.swift",
+      "sha256": "dee89d0888131dbb78f2c87a058d395c3d2c43d9ee421c1cefe922ba73eccf56"
+    },
+    {
+      "path": "HangTen/Models/RopePhysicsDescriptor.swift",
+      "sha256": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08"
+    },
+    {
+      "path": "HangTen/Models/RopeSimulationMetrics.swift",
+      "sha256": "91abf3c099cc13a17854ae4af80313bb19518b8909bcfbf8f8431158962f2e59"
+    },
+    {
+      "path": "HangTen/Models/RopeSimulationState.swift",
+      "sha256": "915a55c8422030a3efeb5c449fc9b085b3a24b612d7766a3ba8745e0670514c8"
+    },
+    {
+      "path": "HangTen/Models/RopeThreadedSeed.swift",
+      "sha256": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a"
+    },
+    {
+      "path": "HangTen/Models/RopeTriangleCollider.swift",
+      "sha256": "e7f16b650115842ae0eeac5d209c692992ff0c29fda7cb557184337654033b1d"
+    },
+    {
+      "path": "HangTen/Models/SentryDiagnostics.swift",
+      "sha256": "895405fbe48ffab849f53e91f7e3d07f20d22624c86b4b2619898cbf5d3052b9"
+    },
+    {
+      "path": "HangTen/Models/SentryUserReports.swift",
+      "sha256": "b5a5e97866259b0c43fa39f87bf41095ae403678510090179c80bd3157fccde7"
+    },
+    {
+      "path": "HangTen/Models/SimulatedMotherboardTransport.swift",
+      "sha256": "c0e3296503c9976e70cec2da2c7b647e5746429367936a903025c583b329c108"
+    },
+    {
+      "path": "HangTen/Models/SuspensionProfiles.swift",
+      "sha256": "f31abdc44591127fe10277b1d71c7d24247175578b9ed8d9e6fa23eff9a2a6e1"
+    },
+    {
+      "path": "HangTen/Models/Telemetry.swift",
+      "sha256": "7370117a6140895192583c535551bcea79e7d55b2060e53089932788a74024b8"
+    },
+    {
+      "path": "HangTen/Models/TrainingModels.swift",
+      "sha256": "e5bae9c4e770b016a1a8f7362fa1ca91dacb21acc8f8ed13ce069169f6e5cf11"
+    },
+    {
+      "path": "HangTen/Models/WHC06Protocol.swift",
+      "sha256": "2bee3e4be3fdb69919f9ceeb122afa5173f9caafb50d929ca2444d7062d10682"
+    },
+    {
+      "path": "HangTen/Models/WorkoutAccessStore.swift",
+      "sha256": "a770a563aaeeb3ef451a0bf5040257afda5de2dc26b3fd620b46fabf8c04554a"
+    },
+    {
+      "path": "HangTen/Models/WorkoutActivityRecording.swift",
+      "sha256": "8ed923ef8be1c1536934766ccc076b2a3c72059bb58bb1541e4f43c96bd5edcf"
+    },
+    {
+      "path": "HangTen/Models/WorkoutAudioCoach.swift",
+      "sha256": "0dc1b736e0b8c1207e310fc8b665b203762fd717cacf23794d635c9e7293effa"
+    },
+    {
+      "path": "HangTen/Models/WorkoutHistory.swift",
+      "sha256": "ae6b0cb980165ac99bad4954126024673086a5cbc153f6038dfe9b821fa60bed"
+    },
+    {
+      "path": "HangTen/Models/WorkoutHistoryService.swift",
+      "sha256": "23e6e19ea3e10dc4bced42508ceff5d0c1fb1e56da2bb7194420a7922cc15905"
+    },
+    {
+      "path": "HangTen/Models/WorkoutSessionStore.swift",
+      "sha256": "ef6eda2d054800e5b68cdc408068f0c8ae7b6dfabf84bb58c29b317a399488f2"
+    },
+    {
+      "path": "HangTen/Models/WorkoutStepNormalization.swift",
+      "sha256": "b38fab90dc4254a81ae94d24b31815459be832eb87f0748f8a28ef71835d5c5c"
+    },
+    {
+      "path": "HangTen/Models/WorkoutStopwatch.swift",
+      "sha256": "794554b95d44db2c989d5afe37fab97fa5f9c35a1735eb02f361fd5c9b826d38"
+    },
+    {
+      "path": "HangTen/Models/WorkoutTimeline.swift",
+      "sha256": "b63378ae30f2f0c4baa9e8420013d6ea459da401eeaaa1107aaf506063905b97"
+    },
+    {
+      "path": "HangTen/Rendering/BoardWoodSurfaceShader.metal",
+      "sha256": "caf524e2b7a548510f607a1ac7e61ff79671e5543d21ecf892b22ead7a95e8f7"
+    },
+    {
+      "path": "HangTen/Rendering/GripHandSurfaceShader.metal",
+      "sha256": "6fe32276a9c9ff123997dee1427000dbce37099a5f300bb73db1666592de7d80"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png",
+      "sha256": "da9fc125522c5e549d7651453d35e83ba73c526c102ba887eb15dd358eb3749b"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-60@2x.png",
+      "sha256": "01b26702cf4c907209751d3020165604bab51b6d60c2e69451567572b32e0960"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-76@2x.png",
+      "sha256": "98ed3887d34a1318d4aafb3e3be9eb91f33f682c2aef34c36cb6883269de2da3"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-83.5@2x.png",
+      "sha256": "cfb0a38f3537fb42859a55abad10c2b83bb3c32f04bf010a0f89de17984f4e10"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "sha256": "4db6346afef9a677eb7efc9e0124c3770facceab8602db58c7122cca1f6dad07"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/Contents.json",
+      "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandFist.imageset/Contents.json",
+      "sha256": "1f8f6ca5956e05e6a084607f951e584de858142423bd84eaa4134ca71d2c1003"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandFist.imageset/hand-fist.svg",
+      "sha256": "5599c285c9d124640c3107b465f5f8e4cab78016ae1201dd4e8c6d535a4d5b5b"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandFrontThree.imageset/Contents.json",
+      "sha256": "e8c18ec4b0ad283002e9cf3ce7b2095f0e96a89fe682c5be67c778e17cb2027e"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandFrontThree.imageset/hand-fill.svg",
+      "sha256": "8aa65441584ff01071f36cc7f00405f94dc9e9f149052e20f370c710e270d855"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandGrabbing.imageset/Contents.json",
+      "sha256": "44d51f05b4c74f05bab7c296be0c26bb28501f5433a5d05d988cd32bd81e987d"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandGrabbing.imageset/hand-grabbing.svg",
+      "sha256": "9ddb51aa95dafb589e2c47c9fe35d6561c415380300675211b3895d700478b33"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandPalm.imageset/Contents.json",
+      "sha256": "07740cf8ec6f7b72b491253d68787b05537f352f4729f08e63399fb9c5f6ed8f"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandPalm.imageset/hand-palm.svg",
+      "sha256": "2b0387ffccfedd746cac333370eaccc64f1521885bf9468088c19b10ff33553d"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandTwo.imageset/Contents.json",
+      "sha256": "657442593f1f0755192953cfcf4ac610d85ba1ab5097dc4d58e0531d0732ab86"
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandTwo.imageset/hand-peace.svg",
+      "sha256": "8ae6d12b3b644ad5c0cd993aee52c3353a088d1195b0a6e885cbd286282e047e"
+    },
+    {
+      "path": "HangTen/Resources/CountdownAudio/.gitkeep",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": "HangTen/Resources/CountdownAudio/README.md",
+      "sha256": "ea77e9048fdb0ac9830b3323820f9fca66a153beaff6b25f65d0d0d86f2d8f0c"
+    },
+    {
+      "path": "HangTen/Resources/CountdownAudio/countdown-1.mp3",
+      "sha256": "9157273de38a68d1c7bf82cd645bd7525f617c506e9d3cf3a9fcfa4216626e55"
+    },
+    {
+      "path": "HangTen/Resources/CountdownAudio/countdown-2.mp3",
+      "sha256": "595855a28d61bd8e9daf410bdab20d1bfd5d7ccc770850407fab7e60d9184354"
+    },
+    {
+      "path": "HangTen/Resources/CountdownAudio/countdown-3.mp3",
+      "sha256": "5b0535d8fc64eeffe50f80a4c54a17d7f84bd90e1e3f795ec0f09995a36caad4"
+    },
+    {
+      "path": "HangTen/Resources/GripHand/hand-mesh.json",
+      "sha256": "d53dca888e264a1ed581bcd76e5eec91576c3c5cd14456fc34eb82c934e3d433"
+    },
+    {
+      "path": "HangTen/Resources/HangTen.storekit",
+      "sha256": "56dbe661985b546ddc826b16dd1865c8bbebdaf0c939d0c08ee0b4eeb36730c7"
+    },
+    {
+      "path": "HangTen/Resources/PlanLibrary.json",
+      "sha256": "2c2ecd7ae62de57928c9434029a812dfae4043fa17b071408b6ee22c5aa481d1"
+    },
+    {
+      "path": "HangTen/Views/AppSettingsView.swift",
+      "sha256": "8c1c1f6178d56482ae6899dab50d12c95693ed55e0f205378f9a5ab43a66da68"
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "sha256": "4a023bf0e3ce4115fcb69862b2373bf7bedfebece9b4f856298c18f57874602a"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "7c6a9d3902870dcc30d2035ef89a4c0515b22587da1f9496997b049aeffcec65"
+    },
+    {
+      "path": "HangTen/Views/CustomRoutineEditorView.swift",
+      "sha256": "0e7ba09de2c632ae3c0ce3780e4022a1ea3ba32fb70ade179aa7b093adebc626"
+    },
+    {
+      "path": "HangTen/Views/DesignSystem.swift",
+      "sha256": "79ca45b3bb0123b0c28c8854420a60b9531d2dfb68f6dd9b43bf49e61b73b9a6"
+    },
+    {
+      "path": "HangTen/Views/FreeWorkoutAddExerciseSheet.swift",
+      "sha256": "15b09274cf25538caf599349d776110c562f0d1620255223dc1f1c573a955b39"
+    },
+    {
+      "path": "HangTen/Views/FreeWorkoutGuidedHangView.swift",
+      "sha256": "21552bc21b59b9eb3d6cfbf96229cbb9cf0ef8625bb47045a55bd88ba2f6e662"
+    },
+    {
+      "path": "HangTen/Views/FreeWorkoutLogSessionView.swift",
+      "sha256": "33b1a7c245e7cf85ad760bf27af70bd611bee0eb87820c2c262dab3e49ddad07"
+    },
+    {
+      "path": "HangTen/Views/FreeWorkoutLogSetSheet.swift",
+      "sha256": "9bebaa75808ae105ce6393e0a86a4cd5b5514a2947ad01a7561df2a87c8ca7ab"
+    },
+    {
+      "path": "HangTen/Views/FreeWorkoutStartSheet.swift",
+      "sha256": "66ca02f4d07bfca90cb296a26a40460e5bcc2ab869521fdeca6fb103b824933c"
+    },
+    {
+      "path": "HangTen/Views/GripDiagramView.swift",
+      "sha256": "8ebb0f74d756a66d00a24f833a2fb60e4d90ea100b9d84f8966d89ea10d40e4d"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "sha256": "15517e548d52fd29f52289a0fdbc5654199fc723c41759bcaf1dc0c3206c55e1"
+    },
+    {
+      "path": "HangTen/Views/MotherboardViews.swift",
+      "sha256": "a1d914b97f7c436d1c55f32252dcf74041895eeea24bae70d77d9f68f7e20280"
+    },
+    {
+      "path": "HangTen/Views/MotherboardWorkoutPreparationView.swift",
+      "sha256": "be93b4d2dadd71e5e303d545b5a61e23ddd1d3f36e5610d0c889cd541e8d8b56"
+    },
+    {
+      "path": "HangTen/Views/OrbitPanGestureDelegate.swift",
+      "sha256": "7375e7ac2adcaad597b3a35eee5dd07cf7585935b19f424e5bc002ae7a3cbf8e"
+    },
+    {
+      "path": "HangTen/Views/PlanDetailView.swift",
+      "sha256": "eeffc24fb0391d13cc1baf2c16e8ac96b7ae1821980b0c9f4d92989f2186e4c9"
+    },
+    {
+      "path": "HangTen/Views/PlansView.swift",
+      "sha256": "311ffcd2439dc8faa90a4d45ad06d4edc04aaeee4de2b5dbc8857c4462b4da03"
+    },
+    {
+      "path": "HangTen/Views/ReportProblemView.swift",
+      "sha256": "a06380a20487194e6959b6be9218451aa21de36a6d1c07691adbdfd83a32e6b6"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "6d4439ffa97e0a93c25fc2b253710c2711186bbbc1515f830d33dd11a36a8b89"
+    },
+    {
+      "path": "HangTen/Views/SuspendedBoardPresentation.swift",
+      "sha256": "0a0eecdbc4cdca2869828601a53299af461dacad9177bf7dec141647d171a61b"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "b8720ac7c42252f22dceecb8a58f96a1de297068bbb7a3972bddac8c7072fccf"
+    },
+    {
+      "path": "HangTen/Views/WorkoutAccessGate.swift",
+      "sha256": "2834dd18015f4db30421d95b7824241dad461a06c1398887b8a69274d1aa528c"
+    },
+    {
+      "path": "HangTen/Views/WorkoutControls.swift",
+      "sha256": "132643f6f383f01550d5f746f626ba108a2558b898aed52b5e4f266469c621fd"
+    },
+    {
+      "path": "HangTen/Views/WorkoutCueCard.swift",
+      "sha256": "ee269a0b28a550f327b537573fa643984109b9e40792b7f2a0dae890e0ae4bdc"
+    },
+    {
+      "path": "HangTen/Views/WorkoutPresentationContent.swift",
+      "sha256": "28e805ae554a9a5e0857860fac809fb77809a4812655f4c78732b43e5bbc4a78"
+    },
+    {
+      "path": "HangTen/Views/WorkoutSessionState.swift",
+      "sha256": "1cb5f7d33c84bd403e68ce06bcd5dc8580d8f63889984b09b9ceb2037ae2a28f"
+    },
+    {
+      "path": "HangTen/Views/WorkoutStepPickerView.swift",
+      "sha256": "a23faa365fc68be40f19e847198e27b12ab48b766f21a609fc379bf029b2887a"
+    },
+    {
+      "path": "HangTen/Views/WorkoutSummaryView.swift",
+      "sha256": "3016432909453bed8c726ed268942242e87ecadc6ab300e2516d2a9f9e174cd0"
+    },
+    {
+      "path": "HangTen/Views/WorkoutTimerView.swift",
+      "sha256": "12f829b64d0f1c6c01786c4a3724c7751415cd9e051d32cb42ec5e34c256adcf"
+    },
+    {
+      "path": "HangTen/Views/WorkoutView.swift",
+      "sha256": "4de76a2fbb3fcf8f5968706e67b63260dcb50be08611e6e7088177ac8cd474d8"
+    },
+    {
+      "path": "HangTenTests/AppStoreFavoritesTests.swift",
+      "sha256": "9b7b975fad1f9634a4489c8c507e53d60fd88b47af5ac04b10e588a3fa7458bd"
+    },
+    {
+      "path": "HangTenTests/AppStoreTests.swift",
+      "sha256": "17c35b51fb22a5b1b5ea760fb17bca0ac7f1c8cda94743d56c0c59ada7191b62"
+    },
+    {
+      "path": "HangTenTests/BoardModelRealityTests.swift",
+      "sha256": "50c21812849e329d5b47883fad1ff8c18c37fa1f2f1678ab3e94c00cd07c9cbb"
+    },
+    {
+      "path": "HangTenTests/BoardModelTests.swift",
+      "sha256": "af7d8e50fa96206efa65e5ded21304b2136ccbc9b1d7a873e7378e24e702a8fe"
+    },
+    {
+      "path": "HangTenTests/BoardPackageStoreTests.swift",
+      "sha256": "3926d9d37b0cd20dc1830a858387b8cdd5b6b095fbfd6609ea4c5eca86b4c9b2"
+    },
+    {
+      "path": "HangTenTests/BoardPickerFiltersTests.swift",
+      "sha256": "efeedc20f5c1f8016f701fa7ebce42e581cf2111ca2ad2f1b51f488621e15b40"
+    },
+    {
+      "path": "HangTenTests/BoardSourceBoundaryAudit.swift",
+      "sha256": "5ca9a30b1b73a51faf44316f5d995f3a678ca82ca981b63c361484c79b0efb03"
+    },
+    {
+      "path": "HangTenTests/BoardSourceBoundaryTests.swift",
+      "sha256": "6a4ae7a63ee9488186b4548196ff6be3c30b83b62367e86d9d4028e8edc5b295"
+    },
+    {
+      "path": "HangTenTests/BoardSourceBoundaryTrackedPaths.txt",
+      "sha256": "dcba948649fd05291f1d4203ecdfd6a560fa6867311b5617441589e89b958f4e"
+    },
+    {
+      "path": "HangTenTests/BoardTargetSubstitutionTests.swift",
+      "sha256": "91c1b8fe27bd0cbc9a5b99f046157787da99276cac816e360bf1b0248ec6512c"
+    },
+    {
+      "path": "HangTenTests/ClavelliumRopePhysicsTests.swift",
+      "sha256": "aad07bc849b2dc4adc05d4beb5cbc676155a240cef7d79331b7fdf713e607855"
+    },
+    {
+      "path": "HangTenTests/ClimbroProtocolTests.swift",
+      "sha256": "58c35588bc4dccd3398fab88bd1fff6af1202f0725a1c36020f55e40249d0c16"
+    },
+    {
+      "path": "HangTenTests/CustomRoutineAppStoreTests.swift",
+      "sha256": "464809166c200b96708bde16ba9352be4979b0930c60b23583934cab5bd838c5"
+    },
+    {
+      "path": "HangTenTests/CustomRoutineDraftTests.swift",
+      "sha256": "c12bedc618849c28606d6e9d02af3d7b6bee47b7c899f40608e37b9693cd04dc"
+    },
+    {
+      "path": "HangTenTests/CustomRoutineStoreTests.swift",
+      "sha256": "5d213e7069a1ce79c11e3fbabe6275f72ece8d945a8473da9da059d9f6013eee"
+    },
+    {
+      "path": "HangTenTests/DeepLinkManagerTests.swift",
+      "sha256": "f64b6d447b21450ba63ad96b7e1d4a02ad8262010c07ed152a4c0ad9d64e839f"
+    },
+    {
+      "path": "HangTenTests/EntralpiProtocolTests.swift",
+      "sha256": "2e1fdc58f3975a66a3156e2a90e47c78c6741cb5f1a44fc25996d2f5faf04b21"
+    },
+    {
+      "path": "HangTenTests/Fixtures/BoardPackageValidationFixtures.json",
+      "sha256": "d2831505b22af4145c28ceccfd9afd1af4804951e127a079d8761d0174272bfd"
+    },
+    {
+      "path": "HangTenTests/ForceSensorModelsTests.swift",
+      "sha256": "22536463ca4feaf9f52c15dc1af5c4341fb1d61d47580c064632bbb82aef975f"
+    },
+    {
+      "path": "HangTenTests/FreeWorkoutLogTests.swift",
+      "sha256": "ff6e420f17c4d0f9151146091f0d40ab73ede173152c4c8c04f140d38ad20fc6"
+    },
+    {
+      "path": "HangTenTests/FreeWorkoutTests.swift",
+      "sha256": "9174a367e14d6a2aa919b9b701f3abaf0561cac6151fe8bada4c7e88b3911b37"
+    },
+    {
+      "path": "HangTenTests/GripHandCueCardTests.swift",
+      "sha256": "375d839bfe05325087044ab5c42c550c5236fc5da55d6dadab5270a1abbdf92e"
+    },
+    {
+      "path": "HangTenTests/GripHandOrbitTests.swift",
+      "sha256": "fae39b6e2c264cc5ba80458695693ef2db4294fd9fdf39ff426f9c2acb851813"
+    },
+    {
+      "path": "HangTenTests/HealthKitServiceTests.swift",
+      "sha256": "e481e3c04b27596e38adb0f87c7f742b17796936035c03ddaee8966435a2ba1e"
+    },
+    {
+      "path": "HangTenTests/LiveRopeControllerTests.swift",
+      "sha256": "0eee5438630ad2e5f15e02b07a6717d88b3889ef82cec7b4417df0192272b072"
+    },
+    {
+      "path": "HangTenTests/LiveRopeMeshTests.swift",
+      "sha256": "e76754f1c8d80d08563af25f5b5ce436fd11536670c3450bdaa636088ee1e610"
+    },
+    {
+      "path": "HangTenTests/LiveStoreKitConfigurationTests.swift",
+      "sha256": "9cffcd06bb83fe7e9084ab663f9ce89481961f6731b7736332b17685193e0a63"
+    },
+    {
+      "path": "HangTenTests/LocalWorkoutHistoryStoreTests.swift",
+      "sha256": "cf12e9f8679a8391d4045add2db28c3c7540efd428254e081b7166ddfc805f2a"
+    },
+    {
+      "path": "HangTenTests/MotherboardBluetoothServiceTests.swift",
+      "sha256": "6177fa8d61408c03979cd807492567fd6809c88155b32338dd541ae830fe4b3a"
+    },
+    {
+      "path": "HangTenTests/MotherboardModelsTests.swift",
+      "sha256": "800b976e8dada122dead9460ac26a397e135f8c28c8dddb0e8ddfa81c39c11b2"
+    },
+    {
+      "path": "HangTenTests/MotherboardProtocolTests.swift",
+      "sha256": "d6d0f40366c3a1cbe4b510a9c5787d048847f026257e4bab8d2905bc27045743"
+    },
+    {
+      "path": "HangTenTests/MotherboardWorkoutPreparationTests.swift",
+      "sha256": "77cd907fe1d6c15b4ab0abf6a8ab772582858e982068182782157f806ecb9ca0"
+    },
+    {
+      "path": "HangTenTests/MotherboardWorkoutRecorderTests.swift",
+      "sha256": "3cab60b07b7fbd4e934f8ae270f486e89ea3b24f234a8147a8fc805568a70dd0"
+    },
+    {
+      "path": "HangTenTests/OrbitPanArbitrationTests.swift",
+      "sha256": "e5c6810c370a9a23542c2f5fc2b2043cec65e724ccc93dcc86994a265e31e6b0"
+    },
+    {
+      "path": "HangTenTests/PitchSixProtocolTests.swift",
+      "sha256": "fc633838c0af4cd6e5a27c79ff44721d8ec88e8667cd647de4b4c28febea3ae9"
+    },
+    {
+      "path": "HangTenTests/PlanFiltersTests.swift",
+      "sha256": "c00d3ab188bb8402dfea644d941bcd616cfdeb12a103f9ed4ce83033e67736b3"
+    },
+    {
+      "path": "HangTenTests/PlanStorageTests.swift",
+      "sha256": "7e281c3414723f6c3cccfdebe0058a8d9acd38f1f04ccf8d4fc539b9f9124dbb"
+    },
+    {
+      "path": "HangTenTests/ProgressorProtocolTests.swift",
+      "sha256": "148850f0eeb9c5ebd28932db823fcd04e229d64142b08c801e5c2ffeb91737ed"
+    },
+    {
+      "path": "HangTenTests/PurchaseManagerTests.swift",
+      "sha256": "6d57883d6053dd4a9a7940c787c9fa8e5ffb06e42ffe7c46a74e825652e64b50"
+    },
+    {
+      "path": "HangTenTests/RopeBandedSystemTests.swift",
+      "sha256": "362370957c84f1d969c75b91a8440ee61af13351b3f2a8eb197deab7323d484f"
+    },
+    {
+      "path": "HangTenTests/RopeContactSystemTests.swift",
+      "sha256": "5b5731cd9844fa1db70a5df811dd5fc1963e8be54d76ea10e28bd107476305c3"
+    },
+    {
+      "path": "HangTenTests/RopeDynamicsSolverTests.swift",
+      "sha256": "fd3cb65e9dd5eef689b83d2a680d67396705a1772e319866bab293976d8b263e"
+    },
+    {
+      "path": "HangTenTests/RopeInterContactTests.swift",
+      "sha256": "3d3f0bd81aaf889b69afa436153aae4a02d07174ed9be589d702dd11750d3ead"
+    },
+    {
+      "path": "HangTenTests/RopePhysicsDescriptorTests.swift",
+      "sha256": "876130fb00ddae726ad10139f88e578ababf00b70dd41784bc8309d5b9e8a0a5"
+    },
+    {
+      "path": "HangTenTests/RopeThreadedSeedTests.swift",
+      "sha256": "b2464149fbbe738e03e88dfb65fac1f117c0ef7a08eaf479d08e402f71d52a23"
+    },
+    {
+      "path": "HangTenTests/RopeTriangleColliderTests.swift",
+      "sha256": "ff8cbf884e936bbe8ab3567dc6862bfadc68d08819b6619db23b88a83b483915"
+    },
+    {
+      "path": "HangTenTests/SimulatedMotherboardTransportTests.swift",
+      "sha256": "fa3c56a1a00d1b30464b6216f1465d6182805f0bfb504635e5cb9b0de26bfa19"
+    },
+    {
+      "path": "HangTenTests/SuspendedBoardPresentationTests.swift",
+      "sha256": "ea096bb25a0043f5aa08cdca908eb900bbe10a8a0bc48851dd3f674ddb15102d"
+    },
+    {
+      "path": "HangTenTests/TelemetryTests.swift",
+      "sha256": "0bbbbacc71a01e7dedf8ed5edf9ff5b8d328c95d62eda26e24dc8c1784ec90f5"
+    },
+    {
+      "path": "HangTenTests/TestTargetSmokeTests.swift",
+      "sha256": "ca9e4a853406ea4059a33e5951d412c278806e0a8371003d5d792301e910d624"
+    },
+    {
+      "path": "HangTenTests/WHC06ProtocolTests.swift",
+      "sha256": "d2edf26b0dd8678987d53e27a4bef4157fa688aeb3cfe5f240b7818c413e493b"
+    },
+    {
+      "path": "HangTenTests/WorkoutAccessStoreTests.swift",
+      "sha256": "46d64f49d8dd1a692d2d1f3b1ecdbf37c5886b18f66600a7fc4a52052f99ced4"
+    },
+    {
+      "path": "HangTenTests/WorkoutActivityRecordingTests.swift",
+      "sha256": "7519d6d3d016cfedc41b073c1e1a9807718bc1235f468d1c8aa7e83e2a6bb531"
+    },
+    {
+      "path": "HangTenTests/WorkoutHistoryServiceTests.swift",
+      "sha256": "2426a991c97ee9d57e6bbdd42652f4affa0121390ba60c1eb2549bce23f43581"
+    },
+    {
+      "path": "HangTenTests/WorkoutHistoryTests.swift",
+      "sha256": "17ebb5dcabd515d9543bc7aec6988c8b07110c66eb1223ed5a0befef74070ac6"
+    },
+    {
+      "path": "HangTenTests/WorkoutSegmentTargetTests.swift",
+      "sha256": "1a1fe6f887d65e83766f4385d5bbbf719a1f08939a2538c3b3a13ac36e45b388"
+    },
+    {
+      "path": "HangTenTests/WorkoutSegmentTests.swift",
+      "sha256": "0965e60acac7b79d04af4f67855460998971feb04b18dbaf653ae08afcca0bc2"
+    },
+    {
+      "path": "HangTenTests/WorkoutSessionStoreTests.swift",
+      "sha256": "8357942849e734af573fd9362f3b48f7babc864006a5cf50b64a4e86e8074542"
+    },
+    {
+      "path": "HangTenTests/WorkoutStepNormalizationTests.swift",
+      "sha256": "518845236eae67905c4a616f008decad54e731fa0a6763ed57feb80a75e8a5c8"
+    },
+    {
+      "path": "HangTenTests/WorkoutStopwatchTests.swift",
+      "sha256": "029362c4c6ee491bfb78df3f552c50da59ed8d410b1f586ad016dafe77a80428"
+    },
+    {
+      "path": "HangTenTests/WorkoutSummaryTests.swift",
+      "sha256": "0c0b6b5728554eccaeca7ac955ec3ac57685c9112652be6cde89a087d22b0369"
+    },
+    {
+      "path": "HangTenTests/WorkoutTimelineTests.swift",
+      "sha256": "05a107902a4a78a5b29f1e1852d6893775efbf2c93b74eb5af53fca651b67474"
+    },
+    {
+      "path": "Hangboards/aelith-cyclops-011/aelith-cyclops-011.FCStd",
+      "sha256": "6caa7db79f8c92ff3801c15e7cf42016b92808ac312dbb99b7e3dbfedf4e32da"
+    },
+    {
+      "path": "Hangboards/aelith-cyclops-011/assets/primary.model.json",
+      "sha256": "33d6dd4256955ea603098f98f1d8ae95dab4ec15df7f3e042db3439c344a0ef7"
+    },
+    {
+      "path": "Hangboards/aelith-cyclops-011/assets/primary.usdz",
+      "sha256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d"
+    },
+    {
+      "path": "Hangboards/aelith-cyclops-011/suspension.json",
+      "sha256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d"
+    },
+    {
+      "path": "Hangboards/beastmaker-1000/assets/primary.model.json",
+      "sha256": "9154697f07e1d38366a860bf917add63d86fb3b98b83aab7639bae4ab26ccd6a"
+    },
+    {
+      "path": "Hangboards/beastmaker-1000/assets/primary.usdz",
+      "sha256": "67780905b46597c78c696be449c2e2ab6836ed98f7feb037803ec8e04ce033c7"
+    },
+    {
+      "path": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
+      "sha256": "de2bd04820b49ab077828234c2199f28b6a45b18ae2369f2b97096880ba48723"
+    },
+    {
+      "path": "Hangboards/beastmaker-2000/assets/primary.model.json",
+      "sha256": "02b7f12b9c675025fc4c91e8175f53aaf8a648d6530e3de132b9691f7704ef1d"
+    },
+    {
+      "path": "Hangboards/beastmaker-2000/assets/primary.usdz",
+      "sha256": "ebf9267920d7d6103030efd78a0aedd7ce052c6ad26bf0fbb1f96faf4911b9cc"
+    },
+    {
+      "path": "Hangboards/beastmaker-2000/beastmaker-2000.FCStd",
+      "sha256": "217a5431eca468092a2fb7daafefbe7084d8e1618a82afff9381cd5ab7a1df7d"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/assets/primary.model.json",
+      "sha256": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/assets/primary.usdz",
+      "sha256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/captain-fingerfood-dual.FCStd",
+      "sha256": "10b254fc3e2ad3c3b4c25b2876c2c0fc086d9ed4f634025d42397352e0e5cd8e"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/suspension.json",
+      "sha256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-pocket/assets/primary.model.json",
+      "sha256": "4d85ca566ef83d8dbad2b6e5f9677f98e5e4559fe1e2b20f0152450f51747b28"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-pocket/assets/primary.usdz",
+      "sha256": "cea629d95bcef7fe9270a2b44114588193fb136706d1bfc17b3276437d9f45c9"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
+      "sha256": "3165dc49577a93e82cd2b1ec3f8ea4a24965b89ac0b2d4c00ccfb7a36c8c7ff6"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/assets/primary.model.json",
+      "sha256": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/assets/primary.usdz",
+      "sha256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/captain-fingerfood-unlevel.FCStd",
+      "sha256": "b4e8941017237f1196ab8c29632e0c19b7c9301ed92b5fd2011bb3229cb05e87"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/suspension.json",
+      "sha256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e"
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/assets/primary.model.json",
+      "sha256": "0e344ccdc6529eccb4b94e1c05ba835388f1a6fe1e9394d47e637ee55ab9818e"
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/assets/primary.physics.json",
+      "sha256": "c60fbd6dfaf59bfd5fb7e6aa8d806f78af7e828a7f64074d326865e08f13e853"
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/assets/primary.usdz",
+      "sha256": "35417e90919ff4bb75c2e4faaffe04547457e67032de8601451d799d789ca64d"
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/clavellium-training-block.FCStd",
+      "sha256": "62fd932ed815fe02041cc1f798da08348827b0f69a8abbc273213bb2b2d2627b"
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/rope-physics.json",
+      "sha256": "f61f74d80079172a3273b18b9bad47aaffb88aa99d66120f6364b91bc1792b8f"
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/suspension.json",
+      "sha256": "514366d1579ad467b0c6ef761f1841aa8f5147fa2b868b1007b12ad23b08d85c"
+    },
+    {
+      "path": "Hangboards/crimptonite-helium-mobile/assets/primary.model.json",
+      "sha256": "8527910cc401c516a5585c0bdeb9907a0654405e323c43d12b835fc8731b0911"
+    },
+    {
+      "path": "Hangboards/crimptonite-helium-mobile/assets/primary.usdz",
+      "sha256": "c4106a959aa9265717a6c20f928a9b018f048912a66b1ee56e46a6f114be22d1"
+    },
+    {
+      "path": "Hangboards/crimptonite-helium-mobile/crimptonite-helium-mobile.FCStd",
+      "sha256": "95885d03bebd378a25c91230d8cace2b2d904a8412fe0396342a7b1e6e56fb2c"
+    },
+    {
+      "path": "Hangboards/crimptonite-helium-mobile/suspension.json",
+      "sha256": "e37139047d86f44e5c5987c97e6b940874471e008a10b1bf16f9505fe6b8aa56"
+    },
+    {
+      "path": "Hangboards/dewoodstok-woodbord/assets/primary.model.json",
+      "sha256": "f81201b61af8ffb544af5687708c720ad2ebca7b80b9e1daf23e34cce01977ae"
+    },
+    {
+      "path": "Hangboards/dewoodstok-woodbord/assets/primary.usdz",
+      "sha256": "62a43523b873e2c4fc87d9a0c41bf4be862720eed499d5635236822bbb709a52"
+    },
+    {
+      "path": "Hangboards/dewoodstok-woodbord/dewoodstok-woodbord.FCStd",
+      "sha256": "02c55948ebbec3e32f3fe9c206ac21d9917f749da33117ff35c8503eb638ee01"
+    },
+    {
+      "path": "Hangboards/escape-beta-22/assets/primary.model.json",
+      "sha256": "2797e436006385608aa7fb11bc8ec2a3786ecf8d29e00182b5e64f4e66658d2e"
+    },
+    {
+      "path": "Hangboards/escape-beta-22/assets/primary.usdz",
+      "sha256": "014497a1d2a399d4aec12e7d0b97dcec22c0c6cf4cf43aa5d6cfba28cc407c23"
+    },
+    {
+      "path": "Hangboards/escape-beta-22/escape-beta-22.FCStd",
+      "sha256": "4bd4b717970805ebfe58005f9d2659dc94927f39cac31ae736a1f5338067a528"
+    },
+    {
+      "path": "Hangboards/escape-unlimited/assets/primary.model.json",
+      "sha256": "905db88c97f4ed2ae64cfe853c351d284f1c0417768a4e0f4b119e1cf7ff45f3"
+    },
+    {
+      "path": "Hangboards/escape-unlimited/assets/primary.usdz",
+      "sha256": "3eb450c3a42648c8d6c4522bc3220471b298d8cb0f2cf944453ea1ac0f1e4e82"
+    },
+    {
+      "path": "Hangboards/escape-unlimited/escape-unlimited.FCStd",
+      "sha256": "f9ee95e5a53230d579a97a3c69613003d1526ae7028b8f7a573ea430e5dba2ff"
+    },
+    {
+      "path": "Hangboards/evolv-kilter-basic-long/assets/primary.model.json",
+      "sha256": "d218e19200d50e63b18b92de027445454fa6c6f28fd60947535411de2d270d46"
+    },
+    {
+      "path": "Hangboards/evolv-kilter-basic-long/assets/primary.usdz",
+      "sha256": "ac2399e6477942eed730d4e16c78f3021f26228cc52b168c03884b120f165700"
+    },
+    {
+      "path": "Hangboards/evolv-kilter-basic-long/evolv-kilter-basic-long.FCStd",
+      "sha256": "b18d962a2366682d558666169be2363efa53a9e914df7baa922799ccc6536a2e"
+    },
+    {
+      "path": "Hangboards/frictitious-doormount-pro-7/assets/primary.model.json",
+      "sha256": "e78def2362000903d34a4fa09b8afb3e4ae629bef45dab28d6e68844352d576d"
+    },
+    {
+      "path": "Hangboards/frictitious-doormount-pro-7/assets/primary.usdz",
+      "sha256": "eac54ae185cc0d62db3f421ca0c3bb39fdac50d76fc24824a8b24720f3042777"
+    },
+    {
+      "path": "Hangboards/frictitious-doormount-pro-7/frictitious-doormount-pro-7.FCStd",
+      "sha256": "82a27ae8dae37228c30918873cb39bfc03e14ae2d3b2897f84a0ce5ded852b72"
+    },
+    {
+      "path": "Hangboards/frictitious-megalith/assets/primary.model.json",
+      "sha256": "cfe53835cc918b3250e98630d5e03aff9297049188ce08a4bf24b08913678b27"
+    },
+    {
+      "path": "Hangboards/frictitious-megalith/assets/primary.usdz",
+      "sha256": "23a2e9078d2351710006cab3752dc57cfa33538499343e09d9d29a1887dbb4f9"
+    },
+    {
+      "path": "Hangboards/frictitious-megalith/frictitious-megalith.FCStd",
+      "sha256": "75d4def0edafe8bfc95004d9928f029520e2d4240941c52761563188f609b9e5"
+    },
+    {
+      "path": "Hangboards/frictitious-nug/assets/primary.model.json",
+      "sha256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e"
+    },
+    {
+      "path": "Hangboards/frictitious-nug/assets/primary.usdz",
+      "sha256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800"
+    },
+    {
+      "path": "Hangboards/frictitious-nug/frictitious-nug.FCStd",
+      "sha256": "b01c9692af21073b1e0a67af4fd7fcea350decd87fe24fbced569ce3a830e2fa"
+    },
+    {
+      "path": "Hangboards/frictitious-nug/suspension.json",
+      "sha256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472"
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/assets/primary.model.json",
+      "sha256": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1"
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/assets/primary.usdz",
+      "sha256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273"
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/frictitious-port-a-board.FCStd",
+      "sha256": "45ca78a21b1f0f25f1c471a0e1244bfd8a77ca57abac37dcc99cde034e29a289"
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/suspension.json",
+      "sha256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf"
+    },
+    {
+      "path": "Hangboards/j-bryant-ftg-32/assets/primary.model.json",
+      "sha256": "7a9160b0061ce21448f81afd387f7c4191ce07fccfd702d90f953b99e665dac8"
+    },
+    {
+      "path": "Hangboards/j-bryant-ftg-32/assets/primary.usdz",
+      "sha256": "dbc50905cb93ee432da5a6ba39fb9c558d7bdf5d40c09cf26ecb4ab6db434d9a"
+    },
+    {
+      "path": "Hangboards/j-bryant-ftg-32/j-bryant-ftg-32.FCStd",
+      "sha256": "1eb35bba2fb9c337efaa3ee599d08f02fedde61d34f9ee4de2241d669d12db22"
+    },
+    {
+      "path": "Hangboards/lattice-mini-bar/assets/primary.model.json",
+      "sha256": "ac71e805e654fa789329c7c4d0511b3bda5823ddb69a460142dce1987bb98c6c"
+    },
+    {
+      "path": "Hangboards/lattice-mini-bar/assets/primary.usdz",
+      "sha256": "4b4e9950b01fa303f36b27ad2841ea697cc4ed93f5dff61827b11a6f3fcfa2ca"
+    },
+    {
+      "path": "Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd",
+      "sha256": "ae4e480cd1d26c02c0f89c085b2921b45413c904c0c47d5aaaa47c89c37fbe2b"
+    },
+    {
+      "path": "Hangboards/lattice-mini-bar/suspension.json",
+      "sha256": "45481d896ccbe73ed2f89c77cea8d56391da3aecc1ed434c7b55aba0739cee14"
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-large/assets/primary.model.json",
+      "sha256": "1ca240e56f63b6cb6aabf19c3a7b99e02c07a4611c05ac82f2123dc89f74ba63"
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-large/assets/primary.usdz",
+      "sha256": "9b4af116becef393118923d91be2c42f46c9538b7e61679c4e908d7e6ac017b9"
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-large/lattice-mxedge-lift-large.FCStd",
+      "sha256": "a44dc7de549c3a9c1f9dddafcba983bd1ea095443f63cad58b147e0d86960720"
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-small/assets/primary.model.json",
+      "sha256": "041bf64dcafe95c9ddd84a3dc48cf9e54905be5e9d7f0deca70132a2a46181dd"
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-small/assets/primary.usdz",
+      "sha256": "8f78fb29efb6f10ab72fdbbc7fbeca8accf60cce757ff8e2183f5dd9f582fc8e"
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-small/lattice-mxedge-lift-small.FCStd",
+      "sha256": "6724c8548eaa71235f75e924e4306448c02cf47e6d822e22967abb61e50d009e"
+    },
+    {
+      "path": "Hangboards/lattice-triple-rung/assets/primary.model.json",
+      "sha256": "3080f13c98c959e0d6e162ce8ba8f55f5b4357f18e151a64e0a225dcc755ac8d"
+    },
+    {
+      "path": "Hangboards/lattice-triple-rung/assets/primary.usdz",
+      "sha256": "05aab8f7aba9bd97acb7ae14b9026d53a698d7a162de56b2115d95232ec89d3c"
+    },
+    {
+      "path": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
+      "sha256": "821beadb22810a96da35b2952e9932f60796202a8782ca5275eaa37498d96786"
+    },
+    {
+      "path": "Hangboards/mammut-diamond-finger/assets/primary.model.json",
+      "sha256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099"
+    },
+    {
+      "path": "Hangboards/mammut-diamond-finger/assets/primary.usdz",
+      "sha256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12"
+    },
+    {
+      "path": "Hangboards/mammut-diamond-finger/mammut-diamond-finger.FCStd",
+      "sha256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe"
+    },
+    {
+      "path": "Hangboards/metolius-climbers-edge/assets/primary.model.json",
+      "sha256": "3cd49d64e8c8dc5bbd8d5f3fefdf784f24ea1e444de2c4276fa0f1af5fb0efce"
+    },
+    {
+      "path": "Hangboards/metolius-climbers-edge/assets/primary.usdz",
+      "sha256": "4de00eb9e9d60dd70fbcbd0f1e9cd141c09b74470dbb72755847ac1a333fd341"
+    },
+    {
+      "path": "Hangboards/metolius-climbers-edge/metolius-climbers-edge.FCStd",
+      "sha256": "183559334d57680c01268973d7af4f29257d209c1055ed81062f4b9c659f0ece"
+    },
+    {
+      "path": "Hangboards/metolius-contact/assets/primary.model.json",
+      "sha256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f"
+    },
+    {
+      "path": "Hangboards/metolius-contact/assets/primary.usdz",
+      "sha256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07"
+    },
+    {
+      "path": "Hangboards/metolius-contact/metolius-contact.FCStd",
+      "sha256": "732ee95e7b434e188708b96f974bd3afdacdd62fedc93d382f66e7401a480be1"
+    },
+    {
+      "path": "Hangboards/metolius-foundry/assets/primary.model.json",
+      "sha256": "11c745e4a015de265d2e47bc233f8a3cd7d643d3ce608bb6a1055b6ef926d4e1"
+    },
+    {
+      "path": "Hangboards/metolius-foundry/assets/primary.usdz",
+      "sha256": "6fd19aaa5d28b8fbd0b76ee0195f5b2f877b30c3f1746bf9bf057b8e0255a251"
+    },
+    {
+      "path": "Hangboards/metolius-foundry/metolius-foundry.FCStd",
+      "sha256": "a3bc8f2e5ada0957c37b4b39a848a8866d6595cb6deea2fc57f6c5597c00eb90"
+    },
+    {
+      "path": "Hangboards/metolius-light-rail-2/assets/primary.model.json",
+      "sha256": "70e9e992c8ce12077bc98c3a74646452d53a4fef1bda51a26d930108d455ef8e"
+    },
+    {
+      "path": "Hangboards/metolius-light-rail-2/assets/primary.usdz",
+      "sha256": "9b4e233f87685e2f39faef82f73af2edae3644a5d61bb87d2f3188930242db1d"
+    },
+    {
+      "path": "Hangboards/metolius-light-rail-2/metolius-light-rail-2.FCStd",
+      "sha256": "7dd18930697bba18079fc0328a3254072ee5b0bbe8d73d31f9fe0d9d75a50ddb"
+    },
+    {
+      "path": "Hangboards/metolius-prime-rib/assets/primary.model.json",
+      "sha256": "5a90c32758ed7521a86dabe85e655ddb6b62925b17fe6e6d822b0c5610a72ecb"
+    },
+    {
+      "path": "Hangboards/metolius-prime-rib/assets/primary.usdz",
+      "sha256": "66a8f958b3b6dde6766a70c547d336a11969c6ec3b1e9fefa5fd2972f49c6125"
+    },
+    {
+      "path": "Hangboards/metolius-prime-rib/metolius-prime-rib.FCStd",
+      "sha256": "481381c0bbc020d6a48c6c0d76b796b306d7faab64e362335697d2f688377117"
+    },
+    {
+      "path": "Hangboards/metolius-project/assets/primary.model.json",
+      "sha256": "4f3a52b8cd9e556323d96632c5bd9c612a25ad16b3958c2d35fa5d188f628e78"
+    },
+    {
+      "path": "Hangboards/metolius-project/assets/primary.usdz",
+      "sha256": "060ba08fd0ea183f59166c34387004efbef8de247956f6e60ba72550ff11cec7"
+    },
+    {
+      "path": "Hangboards/metolius-project/metolius-project.FCStd",
+      "sha256": "85914eac2bd23cf99fdaf3dfea39345377f94318da0bcd502e72b2a2aa269999"
+    },
+    {
+      "path": "Hangboards/metolius-rock-rings-3d/assets/primary.model.json",
+      "sha256": "c4ae39b8806b2da0e396ea242379810cc62054feb4ec1110858894e2f6485bb5"
+    },
+    {
+      "path": "Hangboards/metolius-rock-rings-3d/assets/primary.usdz",
+      "sha256": "b89eec5ba9949af876e4d9565c2455719c0a925ccd2c294dd6d0ae5bde92355d"
+    },
+    {
+      "path": "Hangboards/metolius-rock-rings-3d/metolius-rock-rings-3d.FCStd",
+      "sha256": "b6f6d5a8ae57289c838ca409eae01bee5995ad562d21b3bd2762d15f0f0142db"
+    },
+    {
+      "path": "Hangboards/metolius-rock-rings-3d/suspension.json",
+      "sha256": "1504f218cc69eb8a09259a23c4bf7458e93a3bab03e468a974d1727a2b8dad1b"
+    },
+    {
+      "path": "Hangboards/metolius-simulator-3d/assets/primary.model.json",
+      "sha256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb"
+    },
+    {
+      "path": "Hangboards/metolius-simulator-3d/assets/primary.usdz",
+      "sha256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b"
+    },
+    {
+      "path": "Hangboards/metolius-simulator-3d/metolius-simulator-3d.FCStd",
+      "sha256": "ac957ebf25e5134ab2875e9b06d9c23831f35b0b8bcbc64730d6a626b7f8588e"
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-compact-ii/assets/primary.model.json",
+      "sha256": "132f23e40eef8e0fcbd642b0e6c3da2ab46f3c4d11fc61cb0ef8544b94073588"
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-compact-ii/assets/primary.usdz",
+      "sha256": "2f90c3e3e0d97dba8c771391fa63659156ab954facbbfa1a74750a57615f40fa"
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-compact-ii/metolius-wood-grips-compact-ii.FCStd",
+      "sha256": "1caf7bccda3892a816c7eb9f47589aab0e334fd3751b982bec3be047e78b234b"
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-deluxe-ii/assets/primary.model.json",
+      "sha256": "4dc67f2f95351e6320aa9ce2fbec68b0d3a6df03475b3d15b8fbee2ebb12b8c0"
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-deluxe-ii/assets/primary.usdz",
+      "sha256": "1225ab7bbf8261e69b57401bcba1d26985614ad8db8468b0526dc35286c6b391"
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-deluxe-ii/metolius-wood-grips-deluxe-ii.FCStd",
+      "sha256": "0e13ed6ecd996c735ead7344fb2d7f5a6fef4d247c7c4deb8aea8b57d5c64cfe"
+    },
+    {
+      "path": "Hangboards/moon-armstrong/assets/primary.model.json",
+      "sha256": "c4791fcc5908aa76745b0a3022e3e1fa9de040d5f3a48ea64740e57911c17c11"
+    },
+    {
+      "path": "Hangboards/moon-armstrong/assets/primary.usdz",
+      "sha256": "0a2fdcfd4178b98ca1170a807f33c92dc30ac60dd5795ab315d2fec6b3153f9c"
+    },
+    {
+      "path": "Hangboards/moon-armstrong/moon-armstrong.FCStd",
+      "sha256": "cdb73bb79c0d971b179e246dce75c8f7332f1e0353f2f53a44f0ce249efbede7"
+    },
+    {
+      "path": "Hangboards/nature-stoak-board-iii/assets/primary.model.json",
+      "sha256": "2463629f60efb6ad6e6d904ce125cd4a654eb7e9395a517bea7ea338c174773e"
+    },
+    {
+      "path": "Hangboards/nature-stoak-board-iii/assets/primary.usdz",
+      "sha256": "03f28c204e52ecfb623635c047b82f2a66971d8fe469f6a79f4e6d9db833ade2"
+    },
+    {
+      "path": "Hangboards/nature-stoak-board-iii/nature-stoak-board-iii.FCStd",
+      "sha256": "8755cf56a180400b8641ae24dd6a39d1b884af64c775a1837e4f283f871bfeee"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.model.json",
+      "sha256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.usdz",
+      "sha256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd",
+      "sha256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/suspension.json",
+      "sha256": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+      "sha256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+      "sha256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/suspension.json",
+      "sha256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/assets/primary.model.json",
+      "sha256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/assets/primary.usdz",
+      "sha256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd",
+      "sha256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/suspension.json",
+      "sha256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a"
+    },
+    {
+      "path": "Hangboards/owl-climb-poker/assets/primary.model.json",
+      "sha256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
+    },
+    {
+      "path": "Hangboards/owl-climb-poker/assets/primary.usdz",
+      "sha256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675"
+    },
+    {
+      "path": "Hangboards/owl-climb-poker/owl-climb-poker.FCStd",
+      "sha256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553"
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json",
+      "sha256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e"
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz",
+      "sha256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431"
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json",
+      "sha256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b"
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz",
+      "sha256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad"
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/primary.model.json",
+      "sha256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55"
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/primary.usdz",
+      "sha256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb"
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+      "sha256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986"
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/suspension.json",
+      "sha256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80"
+    },
+    {
+      "path": "Hangboards/soill-iron-palm-2/assets/primary.model.json",
+      "sha256": "d3fede4f790c74dce3192ac7f05a864819a8a5aa1d9dceaf46bd0cf7591e1329"
+    },
+    {
+      "path": "Hangboards/soill-iron-palm-2/assets/primary.usdz",
+      "sha256": "851e8d66a5fb82909212c7f135862aaded63948dbc14ba392a932e565382877f"
+    },
+    {
+      "path": "Hangboards/soill-iron-palm-2/soill-iron-palm-2.FCStd",
+      "sha256": "ba86f4813c7d42f846608a0b89c2610db3a3f83753d04e63f4b0bbb5f0139a4d"
+    },
+    {
+      "path": "Hangboards/soill-split-palm/assets/primary.model.json",
+      "sha256": "42c0bde7b2b7da3210d59e40de3fa938bb5cce8284379d7ab1ce58f2dbcaf70b"
+    },
+    {
+      "path": "Hangboards/soill-split-palm/assets/primary.usdz",
+      "sha256": "f5f5a89398d6efa1581ba42d692b038a05676757823707186a02a72201ff2455"
+    },
+    {
+      "path": "Hangboards/soill-split-palm/soill-split-palm.FCStd",
+      "sha256": "cb7e592fd903612db83e15b37280eeb466d98018e735c821b19db0e7b95e78e7"
+    },
+    {
+      "path": "Hangboards/soill-training-tiles/assets/primary.model.json",
+      "sha256": "77e09d850ee66d2f50bbbd2c2709121a64f54d834af6d5d2fd49ff8a8fa78a7d"
+    },
+    {
+      "path": "Hangboards/soill-training-tiles/assets/primary.usdz",
+      "sha256": "0e137f91f2cc0283c144a19d052bbd7b8a89bd1706fa7b1b29677deaa3c33cbb"
+    },
+    {
+      "path": "Hangboards/soill-training-tiles/soill-training-tiles.FCStd",
+      "sha256": "3b47e3f69514c8a3ebb12dce2659b40e809798630fc6e2ff3ed2c262048390ac"
+    },
+    {
+      "path": "Hangboards/surfaces-for-climbing-transgression-2011/assets/primary.model.json",
+      "sha256": "0a88a427dbf6fc69815b674892f56bbff6c7efdb533dbd133f4c7d26d3ab480a"
+    },
+    {
+      "path": "Hangboards/surfaces-for-climbing-transgression-2011/assets/primary.usdz",
+      "sha256": "5bc89aaee14f81bcd100d1f8d056f6d097e3a44623b0f77d8c281bda06c81b30"
+    },
+    {
+      "path": "Hangboards/surfaces-for-climbing-transgression-2011/surfaces-for-climbing-transgression-2011.FCStd",
+      "sha256": "a5042032b5e7b01306608fdc6690ce097ed2bd4bc34bbc84a3313596524b7f67"
+    },
+    {
+      "path": "Hangboards/surfaces-for-climbing-transgression-2013/assets/primary.model.json",
+      "sha256": "3099e966644924baaf59ca29ceb9757f67730aa245358a4fad0cec25ffbecb2d"
+    },
+    {
+      "path": "Hangboards/surfaces-for-climbing-transgression-2013/assets/primary.usdz",
+      "sha256": "e7d127e72145a93d1ba9eadf2fde53fa2348f2c8afbba2faa69ec0c5ab33f078"
+    },
+    {
+      "path": "Hangboards/surfaces-for-climbing-transgression-2013/surfaces-for-climbing-transgression-2013.FCStd",
+      "sha256": "00990671ccb446a3d6b6293df6cfcc5ca4d63fc98238a49b51d5ebe771ca578d"
+    },
+    {
+      "path": "Hangboards/target10a-linebreaker-base/assets/primary.model.json",
+      "sha256": "69cb77178c02bb78ebdbe612ebc61285a634f1c409a3d32869b7d671be1dfba1"
+    },
+    {
+      "path": "Hangboards/target10a-linebreaker-base/assets/primary.usdz",
+      "sha256": "b1c08983d2b353442a9cd0131ad5a1e4255a2e6c3222bc26ea5b0fd44ef3e8df"
+    },
+    {
+      "path": "Hangboards/target10a-linebreaker-base/target10a-linebreaker-base.FCStd",
+      "sha256": "393be4f238e6cfa3584c642d6373f575fa5f11823502fe04d8a6a9e6a780d6ac"
+    },
+    {
+      "path": "Hangboards/tension-flash-board/assets/primary.model.json",
+      "sha256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755"
+    },
+    {
+      "path": "Hangboards/tension-flash-board/assets/primary.usdz",
+      "sha256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b"
+    },
+    {
+      "path": "Hangboards/tension-flash-board/suspension.json",
+      "sha256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9"
+    },
+    {
+      "path": "Hangboards/tension-flash-board/tension-flash-board.FCStd",
+      "sha256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53"
+    },
+    {
+      "path": "Hangboards/tension-grindstone-original/assets/primary.model.json",
+      "sha256": "bac999d9366e25abdf1403bebf8a5147e847e6f563a989722551f6229ba3d50b"
+    },
+    {
+      "path": "Hangboards/tension-grindstone-original/assets/primary.usdz",
+      "sha256": "9137b9b5620286ccc0c0f7f49c7e4d448037b56ec8f9882090b4779f8d0dba0e"
+    },
+    {
+      "path": "Hangboards/tension-grindstone-original/tension-grindstone-original.FCStd",
+      "sha256": "f67e4056da41ed3076ff7688a0d3bba4e02e6e880ef2d8cf34c0cecd965ee95f"
+    },
+    {
+      "path": "Hangboards/tension-grindstone-pro/assets/primary.model.json",
+      "sha256": "d926095165b5c401a84a7cffddf5fda5219efeed42a02acddc2bcce26e1f8a98"
+    },
+    {
+      "path": "Hangboards/tension-grindstone-pro/assets/primary.usdz",
+      "sha256": "63cd2673a47c38fa1bcf63e40c7ca16eb4e0a873b5062611a09e4ba6ed5628e2"
+    },
+    {
+      "path": "Hangboards/tension-grindstone-pro/tension-grindstone-pro.FCStd",
+      "sha256": "84b1e281a13c2a65f7b7efcf949a3fc22ad009c5d86a5f7a301d9a7d0665ffcf"
+    },
+    {
+      "path": "Hangboards/tension-grindstone/assets/primary.model.json",
+      "sha256": "2527466044e82c32bf5271cc48f4a909eb303146d8f951215d248a1ae18ef0d4"
+    },
+    {
+      "path": "Hangboards/tension-grindstone/assets/primary.usdz",
+      "sha256": "d69795c0f0c65e0c2070e3dc0c84fcfa7480a03c627157be4b8ed65cffcf5495"
+    },
+    {
+      "path": "Hangboards/tension-grindstone/tension-grindstone.FCStd",
+      "sha256": "3ef21f4328ea2b0f2f6d6f7714c9ceb72d4725f563fae664f22b5d3783cedabd"
+    },
+    {
+      "path": "Hangboards/tension-honestone/assets/primary.model.json",
+      "sha256": "9b1579618fe247e79a755ec4a1ce3ef8e71de4dc33e9a571805f15c181e80d09"
+    },
+    {
+      "path": "Hangboards/tension-honestone/assets/primary.usdz",
+      "sha256": "321a039d39299aca7213cb351bec05043a71493f5f48129717874f3f8e9f86c5"
+    },
+    {
+      "path": "Hangboards/tension-honestone/tension-honestone.FCStd",
+      "sha256": "9b647d84fc3258c3cf3657c1f045519ac0906669f0d17803c9d14c35d7da2c1e"
+    },
+    {
+      "path": "Hangboards/tension-whetstone/assets/primary.model.json",
+      "sha256": "76af62059693284df52bb25afbf48c6fab6bdb48667a87ae6abba63dd2e41f62"
+    },
+    {
+      "path": "Hangboards/tension-whetstone/assets/primary.usdz",
+      "sha256": "2e93891153367ca3921bcbbd562571cd14a9f8c7b91da60e32b0fc1a9c4604ca"
+    },
+    {
+      "path": "Hangboards/tension-whetstone/tension-whetstone.FCStd",
+      "sha256": "42834773e456df1f97a9e8cac75cbab3313556aa13f14d0f0370cc381ad1ac48"
+    },
+    {
+      "path": "Hangboards/the-hangboard/assets/primary.model.json",
+      "sha256": "6d0d41548748408a8a4b0d5c0037a498f17589aafddb1817cab83a221f75444b"
+    },
+    {
+      "path": "Hangboards/the-hangboard/assets/primary.usdz",
+      "sha256": "baa39c97ac15c6ad5775af55801eb6a0419df6e251aca81c2624046cba49c2e9"
+    },
+    {
+      "path": "Hangboards/the-hangboard/the-hangboard.FCStd",
+      "sha256": "a57761033e8706e3ec759bc006a2c48860141673a90e308e0e1c49e41f0945e5"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-forge/assets/primary.model.json",
+      "sha256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
+      "sha256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd",
+      "sha256": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-natural/assets/primary.model.json",
+      "sha256": "37240a099ac7d80fc8251b7e86bdab6418e0628c259fff0baecaf832cd54dcef"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-natural/assets/primary.usdz",
+      "sha256": "8177ca86217b281e62a72ee2d27a5312b6f447b91974d4e1b08d08fd236539c9"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-natural/trango-rock-prodigy-natural.FCStd",
+      "sha256": "886faa151410caaffa57ecad9a9c14591f6951cc874d89542b87b9fe601b51f8"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-pivot/assets/primary.model.json",
+      "sha256": "b7c97e44c37c0d521a5ac991bb9ccd54fca2301d6b3ea8446cc48ce86eac3005"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-pivot/assets/primary.usdz",
+      "sha256": "027c17024235b0340e6513fbda000d081bc7d0d81e618ee75d9f3e5516cae746"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-pivot/trango-rock-prodigy-pivot.FCStd",
+      "sha256": "6ef486646953db5c692d6fd7b24ebb4dc9dd98f4f278f9f51e69bfed4edacd75"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-training-center/assets/primary.model.json",
+      "sha256": "d9dc714ea3111dd8166ce48a0c9b17e56dbdd3f2a44efc4d749c38b3294d86b1"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-training-center/assets/primary.usdz",
+      "sha256": "7b1988e9fd280a26c4c8d086355f36d1e825e045a2f3265632760ca9f5f2c92e"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-training-center/trango-rock-prodigy-training-center.FCStd",
+      "sha256": "6002324b42f5bf49d119bf32c52607ebd5c797fb12557f851f5de0378de86f4d"
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/assets/primary.model.json",
+      "sha256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927"
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/assets/primary.usdz",
+      "sha256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf"
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/suspension.json",
+      "sha256": "4d0aa10c8914bd41fd79cc825d094ffc5a785aae64aef5406ade19778102a282"
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd",
+      "sha256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448"
+    },
+    {
+      "path": "Hangboards/yy-baguette/assets/primary.model.json",
+      "sha256": "75be5cf44e996606261dfd942f3004058d6cc9cd5bfe66e1c159ceaf1578f934"
+    },
+    {
+      "path": "Hangboards/yy-baguette/assets/primary.usdz",
+      "sha256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea"
+    },
+    {
+      "path": "Hangboards/yy-baguette/suspension.json",
+      "sha256": "c69c11dc9708bc1e2dc9f235004f55a7c0ecd524fdf5b073c40dda1d9b0c956f"
+    },
+    {
+      "path": "Hangboards/yy-baguette/yy-baguette.FCStd",
+      "sha256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689"
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/assets/primary.model.json",
+      "sha256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9"
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/assets/primary.usdz",
+      "sha256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab"
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/suspension.json",
+      "sha256": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97"
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
+      "sha256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef"
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.model.json",
+      "sha256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69"
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.usdz",
+      "sha256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f"
+    },
+    {
+      "path": "Hangboards/yy-travelboard/suspension.json",
+      "sha256": "7af15a7f897baa87a4da89fcf62c8123dbb7544d8c3cb0bced71474bf9d044e4"
+    },
+    {
+      "path": "Hangboards/yy-travelboard/yy-travelboard.FCStd",
+      "sha256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-evo/assets/primary.model.json",
+      "sha256": "a023dcf8bdc428623dbbcd27edf7343df3e59f75c4debc1c80d523dae2310a17"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-evo/assets/primary.usdz",
+      "sha256": "32fb8cb84cff35023e4321e36881f6a3762ae25e73f8ac1bcfab89e965b0d345"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-evo/yy-verticalboard-evo.FCStd",
+      "sha256": "40416fa721ae1f9b89ace5bd20273136ed2678b284f4e51f3bfe12d68dfb18ca"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-first/assets/primary.model.json",
+      "sha256": "bb05c99b3a03682b3ae08e72244ef34d4b361da409658912a4943a3859a92eff"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-first/assets/primary.usdz",
+      "sha256": "c945d2fa6433a0416367f80372b3aa4060a7a7c777c80cb58bb0951b2dc664c4"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-first/yy-verticalboard-first.FCStd",
+      "sha256": "7272fc88543714d4fca319648f973dd57c017440d8da9283f8cd361e0bf7205b"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-light/assets/primary.model.json",
+      "sha256": "85b340f6d282b46f704b365b1fe6a953fa76f19541a062534084efd7ad6745dd"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-light/assets/primary.usdz",
+      "sha256": "1fa575d728b9063446451392db0c618de6ba7106801f8a304c9d70fe9c529876"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-light/yy-verticalboard-light.FCStd",
+      "sha256": "348106184e4a84094f3a071eebfed521ac39e1d5847c40d325d6ca77314f6b98"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-one/assets/primary.model.json",
+      "sha256": "a2f6ccff8286c3bf0ea048394a1bef4e47179a0c9c461615042aef0e1f8522ea"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-one/assets/primary.usdz",
+      "sha256": "57e63588b4671fc4ac0e6556dd8c499b131575dce096c380f0a5d3e54d7c93c5"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-one/yy-verticalboard-one.FCStd",
+      "sha256": "860f16dc5af25ee834e6f3b282f0e51fd6d404ce6693581896abde1c7066f33e"
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/assets/primary.model.json",
+      "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe"
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/assets/primary.usdz",
+      "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee"
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/zlagboard-evo.FCStd",
+      "sha256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c"
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.model.json",
+      "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f"
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.usdz",
+      "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684"
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/zlagboard-pro.FCStd",
+      "sha256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a"
+    },
+    {
+      "path": "Tools/HangboardCAD/README.md",
+      "sha256": "3a2a2c62a66471e77f7840a8b60d3dcd1405e43e1e95cd5d9c39edebf68c0ae0"
+    },
+    {
+      "path": "Tools/HangboardCAD/board_manifest.py",
+      "sha256": "8dc5b35e61231d21d36a719c13b0609f829332b9aa26e42fe0829efc0269fbfe"
+    },
+    {
+      "path": "Tools/HangboardCAD/compile_board.py",
+      "sha256": "9e2f12a5acccafa5131b86733b38e0663711b50a254af664d93a0ad70261ef7e"
+    },
+    {
+      "path": "Tools/HangboardCAD/contract.py",
+      "sha256": "e92e39ed8eb802d7f0d33645aade64c274ff5f1b2769e3621fedd462933ed102"
+    },
+    {
+      "path": "Tools/HangboardCAD/export_rope_collision_solid.py",
+      "sha256": "7d1d1f1dae2c36076d7f28529c25e2ba759da4b9ea7ec4a02d7509a2aec088c2"
+    },
+    {
+      "path": "Tools/HangboardCAD/export_rope_physics.py",
+      "sha256": "f637a9945b12be9995617e6605a8ebce27831df440153a6852ea224452844e0c"
+    },
+    {
+      "path": "Tools/HangboardCAD/measure_channel_spines.py",
+      "sha256": "4aad5a14a827ba414f6a4779f5b8f196682a4d82825a75fca48c0f979a145458"
+    },
+    {
+      "path": "Tools/HangboardCAD/migration/author_soill_iron_palm_2.py",
+      "sha256": "f8120f87d91e0921e757ca394d61339f14b7b9e9b3124bb72cfeef0103bbc880"
+    },
+    {
+      "path": "Tools/HangboardCAD/native_cord_features.py",
+      "sha256": "dbf57a10bef757087ee263fef7b883ec660c5d2e45655dab1f98e40e8b4971c4"
+    },
+    {
+      "path": "Tools/HangboardCAD/native_cord_guides.py",
+      "sha256": "2001cb8f4eb141d50146a2f426aa0cc086e729e0e737b4224e7f9dcf0a6fa191"
+    },
+    {
+      "path": "Tools/HangboardCAD/native_cord_routes.py",
+      "sha256": "a7285ef5dfaa8fa358ff956010e613ab891ad8536090455dc024ccdb08e90f18"
+    },
+    {
+      "path": "Tools/HangboardCAD/photo_grid.py",
+      "sha256": "dc342d879ebe077862987a8a9ab18e25c0871f55d48c2232e412c40fdef20b3a"
+    },
+    {
+      "path": "Tools/HangboardCAD/prepare_assets.py",
+      "sha256": "fcf0aa49deb470fe901f4fe34488829b6edcfe4fcb2dffdfa5d40da63202a935"
+    },
+    {
+      "path": "Tools/HangboardCAD/presentation_targets.py",
+      "sha256": "25a3136d0bc1c5d8651d1ad60b99e804e576bdb1668192719102e0f36f856f15"
+    },
+    {
+      "path": "Tools/HangboardCAD/preview.py",
+      "sha256": "f6e47c2d6d68f595bada962fd048ba47e7dcbd0cbd4099d1576dc76bff8b0a14"
+    },
+    {
+      "path": "Tools/HangboardCAD/reference.py",
+      "sha256": "a2566255ebab2658478cfe85d75b210af5fad496a5f7b9c38e1610884dc35a44"
+    },
+    {
+      "path": "Tools/HangboardCAD/rope_solver_requirements.txt",
+      "sha256": "16aa2a2c9a13bbab7a25d9b79da3c3fdf5f05fd4cc5abc911ab5b25269f2b93e"
+    },
+    {
+      "path": "Tools/HangboardCAD/run_freecad.py",
+      "sha256": "b5c030eec4b3f22e1e2ecc93c21e18880b1bdcdb66e1eaaa24cdb1f167816350"
+    },
+    {
+      "path": "Tools/HangboardCAD/set_board_manifest.py",
+      "sha256": "fb3fcab44cf4ecf0aeec7df2ac6c3a1f6c0dd2931971e17928394aa733b81287"
+    },
+    {
+      "path": "Tools/HangboardCAD/solve_exterior_rope.py",
+      "sha256": "f49f80c72d912d3ca7d8cb8d715f47525a0bb213852a2d7f02a0fd6579c80fb3"
+    },
+    {
+      "path": "Tools/HangboardCAD/solve_threaded_rope.py",
+      "sha256": "c838a3f79bb73d397fb46702e034c6e9a766306ae014c2786611234b98ce9c28"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/compare_exports.py",
+      "sha256": "8096775d94291967514a8bfb5c4116f94e39336606a2fecfae3f42fb04154a6b"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/fixtures/native_groove_material_normals.json",
+      "sha256": "caa316ef2e7c35b3091f87c47a63644061b3a64b1b9f82d8941d4497ca60055c"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/foundry_native_source_checks.py",
+      "sha256": "71a2269b8becc0bba3f740576da9e909078396314e6837abff9f88009bc10735"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/honestone_native_source_checks.py",
+      "sha256": "d0415d3dd86c5a7b4b261f048d7b9797d86d4e5c404f58f8d76c541d8b58dba7"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/metolius_native_source_checks.py",
+      "sha256": "423d6ff41d730b6d6307c3d54ea228adbacfd2faf7a82673c955852b52386895"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/native_broken_source_check.py",
+      "sha256": "cff516b3db124f94c0209aeb6097a0463511cfd29e063f0adc2c1f47bf572c74"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/native_cord_feature_checks.py",
+      "sha256": "50c360624c021da6b55001a8ac4aa5dca2cef801160e6265228201f020ea4743"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/native_source_checks.py",
+      "sha256": "391f49a390a47fcbff9828b9e030c80f49920e072640668099bd2d1f02a0e3d3"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/original_grindstone_native_source_checks.py",
+      "sha256": "680cfb37e2a7178346165d9f2c8af625460ae5912f5f43167127d264328486ae"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/prime_rib_native_source_checks.py",
+      "sha256": "2bf343d8435b6e24a1abf08b6cbc10d9c0492b6cb73e93c0ea670898cbc3dcd3"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_board_manifest.py",
+      "sha256": "aa61a3f86dadee4d148f1c8e4eb54aef2d772e5866780822ce61beae2d8d176b"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+      "sha256": "f757edde7afff4a987009fc3fe54916d75bb4023e152378a126193b7f249ea2b"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_clavellium_native.py",
+      "sha256": "b395a6470314d7dcaddb10056930c65528bc6fa8f8dd72dcb16a7767174800ad"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_cli_guards.py",
+      "sha256": "c8271efd18179321836ea57b34be111a0547a27312d51ab19c62fa35e11bedf1"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_compile_v2_depths.py",
+      "sha256": "f449b9e2fa1aebc5ce82e4d961f378c6c6ad3a76b183e7d36d0b7eeb8a7d69e6"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_confirmed_cord_diameter.py",
+      "sha256": "364b93777419d6fc924d17297c3ddfa227893abd4e5790ae63e5b0809806fabb"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_contract.py",
+      "sha256": "b20d377127fc4b9190b7a0aedc8d8986ab2efb1d1795a6ec2e82186f2c018b4c"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_exterior_rope.py",
+      "sha256": "407d829be086b9911c6b3464a2e2b1432a0f3a10cb11f1da4af101a27ee462ad"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_foundry_native.py",
+      "sha256": "6fd234f5634ceeb4a4f0b482ef73313b185c85ba9f99aba464d39b264ae64840"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_honestone_native.py",
+      "sha256": "f133131bd4d171f85a62aa232787607b83689928f13d6e7cada64869a336f248"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_metolius_native.py",
+      "sha256": "bafaf0a7fd36377b2c690281fc8cad10ce469bf823bcee95b96435b25d3799f1"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_native_clearance_budget.py",
+      "sha256": "8ca5f987ddaaabe4b0b9e4012da4907ae983c4b58833046c90518f2d38142fff"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_native_cord_feature_extraction.py",
+      "sha256": "0c8e7f829e6ffb1ad93ac41738776b0857f642c2d0bf946b1375a3ef421591b9"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_native_cord_guides.py",
+      "sha256": "88c708aa16e459a4fec701535da5f2d1d9fa51df18d340c8815a3d610d534341"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_native_cord_routes.py",
+      "sha256": "8e7890dcb013f06fc3e9d1844459b1c952955bf8405d7dcfe951aa5a1ac26c36"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_native_cord_tightening.py",
+      "sha256": "362679227649f45dbfab39a7eda39a7c648de4e928d3904e93750e51f2ab60e7"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_native_path_search.py",
+      "sha256": "9900386900a1fa6ef0409b2dbe54605ee2c2b21b2a436ac56b454836d1dcd87d"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_native_pose_terminals.py",
+      "sha256": "c2bd4c3a0d5849d6845a6aef0fcc4c4dd9c76bae01a80fcd8c84a43572c86761"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_original_grindstone_native.py",
+      "sha256": "448a55e76a6b75c6177af4e647f866b9f2091838a53ce48b11e340c4f1f7f39c"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_pilot_native.py",
+      "sha256": "18c954d75da270ab5a072af38c9bd3aad39271705905bdcc9f93eeb9f960cbcf"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_presentations.py",
+      "sha256": "9e43d1b269f6972a5e7c7898aa37cf2d0ade031ca80aec57a2313c70dbff527b"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_prime_rib_native.py",
+      "sha256": "815b4c641169e1f4d858e255a9bd5176bb6e09227c4524af61f478fcf86763b0"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_rectangular_channel_section.py",
+      "sha256": "d07f12969dcfebf86069b7e9d7de20ac1c3d5e461472d5d0440b7a5f24926ed3"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_rope_physics_export.py",
+      "sha256": "3e7874df1f1d636b901f462b5e87aeb430565eb2138a7e45fd0cce6ae930bfb1"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_shared_contact_membership_cad.py",
+      "sha256": "896b26f48dc2b11cb092320d64bb54b10e157022f253598a16931ac858726015"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_solver_sidecar_dispatch.py",
+      "sha256": "129a5cde7378d3856a54a37fe756e018a2f265cc64d0ed9e053711c48cd3023f"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_threaded_loop_solver.py",
+      "sha256": "5d267706a10c9281765a273d771bb11565b389bc0ab78ab4f9234c1b164b8bea"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_transgression_packages.py",
+      "sha256": "7d2c9b40fcbe06e0eb59abee76fcb6ab9764d87130de98ff72b71157bc7aa75b"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_usdz_writer.py",
+      "sha256": "b8eeddd9197404250d22a5fe1dc7ea4c4fd7dd45473daadf265cf1891f2cd0e3"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_uv_node_normals.py",
+      "sha256": "829e79fc508ac55c28ab17c859ffaca4fa92c29438533f699f96cc308fd05f2f"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_verticalboard_validation_reporting.py",
+      "sha256": "d59d20477119e4081d135f5d4aad566d12bbfc38470f9bb3b0b20eb097b7db9e"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_verticalboards_native.py",
+      "sha256": "cef55e510ab950a5059737fe707cc3eead2d93dbcbcd5a8ff7137995a2e6509b"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_whetstone_package.py",
+      "sha256": "e47a78a63d4a49f87fec05ec140e4677e5f2ae13c3af6a2a4176887ee969ef86"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/test_yy_evo_native.py",
+      "sha256": "c733fc10adaa298b81ad80eda718c08fd925d7611441f98895a52be95904e72d"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/transgression_native_source_checks.py",
+      "sha256": "d3be034afb32a3378c2ed9ff6b51e38c9f83e900eaedbca9f5eb1af679c9558a"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/uv_node_normal_checks.py",
+      "sha256": "684998bb8ca409e7ee07a46f572865a40d5bb1cd7fc86fe49da0419e0e38a8e7"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/verticalboards_native_source_checks.py",
+      "sha256": "2fbebdb794166d887492da19d9821fcc6dacc363acd953aba279d78dae840036"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/whetstone_native_source_checks.py",
+      "sha256": "fead62badda706b0ec87672eaed643a256d9f2f7c86ccd54377f737fcbd786b6"
+    },
+    {
+      "path": "Tools/HangboardCAD/tests/yy_evo_native_source_checks.py",
+      "sha256": "49b9115bf45f6bf3cbfff12d9137c8ee39bd38686f21384667b874478430f406"
+    },
+    {
+      "path": "Tools/HangboardCAD/usdz_writer.py",
+      "sha256": "1d222c1b5483e94288587e4fbb13e8773b00cdaab715a39dac7cf6d69ee4f1af"
+    },
+    {
+      "path": "Tools/HangboardCAD/use_hangboard_packages.py",
+      "sha256": "897951984c2b741e48e115c6b4c7e14620d14f37aa41744c2b9cd34bc9a41738"
+    },
+    {
+      "path": "Tools/HangboardModels/check_production_cord_clearance.rb",
+      "sha256": "1bec1010a0c6b4b1491d95effa69b510a5d68d913a20a4536a77f8a108a6a57e"
+    },
+    {
+      "path": "Tools/HangboardModels/clean_model_meshes.py",
+      "sha256": "08df7be724b970a2307f72e8586c4451faf89f20b3a5421f795aa3a470bf273b"
+    },
+    {
+      "path": "Tools/HangboardModels/contact_model_descriptor.py",
+      "sha256": "56d898f05b2eb0c60c7978f34d6d3e1c093d64e41fc7a8dac298bcc68f168c4a"
+    },
+    {
+      "path": "Tools/HangboardModels/contact_model_package.py",
+      "sha256": "3b591cd0baa747a293aa5d61c503a58d6c635f4317eabbe9055f86fa776faca7"
+    },
+    {
+      "path": "Tools/HangboardModels/import_contact_model_source.py",
+      "sha256": "a53e14fb5f7c5dbffacb9e519c2c3b59a80abfa7aa9e175b07814e26d8cf5886"
+    },
+    {
+      "path": "Tools/HangboardModels/mounting_bore_requirements.txt",
+      "sha256": "a31b5aee25a845f7e12be8c5070ebc1f51f12e6afcfbfe5545c83ed9aad19037"
+    },
+    {
+      "path": "Tools/HangboardModels/production_cord_clearance.swift",
+      "sha256": "8addc679e8641409e8ffe45638a614e6922879fd2e634813696bcfadd62efa4a"
+    },
+    {
+      "path": "Tools/HangboardModels/remove_mounting_bores.py",
+      "sha256": "00e04300b900b311069d2dfa08f16fa2622c29df120ac72f33b7e8b47fef7d9d"
+    },
+    {
+      "path": "Tools/HangboardModels/simplification_pilot.json",
+      "sha256": "92b3216ee26b02d6a8c050ac49392137edc2079d316be264451db525df23022b"
+    },
+    {
+      "path": "Tools/HangboardModels/simplification_requirements.txt",
+      "sha256": "92e60623744cad4941f5fe39c931ccf1b598f9c7c134076a444125fdc036ce17"
+    },
+    {
+      "path": "Tools/HangboardModels/simplify_display_models.py",
+      "sha256": "8c05af199daab2e1f100a21b601dca69c8836de28a2a0422a3a37c1b93552df4"
+    },
+    {
+      "path": "Tools/HangboardModels/test_contact_model_descriptor.py",
+      "sha256": "9761489923f6fb370e1b5e4e1ddf92b93c798aed539feea004d50b390806e791"
+    },
+    {
+      "path": "Tools/HangboardModels/test_contact_model_package.py",
+      "sha256": "961e10d51d36a80c5831647d32334cb615f8b561374a7c12fb3d917918a4ce1d"
+    },
+    {
+      "path": "Tools/HangboardModels/test_import_contact_model_source.py",
+      "sha256": "15cb7c2ac600cd89201dccef4f04685aa48c49797a14c1861298627ce65a2d22"
+    },
+    {
+      "path": "Tools/HangboardModels/test_verify_owl_climb_poker.py",
+      "sha256": "0c7670404ab5094788507521950b7b7283036f69f257840b9ce4ac547ae73cb6"
+    },
+    {
+      "path": "Tools/HangboardModels/test_verify_trango_rock_prodigy_training_center.py",
+      "sha256": "3b3527a97a15e7a274823b8ffc7683ee72ba52a9a4d6609f4fd493b88a6bc182"
+    },
+    {
+      "path": "Tools/HangboardModels/test_verify_yy_baguette_evo.py",
+      "sha256": "a2c0b3b53027f0d43a58c68494298a6e81aed2173f8e83ae529b9c9134f309c6"
+    },
+    {
+      "path": "Tools/HangboardModels/tests/test_remove_mounting_bores.py",
+      "sha256": "b3a00b9e2bc5cd9ab0ee0c9d1df0f4a0efcfd5f82fb1a2342f01926cae69e297"
+    },
+    {
+      "path": "Tools/HangboardModels/tests/test_shared_contact_membership.py",
+      "sha256": "f1522bbf5736b13c07d4d8c00ed9d1fd4bac23453cee9ce4dad600549946e7e8"
+    },
+    {
+      "path": "Tools/HangboardModels/tests/test_simplify_display_models.py",
+      "sha256": "5dbed2227967e5d53c59bab0e9b0b0675d25916453cda3f517b1e3d3e282e66c"
+    },
+    {
+      "path": "Tools/HangboardModels/usdz_readback.py",
+      "sha256": "e3daf99c850f66e1c8c5ebf37f976b5abb8b407e07ca2a02fa91dcfd32be05ff"
+    },
+    {
+      "path": "Tools/HangboardModels/verify_owl_climb_poker.py",
+      "sha256": "9e94b1e3d1855e72b18202f91557a1f9e1d9b3b1b0e33e32b8c6a3a4c62e4e9f"
+    },
+    {
+      "path": "Tools/HangboardModels/verify_simplification_pilot.py",
+      "sha256": "24d1cd74508331f928442a531bbfaea4ef70bf65e1e90684e7a6c31ecf11761f"
+    },
+    {
+      "path": "Tools/HangboardModels/verify_trango_rock_prodigy_training_center.py",
+      "sha256": "49596d7ee29b876e449e40c84d230b1191ac24ca8eb857fac3d23ea96e539cd6"
+    },
+    {
+      "path": "Tools/HangboardModels/verify_yy_baguette_evo.py",
+      "sha256": "81a1ec50327095ed1864a32698196c70a5abc2d6e444fade78ccfa513fc2aacf"
+    },
+    {
+      "path": "Tools/HangboardPackages/README.md",
+      "sha256": "4a785fb98b5391bd6957b5809d256283b483acefac5a1a96122391df53ffb93d"
+    },
+    {
+      "path": "Tools/HangboardPackages/TESTING.md",
+      "sha256": "4ffc2033d840b99531ea534c023714c9f3002e91c6d5be1f6029cd3f8fcd7e10"
+    },
+    {
+      "path": "Tools/HangboardPackages/pyproject.toml",
+      "sha256": "bf5cd775c9a8e6d05cb64c34880a434ba6fdecaa8b3c1be5a57e3fa4d8aa59ae"
+    },
+    {
+      "path": "Tools/HangboardPackages/scripts/remove_primary_backdrops.py",
+      "sha256": "3fb746a852acf9e9ab020e400a6c2bafb5cab878f608e04384b60996b58ffce4"
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/board_catalog.py",
+      "sha256": "6d139dbaa2ef5a87b03ebf9c49cb9e08af91cfa81416ff1d2d9de58ced0a54dd"
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/board_geometry.py",
+      "sha256": "e1dbb6738094e8c0faa63b24bfe68253020b11b36029d150bdb12057d0620a09"
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/board_geometry_schema.py",
+      "sha256": "254d46bfc24a2da427f6fd3f0a4cdd4f6c829f6baab00920e4cb484e8a363582"
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/cad_source.py",
+      "sha256": "4207d11d8897c47ab89518b1af4cd3220e8467a6df39fd437dc28e5699385625"
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/cli.py",
+      "sha256": "70630ea53b766457b3ffd66f0e08075f676d34c1afce36bad45f8575db24e2d6"
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/cord_audit.py",
+      "sha256": "05fe113a053c0aa3f2a13f81a179a0946f5aaec381d3c67c113b7230b4455bec"
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/cord_paths.py",
+      "sha256": "d0c6dcacc8e1ad129e8d03580a43e9e20b547879a127bb912582b19c7a683250"
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/geometry_cleanup.py",
+      "sha256": "ca4245827b502a163b13d05f940c26b7300558b4124ea38a8d4a41e35c506671"
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/metadata_audit.py",
+      "sha256": "feed34d015aa2fdab44767198ceab0a1c45a78ff2af8416ed2f2ec01a0792501"
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/presentation_remediation_audit.py",
+      "sha256": "716d55aa68e1c91ebdb7d267e9f2df2bfb1d901ba40bad3fb2bfcba04997661a"
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/rope_physics.py",
+      "sha256": "91b1a1d84c2297307ce175a13894b483e60bf4f26feffa2140dbdd2bdf416c7d"
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/usd_mesh_chain.py",
+      "sha256": "ebf68d38861dcd289e4a81f2d2db5ced2c660739aa3a9a3bd8ec5e92337eb736"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/_board_package_helpers.py",
+      "sha256": "993afcc8b218feb94268ed1e601c7419be55182fc07d08bf404d34e081d2fb05"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/conftest.py",
+      "sha256": "a44c828d34bc0ffa57e2e4cba0cad8d57565990aa6fe4dfd72d579a16b1ba14c"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/fixtures/metolius-contact-boundary.png",
+      "sha256": "5a53860bc15eb190632222e6868486e68cdee89052f68ace235a06ed1e56940c"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/presentation_remediation_helpers.py",
+      "sha256": "633615be0846aa7c7cc693a650b075b7330d0d031567988cc22d4056fa446767"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_board_catalog.py",
+      "sha256": "551012d7cf8e1c7cbe0b6cc56d8f37fb06c9716eb7960be556f047fe2e25e118"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_board_geometry.py",
+      "sha256": "defa71d372e91798944ebf3e41b546d46c9c05ba93d664d4d71c533f9f5a89aa"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_board_geometry_schema.py",
+      "sha256": "2024ea1e131141eb5594f0503bab0b3f1bb02522668e2f90508e0d2897346420"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_board_package_staging.py",
+      "sha256": "5df9047238dba68950a1737412bb4f3dfc6551d187fcfbc134055f1bc562e383"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_cad_routed_cord.py",
+      "sha256": "fbf01b3c3a5cf2140222307414c2a07b78da2dc4b9fad7a314716d23636a0e78"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_ci_xctest_contract.py",
+      "sha256": "a344c5926c387c4bc63a6c3cfbabfa988989a14877d94120f03c9458f5b022ee"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_cli.py",
+      "sha256": "7f3cb4aecc4baba31c212ee9963795d860bf96d96dfd86593f4c48033521f282"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_coderabbit_mirrored_geometry.py",
+      "sha256": "7274a076593fe7d110b4ad3a7502ebad99edfa668872efe52eb36aab09f0e615"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_complete_catalog_source_audit.py",
+      "sha256": "bfc437344ff2a3a109949a46da198aca55a7a22c60c336f54bd7b7e7254f7e23"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_configured_depths.py",
+      "sha256": "9fd42c7032d0b319922e97d098c62697a511d0645f812b65396e2abdb3270a9b"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_cord_audit_reusable_instances.py",
+      "sha256": "9df28b4cb68bc22207aaeeff4da47b837e52f207473985822125d553302f0394"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_cord_audit_source_tiers.py",
+      "sha256": "2869c900b33ebe512051f0410a35266776dc3f3657ba7c5ecc5fc2b4b4ab0699"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_cord_paths.py",
+      "sha256": "9f22e39dae3f8fcb9e6f4efe2bc6e9ba605449b8b8e6fe56456068210d2e1f4a"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_model_first_packages.py",
+      "sha256": "43a8d69f6c667e1cdb7efca60d311925953bbfd6538af471f45baea6bbbb6273"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_moon_armstrong_geometry_repair.py",
+      "sha256": "185ff45ae1519eff23a40b2e17268a57ee8f250e11855d7b4d38a52740d1bb8c"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_pose_camera_facing.py",
+      "sha256": "347eec40906f59ab5b74c97b85294b18807259e677b19ca6e739476cd98f7aad"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_remove_primary_backdrops.py",
+      "sha256": "f174b5bca70e49a18e43458b7b6e7c219bb6c6e4c63f105b107eae1772b0f943"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_rock_ring_threaded_loop.py",
+      "sha256": "a7533f4e6c8de3338db7353b8d11cdeb3f6969e8d3e39bdc54e8c396cb7ac412"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_rope_physics.py",
+      "sha256": "899e3a7d7f6d81368cda15ff3deb474a32891950d66102779a4633365e4beade"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_shared_contact_membership_package.py",
+      "sha256": "43d0a17c4b93ec522fdb3488094b619de8c753ea282ae142307953cc228180e8"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_single_threaded_loop.py",
+      "sha256": "9bcf91a4757b09c7462d9dc1c7312d4809ff8d8615cfe39fb16a857d0b2610c0"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_trango_mirrored_halves.py",
+      "sha256": "88ceefe95b9ad280652b60559f397876571bbebcf1afa8ca923dd12e17965673"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_trango_rock_prodigy_training_center_board_package.py",
+      "sha256": "98c587929c623573f093807dd556fa94b703a169f8015a776f192f63105560eb"
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/CMakeLists.txt",
+      "sha256": "b21a2beb0aad81a39374d806fd84d68b092955e23cac46827789fdd82f72b05c"
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/README.md",
+      "sha256": "bb11cea35b4f17bbb48d158958e060b6b3182492764951a26648c423760b7478"
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/case.py",
+      "sha256": "97ac876b01a2fb7617a5384832d63460e33f4be6b758c55ccc3025a653f21267"
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/evaluate.py",
+      "sha256": "8e1426182b549a4b40605424e8e7d6f6c0cc8f7de459b8c491934886eabcb9a5"
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/fixtures/exterior-mini-bar-2026-09-26/assets/primary.model.json",
+      "sha256": "7f24709d1448b26c245d40718048a257af6aba6b876075a36c63bd3e3f9f9d7e"
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/fixtures/exterior-mini-bar-2026-09-26/assets/primary.usdz",
+      "sha256": "5f6744d3aeede10cc2b3c5f6f9dc19df1bb985c94991192ec8f2044c32932c46"
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/fixtures/exterior-mini-bar-2026-09-26/suspension.json",
+      "sha256": "ea1e652ae611f6b638c432a5ee6fabcdf6223018567a6337bb307c6aac549220"
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/requirements.txt",
+      "sha256": "22805e9127354284a88c4aeaf999d953b9422b44256d8a382a1e254d90d96a43"
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/rope_solver.cpp",
+      "sha256": "9a384524fd02f68b607f4f3bf005c75348b987248d0e6923e22f8a2b4754c7be"
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/run_case.py",
+      "sha256": "e9ac2799a6daab40ab5afd2dd5b2d9a1d6fb39ce3b958208a214c35a91e99e3e"
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/tests/test_case.py",
+      "sha256": "7149a191c7d7eebfc33a1134f16870079dbbf9384a2f4904aa51c10698e27510"
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/tests/test_evaluate.py",
+      "sha256": "d8601186569e0e937beb9dbfbbf46616d1049eeb96c5a67b0524c3269985cb18"
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/tests/test_run_case.py",
+      "sha256": "7150b85cde62076a12566336a1902f64affeb11eb15fd9fc61d33f0697c929b8"
+    },
+    {
+      "path": "Tools/HangboardRopePrototype/tests/test_solver.py",
+      "sha256": "c15da8ee75dfc9e30f473c2e17e8baa5c23176f78d3764b5e391bf7dfbaaa451"
+    },
+    {
+      "path": "scripts/ExportPlanLibrary.swift",
+      "sha256": "c6e586c96265d465c5e1e64be93e5448007e9a613fb63fd5bd98bd3a675f2ec9"
+    },
+    {
+      "path": "scripts/ExportPlanLibrarySupport.swift",
+      "sha256": "2754844ebbcc069f356b26b1ac5e9914da86396759966f20440412263bd4ff79"
+    },
+    {
+      "path": "scripts/ci-run-xctest.sh",
+      "sha256": "8e8378c28726393913ea4869cf17220aedd65811e26d00f9e1fdd68319fc74bb"
+    },
+    {
+      "path": "scripts/export-plan-library.sh",
+      "sha256": "df21b7e84a5bc6e2560808cdb5d294760ff9a59eb897b10c475727e5f0c8c1f5"
+    },
+    {
+      "path": "scripts/generate-elevenlabs-countdown-audio.sh",
+      "sha256": "5078ad2607cc92bb00de94a83fc478db216722fe97d869476b3eda64709b71e9"
+    },
+    {
+      "path": "scripts/hangboard-packages.sh",
+      "sha256": "48f6de1491d9d67d5716eb12cbc7c3272eec9d16864e206a3f15a5d98c781a36"
+    },
+    {
+      "path": "scripts/paseo-archive.sh",
+      "sha256": "33a1d21e12660b6e550dc71e3e60b42ac65f77e2ed8c00422c3fec7f8eec8a76"
+    },
+    {
+      "path": "scripts/paseo-resource-cleanup.sh",
+      "sha256": "e48ae3b71979202b1f69d431e1de9b9c548a5a0a18513975d7c76aea2ae52a35"
+    },
+    {
+      "path": "scripts/plan-schema-requirements.txt",
+      "sha256": "44ff0dc2f1e40311b8239e83146749ab9d9cee2a650e699f5464755d552ee20d"
+    },
+    {
+      "path": "scripts/run-supported-python.sh",
+      "sha256": "bc45c6a97d5530d2e86e524967f9b7e4b3f9b77c8ddd5a5c56e45221deb98596"
+    },
+    {
+      "path": "scripts/stage-board-packages.py",
+      "sha256": "056fe0d221f8fbdd816d115f32f75eaba2848aedc4c81270b9cc6a59e1174eb6"
+    },
+    {
+      "path": "scripts/test-generate-elevenlabs-countdown-audio.sh",
+      "sha256": "e487ccacf8e77640873a4420d4f70e29345f148f3aa7eed2afdea599a1b8d72f"
+    },
+    {
+      "path": "scripts/tests/paseo-resource-cleanup-test.zsh",
+      "sha256": "61fc7a898b96b3d8de386f20b260be59d50e0d258f9c913eac783bdd5da3458c"
+    },
+    {
+      "path": "scripts/tests/release-workflow-version-test.zsh",
+      "sha256": "bc88f870e862bbeff2c9bf09ddc4d0e2b6071db78715e327aaf71486db8c850b"
+    },
+    {
+      "path": "scripts/tests/test_original_routine_sources.py",
+      "sha256": "e1e1a06d0cc21b2ab47c88e810414a42f666d08468d1341db3b6b78a7e2ee20e"
+    },
+    {
+      "path": "scripts/validate-app-store-metadata.sh",
+      "sha256": "ed5d9c387b9b6154c22e039e06d87e26ee5b68cd9f511a907875f7e990aabeb4"
+    },
+    {
+      "path": "scripts/validate-plan-work-targets.sh",
+      "sha256": "beca14e3ec8192dd90cffd1fa502a979e9402d102bd53da49dacffe786f647bd"
+    },
+    {
+      "path": "scripts/verify-board-source-boundary-manifest.sh",
+      "sha256": "346cfd371e0f9d14c2c0db8e2e7e972ddf54803af2c0eae2cb07091b5c8791cf"
+    }
+  ],
+  "nativePackages": [
+    "aelith-cyclops-011",
+    "beastmaker-1000",
+    "beastmaker-2000",
+    "captain-fingerfood-dual",
+    "captain-fingerfood-pocket",
+    "captain-fingerfood-unlevel",
+    "clavellium-training-block",
+    "crimptonite-helium-mobile",
+    "dewoodstok-woodbord",
+    "escape-beta-22",
+    "escape-unlimited",
+    "evolv-kilter-basic-long",
+    "frictitious-doormount-pro-7",
+    "frictitious-megalith",
+    "frictitious-nug",
+    "frictitious-port-a-board",
+    "j-bryant-ftg-32",
+    "lattice-mini-bar",
+    "lattice-mxedge-lift-large",
+    "lattice-mxedge-lift-small",
+    "lattice-triple-rung",
+    "mammut-diamond-finger",
+    "metolius-climbers-edge",
+    "metolius-contact",
+    "metolius-foundry",
+    "metolius-light-rail-2",
+    "metolius-prime-rib",
+    "metolius-project",
+    "metolius-rock-rings-3d",
+    "metolius-simulator-3d",
+    "metolius-wood-grips-compact-ii",
+    "metolius-wood-grips-deluxe-ii",
+    "moon-armstrong",
+    "nature-stoak-board-iii",
+    "nature-stone-hanger",
+    "nature-stone-hanger-mini",
+    "nature-stone-hanger-mini-karma8a",
+    "owl-climb-poker",
+    "plateau-lifting-edge",
+    "soill-iron-palm-2",
+    "soill-split-palm",
+    "soill-training-tiles",
+    "surfaces-for-climbing-transgression-2011",
+    "surfaces-for-climbing-transgression-2013",
+    "target10a-linebreaker-base",
+    "tension-flash-board",
+    "tension-grindstone",
+    "tension-grindstone-original",
+    "tension-grindstone-pro",
+    "tension-honestone",
+    "tension-whetstone",
+    "the-hangboard",
+    "trango-rock-prodigy-forge",
+    "trango-rock-prodigy-natural",
+    "trango-rock-prodigy-pivot",
+    "trango-rock-prodigy-training-center",
+    "yy-baguette",
+    "yy-baguette-evo",
+    "yy-penta-evo",
+    "yy-travelboard",
+    "yy-verticalboard-evo",
+    "yy-verticalboard-first",
+    "yy-verticalboard-light",
+    "yy-verticalboard-one",
+    "zlagboard-evo",
+    "zlagboard-pro"
+  ],
+  "selectedCanonicalFileCount": 81,
+  "assignedNativeSourceCount": 21
+}

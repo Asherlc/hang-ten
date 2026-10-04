@@ -1,0 +1,49 @@
+{
+  "asset": ".context/placid-badger/nature-stone-review9/granite-seat-correction/repro-assets/primary.usdz",
+  "assetBytes": 687505,
+  "assetSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+  "board": ".context/placid-badger/nature-stone-review9/granite-seat-correction/native-author/nature-stone-hanger.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "edge-front-15mm-flat",
+    "edge-front-15mm-incut",
+    "edge-front-20mm-granite",
+    "edge-front-20mm-wood-flat",
+    "edge-reverse-06mm-flat",
+    "edge-reverse-06mm-incut",
+    "edge-reverse-10mm-flat",
+    "edge-reverse-10mm-incut"
+  ],
+  "descriptor": ".context/placid-badger/nature-stone-review9/granite-seat-correction/repro-assets/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "edge-front-15mm-flat": 15.0,
+    "edge-front-15mm-incut": 15.0,
+    "edge-front-20mm-granite": 20.0,
+    "edge-front-20mm-wood-flat": 20.0,
+    "edge-reverse-06mm-flat": 6.0,
+    "edge-reverse-06mm-incut": 6.0,
+    "edge-reverse-10mm-flat": 10.0,
+    "edge-reverse-10mm-incut": 10.0
+  },
+  "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+  "nodes": [
+    "body_oak_mesh_001",
+    "edge_front_15mm_flat_mesh_001",
+    "edge_front_15mm_incut_mesh_001",
+    "edge_front_20mm_granite_mesh_001",
+    "edge_front_20mm_wood_flat_mesh_001",
+    "edge_reverse_06mm_flat_mesh_001",
+    "edge_reverse_06mm_incut_mesh_001",
+    "edge_reverse_10mm_flat_mesh_001",
+    "edge_reverse_10mm_incut_mesh_001"
+  ],
+  "package": "nature-stone-hanger",
+  "presentationID": "primary",
+  "published": true,
+  "schemaVersion": 1,
+  "source": ".context/placid-badger/nature-stone-review9/granite-seat-correction/native-author/nature-stone-hanger.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 28724
+}

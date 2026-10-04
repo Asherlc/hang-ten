@@ -1,0 +1,1 @@
+{"name": "placid-badger-karma8a-package-validation", "command": ["/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python", "-m", "hangboard_packages.cli", "validate", "--root", ".context/placid-badger/karma8a-review11/refinement-2026-10-02/solve-root/Hangboards"], "timeoutSeconds": 300}

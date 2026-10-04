@@ -1,0 +1,110 @@
+{
+  "files": [
+    {
+      "path": "Tools/HangboardCAD/prepare_assets.py",
+      "sha256": "fcf0aa49deb470fe901f4fe34488829b6edcfe4fcb2dffdfa5d40da63202a935",
+      "astValid": true,
+      "conflictMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardCAD/solve_threaded_rope.py",
+      "sha256": "83ea90045300f88ae308711f4da4f03594ec41de49396e89dbf241aae9314e81",
+      "astValid": true,
+      "conflictMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/board_catalog.py",
+      "sha256": "6d139dbaa2ef5a87b03ebf9c49cb9e08af91cfa81416ff1d2d9de58ced0a54dd",
+      "astValid": true,
+      "conflictMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/cad_source.py",
+      "sha256": "bcaa1ac3da3ff867ab863cb029b4d14060c772795a1ad81ff4dd082987738ecd",
+      "astValid": true,
+      "conflictMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/cord_audit.py",
+      "sha256": "62d3b6f7061d0e43f2bf21604ae3659da0597d7443d3ee924d52de7d6eb97f16",
+      "astValid": true,
+      "conflictMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_cord_audit_reusable_instances.py",
+      "sha256": "2a6c727e3de71c528149a69eb5c36201a70a301cfb1e12676810f65c1a906731",
+      "astValid": true,
+      "conflictMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_model_first_packages.py",
+      "sha256": "a933e66945ea915b54326ebdf39f8183623b2c07ae69e2ef6aa4a80c75e5d676",
+      "astValid": true,
+      "conflictMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_remove_primary_backdrops.py",
+      "sha256": "f174b5bca70e49a18e43458b7b6e7c219bb6c6e4c63f105b107eae1772b0f943",
+      "astValid": true,
+      "conflictMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/scripts/remove_primary_backdrops.py",
+      "sha256": "3fb746a852acf9e9ab020e400a6c2bafb5cab878f608e04384b60996b58ffce4",
+      "astValid": true,
+      "conflictMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_pose_camera_facing.py",
+      "sha256": "347eec40906f59ab5b74c97b85294b18807259e677b19ca6e739476cd98f7aad",
+      "astValid": true,
+      "conflictMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_trango_mirrored_halves.py",
+      "sha256": "4b03e08910c99b7cfb39bacf2916fe37033b291efbed088137de2e2355442480",
+      "astValid": true,
+      "conflictMarkersAbsent": true
+    }
+  ],
+  "results": {
+    "completePackageSuite": {
+      "passed": 612,
+      "failed": 0,
+      "artifact": "merged-complete-package-suite.json"
+    },
+    "isolatedCIContracts": {
+      "passed": 79,
+      "failed": 0,
+      "artifact": "merged-ci-contract-tests.json"
+    },
+    "focusedCADContracts": {
+      "passed": 93,
+      "failed": 0,
+      "artifact": "cad-merged-contracts.json"
+    },
+    "finalInventory": {
+      "boards": 66,
+      "drafts": 0,
+      "artifact": "merged-final-inventory-corrected.json"
+    }
+  },
+  "originalFailuresRetained": [
+    "package-merge-tests.json",
+    "package-merge-tests-system.json",
+    "merged-package-suite.json",
+    "merged-package-suite-no-ci.json",
+    "merged-final-inventory.json",
+    "integration-assertion-type-correction.json"
+  ],
+  "scratchDependency": {
+    "name": "PyYAML",
+    "version": "6.0.3",
+    "wheelSHA256": "fc09d0aa354569bc501d4e787133afc08552722d3ab34836a80547331bb5d4a0",
+    "sharedEnvironmentUnchanged": true,
+    "exactTargetDeleted": true,
+    "cleanupArtifact": "python-deps-cleanup-verification.json"
+  },
+  "nativeExportsRun": false,
+  "geometrySourceImageProcessingRun": false
+}

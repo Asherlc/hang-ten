@@ -1,0 +1,750 @@
+{
+  "passed": true,
+  "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+  "modelSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+  "assetComparisons": {
+    "primary.usdz": {
+      "canonicalSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+      "freshSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+      "bytesEqual": true
+    },
+    "primary.model.json": {
+      "canonicalSHA256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+      "freshSHA256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+      "bytesEqual": true
+    }
+  },
+  "protectedCanonicalFiles": {
+    "Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd": {
+      "before": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+      "after": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+      "retainedSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f"
+    },
+    "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.usdz": {
+      "before": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+      "after": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+      "retainedSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de"
+    },
+    "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.model.json": {
+      "before": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+      "after": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+      "retainedSHA256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460"
+    },
+    "Hangboards/nature-stone-hanger-mini-karma8a/suspension.json": {
+      "before": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc",
+      "after": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc",
+      "retainedSHA256": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc"
+    }
+  },
+  "allThreeSavedRoutesAndHeightsExact": true,
+  "routes": {
+    "passed": true,
+    "allThreePosesChecked": true,
+    "canonicalSuspensionBytesUnchanged": true,
+    "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+    "modelSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+    "poses": {
+      "granite-front": {
+        "savedHeightM": -0.046186777,
+        "freshHeightM": -0.046186777,
+        "exactWrappedRoutesEqual": true,
+        "routeVertexCounts": {
+          "left-lead": 6,
+          "left-cross-return": 3,
+          "right-lead": 7,
+          "right-cross-return": 3
+        },
+        "oldRoutes": {
+          "left-lead": [
+            [
+              -0.051620453,
+              0.027825621,
+              0.0075
+            ],
+            [
+              -0.051736369,
+              0.027680992,
+              0.0075
+            ],
+            [
+              -0.051880314,
+              0.027452936,
+              0.0075
+            ],
+            [
+              -0.051969696,
+              0.027198494,
+              0.0075
+            ],
+            [
+              -0.052,
+              0.026930517,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "left-cross-return": [
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              -0.0525,
+              0.0,
+              -0.0075
+            ]
+          ],
+          "right-lead": [
+            [
+              0.051620456,
+              0.027825617,
+              0.0075
+            ],
+            [
+              0.051649463,
+              0.027789425,
+              0.0075
+            ],
+            [
+              0.051735962,
+              0.027681487,
+              0.0075
+            ],
+            [
+              0.051879879,
+              0.02745345,
+              0.0075
+            ],
+            [
+              0.051969245,
+              0.027199035,
+              0.0075
+            ],
+            [
+              0.051999547,
+              0.026931089,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "right-cross-return": [
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              0.0525,
+              0.0,
+              -0.0075
+            ]
+          ]
+        },
+        "freshRoutes": {
+          "left-lead": [
+            [
+              -0.051620453,
+              0.027825621,
+              0.0075
+            ],
+            [
+              -0.051736369,
+              0.027680992,
+              0.0075
+            ],
+            [
+              -0.051880314,
+              0.027452936,
+              0.0075
+            ],
+            [
+              -0.051969696,
+              0.027198494,
+              0.0075
+            ],
+            [
+              -0.052,
+              0.026930517,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "left-cross-return": [
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              -0.0525,
+              0.0,
+              -0.0075
+            ]
+          ],
+          "right-lead": [
+            [
+              0.051620456,
+              0.027825617,
+              0.0075
+            ],
+            [
+              0.051649463,
+              0.027789425,
+              0.0075
+            ],
+            [
+              0.051735962,
+              0.027681487,
+              0.0075
+            ],
+            [
+              0.051879879,
+              0.02745345,
+              0.0075
+            ],
+            [
+              0.051969245,
+              0.027199035,
+              0.0075
+            ],
+            [
+              0.051999547,
+              0.026931089,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "right-cross-return": [
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              0.0525,
+              0.0,
+              -0.0075
+            ]
+          ]
+        }
+      },
+      "wood-inverted": {
+        "savedHeightM": -0.046186716,
+        "freshHeightM": -0.046186716,
+        "exactWrappedRoutesEqual": true,
+        "routeVertexCounts": {
+          "left-lead": 6,
+          "left-cross-return": 3,
+          "right-lead": 7,
+          "right-cross-return": 3
+        },
+        "oldRoutes": {
+          "left-lead": [
+            [
+              -0.051620453,
+              -0.027825621,
+              0.0075
+            ],
+            [
+              -0.051736369,
+              -0.027680992,
+              0.0075
+            ],
+            [
+              -0.051880314,
+              -0.027452936,
+              0.0075
+            ],
+            [
+              -0.051969696,
+              -0.027198494,
+              0.0075
+            ],
+            [
+              -0.052,
+              -0.026930517,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "left-cross-return": [
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              -0.0525,
+              0.0,
+              -0.0075
+            ]
+          ],
+          "right-lead": [
+            [
+              0.051620456,
+              -0.027825617,
+              0.0075
+            ],
+            [
+              0.051649473,
+              -0.027789412,
+              0.0075
+            ],
+            [
+              0.051736523,
+              -0.027680796,
+              0.0075
+            ],
+            [
+              0.051880462,
+              -0.027452742,
+              0.0075
+            ],
+            [
+              0.051969839,
+              -0.027198304,
+              0.0075
+            ],
+            [
+              0.05200014,
+              -0.026930332,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "right-cross-return": [
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              0.0525,
+              0.0,
+              -0.0075
+            ]
+          ]
+        },
+        "freshRoutes": {
+          "left-lead": [
+            [
+              -0.051620453,
+              -0.027825621,
+              0.0075
+            ],
+            [
+              -0.051736369,
+              -0.027680992,
+              0.0075
+            ],
+            [
+              -0.051880314,
+              -0.027452936,
+              0.0075
+            ],
+            [
+              -0.051969696,
+              -0.027198494,
+              0.0075
+            ],
+            [
+              -0.052,
+              -0.026930517,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "left-cross-return": [
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              -0.0525,
+              0.0,
+              -0.0075
+            ]
+          ],
+          "right-lead": [
+            [
+              0.051620456,
+              -0.027825617,
+              0.0075
+            ],
+            [
+              0.051649473,
+              -0.027789412,
+              0.0075
+            ],
+            [
+              0.051736523,
+              -0.027680796,
+              0.0075
+            ],
+            [
+              0.051880462,
+              -0.027452742,
+              0.0075
+            ],
+            [
+              0.051969839,
+              -0.027198304,
+              0.0075
+            ],
+            [
+              0.05200014,
+              -0.026930332,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "right-cross-return": [
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              0.0525,
+              0.0,
+              -0.0075
+            ]
+          ]
+        }
+      },
+      "pinch-side": {
+        "savedHeightM": -0.046186777,
+        "freshHeightM": -0.046186777,
+        "exactWrappedRoutesEqual": true,
+        "routeVertexCounts": {
+          "left-lead": 6,
+          "left-cross-return": 3,
+          "right-lead": 7,
+          "right-cross-return": 3
+        },
+        "oldRoutes": {
+          "left-lead": [
+            [
+              -0.051620453,
+              0.027825621,
+              0.0075
+            ],
+            [
+              -0.051736369,
+              0.027680992,
+              0.0075
+            ],
+            [
+              -0.051880314,
+              0.027452936,
+              0.0075
+            ],
+            [
+              -0.051969696,
+              0.027198494,
+              0.0075
+            ],
+            [
+              -0.052,
+              0.026930517,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "left-cross-return": [
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              -0.0525,
+              0.0,
+              -0.0075
+            ]
+          ],
+          "right-lead": [
+            [
+              0.051620456,
+              0.027825617,
+              0.0075
+            ],
+            [
+              0.051649463,
+              0.027789425,
+              0.0075
+            ],
+            [
+              0.051735962,
+              0.027681487,
+              0.0075
+            ],
+            [
+              0.051879879,
+              0.02745345,
+              0.0075
+            ],
+            [
+              0.051969245,
+              0.027199035,
+              0.0075
+            ],
+            [
+              0.051999547,
+              0.026931089,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "right-cross-return": [
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              0.0525,
+              0.0,
+              -0.0075
+            ]
+          ]
+        },
+        "freshRoutes": {
+          "left-lead": [
+            [
+              -0.051620453,
+              0.027825621,
+              0.0075
+            ],
+            [
+              -0.051736369,
+              0.027680992,
+              0.0075
+            ],
+            [
+              -0.051880314,
+              0.027452936,
+              0.0075
+            ],
+            [
+              -0.051969696,
+              0.027198494,
+              0.0075
+            ],
+            [
+              -0.052,
+              0.026930517,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "left-cross-return": [
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              -0.0525,
+              0.0,
+              -0.0075
+            ]
+          ],
+          "right-lead": [
+            [
+              0.051620456,
+              0.027825617,
+              0.0075
+            ],
+            [
+              0.051649463,
+              0.027789425,
+              0.0075
+            ],
+            [
+              0.051735962,
+              0.027681487,
+              0.0075
+            ],
+            [
+              0.051879879,
+              0.02745345,
+              0.0075
+            ],
+            [
+              0.051969245,
+              0.027199035,
+              0.0075
+            ],
+            [
+              0.051999547,
+              0.026931089,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "right-cross-return": [
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              0.0525,
+              0.0,
+              -0.0075
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "collider": {
+    "passed": true,
+    "reviewedColliderSHA256": "a41949a3f96f56fd0d5d0ea98caa61c28188481420bb0a9669a2060959c6b7d2",
+    "mergedExporterColliderSHA256": "a41949a3f96f56fd0d5d0ea98caa61c28188481420bb0a9669a2060959c6b7d2",
+    "entirePayloadEqual": true
+  },
+  "compilerMeasuredRegionDepthsMM": {
+    "granite-edge-15": 15.0,
+    "pinch-60": 60.0,
+    "wood-edge-15": 15.0
+  },
+  "compilerTriangles": 27628,
+  "mergedToolHashes": {
+    "Tools/HangboardCAD/compile_board.py": "9e2f12a5acccafa5131b86733b38e0663711b50a254af664d93a0ad70261ef7e",
+    "Tools/HangboardCAD/export_rope_collision_solid.py": "7d1d1f1dae2c36076d7f28529c25e2ba759da4b9ea7ec4a02d7509a2aec088c2",
+    "Tools/HangboardCAD/solve_threaded_rope.py": "c838a3f79bb73d397fb46702e034c6e9a766306ae014c2786611234b98ce9c28",
+    "Tools/HangboardCAD/native_cord_routes.py": "307a4db1b44c80396f2e42638f0fbc0ff6ea588d9b96829bebce9c014da45e5a",
+    "Tools/HangboardCAD/native_cord_features.py": "dbf57a10bef757087ee263fef7b883ec660c5d2e45655dab1f98e40e8b4971c4",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "2d4601a27e8eda9e145cbb84f2011f59e5623c00e6b97ef9ada7c090368df6ed"
+  },
+  "cleanup": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/update-main-2026-10-03/karma11-compatibility/collider-cleanup.json",
+      "sha256": "c516e5f7ef8bc0943471a17d3af030f51e9a172f64d5c93f8a2c8ed14cd5f226",
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/update-main-2026-10-03/karma11-compatibility/compile-cleanup.json",
+      "sha256": "bbb0a42983fd47fd50102487de84705fd2265cd6682d652eab559da258b9ad96",
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/update-main-2026-10-03/karma11-compatibility/solvercheck-cleanup.json",
+      "sha256": "2705f3de96bbf51bb22479ab566658d741eae83e41b73e9b1fbaa8aa20b8f19f",
+      "allExactOwnedResourcesAbsent": true
+    }
+  ],
+  "allExactOwnedResourcesAbsent": true
+}

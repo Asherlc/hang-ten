@@ -1,0 +1,17 @@
+{
+  "files": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "beforeSHA256": "3d139f8b078e14e253ee1b9b3133fbd1c6c09cd9a9f1e19e7cc68dae1400a9a8",
+      "afterSHA256": "0253224a9df668442a2f925d6b686fce57c4cffd94347954abb7b8b9df4c0cd9"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "beforeSHA256": "48c2b5cc6a5d2c1b1b7912576b71f9ba1fca1e281b9655bdb5a46fa1cc684186",
+      "afterSHA256": "89898763d913d908b35abfce0baf4da365efb37aed84c6823d76f0307c5b8ddd"
+    }
+  ],
+  "patchSHA256": "b1f7e8fa033ec8019a0964285519b40a36ad2aef057c86c02d2e7d6ffb195ac6",
+  "head": "e87e43bd4a18a975fd26b9fc3645906bd3b29c32",
+  "instrumentation": "Same boundary census gate both arms; existing semantic highlight-before/after only, no periodic observer/task. Workout onAppear pre-autostart state emitted once per appearance. Zero harness viewport is sentinel, actual leaf from scene snapshots."
+}

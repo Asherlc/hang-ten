@@ -1,0 +1,12 @@
+{
+  "oneMake": true,
+  "oneScene": true,
+  "oneView": true,
+  "stableViewport": false,
+  "noPeriodicSamples": true,
+  "noUpdateCounter": true,
+  "noSecondHost": true,
+  "appActive": false,
+  "sceneAndWindowActive": false,
+  "scriptComplete": true
+}

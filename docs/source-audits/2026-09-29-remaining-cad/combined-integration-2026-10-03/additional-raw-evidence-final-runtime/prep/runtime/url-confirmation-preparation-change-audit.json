@@ -1,0 +1,25 @@
+{
+  "preparedOnly": true,
+  "executed": false,
+  "resourcesCreated": false,
+  "existingRuntimeRawUnchanged": true,
+  "history": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/history-url-confirmation-v1",
+  "priorSHA256": {
+    "prepare-release.py": "cb4b3e7dbb00bd0adfa1b1413445097f4ba320de116956ee4d5736daaf896d85",
+    "capture.py": "e04ae6d955e183ae1b76f2dca82fc12d841c39edebd5b7255dd304d246691764",
+    "README.md": "d3859fbae9ea70041018d4d39d202424c873d54cf51009fc436a4a3bdbf0b09f"
+  },
+  "newSHA256": {
+    "prepare-release.py": "1ef03c7c1b85748132d102561202389c98ac38b2915abdc436eb79cf48a5f18b",
+    "capture.py": "0df3b50206b6da6f03474fa3d1802f98fca8a7ee25c8ffdaa0b654c1fae2351d",
+    "confirm-url-setup.py": "0c838b0f8e97a3c34ba3e029cb00b7356a176be9341e5843c61a6bbc6e97cf22",
+    "README.md": "f122f742b826d15df15c148094d265eb8f1a101e299e18508a7d5b33472f2fcc"
+  },
+  "change": "Separate bounded70s setup-only normalsystemCancel/Open confirmation, onephysicalOpen, workoutgate and exactappcleanup using common.run process registration/traps. Optional explicit safe run suffix names new release/routine/output; setup proof bound by source/parity/binary/device/board hashes. No retry or appsource/training changes.",
+  "checks": [
+    "All3 Python helpers parse via in-memory compile",
+    "No helper execution",
+    "No initial failed build selection",
+    "All CLI calls use common.run or rtk-prefixed prior capture wrapper"
+  ]
+}

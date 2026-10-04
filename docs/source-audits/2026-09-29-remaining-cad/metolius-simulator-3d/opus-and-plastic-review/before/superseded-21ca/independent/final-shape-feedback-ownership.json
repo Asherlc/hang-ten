@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "final-shape-feedback",
+  "timeoutSeconds": 360,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/check_shape_feedback.py",
+    ".context/placid-badger/metolius-simulator-3d-opus-corrections/candidate/metolius-simulator-3d.FCStd",
+    ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/shape-feedback.json"
+  ],
+  "ownedProcessGroup": 42013,
+  "exitCode": 0,
+  "elapsedSeconds": 44.5237743339967,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

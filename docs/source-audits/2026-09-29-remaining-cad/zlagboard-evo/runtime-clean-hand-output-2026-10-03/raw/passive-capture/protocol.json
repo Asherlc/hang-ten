@@ -1,0 +1,22 @@
+{
+  "status": "PREPARED_NOT_RELEASED",
+  "arms": [
+    "live-a",
+    "image",
+    "live-b"
+  ],
+  "sameBinary": true,
+  "trainUnmountCommon": true,
+  "condition": "FreshLIVE validfailure thenIMAGE; reversalonlyvalidfullPASS; stoponinvalid/lostcontrol/imagefailure",
+  "capture": "Same44 fixed externalmutedawake passive recipe",
+  "requirements": [
+    "Correctboardcolorsandvisiblecorrecthands",
+    "No renderer rewrite or canonical asset mutation",
+    "No instrumentation/timer/camera tuning or startup retry loop"
+  ],
+  "limits": [
+    "Neutral analyticenvironment appearanceadaptation",
+    "OffscreenRealityKit maystillinteract",
+    "Earlymissinghandsisfailure,notplaceholderpass"
+  ]
+}

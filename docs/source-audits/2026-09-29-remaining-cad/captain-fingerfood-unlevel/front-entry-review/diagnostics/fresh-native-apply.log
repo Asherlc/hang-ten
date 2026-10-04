@@ -1,0 +1,42 @@
+0.0s edge20-front rotations=preferred
+59.3s edge25-inverted rotations=preferred
+93.4s jug-reverse rotations=preferred
+93.5s pocket-right-end rotations=preferred
+126.9s rejected: native cord paths retrace: left-lead/0, right-lead/0
+126.9s pocket-right-end rotations={'left-lead': -5}
+144.0s rejected: native cord tubes intersect: left-lead/32, right-lead/6
+144.0s pocket-right-end rotations={'left-lead': 5}
+161.4s rejected: native cord tubes intersect: left-lead/30, right-lead/6
+161.4s pocket-right-end rotations={'right-lead': -5}
+189.2s rejected: native cord tubes intersect: left-lead/31, right-lead/6
+189.2s pocket-right-end rotations={'right-lead': 5}
+217.1s rejected: native cord tubes intersect: left-lead/33, right-lead/6
+217.1s pocket-right-end rotations={'left-lead': -5, 'right-lead': 5}
+247.6s rejected: native cord tubes intersect: left-lead/30, right-lead/6
+247.6s pocket-right-end rotations={'left-lead': 5, 'right-lead': -5}
+278.0s rejected: native cord tubes intersect: left-lead/29, right-lead/6
+278.0s pocket-right-end rotations={'left-lead': -10}
+293.8s rejected: native cord tubes intersect: left-lead/29, right-lead/6
+293.8s pocket-right-end rotations={'left-lead': 10}
+314.1s rejected: native cord tubes intersect: left-lead/30, right-lead/6
+314.1s pocket-right-end rotations={'right-lead': -10}
+378.7s rejected: native cord tubes intersect: left-lead/34, right-lead/6
+378.7s pocket-right-end rotations={'right-lead': 10}
+455.3s rejected: native cord tubes intersect: left-lead/34, right-lead/6
+455.3s pocket-right-end rotations={'left-lead': -10, 'right-lead': 10}
+524.1s rejected: native cord tubes intersect: left-lead/30, right-lead/6
+524.1s pocket-right-end rotations={'left-lead': 10, 'right-lead': -10}
+602.0s rejected: native cord tubes intersect: left-lead/31, right-lead/6
+602.0s pocket-right-end rotations={'left-lead': -20}
+618.2s rejected: native cord tubes intersect: left-lead/32, right-lead/6
+618.2s pocket-right-end rotations={'left-lead': 20}
+635.1s rejected: native cord tubes intersect: left-lead/33, right-lead/6
+635.1s pocket-right-end rotations={'right-lead': -20}
+706.2s tightening edge20-front begin
+745.0s tightening edge20-front complete height=-0.193097215 iterations=2
+745.0s tightening edge25-inverted begin
+875.4s tightening edge25-inverted complete height=-0.193113789 iterations=2
+875.4s tightening jug-reverse begin
+900.2s tightening jug-reverse complete height=-0.208857751 iterations=2
+900.2s tightening pocket-right-end begin
+1020.1s tightening pocket-right-end complete height=-0.167817989 iterations=2

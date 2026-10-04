@@ -1,0 +1,32 @@
+{
+  "owner": "placid-badger",
+  "scope": "Metadata documentation and queue row8 only",
+  "before": {
+    "queueSHA256": "a5a6720965bfe4089109ea83bd6518825cc44c84c739412193ffbf4f25d5f4d1",
+    "sourceAuditSHA256": "b17eceb4034798c6d6a1453b79d694a8dd32de23f0885e84a1af2f592981d154"
+  },
+  "protectedSHA256": {
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/human-review.json": "6583e333316c463d38d668e165b82fa63b3a1859c729f744703af87f4cdccb79",
+    "HangTen/Resources/PlanLibrary.json": "2c2ecd7ae62de57928c9434029a812dfae4043fa17b071408b6ee22c5aa481d1",
+    "Hangboards/metolius-simulator-3d/metolius-simulator-3d.FCStd": "ac957ebf25e5134ab2875e9b06d9c23831f35b0b8bcbc64730d6a626b7f8588e",
+    "Hangboards/metolius-simulator-3d/assets/primary.usdz": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+    "Hangboards/metolius-simulator-3d/assets/primary.model.json": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb"
+  },
+  "canonicalMetadataEditedByThisDocumentationStep": false,
+  "resourcesStarted": [],
+  "after": {
+    "queueSHA256": "a35637621f19d9fa54fd2f33ede7b31ede75aa58357f07c208710fcb2663d36e",
+    "sourceAuditSHA256": "0eaf8f471cbb47bd42c2860e4e6dd7d49c642bd69408cf56f7ada97ba0dcdfcb"
+  },
+  "queueChangedRowNumbers": [
+    8
+  ],
+  "queueFieldsChanged": [
+    "sourceSHA256",
+    "acceptedGeometrySourceSHA256",
+    "metadataIntegrationEvents"
+  ],
+  "queueOtherRowsAndTopLevelByteIdentical": true,
+  "sourceAuditAppendOnly": true,
+  "allProtectedFilesUnchanged": true
+}

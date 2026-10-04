@@ -1,0 +1,133 @@
+{
+  "nativeSource": "Hangboards/yy-travelboard/yy-travelboard.FCStd",
+  "nativeFrame": "mm; x right, y depth (front negative), z up",
+  "runtimeFrame": "metres; x=native x/1000, y=native z/1000, z=-native y/1000",
+  "solidFeature": "RightLowerCordMouthCut",
+  "attachmentNodeID": "yy_body",
+  "evidencedGraph": "Visible rear slot entrances plus two exposed strand ends on each side forming exterior end loops. Native shallow wells mark rear slots and each visible end mouth; hidden connections unproven. Four visible leads are solved in a stretched display configuration.",
+  "nativeFeatures": {
+    "mouthWells": [
+      {
+        "center": [
+          -105,
+          15,
+          -4
+        ],
+        "outwardAxis": [
+          0,
+          1,
+          0
+        ],
+        "widthMM": 21,
+        "heightMM": 12,
+        "cornerRadiusMM": 5,
+        "depthMM": 4
+      },
+      {
+        "center": [
+          105,
+          15,
+          -4
+        ],
+        "outwardAxis": [
+          0,
+          1,
+          0
+        ],
+        "widthMM": 21,
+        "heightMM": 12,
+        "cornerRadiusMM": 5,
+        "depthMM": 4
+      }
+    ],
+    "monoHoles": "Two genuine through finger holes at native x \u00b1143,z -25; not suspension channels.",
+    "endMouthWells": [
+      {
+        "center": [
+          -170,
+          0,
+          -7
+        ],
+        "outwardAxis": [
+          -1,
+          0,
+          0
+        ],
+        "radiusMM": 3.5,
+        "depthMM": 4,
+        "dimensionStatus": "display estimate from retained visible end-loop exits, no hidden connection inferred"
+      },
+      {
+        "center": [
+          -170,
+          0,
+          -31
+        ],
+        "outwardAxis": [
+          -1,
+          0,
+          0
+        ],
+        "radiusMM": 3.5,
+        "depthMM": 4,
+        "dimensionStatus": "display estimate from retained visible end-loop exits, no hidden connection inferred"
+      },
+      {
+        "center": [
+          170,
+          0,
+          -7
+        ],
+        "outwardAxis": [
+          1,
+          0,
+          0
+        ],
+        "radiusMM": 3.5,
+        "depthMM": 4,
+        "dimensionStatus": "display estimate from retained visible end-loop exits, no hidden connection inferred"
+      },
+      {
+        "center": [
+          170,
+          0,
+          -31
+        ],
+        "outwardAxis": [
+          1,
+          0,
+          0
+        ],
+        "radiusMM": 3.5,
+        "depthMM": 4,
+        "dimensionStatus": "display estimate from retained visible end-loop exits, no hidden connection inferred"
+      }
+    ]
+  },
+  "positions": [
+    {
+      "id": "front-25-15",
+      "presentationID": "primary",
+      "contactIDs": [
+        "tray",
+        "edge-25",
+        "edge-15",
+        "mono-left",
+        "mono-right"
+      ]
+    },
+    {
+      "id": "reverse-10",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-10"
+      ]
+    }
+  ],
+  "notes": "Front25/15 upright; reverse10 exposes rear. Do not route through finger holes or fabricate rear-well joins. Upper/lower exterior bearing planes use display inclinations +atan(0.15)/-atan(0.15) to keep visible strands distinct; this does not imply internal topology or change native geometry.",
+  "sourceRegister": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/sources.json",
+  "sourceSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+  "modelSHA256ByPresentation": {
+    "primary": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f"
+  }
+}

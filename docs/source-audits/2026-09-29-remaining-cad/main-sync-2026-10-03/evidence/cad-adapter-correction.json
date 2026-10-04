@@ -1,0 +1,5 @@
+{
+  "beforeSHA256": "a8ddd62b3962870a6d42b7d5de15756f7ec0f7d38cd49e95141f5cd91204b00e",
+  "afterSHA256": "10e4fe7d6d945cc0ad22623113e51c4bccc280a949c7408c3fbeaf9a25861747",
+  "reason": "Native CAD instance solver composes canonical pose itself; pass unposed instance base, not pose times base. Penta production select failure retained in xctest-integration."
+}

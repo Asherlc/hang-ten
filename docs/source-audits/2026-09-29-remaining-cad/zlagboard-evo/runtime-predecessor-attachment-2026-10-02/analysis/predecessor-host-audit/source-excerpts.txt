@@ -1,0 +1,661 @@
+
+FILE HangTen/Views/TrainView.swift
+46:     var body: some View {
+47:         NavigationStack {
+48:             ScrollView(showsIndicators: false) {
+49:                 VStack(alignment: .leading, spacing: 22) {
+50:                     selectedBoardCard
+
+
+FILE HangTen/Views/TrainView.swift
+139:     private var selectedBoardCard: some View {
+140:         VStack(alignment: .leading, spacing: 16) {
+141:             BoardMapView(board: store.selectedBoard)
+142:                 .cardPreviewStyle()
+143: 
+144:             VStack(alignment: .leading, spacing: 5) {
+145:                 SectionLabel(title: "Your board")
+146:                 Text(store.selectedBoard.name)
+147:                     .font(.system(size: 21, weight: .bold, design: .rounded))
+148:                     .foregroundStyle(Color.hangInk)
+149:                 if let dimensions = store.selectedBoard.dimensions {
+150:                     Text(dimensions)
+151:                         .font(.system(size: 13, weight: .medium, design: .rounded))
+152:                         .foregroundStyle(Color.hangMuted)
+153:                 }
+154:             }
+155: 
+156:             HStack(spacing: 16) {
+157:                 Link(destination: store.selectedBoard.productURL) {
+158:                     Label("Product page", systemImage: "arrow.up.right")
+159:                 }
+160: 
+161:                 Spacer()
+162: 
+163:                 NavigationLink("Change board") {
+164:                     BoardPickerView()
+165:                 }
+166:                 .accessibilityIdentifier("train.changeBoard")
+167: 
+168:                 NavigationLink("View hold specs") {
+169:                     BoardDetailView(board: store.selectedBoard)
+170:                 }
+171:                 .accessibilityIdentifier("train.boardDetails")
+172:             }
+173:             .font(.system(size: 13, weight: .bold, design: .rounded))
+174:             .foregroundStyle(Color.hangGreenDark)
+175:         }
+176:         .hangCard()
+177:         .accessibilityIdentifier("train.board")
+
+
+FILE HangTen/Views/TrainView.swift
+568:                 Button(action: onSelect) {
+569:                     VStack(alignment: .leading, spacing: 14) {
+570:                         BoardMapView(board: board, isDisplayOnly: true)
+571:                             .cardPreviewStyle()
+572: 
+573:                         HStack(alignment: .top, spacing: 12) {
+
+
+FILE HangTen/Views/TrainView.swift
+623: // Raster photos keep their card treatment; model silhouettes come from the USDZ.
+624: private extension BoardMapView {
+625:     @ViewBuilder
+626:     func cardPreviewStyle() -> some View {
+627:         switch board.defaultPresentation.media {
+628:         case .raster:
+629:             clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+630:         case .model:
+631:             self
+632:         }
+
+
+FILE HangTen/Views/BoardMapView.swift
+558: struct BoardMapView: View {
+559:     let board: BoardRevision
+560:     let highlightedHoldIDs: Set<String>
+561:     let highlightMode: BoardHighlightMode
+562:     let onHoldTap: ((PhysicalContact) -> Void)?
+563:     private let requestedPresentationID: String?
+564:     private let activeHoldID: String?
+565:     private let isDisplayOnly: Bool
+566: 
+567:     @State private var presentationSelection: BoardMapPresentationSelection
+568:     @State private var selectedPositionID: String?
+569: 
+570:     init(
+571:         board: BoardRevision,
+572:         highlightedHoldIDs: Set<String> = [],
+573:         highlightMode: BoardHighlightMode = .active,
+574:         selectedPresentationID: String? = nil,
+575:         activeHoldID: String? = nil,
+576:         onHoldTap: ((PhysicalContact) -> Void)? = nil,
+577:         isDisplayOnly: Bool = false
+578:     ) {
+579:         self.board = board
+580:         self.highlightedHoldIDs = highlightedHoldIDs
+581:         self.highlightMode = highlightMode
+582:         self.onHoldTap = onHoldTap
+583:         requestedPresentationID = selectedPresentationID
+584:         self.activeHoldID = activeHoldID
+585:         self.isDisplayOnly = isDisplayOnly
+586:         let resolvedSelection = BoardMapPresentationSelection(
+587:             board: board,
+588:             requestedPresentationID: selectedPresentationID,
+589:             activeHoldID: activeHoldID,
+590:             highlightedHoldIDs: highlightedHoldIDs
+591:         )
+592:         _presentationSelection = State(initialValue: resolvedSelection)
+593:         _selectedPositionID = State(initialValue: BoardMapPresentationSelection.resolvePositionID(
+594:             board: board,
+595:             presentationID: resolvedSelection.presentationID,
+596:             activeHoldID: activeHoldID,
+597:             highlightedHoldIDs: highlightedHoldIDs
+598:         ))
+
+
+FILE HangTen/Views/BoardMapView.swift
+650:                 case .model:
+651:                     BoardModelSurface(
+652:                         board: board,
+653:                         presentation: content.presentation,
+654:                         positionID: selectedPositionID,
+655:                         highlightedContactIDs: highlightedHoldIDs,
+656:                         highlightMode: highlightMode,
+657:                         onContactTap: onHoldTap.map { callback in
+658:                             { contact in
+659:                                 callback(selectedPositionID.flatMap { positionID in
+660:                                     board.contacts(inPosition: positionID).first { $0.id == contact.id }
+661:                                 } ?? contact)
+662:                             }
+663:                         },
+664:                         isDisplayOnly: isDisplayOnly
+665:                     )
+666:                 }
+667:             }
+668:             .aspectRatio(content.presentation.aspectRatio(for: selectedPositionID), contentMode: .fit)
+669:         }
+670:         .animation(.easeInOut(duration: 0.18), value: highlightedHoldIDs)
+
+
+FILE HangTen/Views/BoardModelView.swift
+16:     let board: BoardRevision
+17:     let presentation: BoardPresentation
+18:     let positionID: String?
+19:     let highlightedContactIDs: Set<String>
+20:     let highlightMode: BoardHighlightMode
+21:     let onContactTap: ((PhysicalContact) -> Void)?
+22:     var isDisplayOnly = false
+23:     @State private var result: ResultState = .loading
+24: 
+25:     init(
+26:         board: BoardRevision,
+27:         presentation: BoardPresentation,
+28:         positionID: String? = nil,
+29:         highlightedContactIDs: Set<String>,
+30:         highlightMode: BoardHighlightMode,
+31:         onContactTap: ((PhysicalContact) -> Void)?,
+32:         isDisplayOnly: Bool = false
+33:     ) {
+34:         self.board = board
+35:         self.presentation = presentation
+36:         self.positionID = positionID
+37:         self.highlightedContactIDs = highlightedContactIDs
+38:         self.highlightMode = highlightMode
+39:         self.onContactTap = onContactTap
+40:         self.isDisplayOnly = isDisplayOnly
+
+
+FILE HangTen/Views/BoardModelView.swift
+43:     var body: some View {
+44:         Group {
+45:             if case .ready(let model) = result {
+46:                 let realityView = BoardModelRealityView(
+47:                     model: model,
+48:                     boardName: board.name,
+49:                     accessibilityValue: highlightedContactCue,
+50:                     contacts: board.contacts(in: presentation),
+51:                     positionID: positionID,
+52:                     highlightedContactIDs: highlightedContactIDs,
+53:                     highlightMode: highlightMode,
+54:                     onContactTap: onContactTap,
+55:                     onUnavailable: { result = .unavailable },
+56:                     isDisplayOnly: isDisplayOnly
+57:                 )
+58:                 // Display-only picker cards wrap this in a Button; claiming
+59:                 // SwiftUI hits here would intercept the card select tap even
+60:                 // when the hosted RealityView has user interaction disabled.
+61:                 .allowsHitTesting(!isDisplayOnly)
+62:                 #if DEBUG
+63:                 let diagnosticHost = Group {
+64:                     if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SEMANTIC_BOARD_HOST"] == "1" {
+65:                         realityView.id(BoardDiagnosticHostIdentity(
+66:                             scene: ObjectIdentifier(model), contactIDs: highlightedContactIDs,
+67:                             mode: highlightMode, positionID: positionID))
+68:                     } else {
+69:                         realityView
+70:                     }
+71:                 }
+72:                 .onChange(of: BoardDiagnosticSurfaceInputs(
+73:                     boardID: board.id, presentationID: presentation.id, positionID: positionID,
+74:                     ids: highlightedContactIDs, mode: highlightMode, isDisplayOnly: isDisplayOnly),
+75:                     initial: true) { _, inputs in
+76:                     BoardHighlightDiagnostic.shared.surfaceInputs(inputs, scene: model)
+77:                 }
+78:                 #else
+79:                 let diagnosticHost = realityView
+80:                 #endif
+81:                 if onContactTap == nil {
+82:                     diagnosticHost.accessibilityIdentifier("boardModel.3d")
+
+
+FILE HangTen/Views/BoardModelView.swift
+109:         .task(id: loadIdentity) {
+110:             guard !Task.isCancelled else { return }
+111:             guard case .model = presentation.media else {
+112:                 result = .unavailable
+113:                 return
+114:             }
+115:             result = .loading
+116:             do {
+117:                 let model = try await BoardModelRealityLoader.load(
+118:                     board: board,
+119:                     presentation: presentation,
+120:                     store: BoardCatalog.packageStore
+121:                 )
+122:                 guard !Task.isCancelled else { return }
+123:                 result = .ready(model)
+124:             } catch {
+125:                 guard !Task.isCancelled else { return }
+126:                 #if DEBUG
+127:                 print("[BoardModelSurface] RealityKit model load failed: \(error)")
+128:                 #endif
+129:                 result = .unavailable
+130:             }
+131:         }
+132:         .onDisappear {
+133:             result = .loading
+134:         }
+135:     }
+136: 
+137:     private var loadIdentity: BoardModelRealityKey? {
+138:         guard case .model(let media) = presentation.media else { return nil }
+139:         return BoardModelRealityKey(
+140:             boardID: board.id,
+141:             presentationID: presentation.id,
+142:             modelSHA256: media.descriptor.modelSHA256
+143:         )
+
+
+FILE HangTen/Models/BoardModelRealityTypes.swift
+167: /// RealityKit-native scene that owns the full model lifecycle.
+168: @MainActor
+169: final class BoardModelRealityScene {
+170:     #if DEBUG
+171:     let diagnosticLifecycleToken = UUID()
+172:     var diagnosticSelection: (Set<String>?, BoardHighlightMode?) {
+173:         (lastHighlightedContactIDs, lastHighlightMode)
+174:     }
+175:     #endif
+176:     // Core state
+177:     let root = Entity()
+178:     let camera = PerspectiveCamera()
+179: 
+180:     var modelEntity: Entity?
+181:     var instanceEntities: [Entity] = []
+182:     var contactEntities: [String: [ModelEntity]] = [:]
+183:     private(set) var transientCordEntity: Entity?
+184:     private var contactIDByEntity: [Entity: String] = [:]
+185:     private var baselineMaterials: [Entity: any RealityKit.Material] = [:]
+186:     private let finishByNodeID: [String: BoardSurfaceFinish]
+187: 
+188:     // Suspension/camera state
+189:     private var suspension: BoardModelSuspension?
+190:     private var verifiedPresentations: [String: (BoardModelSolvedSuspension, ModelEntity)] = [:]
+191:     private var meshWrapSection: [SIMD2<Float>]?
+192:     private var canonicalFraming: SuspendedCameraFraming?
+193:     private var currentFraming: SuspendedCameraFraming?
+194:     private var activePositionID: String?
+195: 
+196:     // Orbit state
+197:     var orbitAzimuth: Float = 0
+198:     var orbitElevation: Float = 0
+199:     var orbitZoom: Float = 1
+200:     private var viewportSize: CGSize = .zero
+201:     private var lastHighlightedContactIDs: Set<String>?
+202:     private var lastHighlightMode: BoardHighlightMode?
+203: 
+204:     // Config
+205:     private let descriptor: BoardModelDescriptor
+206:     private let display: BoardModelDisplay
+207:     private let orientation: BoardModelOrientation?
+208:     private let allowedPositionIDs: Set<String>
+209:     private let instances: [BoardModelInstance]?
+210: 
+211:     // Retain the resource lease until the scene is deallocated,
+212:     // because RealityKit may still stream textures from the USDZ asynchronously.
+213:     // The lease is released automatically when BoardModelRealityResourceLease deinitializes.
+214:     private let resourceLease: BoardModelRealityResourceLease
+
+
+FILE HangTen/Models/BoardModelRealityTypes.swift
+242: /// Loads the USDZ model directly into RealityKit and binds descriptor nodes.
+243:     func load(usdzURL: URL) async throws {
+244:         // RealityKit imports the USDZ asynchronously and reports malformed assets.
+245:         let modelEntity = try await Entity(contentsOf: usdzURL)
+246: 
+247:         self.modelEntity = modelEntity
+248: 
+249:         // Build instance entities from media instances
+250:         if let instances = instances, !instances.isEmpty {
+251:             buildInstanceEntities(from: modelEntity, instances: instances)
+252:         } else {
+253:             // Single instance (legacy behavior)
+254:             root.addChild(modelEntity)
+255:             instanceEntities = [modelEntity]
+256:         }
+257: 
+258:         // Appearance is runtime-only; the bundled USDZ stays unbound. Capture
+259:         // each finish before highlighting so deselection restores the authored finish.
+260:         applyBoardMaterials()
+261: 
+262:         // Build contact entity mapping from descriptor
+263:         // Highlight baselines were captured by applyBoardMaterials().
+264:         try buildContactEntities()
+265: 
+266:         // Set up camera framing based on model bounds
+267:         setupCameraFraming()
+268:     }
+269: 
+270:     private func buildInstanceEntities(from sourceEntity: Entity, instances: [BoardModelInstance]) {
+271:         instanceEntities = []
+272:         let center = Self.boundsCenter(descriptor.modelBounds)
+273: 
+274:         for instance in instances {
+275:             // Clone the source entity hierarchy for this instance
+276:             let instanceEntity = sourceEntity.clone(recursive: true)
+277: 
+278:             instanceEntity.transform = Transform(matrix: Self.instanceMatrix(
+279:                 instance: instance, positionID: nil, center: center))
+280: 
+281:             root.addChild(instanceEntity)
+282:             instanceEntities.append(instanceEntity)
+283:         }
+284:     }
+285: 
+286:     func applyBoardMaterials() {
+287:         for instance in instanceEntities {
+288:             applyBoardMaterials(to: instance, relativeTo: instance, inheritedFinish: display.surfaceFinish)
+289:         }
+290:     }
+291: 
+292:     private func applyBoardMaterials(to entity: Entity, relativeTo instanceRoot: Entity,
+293:                                      inheritedFinish: BoardSurfaceFinish) {
+294:         // CAD descriptor names identify the authored surfaces. Carry the finish
+295:         // through any unnamed mesh children inserted by the USDZ importer.
+296:         let nodeID = findNodeID(for: entity, relativeTo: instanceRoot, bindings: finishByNodeID)
+297:         let finish = nodeID.flatMap { finishByNodeID[$0] } ?? inheritedFinish
+298:         if let modelEntity = entity as? ModelEntity, modelEntity.model != nil {
+299:             let material: any RealityKit.Material
+300:             switch finish {
+301:             case .wood: material = Self.woodMaterial
+302:             case .plastic: material = Self.plasticMaterial
+303:             case .granite: material = Self.graniteMaterial
+304:             case .neutral: material = Self.neutralMaterial()
+305:             }
+306:             modelEntity.model?.materials = [material]
+307:             baselineMaterials[modelEntity] = material
+
+
+FILE HangTen/Models/BoardModelRealityTypes.swift
+314:     private static let woodMaterial: any RealityKit.Material = {
+315:         var base = PhysicallyBasedMaterial()
+316:         base.baseColor = .init(tint: UIColor(red: 0.78, green: 0.66, blue: 0.49, alpha: 1))
+317:         base.roughness = .init(floatLiteral: 0.82)
+318:         base.metallic = .init(floatLiteral: 0)
+319:         guard let device = MTLCreateSystemDefaultDevice(),
+320:               let library = device.makeDefaultLibrary() else { return base }
+321:         do {
+322:             let shader = CustomMaterial.SurfaceShader(named: "boardWoodSurfaceShader", in: library)
+323:             return try CustomMaterial(from: base, surfaceShader: shader)
+324:         } catch {
+325:             #if DEBUG
+326:             print("[BoardModelRealityScene] Wood shader unavailable: \(error)")
+327:             #endif
+328:             // A warm matte fallback still identifies wood on unsupported devices.
+329:             return base
+330:         }
+
+
+FILE HangTen/Models/BoardModelRealityTypes.swift
+726:     func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {
+727:         #if DEBUG
+728:         if BoardHighlightDiagnostic.isEnabled,
+729:            contactIDs != lastHighlightedContactIDs || mode != lastHighlightMode {
+730:             BoardHighlightDiagnostic.shared.capture("highlight-before", scene: self,
+731:                 ids: contactIDs, mode: mode, priorIDs: lastHighlightedContactIDs,
+732:                 priorMode: lastHighlightMode)
+733:         }
+734:         #endif
+735:         guard contactIDs != lastHighlightedContactIDs || mode != lastHighlightMode else { return }
+736:         lastHighlightedContactIDs = contactIDs
+737:         lastHighlightMode = mode
+738:         // A shared mesh is selected when any of its logical contacts is selected.
+739:         // Update each entity once so an unselected membership cannot clear it.
+740:         let highlightedEntities = Set(contactIDs.flatMap { contactEntities[$0] ?? [] })
+741:         let allEntities = Set(contactEntities.values.flatMap { $0 })
+742:         for entity in allEntities {
+743:             let highlightColor: Color = highlightedEntities.contains(entity)
+744:                 ? (mode == .active ? Color.holdActive : Color.restBlue) : .clear
+745:             applyHighlight(to: entity, color: highlightColor, mode: mode)
+746:         }
+
+
+FILE HangTen/Models/BoardModelRealityTypes.swift
+944:     private func applyHighlight(to entity: ModelEntity, color: Color, mode: BoardHighlightMode) {
+945:         guard let baseline = baselineMaterials[entity] else { return }
+946: 
+947:         if color == .clear {
+948:             // Restore the complete runtime finish, including a wood shader.
+949:             entity.model?.materials = [baseline]
+950:             return
+951:         }
+952: 
+953:         // Use a solid selection color for legibility over either finish.
+954:         var material = (baseline as? PhysicallyBasedMaterial) ?? Self.neutralMaterial()
+955:         let uiColor = UIColor(color)
+956:         material.baseColor = .init(tint: uiColor.withAlphaComponent(0.6))
+957:         material.roughness = .init(floatLiteral: 0.8)
+958: 
+959:         entity.model?.materials = [material]
+
+
+FILE HangTen/Models/BoardModelRealityTypes.swift
+1131: /// Cache for loaded RealityKit model sources.
+1132: @MainActor
+1133: enum BoardModelRealityCache {
+1134:     private final class InFlight {
+1135:         var task: Task<BoardModelRealityLoadedSource?, Error>?
+1136:         var waiters: [UUID: CheckedContinuation<BoardModelRealityLoadedSource?, Error>] = [:]
+1137:     }
+1138: 
+1139:     private static var loading: [BoardModelRealityKey: InFlight] = [:]
+1140: 
+1141:     static func source(
+1142:         for key: BoardModelRealityKey,
+1143:         media: BoardModelMedia,
+1144:         board: BoardRevision,
+1145:         presentationID: String,
+1146:         store: BoardPackageStore,
+1147:         resourceAccess: BoardModelResourceAccess
+1148:     ) async throws -> BoardModelRealityLoadedSource? {
+1149:         let waiterID = UUID()
+1150:         return try await withTaskCancellationHandler {
+1151:             try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<BoardModelRealityLoadedSource?, Error>) in
+1152:                 guard !Task.isCancelled else {
+1153:                     continuation.resume(throwing: CancellationError())
+1154:                     return
+1155:                 }
+1156:                 if let entry = loading[key] {
+1157:                     entry.waiters[waiterID] = continuation
+1158:                     return
+1159:                 }
+1160:                 let entry = InFlight()
+1161:                 entry.waiters[waiterID] = continuation
+1162:                 loading[key] = entry
+1163:                 entry.task = Task<BoardModelRealityLoadedSource?, Error> {
+1164:                     var result: BoardModelRealityLoadedSource?
+1165:                     do {
+1166:                         result = try await loadSource(
+1167:                             media: media,
+1168:                             board: board,
+
+
+FILE HangTen/Models/BoardModelRealityTypes.swift
+1173:                         // A canceled acquisition may finish after a replacement
+1174:                         // load has started for the same model identity.
+1175:                         guard loading[key] === entry else { return nil }
+1176:                         loading[key] = nil
+1177:                         let waiters = entry.waiters
+1178:                         entry.waiters.removeAll()
+1179:                         for waiter in waiters.values {
+1180:                             waiter.resume(returning: result)
+1181:                         }
+1182:                     } catch {
+1183:                         // Propagate error to all waiters
+1184:                         guard loading[key] === entry else { return nil }
+1185:                         loading[key] = nil
+1186:                         let waiters = entry.waiters
+1187:                         entry.waiters.removeAll()
+1188:                         for waiter in waiters.values {
+1189:                             waiter.resume(throwing: error)
+1190:                         }
+1191:                     }
+1192:                     return result
+1193:                 }
+1194:             }
+1195:         } onCancel: {
+1196:             Task { @MainActor in
+1197:                 guard let entry = loading[key],
+1198:                       let waiter = entry.waiters.removeValue(forKey: waiterID) else { return }
+1199:                 if entry.waiters.isEmpty {
+1200:                     loading[key] = nil
+1201:                     entry.task?.cancel()
+1202:                 }
+1203:                 // Release the view task immediately. The resource request still
+1204:                 // balances any successful access when its completion arrives.
+1205:                 waiter.resume(throwing: CancellationError())
+1206:             }
+
+
+FILE HangTen/Models/BoardModelRealityTypes.swift
+1210:     private static func loadSource(
+1211:         media: BoardModelMedia,
+1212:         board: BoardRevision,
+1213:         presentationID: String,
+1214:         store: BoardPackageStore,
+1215:         resourceAccess: BoardModelResourceAccess
+1216:     ) async throws -> BoardModelRealityLoadedSource? {
+1217:         let resourceLease: BoardModelRealityResourceLease?
+1218:         if let bundledURL = store.presentationAssetURL(
+1219:             for: board,
+1220:             presentationID: presentationID
+1221:         ) {
+1222:             resourceLease = BoardModelRealityResourceLease(url: bundledURL)
+1223:         } else if let resource = store.modelResource(
+1224:             for: board,
+1225:             presentationID: presentationID
+1226:         ) {
+1227:             if let packagedURL = resource.debugSimulatorPackagedURL(in: store.resourceBundle) {
+1228:                 resourceLease = BoardModelRealityResourceLease(url: packagedURL)
+1229:             } else {
+1230:                 if let lease = await resourceAccess.acquire(
+1231:                     resource,
+1232:                     bundle: store.resourceBundle
+1233:                 ) {
+1234:                     resourceLease = BoardModelRealityResourceLease(url: lease.url, lease: lease)
+1235:                 } else {
+1236:                     resourceLease = nil
+1237:                 }
+1238:             }
+1239:         } else {
+1240:             resourceLease = nil
+1241:         }
+1242:         guard let resourceLease, !Task.isCancelled else { return nil }
+1243: 
+1244:         // Verify SHA-256
+1245:         let url = resourceLease.url
+1246:         let computedSHA256 = try await Task.detached(priority: .utility) {
+1247:             try Self.sha256(of: url)
+1248:         }.value
+1249:         guard computedSHA256 == media.descriptor.modelSHA256 else {
+1250:             throw BoardModelRealityError.sha256Mismatch(expected: media.descriptor.modelSHA256, actual: computedSHA256)
+1251:         }
+1252: 
+1253:         return BoardModelRealityLoadedSource(resourceLease: resourceLease)
+
+
+FILE HangTen/Models/BoardModelRealityTypes.swift
+1275: /// Loaded source shared only by waiters while the same key is in flight.
+1276: final class BoardModelRealityLoadedSource {
+1277:     let resourceLease: BoardModelRealityResourceLease
+1278: 
+1279:     init(resourceLease: BoardModelRealityResourceLease) {
+1280:         self.resourceLease = resourceLease
+1281:     }
+1282: }
+1283: 
+1284: /// Load gate to serialize 3D model loads.
+1285: /// Limit is 1 because RealityKit model loading is memory-intensive and concurrent
+1286: /// loads can cause OOM or GPU resource contention on iOS devices.
+1287: @MainActor
+1288: enum BoardModelRealityLoadGate {
+1289:     private static let limit = 1
+1290:     private static var active = 0
+1291:     private static var waiters: [(id: UUID, continuation: CheckedContinuation<Bool, Never>)] = []
+1292: 
+
+
+FILE HangTen/Models/BoardModelRealityTypes.swift
+1338: /// Loader with SHA-256 verify, cache, resource lease.
+1339: @MainActor
+1340: final class BoardModelRealityLoader {
+1341:     static func load(
+1342:         board: BoardRevision,
+1343:         presentation: BoardPresentation,
+1344:         store: BoardPackageStore = BoardCatalog.packageStore,
+1345:         resourceAccess: BoardModelResourceAccess = .live
+1346:     ) async throws -> BoardModelRealityScene {
+1347:         guard case .model(let media) = presentation.media else {
+1348:             throw BoardModelRealityError.presentationNotModel
+1349:         }
+1350: 
+1351:         guard await BoardModelRealityLoadGate.acquire() else {
+1352:             throw BoardModelRealityError.loadGateCancelled
+1353:         }
+1354:         defer { BoardModelRealityLoadGate.release() }
+1355: 
+1356:         let key = BoardModelRealityKey(
+1357:             boardID: board.id,
+1358:             presentationID: presentation.id,
+1359:             modelSHA256: media.descriptor.modelSHA256
+1360:         )
+1361: 
+1362:         guard let source = try await BoardModelRealityCache.source(
+1363:             for: key,
+1364:             media: media,
+1365:             board: board,
+1366:             presentationID: presentation.id,
+1367:             store: store,
+1368:             resourceAccess: resourceAccess
+1369:         ), !Task.isCancelled else {
+1370:             if Task.isCancelled { throw CancellationError() }
+1371:             throw BoardModelRealityError.resourceUnavailable
+1372:         }
+1373: 
+1374:         let scene = BoardModelRealityScene(
+1375:             descriptor: media.descriptor,
+1376:             display: media.display,
+1377:             suspension: media.suspension,
+1378:             orientation: media.orientation,
+1379:             allowedPositionIDs: Set(board.positions.filter {
+1380:                 $0.presentationID == presentation.id
+1381:             }.map(\.id)),
+1382:             instances: media.instances,
+1383:             resourceLease: source.resourceLease
+1384:         )
+1385: 
+1386:         // Load the USDZ model via ModelIO
+1387:         try await scene.load(usdzURL: source.resourceLease.url)
+1388: 
+1389:         // The resource lease is now owned by the scene and will be released
+1390:         // when the scene is deallocated (after async texture streaming completes).
+1391:         // Do NOT release it here.
+1392: 
+1393:         return scene
+
+
+FILE HangTen/Models/BoardPackageStore.swift
+260:     func presentationAssetURL(
+261:         for board: BoardRevision,
+262:         presentationID: String? = nil
+263:     ) -> URL? {
+264:         let resolvedID = presentationID ?? board.defaultPresentation.id
+265:         return presentationURLsByBoardID[board.id]?[resolvedID]
+266:     }
+267: 
+268:     func presentationDescriptorURL(
+269:         for board: BoardRevision,
+270:         presentationID: String? = nil
+271:     ) -> URL? {
+272:         let resolvedID = presentationID ?? board.defaultPresentation.id
+273:         return descriptorURLsByBoardID[board.id]?[resolvedID]
+274:     }
+275: 
+276:     func modelResource(
+277:         for board: BoardRevision,
+278:         presentationID: String? = nil
+279:     ) -> BoardModelResource? {
+280:         let resolvedID = presentationID ?? board.defaultPresentation.id
+281:         return modelResourcesByBoardID[board.id]?[resolvedID]

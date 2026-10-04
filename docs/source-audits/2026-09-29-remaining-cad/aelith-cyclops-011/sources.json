@@ -1,0 +1,59 @@
+{
+  "approvalRecord": "docs/superpowers/specs/2026-09-20-hangboards-batch-03-3d-migration-design.md#appendix-a-approved-exact-revision-manufacturer-evidence",
+  "sources": [
+    {
+      "ref": "AE-1",
+      "publisher": "Aelith Equipment \u2014 product page",
+      "url": "https://aelithequipment.com/product/011-blue-x-black-cyclops-portable-hangboard/",
+      "snapshotSHA256": "1f802675e64e2f9850542622cef9fb44f34eb7d4ae01ce502e5b610daddd9eb0",
+      "supportClaim": "Exact #011 Blue \u00d7 Black identity, one 20 mm edge, supplied-cord context, and exact gallery association.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/aelith-cyclops-011/product-page.html",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/aelith-cyclops-011/product-page.html",
+      "actualSHA256": "3bb4edad7ed8232cc1425a434e7bf025a3291a13be5fd7e5feda41c9c4af4d98",
+      "approvedHashMatches": false,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/aelith-cyclops-011/evidence/product-page-current.html",
+      "humanApproval": {
+        "approved": false,
+        "researchAuthorized": true,
+        "authorizationDate": "2026-09-29",
+        "notes": "Exact September20 HTML bytes were unavailable; this current primary HTML snapshot differs from the approved historical SHA. User expressly authorized additional primary research on September29. Approval of the exact unchanged visual sources is separate."
+      }
+    },
+    {
+      "ref": "AE-2",
+      "publisher": "Aelith Equipment \u2014 front/back visual",
+      "url": "https://i0.wp.com/aelithequipment.com/wp-content/uploads/2025/05/011CyclopsProductSpread.jpg?fit=2160%2C2160&ssl=1",
+      "snapshotSHA256": "fc40128d4eaf51c260201e84bb1d8fde7d5224c49a42bd1349c93e4ab56cdeff",
+      "supportClaim": "Exact color, teardrop body, single recessed mono surface, reverse profile, and cord attachment at the narrow end.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/aelith-cyclops-011/front-back.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/aelith-cyclops-011/front-back.jpg",
+      "actualSHA256": "fc40128d4eaf51c260201e84bb1d8fde7d5224c49a42bd1349c93e4ab56cdeff",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/aelith-cyclops-011/evidence/front-back.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "AE-3",
+      "publisher": "Aelith Equipment \u2014 in-use/context visual",
+      "url": "https://i0.wp.com/aelithequipment.com/wp-content/uploads/2025/05/img_0159-2-1.jpg?fit=2000%2C1333&ssl=1",
+      "snapshotSHA256": "0226a85fcc54586b7b12ff09b15154ff6aaf190f47fb16142d2fceed95a7a30c",
+      "supportClaim": "The same form and recessed surface from a distinct view plus the single-cord knot and portable suspension arrangement.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/aelith-cyclops-011/in-use.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/aelith-cyclops-011/in-use.jpg",
+      "actualSHA256": "0226a85fcc54586b7b12ff09b15154ff6aaf190f47fb16142d2fceed95a7a30c",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/aelith-cyclops-011/evidence/in-use.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    }
+  ]
+}

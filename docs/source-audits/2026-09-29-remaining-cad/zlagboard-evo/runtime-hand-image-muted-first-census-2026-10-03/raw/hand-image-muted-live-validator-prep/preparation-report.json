@@ -1,0 +1,66 @@
+{
+  "preparationOnly": true,
+  "validatorsExecuted": false,
+  "arm": "hand-image-muted-workout-live-a-landscape",
+  "helperFiles": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/branch_schema.py",
+      "sha256": "87eb845d31e1dda2a23b5df847dab02454b2057e625d9ead35d0135cd9585aea"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-constructors.py",
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-cpu-semantics.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-frames.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-muted-current-hands.py",
+      "sha256": "e6d8a3635727906c46921e2be0a2e85f125d6a8010873a071697c425a5b31ff9"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-navigation.py",
+      "sha256": "6416604364affd782d562898b0f2e9760c2af158709b9fa2db8114d674f9dfb3"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-ownership.py",
+      "sha256": "aed6d064a4956719b04543683669fc80789a4bb8c8541096ec329783df0585ba"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-real-hands.py",
+      "sha256": "5d52a9554ac096bacdb225466797a51fca7dfebd164986913c1bcee8bc98b74a"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-sync-counters.py",
+      "sha256": "36c4bfcd41f31934a1c526823af63e4611635c3e8fc65613dc05827ecd6746cc"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-weak-hand-census.py",
+      "sha256": "2c408b131b66769b551a2c6178c8fb8c74e62e08b0433bfff883b3c5359a79ec"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/marker_correlations.py",
+      "sha256": "edfdd6480f5054c53607cc5bdbf2420feb80cf606138698a55551bb1b023a0cc"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/muted_audio_schema.py",
+      "sha256": "538b6041f788d6903f680c2797f4be59c12278114deaf9cc9166f4a76be02948"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/validate.py",
+      "sha256": "350d3b7daf174b287dc843a1c6ea5c48210c7a90a0e6bcd633c9f164ecff573c"
+    }
+  ],
+  "semanticChanges": [
+    "8 original helper copies change only run path labels",
+    "New muted hand validator requires consistent actual pair across24 raw attached points; no imposed two-host history",
+    "AudioOFF scalar schema copied byte-exact from muted capture owner",
+    "Old prestart/supplemental helpers retained as nonapplicable historical sources, never relabeled passed"
+  ],
+  "runtimeReleaseRequired": true
+}

@@ -1,0 +1,134 @@
+{
+  "timestampUTC": "2026-10-02T01:41:14.468444+00:00",
+  "baseline": "c63554f9f6b6d4bb58c3a07dc9c67533857eb58c",
+  "trackedChangedFiles": [
+    "Hangboards/yy-travelboard/suspension.json",
+    "Hangboards/yy-travelboard/yy-travelboard.FCStd",
+    "docs/model-delivery-lock.json",
+    "docs/source-audits/2026-09-29-remaining-cad/review-queue.json",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/native-authoring.md"
+  ],
+  "untrackedFileCount": 77,
+  "outOfScopeChangedFiles": [],
+  "queue": {
+    "changedBoardNumbers": [
+      19
+    ],
+    "other20RowsExact": true,
+    "otherMetadataExact": true,
+    "humanReview": "pending"
+  },
+  "lock": {
+    "changedPackageRecords": [
+      "yy-travelboard"
+    ],
+    "other56RecordsExact": true,
+    "changedTopLevelKeys": [
+      "sha256Manifest",
+      "sha256ManifestHistory"
+    ],
+    "onlyDigestAndHistoryChanged": true,
+    "priorHistoryPreserved": true,
+    "hashFieldsMatch": {
+      "sourceSHA256": true,
+      "assetSHA256": true,
+      "descriptorSHA256": true,
+      "suspensionSHA256": true
+    }
+  },
+  "otherPackageBytes": {
+    "filesCompared": 202,
+    "lfsRealObjectsCompared": 115,
+    "mismatches": [],
+    "includesAccepted16to18": true
+  },
+  "travelboardPackageComparison": [
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.model.json",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.usdz",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/suspension.json",
+      "unchanged": false
+    },
+    {
+      "path": "Hangboards/yy-travelboard/yy-travelboard.FCStd",
+      "unchanged": false
+    }
+  ],
+  "nativeMetadataBridge": {
+    "sourceHashStillMatches": true,
+    "geometryAndNativeObjectDataExact": true,
+    "onlyWoodFinishManifestChange": true,
+    "allSixContactFactsExact": true
+  },
+  "finalAssets": {
+    "Hangboards/yy-travelboard/assets/primary.model.json": {
+      "sha256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+      "indexMatches": true
+    },
+    "Hangboards/yy-travelboard/assets/primary.usdz": {
+      "sha256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+      "indexMatches": true
+    },
+    "Hangboards/yy-travelboard/suspension.json": {
+      "sha256": "7af15a7f897baa87a4da89fcf62c8123dbb7544d8c3cb0bced71474bf9d044e4",
+      "indexMatches": true
+    },
+    "Hangboards/yy-travelboard/yy-travelboard.FCStd": {
+      "sha256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "indexMatches": true
+    }
+  },
+  "realFCStdZIP": true,
+  "verificationIndexLinks": {
+    "nativeAudit": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/individual-review-2026-10-01/shape-audit/review-summary.json",
+      "exists": true,
+      "sha256": "c4e5ecd76077b2e831c769b07671799634f9cf9b84022550c49fd3ffff3160bc"
+    },
+    "woodMetadata": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/individual-review-2026-10-01/metadata/wood-manifest-provenance.json",
+      "exists": true,
+      "sha256": "f9159ff1801e22c0141c3c2f591f320bc810cf27274c276e9b9dd81740fe4734"
+    },
+    "independentWoodBridge": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/individual-review-2026-10-01/package-checks/wood-bridge.json",
+      "exists": true,
+      "sha256": "46f1469699d347f134ec3e6e18d79a6fbabe44f9bc00f06ff815587c878d13fc"
+    },
+    "actualExportMouths": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/individual-review-2026-10-01/package-checks/actual-usdz-mouth-verification.json",
+      "exists": true,
+      "sha256": "fc8ebfa636b24a0bd2bd3b245d699d0bc66c9186f287385aaa8da96d8be6557e"
+    },
+    "cordApply": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/individual-review-2026-10-01/cord-final/apply.json",
+      "exists": true,
+      "sha256": "ae9ad305d3dcf86d46de12e747a3b10fecab487bfd67aad73c79b7f0ada5d2e1"
+    },
+    "cordReproduction": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/individual-review-2026-10-01/cord-final/check.json",
+      "exists": true,
+      "sha256": "ae9ad305d3dcf86d46de12e747a3b10fecab487bfd67aad73c79b7f0ada5d2e1"
+    },
+    "runtime": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/individual-review-2026-10-01/ios/final-runtime-validation.json",
+      "exists": false,
+      "sha256": null
+    },
+    "delivery": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/individual-review-2026-10-01/delivery-validation.json",
+      "exists": true,
+      "sha256": "fa8eb4d60391e55e7eda860a0432b49e1db97e34a19d074a5df815dbc60dcbf6"
+    }
+  },
+  "pendingLinks": [
+    "runtime"
+  ],
+  "scopePass": true
+}

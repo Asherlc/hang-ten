@@ -1,0 +1,10 @@
+{
+  "classification": "INVALID_FULL_CAPTURE",
+  "actualCaptures": 20,
+  "observedEarlyRest": "Red while Rest preview shown, a concrete failure but not complete sequence",
+  "screenshot190DurationSeconds": 6.488953583,
+  "following191NotLaunched": true,
+  "actionStarted": false,
+  "decision": "One unchanged control repeat only; no retries after second incompletecontrol.",
+  "noCauseAssigned": true
+}

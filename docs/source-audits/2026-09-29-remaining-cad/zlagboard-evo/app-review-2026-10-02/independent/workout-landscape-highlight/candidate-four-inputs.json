@@ -1,0 +1,8 @@
+{
+  "atUTC": "2026-10-02T06:16:01.336611+00:00",
+  "design": "Copy existing ModelComponent, replace materials, explicitly set component on entity for both selection and baseline restoration. Mesh/picking data preserved.",
+  "viewCandidateThree": "temporarily retained pending component-only runtime evidence; parent intends revert View changes if candidate4 succeeds, then revalidate minimal final.",
+  "priorCandidateThree": "Failed actual next-active STEP3/Hang00:06 retains visiblyblue pockets; parent and this worker independently viewed exact screenshot.",
+  "patchSHA256": "75df12f08fb6cda9293b3aaf4a6dd166d55af5340d8343c43a87b099a6980e9b",
+  "testsRuntime": "pending; no fix/pass claim"
+}

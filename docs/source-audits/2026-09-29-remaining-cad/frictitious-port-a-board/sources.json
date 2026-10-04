@@ -1,0 +1,96 @@
+{
+  "approvalRecord": "docs/superpowers/specs/2026-09-20-hangboards-batch-03-3d-migration-design.md#appendix-a-approved-exact-revision-manufacturer-evidence",
+  "sources": [
+    {
+      "ref": "PA-1",
+      "publisher": "Frictitious Climbing \u2014 product page",
+      "url": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
+      "snapshotSHA256": "71f455b60e3f5f15511c22ca24d17c17d8928ef5bf8f296d3ed9207ca8dcfb55",
+      "supportClaim": "Exact identity, marketed edge-depth language, jug/pinch uses, mounting/suspension context, and gallery provenance. Its wording alone does not establish a second physical 30 mm surface.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/frictitious-port-a-board/product-page.html",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/frictitious-port-a-board/product-page.html",
+      "actualSHA256": "d0f031c2a16336226117f059a11487a0cb24b2b71a8f836a4d686d2f26ae8a68",
+      "approvedHashMatches": false,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/evidence/product-page-current.html",
+      "humanApproval": {
+        "approved": false,
+        "researchAuthorized": true,
+        "authorizationDate": "2026-09-29",
+        "notes": "Exact September20 HTML bytes were unavailable; this current primary HTML snapshot differs from the approved historical SHA. User expressly authorized additional primary research on September29. Approval of the exact unchanged visual sources is separate."
+      }
+    },
+    {
+      "ref": "PA-2",
+      "publisher": "Frictitious Climbing \u2014 front visual",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/PAB-Front.jpg?v=1780418977&width=3840",
+      "snapshotSHA256": "1509f81ed1dcf960a8ee1e91424e538de5aa890698b351a12fe2f1c36e4859e1",
+      "supportClaim": "Front 20, 25, and one continuous asymmetric 30 mm recess, center body/rim, and paired cord passages.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/frictitious-port-a-board/front.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/frictitious-port-a-board/front.jpg",
+      "actualSHA256": "1509f81ed1dcf960a8ee1e91424e538de5aa890698b351a12fe2f1c36e4859e1",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/evidence/front.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "PA-3",
+      "publisher": "Frictitious Climbing \u2014 reverse visual",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/PAB-Back.jpg?v=1780418977&width=3840",
+      "snapshotSHA256": "38522abf6ccfa4a0f18dac57e5bbbf9a6290de4cd6a030756248f1a0314f70f4",
+      "supportClaim": "Reverse 15, 12, 8, and 10 mm recesses and continuity within one body.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/frictitious-port-a-board/reverse.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/frictitious-port-a-board/reverse.jpg",
+      "actualSHA256": "38522abf6ccfa4a0f18dac57e5bbbf9a6290de4cd6a030756248f1a0314f70f4",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/evidence/reverse.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "PA-4",
+      "publisher": "Frictitious Climbing \u2014 side visual",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/PAB-Side.jpg?v=1780418977&width=3840",
+      "snapshotSHA256": "61221d7cb34edf3c5fd13e2300045050a0d7149424be9c5bcf8ded6c021df8e7",
+      "supportClaim": "Board thickness, rounded side profile, face relationship, and external cord path.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/frictitious-port-a-board/side.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/frictitious-port-a-board/side.jpg",
+      "actualSHA256": "61221d7cb34edf3c5fd13e2300045050a0d7149424be9c5bcf8ded6c021df8e7",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/evidence/side.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "PA-5",
+      "publisher": "Frictitious Climbing \u2014 in-use visual",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/PAB-homewall-1.jpg?v=1784658897&width=3840",
+      "snapshotSHA256": "a2cc5ec6e79272241c8f24891d91f89d075c3ebadc69b731d082a20775a43cd3",
+      "supportClaim": "Scale in hand, center ridge/30 mm region use, and paired lead-cord arrangement from both front passages.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/frictitious-port-a-board/in-use.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/frictitious-port-a-board/in-use.jpg",
+      "actualSHA256": "a2cc5ec6e79272241c8f24891d91f89d075c3ebadc69b731d082a20775a43cd3",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/evidence/in-use.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    }
+  ],
+  "topologyClarification": "Historical source claim wording such as passages means visible entrances only. The retained views do not establish the hidden connection graph. Current CAD models shallow entrance wells, with all external routing governed by native-cord-evidence.json; no hidden join is inferred."
+}

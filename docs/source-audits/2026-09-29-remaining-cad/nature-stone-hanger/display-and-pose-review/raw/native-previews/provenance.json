@@ -1,0 +1,23 @@
+{
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "nativeBodyMeshSHA256": "a11e8033450c7710c577abd867984f8f576a5831ee1b66c9eac8a205c876c2c7",
+  "beforeSourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+  "beforeModelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+  "beforeDescriptorSHA256": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c",
+  "images": {
+    "before-front.png": "d843a240e4309137b6a242f4b87d80522d4aef6a75e2d9f53b8fda6582e30da6",
+    "after-front.png": "a24e57f832da8b2e7387fbb2d8329cc5fcc7fb85a252a08721447c330354cad7",
+    "comparison-front.png": "3c2f6b1d8e8b89c9268a3b0b1ec99e2b08711073cdf5ed269371b9fe8c4e4fbc",
+    "before-side.png": "7f85801df08e422788464c10a90cdd3b2636ba57c2e7681455fdf4708da53342",
+    "after-side.png": "0836c09672eed1407943606bbf549f844565ed96f09476fa3a86ba385dcb096b",
+    "comparison-side.png": "76b9726f56ba5781e3e6a60f6c2c548a82a99f799eff9128e5b3c757bae197ff",
+    "before-top.png": "a0e2cabfc94029976a455dcd126713dc9a9a6060d02f38bf24072646d745a296",
+    "after-top.png": "f10c6b1c6c22b7d88ab33387e1d7a41b5faf0fcce748893a3b1fa97c1bc9d1f7",
+    "comparison-top.png": "ba1fdd0dc40be19aa497149a55c123f9663af041c657f8fb2b44d061589da4d2",
+    "before-oblique.png": "9eb0120bc2abc549b31e385fc7df44d292e514cb1a125e0d4e349b3c0b4be3f7",
+    "after-oblique.png": "a4c6010504950e8935ee552bfad9ad13b57104d2241b13a60dad2830928eca33",
+    "comparison-oblique.png": "91bd50a0ab239f7ea8743b607df5ca668d6a0eac7f9d7d5439feea766b8bff35"
+  },
+  "method": "Whole native final-solid tessellation at unchanged 0.15 mm, compared with exact prior committed USDZ. Technical CPU normals; no materials/cords. No pixel inference or source-photo processing.",
+  "visualGate": "pending"
+}

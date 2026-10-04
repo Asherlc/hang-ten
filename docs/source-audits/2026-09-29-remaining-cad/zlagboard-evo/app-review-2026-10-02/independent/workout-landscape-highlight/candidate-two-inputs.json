@@ -1,0 +1,13 @@
+{
+  "atUTC": "2026-10-02T06:04:45.004669+00:00",
+  "design": "Single selection writer outside GeometryReader, explicit current payload scene/contacts/mode/position; scene equality byidentity; RealityView make/update framing only; unavailable callback and camera/instance reprojection retained.",
+  "diagnosticLimit": "Trace runs passed; callback race/retention causality not proven. Earlier normal-source runtime failures remain historical, including candidate1 failure.",
+  "rootViewExactHEAD": true,
+  "productionContainsTrace": false,
+  "focusedTests": "pending four focused tests with nonzero orbit and layout-stable monotonic harness",
+  "runtime": "pending normal A/B sequence",
+  "patches": {
+    "candidate-two-production.patch": "d411037f541261c0177317bab32d8ef892a19174dae79676e08c2e6304dfb2c1",
+    "candidate-two-tests.patch": "b4d86055bd0c3c1c43458313cf66ec8dc080806d99ac1500861db0eb6158c22c"
+  }
+}

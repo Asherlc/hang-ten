@@ -1,0 +1,199 @@
+{
+  "owner": "placid-badger",
+  "agent": "/root/flash_board_shape_review",
+  "createdAtUTC": "2026-10-03T19:42:51.689339+00:00",
+  "scope": "Read-only authored left/right convention check for Flash #14; only this report pair was written. No app operation, native authoring, code edits, build, external resource, or cord re-review.",
+  "finding": "No descriptor/contact-ID swap is present. Left/right are stable intrinsic low/high model-X labels, not a promise about screen side or a prescribed hand. Opposite-face viewing and inversion can reverse their screen positions. The two-edge image is consistent with the stored upright camera convention. The three-edge screenshot lacks the active pose needed to distinguish its inverted presentation from another runtime camera convention.",
+  "sourceBackedBlocker": false,
+  "mappingDefectEstablished": false,
+  "runtimePresentationExplanationComplete": false,
+  "sourceLimit": "Retained source notes and approved manufacturer evidence do not assign fixed left/right names to these symmetric contacts. Names and seven identities were preserved through the refinement. No source supports swapping them simply to fit these screenshots.",
+  "contacts": [
+    {
+      "contactID": "three-edge-left",
+      "name": "Left edge on three-edge surface",
+      "nodeIDs": [
+        "flash_board_body_012"
+      ],
+      "normalizedModelX": 0.223999995,
+      "nativeXmmApprox": 112.0
+    },
+    {
+      "contactID": "three-edge-center",
+      "name": "Center edge on three-edge surface",
+      "nodeIDs": [
+        "flash_board_body_011"
+      ],
+      "normalizedModelX": 0.499999985,
+      "nativeXmmApprox": 250.0
+    },
+    {
+      "contactID": "three-edge-right",
+      "name": "Right edge on three-edge surface",
+      "nodeIDs": [
+        "flash_board_body_013"
+      ],
+      "normalizedModelX": 0.775999993,
+      "nativeXmmApprox": 388.0
+    },
+    {
+      "contactID": "two-edge-left",
+      "name": "Left edge on two-edge surface",
+      "nodeIDs": [
+        "flash_board_body_014"
+      ],
+      "normalizedModelX": 0.253999994,
+      "nativeXmmApprox": 127.0
+    },
+    {
+      "contactID": "two-edge-right",
+      "name": "Right edge on two-edge surface",
+      "nodeIDs": [
+        "flash_board_body_015"
+      ],
+      "normalizedModelX": 0.745999991,
+      "nativeXmmApprox": 373.0
+    },
+    {
+      "contactID": "small-crimp-left",
+      "name": "Left small crimp",
+      "nodeIDs": [
+        "flash_board_body_009"
+      ],
+      "normalizedModelX": 0.328000009,
+      "nativeXmmApprox": 164.0
+    },
+    {
+      "contactID": "small-crimp-right",
+      "name": "Right small crimp",
+      "nodeIDs": [
+        "flash_board_body_010"
+      ],
+      "normalizedModelX": 0.671999991,
+      "nativeXmmApprox": 336.0
+    }
+  ],
+  "poseProjectionAssumption": "Quaternion order x,y,z,w; pose rotation is applied to model; stored viewDirection is world camera-to-board; up remains [0,1,0]. Screen-right = cross(viewDirection,up). This is an algebraic reading of authored metadata, not an inspection of reserved runtime code.",
+  "poseProjection": {
+    "three-edge-upright": {
+      "rotationXYZW": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        -0.021394925,
+        0.075999998
+      ],
+      "camera": {
+        "viewDirection": [
+          0,
+          0,
+          -1
+        ],
+        "fitPadding": 0.1
+      },
+      "intrinsicLeftProjectedSideUnderStoredWorldCameraContract": "screen-left"
+    },
+    "three-edge-inverted": {
+      "rotationXYZW": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "translation": [
+        0.5,
+        -0.021396058,
+        0
+      ],
+      "camera": {
+        "viewDirection": [
+          0,
+          0,
+          -1
+        ],
+        "fitPadding": 0.1
+      },
+      "intrinsicLeftProjectedSideUnderStoredWorldCameraContract": "screen-right"
+    },
+    "two-edge-upright": {
+      "rotationXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "translation": [
+        0,
+        -0.11890548,
+        0
+      ],
+      "camera": {
+        "viewDirection": [
+          0,
+          0,
+          1
+        ],
+        "fitPadding": 0.1
+      },
+      "intrinsicLeftProjectedSideUnderStoredWorldCameraContract": "screen-right"
+    },
+    "two-edge-inverted": {
+      "rotationXYZW": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "translation": [
+        0.5,
+        -0.118904441,
+        0.075999998
+      ],
+      "camera": {
+        "viewDirection": [
+          0,
+          0,
+          1
+        ],
+        "fitPadding": 0.1
+      },
+      "intrinsicLeftProjectedSideUnderStoredWorldCameraContract": "screen-left"
+    }
+  },
+  "wholeFrameObservations": [
+    {
+      "image": "app-captures/14-live-front.png",
+      "selectedContact": "three-edge-left",
+      "highlight": "viewer-right three-well contact",
+      "receiptPoseID": null,
+      "interpretation": "Matches three-edge-inverted under the stored camera contract; would require further presentation evidence if runtime asserts three-edge-upright. Do not classify it as an ID swap from the screenshot alone."
+    },
+    {
+      "image": "app-captures/14-live-hold-two-edge-left.png",
+      "selectedContact": "two-edge-left",
+      "highlight": "viewer-right two-well contact",
+      "receiptPoseID": null,
+      "interpretation": "Expected for low-X intrinsic left in two-edge-upright under the stored +Z camera-to-board convention."
+    }
+  ],
+  "practicalDisposition": "Keep immutable native contacts and factual labels. No native correction is justified by this check. If the review requires a full explanation of the three-edge screen orientation, retain its actual pose ID/world camera direction in root-owned runtime diagnostics before declaring that explanation verified.",
+  "inputSHA256": {
+    ".context/placid-badger/runtime-final-2026-10-03/generated-manifests/tension-flash-board.json": "6b7e0262027dc8024b2869ce757595a8c3ba5399ab88376faceafaec4b28d743",
+    "Hangboards/tension-flash-board/assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "Hangboards/tension-flash-board/tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+    "Hangboards/tension-flash-board/assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "Hangboards/tension-flash-board/suspension.json": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
+    "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/geometry-authoring-notes.md": "e1d6b68c0a08d7b61424169c8048990557c6ef4716e443505009a2af657ad355",
+    "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/metadata-preservation.json": "220a1e0f95cbca0275abe2d0fff16387361c9ccc861cc7ec83e8346f6c46db79",
+    "docs/HANGBOARD_CORD_AUTHORING.md": "105d8f8a158f414dcd17bc47190b8690a58bbec2090061f7eb4b4e2eb4d70b3b",
+    ".context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-front.png": "ffc28f7af4bdef7b5605ea10fe482f8e7d9292e298cdf3f832c60a5e692cf2b1",
+    ".context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-front-receipt.json": "9f9918cc79f7d46a4835eb92209111b947abb7e2974ebf40271b4bb028f99071",
+    ".context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-hold-two-edge-left.png": "c841798ed4d1c788ea67b264104822be8d644fc286ebc4164addd0227fe60f11",
+    ".context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-hold-two-edge-left-receipt.json": "862803b54ca98253dd185c91565a5714ee110944b6d8059ac801bc8e4eb4296d"
+  },
+  "externalResourcesCreated": []
+}

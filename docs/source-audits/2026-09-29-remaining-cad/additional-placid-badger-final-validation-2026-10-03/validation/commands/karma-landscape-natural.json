@@ -1,0 +1,17 @@
+{
+  "owner": "placid-badger",
+  "label": "karma-landscape-natural",
+  "command": [
+    "python3",
+    ".context/placid-badger/combined-runtime-final-2026-10-03/workout_capture_natural.py",
+    "11",
+    "landscape"
+  ],
+  "timeoutSeconds": 300.0,
+  "ownedProcessGroup": 23570,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 114.43265149998479
+}

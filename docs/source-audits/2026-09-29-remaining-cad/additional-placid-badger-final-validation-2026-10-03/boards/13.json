@@ -1,0 +1,54 @@
+{
+  "owner": "placid-badger",
+  "number": 13,
+  "boardID": "plateau.lifting-edge",
+  "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+  "presentations": {
+    "depth-18mm": {
+      "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55"
+    },
+    "depth-15mm": {
+      "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+      "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b"
+    },
+    "depth-10mm": {
+      "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+      "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e"
+    }
+  },
+  "sourcePlanID": "research.abrahangs",
+  "workStep": 17,
+  "naturalRestStep": 18,
+  "routineDurationsOrTasksChanged": false,
+  "technicalCapturedWorkflowPassed": true,
+  "automationResult": "Actual Plateau layout red/green regression and natural Rest XCTest passed.",
+  "frames": [
+    {
+      "image": "screenshots/13-landscape-hang.png",
+      "sourceArtifact": "final-natural-attachments/C2906BD2-0454-4D0C-9602-004E9F00ED2A.png",
+      "sha256": "56c6005d34766c8f107050c978cb5984a808dbd8b18da185e8621e228fe4555d",
+      "orientation": "landscape",
+      "observedHighlight": "red",
+      "wholeFrameInspected": true,
+      "boardAndCordsVisible": true,
+      "handPreviewVisible": true
+    },
+    {
+      "image": "screenshots/13-landscape-rest.png",
+      "sourceArtifact": "final-natural-attachments/F78D798A-57A3-4ABD-8A13-4D958D4D36EA.png",
+      "sha256": "78f41abde72cb08c5ca95a8438c5dd219f2b37a68690e6be2f9176099beebae9",
+      "orientation": "landscape",
+      "observedHighlight": "blue",
+      "wholeFrameInspected": true,
+      "boardAndCordsVisible": true,
+      "handPreviewVisible": true
+    }
+  ],
+  "geometryAndSuspensionUnchanged": true,
+  "bodyHumanApprovalUnchanged": true,
+  "currentAppHumanAcceptance": "pending",
+  "limits": "The earlier landscape board collapsed to 3×3 points. The native geometry was unchanged; the selector-height layout correction passes actual XCTest in both Hang and natural Rest. No continuous or hardware GPU timing claim.",
+  "priorTouchAndContactCoverage": "One physical edge across the 18 → 15 → 10 → 18 mm authored presentation sequence.",
+  "priorTouchRecord": "runtime-final-2026-10-03/boards/13.json"
+}

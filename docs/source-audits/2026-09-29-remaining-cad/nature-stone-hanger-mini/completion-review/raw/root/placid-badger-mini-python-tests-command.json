@@ -1,0 +1,33 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+    "-m",
+    "pytest",
+    "-q",
+    "Tools/HangboardCAD/tests/test_board_manifest.py",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+    "Tools/HangboardCAD/tests/test_native_cord_guides.py",
+    "Tools/HangboardCAD/tests/test_native_cord_feature_extraction.py",
+    "Tools/HangboardCAD/tests/test_native_cord_routes.py",
+    "Tools/HangboardCAD/tests/test_native_cord_tightening.py",
+    "Tools/HangboardCAD/tests/test_native_clearance_budget.py",
+    "Tools/HangboardCAD/tests/test_native_path_search.py",
+    "Tools/HangboardPackages/tests/test_board_catalog.py",
+    "Tools/HangboardPackages/tests/test_cad_routed_cord.py",
+    "Tools/HangboardPackages/tests/test_pose_camera_facing.py",
+    "--basetemp",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-python-tests-tmp/pytest"
+  ],
+  "startedUTC": "2026-10-02T03:32:50.125980+00:00",
+  "timeoutSeconds": 600,
+  "ownedTemporaryDirectory": ".context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-python-tests-tmp",
+  "status": "fail",
+  "ownedProcessGroup": 69030,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "exitCode": 2,
+  "elapsedSeconds": 0.35333962499862537
+}

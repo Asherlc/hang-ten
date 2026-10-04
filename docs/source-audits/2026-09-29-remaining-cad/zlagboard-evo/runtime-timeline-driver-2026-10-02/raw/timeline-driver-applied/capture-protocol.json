@@ -1,0 +1,12 @@
+{
+  "script": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/timeline-capture.py",
+  "sha256": "68d26f824bfbb155c5315b02335b2709338e2f7256d01c53234f837a5afed292",
+  "sequence": [
+    "A",
+    "B",
+    "C"
+  ],
+  "counter": "Absent in every arm",
+  "source": "standalone-capture.py retained; separate driver flag, no reuse of B counter flag",
+  "viewport": "Frozen210x36 from prior runtime measurement; actual equality checked by app and capture harness"
+}

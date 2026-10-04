@@ -1,0 +1,252 @@
+{
+  "status": "passed",
+  "authoredMetadataUnchanged": true,
+  "changedPackageFiles": [
+    "Hangboards/frictitious-nug/suspension.json"
+  ],
+  "sourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+  "modelSHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+  "descriptorSHA256": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+  "sidecarSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+  "solverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+  "poses": {
+    "front-25": {
+      "height": -0.162422559,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-front": {
+          "vertices": 15,
+          "certifiedClearance": 0.003012694925443226,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "left-rear": {
+          "vertices": 15,
+          "certifiedClearance": 0.0030080679843749944,
+          "length": 0.2999999995193231,
+          "lengthRatio": 0.9999999983977437,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-front": {
+          "vertices": 17,
+          "certifiedClearance": 0.0030126949254432244,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-rear": {
+          "vertices": 15,
+          "certifiedClearance": 0.003008067984374991,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        }
+      }
+    },
+    "front-inverted-20": {
+      "height": -0.162422559,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-front": {
+          "vertices": 15,
+          "certifiedClearance": 0.003008067984374991,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "left-rear": {
+          "vertices": 17,
+          "certifiedClearance": 0.0030127898910447906,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-front": {
+          "vertices": 15,
+          "certifiedClearance": 0.0030080679843749927,
+          "length": 0.2999999995193231,
+          "lengthRatio": 0.9999999983977437,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-rear": {
+          "vertices": 15,
+          "certifiedClearance": 0.0030126949254432283,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        }
+      }
+    },
+    "reverse-13": {
+      "height": -0.162422559,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-front": {
+          "vertices": 15,
+          "certifiedClearance": 0.003012694925443226,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "left-rear": {
+          "vertices": 15,
+          "certifiedClearance": 0.0030080679843749944,
+          "length": 0.2999999995193231,
+          "lengthRatio": 0.9999999983977437,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-front": {
+          "vertices": 17,
+          "certifiedClearance": 0.0030126949254432244,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-rear": {
+          "vertices": 15,
+          "certifiedClearance": 0.003008067984374991,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        }
+      }
+    },
+    "reverse-inverted-8": {
+      "height": -0.162422559,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-front": {
+          "vertices": 15,
+          "certifiedClearance": 0.003008067984374991,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "left-rear": {
+          "vertices": 17,
+          "certifiedClearance": 0.0030127898910447906,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-front": {
+          "vertices": 15,
+          "certifiedClearance": 0.0030080679843749927,
+          "length": 0.2999999995193231,
+          "lengthRatio": 0.9999999983977437,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-rear": {
+          "vertices": 15,
+          "certifiedClearance": 0.0030126949254432283,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        }
+      }
+    },
+    "outer-upper": {
+      "height": -0.162422559,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-front": {
+          "vertices": 15,
+          "certifiedClearance": 0.003012694925443226,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "left-rear": {
+          "vertices": 15,
+          "certifiedClearance": 0.0030080679843749944,
+          "length": 0.2999999995193231,
+          "lengthRatio": 0.9999999983977437,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-front": {
+          "vertices": 17,
+          "certifiedClearance": 0.0030126949254432244,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-rear": {
+          "vertices": 15,
+          "certifiedClearance": 0.003008067984374991,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        }
+      }
+    },
+    "outer-lower": {
+      "height": -0.162422559,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-front": {
+          "vertices": 15,
+          "certifiedClearance": 0.003012694925443226,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "left-rear": {
+          "vertices": 15,
+          "certifiedClearance": 0.0030080679843749944,
+          "length": 0.2999999995193231,
+          "lengthRatio": 0.9999999983977437,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-front": {
+          "vertices": 17,
+          "certifiedClearance": 0.0030126949254432244,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-rear": {
+          "vertices": 15,
+          "certifiedClearance": 0.003008067984374991,
+          "length": 0.29999999951932055,
+          "lengthRatio": 0.9999999983977352,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        }
+      }
+    }
+  },
+  "solidPath": ".context/placid-badger/cad-raster-boards/frictitious-nug/solid-primary.json",
+  "solidSHA256": "447aaa29326167bbed749643fbc1d454707f84eb8fb29d79b2d6de391986365e",
+  "runtimeRoundingDecimals": 9,
+  "continuousClearanceToleranceMeters": 1e-05,
+  "sourceDiameterMM": 6,
+  "nativeMouthEntryAxisEvidence": "Front native -Y maps to runtime +Z; rear native +Y maps to runtime -Z. Native four shallow entry wells remain unchanged; no hidden connection inferred.",
+  "makerEvidence": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/product-page-current.html",
+  "makerEvidenceSHA256": "fc5517626285368b665c37139a52657133400bc8cf1ef0b4c54b3d1eac490f78",
+  "restLengthStatus": "300 mm per strand, retained display estimate",
+  "topologyStatus": "Four independent exterior leads; hidden connection unasserted"
+}

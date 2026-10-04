@@ -1,0 +1,61 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "8CC50ECB-FD8E-48F6-9404-5A8E7CFD4902",
+        "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half Review Baguette Evo2",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 2,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "HangTen · Built with macOS 27.0",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1790892783.52,
+  "passedTests" : 2,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1790892592.969,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTAssertGreaterThan failed: (\"80.76960184073606\") is not greater than (\"100.0\") - A 32-point body-only map hides the suspended board",
+      "targetName" : "HangTenTests",
+      "testIdentifier" : 3,
+      "testIdentifierString" : "BoardModelTests/testNativeCordMapAspectRatioIncludesCordAndSelectedPosition()",
+      "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenTests/BoardModelTests/testNativeCordMapAspectRatioIncludesCordAndSelectedPosition",
+      "testName" : "testNativeCordMapAspectRatioIncludesCordAndSelectedPosition()"
+    }
+  ],
+  "title" : "Test - HangTen",
+  "topInsights" : [
+    {
+      "category" : "Common Failures",
+      "impact" : "100% of failures",
+      "text" : "2 runs of 1 test failed with XCTAssertGreaterThan failed: (\"97.30055840436528\") is not greater than (\"100.0\") - A 32-point body-only map hides the suspended board"
+    },
+    {
+      "category" : "Common Failures",
+      "impact" : "100% of failures",
+      "text" : "2 runs of 1 test failed with XCTAssertGreaterThan failed: (\"80.76960184073606\") is not greater than (\"100.0\") - A 32-point body-only map hides the suspended board"
+    }
+  ],
+  "totalTestCount" : 3
+}

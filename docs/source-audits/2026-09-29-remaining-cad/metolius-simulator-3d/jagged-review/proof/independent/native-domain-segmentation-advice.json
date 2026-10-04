@@ -1,0 +1,32 @@
+{
+  "reviewedAtUTC": "2026-10-01T14:20:02.866952+00:00",
+  "status": "advice-only-no-new-source-certified",
+  "exactGeometryOperation": "Copy the underlying BSplineSurface then call segment(u1,u2,v1,v2). This mutates knot/pole support, unlike merely creating a trimmed face on the original surface. Existing-knot U bands address the486-pole direction; retain the full4-pole V domain. Preserve trims/orientation when reconstructing the face.",
+  "nativeFeatureLimitation": "No standard parametric document feature wrapping exact surface segmentation was identified in inspected sources. Part::Spline is a base feature only; Surface::Cut performs a boolean; Surface::Extend samples/refits rather than exact segmentation. A Python shape operation cached in Part::Feature does not by itself recompute from upstream parameters and is not a substitute for the required native parametric construction.",
+  "sectorProbeFindings": "The retained fan probe is not an exact partition: assemblies contain4,4,5 solids; CenterShoulder volume56283.63 vs91419.57mm3 and RoundFlat31676.62 vs90436.48mm3. Independently re-lofting normalized profile fractions can alter cross-section correspondence and interpolation; validity of each wedge is insufficient.",
+  "recommendation": "If implementing an exact computational probe, segment the already-built loft surface with its own UV knots and compare degree/poles, shared-edge coincidence, area/volume and point/normal evaluations. For the deliverable under existing native-only constraints, the author must instead create and verify smaller corresponding native section/loft features; this is a revised construction, not automatically an exact representation of the old loft. Confirm single-solid union and no missing/overlapping sectors before export.",
+  "acceptanceChecks": [
+    "Actual underlying NbUPoles/NbVPoles shrink; bounded Face.ParameterRange alone is insufficient",
+    "Do not remove knots/approximate while labeling the result exact",
+    "Adjacent segmented surfaces share exact boundary curves and orientation",
+    "Actual shape or controlled-deviation checks on final solid, not only equal-parameter profile samples",
+    "Recompute and meaningful parameter edit/restore without authoring callbacks",
+    "Existing compiler/normals/tessellation remain unchanged"
+  ],
+  "references": {
+    "FreeCAD BSplineSurface.segment": "https://raw.githubusercontent.com/FreeCAD/FreeCAD/main/src/Mod/Part/App/BSplineSurfacePyImp.cpp",
+    "OCCT Geom_BSplineSurface Segment": "https://occt3d.com/dev/doc/refman/html/class_geom___b_spline_surface.html",
+    "Surface Cut": "https://raw.githubusercontent.com/FreeCAD/FreeCAD/main/src/Mod/Surface/App/FeatureCut.cpp",
+    "Surface Extend": "https://raw.githubusercontent.com/FreeCAD/FreeCAD/main/src/Mod/Surface/App/FeatureExtend.cpp",
+    "Part Spline": "https://raw.githubusercontent.com/FreeCAD/FreeCAD/main/src/Mod/Part/App/FeaturePartSpline.cpp"
+  },
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/author_smooth.py": "66294ee97c90caa8c1eebf8b9c613371f7f6f0f1c2733df89983f792f1deec90",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/probe_compact_segments.py": "e3c2afd4056a7bc46ce0c0856adbf2c909673b5ec259f847a7cff32ce14bc876",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/segment-compaction-probe.json": "b77f291949990cf93eeeda72a302f6dcbeae757c88f2c3677b450212bb540543",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/probe_sector_lofts.py": "0102bc5f043fb6c4841f4e5d3f9592f55a49d4cd91144d0ff9c50005dc8a94fb",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/sector-loft-probe.json": "c69aca2f825805bf4e6d0c9e39827afdc3d3e970eda6dc8fc55241121334b628",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/loft-properties.log": "9b3d09213b5f1d0e39fe9f7a9065e7ae7c7050ad045c13186a64113785c16464",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/face-cost.json": "3871f113d88356051cb9a8415325f61cbebe22ca0cc24fef9acd08429ad2f302"
+  }
+}

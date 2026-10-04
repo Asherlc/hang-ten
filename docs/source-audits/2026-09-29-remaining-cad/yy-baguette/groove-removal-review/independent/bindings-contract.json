@@ -1,0 +1,39 @@
+{
+  "passed": true,
+  "nodes": [
+    {
+      "id": "yy_body",
+      "role": "body"
+    },
+    {
+      "id": "yy_tray",
+      "role": "contact",
+      "contact": "tray"
+    },
+    {
+      "id": "yy_edge_20",
+      "role": "contact",
+      "contact": "edge-20"
+    },
+    {
+      "id": "yy_edge_25",
+      "role": "contact",
+      "contact": "edge-25"
+    },
+    {
+      "id": "yy_edge_10",
+      "role": "contact",
+      "contact": "edge-10"
+    },
+    {
+      "id": "yy_edge_15",
+      "role": "contact",
+      "contact": "edge-15"
+    },
+    {
+      "id": "yy_edge_30",
+      "role": "contact",
+      "contact": "edge-30"
+    }
+  ]
+}

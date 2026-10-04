@@ -1,0 +1,17 @@
+{
+  "runtimeAuthorized": true,
+  "arm": "detach",
+  "helperSHA256": "480220b28acb8f3ac4bf4e036fe2821989a2dcbb3053d7484305b56be6da322f",
+  "constructorMarkerAuditReady": true,
+  "previousArmGatePassed": true,
+  "binarySHA256": "66a1bd90a99a9226dc96b6ec12b8b3325d3a054baf5930009ccdc6808b2c5723",
+  "previousArmEvidence": {
+    "structural-correspondence.json": "1fc8700ac5b373a67c3916a50352a338a8cf211b54bd3bba5509ee5fb51ae6da",
+    "hand-lifetime-validation.json": "db3eb72d7f153e9b8cb7a987f5cfd45980c5c586a12640b840538ec7c08f8f3a",
+    "strict-absence-validation.json": "4a0406b134e8ac16d0ed75593c5f4b6f716dbf13929bf8b68c80c442bf41cfef",
+    "normal-host-frame-validation.json": "7fa4aed7a5da4482a5492e4a5dda86e96099b318aa4705aa570d68c35e21552a",
+    "train-constructor-validation.json": "da58b0e898b53f4a3094bec6e8d797b4db78dbc7f25c134ef7e0583651c2aa6c",
+    "guarded-detach-validation.json": "6fdec2611893b9447db95522fed7cef97e24e4d463dc750ed390b769082ec6a5",
+    "visual-review.json": "a25f64b019908273c1bcacdc3a3e7ef761d2bc35207662bc9b7f22c9a281ebae"
+  }
+}

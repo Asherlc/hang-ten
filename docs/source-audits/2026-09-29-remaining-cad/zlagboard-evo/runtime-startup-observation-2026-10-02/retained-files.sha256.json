@@ -1,0 +1,604 @@
+{
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "6691ffe07190dca9f1621b6c978ea1d415f81ae8282423f3a683d7d9da909e91",
+      "bytes": 3107
+    },
+    {
+      "path": "analysis/startup-observation-independent-audit/report.json",
+      "sha256": "0a5b65a4d5f889a64ce3a6474a5c3c6d756c29400fffc74435f6d8574907a757",
+      "bytes": 4111
+    },
+    {
+      "path": "analysis/startup-observation-independent-timing-audit/report.json",
+      "sha256": "590afa7c3f2d5221c89587fbb6805f8cd3960b1978923f9d21b4b85cbdde2d0c",
+      "bytes": 9337
+    },
+    {
+      "path": "analysis/startup-observation-independent-timing-audit/summary.md",
+      "sha256": "3ecd9a8cac7a1efd5c342540ca785939920cfd3a32030f38c08342d5ddde8a4d",
+      "bytes": 733
+    },
+    {
+      "path": "analysis/startup-observation-independent-timing-audit/timing-rows.json",
+      "sha256": "6b33c933342909ad5fdb31e0e835dd204675e39f731842b202c10966cfa6efab",
+      "bytes": 12731
+    },
+    {
+      "path": "analysis/startup-observation-prep/design.md",
+      "sha256": "e533520ade51f266d6a837a5e9168b83d3f85791f601626649cd17de68d72bc4",
+      "bytes": 1012
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v1/apply-check.json",
+      "sha256": "f73f29234006e73f5ef01cd5bf4f113006866341a78eb02aba31e8e25b99990b",
+      "bytes": 226
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v1/before/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "72ffe2a766a128688510fa02c2c1a1cbcc56c0aa28b6202f74f59a567ed42f67",
+      "bytes": 112594
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v1/before/HangTen/Views/BoardModelView.swift",
+      "sha256": "d74f4fbb2bd260cdd777e3fd15c0d0fc92f9b7b2a9f9b5cd9daa9bdf54748426",
+      "bytes": 24014
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v1/before/HangTen/Views/RootView.swift",
+      "sha256": "5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926",
+      "bytes": 150194
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v1/report.json",
+      "sha256": "ac7c6643f6fd29b289f66593f1df32c0155b99ce5c65ee780b48f7b0fc16e69b",
+      "bytes": 5572
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v1/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "e9f44406138e6e59ca744e529812a8c70ca402341bd390167ea7a7d6258007fc",
+      "bytes": 113037
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v1/source/HangTen/Views/BoardModelView.swift",
+      "sha256": "b4ae8af4abc9564dfd2ea445236fa3eacfe31f2c38e14131ada61b8bb3bbad44",
+      "bytes": 25564
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v1/source/HangTen/Views/RootView.swift",
+      "sha256": "049d40bd016e962d12d296f5ffd4c5756d822eae07dbcf24aa63d3706bff624c",
+      "bytes": 152828
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v1/startup-observation.patch",
+      "sha256": "76901946edd8edee1c6937a707aac4d417f6ebbfe4d60dfefe68e8b04607f541",
+      "bytes": 7345
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v2/apply-check.json",
+      "sha256": "309b10a50d81506fb67d8c7c965631bbe8c131b7ebcca9c5a21e3d0e6d2f8419",
+      "bytes": 320
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v2/apply-check.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v2/apply-check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v2/before/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "72ffe2a766a128688510fa02c2c1a1cbcc56c0aa28b6202f74f59a567ed42f67",
+      "bytes": 112594
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v2/before/HangTen/Views/BoardModelView.swift",
+      "sha256": "d74f4fbb2bd260cdd777e3fd15c0d0fc92f9b7b2a9f9b5cd9daa9bdf54748426",
+      "bytes": 24014
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v2/before/HangTen/Views/RootView.swift",
+      "sha256": "5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926",
+      "bytes": 150194
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v2/correlation-design.md",
+      "sha256": "fbd701ddd8466ab9f6eec9ef6d77b1df87eca540c84eb8cb21a7ab0f3f460bec",
+      "bytes": 1690
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v2/report.json",
+      "sha256": "557c2f29bfa40e0cfeab072f193451b79d6bf0c426b5616a1b2f0cd1b83b4402",
+      "bytes": 6907
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v2/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "a75b0fe069f6f8d03f0ecd21bf18f001d83e5d4c7ac173abd4809d3fba910b9b",
+      "bytes": 118018
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v2/source/HangTen/Views/BoardModelView.swift",
+      "sha256": "b4ae8af4abc9564dfd2ea445236fa3eacfe31f2c38e14131ada61b8bb3bbad44",
+      "bytes": 25564
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v2/source/HangTen/Views/RootView.swift",
+      "sha256": "03b0a639edd9ccf71fa2930951aa28952639fa1db3cdf03d53a3b25968654f57",
+      "bytes": 156818
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v2/source-invariants.json",
+      "sha256": "492fc0795f5dc87c9def4646904c655bddb54b89f289986146af6b60269c5100",
+      "bytes": 834
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v2/startup-observation.patch",
+      "sha256": "6fc896c9ee56b9f8ecbbe4078ce923148ba6725eb25f400f44f53b8b73b42c3c",
+      "bytes": 17437
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v3/apply-check.json",
+      "sha256": "c6666e1d25d1a7eada9a33094a430ba18fcb9d565e98f69a442b927a24845236",
+      "bytes": 320
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v3/apply-check.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v3/apply-check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v3/before/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "72ffe2a766a128688510fa02c2c1a1cbcc56c0aa28b6202f74f59a567ed42f67",
+      "bytes": 112594
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v3/before/HangTen/Views/BoardModelView.swift",
+      "sha256": "d74f4fbb2bd260cdd777e3fd15c0d0fc92f9b7b2a9f9b5cd9daa9bdf54748426",
+      "bytes": 24014
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v3/before/HangTen/Views/RootView.swift",
+      "sha256": "5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926",
+      "bytes": 150194
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v3/correlation-design.md",
+      "sha256": "6ae74673c1446e3513426431333e638e453af99fa1a873b63a082290df9dbb61",
+      "bytes": 1914
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v3/report.json",
+      "sha256": "c96a40135a03e9bd6bb1f3801eb467b28c4f3d4d72d3868c7a3a8bbabc10cf80",
+      "bytes": 8278
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v3/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "a75b0fe069f6f8d03f0ecd21bf18f001d83e5d4c7ac173abd4809d3fba910b9b",
+      "bytes": 118018
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v3/source/HangTen/Views/BoardModelView.swift",
+      "sha256": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97",
+      "bytes": 25768
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v3/source/HangTen/Views/RootView.swift",
+      "sha256": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d",
+      "bytes": 157139
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v3/source-invariants.json",
+      "sha256": "9ece0690ba2548c1f2759e992c5eab1f448ea151ad7c89fd1ac258e96cc0173c",
+      "bytes": 834
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v3/startup-observation.patch",
+      "sha256": "c53b409f878296d440c9eb567163a7afcb0c8c2c9be3a1288995411008d8241d",
+      "bytes": 18104
+    },
+    {
+      "path": "analysis/startup-observation-prep/patch-v3/v2-to-v3.patch",
+      "sha256": "13ce1f617cd2f62c062d0b75a0bfa0cb6632f3181a96fbeeafd8768cdb222848",
+      "bytes": 1810
+    },
+    {
+      "path": "analysis/startup-observation-prep/report.json",
+      "sha256": "db5b770bad8c5ed58189fac1e3ae0e40963d401f510a972de0bedfbd933b9bbc",
+      "bytes": 10218
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep/capture.diff",
+      "sha256": "b2b052c9546f91fb7a9d3eb5517ddfbb678ac13e5f7f4ad3f84dc5daaca597e0",
+      "bytes": 21712
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep/capture.py",
+      "sha256": "301d619992de07d5eb64c512e84a0421fa0205be1abc4803394c40889de3de64",
+      "bytes": 13384
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep/check-observation.py",
+      "sha256": "8792a02d465782bcefb1c16462c22ea2c44b3f3defa4e858b342ef558afe0d32",
+      "bytes": 4072
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep/reference-capture.py.txt",
+      "sha256": "50858c43dced3f368ae696d55dbd57c7619dfd1de8687b34b9caec35e4749c45",
+      "bytes": 13446
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep/report.json",
+      "sha256": "145a04003e9376e1fb005671cae594daf3cae79139723539357253f09c86f7d9",
+      "bytes": 2568
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep-v2/capture.py",
+      "sha256": "0a1eba05a5b797c3a9c63a47c0df28b3275b4d7273facf3ebee8919c8248c5b5",
+      "bytes": 13519
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep-v2/check-observation.py",
+      "sha256": "d5e3fba0d95593fcceb94995c69a72d1d803296f334fe80a7a7e6771cc32bc97",
+      "bytes": 4415
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep-v2/marker-schema-draft.json",
+      "sha256": "e35067d48dbf707c320a08d637b72f06709e06245f054e8acd9be625c904df75",
+      "bytes": 7975
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep-v2/marker-schema.json",
+      "sha256": "a4a9065f46d9a8f018dfd47ccf5a13c9d9c8eb4b6b22554e701e3fa678d23707",
+      "bytes": 10441
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep-v2/marker_correlations.py",
+      "sha256": "edfdd6480f5054c53607cc5bdbf2420feb80cf606138698a55551bb1b023a0cc",
+      "bytes": 5026
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep-v2/prior-capture.py.txt",
+      "sha256": "301d619992de07d5eb64c512e84a0421fa0205be1abc4803394c40889de3de64",
+      "bytes": 13384
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep-v2/prior-check-observation.py.txt",
+      "sha256": "8792a02d465782bcefb1c16462c22ea2c44b3f3defa4e858b342ef558afe0d32",
+      "bytes": 4072
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep-v2/release-proposal.json",
+      "sha256": "cb19321b9360c27afbdb9e336b57acef51b115629e653469d8e53d92bcdf43c3",
+      "bytes": 1715
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep-v2/report.json",
+      "sha256": "56a1ca3b6680f636eb9ec1a79107edc8db2a2096b384f25f9867288ad271633c",
+      "bytes": 2715
+    },
+    {
+      "path": "analysis/startup-observation-runtime-prep-v2/static-checks.json",
+      "sha256": "cb8b960333f0e3b78ad3192aaa21b3f8502098e2ad49aa45169d022d86968b14",
+      "bytes": 181
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/000-stdout.txt",
+      "sha256": "e9a0b7b0f55882d79f82898d311658c54c16e742a65133ce2af172cdd917da72",
+      "bytes": 176
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/001-stdout.txt",
+      "sha256": "b99433b23a26a8dd4ad9ed5e91b3e098cebfbbdda53fd07f3a90932a8b625067",
+      "bytes": 162
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/002-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/002-stdout.txt",
+      "sha256": "c26d4ad790abb720b32af810cd3960fa407c04924d097485386dec6b351f255c",
+      "bytes": 28
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/003-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/003-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/004-stderr.txt",
+      "sha256": "7eef53b39c24adefd880e596de28d2e619d57245e13f4dc5a572bf0212ef48e7",
+      "bytes": 374
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/004-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/appearance-anchor.json",
+      "sha256": "6f4842becb621d3fe546a65d96715c677c6eee0e386ea1fe200e193ab1cc69a7",
+      "bytes": 1492
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/check-observation-command.json",
+      "sha256": "fc17105e7180491207deb890e1ff73126954e6a80a400b0c7c064e539c055199",
+      "bytes": 332
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/check-observation.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/check-observation.stdout",
+      "sha256": "577af4bfeaaf132b7614a3ee56d0d294a880fb203a42ed8307812b4221523755",
+      "bytes": 70
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/commands.json",
+      "sha256": "7ea2d7cbf4758d591cccb91ae3e83bde6eed50c733b3381b815af7f20d449551",
+      "bytes": 3009
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/events-D4476BEE-B669-4358-B806-F6210B54E5EF.jsonl",
+      "sha256": "a937350209818fcaaa027e6937f1be510f26d276bdeb49f58fa49bff59331c05",
+      "bytes": 453861
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/installed-binary-gate.json",
+      "sha256": "7d5751807175ae1f145fbffeae554e9e8f62dbdcecfbf623dc6b6f70e65cc5a5",
+      "bytes": 374
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/launch-initial-capture.json",
+      "sha256": "823f4f72f5908926781e9aa61de237464c970ad7ecc4eb5adf56200beaa88471",
+      "bytes": 896
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/launch-initial.png",
+      "sha256": "159ce67de800b7d621fce93c34a248096aff7eb7dd06cf452ea3e5cab01aa4e7",
+      "bytes": 460686
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/launch-review-environment.json",
+      "sha256": "f6c5051b03113040cef11ec496b0b1dfb21ff602f94d8bae85df424977ed4934",
+      "bytes": 671
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/marker-first-observations.json",
+      "sha256": "80393a3a98af004ec0688288303d3752ddffe918b4348dd5f11ba9f6015cfb20",
+      "bytes": 4448
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/observation-end.json",
+      "sha256": "b16151d5a52929baa50e1e656ff3b715477864a3b62c0c45649fb0d9e8a0532e",
+      "bytes": 185
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/protocol.json",
+      "sha256": "df79fa984917ba9e0d20f280e622cd823deaa0948e71b4d8f149dacb023dae7d",
+      "bytes": 522
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/runtime-release.json",
+      "sha256": "7d3344ead5d408ec26a56b7be333593b38b6c99bf0fca9f9d9b6b002fcf3e9ba",
+      "bytes": 2243
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/startup-observation-validation.json",
+      "sha256": "6e12bdb1b9ac0690233ce379ea0ecf48212b60f74e0973e136ae6c30b7764b4b",
+      "bytes": 36854
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/trace-copy.json",
+      "sha256": "32ab8b7c624bed3a81b8a0e50aa7c58c1fc0fc2c44cf967d032370efc9e02219",
+      "bytes": 889
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/train-startup-readiness.json",
+      "sha256": "c928f679047a895ce63d75d8bfa32c52a07f0fe24217c3a02e6e3e62adf5c3cf",
+      "bytes": 22545
+    },
+    {
+      "path": "raw/startup-observation-action-landscape/workout-openurl-timing.json",
+      "sha256": "590522f300dedc44bc36b6d33f58bf0a131b80d2ccdd8769e9c3e109c34ffcf2",
+      "bytes": 176
+    },
+    {
+      "path": "raw/startup-observation-app-termination-verification.json",
+      "sha256": "b3846a0d7a1c045c22d9b2b3906e47f0916d0bc8e8d5adfdd4d03c24a3299d88",
+      "bytes": 185
+    },
+    {
+      "path": "raw/startup-observation-applied/check-parity.py",
+      "sha256": "7e018847002b4f611ddb2f49d1b1a62207ad28d7ff616b32f49b8dbb801e3bfe",
+      "bytes": 1220
+    },
+    {
+      "path": "raw/startup-observation-applied/full-diagnostic.patch",
+      "sha256": "0f3e9ff0a08d90e847152cc82ffc5a1c30d62cba9ef55269069b046bc898c885",
+      "bytes": 133544
+    },
+    {
+      "path": "raw/startup-observation-applied/installed-container.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-observation-applied/installed-container.stdout",
+      "sha256": "e9a0b7b0f55882d79f82898d311658c54c16e742a65133ce2af172cdd917da72",
+      "bytes": 176
+    },
+    {
+      "path": "raw/startup-observation-applied/mach-o-parity.json",
+      "sha256": "9f5e7b45fecf77cf17a6340fc8b04fd2201c9ec0fc980d8f5cc131082468a2de",
+      "bytes": 2011
+    },
+    {
+      "path": "raw/startup-observation-applied/package-parity.json",
+      "sha256": "9e67ad37d5e4c45be07e0c777ff932d61da70555659c8ac542d9741077dcae31",
+      "bytes": 7405
+    },
+    {
+      "path": "raw/startup-observation-applied/root-application.json",
+      "sha256": "ed79eec42ed9bbc1c2a7594a690eb1314d523ce7720fce4a37adb06b1dc01d2b",
+      "bytes": 2223
+    },
+    {
+      "path": "raw/startup-observation-applied/root-source-review.json",
+      "sha256": "8c3825c3e512a9d1e4a22ec9e11732b7187399910b4e771e1693d4f178ae194a",
+      "bytes": 1227
+    },
+    {
+      "path": "raw/startup-observation-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "a75b0fe069f6f8d03f0ecd21bf18f001d83e5d4c7ac173abd4809d3fba910b9b",
+      "bytes": 118018
+    },
+    {
+      "path": "raw/startup-observation-applied/source/HangTen/Views/BoardModelView.swift",
+      "sha256": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97",
+      "bytes": 25768
+    },
+    {
+      "path": "raw/startup-observation-applied/source/HangTen/Views/GripHandModelView.swift",
+      "sha256": "78398b0253e6bca1184a9c24c5c938a3dd1cc0afce807b0226b0f4605e6824a1",
+      "bytes": 50471
+    },
+    {
+      "path": "raw/startup-observation-applied/source/HangTen/Views/RootView.swift",
+      "sha256": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d",
+      "bytes": 157139
+    },
+    {
+      "path": "raw/startup-observation-applied/source/HangTen/Views/TrainView.swift",
+      "sha256": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba",
+      "bytes": 27742
+    },
+    {
+      "path": "raw/startup-observation-applied/source-freeze.json",
+      "sha256": "1f9fc276c218bb00381ea72501b3ab5c37d3f32ca71af05af7e2f335c2c21954",
+      "bytes": 1745
+    },
+    {
+      "path": "raw/startup-observation-build-command.json",
+      "sha256": "cbfeeeb0b257e9dcae746d02393d8722bae7f154dc97bf5a4f65ceb973feca96",
+      "bytes": 534
+    },
+    {
+      "path": "raw/startup-observation-build-command.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-observation-build-command.stdout",
+      "sha256": "d1245e8e5382a88789b5bd48ee1f31a57b3f12224077879456d6480e207c5e28",
+      "bytes": 322482
+    },
+    {
+      "path": "raw/startup-observation-build-parity.json",
+      "sha256": "d79874c9099aaa79389d1e27459d87d585afcb88daddc924e7b2fb14240c37ff",
+      "bytes": 12855
+    },
+    {
+      "path": "raw/startup-observation-final-parity.json",
+      "sha256": "d79874c9099aaa79389d1e27459d87d585afcb88daddc924e7b2fb14240c37ff",
+      "bytes": 12855
+    },
+    {
+      "path": "raw/startup-observation-findings.json",
+      "sha256": "4367ac8972a8aa5a5842841e8ebec359e11e7088b329c14976c1531e09b3044c",
+      "bytes": 126809
+    },
+    {
+      "path": "raw/startup-observation-frozen-manifest.json",
+      "sha256": "f16c7ce3df36d1ea6e4f1d3c22c66df6f85f303a702fdf606673ec6abe23ee65",
+      "bytes": 30027
+    },
+    {
+      "path": "raw/startup-observation-helper-freeze.json",
+      "sha256": "6ff5c332803410d24f698f458ac1dfbf29eb27433b5c4bde0ce0f81cc9fa762c",
+      "bytes": 2414
+    },
+    {
+      "path": "raw/startup-observation-install-command.json",
+      "sha256": "8116e7cb72c996ea084543ec8023a72c116b69a29cf5b8ab49d8c1778b2c5bc0",
+      "bytes": 449
+    },
+    {
+      "path": "raw/startup-observation-install-command.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-observation-install-command.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-observation-prior-freeze-verification.json",
+      "sha256": "20ef17e13c9cdea089cccc4d8a34400273fd8b98e7bff7249eb68d614c188117",
+      "bytes": 1123
+    },
+    {
+      "path": "raw/startup-observation-root-visual.json",
+      "sha256": "25e0f1b041ba81afc9c86c4a60073b83094427de93dc5ff4ea0ee157a18c8e49",
+      "bytes": 534
+    },
+    {
+      "path": "raw/startup-observation-runtime-release.json",
+      "sha256": "7d3344ead5d408ec26a56b7be333593b38b6c99bf0fca9f9d9b6b002fcf3e9ba",
+      "bytes": 2243
+    },
+    {
+      "path": "raw/startup-observation-termination-ps.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-observation-termination-ps.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-observation-termination.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-observation-termination.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "retention-manifest.json",
+      "sha256": "14df9c628990409d30a06c5442e785e92f6a5e1a19e601f5727cf270040a4630",
+      "bytes": 41979
+    }
+  ]
+}

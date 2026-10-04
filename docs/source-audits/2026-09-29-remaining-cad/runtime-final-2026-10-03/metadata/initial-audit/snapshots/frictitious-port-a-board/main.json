@@ -1,0 +1,739 @@
+{
+  "schemaVersion": 3,
+  "id": "frictitious.port-a-board",
+  "manufacturer": "Frictitious Climbing",
+  "name": "Port-A-Board",
+  "subtitle": "Portable single-object board with edges, pocket, jug, and pinch contacts.",
+  "productURL": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
+  "dimensions": "128 \u00d7 140 \u00d7 48 mm",
+  "aspectRatio": 1.0,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Front Upright",
+      "aspectRatio": 1.0,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "raster",
+        "assetPath": "assets/primary.png",
+        "contactGeometry": {
+          "edge-30": [
+            {
+              "frame": {
+                "x": 0.305,
+                "y": 0.648,
+                "width": 0.39,
+                "height": 0.073
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "pocket-30-two-finger-mono": [
+            {
+              "frame": {
+                "x": 0.34,
+                "y": 0.734,
+                "width": 0.32,
+                "height": 0.047
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "edge-25": [
+            {
+              "frame": {
+                "x": 0.3,
+                "y": 0.468,
+                "width": 0.4,
+                "height": 0.101
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "edge-20": [
+            {
+              "frame": {
+                "x": 0.314,
+                "y": 0.401,
+                "width": 0.378,
+                "height": 0.067
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "jug-outer-rim": [
+            {
+              "frame": {
+                "x": 0.333,
+                "y": 0.344,
+                "width": 0.335,
+                "height": 0.061
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "front-inverted",
+      "name": "Front Inverted",
+      "aspectRatio": 1.0,
+      "isDefault": false,
+      "derivation": {
+        "type": "derived",
+        "sourcePresentationID": "primary",
+        "isInverted": true
+      },
+      "media": {
+        "type": "raster",
+        "assetPath": "assets/front-inverted.png",
+        "contactGeometry": {
+          "edge-30": [
+            {
+              "frame": {
+                "x": 0.305,
+                "y": 0.648,
+                "width": 0.39,
+                "height": 0.073
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "pocket-30-two-finger-mono": [
+            {
+              "frame": {
+                "x": 0.34,
+                "y": 0.734,
+                "width": 0.32,
+                "height": 0.047
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "edge-25": [
+            {
+              "frame": {
+                "x": 0.3,
+                "y": 0.468,
+                "width": 0.4,
+                "height": 0.101
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "edge-20": [
+            {
+              "frame": {
+                "x": 0.314,
+                "y": 0.401,
+                "width": 0.378,
+                "height": 0.067
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "jug-outer-rim": [
+            {
+              "frame": {
+                "x": 0.333,
+                "y": 0.344,
+                "width": 0.335,
+                "height": 0.061
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cord-option-4-20mm-incut",
+      "name": "Cord Option 4 \u2014 20 mm In-cut",
+      "aspectRatio": 1.0,
+      "isDefault": false,
+      "derivation": {
+        "type": "derived",
+        "sourcePresentationID": "primary",
+        "isInverted": true
+      },
+      "media": {
+        "type": "raster",
+        "assetPath": "assets/front-inverted.png",
+        "contactGeometry": {
+          "edge-30": [
+            {
+              "frame": {
+                "x": 0.305,
+                "y": 0.648,
+                "width": 0.39,
+                "height": 0.073
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "pocket-30-two-finger-mono": [
+            {
+              "frame": {
+                "x": 0.34,
+                "y": 0.734,
+                "width": 0.32,
+                "height": 0.047
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "edge-25": [
+            {
+              "frame": {
+                "x": 0.3,
+                "y": 0.468,
+                "width": 0.4,
+                "height": 0.101
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "edge-20": [
+            {
+              "frame": {
+                "x": 0.314,
+                "y": 0.401,
+                "width": 0.378,
+                "height": 0.067
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "jug-outer-rim": [
+            {
+              "frame": {
+                "x": 0.333,
+                "y": 0.344,
+                "width": 0.335,
+                "height": 0.061
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "back",
+      "name": "Back Upright",
+      "aspectRatio": 1.0,
+      "isDefault": false,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "raster",
+        "assetPath": "assets/back.png",
+        "contactGeometry": {
+          "edge-15": [
+            {
+              "frame": {
+                "x": 0.316,
+                "y": 0.401,
+                "width": 0.376,
+                "height": 0.101
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "edge-12": [
+            {
+              "frame": {
+                "x": 0.299,
+                "y": 0.508,
+                "width": 0.402,
+                "height": 0.112
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "edge-10": [
+            {
+              "frame": {
+                "x": 0.315,
+                "y": 0.718,
+                "width": 0.37,
+                "height": 0.105
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "edge-8": [
+            {
+              "frame": {
+                "x": 0.315,
+                "y": 0.628,
+                "width": 0.37,
+                "height": 0.09
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "back-inverted",
+      "name": "Back Inverted",
+      "aspectRatio": 1.0,
+      "isDefault": false,
+      "derivation": {
+        "type": "derived",
+        "sourcePresentationID": "back",
+        "isInverted": true
+      },
+      "media": {
+        "type": "raster",
+        "assetPath": "assets/back-inverted.png",
+        "contactGeometry": {
+          "edge-15": [
+            {
+              "frame": {
+                "x": 0.316,
+                "y": 0.401,
+                "width": 0.376,
+                "height": 0.101
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "edge-12": [
+            {
+              "frame": {
+                "x": 0.299,
+                "y": 0.508,
+                "width": 0.402,
+                "height": 0.112
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "edge-10": [
+            {
+              "frame": {
+                "x": 0.315,
+                "y": 0.718,
+                "width": 0.37,
+                "height": 0.105
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ],
+          "edge-8": [
+            {
+              "frame": {
+                "x": 0.315,
+                "y": 0.628,
+                "width": 0.37,
+                "height": 0.09
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "side",
+      "name": "Pinch Side",
+      "aspectRatio": 1.0,
+      "isDefault": false,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "raster",
+        "assetPath": "assets/side.png",
+        "contactGeometry": {
+          "pinch-body": [
+            {
+              "frame": {
+                "x": 0.4,
+                "y": 0.332,
+                "width": 0.2,
+                "height": 0.535
+              },
+              "shape": {
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
+              },
+              "shapeConstraint": {
+                "shape": "roundedRectangle",
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "edge-30",
+      "equipmentObjectID": "primary",
+      "name": "30 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-30-two-finger-mono",
+      "equipmentObjectID": "primary",
+      "name": "30 mm two-finger / mono pocket contact",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-25",
+      "equipmentObjectID": "primary",
+      "name": "25 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20",
+      "equipmentObjectID": "primary",
+      "name": "20 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15",
+      "equipmentObjectID": "primary",
+      "name": "15 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-12",
+      "equipmentObjectID": "primary",
+      "name": "12 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 12,
+          "maximum": 12
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10",
+      "equipmentObjectID": "primary",
+      "name": "10 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-8",
+      "equipmentObjectID": "primary",
+      "name": "8 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 8,
+          "maximum": 8
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "jug-outer-rim",
+      "equipmentObjectID": "primary",
+      "name": "Outer rim jug contact",
+      "kind": "jug",
+      "gripTypes": []
+    },
+    {
+      "id": "pinch-body",
+      "equipmentObjectID": "primary",
+      "name": "Board body pinch contact",
+      "kind": "pinch",
+      "gripTypes": []
+    }
+  ]
+}

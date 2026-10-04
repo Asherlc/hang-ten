@@ -1,0 +1,16 @@
+{
+  "createdUTC": "2026-10-02T19:02:57.507299+00:00",
+  "selfExcluded": "retained-files.sha256.json",
+  "entries": [
+    {
+      "path": "README.md",
+      "bytes": 990,
+      "sha256": "6fb427ade5dc29e2e90086c904164c16aa71e11d8640679e588a7af3aebb7227"
+    },
+    {
+      "path": "baseline-workflow.json",
+      "bytes": 2120,
+      "sha256": "0841086720a4faabba88e8f836af14e2646c848ceb0657e78390b48d97152bbe"
+    }
+  ]
+}

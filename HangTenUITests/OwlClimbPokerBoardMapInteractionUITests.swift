@@ -220,10 +220,10 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
-    func testLandscapeMultiPresentationSquareBoardDetailKeepsMapInViewport() throws {
+    func testLandscapeMultiPresentationBoardDetailKeepsMapInViewport() throws {
         let (app, map) = try launchLandscapeBoardDetail(
-            boardID: "nature.stone-hanger-mini",
-            expectedBoardName: "Stone Hanger Mini"
+            boardID: "plateau.lifting-edge",
+            expectedBoardName: "Lifting Edge"
         )
         assertMap(map, isInside: app)
 
@@ -236,6 +236,84 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCTAssertLessThanOrEqual(presentationSelector.frame.maxY, map.frame.minY + 1)
 
         XCUIDevice.shared.orientation = .portrait
+    }
+
+    func testLandscapePlateauWorkoutKeepsBoardVisibleBelowConfigurationSelector() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "plateau.lifting-edge",
+            "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
+            "HANGTEN_REVIEW_LANDSCAPE": "1",
+            "HANGTEN_REVIEW_STEP": "17",
+        ]
+        app.launch()
+        XCTAssertTrue(app.otherElements["train.board"].waitForExistence(timeout: 30))
+        app.open(URL(string: "hangten://plan/research.abrahangs/workout")!)
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 30))
+        pause.tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+
+        let selector = app.segmentedControls["boardMap.presentationSelector"]
+        XCTAssertTrue(selector.waitForExistence(timeout: 5))
+        XCTAssertTrue(selector.isHittable)
+        let board = app.otherElements["boardModel.3d"]
+        XCTAssertTrue(board.waitForExistence(timeout: 5))
+        XCTAssertGreaterThan(board.frame.height, 30, "Configuration controls must not collapse the workout board.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).width, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).height, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThan(board.frame.width, 30)
+        XCTAssertGreaterThanOrEqual(board.frame.minY, selector.frame.maxY)
+        XCTAssertLessThanOrEqual(board.frame.maxY, app.frame.maxY)
+        addScreenshot(named: "Plateau landscape workout board below configuration selector")
+
+        app.buttons["Resume"].tap()
+        let rest = NSPredicate(format: "label CONTAINS %@", "current step 18: Rest")
+        expectation(for: rest, evaluatedWith: app.buttons["workout.routinePicker"])
+        waitForExpectations(timeout: 20)
+        pause.tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        XCTAssertGreaterThan(board.frame.height, 30)
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).width, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).height, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThanOrEqual(board.frame.minY, selector.frame.maxY)
+        addScreenshot(named: "Plateau landscape natural Rest board preview")
+    }
+
+    func testMiniPortraitWorkoutShowsBoardDuringHangAndNaturalRest() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger-mini",
+            "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+            "HANGTEN_REVIEW_STEP": "17",
+        ]
+        app.launch()
+        XCTAssertTrue(app.otherElements["train.board"].waitForExistence(timeout: 30))
+        app.open(URL(string: "hangten://plan/research.abrahangs/workout")!)
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 30))
+        pause.tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        let board = app.otherElements["boardModel.3d"]
+        XCTAssertTrue(board.waitForExistence(timeout: 5))
+        board.swipeUp()
+        XCTAssertGreaterThan(board.frame.height, 30)
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).width, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).height, 30, "The workout board must be visible inside the viewport.")
+        addScreenshot(named: "Mini portrait paused Hang board and finger cues")
+
+        app.buttons["Resume"].tap()
+        let rest = NSPredicate(format: "label CONTAINS %@", "current step 18: Rest")
+        expectation(for: rest, evaluatedWith: app.buttons["workout.routinePicker"])
+        waitForExpectations(timeout: 20)
+        pause.tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        board.swipeUp()
+        XCTAssertGreaterThan(board.frame.height, 30)
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).width, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).height, 30, "The workout board must be visible inside the viewport.")
+        addScreenshot(named: "Mini portrait natural Rest board and finger cues")
     }
 
     private func launchLandscapeBoardDetail(

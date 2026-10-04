@@ -1,0 +1,150 @@
+{
+  "reviewedAt": "2026-09-30T19:19:24.083083+00:00",
+  "reviewer": "cad_wall_boards",
+  "status": "passed: frozen implementation, all-four applied native geometry and independent fresh exact regeneration verified",
+  "blockingFindings": [],
+  "poses": {
+    "curved-lip-front": {
+      "allRoutesAndHeightExactlyMatchApplyReport": true,
+      "wholeTubeGate": "passed",
+      "heightIterations": 2,
+      "maxCandidateChecksPerPass": 1916,
+      "strands": {
+        "left-lead": {
+          "lengthMM": 400.00000048444593,
+          "lengthRatio": 1.0000000012111148,
+          "frontEntryDotMM": 19.600545,
+          "continuousCertificateMM": 1.9900946945274165,
+          "largestWoodDistanceAtTurnOver5DegreesMM": 2.0284641857806847
+        },
+        "right-lead": {
+          "lengthMM": 400.00000048444593,
+          "lengthRatio": 1.0000000012111148,
+          "frontEntryDotMM": 19.600545,
+          "continuousCertificateMM": 1.9900946945274165,
+          "largestWoodDistanceAtTurnOver5DegreesMM": 2.028464185780687
+        }
+      }
+    },
+    "exterior-jug-back": {
+      "allRoutesAndHeightExactlyMatchApplyReport": true,
+      "wholeTubeGate": "passed",
+      "heightIterations": 2,
+      "maxCandidateChecksPerPass": 1298,
+      "strands": {
+        "left-lead": {
+          "lengthMM": 400.0000001689372,
+          "lengthRatio": 1.000000000422343,
+          "frontEntryDotMM": 19.175987,
+          "continuousCertificateMM": 1.9900876098927398,
+          "largestWoodDistanceAtTurnOver5DegreesMM": 2.0895198177919476
+        },
+        "right-lead": {
+          "lengthMM": 399.99884748891594,
+          "lengthRatio": 0.9999971187222898,
+          "frontEntryDotMM": 19.522818,
+          "continuousCertificateMM": 1.9901322161759962,
+          "largestWoodDistanceAtTurnOver5DegreesMM": 2.0803277462240204
+        }
+      }
+    },
+    "left-pocket-vertical": {
+      "allRoutesAndHeightExactlyMatchApplyReport": true,
+      "wholeTubeGate": "passed",
+      "heightIterations": 2,
+      "maxCandidateChecksPerPass": 8118,
+      "strands": {
+        "left-lead": {
+          "lengthMM": 399.99999973447683,
+          "lengthRatio": 0.999999999336192,
+          "frontEntryDotMM": 1.6312140000000002,
+          "continuousCertificateMM": 1.9901019367640458,
+          "largestWoodDistanceAtTurnOver5DegreesMM": 2.0404876045788862
+        },
+        "right-lead": {
+          "lengthMM": 352.3283822959691,
+          "lengthRatio": 0.8808209557399228,
+          "frontEntryDotMM": 3.607244,
+          "continuousCertificateMM": 1.9904105817682505,
+          "largestWoodDistanceAtTurnOver5DegreesMM": 2.030833799512639
+        }
+      }
+    },
+    "straight-lip-inverted": {
+      "allRoutesAndHeightExactlyMatchApplyReport": true,
+      "wholeTubeGate": "passed",
+      "heightIterations": 2,
+      "maxCandidateChecksPerPass": 1827,
+      "strands": {
+        "left-lead": {
+          "lengthMM": 399.99999980027707,
+          "lengthRatio": 0.9999999995006926,
+          "frontEntryDotMM": 19.431193999999998,
+          "continuousCertificateMM": 1.9901035445246038,
+          "largestWoodDistanceAtTurnOver5DegreesMM": 2.0385083433602027
+        },
+        "right-lead": {
+          "lengthMM": 399.9980833481951,
+          "lengthRatio": 0.9999952083704877,
+          "frontEntryDotMM": 19.535625,
+          "continuousCertificateMM": 1.990102631960677,
+          "largestWoodDistanceAtTurnOver5DegreesMM": 2.0378594688565057
+        }
+      }
+    }
+  },
+  "claims": {
+    "unsupportedCollars": "All substantial turns now remain near native wood contact; no tested local corner cut above1micrometre certifies on any pose. Former exterior collars are seed metadata only, not fixed geometry constraints.",
+    "verticalBow": {
+      "beforeMM": 11.217132,
+      "afterMM": 4.289887990871082,
+      "nonSupportInterstrandMinimumMM": 4.000338195802653,
+      "verticalFreshReportExactlyEqualsIndependentlyReviewedProbe": true
+    },
+    "boundedLocalConvergence": "All four poses settle in2height iterations. Deterministic generated subchains, native-normal proposals and corner cuts use explicit128sweep/256vertex/20kcheck/16height limits. No global minimum or full equilibrium claim.",
+    "sourceEntry": "All eight exact front mouth centers are unchanged, positive final front approach and full native aperture clearance independently replayed.",
+    "precision": "Exact9decimal body routes and rounded body height replayed through original full-solid and whole-path tube gates; proposal margins do not loosen final gates.",
+    "metadataAndAssets": {
+      "sourceModelDescriptorUnchanged": true,
+      "authoredMetadataUnchangedExceptOptInAndGeneratedRoutesHeight": true,
+      "baselineFilesCompared": 206,
+      "unchangedFiles": 205,
+      "changedFiles": [
+        "Hangboards/captain-fingerfood-dual/suspension.json"
+      ]
+    }
+  },
+  "visualReview": "Independently viewed retained front/side/top vertical diagnostic comparisons; fresh vertical report equals those diagnostic routes exactly. Narrower front/top divergence and removed side-view floating stand-off are visible. Root owns current app/all-pose screenshots.",
+  "practicalLimits": [
+    "One-micrometre local length threshold; tested corner cuts are a bounded quality check, not proof of every possible3D shortening.",
+    "The vertical upper lead displays352.328382mm against400mm rest length:47.671618mm of slack is not represented. This remains a static display-route model, not equilibrium of two equally taut ropes.",
+    "Continuous certificates use the unchanged10micrometre numerical tolerance for a2mm tube; reported conservative lower bounds near1.990mm do not claim exact zero-gap contact."
+  ],
+  "pending": [
+    "Root full Python and current iOS integration lanes",
+    "Portable Baguette exact existing-cache check; all unrelated package bytes already independently unchanged"
+  ],
+  "reviewerScope": "Read-only production review; static replay and local analytic checks only. No heavy solve, shared edits, server or simulator.",
+  "fileSHA256": {
+    "Tools/HangboardCAD/native_cord_routes.py": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+    "Tools/HangboardCAD/tests/test_native_cord_tightening.py": "362679227649f45dbfab39a7eda39a7c648de4e928d3904e93750e51f2ab60e7",
+    "Tools/HangboardPackages/src/hangboard_packages/cord_paths.py": "d0c6dcacc8e1ad129e8d03580a43e9e20b547879a127bb912582b19c7a683250",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "31a4896a3e423f23199907fabd8d63481d1890beca90307394e28c1cfac20661",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py": "31d1262891ed33ad28fa1cf5fb459015701044b03a9a77ea3344deb29a63a2c7",
+    "Hangboards/captain-fingerfood-dual/suspension.json": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+    "Hangboards/captain-fingerfood-dual/captain-fingerfood-dual.FCStd": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+    "Hangboards/captain-fingerfood-dual/assets/primary.usdz": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+    "Hangboards/captain-fingerfood-dual/assets/primary.model.json": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699",
+    ".context/placid-badger/dual-vertical-review/fresh-native-apply-report.json": "f345c21d91abebf80c2eb3548d67bb7563daa00fb2f5d7d5405441a2ab8af682",
+    ".context/placid-badger/dual-vertical-review/post-apply-native-certificates.json": "d3dba06366bda65ba14f45e18e9b89ce2a34b0985a48add9de879d73c95cd119",
+    ".context/placid-badger/dual-vertical-review/fresh-apply-before-package-hashes.json": "696a10f229f9017a91a420f6fa9c170b886922db59d03f73808433309f1f905d",
+    ".context/placid-badger/dual-vertical-review/probe-3-independent-quality.json": "1eed55df754d7780ee0a9d6aef4baca289d49aca1bc2d9635f9b169163c0c0a8",
+    ".context/placid-badger/dual-vertical-review/fresh-native-check-report.json": "f345c21d91abebf80c2eb3548d67bb7563daa00fb2f5d7d5405441a2ab8af682",
+    ".context/placid-badger/dual-vertical-review/fresh-reproducibility-result.json": "78a86127576203cced503cf46464516426b57389a9fea423afe0979812e4cce0"
+  },
+  "freshExactReproduction": {
+    "result": "passed",
+    "applyAndCheckReportsByteIdentical": true,
+    "reportSHA256": "f345c21d91abebf80c2eb3548d67bb7563daa00fb2f5d7d5405441a2ab8af682"
+  }
+}

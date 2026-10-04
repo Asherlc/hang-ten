@@ -1,0 +1,96 @@
+{
+  "status": "pass",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "beforeSourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "rawManifestExact": true,
+  "surfaceFinish": "plastic",
+  "bodyValid": true,
+  "bodySolidCount": 1,
+  "contactCount": 30,
+  "depthFactCount": 27,
+  "normalFlags": {
+    "analytic": true,
+    "uvNative": true
+  },
+  "fullyConstrainedSketchCount": 159,
+  "measuredEnvelopeXYZMM": [
+    711.9984710024119,
+    100.4741579574828,
+    226.44864175057293
+  ],
+  "upperProtectedZMinimumMM": 135,
+  "upperBodyBidirectionalDifferenceVolumesMM3": [
+    0.0,
+    0.0
+  ],
+  "nativeLowerTangentJoins": [
+    {
+      "indices": [
+        5,
+        6
+      ],
+      "joinYZ": [
+        -72.12800000000001,
+        135.00000000000003
+      ],
+      "gapMM": 3.1776437161565096e-14,
+      "tangentAngleDegrees": 0.0
+    },
+    {
+      "indices": [
+        6,
+        7
+      ],
+      "joinYZ": [
+        -65.0,
+        117.0
+      ],
+      "gapMM": 0.0,
+      "tangentAngleDegrees": 0.0
+    },
+    {
+      "indices": [
+        7,
+        8
+      ],
+      "joinYZ": [
+        -55.0,
+        87.0
+      ],
+      "gapMM": 0.0,
+      "tangentAngleDegrees": 0.0
+    },
+    {
+      "indices": [
+        8,
+        9
+      ],
+      "joinYZ": [
+        -44.0,
+        59.0
+      ],
+      "gapMM": 0.0,
+      "tangentAngleDegrees": 0.0
+    },
+    {
+      "indices": [
+        9,
+        10
+      ],
+      "joinYZ": [
+        -32.0,
+        29.0
+      ],
+      "gapMM": 0.0,
+      "tangentAngleDegrees": 0.0
+    }
+  ],
+  "sourceUnchanged": true
+}
+
+								
+								
+								
+								
+								
+								

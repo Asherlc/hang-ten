@@ -1,0 +1,8 @@
+{
+  "exactHelperPID": 59788,
+  "verifiedCommand": "59788 /opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python .context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/run-tests.py --name integration-test-corrections-focus --only HangTenTests/ContactResolverTests --only HangTenTests/BoardSourceBoundaryTests/testBoardMapGivesImageAndAllHoldPathsTheSameExplicitBounds\n",
+  "epoch": 1791070589.925888,
+  "earlierRecordWasIntentOnly": true,
+  "earlierSignalNotIssuedDueMissingOsImport": true,
+  "signal": 2
+}

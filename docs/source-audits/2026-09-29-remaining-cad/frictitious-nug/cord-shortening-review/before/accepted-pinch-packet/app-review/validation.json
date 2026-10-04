@@ -1,0 +1,78 @@
+{
+  "owner": "placid-badger",
+  "simulator": "20358DD7-A124-4108-ADEA-E9B07EA3DA09",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS 26.5",
+  "boardID": "frictitious.nug",
+  "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+  "suspensionSHA256": "8a3fdf291c1ef34588425a4a7a73524fab33abdbb5a561456d571ecdd86642fc",
+  "presentations": {
+    "primary": {
+      "descriptorSHA256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+      "modelSHA256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800"
+    }
+  },
+  "builtBinarySHA256": "c82d9dc78fae85e0613d94e14cade25978f4da055f9fc13de89ac880cf827f3d",
+  "checks": [
+    {
+      "positionID": "front-25",
+      "contactID": "edge-25",
+      "front": "front-25-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "front-inverted-20",
+      "contactID": "edge-20",
+      "front": "front-inverted-20-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "reverse-13",
+      "contactID": "edge-13",
+      "front": "reverse-13-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "reverse-inverted-8",
+      "contactID": "edge-8",
+      "front": "reverse-inverted-8-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "outer-upper",
+      "contactID": "jug-40",
+      "front": "outer-upper-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "outer-lower",
+      "contactID": "pinch-60",
+      "front": "outer-lower-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    }
+  ],
+  "humanGeometryAcceptance": "pending The NUG review",
+  "limits": "App screenshots and accessibility checks establish current-source rendering; manufacturer fidelity remains under individual human review. Physical The NUG orbit capture remains unverified; only these canonical views are claimed.",
+  "captureSHA256": {
+    "front-25-front-accessibility.json": "ee2fa5cb31697e145cf491d611eb57609d097f0a338e989a22f69edf9dc8a6e1",
+    "front-25-front.png": "5eb2cf97ad81c88779f1a00f3b12947810c466d63966d01c2feacbe1b28daee3",
+    "front-inverted-20-front-accessibility.json": "54d38846eab59683be2f1b9e217b4e908b6c9bc97cc69bf141c424676108fa99",
+    "front-inverted-20-front.png": "ddcb4fbb6b7c64955a076f8c64b79734a58dd4fd9df0a61b6bbaa7e9849104e8",
+    "outer-lower-front-accessibility.json": "0f6e1ae3869a8761e9b44e6fc794c936d6f3e2d1e0d8b5d5ff24f4cc8b5b8213",
+    "outer-lower-front.png": "fe409557f2c72f8da64d1434a0a8d7f9c0f614867083cecda19d364f1502209a",
+    "outer-upper-front-accessibility.json": "dc93c090ee193366db6e4478a6f2470ca8c2c750837f470da26ce7807aa302e8",
+    "outer-upper-front.png": "a83e70c0d3b37cb24a3def670592b12d5986a7236366a63b24aefc7b4490205d",
+    "reverse-13-front-accessibility.json": "cd629327d54369e1effbb063396e73517e52b5dec3a107697c524a796a979dee",
+    "reverse-13-front.png": "7a7c493f0e020e231f689262200a0cc20bfbda5b2e6fe2411e9333087c22863d",
+    "reverse-inverted-8-front-accessibility.json": "a0c21c768cb921f366b59e8bc12fb9ce2736f16e7396216b8501710ca88ac3d5",
+    "reverse-inverted-8-front.png": "66e00ffd57a388219826de35af47e749b3aae551de20456c22add826415d36dc"
+  },
+  "physicalOrbitVerified": false,
+  "orbitCaptureStatus": "Unverified; canonical current-source views only."
+}

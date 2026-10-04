@@ -1,0 +1,50 @@
+{
+  "actionTitle" : "Build \"HangTen\"",
+  "analyzerWarningCount" : 0,
+  "analyzerWarnings" : [
+
+  ],
+  "destination" : {
+    "architecture" : "arm64",
+    "deviceId" : "1684856E-FC2D-4407-8063-9B343B99CAD6",
+    "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half Review Zlagboard Evo Resume20261002",
+    "modelName" : "iPhone 17 Pro",
+    "osBuildNumber" : "23F77",
+    "osVersion" : "26.5",
+    "platform" : "iOS Simulator"
+  },
+  "endTime" : 1790921382.018,
+  "errorCount" : 0,
+  "errors" : [
+
+  ],
+  "startTime" : 1790921372.051,
+  "status" : "succeeded",
+  "warningCount" : 4,
+  "warnings" : [
+    {
+      "className" : "DVTTextDocumentLocation",
+      "issueType" : "Swift Compiler Warning",
+      "message" : "Main actor-isolated static property 'systemSleep' can not be referenced from a nonisolated context; this is an error in the Swift 6 language mode",
+      "sourceURL" : "file:///Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Models/WorkoutAudioCoach.swift#EndingColumnNumber=77&EndingLineNumber=234&StartingColumnNumber=77&StartingLineNumber=234&Timestamp=812614172.056137"
+    },
+    {
+      "className" : "DVTTextDocumentLocation",
+      "issueType" : "Swift Compiler Warning",
+      "message" : "Main actor-isolated static property 'systemSleep' can not be referenced from a nonisolated context; this is an error in the Swift 6 language mode",
+      "sourceURL" : "file:///Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Models/WorkoutAudioCoach.swift#EndingColumnNumber=77&EndingLineNumber=256&StartingColumnNumber=77&StartingLineNumber=256&Timestamp=812614172.056137"
+    },
+    {
+      "className" : "DVTTextDocumentLocation",
+      "issueType" : "Swift Compiler Warning",
+      "message" : "Main actor-isolated static property 'systemSleep' can not be referenced from a nonisolated context; this is an error in the Swift 6 language mode",
+      "sourceURL" : "file:///Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Models/WorkoutAudioCoach.swift#EndingColumnNumber=77&EndingLineNumber=272&StartingColumnNumber=77&StartingLineNumber=272&Timestamp=812614172.056137"
+    },
+    {
+      "className" : "DVTTextDocumentLocation",
+      "issueType" : "Swift Compiler Warning",
+      "message" : "Main actor-isolated static property 'systemSleep' can not be referenced from a nonisolated context; this is an error in the Swift 6 language mode",
+      "sourceURL" : "file:///Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Models/WorkoutAudioCoach.swift#EndingColumnNumber=77&EndingLineNumber=288&StartingColumnNumber=77&StartingLineNumber=288&Timestamp=812614172.056137"
+    }
+  ]
+}

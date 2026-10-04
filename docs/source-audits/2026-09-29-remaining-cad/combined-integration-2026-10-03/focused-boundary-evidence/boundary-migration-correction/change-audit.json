@@ -1,0 +1,43 @@
+{
+  "scope": "Only HangTenTests/BoardSourceBoundaryAudit.swift and HangTenTests/BoardSourceBoundaryTests.swift edited. No models/views/packages/resources/test runs/commits.",
+  "reviewedHEAD": "3497b01405386ce388cb478d60c8e915cafc5dc6",
+  "beforeSHA256": {
+    "HangTenTests/BoardSourceBoundaryAudit.swift": "5ca9a30b1b73a51faf44316f5d995f3a678ca82ca981b63c361484c79b0efb03",
+    "HangTenTests/BoardSourceBoundaryTests.swift": "6a4ae7a63ee9488186b4548196ff6be3c30b83b62367e86d9d4028e8edc5b295",
+    "HangTen/Models/CustomRoutineStore.swift": "119ab754ad1a79c091fbc5d3cc4e8ec1a0f23747b2067b7ee49ad16f4fe236af"
+  },
+  "afterSHA256": {
+    "HangTenTests/BoardSourceBoundaryAudit.swift": "628609d9f08b632375aceb2110cf565460ccf55094956bf8276fa059c7d8dfb7",
+    "HangTenTests/BoardSourceBoundaryTests.swift": "fbdd72d9199b65dd8597cdf539b4b466dd93f23d67e8dff12e27bb181f644c99",
+    "HangTen/Models/CustomRoutineStore.swift": "119ab754ad1a79c091fbc5d3cc4e8ec1a0f23747b2067b7ee49ad16f4fe236af"
+  },
+  "storageMigrationUnchanged": true,
+  "redEvidence": "Root retained N/full-unit-compatibility-integration full suite 1518 tests/3 skips/one boundary finding failure; no independent test execution by this subagent.",
+  "exceptionScope": {
+    "path": "HangTen/Models/CustomRoutineStore.swift",
+    "bindings": [
+      {
+        "method": "private static normalize(_ definition: CustomRoutineDefinition) -> CustomRoutineDefinition",
+        "literal": "plateau.lifting-edge",
+        "expression": "board-specific definition.targetMode comparison followed by migratingLegacyPlateauTargets(in: step)"
+      },
+      {
+        "method": "private static migratingLegacyPlateauRequirement(_ requirement: ContactRequirement) -> ContactRequirement",
+        "literal": "edge-18",
+        "expression": "returned ContactRequirement contactID field"
+      }
+    ],
+    "notExempted": "Entire file, complete methods, arbitrary package IDs, unrelated occurrences of the approved IDs, assets, legacy artifact tokens, mappings or geometry."
+  },
+  "regressions": [
+    "Positive exact scoped persistence bindings",
+    "Wrong owner file rejected",
+    "Same approved literals outside the methods rejected",
+    "Same expressions in unrelated methods rejected",
+    "Other board/contact literals rejected in the approved methods",
+    "Asset and PhysicalContact geometry inside approved migration method still rejected",
+    "Unrelated edge-18 occurrence inside approved migration method still rejected"
+  ],
+  "verification": "git diff --check passed. New regressions and existing boundary tests require root execution; no green claim made.",
+  "diffSHA256": "873887cbe3a9df7b1c36e4f1839177bcd60b57f746d206093eec899a7de2a759"
+}

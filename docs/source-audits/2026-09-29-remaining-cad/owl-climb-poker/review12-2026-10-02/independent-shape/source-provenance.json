@@ -1,0 +1,36 @@
+{
+  "owner": "placid-badger",
+  "reviewDate": "2026-10-02",
+  "approvedSources": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/evidence/owl-climb-poker-face-a.jpg",
+      "sha256": "4bae58b408b3f3a82c524b1101079eafa01cd062c398cb203d4803fce9850eab",
+      "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_0.jpg",
+      "wholePhotoViewed": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/evidence/owl-climb-poker-face-b.jpg",
+      "sha256": "0c1d54cb2bc4d8e7fa285f3053b927d7c1a1b3fbafdf0b5d7aface9c82d0dbad",
+      "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_1.jpg",
+      "wholePhotoViewed": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/evidence/owl-climb-poker-face-c.jpg",
+      "sha256": "5fbff79f31db8e85d078a74eb629abd069fc276ac128b3d85a84fc15ad9f1c4e",
+      "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_2.jpg",
+      "wholePhotoViewed": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/evidence/owl-climb-poker-face-d.jpg",
+      "sha256": "ae39598fbf75c0e4e4dfbb599c724ff1e2531ef12ecca84b3504805e7bc3af13",
+      "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_3.jpg",
+      "wholePhotoViewed": true
+    }
+  ],
+  "candidateNative": {
+    "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/owl-climb-poker.FCStd",
+    "sha256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553"
+  },
+  "resourcesStarted": [],
+  "state": "Sources verified; final export visual review pending"
+}

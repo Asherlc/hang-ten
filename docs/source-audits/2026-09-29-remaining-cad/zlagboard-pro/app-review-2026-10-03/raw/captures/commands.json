@@ -1,0 +1,196 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures/top-jug-left-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures/top-jug-left-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791057732.049623,
+    "pid": 95894,
+    "exitStatus": 0,
+    "endEpoch": 1791057733.2880251
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791057734.299079,
+    "pid": 95923,
+    "exitStatus": 0,
+    "endEpoch": 1791057743.6373482
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "86.0",
+      "-y",
+      "234.66666666666663",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791057743.639093,
+    "pid": 96091,
+    "exitStatus": 0,
+    "endEpoch": 1791057747.457697
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791057747.965217,
+    "pid": 96141,
+    "exitStatus": 0,
+    "endEpoch": 1791057752.021129
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791057752.635531,
+    "pid": 96313,
+    "exitStatus": 0,
+    "endEpoch": 1791057756.3974469
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures/top-jug-left.png"
+    ],
+    "startEpoch": 1791057756.503715,
+    "pid": 96362,
+    "exitStatus": 0,
+    "endEpoch": 1791057757.202775
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "167.6",
+      "--start-y",
+      "259.6",
+      "--end-x",
+      "211.02",
+      "--end-y",
+      "248.8",
+      "--duration",
+      ".5",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791057757.20416,
+    "pid": 96407,
+    "exitStatus": 0,
+    "endEpoch": 1791057761.784171
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791057762.287362,
+    "pid": 96470,
+    "exitStatus": 0,
+    "endEpoch": 1791057766.306085
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791057766.9111402,
+    "pid": 96643,
+    "exitStatus": 0,
+    "endEpoch": 1791057770.630028
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures/jug-orbit.png"
+    ],
+    "startEpoch": 1791057770.797348,
+    "pid": 96695,
+    "exitStatus": 0,
+    "endEpoch": 1791057771.448329
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "terminate",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1791057771.459063,
+    "pid": 96710,
+    "exitStatus": 0,
+    "endEpoch": 1791057772.162988
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "95912",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791057772.1635919,
+    "pid": 96725,
+    "exitStatus": 1,
+    "endEpoch": 1791057772.2035441
+  }
+]

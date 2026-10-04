@@ -1,0 +1,17 @@
+{
+  "owner": "placid-badger",
+  "reviewedAtUTC": "2026-10-03T13:31:37.055213+00:00",
+  "method": "Direct inspection through view_image of both full-resolution composed sheets; they contain all six entire component frames",
+  "viewedFiles": {
+    "contactSheet": "a8b4538bd6db6528283947d6e47663d664faa76ae35ac8a01430fc2cedd85826",
+    "contactObliqueSheet": "f451504dcd8366af1be7dc075c6a387d5dea40c34b5ce7f93300536c0bb18aed"
+  },
+  "observations": [
+    "All six frames include the entire board, both support legs and their shared fixed-support apex without cropping.",
+    "Granite red follows nature_stone; wood red follows nature_wood in its exact saved half-turn; pinch red follows nature_pinch on the exterior upper and lower rails.",
+    "The visible near-side lead and transverse return are properly occluded by the actual USDZ using shared per-pixel depth.",
+    "Granite-front and pinch-side intentionally share the saved current rigid pose.",
+    "No manufacturer image was processed, geometry regenerated, cord cache changed or runtime finish synthesized."
+  ],
+  "scope": "Technical diagnostics only; human geometry acceptance and runtime appearance remain pending"
+}

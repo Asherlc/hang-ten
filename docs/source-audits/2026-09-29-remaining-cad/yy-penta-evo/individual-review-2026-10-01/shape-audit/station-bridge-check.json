@@ -1,0 +1,30 @@
+[
+  {
+    "slot": "edge-25",
+    "stationBridgeSolidDistanceMM": 2.2000010000059795
+  },
+  {
+    "slot": "edge-20",
+    "stationBridgeSolidDistanceMM": 2.2000010000059795
+  },
+  {
+    "slot": "edge-15",
+    "stationBridgeSolidDistanceMM": 2.200001000005981
+  },
+  {
+    "slot": "edge-10",
+    "stationBridgeSolidDistanceMM": 2.200001000005964
+  },
+  {
+    "slot": "mono",
+    "stationBridgeSolidDistanceMM": 2.200001000005974
+  },
+  {
+    "slot": "duo",
+    "stationBridgeSolidDistanceMM": 2.2000010000059826
+  },
+  {
+    "slot": "tray",
+    "stationBridgeSolidDistanceMM": 2.200001000004635
+  }
+]

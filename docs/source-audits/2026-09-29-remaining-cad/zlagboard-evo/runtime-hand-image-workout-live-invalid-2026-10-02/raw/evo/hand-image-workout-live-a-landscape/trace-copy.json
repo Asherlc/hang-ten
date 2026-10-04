@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/362DF656-0215-4C49-87F4-700B42AEAE96/Documents/HighlightDiagnostic-placid-badger-cad-second-half-hand-image-workout-live-a/events-4F1E2EDD-6532-46B6-8C55-6AD3AB5E0301.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/events-4F1E2EDD-6532-46B6-8C55-6AD3AB5E0301.jsonl",
+      "sha256": "ad8bc018e07e6cd2ddb7b263fae0a1733d8ec3ff41908a6519c51181aa34d56b"
+    }
+  ],
+  "records": 19,
+  "completeContiguous": true,
+  "copiedEpoch": 1791008946.973484,
+  "includesSamplerEnd": false
+}

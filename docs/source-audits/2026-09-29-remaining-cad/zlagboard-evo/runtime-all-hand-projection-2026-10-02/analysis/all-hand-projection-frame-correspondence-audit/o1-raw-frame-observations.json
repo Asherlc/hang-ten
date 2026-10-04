@@ -1,0 +1,1922 @@
+[
+  {
+    "sequence": 11,
+    "event": "sample",
+    "epoch": 1790983524.422297,
+    "frame": [
+      232,
+      143.33333333333331,
+      410,
+      70
+    ],
+    "lambda": 0.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": -0.8322649002075195,
+    "secondsBeforeFirstCaptureStart": 1.1150469779968262
+  },
+  {
+    "sequence": 12,
+    "event": "highlight-before",
+    "epoch": 1790983525.24471,
+    "frame": [
+      232,
+      143.33333333333331,
+      410,
+      70
+    ],
+    "lambda": 0.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": -0.009851932525634766,
+    "secondsBeforeFirstCaptureStart": 0.2926340103149414
+  },
+  {
+    "sequence": 13,
+    "event": "highlight-after",
+    "epoch": 1790983525.254562,
+    "frame": [
+      232,
+      143.33333333333331,
+      410,
+      70
+    ],
+    "lambda": 0.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 0.0,
+    "secondsBeforeFirstCaptureStart": 0.28278207778930664
+  },
+  {
+    "sequence": 20,
+    "event": "sample",
+    "epoch": 1790983525.425887,
+    "frame": [
+      236.005765914917,
+      149.6357383728027,
+      401.988468170166,
+      68.66474469502768
+    ],
+    "lambda": 0.1602306365966796,
+    "maximumAffineResidualPoints": 1.4210854715202004e-14,
+    "secondsFromInitialActive": 0.1713252067565918,
+    "secondsBeforeFirstCaptureStart": 0.11145687103271484
+  },
+  {
+    "sequence": 21,
+    "event": "sample",
+    "epoch": 1790983526.45665,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 1.2020881175994873,
+    "secondsBeforeFirstCaptureStart": -0.9193060398101807
+  },
+  {
+    "sequence": 22,
+    "event": "sample",
+    "epoch": 1790983527.524178,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 2.26961612701416,
+    "secondsBeforeFirstCaptureStart": -1.9868340492248535
+  },
+  {
+    "sequence": 23,
+    "event": "sample",
+    "epoch": 1790983528.5903049,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 3.335742950439453,
+    "secondsBeforeFirstCaptureStart": -3.0529608726501465
+  },
+  {
+    "sequence": 24,
+    "event": "sample",
+    "epoch": 1790983529.619618,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 4.365056037902832,
+    "secondsBeforeFirstCaptureStart": -4.082273960113525
+  },
+  {
+    "sequence": 25,
+    "event": "sample",
+    "epoch": 1790983530.872766,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 5.618204116821289,
+    "secondsBeforeFirstCaptureStart": -5.335422039031982
+  },
+  {
+    "sequence": 26,
+    "event": "sample",
+    "epoch": 1790983531.8955178,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 6.640955924987793,
+    "secondsBeforeFirstCaptureStart": -6.358173847198486
+  },
+  {
+    "sequence": 27,
+    "event": "highlight-before",
+    "epoch": 1790983532.90539,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 7.650828123092651,
+    "secondsBeforeFirstCaptureStart": -7.368046045303345
+  },
+  {
+    "sequence": 28,
+    "event": "highlight-after",
+    "epoch": 1790983532.9146981,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 7.6601362228393555,
+    "secondsBeforeFirstCaptureStart": -7.377354145050049
+  },
+  {
+    "sequence": 31,
+    "event": "sample",
+    "epoch": 1790983532.9328032,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 7.67824125289917,
+    "secondsBeforeFirstCaptureStart": -7.395459175109863
+  },
+  {
+    "sequence": 32,
+    "event": "sample",
+    "epoch": 1790983534.903796,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 9.649234056472778,
+    "secondsBeforeFirstCaptureStart": -9.366451978683472
+  },
+  {
+    "sequence": 33,
+    "event": "sample",
+    "epoch": 1790983535.9256701,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 10.67110824584961,
+    "secondsBeforeFirstCaptureStart": -10.388326168060303
+  },
+  {
+    "sequence": 34,
+    "event": "sample",
+    "epoch": 1790983536.9312139,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 11.676651954650879,
+    "secondsBeforeFirstCaptureStart": -11.393869876861572
+  },
+  {
+    "sequence": 35,
+    "event": "sample",
+    "epoch": 1790983537.93711,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 12.68254804611206,
+    "secondsBeforeFirstCaptureStart": -12.399765968322754
+  },
+  {
+    "sequence": 36,
+    "event": "sample",
+    "epoch": 1790983538.9434419,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 13.68887996673584,
+    "secondsBeforeFirstCaptureStart": -13.406097888946533
+  },
+  {
+    "sequence": 37,
+    "event": "sample",
+    "epoch": 1790983539.95443,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 14.699868202209473,
+    "secondsBeforeFirstCaptureStart": -14.417086124420166
+  },
+  {
+    "sequence": 38,
+    "event": "sample",
+    "epoch": 1790983541.964361,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 16.70979905128479,
+    "secondsBeforeFirstCaptureStart": -16.427016973495483
+  },
+  {
+    "sequence": 39,
+    "event": "sample",
+    "epoch": 1790983542.96972,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 17.715157985687256,
+    "secondsBeforeFirstCaptureStart": -17.43237590789795
+  },
+  {
+    "sequence": 40,
+    "event": "sample",
+    "epoch": 1790983544.9872031,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 19.732641220092773,
+    "secondsBeforeFirstCaptureStart": -19.449859142303467
+  },
+  {
+    "sequence": 41,
+    "event": "sample",
+    "epoch": 1790983546.997977,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 21.743415117263794,
+    "secondsBeforeFirstCaptureStart": -21.460633039474487
+  },
+  {
+    "sequence": 42,
+    "event": "sample",
+    "epoch": 1790983548.011623,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 22.757061004638672,
+    "secondsBeforeFirstCaptureStart": -22.474278926849365
+  },
+  {
+    "sequence": 43,
+    "event": "sample",
+    "epoch": 1790983550.023706,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 24.76914405822754,
+    "secondsBeforeFirstCaptureStart": -24.486361980438232
+  },
+  {
+    "sequence": 44,
+    "event": "sample",
+    "epoch": 1790983552.040429,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 26.78586721420288,
+    "secondsBeforeFirstCaptureStart": -26.503085136413574
+  },
+  {
+    "sequence": 45,
+    "event": "sample",
+    "epoch": 1790983554.0374,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 28.782838106155396,
+    "secondsBeforeFirstCaptureStart": -28.50005602836609
+  },
+  {
+    "sequence": 46,
+    "event": "sample",
+    "epoch": 1790983555.050044,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 29.79548215866089,
+    "secondsBeforeFirstCaptureStart": -29.512700080871582
+  },
+  {
+    "sequence": 47,
+    "event": "sample",
+    "epoch": 1790983556.059041,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 30.804479122161865,
+    "secondsBeforeFirstCaptureStart": -30.52169704437256
+  },
+  {
+    "sequence": 48,
+    "event": "sample",
+    "epoch": 1790983557.0676699,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 31.81310796737671,
+    "secondsBeforeFirstCaptureStart": -31.530325889587402
+  },
+  {
+    "sequence": 49,
+    "event": "sample",
+    "epoch": 1790983558.077635,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 32.82307314872742,
+    "secondsBeforeFirstCaptureStart": -32.54029107093811
+  },
+  {
+    "sequence": 50,
+    "event": "sample",
+    "epoch": 1790983560.0877,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 34.83313798904419,
+    "secondsBeforeFirstCaptureStart": -34.55035591125488
+  },
+  {
+    "sequence": 51,
+    "event": "sample",
+    "epoch": 1790983561.1014218,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 35.8468599319458,
+    "secondsBeforeFirstCaptureStart": -35.564077854156494
+  },
+  {
+    "sequence": 52,
+    "event": "sample",
+    "epoch": 1790983563.117024,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 37.86246204376221,
+    "secondsBeforeFirstCaptureStart": -37.5796799659729
+  },
+  {
+    "sequence": 53,
+    "event": "sample",
+    "epoch": 1790983564.139896,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 38.88533401489258,
+    "secondsBeforeFirstCaptureStart": -38.60255193710327
+  },
+  {
+    "sequence": 54,
+    "event": "sample",
+    "epoch": 1790983565.176074,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 39.92151212692261,
+    "secondsBeforeFirstCaptureStart": -39.6387300491333
+  },
+  {
+    "sequence": 55,
+    "event": "sample",
+    "epoch": 1790983566.2047992,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 40.95023727416992,
+    "secondsBeforeFirstCaptureStart": -40.667455196380615
+  },
+  {
+    "sequence": 56,
+    "event": "sample",
+    "epoch": 1790983567.208239,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 41.9536771774292,
+    "secondsBeforeFirstCaptureStart": -41.67089509963989
+  },
+  {
+    "sequence": 57,
+    "event": "sample",
+    "epoch": 1790983568.2620459,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 43.007483959198,
+    "secondsBeforeFirstCaptureStart": -42.72470188140869
+  },
+  {
+    "sequence": 58,
+    "event": "sample",
+    "epoch": 1790983569.332295,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 44.07773303985596,
+    "secondsBeforeFirstCaptureStart": -43.79495096206665
+  },
+  {
+    "sequence": 59,
+    "event": "sample",
+    "epoch": 1790983570.381597,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 45.12703514099121,
+    "secondsBeforeFirstCaptureStart": -44.844253063201904
+  },
+  {
+    "sequence": 60,
+    "event": "sample",
+    "epoch": 1790983571.41849,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 46.16392803192139,
+    "secondsBeforeFirstCaptureStart": -45.88114595413208
+  },
+  {
+    "sequence": 61,
+    "event": "sample",
+    "epoch": 1790983572.452341,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 47.197779178619385,
+    "secondsBeforeFirstCaptureStart": -46.91499710083008
+  },
+  {
+    "sequence": 62,
+    "event": "sample",
+    "epoch": 1790983573.519259,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 48.26469707489014,
+    "secondsBeforeFirstCaptureStart": -47.98191499710083
+  },
+  {
+    "sequence": 63,
+    "event": "sample",
+    "epoch": 1790983574.576946,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 49.32238411903381,
+    "secondsBeforeFirstCaptureStart": -49.03960204124451
+  },
+  {
+    "sequence": 64,
+    "event": "sample",
+    "epoch": 1790983575.642062,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 50.387500047683716,
+    "secondsBeforeFirstCaptureStart": -50.10471796989441
+  },
+  {
+    "sequence": 65,
+    "event": "sample",
+    "epoch": 1790983576.708525,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 51.45396304130554,
+    "secondsBeforeFirstCaptureStart": -51.171180963516235
+  },
+  {
+    "sequence": 66,
+    "event": "sample",
+    "epoch": 1790983577.755331,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 52.50076913833618,
+    "secondsBeforeFirstCaptureStart": -52.217987060546875
+  },
+  {
+    "sequence": 67,
+    "event": "sample",
+    "epoch": 1790983578.767019,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 53.51245713233948,
+    "secondsBeforeFirstCaptureStart": -53.22967505455017
+  },
+  {
+    "sequence": 68,
+    "event": "sample",
+    "epoch": 1790983579.805316,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 54.55075407028198,
+    "secondsBeforeFirstCaptureStart": -54.267971992492676
+  },
+  {
+    "sequence": 69,
+    "event": "sample",
+    "epoch": 1790983580.841127,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 55.586565017700195,
+    "secondsBeforeFirstCaptureStart": -55.30378293991089
+  },
+  {
+    "sequence": 70,
+    "event": "sample",
+    "epoch": 1790983581.881452,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 56.62689018249512,
+    "secondsBeforeFirstCaptureStart": -56.34410810470581
+  },
+  {
+    "sequence": 71,
+    "event": "sample",
+    "epoch": 1790983582.92737,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 57.6728081703186,
+    "secondsBeforeFirstCaptureStart": -57.3900260925293
+  },
+  {
+    "sequence": 72,
+    "event": "sample",
+    "epoch": 1790983583.95257,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 58.69800806045532,
+    "secondsBeforeFirstCaptureStart": -58.415225982666016
+  },
+  {
+    "sequence": 73,
+    "event": "sample",
+    "epoch": 1790983584.9762669,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 59.721704959869385,
+    "secondsBeforeFirstCaptureStart": -59.43892288208008
+  },
+  {
+    "sequence": 74,
+    "event": "sample",
+    "epoch": 1790983585.980781,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 60.726219177246094,
+    "secondsBeforeFirstCaptureStart": -60.44343709945679
+  },
+  {
+    "sequence": 75,
+    "event": "sample",
+    "epoch": 1790983587.0230489,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 61.768486976623535,
+    "secondsBeforeFirstCaptureStart": -61.48570489883423
+  },
+  {
+    "sequence": 76,
+    "event": "sample",
+    "epoch": 1790983588.090663,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 62.836101055145264,
+    "secondsBeforeFirstCaptureStart": -62.55331897735596
+  },
+  {
+    "sequence": 77,
+    "event": "sample",
+    "epoch": 1790983589.143828,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 63.88926601409912,
+    "secondsBeforeFirstCaptureStart": -63.606483936309814
+  },
+  {
+    "sequence": 78,
+    "event": "sample",
+    "epoch": 1790983590.191493,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 64.93693113327026,
+    "secondsBeforeFirstCaptureStart": -64.65414905548096
+  },
+  {
+    "sequence": 79,
+    "event": "sample",
+    "epoch": 1790983591.2020988,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 65.94753694534302,
+    "secondsBeforeFirstCaptureStart": -65.66475486755371
+  },
+  {
+    "sequence": 80,
+    "event": "sample",
+    "epoch": 1790983592.2609138,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 67.00635194778442,
+    "secondsBeforeFirstCaptureStart": -66.72356986999512
+  },
+  {
+    "sequence": 81,
+    "event": "sample",
+    "epoch": 1790983593.311451,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 68.05688905715942,
+    "secondsBeforeFirstCaptureStart": -67.77410697937012
+  },
+  {
+    "sequence": 82,
+    "event": "sample",
+    "epoch": 1790983594.387018,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 69.13245606422424,
+    "secondsBeforeFirstCaptureStart": -68.84967398643494
+  },
+  {
+    "sequence": 83,
+    "event": "sample",
+    "epoch": 1790983595.389865,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 70.1353030204773,
+    "secondsBeforeFirstCaptureStart": -69.85252094268799
+  },
+  {
+    "sequence": 84,
+    "event": "sample",
+    "epoch": 1790983596.39964,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 71.14507818222046,
+    "secondsBeforeFirstCaptureStart": -70.86229610443115
+  },
+  {
+    "sequence": 85,
+    "event": "sample",
+    "epoch": 1790983597.405308,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 72.15074610710144,
+    "secondsBeforeFirstCaptureStart": -71.86796402931213
+  },
+  {
+    "sequence": 86,
+    "event": "sample",
+    "epoch": 1790983598.409925,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 73.15536308288574,
+    "secondsBeforeFirstCaptureStart": -72.87258100509644
+  },
+  {
+    "sequence": 87,
+    "event": "sample",
+    "epoch": 1790983599.422195,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 74.16763305664062,
+    "secondsBeforeFirstCaptureStart": -73.88485097885132
+  },
+  {
+    "sequence": 88,
+    "event": "sample",
+    "epoch": 1790983601.427534,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 76.17297220230103,
+    "secondsBeforeFirstCaptureStart": -75.89019012451172
+  },
+  {
+    "sequence": 89,
+    "event": "sample",
+    "epoch": 1790983603.433631,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 78.17906904220581,
+    "secondsBeforeFirstCaptureStart": -77.8962869644165
+  },
+  {
+    "sequence": 90,
+    "event": "sample",
+    "epoch": 1790983604.45006,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 79.19549798965454,
+    "secondsBeforeFirstCaptureStart": -78.91271591186523
+  },
+  {
+    "sequence": 91,
+    "event": "sample",
+    "epoch": 1790983606.4574971,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 81.20293521881104,
+    "secondsBeforeFirstCaptureStart": -80.92015314102173
+  },
+  {
+    "sequence": 92,
+    "event": "sample",
+    "epoch": 1790983607.465358,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 82.21079611778259,
+    "secondsBeforeFirstCaptureStart": -81.92801403999329
+  },
+  {
+    "sequence": 93,
+    "event": "sample",
+    "epoch": 1790983609.4760299,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 84.22146797180176,
+    "secondsBeforeFirstCaptureStart": -83.93868589401245
+  },
+  {
+    "sequence": 94,
+    "event": "sample",
+    "epoch": 1790983610.52218,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 85.26761817932129,
+    "secondsBeforeFirstCaptureStart": -84.98483610153198
+  },
+  {
+    "sequence": 95,
+    "event": "sample",
+    "epoch": 1790983611.570152,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 86.31559014320374,
+    "secondsBeforeFirstCaptureStart": -86.03280806541443
+  },
+  {
+    "sequence": 96,
+    "event": "sample",
+    "epoch": 1790983612.616396,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 87.36183404922485,
+    "secondsBeforeFirstCaptureStart": -87.07905197143555
+  },
+  {
+    "sequence": 97,
+    "event": "sample",
+    "epoch": 1790983613.621983,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 88.36742115020752,
+    "secondsBeforeFirstCaptureStart": -88.08463907241821
+  },
+  {
+    "sequence": 98,
+    "event": "sample",
+    "epoch": 1790983614.6336951,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 89.3791332244873,
+    "secondsBeforeFirstCaptureStart": -89.096351146698
+  },
+  {
+    "sequence": 99,
+    "event": "sample",
+    "epoch": 1790983615.663024,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 90.4084620475769,
+    "secondsBeforeFirstCaptureStart": -90.1256799697876
+  },
+  {
+    "sequence": 100,
+    "event": "sample",
+    "epoch": 1790983616.719089,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 91.46452713012695,
+    "secondsBeforeFirstCaptureStart": -91.18174505233765
+  },
+  {
+    "sequence": 101,
+    "event": "sample",
+    "epoch": 1790983617.777938,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 92.52337598800659,
+    "secondsBeforeFirstCaptureStart": -92.24059391021729
+  },
+  {
+    "sequence": 102,
+    "event": "sample",
+    "epoch": 1790983618.831974,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 93.57741212844849,
+    "secondsBeforeFirstCaptureStart": -93.29463005065918
+  },
+  {
+    "sequence": 103,
+    "event": "sample",
+    "epoch": 1790983619.8973079,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 94.64274597167969,
+    "secondsBeforeFirstCaptureStart": -94.35996389389038
+  },
+  {
+    "sequence": 104,
+    "event": "sample",
+    "epoch": 1790983620.900622,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 95.6460599899292,
+    "secondsBeforeFirstCaptureStart": -95.36327791213989
+  },
+  {
+    "sequence": 105,
+    "event": "sample",
+    "epoch": 1790983621.955957,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 96.70139503479004,
+    "secondsBeforeFirstCaptureStart": -96.41861295700073
+  },
+  {
+    "sequence": 106,
+    "event": "sample",
+    "epoch": 1790983623.006146,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 97.75158405303955,
+    "secondsBeforeFirstCaptureStart": -97.46880197525024
+  },
+  {
+    "sequence": 107,
+    "event": "sample",
+    "epoch": 1790983624.071243,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 98.8166811466217,
+    "secondsBeforeFirstCaptureStart": -98.5338990688324
+  },
+  {
+    "sequence": 108,
+    "event": "sample",
+    "epoch": 1790983625.140568,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 99.88600611686707,
+    "secondsBeforeFirstCaptureStart": -99.60322403907776
+  },
+  {
+    "sequence": 109,
+    "event": "sample",
+    "epoch": 1790983626.194325,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 100.93976306915283,
+    "secondsBeforeFirstCaptureStart": -100.65698099136353
+  },
+  {
+    "sequence": 110,
+    "event": "sample",
+    "epoch": 1790983627.203761,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 101.94919919967651,
+    "secondsBeforeFirstCaptureStart": -101.6664171218872
+  },
+  {
+    "sequence": 111,
+    "event": "sample",
+    "epoch": 1790983628.2066278,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 102.95206594467163,
+    "secondsBeforeFirstCaptureStart": -102.66928386688232
+  },
+  {
+    "sequence": 112,
+    "event": "sample",
+    "epoch": 1790983629.263252,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 104.00869011878967,
+    "secondsBeforeFirstCaptureStart": -103.72590804100037
+  },
+  {
+    "sequence": 113,
+    "event": "sample",
+    "epoch": 1790983630.323402,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 105.06884002685547,
+    "secondsBeforeFirstCaptureStart": -104.78605794906616
+  },
+  {
+    "sequence": 114,
+    "event": "sample",
+    "epoch": 1790983631.365062,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 106.11050009727478,
+    "secondsBeforeFirstCaptureStart": -105.82771801948547
+  },
+  {
+    "sequence": 115,
+    "event": "sample",
+    "epoch": 1790983632.411827,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 107.15726518630981,
+    "secondsBeforeFirstCaptureStart": -106.87448310852051
+  },
+  {
+    "sequence": 116,
+    "event": "sample",
+    "epoch": 1790983633.416556,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 108.16199398040771,
+    "secondsBeforeFirstCaptureStart": -107.87921190261841
+  },
+  {
+    "sequence": 117,
+    "event": "sample",
+    "epoch": 1790983634.456702,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 109.20214009284973,
+    "secondsBeforeFirstCaptureStart": -108.91935801506042
+  },
+  {
+    "sequence": 118,
+    "event": "sample",
+    "epoch": 1790983635.511903,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 110.25734114646912,
+    "secondsBeforeFirstCaptureStart": -109.97455906867981
+  },
+  {
+    "sequence": 119,
+    "event": "sample",
+    "epoch": 1790983636.5641952,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 111.30963325500488,
+    "secondsBeforeFirstCaptureStart": -111.02685117721558
+  },
+  {
+    "sequence": 120,
+    "event": "sample",
+    "epoch": 1790983637.626295,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 112.37173318862915,
+    "secondsBeforeFirstCaptureStart": -112.08895111083984
+  },
+  {
+    "sequence": 121,
+    "event": "sample",
+    "epoch": 1790983638.666873,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 113.41231107711792,
+    "secondsBeforeFirstCaptureStart": -113.12952899932861
+  },
+  {
+    "sequence": 122,
+    "event": "sample",
+    "epoch": 1790983639.7275472,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 114.47298526763916,
+    "secondsBeforeFirstCaptureStart": -114.19020318984985
+  },
+  {
+    "sequence": 123,
+    "event": "sample",
+    "epoch": 1790983640.7532449,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 115.49868297576904,
+    "secondsBeforeFirstCaptureStart": -115.21590089797974
+  },
+  {
+    "sequence": 124,
+    "event": "sample",
+    "epoch": 1790983641.807654,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 116.55309200286865,
+    "secondsBeforeFirstCaptureStart": -116.27030992507935
+  },
+  {
+    "sequence": 125,
+    "event": "sample",
+    "epoch": 1790983642.867507,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 117.61294507980347,
+    "secondsBeforeFirstCaptureStart": -117.33016300201416
+  },
+  {
+    "sequence": 126,
+    "event": "sample",
+    "epoch": 1790983643.882158,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 118.62759613990784,
+    "secondsBeforeFirstCaptureStart": -118.34481406211853
+  },
+  {
+    "sequence": 127,
+    "event": "sample",
+    "epoch": 1790983644.899979,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 119.64541721343994,
+    "secondsBeforeFirstCaptureStart": -119.36263513565063
+  },
+  {
+    "sequence": 128,
+    "event": "sample",
+    "epoch": 1790983645.956001,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 120.70143914222717,
+    "secondsBeforeFirstCaptureStart": -120.41865706443787
+  },
+  {
+    "sequence": 129,
+    "event": "sample",
+    "epoch": 1790983647.0089068,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 121.75434494018555,
+    "secondsBeforeFirstCaptureStart": -121.47156286239624
+  },
+  {
+    "sequence": 130,
+    "event": "sample",
+    "epoch": 1790983648.017555,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 122.7629930973053,
+    "secondsBeforeFirstCaptureStart": -122.48021101951599
+  },
+  {
+    "sequence": 131,
+    "event": "sample",
+    "epoch": 1790983649.075119,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 123.82055711746216,
+    "secondsBeforeFirstCaptureStart": -123.53777503967285
+  },
+  {
+    "sequence": 132,
+    "event": "sample",
+    "epoch": 1790983650.078673,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 124.82411098480225,
+    "secondsBeforeFirstCaptureStart": -124.54132890701294
+  },
+  {
+    "sequence": 133,
+    "event": "sample",
+    "epoch": 1790983651.121484,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 125.86692214012146,
+    "secondsBeforeFirstCaptureStart": -125.58414006233215
+  },
+  {
+    "sequence": 134,
+    "event": "sample",
+    "epoch": 1790983652.14119,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 126.88662815093994,
+    "secondsBeforeFirstCaptureStart": -126.60384607315063
+  },
+  {
+    "sequence": 135,
+    "event": "sample",
+    "epoch": 1790983653.180808,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 127.92624616622925,
+    "secondsBeforeFirstCaptureStart": -127.64346408843994
+  },
+  {
+    "sequence": 136,
+    "event": "sample",
+    "epoch": 1790983654.2054749,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 128.9509129524231,
+    "secondsBeforeFirstCaptureStart": -128.6681308746338
+  },
+  {
+    "sequence": 137,
+    "event": "sample",
+    "epoch": 1790983655.269147,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 130.01458501815796,
+    "secondsBeforeFirstCaptureStart": -129.73180294036865
+  },
+  {
+    "sequence": 138,
+    "event": "sample",
+    "epoch": 1790983656.328868,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 131.07430601119995,
+    "secondsBeforeFirstCaptureStart": -130.79152393341064
+  },
+  {
+    "sequence": 139,
+    "event": "sample",
+    "epoch": 1790983657.3915749,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 132.1370129585266,
+    "secondsBeforeFirstCaptureStart": -131.8542308807373
+  },
+  {
+    "sequence": 140,
+    "event": "sample",
+    "epoch": 1790983658.439968,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 133.18540620803833,
+    "secondsBeforeFirstCaptureStart": -132.90262413024902
+  },
+  {
+    "sequence": 141,
+    "event": "sample",
+    "epoch": 1790983659.467279,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 134.2127170562744,
+    "secondsBeforeFirstCaptureStart": -133.9299349784851
+  },
+  {
+    "sequence": 142,
+    "event": "sample",
+    "epoch": 1790983660.470621,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 135.21605920791626,
+    "secondsBeforeFirstCaptureStart": -134.93327713012695
+  },
+  {
+    "sequence": 144,
+    "event": "highlight-before",
+    "epoch": 1790983712.219271,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 186.9647090435028,
+    "secondsBeforeFirstCaptureStart": -186.6819269657135
+  },
+  {
+    "sequence": 145,
+    "event": "highlight-after",
+    "epoch": 1790983712.228971,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 186.97440910339355,
+    "secondsBeforeFirstCaptureStart": -186.69162702560425
+  },
+  {
+    "sequence": 148,
+    "event": "highlight-before",
+    "epoch": 1790983719.265088,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 194.01052618026733,
+    "secondsBeforeFirstCaptureStart": -193.72774410247803
+  },
+  {
+    "sequence": 149,
+    "event": "highlight-after",
+    "epoch": 1790983719.2736812,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "secondsFromInitialActive": 194.0191192626953,
+    "secondsBeforeFirstCaptureStart": -193.736337184906
+  }
+]

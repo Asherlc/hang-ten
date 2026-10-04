@@ -1,0 +1,423 @@
+{
+  "status": "pass-final-sidecar-bound-native-bearing",
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+  "descriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+  "sidecarSHA256": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae",
+  "fileSHA256": {
+    ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/native-bearing/new-native-bearing.json": "b3f52e79fa12d5a090c92c0c07afb295e18012e139b0996006ddff185a898137",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/native-bearing/placid-badger-stone-vertical-native-bearing-ownership.json": "26911d5ea5a87f5fc73dcdbef0d7764d6423085d36c1c72fffda27c80016441a",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-apply/suspension.json": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae"
+  },
+  "poses": {
+    "edge-front-15mm-incut": {
+      "status": "pass",
+      "rotation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "bearingFaceIndexOneBased": 8,
+      "samples": [
+        {
+          "parametersUV": [
+            14.600000000000001,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            0.9934797723892432,
+            -0.11400851658283058
+          ],
+          "worldUpDot": 0.9934797723892432
+        },
+        {
+          "parametersUV": [
+            29.200000000000003,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            0.9934797723892432,
+            -0.11400851658283058
+          ],
+          "worldUpDot": 0.9934797723892432
+        },
+        {
+          "parametersUV": [
+            43.800000000000004,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            0.9934797723892432,
+            -0.11400851658283058
+          ],
+          "worldUpDot": 0.9934797723892432
+        }
+      ],
+      "minimumWorldUpDot": 0.9934797723892432
+    },
+    "edge-front-15mm-flat": {
+      "status": "pass",
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bearingFaceIndexOneBased": 8,
+      "samples": [
+        {
+          "parametersUV": [
+            14.600000000000001,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        },
+        {
+          "parametersUV": [
+            29.200000000000003,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        },
+        {
+          "parametersUV": [
+            43.800000000000004,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        }
+      ],
+      "minimumWorldUpDot": 1.0
+    },
+    "edge-reverse-10mm-incut": {
+      "status": "pass",
+      "rotation": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "bearingFaceIndexOneBased": 8,
+      "samples": [
+        {
+          "parametersUV": [
+            15.0,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            0.981615724669084,
+            -0.19086793623442683
+          ],
+          "worldUpDot": 0.981615724669084
+        },
+        {
+          "parametersUV": [
+            30.0,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            0.981615724669084,
+            -0.19086793623442683
+          ],
+          "worldUpDot": 0.981615724669084
+        },
+        {
+          "parametersUV": [
+            45.0,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            0.981615724669084,
+            -0.19086793623442683
+          ],
+          "worldUpDot": 0.981615724669084
+        }
+      ],
+      "minimumWorldUpDot": 0.981615724669084
+    },
+    "edge-reverse-10mm-flat": {
+      "status": "pass",
+      "rotation": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "bearingFaceIndexOneBased": 8,
+      "samples": [
+        {
+          "parametersUV": [
+            15.0,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        },
+        {
+          "parametersUV": [
+            30.0,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        },
+        {
+          "parametersUV": [
+            45.0,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        }
+      ],
+      "minimumWorldUpDot": 1.0
+    },
+    "edge-reverse-06mm-flat": {
+      "status": "pass",
+      "rotation": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "bearingFaceIndexOneBased": 8,
+      "samples": [
+        {
+          "parametersUV": [
+            15.0,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        },
+        {
+          "parametersUV": [
+            30.0,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        },
+        {
+          "parametersUV": [
+            45.0,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        }
+      ],
+      "minimumWorldUpDot": 1.0
+    },
+    "edge-reverse-06mm-incut": {
+      "status": "pass",
+      "rotation": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "bearingFaceIndexOneBased": 8,
+      "samples": [
+        {
+          "parametersUV": [
+            15.0,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            0.9870077111602391,
+            -0.16067289164705414
+          ],
+          "worldUpDot": 0.9870077111602391
+        },
+        {
+          "parametersUV": [
+            30.0,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            0.9870077111602391,
+            -0.16067289164705414
+          ],
+          "worldUpDot": 0.9870077111602391
+        },
+        {
+          "parametersUV": [
+            45.0,
+            0.5
+          ],
+          "worldBearingNormal": [
+            0.0,
+            0.9870077111602391,
+            -0.16067289164705414
+          ],
+          "worldUpDot": 0.9870077111602391
+        }
+      ],
+      "minimumWorldUpDot": 0.9870077111602391
+    },
+    "edge-front-20mm-wood-flat": {
+      "status": "pass",
+      "rotation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "bearingFaceIndexOneBased": 8,
+      "samples": [
+        {
+          "parametersUV": [
+            12.35,
+            -8.049999999999999
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        },
+        {
+          "parametersUV": [
+            24.7,
+            -8.049999999999999
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        },
+        {
+          "parametersUV": [
+            37.05,
+            -8.049999999999999
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        }
+      ],
+      "minimumWorldUpDot": 1.0
+    },
+    "edge-front-20mm-granite": {
+      "status": "pass",
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bearingFaceIndexOneBased": 5,
+      "samples": [
+        {
+          "parametersUV": [
+            21.199999999999996,
+            10.0
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        },
+        {
+          "parametersUV": [
+            39.99999999999999,
+            10.0
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        },
+        {
+          "parametersUV": [
+            58.79999999999999,
+            10.0
+          ],
+          "worldBearingNormal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "worldUpDot": 1.0
+        }
+      ],
+      "minimumWorldUpDot": 1.0
+    }
+  },
+  "contactCount": 8,
+  "sampleCount": 24,
+  "minimumWorldUpDot": 0.981615724669084,
+  "finalQuaternionsMatchFreshNativeCheck": true,
+  "oldThirtyDegreeAdaptationReused": false,
+  "legacyProposalUsedOnlyForDeliberateFaceIndices": true,
+  "sourceBytesUnchanged": true,
+  "ownedNativeResourcesVerifiedCleaned": true,
+  "blockingFindings": [],
+  "humanAcceptance": "pending",
+  "limits": [
+    "Native normals and body-side membership were freshly checked on the new source; final immutable quaternions are rechecked by arithmetic. Settled translations do not alter direction normals.",
+    "This proves sampled local upward bearing for the deliberately assigned faces. It does not prove continuum cable/global board equilibrium, real load safety or actual camera/picking usability.",
+    "Final cord, regeneration, app and human acceptance remain separate gates."
+  ],
+  "newNativeJobOrSolveAtBinding": false,
+  "canonicalMutation": false
+}

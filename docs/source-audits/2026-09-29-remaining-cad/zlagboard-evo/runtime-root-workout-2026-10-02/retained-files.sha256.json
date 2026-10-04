@@ -1,0 +1,938 @@
+{
+  "algorithm": "sha256",
+  "excluded": [
+    "retained-files.sha256.json"
+  ],
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 3507,
+      "sha256": "730f1b9ef5cb0ceb453509cd22e0988b7e7af65bc02b39f069e4ec5f675f37bc"
+    },
+    {
+      "path": "analysis/architecture-committee/astra-root-workout-review-tool.json",
+      "bytes": 5857,
+      "sha256": "2363822fd16704e54c206268d614754c038658fee5675ed5da43bfaeeba0de7d"
+    },
+    {
+      "path": "analysis/workout-root-proposal/report.json",
+      "bytes": 8871,
+      "sha256": "4056c7efd8f64eb7d0d75047e3665f472c35da91801df259977642d671184388"
+    },
+    {
+      "path": "analysis/workout-root-proposal/source-excerpts.txt",
+      "bytes": 20379,
+      "sha256": "e2459ec25aa624da7329e6c7a88382d675f26366bdb52224d6d44549cccf53b8"
+    },
+    {
+      "path": "frozen-current-source/HangTen/Models/BoardModelRealityTypes.swift",
+      "bytes": 85117,
+      "sha256": "89898763d913d908b35abfce0baf4da365efb37aed84c6823d76f0307c5b8ddd"
+    },
+    {
+      "path": "frozen-current-source/HangTen/Views/BoardModelView.swift",
+      "bytes": 22063,
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+    },
+    {
+      "path": "frozen-current-source/HangTen/Views/RootView.swift",
+      "bytes": 147554,
+      "sha256": "0253224a9df668442a2f925d6b686fce57c4cffd94347954abb7b8b9df4c0cd9"
+    },
+    {
+      "path": "frozen-current-source/current-three-file.patch",
+      "bytes": 58717,
+      "sha256": "c718d70edd9a57688882eaeaa6ddc35ba0d2a66cd144b7267f1915c156f7ebd9"
+    },
+    {
+      "path": "frozen-current-source/source-snapshot.json",
+      "bytes": 1182,
+      "sha256": "d111c8ba9d1c24d68a3ccce0d464a4c7e2f0f65cf8309f07835d5240eeefa73c"
+    },
+    {
+      "path": "promotion-verification.json",
+      "bytes": 468,
+      "sha256": "314ba0631022a6ad6efdabe12fab166d548afb60a611d3db130b8cf500215d9c"
+    },
+    {
+      "path": "raw/check-root-workout-parity.py",
+      "bytes": 1188,
+      "sha256": "a700cc0f4f666d3a365162d6485c96c407d7984624b58a4c3078af071d16d3bc"
+    },
+    {
+      "path": "raw/check-root-workout.py",
+      "bytes": 3916,
+      "sha256": "ac383148be165946df9281b75c0697dac4e35b51c8635884f5d33f34063b4e26"
+    },
+    {
+      "path": "raw/root-workout-after-direct-parity.json",
+      "bytes": 12291,
+      "sha256": "6ae32c21c89a005fc78fabf02cd25b86fac8d60c2c11fde23a506359dc3a6edb"
+    },
+    {
+      "path": "raw/root-workout-applied/BoardModelRealityTypes.after.swift",
+      "bytes": 85117,
+      "sha256": "89898763d913d908b35abfce0baf4da365efb37aed84c6823d76f0307c5b8ddd"
+    },
+    {
+      "path": "raw/root-workout-applied/BoardModelRealityTypes.before.swift",
+      "bytes": 84896,
+      "sha256": "48c2b5cc6a5d2c1b1b7912576b71f9ba1fca1e281b9655bdb5a46fa1cc684186"
+    },
+    {
+      "path": "raw/root-workout-applied/RootView.after.swift",
+      "bytes": 147554,
+      "sha256": "0253224a9df668442a2f925d6b686fce57c4cffd94347954abb7b8b9df4c0cd9"
+    },
+    {
+      "path": "raw/root-workout-applied/RootView.before.swift",
+      "bytes": 145287,
+      "sha256": "3d139f8b078e14e253ee1b9b3133fbd1c6c09cd9a9f1e19e7cc68dae1400a9a8"
+    },
+    {
+      "path": "raw/root-workout-applied/applied.patch",
+      "bytes": 3779,
+      "sha256": "b1f7e8fa033ec8019a0964285519b40a36ad2aef057c86c02d2e7d6ffb195ac6"
+    },
+    {
+      "path": "raw/root-workout-applied/parse.json",
+      "bytes": 210,
+      "sha256": "70cba18fb99c9ff216d0977cbdac3258b4a35307f000270ca2c1aab1a7eb4460"
+    },
+    {
+      "path": "raw/root-workout-applied/parse.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-applied/parse.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-applied/provenance.json",
+      "bytes": 918,
+      "sha256": "82cfbb2b768c4743c78b9bee28f25263ceb927d1d18169f79d8f04b7f9a63b20"
+    },
+    {
+      "path": "raw/root-workout-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "bytes": 85117,
+      "sha256": "89898763d913d908b35abfce0baf4da365efb37aed84c6823d76f0307c5b8ddd"
+    },
+    {
+      "path": "raw/root-workout-applied/source/HangTen/Views/BoardModelView.swift",
+      "bytes": 22063,
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+    },
+    {
+      "path": "raw/root-workout-applied/source/HangTen/Views/RootView.swift",
+      "bytes": 147554,
+      "sha256": "0253224a9df668442a2f925d6b686fce57c4cffd94347954abb7b8b9df4c0cd9"
+    },
+    {
+      "path": "raw/root-workout-build-command.json",
+      "bytes": 533,
+      "sha256": "6c42d6c089ab3c1eab7bd73883355848fdc785260a481dd55a62a1456e0702fb"
+    },
+    {
+      "path": "raw/root-workout-build-command.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-build-command.stdout",
+      "bytes": 317271,
+      "sha256": "0adfa66b369575475d18c791550279d60ab93eeaac331921db361e0734d287c7"
+    },
+    {
+      "path": "raw/root-workout-capture-correction.patch",
+      "bytes": 4221,
+      "sha256": "9516b1eaa1bf04c9759266f17de10f139c5d06865e1b0a34ced7f6abdb161509"
+    },
+    {
+      "path": "raw/root-workout-code-parity/installed-container.txt",
+      "bytes": 176,
+      "sha256": "40c3d59bca565c246060a1f3897c503f5f22834878507b96abfbdf5288c15113"
+    },
+    {
+      "path": "raw/root-workout-code-parity/mach-o-parity.json",
+      "bytes": 2030,
+      "sha256": "f380f42a224b88188681e0ea3662a2d8f578c7ce151212a828a332b4f816e853"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/000-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/000-stdout.txt",
+      "bytes": 162,
+      "sha256": "677570379588ce707c3a8e1cc9e01837f4c099b0315baddf0e985bdc25837104"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/001-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/001-stdout.txt",
+      "bytes": 27,
+      "sha256": "ecc5e3f8b898f4745f9702754f91705b1d25bd31654b84e85e38aa2d6bea0d5f"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/002-stderr.txt",
+      "bytes": 369,
+      "sha256": "c3b758dfb6145e2db2c3639dae216b0b1f029827658492ce02c5b7c9263f6eb8"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/002-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/003-stderr.txt",
+      "bytes": 379,
+      "sha256": "e9845b2826485bf374e8f2248545668db7f9b108a3b38dc3a3108aeea1aeed85"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/003-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/004-stderr.txt",
+      "bytes": 376,
+      "sha256": "3d661da8534f17874aebb3b2c19ddd5cb30c432c88fbc75b463fd4b3f8a75c03"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/004-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/005-stderr.txt",
+      "bytes": 376,
+      "sha256": "e4b06db033b887091125d19c6e7c21cc9d2bb560d12f6a342df4006ba2f00c4e"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/005-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/006-stderr.txt",
+      "bytes": 376,
+      "sha256": "1b1331bbe399d6da1644a2848ad50954f48441912c3f27833acdb808cb72e7f9"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/006-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/007-stderr.txt",
+      "bytes": 380,
+      "sha256": "0d626d16e5b81c89a188f1737b2581e3bec92aff8fccb720d0b3962353a56c9f"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/007-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/008-stderr.txt",
+      "bytes": 377,
+      "sha256": "cf36ae4c1cc6914a32f195e713e26df5b853d557946c34c216e407190aff082b"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/008-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/009-stderr.txt",
+      "bytes": 377,
+      "sha256": "3d896093f9ca4fe64e16d8f0f89a4b8ce9cda8654b10affe53044df5ff3f57bc"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/009-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/010-stderr.txt",
+      "bytes": 377,
+      "sha256": "35f2b41e43f4c2597838e168153a3fb8ad54512dafdd9fb02c9882866f27ca12"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/010-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/011-stderr.txt",
+      "bytes": 379,
+      "sha256": "cd26f7b2fb01fc9f5ebf338f85b2fc95de84a352ef46328f514e39e3e590980d"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/011-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/012-stderr.txt",
+      "bytes": 376,
+      "sha256": "48afdc5e04c756eb4d0a397249c4b76101ffc19a67a537a70860872a6d0c0a10"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/012-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/013-stderr.txt",
+      "bytes": 376,
+      "sha256": "6b32e0b058cc01100b67994b094403ae1de7aa5522f23181487b90c3b4d050d4"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/013-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/014-stderr.txt",
+      "bytes": 376,
+      "sha256": "cc7214f6731fca4ca473bbb05749906108a1e9386b0f227823eac01795218878"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/014-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/captures.json",
+      "bytes": 7896,
+      "sha256": "65af7417fa8283e1cd8d6a75a9de0e74a080459eabe401c24b3f618d50ecfd65"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/commands.json",
+      "bytes": 5850,
+      "sha256": "4487bc5df5ef3b23655a91bb4195b5bb6b2fb67d2d2ec832d87fd2e8c8d56850"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/events-E592AD8C-0C2C-4005-A5EE-405F4E2DF54C.jsonl",
+      "bytes": 641117,
+      "sha256": "dd831c2937a6d8519b8d1a855c475b7871e8c6ba29e971ea719b2911f227d7a1"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/first-eight-visual-review.json",
+      "bytes": 3753,
+      "sha256": "90bfaa1e8d4463863ad5c730b0ee35871167e284e4bf9a4b680e034b370e4bd1"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/following-preview-tail.json",
+      "bytes": 8434,
+      "sha256": "a8897ed94ed6199f51737937c06fb27353d2f0d927bd83bb4f5e71d019058fa2"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/launch-initial-capture.json",
+      "bytes": 149,
+      "sha256": "11d706666045c06e0871c8b0994284e10352ae9fe2e877f3e285daa07f191841"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/launch-initial.png",
+      "bytes": 211660,
+      "sha256": "5e59f7d8559b51db5b1ed4bdf78051e29d08cbcb2d2a3be0deaf78499d35bec0"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/launch-review-environment.json",
+      "bytes": 360,
+      "sha256": "d484258eafa3371af06da4f7e4d21591c7cb80ca5449b873a4560768b6605400"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/phase-0-active-plus-0.25.png",
+      "bytes": 355281,
+      "sha256": "df5e49b73db5da9a46e9f89f9d9e1db2fe1904ea7869f70768787273311f9cc7"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/phase-0-active-plus-1.png",
+      "bytes": 356584,
+      "sha256": "1bbca3425bc3355fed1fbb28bda85fc0ce885b325d843490d86445094bf45c3e"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/phase-0-active-plus-3.png",
+      "bytes": 361718,
+      "sha256": "0e5c809c9c8fe38383930227a42c402bb402568a34b95f86116f576abaa7ec67"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/phase-0-active-plus-5.png",
+      "bytes": 355745,
+      "sha256": "b25341fc09aade23e63254bde1d1835c96f1d5185a9e0448d2c40736ed1ef566"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/phase-1-preview-plus-0.25.png",
+      "bytes": 321168,
+      "sha256": "a0a34d6ac3bcc45e47d571f01bbf7bef6dafab6a1bc0f60a448f8a81370451f4"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/phase-1-preview-plus-1.png",
+      "bytes": 323996,
+      "sha256": "1badf4ef59fd18febf9d05eaab4b9a021c3c6510e4834a54bffb62b7eb0c3035"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/phase-1-preview-plus-3.png",
+      "bytes": 323182,
+      "sha256": "1921c5b5cff9057336b932a63acf3844d9885cad862c2857fca3a7a781d1e41f"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/phase-1-preview-plus-5.png",
+      "bytes": 322165,
+      "sha256": "4465cc1d25191f2bfac1a5194e605f2fa45da206392f3b8bc93e9be54c1b7cd0"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/phase-2-active-plus-0.25.png",
+      "bytes": 356453,
+      "sha256": "792ca5c9fd98d771da44676e2484623facd92b4afe4d15f915e7b2dc3ae4d269"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/phase-2-active-plus-1.png",
+      "bytes": 357938,
+      "sha256": "e0b2616525736a9977c2b17a49eaa73b80ecccb2aaec8248416f45e914ec9833"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/phase-2-active-plus-3.png",
+      "bytes": 356766,
+      "sha256": "78b89ad7e33a263312861733f90a421ac8d4448c8ee335fc732218ca00570e92"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/phase-2-active-plus-5.png",
+      "bytes": 357067,
+      "sha256": "8db8ba26ce302e577195d44342818aeec2bf0c364eda79c7a74d0ffd543fbd3a"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/protocol.json",
+      "bytes": 748,
+      "sha256": "6ab5bcc4eda8afabb23ef68547ada6ef18452b6fe7fa06c86246aba5e5cee7fa"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/root-following-hang-review.json",
+      "bytes": 1654,
+      "sha256": "5544d8fc714ef786917fe289fd5bb5e8df2edf189dd5d010a21e5f6c8df98410"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/root-initial-rest-review.json",
+      "bytes": 3301,
+      "sha256": "4698f733bb06523176869f8cc6ae7b274979e85beb83929a088722c3b442b287"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/structural-correspondence.json",
+      "bytes": 225686,
+      "sha256": "83714120d9d25804acb2bdc2db3b3ef2602bc5e4e811b236b2b2294818a8b8a4"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/trace-copy.json",
+      "bytes": 716,
+      "sha256": "3bdda65a62793b5fec522a07cadc26a7e08f41a2301b8f7da612646f55704ca4"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/transition-observations.json",
+      "bytes": 25454,
+      "sha256": "236d263ee2a4c4f61f31a7d115b499fd80a206d9c1fffee3a99e89cd57af3c0e"
+    },
+    {
+      "path": "raw/root-workout-direct-2-landscape/visual-review.json",
+      "bytes": 5796,
+      "sha256": "fda40d8d08e125095fedc89976a076069a3f9be9640db16c64a1af9352fadd96"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/000-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/000-stdout.txt",
+      "bytes": 162,
+      "sha256": "677570379588ce707c3a8e1cc9e01837f4c099b0315baddf0e985bdc25837104"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/001-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/001-stdout.txt",
+      "bytes": 28,
+      "sha256": "65d65554a26dcd054eff8715141e51910d6e5bc776b6cc2a71d75fab1f498920"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/002-stderr.txt",
+      "bytes": 367,
+      "sha256": "c1b5b9d0ba79a200390565571bb6227ccc2c437bb71de5e2ab78d7ad046a21f8"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/002-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/003-stderr.txt",
+      "bytes": 377,
+      "sha256": "e96e6f8399aa181d57d8960cef37208af00d2d839874946b3ff4067acefa1dca"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/003-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/004-stderr.txt",
+      "bytes": 374,
+      "sha256": "5e0aeafbebbb96667df9a775aa144d37326f1fafabedd08de41ec73b7d8fcf83"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/004-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/005-stderr.txt",
+      "bytes": 374,
+      "sha256": "5653b661b6fc7b4df1540e741cbda49b4d6cf54aeb3925395e450bd3bcc5d7e6"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/005-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/006-stderr.txt",
+      "bytes": 374,
+      "sha256": "7ab6cbe3195b4e19516f6d42264b1d90f6118845ed1e360b73e478d6ffe449d6"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/006-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/capture-process-exit-check.json",
+      "bytes": 90,
+      "sha256": "b169df268733198c1aa33f4f25f5e167d5d4b98fbad8334237976943375542b8"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/captures.json",
+      "bytes": 2610,
+      "sha256": "9721b39df251ec90aa97992c6e71a4f3071f2b1ac799dbb1b7b71f8c187fed8f"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/commands.json",
+      "bytes": 2612,
+      "sha256": "7befb60d53e9d15cb7fb9e6f7a5f59d416d0be41c0dcb76ca75ac6dafd1b7e45"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/invalid-setup-events-6BE8226A-1D4D-48F8-84C2-B199C2B09C8E.jsonl",
+      "bytes": 319295,
+      "sha256": "e70be96f84a6d4383722375479d20b1d4cf298b2c4e29b2c207a0464e54e2a82"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/invalid-setup.json",
+      "bytes": 1244,
+      "sha256": "12b31737f2ee176c6b389d482f6b0a6027c703a5102072abbfdf287b8b65e665"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/launch-initial-capture.json",
+      "bytes": 153,
+      "sha256": "941ffc5ce12028f9b3d7d7aeadc550bc34a4d810affcb1191d5b3a34786ae3e8"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/launch-initial.png",
+      "bytes": 134320,
+      "sha256": "a6ef19af5f10fd3a48e286a400bbd0572cd029780e398ae4029c1aadbc76dea3"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/launch-review-environment.json",
+      "bytes": 393,
+      "sha256": "631c73235ad982e7202edc3052fd46fcc22d2863db26089e323cb5670757267e"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/phase-0-active-plus-0.25.png",
+      "bytes": 346729,
+      "sha256": "79164e793d325f44396f9eafe83df024b7758be7b03f5d71733d7a64af4e4b65"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/phase-0-active-plus-1.png",
+      "bytes": 346048,
+      "sha256": "65e6f109adaf9dd64d52caf0617c77032243be5d7e7d57b5d92e74ce2ba28e2f"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/phase-0-active-plus-3.png",
+      "bytes": 344688,
+      "sha256": "0955bacd487d8f2215597fb5a009ef628baad8228fcb4f3c79ccb1a3289e87cd"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/phase-0-active-plus-5.png",
+      "bytes": 344688,
+      "sha256": "0955bacd487d8f2215597fb5a009ef628baad8228fcb4f3c79ccb1a3289e87cd"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/protocol.json",
+      "bytes": 690,
+      "sha256": "ab4e454296516629cf2321277641401119941a27b39804c26fdf963bc57ef288"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/startup-analysis.json",
+      "bytes": 1312,
+      "sha256": "0081e32dfdb36b0fbad34565bd9f266d1e41c073f076950662a5e444c396fe63"
+    },
+    {
+      "path": "raw/root-workout-direct-landscape/transition-observations.json",
+      "bytes": 7380,
+      "sha256": "ca73ac6f78bbf4d2d2c38680c751de0088889ed85b8a93e056c300c2a80f04b6"
+    },
+    {
+      "path": "raw/root-workout-final-parity.json",
+      "bytes": 12291,
+      "sha256": "6ae32c21c89a005fc78fabf02cd25b86fac8d60c2c11fde23a506359dc3a6edb"
+    },
+    {
+      "path": "raw/root-workout-findings.json",
+      "bytes": 26822,
+      "sha256": "5359015cf920eae5d2381079015a6b66dfe5d1cb62fc09c6a4d3b9aeb5fe37bb"
+    },
+    {
+      "path": "raw/root-workout-install-command.json",
+      "bytes": 449,
+      "sha256": "3da97ddb87c9536a4d0def75cb024d1c5736452828603fe04731b837b1c96897"
+    },
+    {
+      "path": "raw/root-workout-install-command.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-install-command.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/000-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/000-stdout.txt",
+      "bytes": 162,
+      "sha256": "677570379588ce707c3a8e1cc9e01837f4c099b0315baddf0e985bdc25837104"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/001-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/001-stdout.txt",
+      "bytes": 27,
+      "sha256": "3005ef01e6459636bb5a74afb105981fe2c9c0859e8c0c64d38a8d3caa75832f"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/002-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/002-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/003-stderr.txt",
+      "bytes": 369,
+      "sha256": "f465456990f83699253f4764c915766a2ba724b08917b4889d153ed578b51ca2"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/003-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/004-stderr.txt",
+      "bytes": 379,
+      "sha256": "f05f56229133db149a7dd3a264f7a3322d3ddc0e5cbcb678b12fa3d7a42cfd55"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/004-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/005-stderr.txt",
+      "bytes": 376,
+      "sha256": "6595bb898ecd77cea2b1aa99e24342628be752722cc2cd208cb395ae3e77f27b"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/005-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/006-stderr.txt",
+      "bytes": 376,
+      "sha256": "a6d7e0796c793603dcc5eeb7cc1dfd625707ccc667b04fc97106531235479fa8"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/006-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/007-stderr.txt",
+      "bytes": 376,
+      "sha256": "8ac45ca2e1bc0eca9b50334553006eeed788dfa6012d67a221ad0ae0f69d534c"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/007-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/008-stderr.txt",
+      "bytes": 380,
+      "sha256": "9461df44c9e79f4d24b090f5d99f692f4a6fc80dec04707223ad0e1f3e23a429"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/008-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/009-stderr.txt",
+      "bytes": 377,
+      "sha256": "4c69d4da799607f977306966d90ab09ef4e0c60abe50b3024ce68ba0f1044c4e"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/009-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/010-stderr.txt",
+      "bytes": 377,
+      "sha256": "71620b7241cdcdb1b9dd438d666386ed1b53bd0c2e864a047321c3213d976e33"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/010-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/011-stderr.txt",
+      "bytes": 377,
+      "sha256": "a20567f2bd1da1c2aa9c6a702cdfe78475b59e7eb7ca6941e34e18f234c8d797"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/011-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/012-stderr.txt",
+      "bytes": 379,
+      "sha256": "5e2b3d04676187b7a4ebbddc5627c22fea1d26d80b6090e7d4b7ddda939dba45"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/012-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/013-stderr.txt",
+      "bytes": 376,
+      "sha256": "b8c6b7d2df2c64064ab4fcad3e1b772d8d97ed19503fcf20ddf0352f2f5ffeaa"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/013-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/014-stderr.txt",
+      "bytes": 376,
+      "sha256": "382ec0598ed94d9b19b6c8840f5b16d014aa77be58275cb4fd2b2ed68df43e4a"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/014-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/015-stderr.txt",
+      "bytes": 376,
+      "sha256": "9a58ef4bde258f7e53ce56fb6e4640551f1ff3d515506df8bdfdd3f1f953fbce"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/015-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/captures.json",
+      "bytes": 7886,
+      "sha256": "f548c2dd6e748e161125fe5cb0f5afa38755fa380f39229624d5ba58e27d077a"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/commands.json",
+      "bytes": 6154,
+      "sha256": "3cb4f809aad576386e01e1cf7a1eb792ff8c53fb0cfa6a4e5ff666104f59828a"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/events-FA582086-EE07-4AA5-834A-8510096A8A63.jsonl",
+      "bytes": 629994,
+      "sha256": "2d2a210d17c10470aa42faef2d12f4052bfe9c21753fddf87bed0ff87589c60c"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/first-eight-visual-review.json",
+      "bytes": 3879,
+      "sha256": "d31f50c8197e3afbdae1a5d2f93f3e7c56c9bf3dd6bbf0d8ce6154c9b5f60344"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/following-preview-tail.json",
+      "bytes": 8272,
+      "sha256": "f8d09b74957249a548286490c7a17a27876b3a2fcee9f4fd226a73f0d7b09781"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/launch-initial-capture.json",
+      "bytes": 151,
+      "sha256": "ff785e9800b24991c82a37c078deaaad4b24530d6c74bc14bdbc7f1425a38fd3"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/launch-initial.png",
+      "bytes": 283502,
+      "sha256": "2d2cf10897720cd9047f8f7224b6a059974367b15eef52cf84f8c9464116c8d2"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/launch-review-environment.json",
+      "bytes": 319,
+      "sha256": "9db161d50bd4e2c4e3336c143159f00a7936ee25354959af9cdeec0df0e8d09f"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/phase-0-active-plus-0.25.png",
+      "bytes": 276285,
+      "sha256": "3ec86e78e7a1229ec0551f006e7c97740b4d8b1481dc35fd98b6dfd08541bfd7"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/phase-0-active-plus-1.png",
+      "bytes": 277134,
+      "sha256": "7e8ed8feee14825328827188978ff289f50fdbfb42e38b8c7531a7a9e22ce172"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/phase-0-active-plus-3.png",
+      "bytes": 334652,
+      "sha256": "3cf6319961f2d3a47ff3c85b408ea6b350113ead48fbbf7190a6092b4bfbf584"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/phase-0-active-plus-5.png",
+      "bytes": 335111,
+      "sha256": "4ca1142e638464f3ad051ff6f3a51f651d72f5ba4db8a1eef21c968d0097319b"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/phase-1-preview-plus-0.25.png",
+      "bytes": 300960,
+      "sha256": "14e7a4f09ecc7870155e58747f5784d8d99fac8e84d40fcd911c255532b6a523"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/phase-1-preview-plus-1.png",
+      "bytes": 305282,
+      "sha256": "2bd6044efa35979b49ce1013cd2bdc2c33ee858d8202336e67b95b469ee16e26"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/phase-1-preview-plus-3.png",
+      "bytes": 303574,
+      "sha256": "f6e35cd1991fb0f167ccb0f2b1b3d6688d4ccb33b823995d715921862ddbc9e2"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/phase-1-preview-plus-5.png",
+      "bytes": 301910,
+      "sha256": "6899840cfbf4ba92984fe46c9b5a7ab5b474863d2ae704ee225d7e4301f711d1"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/phase-2-active-plus-0.25.png",
+      "bytes": 335614,
+      "sha256": "8d25b23b97c30cfd01fd945431b4a5cea999fb36f58c7c4bc9031620207eee17"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/phase-2-active-plus-1.png",
+      "bytes": 337447,
+      "sha256": "6806ee0b4b98b43655ad0ad4d5fddbd3fc87b019b838331c64cde1331fee4602"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/phase-2-active-plus-3.png",
+      "bytes": 335859,
+      "sha256": "78cc44814e9a19de371155545e687dab82f19b59ecd8b13e9d9979ca00fca0fb"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/phase-2-active-plus-5.png",
+      "bytes": 336352,
+      "sha256": "67ae3730d936cd8e150128749f9bcc743988bba99f75f7ad8b32f948bf18823b"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/protocol.json",
+      "bytes": 748,
+      "sha256": "b41243ceafe16326323b6731e880859d3dcb5bb6717a113e4e61571ef8715f1d"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/root-following-hang-review.json",
+      "bytes": 1795,
+      "sha256": "248b0a87c8dcbac9bc6da4038011b7ff41736f15e3cf984f5dc29650d202c583"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/root-initial-rest-review.json",
+      "bytes": 3554,
+      "sha256": "35d9ce75b29165122a9dc1bde2392aabf2e5391c7b1e58b07ac53cb1b8c5f41e"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/structural-correspondence.json",
+      "bytes": 226856,
+      "sha256": "d0eab3b2d11ff53ae71480ab843445c1df5f4246cff2b0c2a7326741d082fd60"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/trace-copy.json",
+      "bytes": 717,
+      "sha256": "73bf8995d9cff48bd28abd2cdd5690ee0d138deb31dddc546400840061c6865d"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/transition-observations.json",
+      "bytes": 25129,
+      "sha256": "746294e110c80e1317a5237bd4e348d0e414128ada8caeb78911dc1a7fba0bc8"
+    },
+    {
+      "path": "raw/root-workout-normal-2-landscape/visual-review.json",
+      "bytes": 5922,
+      "sha256": "538ca69b56888663dd0f1bf353bf248b05c78f5175a431285d0a6d05b7f6398f"
+    },
+    {
+      "path": "raw/root-workout-package-parity.json",
+      "bytes": 7319,
+      "sha256": "f6c13eb5f88d73ce35e0b814f8eb39040d10024cf99a3d4390cf5bf4e967b5f4"
+    },
+    {
+      "path": "raw/workout-root-passive-2.py",
+      "bytes": 7312,
+      "sha256": "d831fb3aa95fb620da24fbd9d5f25aee868d4b5e8364990678a5b6bc01a88ae4"
+    },
+    {
+      "path": "raw/workout-root-passive.py",
+      "bytes": 6856,
+      "sha256": "15a39e53d4fa23430e8f5d6f8386e83cb4f3369d74cffc3a1a9044e2f310d870"
+    },
+    {
+      "path": "resource-provenance/ownership-at-packaging.json",
+      "bytes": 847,
+      "sha256": "1ace3ca5d4e0dbc4ccbda0bcc3550f1fdcef7925ee3f9f8398c371661de7c490"
+    },
+    {
+      "path": "retention-manifest.json",
+      "bytes": 61760,
+      "sha256": "acb85d1d81d5f00056031f4fd9fb767a3d8e94165500438b6a018140cd674561"
+    }
+  ]
+}

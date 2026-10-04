@@ -1,0 +1,101 @@
+{
+  "inputSidecarSHA256": "c5b3adfabbce5abcda5669b6ae4c6bcd7a90cd04bd58f3c2e3bc16dda37af0f9",
+  "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+  "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+  "method": "Euclidean lower bounds from actual support to terminal/certified axis-derived collar at the existing native solver base height 0; additional surface wrapping can only increase these bounds",
+  "worldAnchor": [
+    0.25,
+    0.275999998,
+    0.037995307
+  ],
+  "poses": {
+    "three-edge-upright": {
+      "mouth-1-lead": {
+        "directSupportToTerminalM": 0.4007600962872934,
+        "mandatoryCollarLowerBoundM": 0.40462595394945544,
+        "declaredLengthM": 0.35
+      },
+      "mouth-2-lead": {
+        "directSupportToTerminalM": 0.39278576193161674,
+        "mandatoryCollarLowerBoundM": 0.3966584768887622,
+        "declaredLengthM": 0.35
+      },
+      "mouth-3-lead": {
+        "directSupportToTerminalM": 0.39278576193161674,
+        "mandatoryCollarLowerBoundM": 0.3966584768887622,
+        "declaredLengthM": 0.35
+      },
+      "mouth-4-lead": {
+        "directSupportToTerminalM": 0.4007600962872934,
+        "mandatoryCollarLowerBoundM": 0.40462595394945544,
+        "declaredLengthM": 0.35
+      }
+    },
+    "three-edge-inverted": {
+      "mouth-1-lead": {
+        "directSupportToTerminalM": 0.40076095471298673,
+        "mandatoryCollarLowerBoundM": 0.40462689418703907,
+        "declaredLengthM": 0.35
+      },
+      "mouth-2-lead": {
+        "directSupportToTerminalM": 0.3927866377850252,
+        "mandatoryCollarLowerBoundM": 0.39665943618185007,
+        "declaredLengthM": 0.35
+      },
+      "mouth-3-lead": {
+        "directSupportToTerminalM": 0.3927866377850252,
+        "mandatoryCollarLowerBoundM": 0.39665943618185007,
+        "declaredLengthM": 0.35
+      },
+      "mouth-4-lead": {
+        "directSupportToTerminalM": 0.40076095471298673,
+        "mandatoryCollarLowerBoundM": 0.40462689418703907,
+        "declaredLengthM": 0.35
+      }
+    },
+    "two-edge-upright": {
+      "mouth-1-lead": {
+        "directSupportToTerminalM": 0.32805082412099595,
+        "mandatoryCollarLowerBoundM": 0.33199162422871237,
+        "declaredLengthM": 0.35
+      },
+      "mouth-2-lead": {
+        "directSupportToTerminalM": 0.31825986741413786,
+        "mandatoryCollarLowerBoundM": 0.32221335636933396,
+        "declaredLengthM": 0.35
+      },
+      "mouth-3-lead": {
+        "directSupportToTerminalM": 0.31825986741413786,
+        "mandatoryCollarLowerBoundM": 0.32221335636933396,
+        "declaredLengthM": 0.35
+      },
+      "mouth-4-lead": {
+        "directSupportToTerminalM": 0.32805082412099595,
+        "mandatoryCollarLowerBoundM": 0.33199162422871237,
+        "declaredLengthM": 0.35
+      }
+    },
+    "two-edge-inverted": {
+      "mouth-1-lead": {
+        "directSupportToTerminalM": 0.3280497754308036,
+        "mandatoryCollarLowerBoundM": 0.3319904760698215,
+        "declaredLengthM": 0.35
+      },
+      "mouth-2-lead": {
+        "directSupportToTerminalM": 0.31825878646189915,
+        "mandatoryCollarLowerBoundM": 0.3222121729812148,
+        "declaredLengthM": 0.35
+      },
+      "mouth-3-lead": {
+        "directSupportToTerminalM": 0.3182587864618991,
+        "mandatoryCollarLowerBoundM": 0.3222121729812148,
+        "declaredLengthM": 0.35
+      },
+      "mouth-4-lead": {
+        "directSupportToTerminalM": 0.3280497754308036,
+        "mandatoryCollarLowerBoundM": 0.3319904760698215,
+        "declaredLengthM": 0.35
+      }
+    }
+  }
+}

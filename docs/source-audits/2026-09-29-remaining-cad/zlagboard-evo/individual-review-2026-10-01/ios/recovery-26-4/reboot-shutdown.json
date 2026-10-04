@@ -1,0 +1,13 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "shutdown",
+    "4E0DA38B-E1C2-47A3-BEC7-B18750EF09C5"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ""
+}

@@ -1,0 +1,17 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "open",
+    "-a",
+    "Simulator",
+    "--args",
+    "-CurrentDeviceUDID",
+    "87CE3964-139D-4FAE-B121-AB12237401DB"
+  ],
+  "boundSeconds": 15.0,
+  "timedOut": false,
+  "interruptedBySignal": null,
+  "exitStatus": 0,
+  "elapsedSeconds": 0.24244016699958593
+}

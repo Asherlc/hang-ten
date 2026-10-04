@@ -1,0 +1,8 @@
+{
+  "beforeSHA256": "e18e0a0f59139a4c19cf2e197c383698572d487eed0254dcfc28acbf373ceb39",
+  "afterSHA256": "4ef9535c18fdeebc4217105bd7ded0f8c6d0073ecc3badf8f0f7dc04511f1687",
+  "patchSHA256": "6fdea7c10496de3bceb9895d07881577eba39e13553554dbc62a713e153c574f",
+  "authorization": "Root exact selected-entity DEBUG visibility probe; baseline RealityView/hands ON",
+  "timing": "3s delay after first active\u2192preview write,3s hidden, saved isEnabled restored also on cancellation/teardown",
+  "materialCameraSwiftUIChanges": false
+}

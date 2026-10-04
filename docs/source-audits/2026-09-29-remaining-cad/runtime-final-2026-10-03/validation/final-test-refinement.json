@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger",
+  "reason": "Address nonblocking review observation by checking camera pitch at fixed yaw, rather than allowing yaw alone to satisfy camera motion assertion",
+  "changedOnlyTestAssertion": true,
+  "testPath": "HangTenTests/BoardModelRealityTests.swift",
+  "previousTestSHA256": "63a8fbb748940862bad77c732ca353fe3d2c0a614d2e074a5c1e6b4ba5bbf6e6",
+  "currentTestSHA256": "bc27513a839dad08cb98e2c646d7825eefd1204bb8c3a649d7971b3873e2899e",
+  "productionCodeSHA256": "dfb079b42c054c29f9c9719721c96face6f573db8e7c66792cc755d22ca5bfc4",
+  "appScreenshotsStillBoundTo": "installed-app-provenance.json",
+  "finalTestCommandPending": false,
+  "result": "Passed",
+  "passedTests": 455,
+  "failedTests": 0,
+  "skippedTests": 1,
+  "summary": "final-strong-summary.json"
+}

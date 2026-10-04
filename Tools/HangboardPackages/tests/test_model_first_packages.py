@@ -1356,6 +1356,7 @@ def test_model_display_wood_nodes_preserves_explicit_surface_selection(tmp_path:
     assert board.presentations[0].media.display["woodNodeIDs"] == ("body", "edge-node")
 
 
+
 @pytest.mark.parametrize("nodes", [["missing"], ["body", "body"], [""], "body", None])
 def test_model_display_rejects_invalid_wood_surface_selection(tmp_path: Path, nodes) -> None:
     package = write_v3_model_package(tmp_path / "wood-display", contacts=("edge",), body_nodes=("body",))
@@ -1364,6 +1365,7 @@ def test_model_display_rejects_invalid_wood_surface_selection(tmp_path: Path, no
     (package / "board.json").write_text(json.dumps(document))
     with pytest.raises(ValueError, match="woodNodeIDs"):
         load_board_package(package)
+
 
 
 def test_model_display_plastic_nodes_preserves_explicit_surface_selection(tmp_path: Path) -> None:
@@ -1375,6 +1377,7 @@ def test_model_display_plastic_nodes_preserves_explicit_surface_selection(tmp_pa
     assert board.presentations[0].media.display["plasticNodeIDs"] == ("body", "edge-node")
 
 
+
 @pytest.mark.parametrize("nodes", [["missing"], ["body", "body"], [""], "body", None])
 def test_model_display_rejects_invalid_plastic_surface_selection(tmp_path: Path, nodes) -> None:
     package = write_v3_model_package(tmp_path / "plastic-display", contacts=("edge",), body_nodes=("body",))
@@ -1383,6 +1386,7 @@ def test_model_display_rejects_invalid_plastic_surface_selection(tmp_path: Path,
     (package / "board.json").write_text(json.dumps(document))
     with pytest.raises(ValueError, match="plasticNodeIDs"):
         load_board_package(package)
+
 
 
 def test_model_display_rejects_conflicting_surface_finishes(tmp_path: Path) -> None:
@@ -1396,6 +1400,7 @@ def test_model_display_rejects_conflicting_surface_finishes(tmp_path: Path) -> N
         load_board_package(package)
 
 
+
 def test_model_display_granite_overrides_keep_board_wood_default(tmp_path: Path) -> None:
     package = write_v3_model_package(tmp_path / "stone-insert", contacts=("edge",), body_nodes=("body",))
     document = json.loads((package / "board.json").read_text())
@@ -1407,6 +1412,7 @@ def test_model_display_granite_overrides_keep_board_wood_default(tmp_path: Path)
     assert board.presentations[0].media.display["graniteNodeIDs"] == ("edge-node",)
 
 
+
 @pytest.mark.parametrize("nodes", [["missing"], ["body", "body"], [""], "body", None])
 def test_model_display_rejects_invalid_granite_nodes(tmp_path: Path, nodes) -> None:
     package = write_v3_model_package(tmp_path / "stone-insert", contacts=("edge",), body_nodes=("body",))
@@ -1415,6 +1421,7 @@ def test_model_display_rejects_invalid_granite_nodes(tmp_path: Path, nodes) -> N
     (package / "board.json").write_text(json.dumps(document))
     with pytest.raises(ValueError, match="graniteNodeIDs"):
         load_board_package(package)
+
 
 
 @pytest.mark.parametrize("other", ["woodNodeIDs", "plasticNodeIDs"])
@@ -1429,6 +1436,7 @@ def test_model_display_rejects_conflicting_granite_override(tmp_path: Path, othe
         load_board_package(package)
 
 
+
 def test_model_display_surface_finish_applies_without_node_inventory(tmp_path: Path) -> None:
     package = write_v3_model_package(tmp_path / "board-finish", contacts=("edge",), body_nodes=("body", "new-body"))
     document = json.loads((package / "board.json").read_text())
@@ -1437,6 +1445,7 @@ def test_model_display_surface_finish_applies_without_node_inventory(tmp_path: P
     (package / "board.json").write_text(json.dumps(document))
     board = load_board_package(package).board
     assert board.presentations[0].media.display["surfaceFinish"] == "wood"
+
 
 
 @pytest.mark.parametrize("finish", [None, "unknown", "", 1, [], {}])
@@ -1461,7 +1470,18 @@ def test_every_catalog_model_authors_a_material_finish() -> None:
                 continue
             model_count += 1
             display = presentation.media.display
-            assert display.get("surfaceFinish") in {"wood", "plastic", "granite"}, package
+            if package.name == "aelith-cyclops-011":
+                # The maker specifies anodized aluminium. There is no metal palette;
+                # this exact revision must explicitly retain its neutral finish.
+                assert display.get("surfaceFinish") == "neutral", package
+                assert not any(display.get(field) for field in ("woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs")), package
+            elif package.name == "plateau-lifting-edge":
+                # Only the accepted wooden body and working edge use wood;
+                # the neutral default preserves its attachment/insert appearance.
+                assert display.get("surfaceFinish") == "neutral", package
+                assert display.get("woodNodeIDs") == ("plateau_body", "plateau_edge_18"), package
+            else:
+                assert display.get("surfaceFinish") in {"wood", "plastic", "granite"}, package
     # Preserve coverage of the 55 model presentations present at this rollout.
     assert model_count >= 55
 
@@ -1474,4 +1494,27 @@ def test_model_display_rejects_invented_per_surface_bands(tmp_path: Path) -> Non
     ]
     (package / "board.json").write_text(json.dumps(document))
     with pytest.raises(ValueError, match="unknown keys"):
+        load_board_package(package)
+
+
+
+def test_model_display_absent_finish_preserves_legacy_neutral_default(tmp_path: Path) -> None:
+    package = write_v3_model_package(tmp_path / "legacy-display", contacts=("edge",), body_nodes=("body",))
+    display = load_board_package(package).board.presentations[0].media.display
+    assert "surfaceFinish" not in display
+    assert not any(field in display for field in ("woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"))
+
+
+@pytest.mark.parametrize("field", ["woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"])
+def test_model_display_overrides_cannot_paint_attachment_nodes(tmp_path: Path, field: str) -> None:
+    package = write_v3_model_package(tmp_path / "attachment-display", contacts=("edge",), body_nodes=("body",))
+    descriptor_path = package / "assets/primary.model.json"
+    descriptor = json.loads(descriptor_path.read_text())
+    descriptor["nodes"].append({"nodeID": "attachment", "role": "attachment"})
+    descriptor["nodes"].sort(key=lambda node: node["nodeID"])
+    descriptor_path.write_text(json.dumps(descriptor))
+    document = json.loads((package / "board.json").read_text())
+    document["presentations"][0]["media"]["display"][field] = ["attachment"]
+    (package / "board.json").write_text(json.dumps(document))
+    with pytest.raises(ValueError, match="body or contact"):
         load_board_package(package)

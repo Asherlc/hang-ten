@@ -1,0 +1,31 @@
+{
+  "method": "Complete final generated before/after pairs uniformly reduced to half scale into a labeled2x3overview.",
+  "image": "default-inverted-cord-overview.png",
+  "sha256": "df9bec78c92618f6f5cc467cb9661fabbf4e3cb693eaf5e946741734a2a97856",
+  "inputs": [
+    {
+      "image": "front-25-front-full.png",
+      "sha256": "21724e2be3d890f72273cf3f4917b295eba48635acd8e2d576ac66db04c4b6f9"
+    },
+    {
+      "image": "front-25-side-full.png",
+      "sha256": "0933a0e7e7d0315adb8f82be522eb7cf464b61f74e3419677886cbcfd918270b"
+    },
+    {
+      "image": "front-25-top-full.png",
+      "sha256": "55bb10552a8e522aa33b04ad9b4899e01c69f9466336ef1ff275f246c85baf26"
+    },
+    {
+      "image": "front-inverted-20-front-full.png",
+      "sha256": "ed5005afb468197f81259a8d37a9121ec60af68dff51a604f8aacfb67721435e"
+    },
+    {
+      "image": "front-inverted-20-side-full.png",
+      "sha256": "deeda1e975fc1702f21cc4eefb7b59de3c668cb3295ad9463d73fa121395e5e2"
+    },
+    {
+      "image": "front-inverted-20-top-full.png",
+      "sha256": "5e90341e7f78af9f0a78d0795525c8ec2040d4617f6fbcfbece8152c99d37d48"
+    }
+  ]
+}

@@ -1,0 +1,524 @@
+{
+  "slug": "metolius-simulator-3d",
+  "boardID": "metolius.simulator-3d",
+  "preMigrationBoardSHA256": "c57e419c5676a51ddb6bafe26926aaa21345d0d885abfc3d83c86784af00b4f0",
+  "contactCount": 30,
+  "contacts": [
+    {
+      "contactID": "jug-1-left",
+      "name": "Left #1 outer jug",
+      "kind": "jug",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "flat-sloper-2-left",
+      "name": "Left #2 55 mm flat sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "round-sloper-3-center",
+      "name": "Center #3 65 mm round sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "jug-14-center",
+      "name": "Center #14 jug",
+      "kind": "jug",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "flat-sloper-2-right",
+      "name": "Right #2 55 mm flat sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "jug-1-right",
+      "name": "Right #1 outer jug",
+      "kind": "jug",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-4-left",
+      "name": "Left #4 30 mm 3-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": 3,
+      "gripTypes": [
+        "threeFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "edge-5-left",
+      "name": "Left #5 25 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "edge-6-left",
+      "name": "Left #6 19 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 19,
+          "maximum": 19
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "edge-7-left",
+      "name": "Left #7 36 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 36,
+          "maximum": 36
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-8-left",
+      "name": "Left #8 15 mm 3-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "fingerCapacity": 3,
+      "gripTypes": [
+        "threeFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-9-left",
+      "name": "Left #9 35 mm 3-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 35,
+          "maximum": 35
+        }
+      },
+      "fingerCapacity": 3,
+      "gripTypes": [
+        "threeFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-10-left",
+      "name": "Left #10 17 mm 3-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 17,
+          "maximum": 17
+        }
+      },
+      "fingerCapacity": 3,
+      "gripTypes": [
+        "threeFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "edge-11-left",
+      "name": "Left #11 14 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 14,
+          "maximum": 14
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-12-left",
+      "name": "Left #12 30 mm 2-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-13-left",
+      "name": "Left #13 14 mm 2-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 14,
+          "maximum": 14
+        }
+      },
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-15-center",
+      "name": "Center #15 50 mm 3-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 50,
+          "maximum": 50
+        }
+      },
+      "fingerCapacity": 3,
+      "gripTypes": [
+        "threeFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-16-center",
+      "name": "Center #16 37 mm 3-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 37,
+          "maximum": 37
+        }
+      },
+      "fingerCapacity": 3,
+      "gripTypes": [
+        "threeFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-17-center",
+      "name": "Center #17 28 mm 2-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 28,
+          "maximum": 28
+        }
+      },
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-18-center",
+      "name": "Center #18 32 mm 2-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 32,
+          "maximum": 32
+        }
+      },
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-13-right",
+      "name": "Right #13 14 mm 2-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 14,
+          "maximum": 14
+        }
+      },
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-12-right",
+      "name": "Right #12 30 mm 2-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "edge-11-right",
+      "name": "Right #11 14 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 14,
+          "maximum": 14
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-10-right",
+      "name": "Right #10 17 mm 3-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 17,
+          "maximum": 17
+        }
+      },
+      "fingerCapacity": 3,
+      "gripTypes": [
+        "threeFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-9-right",
+      "name": "Right #9 35 mm 3-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 35,
+          "maximum": 35
+        }
+      },
+      "fingerCapacity": 3,
+      "gripTypes": [
+        "threeFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-8-right",
+      "name": "Right #8 15 mm 3-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "fingerCapacity": 3,
+      "gripTypes": [
+        "threeFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "edge-7-right",
+      "name": "Right #7 36 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 36,
+          "maximum": 36
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "edge-6-right",
+      "name": "Right #6 19 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 19,
+          "maximum": 19
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "edge-5-right",
+      "name": "Right #5 25 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    },
+    {
+      "contactID": "pocket-4-right",
+      "name": "Right #4 30 mm 3-finger pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": 3,
+      "gripTypes": [
+        "threeFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085"
+      ]
+    }
+  ],
+  "metadataPolicy": "Identity, revision, contact order, names, capacities, grip types, dimensions, aspect ratios and model camera retained verbatim. Existing unsupported facts are neither added nor expanded. No training content changes.",
+  "sourceLimitations": "Manufacturer photograph and independent numbered depth diagram establish broad arc shell taper, outer and center jugs, top slopers, long second-row edges, lower pocket pairs and four central pockets. Published envelope 28 x 8.75 in. Preserve current split left/right flat sloper and combined center round sloper identity. Another active PR #516 concerns handCapacity only.",
+  "embeddedManifestRoundtripExact": true,
+  "generatedBoardJsonRemoved": true
+}

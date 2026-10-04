@@ -1,0 +1,23 @@
+{
+  "audioMuted": true,
+  "snapshots": [
+    {
+      "sequence": 18,
+      "event": "startup-request-entry",
+      "audioEnabled": false
+    },
+    {
+      "sequence": 19,
+      "event": "startup-visible-countdown-before",
+      "audioEnabled": false
+    },
+    {
+      "sequence": 20,
+      "event": "startup-visible-countdown-after",
+      "audioEnabled": false
+    }
+  ],
+  "noPrepareEvents": true,
+  "finalRequirementsChecked": true,
+  "limitation": "Sampled scalar settings and call boundaries; not proof of all framework audio inactivity."
+}

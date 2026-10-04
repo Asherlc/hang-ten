@@ -1,0 +1,16 @@
+{
+  "routeStart": {
+    "epoch": 1791068074.73713,
+    "monotonic": 130728.459238375
+  },
+  "routeCompleted": {
+    "epoch": 1791068074.959337,
+    "monotonic": 130728.681446666
+  },
+  "measurementAnchor": {
+    "epoch": 1791068074.959337,
+    "monotonic": 130728.681446666
+  },
+  "anchorKind": "normal openurl command completion",
+  "noAppPhaseInference": true
+}

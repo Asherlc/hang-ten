@@ -1,0 +1,44 @@
+{
+  "asset": "Hangboards/owl-climb-poker/assets/primary.usdz",
+  "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+  "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+  "renderer": "whole actual USDZ, retained CPU z-buffer; runtime finish unverified",
+  "views": [
+    {
+      "path": "face-a-straight.png",
+      "rotationXDegrees": 0
+    },
+    {
+      "path": "face-a-oblique.png",
+      "rotationXDegrees": 18
+    },
+    {
+      "path": "face-b-straight.png",
+      "rotationXDegrees": 90
+    },
+    {
+      "path": "face-b-oblique.png",
+      "rotationXDegrees": 108
+    },
+    {
+      "path": "face-c-straight.png",
+      "rotationXDegrees": 180
+    },
+    {
+      "path": "face-c-oblique.png",
+      "rotationXDegrees": 198
+    },
+    {
+      "path": "face-d-straight.png",
+      "rotationXDegrees": 270
+    },
+    {
+      "path": "face-d-oblique.png",
+      "rotationXDegrees": 288
+    },
+    {
+      "path": "native-side.png",
+      "view": "native side"
+    }
+  ]
+}

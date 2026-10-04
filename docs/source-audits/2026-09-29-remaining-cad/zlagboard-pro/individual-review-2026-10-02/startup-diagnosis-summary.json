@@ -1,0 +1,12 @@
+{
+  "scope": "Read-only inspection of exact owned26.4 device startup logs; no shared service operations.",
+  "uuid": "9B0B559E-0E57-4C3F-9685-E5892BC41E30",
+  "observed": "First180second boot stalled in migration; ordinary same-device reboot reached Status4 Waiting on System App but remained at black startup spinner through480second bound.",
+  "independentAstraFinding": "SpringBoard running PID98691, runs2, initialized1; prior OS_REASON_RUNNINGBOARD exit is not proof of current crash/deadlock. Runtime-volume bootstrap errors and mobile/tmp warnings identify no precise owned-path fault to repair.",
+  "causeEstablished": false,
+  "additionalPrivateServiceRepairPerformed": false,
+  "cleanup": "ios-2026-10-02/cleanup-verification.json",
+  "freshGenericBuild": "build-only-2026-10-02/build-results-summary.json",
+  "buildProductHandoff": "Firstgenericbuild completed and its EXITtrap removed product before preservationhandoff. A new controlled26.5attempt requires another freshbuild; original success/cleanup evidence remains unchanged.",
+  "appValidation": "not yet run; awaiting independent26.5 runtime attempt"
+}

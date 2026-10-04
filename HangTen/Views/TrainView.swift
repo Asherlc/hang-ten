@@ -269,6 +269,7 @@ struct BoardDetailView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @State private var selectedHoldID: String?
+    @State private var selectedPositionID: String?
     @State private var showsReportProblem = false
     @State private var compactMetrics = BoardDetailCompactMetrics()
 
@@ -297,6 +298,10 @@ struct BoardDetailView: View {
 
     private var selectedHold: PhysicalContact? {
         guard let selectedHoldID else { return nil }
+        if let selectedPositionID,
+           let configured = board.contacts(inPosition: selectedPositionID).first(where: { $0.id == selectedHoldID }) {
+            return configured
+        }
         return board.contacts.first { $0.id == selectedHoldID }
     }
 
@@ -322,6 +327,7 @@ struct BoardDetailView: View {
                 BoardDetailMapView(
                     board: board,
                     selectedHoldID: $selectedHoldID,
+                    selectedPositionID: $selectedPositionID,
                     maximumMapHeight: compactMaximumMapHeight,
                     selectedHoldContent: selectedHold.map { AnyView(selectedHoldCard($0)) }
                 )

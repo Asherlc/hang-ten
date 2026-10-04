@@ -1,0 +1,210 @@
+[
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-passive-route-helper-0",
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "37186",
+      "-o",
+      "pid=,command="
+    ],
+    "startEpoch": 1791075686.608205,
+    "startMonotonic": 137330.802350666,
+    "limitSeconds": 20,
+    "pid": 48987,
+    "endEpoch": 1791075686.6348531,
+    "endMonotonic": 137330.828999333,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-passive-route-helper-1",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "com.hangten.training",
+      "app"
+    ],
+    "startEpoch": 1791075686.638891,
+    "startMonotonic": 137330.83303625,
+    "limitSeconds": 20,
+    "pid": 48990,
+    "endEpoch": 1791075686.881997,
+    "endMonotonic": 137331.076144083,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-passive-route-helper-2",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-passive-route/app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-passive-route/app.stderr",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791075686.914689,
+    "startMonotonic": 137331.108835583,
+    "limitSeconds": 20,
+    "pid": 49003,
+    "endEpoch": 1791075687.334431,
+    "endMonotonic": 137331.528579291,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-passive-route-helper-3",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "enumerate"
+    ],
+    "startEpoch": 1791075690.355298,
+    "startMonotonic": 137334.549456208,
+    "limitSeconds": 20,
+    "pid": 49168,
+    "endEpoch": 1791075692.549679,
+    "endMonotonic": 137336.743844458,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-passive-route-helper-4",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-passive-route/train-setup.png"
+    ],
+    "startEpoch": 1791075692.550546,
+    "startMonotonic": 137336.744711375,
+    "limitSeconds": 20,
+    "pid": 49315,
+    "endEpoch": 1791075694.6536,
+    "endMonotonic": 137338.847772875,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-passive-route-helper-5",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "openurl",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "hangten://plan/research.max-hangs/workout"
+    ],
+    "startEpoch": 1791075710.004683,
+    "startMonotonic": 137354.198906208,
+    "limitSeconds": 20,
+    "pid": 50025,
+    "endEpoch": 1791075710.417135,
+    "endMonotonic": 137354.611360166,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-passive-route-helper-6",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-passive-route/mini-before-hand-setup.png"
+    ],
+    "startEpoch": 1791075712.4191391,
+    "startMonotonic": 137356.61337,
+    "limitSeconds": 20,
+    "pid": 50122,
+    "endEpoch": 1791075713.08415,
+    "endMonotonic": 137357.2783845,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-passive-route-helper-7",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "terminate",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1791075758.10498,
+    "startMonotonic": 137402.299363833,
+    "limitSeconds": 10,
+    "pid": 52399,
+    "endEpoch": 1791075758.341415,
+    "endMonotonic": 137402.53580025,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-passive-route-helper-8",
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "49016",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791075758.3422441,
+    "startMonotonic": 137402.536629375,
+    "limitSeconds": 3,
+    "pid": 52409,
+    "endEpoch": 1791075758.393875,
+    "endMonotonic": 137402.588260875,
+    "exitStatus": 1
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-passive-route-helper-9",
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "48989",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791075758.398991,
+    "startMonotonic": 137402.593376625,
+    "limitSeconds": 3,
+    "pid": 52411,
+    "endEpoch": 1791075758.424284,
+    "endMonotonic": 137402.618669166,
+    "exitStatus": 1
+  }
+]

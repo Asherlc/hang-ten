@@ -1,0 +1,19 @@
+{
+  "package": "frictitious-port-a-board",
+  "currentSourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+  "nativeReopenEditSourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+  "modelSHA256ByPresentation": {
+    "primary": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273"
+  },
+  "fullPackageSchemaPassed": true,
+  "nativeCordCacheCheckPassed": true,
+  "minimumNativeCordClearanceMM": 1.6971317806765347,
+  "metadataOnlyCompileRebindings": [],
+  "humanCADReview": "pending requested one-at-a-time review after whole batch",
+  "externalResourcesCreated": false,
+  "continuousRoundedRuntimeCordClearancePassed": true,
+  "minimumCertifiedRuntimeCordClearanceMM": 1.490452601562494,
+  "continuousClearanceReport": "cord-continuous-clearance.json",
+  "sidecarSHA256": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305",
+  "cameraOnlyRebindingProof": "camera-correction-proof.json"
+}

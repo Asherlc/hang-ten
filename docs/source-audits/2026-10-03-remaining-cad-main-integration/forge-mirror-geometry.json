@@ -1,0 +1,81 @@
+{
+  "workspaceOwner": "placid-badger",
+  "asset": "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
+  "sha256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+  "worldCoordinateRoundingDigits": 7,
+  "meshCount": 21,
+  "bodyVertexCount": 7290,
+  "bodyVertexMultisetMatchesReflection": true,
+  "contactPairs": [
+    {
+      "rightNode": "contact_variable_edge_rail_right",
+      "leftNode": "contact_variable_edge_rail_left",
+      "verticesPerMesh": 1129,
+      "unmatchedLeftVertices": 0,
+      "unmatchedMirroredRightVertices": 0
+    },
+    {
+      "rightNode": "contact_closed_crimp_right",
+      "leftNode": "contact_closed_crimp_left",
+      "verticesPerMesh": 1414,
+      "unmatchedLeftVertices": 0,
+      "unmatchedMirroredRightVertices": 0
+    },
+    {
+      "rightNode": "contact_mr_deep_right",
+      "leftNode": "contact_mr_deep_left",
+      "verticesPerMesh": 1092,
+      "unmatchedLeftVertices": 0,
+      "unmatchedMirroredRightVertices": 0
+    },
+    {
+      "rightNode": "contact_mr_shallow_right",
+      "leftNode": "contact_mr_shallow_left",
+      "verticesPerMesh": 1090,
+      "unmatchedLeftVertices": 0,
+      "unmatchedMirroredRightVertices": 0
+    },
+    {
+      "rightNode": "contact_im_shallow_right",
+      "leftNode": "contact_im_shallow_left",
+      "verticesPerMesh": 331,
+      "unmatchedLeftVertices": 0,
+      "unmatchedMirroredRightVertices": 0
+    },
+    {
+      "rightNode": "contact_im_deep_right",
+      "leftNode": "contact_im_deep_left",
+      "verticesPerMesh": 561,
+      "unmatchedLeftVertices": 0,
+      "unmatchedMirroredRightVertices": 0
+    },
+    {
+      "rightNode": "contact_sloper_30_right",
+      "leftNode": "contact_sloper_30_left",
+      "verticesPerMesh": 92,
+      "unmatchedLeftVertices": 0,
+      "unmatchedMirroredRightVertices": 0
+    },
+    {
+      "rightNode": "contact_sloper_40_right",
+      "leftNode": "contact_sloper_40_left",
+      "verticesPerMesh": 32,
+      "unmatchedLeftVertices": 0,
+      "unmatchedMirroredRightVertices": 0
+    },
+    {
+      "rightNode": "contact_large_flat_edge_right",
+      "leftNode": "contact_large_flat_edge_left",
+      "verticesPerMesh": 4,
+      "unmatchedLeftVertices": 0,
+      "unmatchedMirroredRightVertices": 0
+    },
+    {
+      "rightNode": "contact_slopey_crimper_right",
+      "leftNode": "contact_slopey_crimper_left",
+      "verticesPerMesh": 47,
+      "unmatchedLeftVertices": 0,
+      "unmatchedMirroredRightVertices": 0
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "actual-owner-normal-supplement-b722",
+  "timeoutSeconds": 180,
+  "command": [
+    "--extra-python-path",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_actual_owner_normals_b722.py"
+  ],
+  "ownedProcessGroup": 14115,
+  "exitCode": 0,
+  "elapsedSeconds": 16.67561970796669,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

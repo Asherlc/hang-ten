@@ -1,0 +1,36 @@
+{
+  "runtimeAuthorized": true,
+  "exclusiveRuntimeOwnership": true,
+  "owner": "placid-badger-cad-second-half",
+  "simulatorUUID": "E0AC7F37-369F-414E-B407-353435A0BE03",
+  "controllerPID": 17341,
+  "ownershipPath": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/ownership.json",
+  "ownershipSHA256": "46345ff969e249c2a240dbb442761417e95d64ddafa3922cd0c6ed955ed9bb59",
+  "sourceCommit": "a314f39c03121465b493da6f45e49fa7c928b1cc",
+  "sourceReferencePath": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/candidate-source-reference.json",
+  "sourceReferenceSHA256": "f9f1748e15ea6b1f2739b16c83a42e4d838035becf14681e4ab933cc359784c4",
+  "parityPath": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/candidate-parity.json",
+  "paritySHA256": "49698133d9840ca71761eae9da4ad19d48794b8a2d2227ebc70b2690bc12526d",
+  "parityCheckCount": 22,
+  "binarySHA256": "7c7f3fcc5cffbe97a09b2bde5fa2d366e7c92b15d21f0e5aee2ea3fe63272b7b",
+  "helperSHA256": "db2b679301a8ead9a129647a50f366ecdded054b9c84d90b692b84fa264645f7",
+  "scheduleSHA256": "26b19c6c9273432d96bf9a34be0f5796e6d8af197b8ca017766ea8123d0f45b2",
+  "planLibrarySHA256": "2c2ecd7ae62de57928c9434029a812dfae4043fa17b071408b6ee22c5aa481d1",
+  "routineReferenceSHA256": "ed3655bf12b217326324bb5f461cdaee0db28f018e0e593a995c49f5b084e601",
+  "boardID": "zlagboard.evo",
+  "planID": "research.max-hangs",
+  "arm": "control",
+  "runID": "placid-badger-cad-second-half-post-main-zlagboard-evo-control",
+  "outputDirectory": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/evo-control-repeat",
+  "appArguments": [
+    "-workoutAudioCuesEnabled",
+    "NO"
+  ],
+  "launchReviewFlags": {
+    "HANGTEN_REVIEW_BOARD_ID": "zlagboard.evo",
+    "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+    "HANGTEN_REVIEW_LANDSCAPE": "1",
+    "HANGTEN_REVIEW_SKIP_NONINTERACTIVE_PRESENTATION": "1"
+  },
+  "trialID": "unchanged-control-one-repeat-after-6.49s-screenshot"
+}

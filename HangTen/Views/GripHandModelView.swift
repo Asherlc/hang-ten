@@ -32,6 +32,14 @@ struct GripHandPose: Equatable {
     }
 }
 
+private struct GripHandPreparation: Equatable {
+    let id: UUID
+    let size: CGSize
+    let pose: GripHandPose
+    let isLeft: Bool?
+    let resetToken: Int
+}
+
 /// Displays the evaluated surfaces authored in Art/GripHand/GripHand.blend.
 /// Pose changes preserve Blender deformation and smoothing exactly.
 @MainActor
@@ -86,6 +94,9 @@ struct GripHandModelView: View {
     @State private var dragState = GripHandDragState()
     @State private var lastMagnification: CGFloat = 1
     @State private var cameraRevision = 0
+    @State private var preparationHostID = UUID()
+    @State private var synchronizedPreparation: GripHandPreparation?
+    @Environment(\.workoutRendererPreparationID) private var preparationID
 
     private var scene: GripHandRealityScene { sceneStorage.scene }
 
@@ -118,12 +129,19 @@ struct GripHandModelView: View {
                 content.add(scene.root)
                 syncScene(in: size)
                 updateUnavailableState()
+                reportPreparation(in: size)
             } update: { _ in
                 syncScene(in: size)
                 updateUnavailableState()
+                reportPreparation(in: size)
             }
             .simultaneousGesture(orbitGesture(size: size))
             .simultaneousGesture(magnifyGesture)
+            #if targetEnvironment(simulator)
+            .background {
+                SimulatorDrawablePresentation().allowsHitTesting(false)
+            }
+            #endif
             .overlay {
                 if isUnavailable {
                     Text("3D hand unavailable")
@@ -135,7 +153,25 @@ struct GripHandModelView: View {
                 }
             }
             .accessibilityHidden(true)
+            .preference(key: WorkoutRendererReadinessKey.self, value: preparationID == nil
+                        ? .init() : .init(renderers: [preparationHostID: .init(
+                            kind: .hand, status: isUnavailable ? .unavailable
+                                : synchronizedPreparation == currentPreparation(in: size) ? .ready : .loading,
+                            preparationID: preparationID)]))
         }
+    }
+
+    private func currentPreparation(in size: CGSize) -> GripHandPreparation? {
+        preparationID.map { GripHandPreparation(id: $0, size: size,
+            pose: GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration),
+            isLeft: side == .left, resetToken: resetToken) }
+    }
+
+    private func reportPreparation(in size: CGSize) {
+        guard let preparation = currentPreparation(in: size), synchronizedPreparation != preparation,
+              size.width.isFinite, size.height.isFinite, size.width > 0, size.height > 0,
+              !scene.isUnavailable else { return }
+        Task { @MainActor in synchronizedPreparation = preparation }
     }
 
     func syncScene(in size: CGSize) {
@@ -783,6 +819,9 @@ struct GripHandPairModelView: View {
     @State private var dragState = GripHandDragState()
     @State private var lastMagnification: CGFloat = 1
     @State private var cameraRevision = 0
+    @State private var preparationHostID = UUID()
+    @State private var synchronizedPreparation: GripHandPreparation?
+    @Environment(\.workoutRendererPreparationID) private var preparationID
 
     private var scene: GripHandRealityPairScene { sceneStorage.scene }
 
@@ -812,12 +851,19 @@ struct GripHandPairModelView: View {
                 content.add(scene.root)
                 syncScene(in: size)
                 updateUnavailableState()
+                reportPreparation(in: size)
             } update: { _ in
                 syncScene(in: size)
                 updateUnavailableState()
+                reportPreparation(in: size)
             }
             .simultaneousGesture(orbitGesture(size: size))
             .simultaneousGesture(magnifyGesture)
+            #if targetEnvironment(simulator)
+            .background {
+                SimulatorDrawablePresentation().allowsHitTesting(false)
+            }
+            #endif
             .overlay {
                 if isUnavailable {
                     Text("3D hands unavailable")
@@ -829,7 +875,25 @@ struct GripHandPairModelView: View {
                 }
             }
             .accessibilityHidden(true)
+            .preference(key: WorkoutRendererReadinessKey.self, value: preparationID == nil
+                        ? .init() : .init(renderers: [preparationHostID: .init(
+                            kind: .hand, status: isUnavailable ? .unavailable
+                                : synchronizedPreparation == currentPreparation(in: size) ? .ready : .loading,
+                            preparationID: preparationID)]))
         }
+    }
+
+    private func currentPreparation(in size: CGSize) -> GripHandPreparation? {
+        preparationID.map { GripHandPreparation(id: $0, size: size,
+            pose: GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration),
+            isLeft: nil, resetToken: resetToken) }
+    }
+
+    private func reportPreparation(in size: CGSize) {
+        guard let preparation = currentPreparation(in: size), synchronizedPreparation != preparation,
+              size.width.isFinite, size.height.isFinite, size.width > 0, size.height > 0,
+              scene.isAvailable else { return }
+        Task { @MainActor in synchronizedPreparation = preparation }
     }
 
     func syncScene(in size: CGSize) {

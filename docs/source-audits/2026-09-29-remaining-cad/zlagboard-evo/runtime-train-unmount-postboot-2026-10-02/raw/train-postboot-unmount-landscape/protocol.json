@@ -1,0 +1,20 @@
+{
+  "hardBoundSeconds": 300,
+  "plannedPhases": [
+    "active",
+    "preview",
+    "active"
+  ],
+  "captureOffsetsAfterActualMutation": [
+    0.25,
+    1,
+    3,
+    5
+  ],
+  "afterLaunchUIAccess": "screenshots only; no AX queries/taps/Skip",
+  "externalTracePollingSeconds": 0.03,
+  "routineUnchanged": true,
+  "samplerLimit": "Existing120-iteration sampler remains; new identical both-arm boundary census on actual highlight-before/after supplies sparse late-phase app/window/placement evidence, not every capture instant",
+  "arm": "unmount",
+  "startup": "Existing WorkoutAccessGate and production automatic-start policy in both arms; explicit DEBUG AUTOSTART omitted, fresh process/session; both arms normal launch plus existing workout deep link through original Train/navigation history; strict all-hand-host suppression enabled; Train board PRESENT; weak predecessor-attachment census, retained-model/tag trial and guarded disappearing Train root/camera detach common to both arms; unmount alone requests structural Train removal; bounded Train constructor/make+attachment readiness gate before openurl is a deliberate new common startup protocol; control must reproduce failure; perspective/old hand-OFF/camera/standalone/direct-root/root-navigation flags absent all arms"
+}

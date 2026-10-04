@@ -1,0 +1,8 @@
+{
+  "active": {},
+  "ended": {
+    "check": "exited",
+    "export": "exited"
+  },
+  "limitSeconds": 1800
+}

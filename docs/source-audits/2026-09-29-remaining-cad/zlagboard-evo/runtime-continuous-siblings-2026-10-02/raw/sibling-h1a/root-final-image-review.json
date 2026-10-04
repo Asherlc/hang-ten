@@ -1,0 +1,46 @@
+{
+  "scope": "Only five phase-final images reviewed here; worker independently reviews every live capture. No20-frame inference from these five alone.",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-0-clear-plus-7.png",
+      "sha256": "1478f5a19c7ade6342350cd2da06ae3e7c5d91f108258a8aaec0eaaf2b70678c",
+      "wholeImageViewed": true,
+      "boardObserved": "neutral wood",
+      "timerObserved": "00:01",
+      "progress": "visibly increases across successive finals"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-1-active-plus-7.png",
+      "sha256": "7e3d410338b1d2306c0c18387515f72b1d04244fd280433c9e6a976949a285a1",
+      "wholeImageViewed": true,
+      "boardObserved": "red",
+      "timerObserved": "00:01",
+      "progress": "visibly increases across successive finals"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-2-preview-plus-7.png",
+      "sha256": "958bee7b6fdfba42c61cc35a4cb93e65bf09d2e2f8f70938afa8bb6cc7521283",
+      "wholeImageViewed": true,
+      "boardObserved": "blue",
+      "timerObserved": "00:01",
+      "progress": "visibly increases across successive finals"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-3-active-plus-7.png",
+      "sha256": "82de6348cad6ee9c969c931183b7c822d31097f061289608d38d0170be0937b5",
+      "wholeImageViewed": true,
+      "boardObserved": "red",
+      "timerObserved": "00:01",
+      "progress": "visibly increases across successive finals"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h1a/phase-4-preview-plus-7.png",
+      "sha256": "a95a05f8070fc89379b7ce7175c6ae35acc3f700ed21d7122e88cd5f70414dbc",
+      "wholeImageViewed": true,
+      "boardObserved": "blue",
+      "timerObserved": "00:01",
+      "progress": "visibly increases across successive finals"
+    }
+  ],
+  "fixEstablished": false
+}

@@ -1,0 +1,12 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "/opt/homebrew/bin/axe",
+    "describe-ui",
+    "--udid",
+    "9B0B559E-0E57-4C3F-9685-E5892BC41E30"
+  ],
+  "exitStatus": 1,
+  "elapsedSeconds": 3.2020671367645264
+}

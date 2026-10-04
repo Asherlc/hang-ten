@@ -1,0 +1,855 @@
+
+FILE HangTen/Views/RootView.swift
+193: struct RootView: View {
+194:     @EnvironmentObject private var store: AppStore
+195:     @StateObject private var workoutAudioCoach = WorkoutAudioCoach()
+196:     @StateObject private var deepLinkManager = DeepLinkManager()
+197:     @State private var selectedTab = RootTab.initial(
+198:         environment: ProcessInfo.processInfo.environment
+199:     )
+200: 
+201:     var body: some View {
+202:         #if DEBUG
+203:         if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STANDALONE_BOARD"] == "1" {
+204:             StandaloneBoardHighlightProbe()
+205:         } else {
+206:             normalBody
+207:         }
+208:         #else
+209:         normalBody
+210:         #endif
+211:     }
+212: 
+213:     private var normalBody: some View {
+214: 		TabView(selection: $selectedTab) {
+215: 			TrainView { selectedTab = .plans }
+216: 				.tabItem { Label("Train", systemImage: "figure.climbing") }
+217: 				.tag(RootTab.train)
+218: 
+219: 			PlansView()
+220: 				.tabItem {
+221: 					Label("Plans", systemImage: "list.bullet.rectangle.portrait.fill")
+222: 				}
+223: 				.tag(RootTab.plans)
+224: 
+225: 			HistoryView()
+226: 				.tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
+227: 				.tag(RootTab.history)
+228: 		}
+229: 		.tint(.hangGreenDark)
+230: 		.environmentObject(workoutAudioCoach)
+231: 		.environmentObject(deepLinkManager)
+
+
+FILE HangTen/Views/RootView.swift
+1866: struct WorkoutView: View {
+1867:     private enum PendingCountdownStart: Equatable {
+1868:         case initial
+1869:         case skip(targetElapsed: TimeInterval)
+1870:     }
+1871: 
+1872:     private enum LandscapeLayout {
+1873:         static let sideCueSlotWidth: CGFloat = 142
+1874:         static let boardMaxHeight: CGFloat = 132
+1875:         static let normalCueRowHeight: CGFloat = 149
+1876:         static let previewLabelHeight: CGFloat = 13
+1877:     }
+
+
+FILE HangTen/Views/RootView.swift
+1950:     var body: some View {
+1951: 		GeometryReader { geometry in
+1952: 			TimelineView(.periodic(from: .now, by: 0.25)) { context in
+1953: 				let monotonicTime = WorkoutClock.monotonicTime
+1954: 				let elapsed = currentElapsed(at: monotonicTime)
+1955: 				let step = step(at: elapsed)
+1956: 				// Session steps are already preference-materialized / alternate-expanded.
+1957: 				let presentedStep = step
+1958: 				let stepElapsed = elapsedInStep(at: elapsed)
+1959: 				let countdown = countdownRemaining(at: monotonicTime)
+1960: 				let canNavigate = canNavigate(at: monotonicTime)
+1961: 				let isComplete = elapsed >= sessionDuration
+1962: 				let isTimedResting = isRestInterval(step: step, stepElapsed: stepElapsed)
+1963: 				let boardCue = timeline.boardCue(
+1964: 					currentStep: step,
+1965: 					stepElapsed: stepElapsed,
+1966: 					countdown: countdown,
+1967: 					isComplete: isComplete,
+1968: 					isSkipCountdown: sessionState.countdownKind == .skip
+1969: 				)
+1970: 				let isResting = boardCue.isResting
+1971: 				let highlightedStep = boardCue.step
+1972: 				let resolvedHighlightedStep = highlightedStep
+1973: 				let previewHoldIDs = resolvedHighlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
+1974: 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
+1975: 				let highlightMode = boardCue.mode
+1976: 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
+1977: 				let activeHold = resolvedHighlightedStep.flatMap { WorkoutHighlightResolver.contacts(for: $0, on: board).first }
+1978: 				let holdCue = WorkoutHoldCuePolicy.resolve(step: resolvedHighlightedStep, hold: activeHold, on: board)
+1979: 				let isLandscape = geometry.size.width > geometry.size.height
+1980: 				let audioMoment = audioMoment(
+1981: 					step: step,
+1982: 					stepElapsed: stepElapsed,
+1983: 					elapsed: elapsed,
+1984: 					countdown: countdown,
+1985: 					isTimedResting: isTimedResting,
+1986: 					isComplete: isComplete
+1987: 				)
+1988: 				let audioCountdownStartUptime = audioCountdownStartUptime(
+1989: 					step: step,
+1990: 					elapsed: elapsed,
+1991: 					countdown: countdown,
+1992: 					isTimedResting: isTimedResting,
+1993: 					moment: audioMoment
+1994: 				)
+1995: 
+1996: 				Group {
+1997: 					if isLandscape {
+1998: 						landscapeSession(
+1999: 							step: presentedStep,
+2000: 							stepElapsed: stepElapsed,
+2001: 							elapsed: elapsed,
+2002: 							monotonicTime: monotonicTime,
+2003: 							countdown: countdown,
+2004: 							canNavigate: canNavigate,
+2005: 							isResting: isResting,
+2006: 							isComplete: isComplete,
+2007: 							highlightedHoldIDs: highlightedHoldIDs,
+2008: 							highlightMode: highlightMode,
+2009: 							showsHoldPreview: showsHoldPreview,
+2010: 							holdCue: holdCue,
+2011: 							cueStep: resolvedHighlightedStep,
+2012: 							isSkipCountdown: sessionState.countdownKind == .skip
+2013: 						)
+2014: 					} else {
+2015: 						portraitSession(
+2016: 							step: presentedStep,
+2017: 							stepElapsed: stepElapsed,
+2018: 							elapsed: elapsed,
+2019: 							monotonicTime: monotonicTime,
+2020: 							countdown: countdown,
+2021: 							canNavigate: canNavigate,
+2022: 							isResting: isResting,
+2023: 							isComplete: isComplete,
+2024: 							highlightedHoldIDs: highlightedHoldIDs,
+2025: 							highlightMode: highlightMode,
+2026: 							showsHoldPreview: showsHoldPreview,
+2027: 							holdCue: holdCue,
+2028: 							cueStep: resolvedHighlightedStep,
+2029: 							isSkipCountdown: sessionState.countdownKind == .skip
+2030: 						)
+2031: 					}
+2032: 				}
+2033: 				.frame(maxWidth: .infinity, maxHeight: .infinity)
+2034: 				.background(Color.hangBackground)
+2035: 				.onChange(of: isComplete) { _, routineComplete in
+2036: 					guard routineComplete else { return }
+2037: 					finalizeRoutine()
+2038: 				}
+2039: 				.onChange(of: step.id) { _, _ in
+2040: 					recorder.pause(at: elapsed)
+2041: 				}
+2042: 				.onChange(of: isResting) { _, resting in
+2043: 					guard resting else { return }
+2044: 					recorder.pause(at: elapsed)
+2045: 				}
+2046: 				.onChange(of: audioMoment, initial: true) { previousMoment, moment in
+2047: 					guard audioCuesEnabled else {
+2048: 						audioCoach.stop()
+2049: 						return
+2050: 					}
+2051: 
+2052: 				_ = WorkoutAudioCueRouter.route(
+2053: 					WorkoutAudioCuePolicy.action(
+2054: 						previous: previousMoment,
+2055: 						current: moment,
+2056: 						countdownStartUptime: audioCountdownStartUptime
+2057: 					),
+2058: 					to: audioCoach
+2059: 				)
+2060: 				}
+2061: 				.onChange(of: countdown, initial: true) { _, countdown in
+2062: 					guard countdown == 0 else { return }
+2063: 					sessionState.transitionExpiredCountdown(at: monotonicTime)
+2064: 				}
+2065: 				.onChange(of: isComplete, initial: true) { _, complete in
+2066: 					guard complete else { return }
+2067: 					finalizeAllStopwatches(at: monotonicTime)
+2068: 				}
+2069: 				.onChange(of: step.id) { previousStepID, _ in
+2070: 					finalizeStopwatches(for: previousStepID, at: monotonicTime)
+2071: 				}
+2072: 				.onChange(of: isResting) { wasResting, resting in
+2073: 					guard resting, !wasResting else { return }
+2074: 					finalizeCurrentStopwatch(at: monotonicTime)
+2075: 				}
+2076: 				.sheet(isPresented: $showsStepPicker) {
+2077: 					WorkoutStepPickerView(
+2078: 						steps: activeSteps,
+2079: 						currentStepID: step.id
+2080: 					) { selectedStep in
+2081: 						jump(to: selectedStep)
+2082: 					}
+2083: 				}
+2084: 			}
+2085: 		}
+2086:         .navigationTitle("Session")
+2087:         .navigationBarTitleDisplayMode(.inline)
+2088: 		.toolbar(.hidden, for: .tabBar)
+
+
+FILE HangTen/Views/RootView.swift
+2260: 		ScrollView(showsIndicators: false) {
+2261: 			VStack(alignment: .leading, spacing: 19) {
+2262: 				sessionHeader(
+2263: 					step: step,
+2264: 					stepElapsed: stepElapsed,
+2265: 					elapsed: elapsed,
+2266: 					countdown: countdown,
+2267: 					canNavigate: canNavigate,
+2268: 					isResting: isResting,
+2269: 					isComplete: isComplete
+2270: 				)
+2271: 				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
+2272: 				if showsHoldPreview {
+2273: 					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+2274: 				}
+2275: 				BoardMapView(
+2276: 					board: board,
+2277: 					highlightedHoldIDs: highlightedHoldIDs,
+2278: 					highlightMode: highlightMode,
+2279: 					selectedPresentationID: WorkoutHighlightResolver.presentationID(for: cueStep, on: board),
+2280: 					activeHoldID: holdCue?.hold?.id
+2281: 				)
+2282: 					.padding(.horizontal, 2)
+2283: 				if let holdCue, WorkoutHoldCueVisibilityPolicy.showsCue(
+
+
+FILE HangTen/Views/RootView.swift
+2369: 		return VStack(spacing: 9) {
+2370: 			landscapeHeader(
+2371: 				step: step,
+2372: 				stepElapsed: stepElapsed,
+2373: 				countdown: countdown,
+2374: 				canNavigate: canNavigate,
+2375: 				isResting: isResting,
+2376: 				isComplete: isComplete
+2377: 			)
+2378: 
+2379: 			ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
+2380: 				.tint(Color.hangGreenDark)
+2381: 
+2382: 			VStack(spacing: 2) {
+2383: 				if showsPairedHandCue, let holdCue {
+2384: 					Group {
+2385: 						#if DEBUG
+2386: 						if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_WORKOUT_HAND_HOST"] == "1" {
+2387: 							Color.clear
+2388: 						} else if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAIN_SECOND_HOST"] == "1" {
+2389: 							WorkoutPlainSecondHostProbe(posture: holdCue.gripType,
+2390: 								fingerConfiguration: holdCue.fingerConfiguration)
+2391: 						} else {
+2392: 							GripHandPairModelView(posture: holdCue.gripType,
+2393: 								fingerConfiguration: holdCue.fingerConfiguration)
+2394: 						}
+2395: 						#else
+2396: 						GripHandPairModelView(posture: holdCue.gripType,
+2397: 							fingerConfiguration: holdCue.fingerConfiguration)
+2398: 						#endif
+2399: 					}
+2400: 						.frame(height: 68)
+2401: 						.accessibilityHidden(true)
+2402: 				}
+2403: 				HStack(spacing: 12) {
+2404: 				landscapeHandCueSlot(
+2405: 					holdCue: holdCue,
+2406: 					cueStep: cueStep,
+2407: 					countdown: countdown,
+2408: 					isComplete: isComplete,
+2409: 					isSkipCountdown: isSkipCountdown,
+2410: 					side: .left,
+2411: 					usesSharedPairPreview: showsPairedHandCue
+2412: 				)
+2413: 
+2414: 				VStack(alignment: .leading, spacing: 4) {
+2415: 					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+2416: 						.frame(maxWidth: .infinity, minHeight: LandscapeLayout.previewLabelHeight, alignment: .center)
+2417: 						.opacity(showsHoldPreview ? 1 : 0)
+2418: 						.accessibilityHidden(!showsHoldPreview)
+2419: 					BoardMapView(
+2420: 						board: board,
+2421: 						highlightedHoldIDs: highlightedHoldIDs,
+2422: 						highlightMode: highlightMode,
+2423: 						selectedPresentationID: WorkoutHighlightResolver.presentationID(for: cueStep, on: board),
+2424: 						activeHoldID: holdCue?.hold?.id
+2425: 					)
+2426: 						.frame(maxWidth: .infinity)
+2427: 						.frame(maxHeight: LandscapeLayout.boardMaxHeight)
+2428: 				}
+2429: 				.frame(maxWidth: .infinity)
+2430: 
+2431: 				landscapeHandCueSlot(
+2432: 					holdCue: holdCue,
+2433: 					cueStep: cueStep,
+2434: 					countdown: countdown,
+2435: 					isComplete: isComplete,
+2436: 					isSkipCountdown: isSkipCountdown,
+2437: 					side: .right,
+2438: 					usesSharedPairPreview: showsPairedHandCue
+2439: 				)
+2440: 				}
+2441: 			}
+2442: 			.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
+
+
+FILE HangTen/Views/RootView.swift
+3778: #if DEBUG
+3779: /// Deliberately outside TabView, navigation, workout and every hand host.
+3780: @MainActor
+3781: private struct StandaloneBoardHighlightProbe: View {
+3782:     private enum Selection: String { case active, preview, clear }
+3783:     private struct SemanticSelection: Equatable {
+3784:         let ids: Set<String>
+3785:         let mode: BoardHighlightMode
+3786:         let positionID: String?
+3787:     }
+3788:     @State private var selection: Selection = .clear
+3789:     @State private var scriptEpoch: TimeInterval?
+3790:     private var driver: String { env["HANGTEN_REVIEW_STANDALONE_DRIVER"] ?? "A" }
+3791:     private let env = ProcessInfo.processInfo.environment
+3792:     private var viewport: CGSize {
+3793:         CGSize(width: Double(env["HANGTEN_REVIEW_STANDALONE_WIDTH"] ?? "210") ?? 210,
+3794:                height: Double(env["HANGTEN_REVIEW_STANDALONE_HEIGHT"] ?? "36") ?? 36)
+3795:     }
+3796:     var body: some View {
+3797:         driverContent
+3798:         .frame(maxWidth: .infinity, maxHeight: .infinity)
+3799:         .background(Color.hangBackground)
+3800:         .task { await runScript() }
+3801:         .onAppear {
+3802:             if env["HANGTEN_REVIEW_LANDSCAPE"] == "1",
+3803:                let scene = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first {
+3804:                 scene.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
+3805:             }
+3806:             BoardHighlightDiagnostic.shared.harnessEvent("standalone-appear", state: selection.rawValue,
+3807:                                                          viewport: viewport)
+3808:         }
+3809:     }
+3810:     @ViewBuilder
+3811:     private var driverContent: some View {
+3812:         if driver == "A" {
+3813:             fixedContent(phase: selection)
+3814:         } else {
+3815:             TimelineView(.periodic(from: .now, by: 0.25)) { _ in
+3816:                 // Production also reads monotonic uptime rather than context.date.
+3817:                 let phase = driver == "C" ? derivedPhase(at: ProcessInfo.processInfo.systemUptime) : selection
+3818:                 fixedContent(phase: phase)
+3819:             }
+3820:         }
+3821:     }
+3822: 
+3823:     private func derivedPhase(at uptime: TimeInterval) -> Selection {
+3824:         guard let scriptEpoch else { return .clear }
+3825:         let elapsed = uptime - scriptEpoch
+3826:         if elapsed < 8 { return .clear }
+3827:         if elapsed < 16 { return .active }
+3828:         if elapsed < 24 { return .preview }
+3829:         if elapsed < 32 { return .active }
+3830:         return .preview
+3831:     }
+3832: 
+3833:     private func fixedContent(phase: Selection) -> some View {
+3834:         VStack(spacing: 24) {
+3835:             Text("Standalone board: \(phase.rawValue)")
+3836:                 .accessibilityIdentifier("standalone.state")
+3837:             if let board = BoardCatalog.all.first(where: { $0.id == "zlagboard.evo" }) {
+3838:                 let semantic = SemanticSelection(
+3839:                     ids: phase == .clear ? [] : ["edge-20-left", "edge-20-right"],
+3840:                     mode: phase == .preview ? .preview : .active,
+3841:                     positionID: board.position(presentationID: board.defaultPresentation.id,
+3842:                                                containingContactID: "edge-20-left")?.id)
+3843:                 BoardModelSurface(board: board, presentation: board.defaultPresentation,
+3844:                     positionID: semantic.positionID,
+3845:                     highlightedContactIDs: semantic.ids,
+3846:                     highlightMode: semantic.mode,
+3847:                     onContactTap: nil, isDisplayOnly: false)
+3848:                     .frame(width: viewport.width, height: viewport.height)
+3849:                     .onChange(of: semantic, initial: true) { _, observed in
+3850:                         BoardHighlightDiagnostic.shared.harnessObservedSelection(
+3851:                             state: observed.ids.isEmpty ? "clear" : (observed.mode == .preview ? "preview" : "active"),
+3852:                             ids: observed.ids, mode: observed.mode, positionID: observed.positionID,
+3853:                             viewport: viewport)
+3854:                     }
+3855:             } else {
+3856:                 Text("Missing Evo catalog entry")
+3857:             }
+3858:             HStack {
+3859:                 control("Active", .active)
+3860:                 control("Preview", .preview)
+3861:                 control("Clear", .clear)
+3862:             }
+3863:         }
+3864:     }
+
+
+FILE HangTen/Views/RootView.swift
+3889:             }
+3890:             // Future epoch lets host schedule screenshots before the first state window.
+3891:             let baseUptime = ProcessInfo.processInfo.systemUptime + 2
+3892:             scriptEpoch = baseUptime // Established once, before the measurement window.
+3893:             recorder.standaloneSchedule(baseUptime: baseUptime, viewport: viewport)
+3894:             defer { recorder.finishStandaloneObservation() }
+3895:             let phases: [Selection] = [.clear, .active, .preview, .active, .preview]
+3896:             for (index, phase) in phases.enumerated() {
+3897:                 let start = baseUptime + Double(index * 8)
+3898:                 try await sleepUntil(start)
+3899:                 recorder.harnessEvent("standalone-intended-\(index)", state: phase.rawValue,
+3900:                                       viewport: viewport)
+3901:                 // C's task observes only: no state writes after epoch establishment.
+3902:                 if driver != "C", selection != phase { selection = phase }
+3903:                 // Predetermined sparse snapshots, no 1 Hz sampler in standalone mode.
+3904:                 for offset in [0.15, 0.85, 1.75, 2.85, 3.75, 6.85, 7.75] {
+3905:                     try await sleepUntil(start + offset)
+3906:                     recorder.standaloneSnapshot("standalone-snapshot-\(index)-\(offset)")
+3907:                 }
+
+
+FILE HangTen/Views/BoardMapView.swift
+558: struct BoardMapView: View {
+559:     let board: BoardRevision
+560:     let highlightedHoldIDs: Set<String>
+561:     let highlightMode: BoardHighlightMode
+562:     let onHoldTap: ((PhysicalContact) -> Void)?
+563:     private let requestedPresentationID: String?
+564:     private let activeHoldID: String?
+565:     private let isDisplayOnly: Bool
+566: 
+567:     @State private var presentationSelection: BoardMapPresentationSelection
+568:     @State private var selectedPositionID: String?
+569: 
+570:     init(
+571:         board: BoardRevision,
+572:         highlightedHoldIDs: Set<String> = [],
+573:         highlightMode: BoardHighlightMode = .active,
+574:         selectedPresentationID: String? = nil,
+575:         activeHoldID: String? = nil,
+576:         onHoldTap: ((PhysicalContact) -> Void)? = nil,
+577:         isDisplayOnly: Bool = false
+578:     ) {
+579:         self.board = board
+580:         self.highlightedHoldIDs = highlightedHoldIDs
+581:         self.highlightMode = highlightMode
+582:         self.onHoldTap = onHoldTap
+583:         requestedPresentationID = selectedPresentationID
+584:         self.activeHoldID = activeHoldID
+585:         self.isDisplayOnly = isDisplayOnly
+586:         let resolvedSelection = BoardMapPresentationSelection(
+587:             board: board,
+588:             requestedPresentationID: selectedPresentationID,
+589:             activeHoldID: activeHoldID,
+590:             highlightedHoldIDs: highlightedHoldIDs
+591:         )
+592:         _presentationSelection = State(initialValue: resolvedSelection)
+593:         _selectedPositionID = State(initialValue: BoardMapPresentationSelection.resolvePositionID(
+594:             board: board,
+595:             presentationID: resolvedSelection.presentationID,
+596:             activeHoldID: activeHoldID,
+597:             highlightedHoldIDs: highlightedHoldIDs
+598:         ))
+599:     }
+600: 
+601:     var body: some View {
+602:         let content = BoardMapPresentationContent(
+603:             board: board,
+604:             selectedPresentationID: presentationSelection.presentationID
+605:         )
+
+
+FILE HangTen/Views/BoardMapView.swift
+650:                 case .model:
+651:                     BoardModelSurface(
+652:                         board: board,
+653:                         presentation: content.presentation,
+654:                         positionID: selectedPositionID,
+655:                         highlightedContactIDs: highlightedHoldIDs,
+656:                         highlightMode: highlightMode,
+657:                         onContactTap: onHoldTap.map { callback in
+658:                             { contact in
+659:                                 callback(selectedPositionID.flatMap { positionID in
+660:                                     board.contacts(inPosition: positionID).first { $0.id == contact.id }
+661:                                 } ?? contact)
+662:                             }
+663:                         },
+664:                         isDisplayOnly: isDisplayOnly
+665:                     )
+666:                 }
+667:             }
+668:             .aspectRatio(content.presentation.aspectRatio(for: selectedPositionID), contentMode: .fit)
+669:         }
+670:         .animation(.easeInOut(duration: 0.18), value: highlightedHoldIDs)
+671:         .onChange(of: highlightedHoldIDs) { previousHoldIDs, holdIDs in
+672:             presentationSelection.updateHighlights(
+673:                 from: previousHoldIDs,
+674:                 to: holdIDs,
+675:                 activeHoldID: activeHoldID,
+676:                 on: board
+677:             )
+678:             selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
+679:                 board: board,
+680:                 presentationID: presentationSelection.presentationID,
+681:                 activeHoldID: activeHoldID,
+682:                 highlightedHoldIDs: holdIDs
+683:             )
+684:         }
+685:         .onChange(of: activeHoldID) { _, holdID in
+686:             presentationSelection.activateHold(id: holdID, on: board)
+687:             selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
+688:                 board: board,
+689:                 presentationID: presentationSelection.presentationID,
+690:                 activeHoldID: holdID,
+691:                 highlightedHoldIDs: highlightedHoldIDs
+692:             )
+693:         }
+694:         .onChange(of: requestedPresentationID) { _, presentationID in
+695:             presentationSelection.updateRequestedPresentation(
+696:                 id: presentationID,
+697:                 activeHoldID: activeHoldID,
+698:                 highlightedHoldIDs: highlightedHoldIDs,
+699:                 on: board
+700:             )
+701:             selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
+702:                 board: board,
+703:                 presentationID: presentationSelection.presentationID,
+704:                 activeHoldID: activeHoldID,
+705:                 highlightedHoldIDs: highlightedHoldIDs
+706:             )
+707:         }
+708:         .onChange(of: board.id) { _, _ in
+709:             presentationSelection.reset(
+710:                 board: board,
+711:                 requestedPresentationID: requestedPresentationID,
+712:                 activeHoldID: activeHoldID,
+713:                 highlightedHoldIDs: highlightedHoldIDs
+714:             )
+715:             selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
+716:                 board: board,
+717:                 presentationID: presentationSelection.presentationID,
+718:                 activeHoldID: activeHoldID,
+719:                 highlightedHoldIDs: highlightedHoldIDs
+720:             )
+721:         }
+
+
+FILE HangTen/Views/BoardModelView.swift
+16:     let board: BoardRevision
+17:     let presentation: BoardPresentation
+18:     let positionID: String?
+19:     let highlightedContactIDs: Set<String>
+20:     let highlightMode: BoardHighlightMode
+21:     let onContactTap: ((PhysicalContact) -> Void)?
+22:     var isDisplayOnly = false
+23:     @State private var result: ResultState = .loading
+24: 
+25:     init(
+26:         board: BoardRevision,
+27:         presentation: BoardPresentation,
+28:         positionID: String? = nil,
+29:         highlightedContactIDs: Set<String>,
+30:         highlightMode: BoardHighlightMode,
+31:         onContactTap: ((PhysicalContact) -> Void)?,
+32:         isDisplayOnly: Bool = false
+33:     ) {
+34:         self.board = board
+35:         self.presentation = presentation
+36:         self.positionID = positionID
+37:         self.highlightedContactIDs = highlightedContactIDs
+38:         self.highlightMode = highlightMode
+39:         self.onContactTap = onContactTap
+40:         self.isDisplayOnly = isDisplayOnly
+41:     }
+42: 
+43:     var body: some View {
+44:         Group {
+45:             if case .ready(let model) = result {
+46:                 let realityView = BoardModelRealityView(
+47:                     model: model,
+48:                     boardName: board.name,
+49:                     accessibilityValue: highlightedContactCue,
+50:                     contacts: board.contacts(in: presentation),
+51:                     positionID: positionID,
+52:                     highlightedContactIDs: highlightedContactIDs,
+53:                     highlightMode: highlightMode,
+54:                     onContactTap: onContactTap,
+55:                     onUnavailable: { result = .unavailable },
+56:                     isDisplayOnly: isDisplayOnly
+57:                 )
+58:                 // Display-only picker cards wrap this in a Button; claiming
+59:                 // SwiftUI hits here would intercept the card select tap even
+60:                 // when the hosted RealityView has user interaction disabled.
+61:                 .allowsHitTesting(!isDisplayOnly)
+62:                 #if DEBUG
+63:                 let diagnosticHost = Group {
+64:                     if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SEMANTIC_BOARD_HOST"] == "1" {
+65:                         realityView.id(BoardDiagnosticHostIdentity(
+66:                             scene: ObjectIdentifier(model), contactIDs: highlightedContactIDs,
+67:                             mode: highlightMode, positionID: positionID))
+68:                     } else {
+69:                         realityView
+70:                     }
+71:                 }
+72:                 #else
+73:                 let diagnosticHost = realityView
+74:                 #endif
+75:                 if onContactTap == nil {
+76:                     diagnosticHost.accessibilityIdentifier("boardModel.3d")
+77:                 } else {
+78:                     // A parent accessibility identifier propagates to the
+79:                     // RealityView's projected contact buttons. Keep their
+80:                     // per-contact identifiers available to UI automation and
+81:                     // assistive technology on interactive board maps.
+82:                     diagnosticHost
+
+
+FILE HangTen/Views/BoardModelView.swift
+103:         .task(id: loadIdentity) {
+104:             guard !Task.isCancelled else { return }
+105:             guard case .model = presentation.media else {
+106:                 result = .unavailable
+107:                 return
+108:             }
+109:             result = .loading
+110:             do {
+111:                 let model = try await BoardModelRealityLoader.load(
+112:                     board: board,
+113:                     presentation: presentation,
+114:                     store: BoardCatalog.packageStore
+115:                 )
+116:                 guard !Task.isCancelled else { return }
+117:                 result = .ready(model)
+118:             } catch {
+119:                 guard !Task.isCancelled else { return }
+120:                 #if DEBUG
+121:                 print("[BoardModelSurface] RealityKit model load failed: \(error)")
+122:                 #endif
+123:                 result = .unavailable
+124:             }
+125:         }
+126:         .onDisappear {
+127:             result = .loading
+128:         }
+129:     }
+130: 
+131:     private var loadIdentity: BoardModelRealityKey? {
+132:         guard case .model(let media) = presentation.media else { return nil }
+133:         return BoardModelRealityKey(
+134:             boardID: board.id,
+135:             presentationID: presentation.id,
+136:             modelSHA256: media.descriptor.modelSHA256
+137:         )
+138:     }
+139: 
+140:     private var highlightedContactCue: String? {
+141:         let boardContacts = board.contacts(in: presentation)
+142:         let highlighted = boardContacts.filter { highlightedContactIDs.contains($0.id) }
+143:         guard highlighted.count == 1, let contact = highlighted.first else { return nil }
+144:         return GripDiagramView.cueLabel(for: contact)
+145:     }
+
+
+FILE HangTen/Views/BoardModelView.swift
+161: struct BoardModelRealityView: View {
+162:     let model: BoardModelRealityScene
+163:     let boardName: String
+164:     let accessibilityValue: String?
+165:     let contacts: [PhysicalContact]
+166:     let positionID: String?
+167:     let highlightedContactIDs: Set<String>
+168:     let highlightMode: BoardHighlightMode
+169:     let onContactTap: ((PhysicalContact) -> Void)?
+170:     let onUnavailable: (() -> Void)?
+171:     var isDisplayOnly = false
+172: 
+173:     @State private var cameraRevision = 0
+174:     @State private var lastDragTranslation: CGSize = .zero
+175:     @State private var lastMagnification: CGFloat = 1
+176:     @State private var didReportUnavailable = false
+
+
+FILE HangTen/Views/BoardModelView.swift
+190:     var body: some View {
+191:         let _ = cameraRevision
+192:         GeometryReader { proxy in
+193:             let size = proxy.size
+194:             #if DEBUG
+195:             if onContactTap == nil,
+196:                ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_ARVIEW_HOST"] == "1" {
+197:                 BoardNonARHostProbe(model: model, viewToken: diagnosticViewToken,
+198:                                     selectedIDs: highlightedContactIDs, mode: highlightMode,
+199:                                     synchronize: { applySync(size: size) })
+200:                     .id(ObjectIdentifier(model))
+201:                     .allowsHitTesting(false)
+202:             } else {
+203:                 realityHost(size: size)
+204:             }
+205:             #else
+206:             realityHost(size: size)
+207:             #endif
+208:         }
+209:         // A display-only card is one element (its host Button owns the tap). An
+210:         // interactive board exposes its contact elements instead, so the
+211:         // container must not collapse them into a single element.
+212:         .modifier(BoardModelAccessibilityContainer(
+213:             label: onContactTap == nil ? "\(boardName) hangboard" : nil,
+214:             value: onContactTap == nil ? accessibilityValue : nil))
+215:     }
+216: 
+217:     private func realityHost(size: CGSize) -> some View {
+218:             RealityView { content in
+219:                 #if DEBUG
+220:                 if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_VIRTUAL_CAMERA"] == "1" {
+221:                     content.camera = .virtual
+222:                 }
+223:                 #endif
+224:                 content.add(model.root)
+225:                 content.add(model.camera)
+226:                 applySync(size: size)
+227:                 #if DEBUG
+228:                 if BoardHighlightDiagnostic.isEnabled {
+229:                     BoardHighlightDiagnostic.shared.capture("view-make", scene: model,
+230:                         view: diagnosticViewToken, roots: Array(content.entities), viewport: size)
+231:                     BoardHighlightDiagnostic.shared.startSamples(view: diagnosticViewToken, scene: model)
+232:                 }
+233:                 #endif
+234:             } update: { content in
+235:                 #if DEBUG
+236:                 if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_VIRTUAL_CAMERA"] == "1" {
+237:                     content.camera = .virtual
+238:                 }
+239:                 #endif
+240:                 applySync(size: size)
+241:                 #if DEBUG
+242:                 if BoardHighlightDiagnostic.isEnabled {
+243:                     BoardHighlightDiagnostic.shared.capture("view-update", scene: model,
+244:                         view: diagnosticViewToken, roots: Array(content.entities), viewport: size)
+245:                 }
+246:                 #endif
+247:             }
+248:             .gesture(orbitGesture(size: size))
+249:             .simultaneousGesture(magnifyGesture)
+250:             .gesture(tapGesture)
+251:             .overlay { accessibilityOverlay(size: size) }
+252:             .allowsHitTesting(!isDisplayOnly)
+253:             // A different scene needs a fresh RealityView make closure so its
+254:             // root and camera replace the prior scene's entities.
+255:             .id(ObjectIdentifier(model))
+256:             .onDisappear {
+257:                 #if DEBUG
+258:                 if BoardHighlightDiagnostic.isEnabled {
+259:                     BoardHighlightDiagnostic.shared.disappear(view: diagnosticViewToken, scene: model)
+260:                 }
+261:                 #endif
+262:             }
+263:     }
+264: 
+265:     private func applySync(size: CGSize) {
+266:         let priorCameraTransform = model.camera.transform.matrix
+267:         let priorInstanceTransforms = model.instanceEntities.map { $0.transform.matrix }
+268:         var camera = model.camera.camera
+269:         camera.fieldOfViewInDegrees = Float(fieldOfViewDegrees)
+270:         camera.fieldOfViewOrientation = .vertical
+271:         camera.near = 0.001
+272:         camera.far = 1000
+273:         model.camera.camera = camera
+274:         model.frame(in: size)
+275:         let didSelect = model.select(positionID: positionID)
+276:         model.highlight(highlightedContactIDs, mode: highlightMode)
+277:         // RealityView synchronizes after SwiftUI evaluates the accessibility
+278:         // overlay. Reproject once when framing or a board pose actually changes.
+279:         // The unchanged follow-up update must not schedule another invalidation.
+280:         if model.camera.transform.matrix != priorCameraTransform
+281:             || model.instanceEntities.map({ $0.transform.matrix }) != priorInstanceTransforms {
+282:             Task { @MainActor in cameraRevision &+= 1 }
+
+
+FILE HangTen/Views/TrainView.swift
+46:     var body: some View {
+47:         NavigationStack {
+48:             ScrollView(showsIndicators: false) {
+49:                 VStack(alignment: .leading, spacing: 22) {
+50:                     selectedBoardCard
+51:                     favoritesSection
+52:                 }
+53:                 .padding(.horizontal, 20)
+54:                 .padding(.top, 18)
+55:                 .padding(.bottom, 30)
+56:             }
+
+
+FILE HangTen/Views/TrainView.swift
+88:             .navigationDestination(isPresented: $showsDeepLinkedBoardDetail) {
+89:                 BoardDetailView(board: store.selectedBoard, initialHoldID: deepLinkManager.pendingHoldID)
+90:                     .onAppear { deepLinkManager.clearPending() }
+91:             }
+92:             .navigationDestination(isPresented: $showsDeepLinkedWorkout) {
+93:                 if let plan = deepLinkedWorkoutPlan {
+94:                     WorkoutAccessGate(plan: plan)
+95:                 } else {
+96:                     noCompatiblePlan
+97:                 }
+98:             }
+
+
+FILE HangTen/Views/TrainView.swift
+139:     private var selectedBoardCard: some View {
+140:         VStack(alignment: .leading, spacing: 16) {
+141:             BoardMapView(board: store.selectedBoard)
+142:                 .cardPreviewStyle()
+143: 
+144:             VStack(alignment: .leading, spacing: 5) {
+145:                 SectionLabel(title: "Your board")
+146:                 Text(store.selectedBoard.name)
+147:                     .font(.system(size: 21, weight: .bold, design: .rounded))
+148:                     .foregroundStyle(Color.hangInk)
+149:                 if let dimensions = store.selectedBoard.dimensions {
+150:                     Text(dimensions)
+151:                         .font(.system(size: 13, weight: .medium, design: .rounded))
+152:                         .foregroundStyle(Color.hangMuted)
+153:                 }
+154:             }
+155: 
+156:             HStack(spacing: 16) {
+157:                 Link(destination: store.selectedBoard.productURL) {
+158:                     Label("Product page", systemImage: "arrow.up.right")
+159:                 }
+
+
+FILE HangTen/Views/WorkoutAccessGate.swift
+28:     var body: some View {
+29:         Group {
+30:             if launchesOnAppear {
+31:                 if showsWorkout, let pendingPlan {
+32:                     WorkoutView(plan: pendingPlan, initialWeight: pendingInitialWeight)
+33:                 } else {
+34:                     Color.clear
+35:                 }
+36:             } else {
+37:                 Button(action: requestLaunch) {
+38:                     label
+39:                 }
+40:                 .navigationDestination(isPresented: $showsWorkout) {
+41:                     if let pendingPlan {
+42:                         WorkoutView(plan: pendingPlan, initialWeight: pendingInitialWeight)
+43:                     }
+44:                 }
+45:             }
+46:         }
+47:         .sheet(isPresented: $showsPaywall, onDismiss: continuePendingLaunchIfAllowed) {
+48:             LifetimeUnlockPaywall(
+49:                 purchaseManager: store.purchaseManager,
+50:                 onAccessChange: accessDecisionDidChange
+51:             )
+52:         }
+53:         .task {
+54:             guard launchesOnAppear, pendingPlan == nil else { return }
+55:             requestLaunch()
+56:         }

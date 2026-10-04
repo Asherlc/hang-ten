@@ -1,0 +1,13 @@
+[
+  {
+    "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/149D7CA2-9338-4A20-8363-15C2B6367A6B/Documents/HighlightDiagnostic-placid-badger-cad-second-half-identity-semantic-a/events-3CDE7184-F817-4789-A695-3793265BE4F8.jsonl",
+    "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/identity-semantic-a-landscape/events-3CDE7184-F817-4789-A695-3793265BE4F8.jsonl",
+    "sha256": "029c10773120d701a7a62f26132250879234bee2040b828b74f881f293ed2561",
+    "copyEpoch": 1790970258.5499752,
+    "records": 62,
+    "newlineComplete": true,
+    "allComplete": true,
+    "contiguousSequences": true,
+    "limitReached": false
+  }
+]

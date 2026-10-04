@@ -1,0 +1,22 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "python3",
+    "Tools/HangboardCAD/run_freecad.py",
+    ".context/placid-badger/flash-board-review14/shape-review/native-refinement/author_relief.py"
+  ],
+  "startedUTC": "2026-10-02T21:39:20.298676+00:00",
+  "timeoutSeconds": 240,
+  "ownedTemporaryDirectory": ".context/placid-badger/flash-board-review14/shape-review/native-refinement/placid-badger-flash14-relief-author-v1-tmp",
+  "ownedExtraDirectories": [],
+  "status": "fail",
+  "ownedProcessGroup": 69396,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "ownedExtraDirectoriesAbsent": [],
+  "exitCode": 3,
+  "elapsedSeconds": 6.852231374999974,
+  "logSHA256": "94d2c534d9969b6822670eaa745ef76765d3b74f85b002c51655ccff9a9e2379"
+}

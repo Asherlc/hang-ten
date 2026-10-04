@@ -1,0 +1,40 @@
+[
+  {
+    "face": 26,
+    "points": 14201,
+    "UVNodes": 14201,
+    "matchedAt1e5Quantization": 14184,
+    "maxMatchedDistanceMM": 5.960970103170571e-06
+  },
+  {
+    "face": 27,
+    "points": 26348,
+    "UVNodes": 26348,
+    "matchedAt1e5Quantization": 26348,
+    "maxMatchedDistanceMM": 5.020536062583096e-06
+  },
+  {
+    "face": 42,
+    "points": 14699,
+    "UVNodes": 14699,
+    "matchedAt1e5Quantization": 14691,
+    "maxMatchedDistanceMM": 5.533507816454623e-06
+  },
+  {
+    "face": 45,
+    "points": 26352,
+    "UVNodes": 26352,
+    "matchedAt1e5Quantization": 26352,
+    "maxMatchedDistanceMM": 5.020536062583096e-06
+  },
+  {
+    "face": 47,
+    "points": 14233,
+    "UVNodes": 14233,
+    "matchedAt1e5Quantization": 14216,
+    "maxMatchedDistanceMM": 5.960970103170571e-06
+  }
+]
+
+								
+								

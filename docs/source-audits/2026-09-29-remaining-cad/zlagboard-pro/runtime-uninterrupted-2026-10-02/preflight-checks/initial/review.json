@@ -1,0 +1,25 @@
+{
+  "timestampUTC": "2026-10-02T14:40:24.158795+00:00",
+  "readOnly": true,
+  "passed": false,
+  "sourceSnapshots": {
+    "lifecycle.zsh": "2da25e851671b4724905bd0f9c2d3f02ee38e375c08887d47a5e7496f00e96aa",
+    "boot-uninterrupted.py": "a5caa346c0d60dbc7ee8209263c6fe9adfc243e8ee78ab87760ba0402a903b27",
+    "source-gate.py": "9a6e59da219d6afaf4e00c9f4a22ac4e60151b1854e506c0e269d59d4ad4dd55",
+    "build-parity.py": "a757d1cf0ce8e7a5c82bcca5362deb99cdc8e495e7166fedd1ff36286719a1f4"
+  },
+  "issues": [
+    "Potentially blocking create/open/build/xcresult/cleanup subprocesses have no explicit timeout.",
+    "900second readiness clock starts after initial boot/open, so total firstboot readiness budget can exceed15minutes.",
+    "Home approval checks booleans only; bind to currentUUID and observed screenshot hash."
+  ],
+  "positiveFindings": [
+    "EXIT/INT/TERM traps before Simulator creation",
+    "Exact pending then owned UUID registration",
+    "Single boot with no restart branch",
+    "Home AX identifiers verified against retained actual Home tree",
+    "Separate whole-screen visual approval before build",
+    "Fresh hash/cleanHEAD gate before build"
+  ],
+  "resourcesCreatedByReviewer": false
+}

@@ -1,0 +1,26 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 14,
+    "boardID": "tension.flash-board",
+    "package": "tension-flash-board",
+    "contactID": null,
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "tension.flash-board",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1"
+    },
+    "launchedAt": 1791056124.409956
+  },
+  "image": "14-live-unselected-train.png",
+  "imageSHA256": "aa48696b06fc23f2a4d86015c7e004043aaf80b2631803094b4ec547b2612858",
+  "accessibilitySHA256": "f251689ee10f5fdb56396147411198f63e60bac4934a7a8821a65b0fba22026f",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "rawFailureCapture": false
+}

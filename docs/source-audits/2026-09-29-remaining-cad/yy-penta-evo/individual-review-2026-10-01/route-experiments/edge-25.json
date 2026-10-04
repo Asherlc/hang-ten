@@ -1,0 +1,85 @@
+{
+  "status": "failed",
+  "sourceSHA256": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e",
+  "elapsedSeconds": 1.0048304160009138,
+  "input": {
+    "presentationID": "front-pair",
+    "modelSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+    "suspension": {
+      "type": "cadRoutedCord",
+      "bodyNodeID": "penta_body_001",
+      "strands": [
+        {
+          "id": "upper-band-loop",
+          "kind": "loop",
+          "restLength": 0.6,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible loop only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+        }
+      ],
+      "anchor": {
+        "offsetFromBoardBounds": [
+          -0.15,
+          0.21,
+          0
+        ],
+        "visibility": "invisible",
+        "provenance": "authored-display-estimate: independent fixed overhead display anchor with canonical pose-owned spacing. All unit dimensions except sourced contact depths, wood color, rounding, camera and placement are display estimates."
+      },
+      "canonicalPoses": {
+        "edge-25": {
+          "rotation": [
+            0.0,
+            0.0,
+            0.9396926207859084,
+            0.3420201433256689
+          ],
+          "translation": [
+            -0.15,
+            0,
+            0
+          ],
+          "camera": {
+            "viewDirection": [
+              -0.21984631039295427,
+              0.2620026302293849,
+              -0.9396926207859086
+            ],
+            "fitPadding": 0.1
+          }
+        }
+      }
+    },
+    "ropeSolver": {
+      "method": "nativeRoutes",
+      "clearance": 0.0002,
+      "supportDirection": 1,
+      "terminalsByStrandID": {
+        "upper-band-loop": {
+          "points": [
+            [
+              0.044366425415887235,
+              -0.05459808753704667,
+              0.01
+            ],
+            [
+              0.044366425415887235,
+              -0.05459808753704667,
+              -0.01
+            ]
+          ],
+          "planeNormal": [
+            0.766044443118978,
+            0.6427876096865396,
+            0
+          ]
+        }
+      },
+      "pathSearch": "aStar"
+    },
+    "equipmentObjectID": "left-penta"
+  },
+  "error": "edge-25/upper-band-loop: native CAD cord collision: clearance 0.001893944 m < radius 0.002000000 m",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/native_cord_routes.py\", line 779, in evaluate\n    clearances[identifier]=checked_clearance(mesh,cached,strand[\"radius\"])\n                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/native_cord_routes.py\", line 217, in checked_clearance\n    values = distances(points)\n             ^^^^^^^^^^^^^^^^^\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/native_cord_routes.py\", line 215, in distances\n    raise ValueError(f\"native CAD cord collision: clearance {minimum:.9f} m < radius {radius:.9f} m\")\nValueError: native CAD cord collision: clearance 0.001893944 m < radius 0.002000000 m\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/solve.py\", line 18, in <module>\n    solved=solve_native_routes(mesh,d,descriptor)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/native_cord_routes.py\", line 515, in solve_native_routes\n    return _solve_native_seed(mesh, data, descriptor)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/native_cord_routes.py\", line 628, in _solve_native_seed\n    return _solve_native_routes(mesh, data, descriptor)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/native_cord_routes.py\", line 830, in _solve_native_routes\n    paths,ratios,minimums=evaluate(height,True)\n                          ^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/native_cord_routes.py\", line 782, in evaluate\n    raise error_type(f\"{pose_id}/{identifier}: {error}\") from error\nValueError: edge-25/upper-band-loop: native CAD cord collision: clearance 0.001893944 m < radius 0.002000000 m\n"
+}

@@ -1,0 +1,28 @@
+{
+  "reviewer": "CAD authoring agent",
+  "reviewDate": "2026-09-29",
+  "views": [
+    "front",
+    "side",
+    "top"
+  ],
+  "artifact": "geometry-review.html",
+  "referenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "observations": [
+    "Same 660\u00d7100\u00d7100 mm envelope and 34-contact four-face inventory.",
+    "Repeated mono/duo/outer/center pockets and broad sloper locations preserved.",
+    "Six native loft stations retain measured floor inset and lip-to-floor transitions; analytic edge shading differs from prior faceted mesh.",
+    "Side envelope remains rounded at cross-section corners; end-face finishing is a display approximation.",
+    "Only the two authorized face-C depth omissions change factual metadata; 100 mm is diameter.",
+    "Final corrected C/D native profiles follow retained reference section through a smooth shared tangent; actual USDZ contact/ray/depth/ridge regression passes at2.752845684 degrees on both sides."
+  ],
+  "humanFinalAppReview": "pending root coordination",
+  "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+  "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+  "reviewArtifacts": [
+    "geometry-review.html",
+    "comparison-sheet.png",
+    "cd-junction-review.svg",
+    "cd-native-final-regression.json"
+  ]
+}

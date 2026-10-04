@@ -1,0 +1,38 @@
+{
+  "reviewedAtUTC": "2026-10-01T15:13:33.672666+00:00",
+  "owner": "placid-badger",
+  "reviewer": "root agent, direct inspection of complete images",
+  "sourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+  "modelSHA256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+  "descriptorSHA256": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d",
+  "status": "ready for revised human review #8",
+  "observations": [
+    "The former angular lower/outer corners read as rounded in the actual app.",
+    "The former abrupt triangular shoulder height steps are replaced by continuous transitions.",
+    "CPU comparison shading has polygon bands; those bands do not appear as visible gaps or slivers in the actual app frames.",
+    "The outer jug, flat sloper, combined round shoulder, shallow edge and deep pocket highlights appear on their intended representative surfaces.",
+    "Selections remain attached through all three actual drag orbits."
+  ],
+  "limits": [
+    "Image review uses full frames without cropping, registration, tracing or pixel measurements.",
+    "Eight frames cover five representative IDs and three real drags, not every contact or subpixel flicker.",
+    "Estimated rounding, loft transitions and 94.1183246265 mm thickness are not manufacturing dimensions.",
+    "Roof transitions retain small direction changes up to 6.77 degrees; global G1/C1 continuity is not claimed.",
+    "Human acceptance remains pending; the first seven approvals are unchanged."
+  ],
+  "imageSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/after-captures/jug-left.png": "4c80df76ad3b457acd09198e4843cb9741182d000252ce2afbe333d09d5a8aca",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/after-captures/jug-left-orbit.png": "3986ab7e59a6d5c8b34175f9a98012c0a7fa69193ba6ed0914894452068c016d",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/after-captures/flat-left.png": "6f5112e1a7d19d6a9e34b40db5de4b6bce2ce98d616cce9c2a0a133864d8d6b6",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/after-captures/flat-left-orbit.png": "46dc1a2d57d0e67607fee4a71c1318bf58fea0dd047515b1497f2fd7b8b992ab",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/after-captures/round-center.png": "934e24a6ee5f4c7b5e75b12638c929309215a9bc4be90703191f649edd7013d8",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/after-captures/round-center-orbit.png": "7443decb353bb7c3fed1da376887b7d3ffe441df10a89b3a5f3003d635b34df1",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/after-captures/shallow-edge.png": "7dbe08016282bb69070ebfc6e27ad55945e733fb278cee71482e42ae1b14df56",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/after-captures/deep-pocket.png": "397b7063c58a71de15a10bb34e8e2d4e437f3236a9d550642f85760e0f3f6992",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/before-captures/jug-left-orbit.png": "c78d6b653f69b869a63d5feb688127b00a378bd0ea5420ed54c563dc159396ca",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/review/comparison-front.png": "3d76c8fdef856bd33b55198ab8f22d13a9a4c6bce950e045b5bcb294105930c4",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/review/comparison-side.png": "31b427271d2ba2c6cd4cefdbe371a1d076bc12d566d3163330f01281cf1239eb",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/review/comparison-top.png": "1109424da4cbe2749cc67e426cfc16ea1b7a50f8e5c9576bb8f2ed87eac12f9f",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/sources/product-01.jpg": "5ac1677d6280dc90242cb1dcef47691647fd3f5a9adc3c465838e930075f58a9"
+  }
+}

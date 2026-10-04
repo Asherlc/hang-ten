@@ -1,0 +1,198 @@
+{
+  "bodyFeature": "ReliefAndPocketLipRounds",
+  "volumeMM3": 1801610.9595007135,
+  "validSingleSolid": true,
+  "boundsMM": [
+    500.0,
+    75.986194750944,
+    76.00000000000011
+  ],
+  "regions": {
+    "three-edge-left": {
+      "faces": [
+        "Face51",
+        "Face52",
+        "Face53",
+        "Face54",
+        "Face55",
+        "Face56",
+        "Face57",
+        "Face58",
+        "Face84",
+        "Face85",
+        "Face86",
+        "Face87",
+        "Face88",
+        "Face89",
+        "Face90",
+        "Face91",
+        "Face116"
+      ],
+      "areaMM2": 7367.750350152121,
+      "boundsMM": [
+        115.13023620614027,
+        14.000000000000014,
+        35.980236206140276
+      ]
+    },
+    "three-edge-center": {
+      "faces": [
+        "Face59",
+        "Face60",
+        "Face61",
+        "Face62",
+        "Face63",
+        "Face64",
+        "Face65",
+        "Face66",
+        "Face92",
+        "Face93",
+        "Face94",
+        "Face95",
+        "Face96",
+        "Face97",
+        "Face98",
+        "Face99",
+        "Face117"
+      ],
+      "areaMM2": 7367.750350152122,
+      "boundsMM": [
+        115.13023620614024,
+        14.000000000000014,
+        35.98023620614026
+      ]
+    },
+    "three-edge-right": {
+      "faces": [
+        "Face67",
+        "Face68",
+        "Face69",
+        "Face70",
+        "Face71",
+        "Face72",
+        "Face73",
+        "Face74",
+        "Face100",
+        "Face101",
+        "Face102",
+        "Face103",
+        "Face104",
+        "Face105",
+        "Face106",
+        "Face107",
+        "Face118"
+      ],
+      "areaMM2": 7367.750350152122,
+      "boundsMM": [
+        115.13023620614024,
+        14.000000000000014,
+        35.98023620614026
+      ]
+    },
+    "two-edge-left": {
+      "faces": [
+        "Face75",
+        "Face76",
+        "Face77",
+        "Face78",
+        "Face79",
+        "Face80",
+        "Face81",
+        "Face82",
+        "Face108",
+        "Face109",
+        "Face110",
+        "Face111",
+        "Face112",
+        "Face113",
+        "Face114",
+        "Face115",
+        "Face119"
+      ],
+      "areaMM2": 7682.68165738972,
+      "boundsMM": [
+        122.13023620614027,
+        13.999999999999996,
+        35.22023620614028
+      ]
+    },
+    "two-edge-right": {
+      "faces": [
+        "Face2",
+        "Face3",
+        "Face4",
+        "Face5",
+        "Face6",
+        "Face7",
+        "Face8",
+        "Face9",
+        "Face14",
+        "Face15",
+        "Face16",
+        "Face17",
+        "Face18",
+        "Face19",
+        "Face20",
+        "Face21",
+        "Face49"
+      ],
+      "areaMM2": 7682.6816573897195,
+      "boundsMM": [
+        122.13023620614024,
+        13.999999999999996,
+        35.22023620614027
+      ]
+    },
+    "small-crimp-left": {
+      "faces": [
+        "Face43",
+        "Face44",
+        "Face45",
+        "Face46",
+        "Face83"
+      ],
+      "areaMM2": 1374.2755795248597,
+      "boundsMM": [
+        63.60000000000002,
+        9.867067713473304,
+        5.800000000000082
+      ]
+    },
+    "small-crimp-right": {
+      "faces": [
+        "Face28",
+        "Face29",
+        "Face30",
+        "Face31",
+        "Face50"
+      ],
+      "areaMM2": 1374.275579510385,
+      "boundsMM": [
+        63.60000000000002,
+        9.867067712822202,
+        5.800000000000097
+      ]
+    }
+  },
+  "manifestUnchanged": true,
+  "boreFeaturesUnchanged": true,
+  "estimates": {
+    "frontReliefDepthMM": 8.0,
+    "reverseReliefDepthMM": 10.0,
+    "lipRadiusMM": 1.5,
+    "frontXRangeMM": [
+      48.0,
+      452.0
+    ],
+    "reverseXRangesMM": [
+      [
+        49.0,
+        215.0
+      ],
+      [
+        285.0,
+        451.0
+      ]
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B",
+  "simulatorName": "Hang Ten Paseo placid-badger Review Mini Completion iOS264",
+  "pendingAndOwnedRegistered": true,
+  "cleanupTrap": "ios26.4-clean-session.zsh",
+  "runtimeIdentifier": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+  "runtimeVersion": "26.4",
+  "runtimeBuild": "23E244"
+}

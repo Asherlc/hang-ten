@@ -1,0 +1,108 @@
+{
+  "owner": "placid-badger",
+  "checkedUTC": "2026-10-02T19:05:32.532924+00:00",
+  "status": "pass",
+  "processGroupsVerifiedAbsent": 6,
+  "exactOwnedPathsVerifiedAbsent": 9,
+  "jobs": [
+    {
+      "receiptPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-author-command.json",
+      "receiptSHA256": "9cd0b550c88104b0bb068546337f1fbaff81bd1448a5b159f3193ba293fc443a",
+      "processGroup": 17424,
+      "processGroupFreshlyAbsent": true,
+      "logSHA256Matches": true,
+      "resources": [
+        {
+          "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-author-tmp",
+          "absent": true
+        }
+      ]
+    },
+    {
+      "receiptPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-10mm-command.json",
+      "receiptSHA256": "ad1ee6b49485f9f1c99d1bb0679b97b21023fda9cf2a3a443713217f280ad3bf",
+      "processGroup": 25181,
+      "processGroupFreshlyAbsent": true,
+      "logSHA256Matches": true,
+      "resources": [
+        {
+          "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-10mm-tmp",
+          "absent": true
+        },
+        {
+          "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-export-10mm-staging",
+          "absent": true
+        }
+      ]
+    },
+    {
+      "receiptPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-15mm-command.json",
+      "receiptSHA256": "e710a7aa15afdd3a952046dec7724e0ae25b3a46d0d5520c776519675e51a068",
+      "processGroup": 25084,
+      "processGroupFreshlyAbsent": true,
+      "logSHA256Matches": true,
+      "resources": [
+        {
+          "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-15mm-tmp",
+          "absent": true
+        },
+        {
+          "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-export-15mm-staging",
+          "absent": true
+        }
+      ]
+    },
+    {
+      "receiptPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-18mm-command.json",
+      "receiptSHA256": "54f47944592c730e96061c03be608eff36fd0996096952357af98c632a5ae26e",
+      "processGroup": 22315,
+      "processGroupFreshlyAbsent": true,
+      "logSHA256Matches": true,
+      "resources": [
+        {
+          "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-18mm-tmp",
+          "absent": true
+        },
+        {
+          "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-export-18mm-staging",
+          "absent": true
+        }
+      ]
+    },
+    {
+      "receiptPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-native-verify-command.json",
+      "receiptSHA256": "303e57f1ca751bbf85a3b7b70e0494600fb9886ccff9a042b4d7adc750db85b0",
+      "processGroup": 22187,
+      "processGroupFreshlyAbsent": true,
+      "logSHA256Matches": true,
+      "resources": [
+        {
+          "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-native-verify-tmp",
+          "absent": true
+        }
+      ]
+    },
+    {
+      "receiptPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-preserve-finish-command.json",
+      "receiptSHA256": "668221b61c9bb5a6b6c39eef101983e5df3cb7aa475766c2f1f272845f294a60",
+      "processGroup": 21007,
+      "processGroupFreshlyAbsent": true,
+      "logSHA256Matches": true,
+      "resources": [
+        {
+          "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-preserve-finish-tmp",
+          "absent": true
+        }
+      ]
+    }
+  ],
+  "canonicalEightFilesUnchanged": true,
+  "fiveReservedSharedPathsUnchanged": true,
+  "immutableHandoffPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/immutable-material-handoff.json",
+  "currentAppFrames": 0,
+  "IOSCases": 0,
+  "guestOperations": 0,
+  "HTTPResources": 0,
+  "broadTestsRun": 0,
+  "genericBuildsRun": 0
+}

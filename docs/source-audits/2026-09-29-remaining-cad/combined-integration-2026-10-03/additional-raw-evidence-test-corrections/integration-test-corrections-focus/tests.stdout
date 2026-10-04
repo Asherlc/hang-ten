@@ -1,0 +1,98 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=055BDCE2-3263-470D-89DF-04B967EF7790" -derivedDataPath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/DerivedData-placid-badger-cad-second-half -resultBundlePath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/tests-placid-badger-cad-second-half-integration-test-corrections-focus.xcresult -parallel-testing-enabled NO -maximum-concurrent-test-simulator-destinations 1 "-only-testing:HangTenTests/ContactResolverTests" "-only-testing:HangTenTests/BoardSourceBoundaryTests/testBoardMapGivesImageAndAllHoldPathsTheSameExplicitBounds" test-without-building
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  Sentry: https://github.com/getsentry/sentry-cocoa.git @ 8.58.4
+  AmplitudeCore: https://github.com/amplitude/AmplitudeCore-Swift.git @ 1.5.0
+  analytics-connector-ios: https://github.com/amplitude/analytics-connector-ios.git @ 1.3.2
+  Amplitude-Swift: https://github.com/amplitude/Amplitude-Swift @ 1.18.8
+
+Writing result bundle at path:
+	/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/tests-placid-badger-cad-second-half-integration-test-corrections-focus.xcresult
+
+[Sentry] [error] [1791070367.889732] [SentryOptions:251] Could not parse the DSN: Error Domain=SentryErrorDomain Code=100 "Host component of DSN is missing" UserInfo={NSLocalizedDescription=Host component of DSN is missing}.
+[Sentry] [fatal] [1791070367.894298] [SentryFileManager:162] No DSN provided, using base path for envelopes: /Users/asherlc/Library/Developer/CoreSimulator/Devices/055BDCE2-3263-470D-89DF-04B967EF7790/data/Containers/Data/Application/EE900E2F-CD7E-4D1F-A7E7-8C2EB3F5045A/Library/Caches/io.sentry
+[Sentry] [fatal] [1791070367.898607] [SentryFileManager:162] No DSN provided, using base path for envelopes: /Users/asherlc/Library/Developer/CoreSimulator/Devices/055BDCE2-3263-470D-89DF-04B967EF7790/data/Containers/Data/Application/EE900E2F-CD7E-4D1F-A7E7-8C2EB3F5045A/Library/Caches/io.sentry
+Test Suite 'Selected tests' started at 2026-10-03 16:32:48.625.
+Test Suite 'HangTenTests.xctest' started at 2026-10-03 16:32:48.625.
+Test Suite 'BoardSourceBoundaryTests' started at 2026-10-03 16:32:48.625.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoardMapGivesImageAndAllHoldPathsTheSameExplicitBounds]' started.
+/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/BoardSourceBoundaryTests.swift:582: error: -[HangTenTests.BoardSourceBoundaryTests testBoardMapGivesImageAndAllHoldPathsTheSameExplicitBounds] : XCTAssertTrue failed - The raster board ZStack must receive explicit bounds before later modifiers.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoardMapGivesImageAndAllHoldPathsTheSameExplicitBounds]' failed (0.311 seconds).
+Test Suite 'BoardSourceBoundaryTests' failed at 2026-10-03 16:32:48.937.
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.311 (0.312) seconds
+Test Suite 'ContactResolverTests' started at 2026-10-03 16:32:48.937.
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairDerivesExtremaFromFrameCentersRatherThanEdges]' started.
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairDerivesExtremaFromFrameCentersRatherThanEdges]' passed (0.002 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairDoesNotGuessAmongCandidatesWithoutEveryDefaultPresentationFrame]' started.
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairDoesNotGuessAmongCandidatesWithoutEveryDefaultPresentationFrame]' passed (0.005 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairRejectsContactsWithDifferentFactualDescriptors]' started.
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairRejectsContactsWithDifferentFactualDescriptors]' passed (0.002 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairRejectsDifferentFingerCapacity]' started.
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairRejectsDifferentFingerCapacity]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairRejectsDifferentHandCapacity]' started.
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairRejectsDifferentHandCapacity]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairRejectsThreeMatchingContactsOnOneSideOfPresentationMidpoint]' started.
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairRejectsThreeMatchingContactsOnOneSideOfPresentationMidpoint]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairRejectsTwoCandidatesOnTheSameSideOfThePresentationMidpoint]' started.
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairRejectsTwoCandidatesOnTheSameSideOfThePresentationMidpoint]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairSelectsOuterContactsFromDefaultPresentationWhenThreeJugsMatch]' started.
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairSelectsOuterContactsFromDefaultPresentationWhenThreeJugsMatch]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairSelectsTwoStraddlingCandidatesWithoutPairingMetadata]' started.
+Test Case '-[HangTenTests.ContactResolverTests testBilateralPairSelectsTwoStraddlingCandidatesWithoutPairingMetadata]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testCatalogSevenThreeCueUsesTwoHandsOnCompactBoard]' started.
+Test Case '-[HangTenTests.ContactResolverTests testCatalogSevenThreeCueUsesTwoHandsOnCompactBoard]' passed (0.062 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testDerivedBilateralPairRejectsDifferentFactualDescriptors]' started.
+Test Case '-[HangTenTests.ContactResolverTests testDerivedBilateralPairRejectsDifferentFactualDescriptors]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testEmptyContactGripTypesDoNotConstrainStepGrip]' started.
+Test Case '-[HangTenTests.ContactResolverTests testEmptyContactGripTypesDoNotConstrainStepGrip]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testEveryBoardSpecificCatalogTaskResolves]' started.
+Test Case '-[HangTenTests.ContactResolverTests testEveryBoardSpecificCatalogTaskResolves]' passed (0.008 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testLopezMaxHangsOffersBothBeastmakersAndRecordsChosenEdges]' started.
+Test Case '-[HangTenTests.ContactResolverTests testLopezMaxHangsOffersBothBeastmakersAndRecordsChosenEdges]' passed (0.004 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testLopezMaxHangsRejectsUnsupportedAndOutOfRangeEdgeSelections]' started.
+Test Case '-[HangTenTests.ContactResolverTests testLopezMaxHangsRejectsUnsupportedAndOutOfRangeEdgeSelections]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testMaxHangsHighlightsDualTwentyMillimeterEdge]' started.
+Test Case '-[HangTenTests.ContactResolverTests testMaxHangsHighlightsDualTwentyMillimeterEdge]' passed (0.003 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testMaxHangsResolvesPentaReusableTwentyMillimeterPairAndPose]' started.
+/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/BoardTargetSubstitutionTests.swift:404: error: -[HangTenTests.ContactResolverTests testMaxHangsResolvesPentaReusableTwentyMillimeterPairAndPose] : XCTUnwrap failed: expected non-nil value of type "TrainingPlan"
+Test Case '-[HangTenTests.ContactResolverTests testMaxHangsResolvesPentaReusableTwentyMillimeterPairAndPose]' failed (0.015 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testMetoliusEntryHighlightsJugAndMediumEdgeOnDual]' started.
+Test Case '-[HangTenTests.ContactResolverTests testMetoliusEntryHighlightsJugAndMediumEdgeOnDual]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testPentaLegacyPairRequiresAnExactAthleteSelectedDepth]' started.
+Test Case '-[HangTenTests.ContactResolverTests testPentaLegacyPairRequiresAnExactAthleteSelectedDepth]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testRepeatersFirstCueHighlightsBothCompactTwentyNineMillimeterEdges]' started.
+Test Case '-[HangTenTests.ContactResolverTests testRepeatersFirstCueHighlightsBothCompactTwentyNineMillimeterEdges]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testResolutionFailuresDescribeSelectionOrGeometricPairingFailures]' started.
+Test Case '-[HangTenTests.ContactResolverTests testResolutionFailuresDescribeSelectionOrGeometricPairingFailures]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testResolutionUsesAllDefaultPresentationContactsNotOnlyFirstPosition]' started.
+Test Case '-[HangTenTests.ContactResolverTests testResolutionUsesAllDefaultPresentationContactsNotOnlyFirstPosition]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testReusablePairRejectsDifferentSlotsEvenWhenUnitFramesStraddleMidpoint]' started.
+Test Case '-[HangTenTests.ContactResolverTests testReusablePairRejectsDifferentSlotsEvenWhenUnitFramesStraddleMidpoint]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testReusablePairRejectsSameInstanceEvenWhenUnitFramesStraddleMidpoint]' started.
+Test Case '-[HangTenTests.ContactResolverTests testReusablePairRejectsSameInstanceEvenWhenUnitFramesStraddleMidpoint]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testReusablePairRejectsUnequalContactFacts]' started.
+Test Case '-[HangTenTests.ContactResolverTests testReusablePairRejectsUnequalContactFacts]' passed (0.000 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testSingleBreaksEqualMidpointDistancesByContactID]' started.
+Test Case '-[HangTenTests.ContactResolverTests testSingleBreaksEqualMidpointDistancesByContactID]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testSingleDoesNotGuessAmongMultipleCandidatesWithoutEveryDefaultPresentationFrame]' started.
+Test Case '-[HangTenTests.ContactResolverTests testSingleDoesNotGuessAmongMultipleCandidatesWithoutEveryDefaultPresentationFrame]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testSingleSelectionIgnoresUnilateralWorkoutSide]' started.
+Test Case '-[HangTenTests.ContactResolverTests testSingleSelectionIgnoresUnilateralWorkoutSide]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testSingleSelectsTheCandidateNearestTheDefaultPresentationMidpoint]' started.
+Test Case '-[HangTenTests.ContactResolverTests testSingleSelectsTheCandidateNearestTheDefaultPresentationMidpoint]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testSingleSelectsTheOnlyCandidateMatchingAnExactDepth]' started.
+Test Case '-[HangTenTests.ContactResolverTests testSingleSelectsTheOnlyCandidateMatchingAnExactDepth]' passed (0.001 seconds).
+Test Case '-[HangTenTests.ContactResolverTests testStepGripConstraintRejectsIncompatibleNonEmptyContactGripMetadata]' started.
+Test Case '-[HangTenTests.ContactResolverTests testStepGripConstraintRejectsIncompatibleNonEmptyContactGripMetadata]' passed (0.001 seconds).
+Test Suite 'ContactResolverTests' failed at 2026-10-03 16:32:49.063.
+	 Executed 31 tests, with 1 failure (0 unexpected) in 0.116 (0.125) seconds
+Test Suite 'HangTenTests.xctest' failed at 2026-10-03 16:32:49.063.
+	 Executed 32 tests, with 2 failures (0 unexpected) in 0.427 (0.438) seconds
+Test Suite 'Selected tests' failed at 2026-10-03 16:32:49.063.
+	 Executed 32 tests, with 2 failures (0 unexpected) in 0.427 (0.439) seconds
+Resolve Package Graph
+

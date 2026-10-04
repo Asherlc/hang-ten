@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/vertical-groove-correction/placid-badger-retained-red-v2-tmp/hangten-freecad-ujf23gyg/run.py", line 5, in <module>
+    exec(compile(open(path).read(), path, 'exec'), {'__name__': '__main__', '__file__': path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/vertical-groove-correction/rejected-original-extractor/native_cord_feature_checks.py", line 44, in <module>
+    merged=extract_native_cord_features(doc,body,[x.Name for x in guides],["Left","Right"])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/vertical-groove-correction/rejected-original-extractor/native_cord_features.py", line 46, in extract_native_cord_features
+    if not planes:raise ValueError(f"native bore {name} has no actual exterior plane witness")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: native bore Left has no actual exterior plane witness
+
+PASS opposite coaxial bore binding; remote stepped face excluded; finite aperture distance exact
+
+								
+								

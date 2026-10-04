@@ -1,0 +1,43 @@
+{
+  "status": "Technical previews complete; final human geometry acceptance remains pending",
+  "beforeSHA256": "d689a72a606c7e429ff3050da9f4daa3d57ba02c55f9a100c56d71f019ddde18",
+  "afterSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+  "comparisonCount": 24,
+  "retainedBeforeFilesVerified": 28,
+  "existingGeometryAndAppEvidenceUnchanged": true,
+  "nativeGeometryUSDZDescriptorUnchanged": true,
+  "inspection": {
+    "edge20-front": [
+      "front detail",
+      "side detail",
+      "top detail"
+    ],
+    "pocket-right-end": [
+      "front detail",
+      "side detail",
+      "top detail"
+    ],
+    "edge25-inverted": [
+      "front detail"
+    ],
+    "jug-reverse": [
+      "front detail"
+    ]
+  },
+  "observations": [
+    "Default20mm and inverted25mm views now show both leads across the front recess into the existing floor holes; before views hide them behind the native body.",
+    "The90-degree pocket view shows two close front-side leads reaching the upper/lower holes; side and top reveal their approach is on the front of the body.",
+    "Reverse-jug view preserves occlusion by the body. These projections are rendered from the exact approved cache and unchanged mesh, not redrawn cord paths."
+  ],
+  "bestDefaultViews": {
+    "front": "edge20-front-front-detail.png",
+    "side": "edge20-front-side-detail.png",
+    "top": "edge20-front-top-detail.png"
+  },
+  "bestVerticalViews": {
+    "front": "pocket-right-end-front-detail.png",
+    "side": "pocket-right-end-side-detail.png",
+    "top": "pocket-right-end-top-detail.png"
+  },
+  "limits": "This lane performed no native solve, package edit, runtime tests or app capture. Prior reports and screenshots remain untouched. Common numeric viewport bounds provide identical pair scale; generated detail views clip around body+15mm; full views retain complete support-to-mouth paths."
+}

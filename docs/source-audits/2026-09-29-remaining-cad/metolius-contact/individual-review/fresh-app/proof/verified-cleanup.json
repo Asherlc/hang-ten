@@ -1,0 +1,17 @@
+{
+  "simulator": "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD",
+  "cleanupStatus": 0,
+  "derivedDataRemoved": true,
+  "owner": "placid-badger",
+  "simulatorName": "Hang Ten Paseo placid-badger Metolius Contact Review",
+  "simulatorDeletionVerified": true,
+  "verificationCommand": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "list",
+    "devices",
+    "--json"
+  ]
+}
