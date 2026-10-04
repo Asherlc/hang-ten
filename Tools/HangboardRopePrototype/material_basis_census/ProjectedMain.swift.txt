@@ -1,0 +1,40 @@
+do {
+    result["step"]=140
+    try ProjectedKKT.fixtures();result["fixturesPass"]=true
+    if CommandLine.arguments.contains("--fixtures-only") {try persist(nil);print("PASS projected KKT fixtures");exit(0)}
+    for step in 1...139 {
+        let record=try run(&initial).1
+        let old=(priorSteps[step-1]["trace"] as! [String:Any])["corrections"] as! [[String:Double]]
+        guard record.count==old.count else {throw RopePhysicsError.invalid("projected prefix count")}
+        for (a,b) in zip(record,old) {for key in ["movement","alpha","strain"] {
+            guard (a[key] as! Double)==b[key] else {throw RopePhysicsError.invalid("projected prefix identity")}
+        }}
+    }
+    var control=initial,candidate=initial
+    control.woodMajorizerExperiment=true;candidate.woodMajorizerExperiment=true
+    _ = try run(&control)
+    ProjectedKKT.enabled=true;MaterialBasisTrace.enabled=true
+    let captured=try run(&candidate)
+    ProjectedKKT.enabled=false;MaterialBasisTrace.enabled=false
+    guard try serialize(control.bundleCheckpoint())==serialize(candidate.bundleCheckpoint()),ProjectedKKT.inputs.count==2,
+          candidate.reviewStepCaps==0,candidate.reviewStepRetries==0 else {throw RopePhysicsError.invalid("projected capture identity")}
+    result["metrics"]=try check(candidate);result["completeInstrumentationIdentity"]=true;result["originalTrace"]=captured.1
+    result["oracleActiveSet"]=true;result["adopted"]=false;result["dynamicBackend"]=false
+    result["frozenSystems"]=ProjectedKKT.inputs.map{ProjectedKKT.snapshot($0)}
+    result["systems"]=try ProjectedKKT.inputs.map{try ProjectedKKT.report($0)}
+    result["candidateAccuracyPass"]=(result["systems"] as! [[String:Any]]).allSatisfy{($0["projectedCertificatePass"] as! Bool) && ($0["oracleActiveSetSufficient"] as! Bool) && ($0["referencePosePass"] as! Bool)}
+    result["costOnlyDiagnosticAfterAccuracyFailure"] = !(result["candidateAccuracyPass"] as! Bool)
+    var times:[Double]=[]
+    for _ in 0..<7 {
+        let start=ProcessInfo.processInfo.systemUptime
+        var checksum=0.0
+        for input in ProjectedKKT.inputs {let solved=try ProjectedKKT.solve(input);checksum+=solved.2[input.size]}
+        times.append(ProcessInfo.processInfo.systemUptime-start)
+        guard checksum.isFinite else {throw RopePhysicsError.invalid("projected nonfinite timing")}
+    }
+    result["pairedCorrectionsSeconds"]=times;result["medianPairedCorrectionsSeconds"]=times.sorted()[3]
+    result["necessaryNumericBudgetSeconds"]=0.00027200004761107274
+    result["necessaryNumericCostPass"]=times.sorted()[3]<=0.00027200004761107274
+    result["timingIncludes"]="input-only basis, full sparse projection/assembly, factor, solve, fine reconstruction; excludes capture/decode/oracle/report/admission"
+    try persist(nil);print("PROJECTED KKT frozen systems, numeric cost pass",result["necessaryNumericCostPass"]!,"seconds",times.sorted()[3])
+} catch {try persist(String(describing:error));print("FAIL projected KKT",error);exit(2)}

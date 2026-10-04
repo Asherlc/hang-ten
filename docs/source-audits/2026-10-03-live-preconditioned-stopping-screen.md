@@ -1,0 +1,7 @@
+# Selected affine stopping guard: isolated140 pass, trajectory pending
+
+This deliberately revisits the prior fresh-force/old-factor estimator, removing only selected-row affine consistency as an internal stopping guard. Fresh original-force/J residual and regularized constraint residual are preconditioned by the previous full factor. Wood majorizer contributes to that preconditioner, never to the original force. Estimated positions/multipliers are not applied. Exact canonical correspondence, unsupported/duplicate rejection, updated compression signs and every fresh inactive affine inequality remain required. The norm is an empirical estimate, not an error certificate.
+
+RED flag off still needs two applied QPs and fails the registered one-QP gate. GREEN140 stops after one; old-factor norm2.859µm versus control fresh full correction3.448µm. Strict/current differences2.801/2.809µm, physical mesh/material/CCD checks, zero caps/retries pass. Seven paired timing ratio median.7851 passes.80, but candidate median4.484ms does not pass4ms. No real-time claim or product adoption.
+
+Astra endorsed only this narrower selected guard relaxation. Four exact new groups independently absent. Native source hashes pin the tested implementation; trajectory harness was subsequently added but not yet run. Fixed3/109 and full540 with every settled strict continuation remain pending before simulator/video. User explicitly authorizes all experiments; physical acceptance limits remain fixed.

@@ -1,0 +1,72 @@
+{
+  "adopted": false,
+  "closed": true,
+  "systems": [
+    {
+      "bandStorageDoubles": 42755,
+      "baseBandwidth": 28,
+      "baseSize": 503,
+      "denseMatrixError": 5.551115123125783e-17,
+      "denseSolutionError": 8.372654387292164e-11,
+      "maxPoseDifference": 5.48697261567743e-07,
+      "oracleActiveSetSufficient": true,
+      "originalBandwidth": 8,
+      "originalBaseSize": 1127,
+      "positiveContactMultiplier": 0,
+      "projectedCertificatePass": true,
+      "projectedResidual": 6.486874771604971e-17,
+      "rawEqualityResidual": 4.245489371743328e-12,
+      "referencePosePass": true,
+      "selectedRowsRetained": 293,
+      "unprojectedCapturePass": true,
+      "unprojectedRecoveryPoseError": 7.987602165893452e-17,
+      "unprojectedReferenceResidual": 5.854691731421724e-17,
+      "worstInactiveGap": 0
+    },
+    {
+      "bandStorageDoubles": 72668,
+      "baseBandwidth": 49,
+      "baseSize": 491,
+      "denseMatrixError": 5.551115123125783e-17,
+      "denseSolutionError": 3.283137206544495e-08,
+      "maxPoseDifference": 0.009452031827072115,
+      "oracleActiveSetSufficient": false,
+      "originalBandwidth": 8,
+      "originalBaseSize": 1127,
+      "positiveContactMultiplier": 0,
+      "projectedCertificatePass": true,
+      "projectedResidual": 1.1162945567910754e-15,
+      "rawEqualityResidual": 1.860586420807285e-07,
+      "referencePosePass": false,
+      "selectedRowsRetained": 293,
+      "unprojectedCapturePass": true,
+      "unprojectedRecoveryPoseError": 1.1130171385187687e-16,
+      "unprojectedReferenceResidual": 1.0758199873790351e-16,
+      "worstInactiveGap": -0.0008792604131739624
+    }
+  ],
+  "numericCostPass": false,
+  "physicalProjectedStepsAccepted": false,
+  "groupsIndependentlyAbsent": [
+    26607,
+    27177,
+    27551,
+    28140,
+    30287,
+    33723,
+    34228
+  ],
+  "evidenceSHA256": {
+    ".context/strong-owl-live-physics-armijo-8b9521422-projected-kkt-red/native/result.json": "35bd226e294d8fa47bfeddb1971f19ba3b555c61eccbe5327fd2f86df48ac26c",
+    ".context/strong-owl-live-physics-armijo-8b9521422-projected-kkt-red/native/resources.jsonl": "e46a527bec7a9ab617df8d11b3e231178f45305a11e06eb8ba5c5917298d7bea",
+    ".context/strong-owl-live-physics-armijo-8b9521422-projected-kkt-140/native/result.json": "ca6edbcd5047e247a0044febbdf472379ab6ca4e2fd148c5da50802ea05b997b",
+    ".context/strong-owl-live-physics-armijo-8b9521422-projected-kkt-140/native/resources.jsonl": "5237a22f9584765dbd4f4e45e27e8e55b0ff345748f966c177fcc647f1d8be11",
+    ".context/strong-owl-live-physics-armijo-8b9521422-projected-kkt-provenance/native/resources.jsonl": "14d870e1fcf13e1a7cd78ee6fb690b131154dcdc6cf9153ff14ba08d867f33d2",
+    ".context/strong-owl-live-physics-armijo-8b9521422-projected-kkt-provenance-v2/native/result.json": "ea805bfc78bfcf9ff120e5657e24772f29d13af9b92a96dd6b7f47f419ffab15",
+    ".context/strong-owl-live-physics-armijo-8b9521422-projected-kkt-provenance-v2/native/resources.jsonl": "5d880a3829b2c29f43f29b969a9c2b4187452e62e7dcff74ffa54a9a052e1cb1",
+    "Tools/HangboardRopePrototype/material_basis_census/Projected.swift": "4c485868c066068ffbe61a06cbde9af8cbbe9f3cb4374edc8270cd15a482c312",
+    "Tools/HangboardRopePrototype/material_basis_census/ProjectedMain.swift.txt": "45d92d39ed7314ba55104452de1e8359c54c0e43a4c9414db991b8a7a210b53b",
+    "Tools/HangboardRopePrototype/material_basis_census/projected_snapshot.py": "d90d0fb3f048ef43b3e1806e6e858348d7f4e8e21f693cfbe5e8d322153cd0ea"
+  },
+  "limits": "oracle active set only; projected linear algebra passes but second affine/pose checks fail; cost diagnostic only; no contact repair, dynamics, simulator or video"
+}

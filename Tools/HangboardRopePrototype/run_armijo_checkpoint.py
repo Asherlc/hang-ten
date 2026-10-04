@@ -28,12 +28,16 @@ parser.add_argument('--wood-residual-red',action='store_true')
 parser.add_argument('--wood-residual-diagnostic',action='store_true')
 parser.add_argument('--wood-feature-ids',action='store_true')
 parser.add_argument('--wood-feature-ids-red',action='store_true')
+parser.add_argument('--preconditioned-stop',action='store_true')
+parser.add_argument('--preconditioned-stop-red',action='store_true')
 parser.add_argument('--fresh-active-stop',action='store_true')
 parser.add_argument('--fresh-active-stop-red',action='store_true')
 parser.add_argument('--foreground-qos',action='store_true')
 parser.add_argument('--foreground-qos-red',action='store_true')
 parser.add_argument('--material-basis-census',action='store_true')
 parser.add_argument('--material-basis-cost',action='store_true')
+parser.add_argument('--material-basis-projected',action='store_true')
+parser.add_argument('--material-basis-projected-red',action='store_true')
 parser.add_argument('--wood-assembly-red',action='store_true')
 parser.add_argument('--wood-checkpoint',type=int,choices=[3,109,140],default=109)
 parser.add_argument('--arrival-checkpoint',type=int,choices=[109,140],default=109)
@@ -62,14 +66,18 @@ if args.float_face_red and not args.float_face_reject:parser.error('--float-face
 if args.float_face_verification_only and not args.float_face_reject:parser.error('--float-face-verification-only requires --float-face-reject')
 if args.wood_feature_ids and (not args.wood_residual or args.wood_residual_red):parser.error('--wood-feature-ids requires isolated residual majorizer')
 if args.wood_feature_ids_red and not args.wood_feature_ids:parser.error('--wood-feature-ids-red requires --wood-feature-ids')
+if args.preconditioned_stop and (not args.wood_feature_ids or args.wood_feature_ids_red or args.wood_residual_diagnostic or args.fresh_active_stop):parser.error('--preconditioned-stop requires isolated canonical residual checkpoint')
+if args.preconditioned_stop_red and not args.preconditioned_stop:parser.error('--preconditioned-stop-red requires --preconditioned-stop')
 if args.fresh_active_stop and (not args.wood_feature_ids or args.wood_feature_ids_red or args.wood_residual_diagnostic):parser.error('--fresh-active-stop requires isolated canonical residual checkpoint')
 if args.fresh_active_stop_red and not args.fresh_active_stop:parser.error('--fresh-active-stop-red requires --fresh-active-stop')
 if args.foreground_qos and (not args.wood_majorizer or args.wood_checkpoint!=140 or args.wood_residual or args.step_rate or args.fixtures_only or args.empty_face_floor):parser.error('--foreground-qos requires isolated majorizer140')
 if args.foreground_qos_red and not args.foreground_qos:parser.error('--foreground-qos-red requires --foreground-qos')
-if args.material_basis_census and (not args.wood_majorizer or args.wood_residual or args.step_rate or args.fixtures_only or args.empty_face_floor or args.foreground_qos):parser.error('--material-basis-census requires isolated majorizer capture')
+if args.material_basis_census and (not args.wood_majorizer or args.wood_residual or args.step_rate or (args.fixtures_only and not args.material_basis_projected) or args.empty_face_floor or args.foreground_qos):parser.error('--material-basis-census requires isolated majorizer capture')
+if args.material_basis_projected and (not args.material_basis_census or args.material_basis_cost):parser.error('--material-basis-projected requires isolated census capture')
+if args.material_basis_projected_red and not args.material_basis_projected:parser.error('--material-basis-projected-red requires projected screen')
 if args.material_basis_cost and not args.material_basis_census:parser.error('--material-basis-cost requires --material-basis-census')
 if args.wood_residual_diagnostic and (not args.wood_residual or args.wood_residual_red or args.wood_checkpoint!=140):parser.error('--wood-residual-diagnostic requires enabled fixed140')
-if args.wood_residual and (not args.wood_majorizer or args.step_rate or args.fixtures_only):parser.error('--wood-residual requires isolated majorizer checkpoint')
+if args.wood_residual and (not args.wood_majorizer or (args.step_rate and not (args.preconditioned_stop and args.step_rate==240)) or args.fixtures_only):parser.error('--wood-residual requires isolated majorizer checkpoint')
 if args.wood_residual_red and not args.wood_residual:parser.error('--wood-residual-red requires --wood-residual')
 if args.wood_assembly_red and (not args.wood_majorizer or not args.fixtures_only):parser.error('--wood-assembly-red requires isolated wood fixtures')
 if args.wood_majorizer and (args.retained_initializer or args.arrival_stop or args.quiet_strain or args.fullstep_feasible or args.full_merit or args.trajectory or args.step_rate==120 or args.composed_step or args.mass_only or args.planar_regions or args.spectral_step or args.clearance_bounds or args.scaled_merit or args.geometry_hints or args.lagged_reaction):parser.error('--wood-majorizer is isolated')
@@ -177,6 +185,12 @@ for name in NAMES:
                 if args.material_basis_cost:
                     from material_basis_census.cost_snapshot import solver_source as cost_solver
                     text=cost_solver(text)
+                if args.material_basis_projected:
+                    from material_basis_census.projected_snapshot import solver_source as projected_solver
+                    text=projected_solver(text)
+            if args.preconditioned_stop:
+                from preconditioned_stop.snapshot import solver_source as preconditioned_solver
+                text=preconditioned_solver(text)
             if args.fresh_active_stop:
                 from fresh_active_stop.snapshot import solver_source as fresh_solver
                 text=fresh_solver(text)
@@ -243,6 +257,9 @@ for name in NAMES:
         if args.composed_step:
             from composed_step.snapshot import solver_source as composed_solver
             text=composed_solver(text)
+    if args.material_basis_projected and name=='RopeBandedSystem.swift':
+        from material_basis_census.projected_snapshot import band_source
+        text=band_source(text)
     if name=='RopeBandedSystem.swift':text=text.replace('        try RopeBandedFactorization(size:size','        return try RopeBandedFactorization(size:size')
     (sources/name).write_text(text)
 for name in ['Math.swift','Trace.swift','main.swift']:
@@ -251,7 +268,10 @@ for name in ['Math.swift','Trace.swift','main.swift']:
         text=text.replace('    ArmijoTrace.collectOracleBranches=x.verifyArmijoDerivative\n','')
     if name=='main.swift' and args.wood_majorizer:
         from wood_majorizer.snapshot import driver_source as wood_driver,trajectory_source as wood_trajectory
-        if args.wood_residual:
+        if args.wood_residual and args.step_rate:
+            from preconditioned_stop.snapshot import trajectory_source
+            text=trajectory_source(text)
+        elif args.wood_residual:
             from wood_residual.snapshot import driver_source as wood_driver
             if args.wood_feature_ids:
                 from wood_feature_ids.snapshot import driver_source as wood_driver
@@ -261,6 +281,9 @@ for name in ['Math.swift','Trace.swift','main.swift']:
             if args.wood_residual_diagnostic:
                 from wood_residual.diagnostic import driver_source as diagnose_driver
                 text=diagnose_driver(text)
+            if args.preconditioned_stop:
+                from preconditioned_stop.snapshot import driver_source as preconditioned_driver
+                text=preconditioned_driver(text,not args.preconditioned_stop_red)
             if args.fresh_active_stop:
                 from fresh_active_stop.snapshot import driver_source as fresh_driver
                 text=fresh_driver(text,not args.fresh_active_stop_red)
@@ -275,6 +298,10 @@ for name in ['Math.swift','Trace.swift','main.swift']:
             if args.material_basis_cost:
                 from material_basis_census.cost_snapshot import driver_source as cost_driver
                 text=cost_driver(text)
+            if args.material_basis_projected:
+                from material_basis_census.projected_snapshot import driver_source as projected_driver
+                text=projected_driver(text)
+                if args.material_basis_projected_red:text=text.replace('    try ProjectedKKT.fixtures()','    ProjectedKKT.red=true;try ProjectedKKT.fixtures()')
         if args.empty_face_floor:
             from empty_face_floor.snapshot import driver_source as floor_driver
             text=floor_driver(text)
@@ -397,6 +424,7 @@ if args.empty_face_floor:(sources/'EmptyFaceFloor.swift').write_bytes((tool/'emp
 if args.foreground_qos:(sources/'ForegroundQoSTrace.swift').write_bytes((tool/'foreground_qos/Trace.swift').read_bytes())
 if args.material_basis_census:(sources/'MaterialBasisTrace.swift').write_bytes((tool/'material_basis_census/Trace.swift').read_bytes())
 if args.material_basis_cost:(sources/'MaterialBasisCost.swift').write_bytes((tool/'material_basis_census/Cost.swift').read_bytes())
+if args.material_basis_projected:(sources/'ProjectedKKT.swift').write_bytes((tool/'material_basis_census/Projected.swift').read_bytes())
 if args.float_face_reject:
     from float_face_reject.snapshot import math_source as float_math,trace_source as float_trace
     (sources/'FloatFaceReject.swift').write_text(float_math((REPO/'HangTen/Models/RopeTriangleCollider.swift').read_text()))
