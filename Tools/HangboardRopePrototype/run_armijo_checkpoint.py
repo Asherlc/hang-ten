@@ -30,6 +30,8 @@ parser.add_argument('--wood-feature-ids',action='store_true')
 parser.add_argument('--wood-feature-ids-red',action='store_true')
 parser.add_argument('--fresh-active-stop',action='store_true')
 parser.add_argument('--fresh-active-stop-red',action='store_true')
+parser.add_argument('--foreground-qos',action='store_true')
+parser.add_argument('--foreground-qos-red',action='store_true')
 parser.add_argument('--wood-assembly-red',action='store_true')
 parser.add_argument('--wood-checkpoint',type=int,choices=[3,109,140],default=109)
 parser.add_argument('--arrival-checkpoint',type=int,choices=[109,140],default=109)
@@ -60,6 +62,8 @@ if args.wood_feature_ids and (not args.wood_residual or args.wood_residual_red):
 if args.wood_feature_ids_red and not args.wood_feature_ids:parser.error('--wood-feature-ids-red requires --wood-feature-ids')
 if args.fresh_active_stop and (not args.wood_feature_ids or args.wood_feature_ids_red or args.wood_residual_diagnostic):parser.error('--fresh-active-stop requires isolated canonical residual checkpoint')
 if args.fresh_active_stop_red and not args.fresh_active_stop:parser.error('--fresh-active-stop-red requires --fresh-active-stop')
+if args.foreground_qos and (not args.wood_majorizer or args.wood_checkpoint!=140 or args.wood_residual or args.step_rate or args.fixtures_only or args.empty_face_floor):parser.error('--foreground-qos requires isolated majorizer140')
+if args.foreground_qos_red and not args.foreground_qos:parser.error('--foreground-qos-red requires --foreground-qos')
 if args.wood_residual_diagnostic and (not args.wood_residual or args.wood_residual_red or args.wood_checkpoint!=140):parser.error('--wood-residual-diagnostic requires enabled fixed140')
 if args.wood_residual and (not args.wood_majorizer or args.step_rate or args.fixtures_only):parser.error('--wood-residual requires isolated majorizer checkpoint')
 if args.wood_residual_red and not args.wood_residual:parser.error('--wood-residual-red requires --wood-residual')
@@ -134,6 +138,9 @@ for name in NAMES:
         else:
             from wood_majorizer.snapshot import collider_source as wood_collider
         text=wood_collider(text)
+        if args.foreground_qos:
+            from foreground_qos.snapshot import collider_source as qos_collider
+            text=qos_collider(text)
     if args.empty_face_floor and name=='RopeTriangleCollider.swift':
         from empty_face_floor.snapshot import collider_source as floor_collider
         text=floor_collider(text)
@@ -246,6 +253,9 @@ for name in ['Math.swift','Trace.swift','main.swift']:
                 text=fresh_driver(text,not args.fresh_active_stop_red)
         else:
             text=wood_trajectory(text) if args.step_rate else wood_driver(text,args.wood_checkpoint)
+        if args.foreground_qos:
+            from foreground_qos.snapshot import driver_source as qos_driver
+            text=qos_driver(text,not args.foreground_qos_red)
         if args.empty_face_floor:
             from empty_face_floor.snapshot import driver_source as floor_driver
             text=floor_driver(text)
@@ -365,6 +375,7 @@ if args.wood_majorizer:
         from armijo.snapshot import once
         p.write_text(once(text,'columns[0][indices[a]] += scale*values[a]*height','columns[0][indices[a]] -= scale*values[a]*height'))
 if args.empty_face_floor:(sources/'EmptyFaceFloor.swift').write_bytes((tool/'empty_face_floor/Trace.swift').read_bytes())
+if args.foreground_qos:(sources/'ForegroundQoSTrace.swift').write_bytes((tool/'foreground_qos/Trace.swift').read_bytes())
 if args.float_face_reject:
     from float_face_reject.snapshot import math_source as float_math,trace_source as float_trace
     (sources/'FloatFaceReject.swift').write_text(float_math((REPO/'HangTen/Models/RopeTriangleCollider.swift').read_text()))
@@ -398,6 +409,7 @@ if args.region_queries or args.planar_rows:inputs += [REPO/'.context/strong-owl-
 if args.planar_regions:inputs += [*list((tool/'planar_regions').glob('*.*')),tool/'census_planar_regions.py',stage/'region-topology.json']
 if args.wood_feature_ids:inputs += list((tool/'wood_feature_ids').glob('*.*'))
 if args.fresh_active_stop:inputs += list((tool/'fresh_active_stop').glob('*.*'))
+if args.foreground_qos:inputs += list((tool/'foreground_qos').glob('*.*'))
 if args.wood_residual:inputs += list((tool/'wood_residual').glob('*.*'))+list((tool/'residual_stop').glob('*.*'))
 if args.wood_majorizer:inputs += list((tool/'wood_majorizer').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))
 if args.empty_face_floor:inputs += list((tool/'empty_face_floor').glob('*.*'))

@@ -1,0 +1,84 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "closed": true,
+  "modelChanged": false,
+  "completeCheckpointAndScheduleIdentity": true,
+  "workersDefaultRaw": 21,
+  "workersForegroundRaw": 25,
+  "medianForegroundSeconds": 0.005570250010350719,
+  "medianRatio": 0.9898851174597617,
+  "schedulingPass": false,
+  "pairs": [
+    {
+      "defaultCPUSeconds": 0.008312000000000097,
+      "defaultSeconds": 0.005888208339456469,
+      "foregroundCPUSeconds": 0.007900999999999936,
+      "foregroundSeconds": 0.005570250010350719,
+      "ratio": 0.9460008357762865
+    },
+    {
+      "defaultCPUSeconds": 0.00813900000000034,
+      "defaultSeconds": 0.005733541678637266,
+      "foregroundCPUSeconds": 0.007982000000000156,
+      "foregroundSeconds": 0.005641999974614009,
+      "ratio": 0.9840340039099508
+    },
+    {
+      "defaultCPUSeconds": 0.008069999999999578,
+      "defaultSeconds": 0.010141833336092532,
+      "foregroundCPUSeconds": 0.007813000000000514,
+      "foregroundSeconds": 0.00559470834559761,
+      "ratio": 0.5516466461430879
+    },
+    {
+      "defaultCPUSeconds": 0.007759000000000071,
+      "defaultSeconds": 0.005491083313245326,
+      "foregroundCPUSeconds": 0.007651000000000074,
+      "foregroundSeconds": 0.005435541650513187,
+      "ratio": 0.9898851174597617
+    },
+    {
+      "defaultCPUSeconds": 0.007416000000000089,
+      "defaultSeconds": 0.005234791664406657,
+      "foregroundCPUSeconds": 0.00812999999999997,
+      "foregroundSeconds": 0.005983833339996636,
+      "ratio": 1.1430891091011317
+    },
+    {
+      "defaultCPUSeconds": 0.007509999999999906,
+      "defaultSeconds": 0.005364333337638527,
+      "foregroundCPUSeconds": 0.007522999999999946,
+      "foregroundSeconds": 0.0054002916731406,
+      "ratio": 1.0067032254035695
+    },
+    {
+      "defaultCPUSeconds": 0.007460000000000022,
+      "defaultSeconds": 0.0053829166572541,
+      "foregroundCPUSeconds": 0.007425000000000015,
+      "foregroundSeconds": 0.005395333340857178,
+      "ratio": 1.0023066832339573
+    }
+  ],
+  "initialCompileFailure": "pthread_get_qos_class_np needs qos out-param and relative priority out-param; corrected before RED/GREEN",
+  "newExactPrivateGroupsVerifiedAbsent": [
+    97250,
+    4156,
+    4503,
+    5190,
+    5638
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-3e617a59f-foreground-qos-red/native/compile.log": "f3471c7b13bfd57cca7a428d114b2d15f0b5ed3b323835d12bacf26247b53c47",
+    ".context/strong-owl-live-physics-armijo-3e617a59f-foreground-qos-red/native/provenance.json": "7479cb94f01b906840cb04f25f05919687a6dc8a3e15d46597c471ed218df725",
+    ".context/strong-owl-live-physics-armijo-3e617a59f-foreground-qos-red/native/resources.jsonl": "66734508c2f81b8d4edf9decc0d818663abaf1f46ec86f204cdc9de4797ae535",
+    ".context/strong-owl-live-physics-armijo-3e617a59f-foreground-qos-red-v2/native/result.json": "5f0c1a9fcfe6b3bdb2f98317a672fd9a11163724e26f7f35b1d5b5bf66eac3ac",
+    ".context/strong-owl-live-physics-armijo-3e617a59f-foreground-qos-red-v2/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-armijo-3e617a59f-foreground-qos-red-v2/native/provenance.json": "2cf7bcb163908b1f5949f53f3e466f6ba3e6c9030bf800109d7281295cfb0a69",
+    ".context/strong-owl-live-physics-armijo-3e617a59f-foreground-qos-red-v2/native/resources.jsonl": "c13858512e7e5b9a43cd53c1f9a307c76a81f6d7ed564c73ac4f77ca82b6e624",
+    ".context/strong-owl-live-physics-armijo-3e617a59f-foreground-qos-140/native/result.json": "e5df030010d43582f51e13209ed5983e8ed1530d1ea07e2db552d6f8cabe3368",
+    ".context/strong-owl-live-physics-armijo-3e617a59f-foreground-qos-140/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-armijo-3e617a59f-foreground-qos-140/native/provenance.json": "ac9b8c199a2e459836e5a3eb5dbf17d723563768d40f64ae2b03fe073e7133ee",
+    ".context/strong-owl-live-physics-armijo-3e617a59f-foreground-qos-140/native/resources.jsonl": "600c00cb659f7fa432d3c396b42645bb082ecc1d612bd453020e499910f66871"
+  }
+}

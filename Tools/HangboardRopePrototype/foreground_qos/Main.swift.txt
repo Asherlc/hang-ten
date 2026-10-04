@@ -1,0 +1,62 @@
+func schedule(_ trace:[[String:Any]])throws->Data {
+    try serialize(["trace":trace.map {row in
+        Dictionary(uniqueKeysWithValues:["movement","alpha","strain","rows","woodTerms"].map{($0,row[$0]!)})
+    }])
+}
+do {
+    result["step"]=140;result["foregroundQoS"] = // ENABLED
+    result["modelChanged"]=false;result["workerCount"]=4
+    for step in 1...139 {
+        let record=try run(&initial).1
+        let old=(priorSteps[step-1]["trace"] as! [String:Any])["corrections"] as! [[String:Double]]
+        guard record.count==old.count else {throw RopePhysicsError.invalid("prefix count identity")}
+        for (a,b) in zip(record,old) {for key in ["movement","alpha","strain"] {
+            guard (a[key] as! Double)==b[key] else {throw RopePhysicsError.invalid("prefix numerical identity")}
+        }}
+    }
+    var expected=initial;expected.woodMajorizerExperiment=true
+    foregroundExperiment=false
+    let reference=try run(&expected),checkpoint=try serialize(expected.bundleCheckpoint())
+    let expectedSchedule=try schedule(reference.1)
+    result["referenceTrace"]=reference.1;result["metrics"]=try check(expected)
+    guard expected.reviewStepCaps==0,expected.reviewStepRetries==0,expected.reviewStepCorrections==2 else {
+        throw RopePhysicsError.invalid("reference work/physics")
+    }
+    var observations:[[String:Any]]=[]
+    for foreground in [false,true] {
+        var observed=initial;observed.woodMajorizerExperiment=true
+        ForegroundQoSTrace.observe=true;ForegroundQoSTrace.workers=[]
+        foregroundExperiment=foreground && (// ENABLED)
+        _ = try run(&observed)
+        ForegroundQoSTrace.observe=false
+        guard try serialize(observed.bundleCheckpoint())==checkpoint else {throw RopePhysicsError.invalid("QoS observation identity")}
+        observations.append(["foreground":foregroundExperiment,"caller":foregroundExperiment ? "USER_INITIATED":"DEFAULT",
+            "workers":ForegroundQoSTrace.workers])
+    }
+    result["observedQoS"]=observations
+    for iteration in 0..<7 {
+        let order=iteration%2==0 ? [false,true]:[true,false]
+        var times:[Bool:Double]=[:],cpu:[Bool:Double]=[:]
+        for foreground in order {
+            var x=initial;x.woodMajorizerExperiment=true
+            foregroundExperiment=foreground && (// ENABLED)
+            let cpuStart=ForegroundQoSTrace.cpuSeconds()
+            let measured=try run(&x)
+            cpu[foreground]=ForegroundQoSTrace.cpuSeconds()-cpuStart
+            guard try serialize(x.bundleCheckpoint())==checkpoint,try schedule(measured.1)==expectedSchedule,
+                  x.reviewStepCaps==0,x.reviewStepRetries==0 else {throw RopePhysicsError.invalid("QoS checkpoint/schedule identity")}
+            _ = try check(x)
+            times[foreground]=measured.0
+        }
+        pairs.append(["defaultSeconds":times[false]!,"foregroundSeconds":times[true]!,"ratio":times[true]!/times[false]!,
+            "defaultCPUSeconds":cpu[false]!,"foregroundCPUSeconds":cpu[true]!])
+    }
+    let ratio=pairs.map{$0["ratio"] as! Double}.sorted()[3]
+    let median=pairs.map{$0["foregroundSeconds"] as! Double}.sorted()[3]
+    result["medianRatio"]=ratio;result["medianForegroundSeconds"]=median
+    result["completeCheckpointAndScheduleIdentity"]=true
+    result["schedulingPass"]=ratio<=0.80 && median<0.004
+    try persist(nil)
+    print("FOREGROUND QoS",ratio<=0.80 && median<0.004 ? "PASS":"FAIL","ratio",ratio,"median",median)
+    if ratio>0.80 || median>=0.004 {exit(3)}
+} catch {try persist(String(describing:error));print("FAIL foreground QoS",error);exit(2)}
